@@ -4,7 +4,7 @@
 
 Provides Duskmoon UI for Phoenix project.
 
-Require `tailwindcss >= 4.0` and `daisyui >= 5.0`
+Require `tailwindcss >= 4.0` and `duskmoonui >= 5.0`
 
 See the [docs](https://hexdocs.pm/phoenix_duskmoon/) for more information.
 
@@ -38,7 +38,7 @@ Import `css`
 
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
-@plugin "daisyui";
+@plugin "duskmoonui";
 @import "phoenix_duskmoon/theme";
 @import "phoenix_duskmoon/components";
 ```

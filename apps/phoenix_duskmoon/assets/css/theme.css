@@ -1,6 +1,6 @@
 @import "./utility.css";
 
-@plugin "daisyui/theme" {
+@plugin "duskmoonui/theme" {
   name: "sunshine";
   default: true;
   prefersdark: false;
@@ -35,7 +35,7 @@
   --noise: 1;
 }
 
-@plugin "daisyui/theme" {
+@plugin "duskmoonui/theme" {
   name: "moonlight";
   default: true;
   prefersdark: true;

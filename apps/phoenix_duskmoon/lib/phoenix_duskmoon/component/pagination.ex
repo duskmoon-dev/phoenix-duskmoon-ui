@@ -175,7 +175,7 @@ defmodule PhoenixDuskmoon.Component.Pagination do
 
   @doc """
   Generates a Pagination.
-  Use daisyui style.
+  Use duskmoonui style.
 
   ## Examples
 

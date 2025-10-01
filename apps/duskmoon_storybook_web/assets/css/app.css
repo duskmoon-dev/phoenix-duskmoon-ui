@@ -5,7 +5,7 @@
 @source '../../../phoenix_duskmoon/assets/**/*.css';
 @source '../../../phoenix_duskmoon/lib/**/*.*ex';
 
-@plugin "daisyui";
+@plugin "duskmoonui";
 @plugin "@tailwindcss/typography";
 
 @import "tailwindcss";

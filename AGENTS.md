@@ -19,3 +19,4 @@
 - Tests: use `async: true` when possible, follow ExUnit conventions, use `render_component/2` for component tests
 - Format with built-in formatter (.formatter.exs configures inputs and subdirectories)
 - Component naming: prefix with `dm_` (e.g., `dm_btn`, `dm_mdi`)
+- Umbrella project: run commands from root, they cascade to apps/* subdirectories

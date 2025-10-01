@@ -3,7 +3,7 @@
 @source '../../lib/**/*.ex';
 
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "duskmoonui";
 @plugin "@tailwindcss/typography";
 
 @import "./theme.css";

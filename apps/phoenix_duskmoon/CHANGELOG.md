@@ -309,7 +309,7 @@
 
 ### BREAKING CHANGES
 
-* * Update tailwindcss to 4.0 and daisyui to 5.0.
+* * Update tailwindcss to 4.0 and duskmoonui to 5.0.
 * Remove legacy `use PhoenixDuskmoon`
 
 # [5.2.0-beta.5](https://github.com/gsmlg-dev/phoenix-duskmoon-ui/compare/v5.2.0-beta.4...v5.2.0-beta.5) (2025-02-05)
@@ -383,7 +383,7 @@
 * Update bsi bootstrap icons. ([cb9354a](https://github.com/gsmlg-dev/phoenix-duskmoon-ui/commit/cb9354ad20c4d04303291f07af7319b4d959c059))
 * Update mdi material design icons. ([598222a](https://github.com/gsmlg-dev/phoenix-duskmoon-ui/commit/598222a45081989bb9106d6f63ef544819b21203))
 * Update new tailwind css. ([b9253df](https://github.com/gsmlg-dev/phoenix-duskmoon-ui/commit/b9253df07ccafdc87e05eb10dc91da21ba123866))
-* Update tailwind and daisyui. ([5129da5](https://github.com/gsmlg-dev/phoenix-duskmoon-ui/commit/5129da5963bda3fa0047940946a73b62f42a4760))
+* Update tailwind and duskmoonui. ([5129da5](https://github.com/gsmlg-dev/phoenix-duskmoon-ui/commit/5129da5963bda3fa0047940946a73b62f42a4760))
 * Use npm workspace. ([e5fa0a2](https://github.com/gsmlg-dev/phoenix-duskmoon-ui/commit/e5fa0a2254cee3f6071ee5da86692d5968479474))
 
 
@@ -536,7 +536,7 @@
 ### Bug Fixes
 
 * Fix styles. ([aac7a9d](https://github.com/gsmlg-dev/phoenix-duskmoon-ui/commit/aac7a9d569e6a59fb066d95d1a0c6707959ce774))
-* Optimize with daisyui. ([0dcc9be](https://github.com/gsmlg-dev/phoenix-duskmoon-ui/commit/0dcc9beebf3419877b60510d6072accd0fd7c389))
+* Optimize with duskmoonui. ([0dcc9be](https://github.com/gsmlg-dev/phoenix-duskmoon-ui/commit/0dcc9beebf3419877b60510d6072accd0fd7c389))
 
 
 ### Features
