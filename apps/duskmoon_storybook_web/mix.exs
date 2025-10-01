@@ -43,7 +43,7 @@ defmodule DuskmoonStorybookWeb.MixProject do
       {:phoenix_html, "~> 4.0"},
       {:phoenix_live_reload, "~> 1.4", only: :dev},
       {:phoenix_live_view, "~> 1.0"},
-      {:phoenix_storybook, "~> 0.7"},
+      {:phoenix_storybook, "~> 0.9"},
       {:phoenix_live_dashboard, "~> 0.7"},
       {:floki, ">= 0.30.0", only: :test},
       {:bun, "~> 1.4", runtime: Mix.env() == :dev},
