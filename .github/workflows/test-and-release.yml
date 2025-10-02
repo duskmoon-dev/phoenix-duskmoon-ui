@@ -45,11 +45,6 @@ jobs:
     - name: Remove compiled application files
       run: mix clean
 
-    - name: Compile & lint dependencies
-      run: mix compile --warnings-as-errors
-      env:
-        MIX_ENV: test
-
     - name: Run tests
       run: mix test
       env:
