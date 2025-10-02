@@ -1,3 +1,30 @@
+# [7.0.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v6.3.2...v7.0.0) (2025-10-02)
+
+
+### Bug Fixes
+
+* Fix storybook. ([640b03d](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/640b03d57826bb8bc46d432e07173f92040ec7d4))
+* Fix. ([5aa04e3](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/5aa04e309c2b068ca9006a5629d83017294788ab))
+* Fix. ([60be998](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/60be998f1ea056032cc020281d2dcba80d6e0676))
+* Resolve PhoenixStorybook compilation warning by adding content entries to index files ([577a887](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/577a8872c9626bfff3b9bf3406a7eca8275389fc))
+* Update dependencies to resolve compilation warnings ([6f9d050](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/6f9d0507c22093bab534f2d8b25eb9dc50e4ca41))
+
+
+### Code Refactoring
+
+* Replace daisyui with duskmoonui dependency ([3aace17](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/3aace172cec493c877318825bfc180bdda6415a1))
+
+
+### Features
+
+* Add comprehensive component tests for Button, Card, Icons, and Link ([3df36f7](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/3df36f7a33532ce935b6cc4b7395227b4088fc5e))
+* Add devenv development environment configuration ([6c010b9](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/6c010b9aa07ae66e472e112778849f3b2eb94b18))
+
+
+### BREAKING CHANGES
+
+* Update css library to duskmoonui instead of daisyui.
+
 ## [6.3.2](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v6.3.1...v6.3.2) (2025-05-29)
 
 
