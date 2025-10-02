@@ -1,6 +1,6 @@
 # PhoenixDuskmoon
 
-[![release](https://github.com/gsmlg-dev/phoenix-duskmoon-ui/actions/workflows/test-and-release.yml/badge.svg)](https://github.com/gsmlg-dev/phoenix-duskmoon-ui/actions/workflows/test-and-release.yml)
+[![release](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/actions/workflows/test-and-release.yml/badge.svg)](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/actions/workflows/test-and-release.yml)
 
 Provides Duskmoon UI for Phoenix project.
 

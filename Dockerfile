@@ -33,7 +33,7 @@ ARG RELEASE_VERSION=1.0.0
 LABEL maintainer="GSMLG <gsmlg.com@gmail.com>"
 LABEL RELEASE_VERSION="${RELEASE_VERSION}"
 
-LABEL org.opencontainers.image.source="https://github.com/gsmlg-dev/phoenix-duskmoon-ui"
+LABEL org.opencontainers.image.source="https://github.com/duskmoon-dev/phoenix-duskmoon-ui"
 LABEL org.opencontainers.image.description="Duskmoon UI Demo and Storybook"
 LABEL org.opencontainers.image.licenses=MIT
 

@@ -2,13 +2,13 @@
     "name": "phoenix-duskmoon-ui",
     "private": true,
     "description": "Duskmoon UI Umbrella Project",
-    "homepage": "https://github.com/gsmlg-dev/phoenix-duskmoon-ui#readme",
+    "homepage": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui#readme",
     "bugs": {
-      "url": "https://github.com/gsmlg-dev/phoenix-duskmoon-ui/issues"
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues"
     },
     "repository": {
       "type": "git",
-      "url": "git+https://github.com/gsmlg-dev/phoenix-duskmoon-ui.git"
+      "url": "git+https://github.com/duskmoon-dev/phoenix-duskmoon-ui.git"
     },
     "license": "see LICENSE.txt",
     "author": "Jonathan Gao",

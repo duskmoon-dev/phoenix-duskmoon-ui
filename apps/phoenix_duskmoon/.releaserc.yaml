@@ -1,4 +1,4 @@
-repositoryUrl: https://github.com/gsmlg-dev/phoenix-duskmoon-ui.git
+repositoryUrl: https://github.com/duskmoon-dev/phoenix-duskmoon-ui.git
 branches:
   - +([0-9])?(.{+([0-9]),x}).x
   - {name: '2.x', range: '2.x.x'}
