@@ -9,7 +9,7 @@ defmodule PhoenixDuskmoon.Component.CardTest do
     assert render_component(&dm_card/1, %{
              inner_block: %{inner_block: fn _, _ -> "Card content" end}
            }) ==
-             ~s[<div class="card ">\n  <div class="card-body ">\n    \n    Card content\n    \n  </div>\n</div>]
+             ~s[<div class="card ">\n  \n  <div class="card-body ">\n    \n    Card content\n    \n  </div>\n</div>]
   end
 
   test "renders card with custom class" do
@@ -17,7 +17,7 @@ defmodule PhoenixDuskmoon.Component.CardTest do
              class: "card-compact",
              inner_block: %{inner_block: fn _, _ -> "Compact card" end}
            }) ==
-             ~s[<div class="card card-compact">\n  <div class="card-body ">\n    \n    Compact card\n    \n  </div>\n</div>]
+             ~s[<div class="card card-compact">\n  \n  <div class="card-body ">\n    \n    Compact card\n    \n  </div>\n</div>]
   end
 
   test "renders card with custom body class" do
@@ -25,7 +25,7 @@ defmodule PhoenixDuskmoon.Component.CardTest do
              body_class: "p-4",
              inner_block: %{inner_block: fn _, _ -> "Custom padding" end}
            }) ==
-             ~s[<div class="card ">\n  <div class="card-body p-4">\n    \n    Custom padding\n    \n  </div>\n</div>]
+             ~s[<div class="card ">\n  \n  <div class="card-body p-4">\n    \n    Custom padding\n    \n  </div>\n</div>]
   end
 
   test "renders card with id" do
@@ -33,7 +33,7 @@ defmodule PhoenixDuskmoon.Component.CardTest do
              id: "test-card",
              inner_block: %{inner_block: fn _, _ -> "Test card" end}
            }) ==
-             ~s[<div id="test-card" class="card ">\n  <div class="card-body ">\n    \n    Test card\n    \n  </div>\n</div>]
+             ~s[<div id="test-card" class="card ">\n  \n  <div class="card-body ">\n    \n    Test card\n    \n  </div>\n</div>]
   end
 
   test "renders card with title" do

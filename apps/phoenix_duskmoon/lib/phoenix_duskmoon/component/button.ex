@@ -21,6 +21,26 @@ defmodule PhoenixDuskmoon.Component.Button do
   attr(:id, :any, required: false)
   attr(:class, :any, default: nil, doc: "the class of the button")
 
+  attr(:variant, :string,
+    default: nil,
+    doc:
+      "the color variant of the button (primary, secondary, accent, info, success, warning, error, ghost, link, outline)"
+  )
+
+  attr(:size, :string,
+    default: nil,
+    doc: "the size of the button (xs, sm, md, lg)"
+  )
+
+  attr(:shape, :string,
+    default: nil,
+    doc: "the shape of the button (square, circle)"
+  )
+
+  attr(:glass, :boolean, default: false, doc: "apply glass effect to the button")
+  attr(:loading, :boolean, default: false, doc: "show loading state")
+  attr(:disabled, :boolean, default: false, doc: "disable the button")
+
   attr(:noise, :boolean, default: false, doc: "the noise of the button")
   attr(:content, :string, default: "", doc: "the content of noise button")
 
@@ -62,7 +82,16 @@ defmodule PhoenixDuskmoon.Component.Button do
     ~H"""
     <button
       id={@id}
-      class={["btn", @class]}
+      class={[
+        "btn",
+        @variant && "btn-#{@variant}",
+        @size && "btn-#{@size}",
+        @shape && "btn-#{@shape}",
+        @glass && "glass",
+        @loading && "loading",
+        @disabled && "btn-disabled",
+        @class
+      ]}
       onclick={"document.getElementById('confirm-dialog-#{@id}').showModal()"}
       {@rest}
     ><%= render_slot(@inner_block) %></button>
@@ -127,7 +156,16 @@ defmodule PhoenixDuskmoon.Component.Button do
     ~H"""
     <button
       id={@id}
-      class={["btn", @class]}
+      class={[
+        "btn",
+        @variant && "btn-#{@variant}",
+        @size && "btn-#{@size}",
+        @shape && "btn-#{@shape}",
+        @glass && "glass",
+        @loading && "loading",
+        @disabled && "btn-disabled",
+        @class
+      ]}
       {@rest}
     ><%= render_slot(@inner_block) %></button>
     """

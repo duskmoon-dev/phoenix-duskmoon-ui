@@ -88,6 +88,17 @@ defmodule PhoenixDuskmoon.Component.Form do
   attr(:label, :string, default: nil)
   attr(:value, :any)
 
+  attr(:color, :string,
+    default: nil,
+    doc:
+      "the color variant of the input (primary, secondary, accent, info, success, warning, error)"
+  )
+
+  attr(:size, :string,
+    default: nil,
+    doc: "the size of the input (xs, sm, lg)"
+  )
+
   attr(:type, :string,
     default: "text",
     values: ~w(checkbox color date datetime-local email file hidden month number password
@@ -161,6 +172,8 @@ defmodule PhoenixDuskmoon.Component.Form do
           id={@id}
           class={[
             if(!@classic, do: "toggle"),
+            @color && "toggle-#{@color}",
+            @size && "toggle-#{@size}",
             @class
           ]}
           name={@name}
@@ -183,8 +196,11 @@ defmodule PhoenixDuskmoon.Component.Form do
           id={@id}
           name={@name}
           class={[
-            if(!@classic, do: "select select-bordered"),
-            @class
+            if(!@classic, do: "textarea textarea-bordered"),
+            @color && "textarea-#{@color}",
+            @size && "textarea-#{@size}",
+            @class,
+            @errors != [] && "textarea-error"
           ]}
           multiple={@multiple}
           {@rest}
@@ -210,10 +226,12 @@ defmodule PhoenixDuskmoon.Component.Form do
           >
             <input
               type="checkbox"
-              class={[
-                if(!@classic, do: "checkbox"),
-                @class
-              ]}
+          class={[
+            if(!@classic, do: "checkbox"),
+            @color && "checkbox-#{@color}",
+            @size && "checkbox-#{@size}",
+            @class
+          ]}
               name={"#{@name}[]"}
               checked={Enum.member?(if(is_list(@value), do: @value, else: []), opt_value)}
               value={opt_value}
@@ -237,7 +255,9 @@ defmodule PhoenixDuskmoon.Component.Form do
             <input
               type="radio"
               class={[
-                if(!@classic, do: "radio"),
+                if(!@classic, do: "checkbox"),
+                @color && "checkbox-#{@color}",
+                @size && "checkbox-#{@size}",
                 @class
               ]}
               name={@name}
@@ -261,11 +281,12 @@ defmodule PhoenixDuskmoon.Component.Form do
         <textarea
           id={@id}
           name={@name}
-          class={[
-            if(!@classic, do: "textarea textarea-bordered"),
-            @class,
-            @errors != [] && "textarea-error"
-          ]}
+              class={[
+                if(!@classic, do: "radio"),
+                @color && "radio-#{@color}",
+                @size && "radio-#{@size}",
+                @class
+              ]}
           {@rest}
         ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
         <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
@@ -287,6 +308,8 @@ defmodule PhoenixDuskmoon.Component.Form do
           class={[
             @class,
             if(!@classic, do: "file-input file-input-bordered"),
+            @color && "file-input-#{@color}",
+            @size && "file-input-#{@size}",
             @errors != [] && "file-input-error"
           ]}
           {@rest}
@@ -311,6 +334,8 @@ defmodule PhoenixDuskmoon.Component.Form do
           class={[
             @class,
             if(!@classic, do: "input input-bordered"),
+            @color && "input-#{@color}",
+            @size && "input-#{@size}",
             @errors != [] && "input-error"
           ]}
           {@rest}
@@ -350,6 +375,55 @@ defmodule PhoenixDuskmoon.Component.Form do
       <.dm_bsi name="exclamation-circle" class="h-3 w-3 flex-none" />
       <%= render_slot(@inner_block) %>
     </span>
+    """
+  end
+
+  @doc """
+  Generates an alert component using daisyui classes.
+
+  ## Examples
+
+      <.dm_alert variant="info">
+        This is an informational message.
+      </.dm_alert>
+      
+      <.dm_alert variant="error" icon="exclamation-triangle">
+        Something went wrong!
+      </.dm_alert>
+  """
+  attr(:id, :any, default: nil)
+  attr(:class, :any, default: nil)
+
+  attr(:variant, :string,
+    default: "info",
+    values: ~w(info success warning error),
+    doc: "the alert variant"
+  )
+
+  attr(:icon, :string, default: nil, doc: "override default icon")
+  attr(:title, :string, default: nil, doc: "alert title")
+  slot(:inner_block, required: true)
+
+  def dm_alert(assigns) do
+    assigns =
+      assign_new(assigns, :icon, fn ->
+        case assigns.variant do
+          "info" -> "information-circle"
+          "success" -> "check-circle"
+          "warning" -> "exclamation-triangle"
+          "error" -> "exclamation-circle"
+          _ -> "information-circle"
+        end
+      end)
+
+    ~H"""
+    <div id={@id} class={["alert", "alert-#{@variant}", @class]}>
+      <.dm_mdi name={@icon} class="h-5 w-5 flex-none" />
+      <div>
+        <h3 :if={@title} class="font-bold"><%= @title %></h3>
+        <div class="text-sm"><%= render_slot(@inner_block) %></div>
+      </div>
+    </div>
     """
   end
 

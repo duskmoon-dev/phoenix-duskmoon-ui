@@ -58,10 +58,14 @@ defmodule PhoenixDuskmoon.Component.Tab do
     """
   )
 
-  attr(:active_tab_class, :any,
-    doc: """
-    class of active tab
-    """
+  attr(:variant, :string,
+    default: nil,
+    doc: "tab style variant (lifted, bordered, boxed)"
+  )
+
+  attr(:size, :string,
+    default: nil,
+    doc: "tab size (xs, sm, lg)"
   )
 
   attr(:content_class, :any,
@@ -94,64 +98,54 @@ defmodule PhoenixDuskmoon.Component.Tab do
   end
 
   def dm_tab(assigns) do
-    assigns =
-      assigns
-      |> assign_new(:active_tab_class, fn ->
-        if assigns[:orientation] == "horizontal" do
-          "text-blue-400 border-x-0 border-t-0 border-b border-solid border-blue-400"
-        else
-          "text-blue-400 border-y-0 border-l-0 border-r border-solid border-blue-400"
-        end
-      end)
-
     ~H"""
     <section
       id={@id}
       class={[
-        "flex gap-2",
-        "w-full px-4",
-        if(@orientation == "horizontal", do: "flex-col", else: "flex-row"),
+        "tabs",
+        @variant && "tabs-#{@variant}",
+        @size && "tabs-#{@size}",
+        if(@orientation == "horizontal", do: "tabs-lifted", else: "tabs-vertical"),
         @class
       ]}
     >
-      <header
+      <div
         class={[
           "flex justify-start items-center gap-2 sticky top-0",
           if(@orientation == "horizontal", do: "flex-row", else: "flex-col"),
           @header_class
         ]}
       >
-      <%= for {tab, i} <- Enum.with_index(@tab) do %>
-        <span
-          id={Map.get(tab, :id, false)}
-          class={[
-            "flex flex-row",
-            "py-4 px-2",
-            Map.get(tab, :class, ""),
-            if(@active_tab_name != "",
-              do: if(@active_tab_name == Map.get(tab, :name, ""),
-                do: @active_tab_class,
-                else: "cursor-pointer"),
-              else: if(@active_tab_index == i,
-                do: @active_tab_class,
-                else: "cursor-pointer"))
-          ]}
-          phx-click={Map.get(tab, :phx_click, nil)}
-        >
-          <%= render_slot(tab) %>
-        </span>
-      <% end %>
-      </header>
+        <%= for {tab, i} <- Enum.with_index(@tab) do %>
+          <a
+            id={Map.get(tab, :id, false)}
+            class={[
+              "tab",
+              Map.get(tab, :class, ""),
+              if(@active_tab_name != "",
+                do: if(@active_tab_name == Map.get(tab, :name, ""),
+                  do: "tab-active",
+                  else: ""),
+                else: if(@active_tab_index == i,
+                  do: "tab-active",
+                  else: ""))
+            ]}
+            phx-click={Map.get(tab, :phx_click, nil)}
+          >
+            <%= render_slot(tab) %>
+          </a>
+        <% end %>
+      </div>
       <%= for {tab_content, i} <- Enum.with_index(@tab_content) do %>
         <%= if @active_tab_name != "" do %>
           <%= if @active_tab_name == Map.get(tab_content, :name, "") do %>
-            <div id={Map.get(tab_content, :id, false)} class={Map.get(tab_content, :class, "")}>
+            <div id={Map.get(tab_content, :id, false)} class={["tab-content", Map.get(tab_content, :class, "")]}>
             <%= render_slot(tab_content) %>
             </div>
           <% end %>
         <% else %>
           <%= if @active_tab_index == i do %>
-            <div id={Map.get(tab_content, :id, false)} class={Map.get(tab_content, :class, "")}>
+            <div id={Map.get(tab_content, :id, false)} class={["tab-content", Map.get(tab_content, :class, "")]}>
             <%= render_slot(tab_content) %>
             </div>
           <% end %>

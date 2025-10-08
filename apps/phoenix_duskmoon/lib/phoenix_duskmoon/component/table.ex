@@ -53,6 +53,31 @@ defmodule PhoenixDuskmoon.Component.Table do
     """
   )
 
+  attr(:zebra, :boolean,
+    default: false,
+    doc: "show zebra striping"
+  )
+
+  attr(:pin_rows, :boolean,
+    default: false,
+    doc: "pin rows for sticky positioning"
+  )
+
+  attr(:pin_cols, :boolean,
+    default: false,
+    doc: "pin columns for sticky positioning"
+  )
+
+  attr(:size, :string,
+    default: nil,
+    doc: "table size (xs, sm, md, lg)"
+  )
+
+  attr(:compact, :boolean,
+    default: false,
+    doc: "make table more compact"
+  )
+
   attr(:data, :list,
     default: [],
     doc: """
@@ -127,6 +152,11 @@ defmodule PhoenixDuskmoon.Component.Table do
       class={[
         "table border-collapse border-spacing-0",
         if(@border, do: "border"),
+        if(@zebra, do: "table-zebra"),
+        if(@pin_rows, do: "table-pin-rows"),
+        if(@pin_cols, do: "table-pin-cols"),
+        @size && "table-#{@size}",
+        if(@compact, do: "table-compact"),
         @class,
       ]}
     >
