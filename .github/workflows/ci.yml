@@ -12,8 +12,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - elixir: 1.16
-            otp: 26
+          - elixir: 1.18
+            otp: 28
           - elixir: 1.18
             otp: 27
 
@@ -21,7 +21,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Set up Elixir
       uses: erlef/setup-elixir@v1

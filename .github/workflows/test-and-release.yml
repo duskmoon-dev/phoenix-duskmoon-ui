@@ -15,8 +15,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - elixir: 1.16
-            otp: 26
+          - elixir: 1.18
+            otp: 28
           - elixir: 1.18
             otp: 27
 
@@ -24,7 +24,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Set up Elixir
       uses: erlef/setup-beam@v1
@@ -64,7 +64,7 @@ jobs:
           access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 💊 Setup Elixir
         uses: erlef/setup-beam@v1
@@ -101,7 +101,7 @@ jobs:
     needs: [ release ]
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
