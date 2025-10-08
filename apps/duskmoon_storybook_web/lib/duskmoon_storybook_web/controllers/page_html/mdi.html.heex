@@ -9,6 +9,9 @@
     <span class="text-4xl text-blue-600 hover:text-blue-400">
       Material Design Icons
     </span>
+    <span class="ml-4 text-sm text-base-content/60">
+      <%= length(@mdi_icons) %> of <%= PhoenixDuskmoon.Component.Icons.mdi_icons() |> length() %> icons
+    </span>
   </:title>
   <div class="mockup-window bg-base-300 border">
     <.dm_markdown
@@ -17,70 +20,97 @@
         ## Example
 
         ```html
-        <!-- icon_name is matrial icon name -->
+        <!-- icon_name is material icon name -->
         <.dm_mdi name={icon_name} class="w-12 h-12" />
         ```
         """}
     />
   </div>
-  <div class="flex flex-row mt-4 mb-2">
-    <.dm_form for={@conn} action={~p"/mdi"} method="get" class="input input-bordered pr-0">
+  <div class="flex flex-row mt-4 mb-2 gap-2">
+    <.dm_form for={@conn} action={~p"/mdi"} method="get" class="input input-bordered pr-0 flex-1">
       <.dm_input field_class="flex" label="Icon Name" name="filter" value={@filter} classic={true} />
       <button type="submit" class="btn btn-primary">Search</button>
     </.dm_form>
+    <button 
+      id="toggle-view" 
+      class="btn btn-ghost"
+      onclick="toggleIconView()"
+    >
+      <.dm_bsi name="grid" class="w-4 aspect-square" />
+    </button>
   </div>
-  <script>
-    function fallbackCopyTextToClipboard(text) {
-      var textArea = document.createElement("textarea");
-      textArea.value = text;
-      
-      // Avoid scrolling to bottom
-      textArea.style.top = "0";
-      textArea.style.left = "0";
-      textArea.style.position = "fixed";
-
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-
-      try {
-        var successful = document.execCommand('copy');
-        var msg = successful ? 'successful' : 'unsuccessful';
-        console.log('Fallback: Copying text command was ' + msg);
-      } catch (err) {
-        console.error('Fallback: Oops, unable to copy', err);
-      }
-
-      document.body.removeChild(textArea);
-    }
-    function copyTextToClipboard(text) {
-      if (!navigator.clipboard) {
-        fallbackCopyTextToClipboard(text);
-        return;
-      }
-      navigator.clipboard.writeText(text).then(function() {
-        console.log('Async: Copying to clipboard was successful!');
-      }, function(err) {
-        console.error('Async: Could not copy text: ', err);
-      });
-    }
-  </script>
-  <div class="grid grid-cols-auto-fill-[6rem] auto-fill-[6rem] gap-4">
+  
+  <div id="icon-container" class="grid grid-cols-auto-fill-[8rem] gap-3 max-h-[70vh] overflow-y-auto p-2">
     <div 
       :for={icon_name <- @mdi_icons}
-      class="border flex flex-col w-full h-full items-center justify-between p-4"
+      class="border border-base-300 hover:border-primary rounded-lg flex flex-col items-center justify-center p-3 transition-all hover:shadow-md cursor-pointer group"
+      onclick={"copyIconName('#{icon_name}', this)"}
     >
-      <div class="text-primary/60 text-sm">
-        <embed class="min-w-max"><%= icon_name %></embed>
-        <a
-          class="btn btn-xs btn-ghost btn-primary"
-          onclick={"copyTextToClipboard('#{icon_name}')"}>
-          <.dm_bsi name="clipboard" class="w-3 aspect-square" />
-        </a>
+      <div class="text-primary/60 text-xs font-mono mb-2 text-center break-all">
+        <%= icon_name %>
       </div>
-      <div class="flex items-center justify-center">
-        <.dm_mdi name={icon_name} class="w-16 aspect-square" />
+      <div class="flex items-center justify-center mb-2">
+        <.dm_mdi name={icon_name} class="w-12 h-12 text-base-content group-hover:text-primary transition-colors" />
       </div>
+      <button 
+        class="btn btn-xs btn-ghost opacity-0 group-hover:opacity-100 transition-opacity"
+        onclick={"event.stopPropagation(); copyIconName('#{icon_name}', this.parentElement)"}
+      >
+        <.dm_bsi name="clipboard" class="w-3 aspect-square" />
+      </button>
     </div>
   </div>
+  
+  <div id="loading-indicator" class="hidden fixed inset-0 bg-base-100/80 flex items-center justify-center z-50">
+    <div class="loading loading-spinner loading-lg"></div>
+  </div>
 </.dm_card>
+
+<script>
+  let currentView = 'grid';
+  let searchTimeout;
+  
+  function toggleIconView() {
+    const container = document.getElementById('icon-container');
+    const toggleBtn = document.getElementById('toggle-view');
+    
+    if (currentView === 'grid') {
+      container.className = 'flex flex-col gap-2 max-h-[70vh] overflow-y-auto p-2';
+      currentView = 'list';
+    } else {
+      container.className = 'grid grid-cols-auto-fill-[8rem] gap-3 max-h-[70vh] overflow-y-auto p-2';
+      currentView = 'grid';
+    }
+  }
+  
+  function copyIconName(iconName, element) {
+    copyTextToClipboard(iconName);
+    showCopyFeedback(element);
+    
+    // Add visual feedback
+    element.classList.add('ring-2', 'ring-success', 'ring-opacity-50');
+    setTimeout(() => {
+      element.classList.remove('ring-2', 'ring-success', 'ring-opacity-50');
+    }, 1000);
+  }
+  
+  // Debounced search functionality
+  function setupDebouncedSearch() {
+    const searchInput = document.querySelector('input[name="filter"]');
+    if (searchInput) {
+      searchInput.addEventListener('input', function(e) {
+        clearTimeout(searchTimeout);
+        const loadingIndicator = document.getElementById('loading-indicator');
+        
+        searchTimeout = setTimeout(() => {
+          loadingIndicator.classList.remove('hidden');
+          const form = e.target.closest('form');
+          form.submit();
+        }, 300);
+      });
+    }
+  }
+  
+  // Initialize when DOM is ready
+  document.addEventListener('DOMContentLoaded', setupDebouncedSearch);
+</script>
