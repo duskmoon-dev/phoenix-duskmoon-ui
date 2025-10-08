@@ -20,3 +20,9 @@
 - Format with built-in formatter (.formatter.exs configures inputs and subdirectories)
 - Component naming: prefix with `dm_` (e.g., `dm_btn`, `dm_mdi`)
 - Umbrella project: run commands from root, they cascade to apps/* subdirectories
+
+## Frontend Dependencies & Styling
+- This project uses the `duskmoonui` npm package as the Tailwind CSS theme
+- `duskmoonui` extends `daisyui` with additional tertiary color support
+- The theme provides custom component styles and color variants for the Phoenix Duskmoon UI components
+- When working with styles, reference the duskmoonui documentation for available utility classes and component modifiers
