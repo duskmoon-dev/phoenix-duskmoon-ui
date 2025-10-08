@@ -16,7 +16,8 @@ defmodule DuskmoonStorybookWeb.MixProject do
       compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      listeners: [Phoenix.CodeReloader]
     ]
   end
 
@@ -31,8 +32,8 @@ defmodule DuskmoonStorybookWeb.MixProject do
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_), do: ["lib"]
+  defp elixirc_paths(:test), do: ["lib", "test/support", "storybook"]
+  defp elixirc_paths(_), do: ["lib", "storybook"]
 
   # Specifies your project dependencies.
   #
