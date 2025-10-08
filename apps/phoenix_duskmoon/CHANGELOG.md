@@ -1,3 +1,11 @@
+## [7.0.1](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.0.0...v7.0.1) (2025-10-08)
+
+
+### Bug Fixes
+
+* Disable PhoenixStorybook to resolve CI/CD compilation failure ([3f549ce](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/3f549ce4f087310a823ab4a9f3eb0a9bde6b2f5d))
+* Update Phoenix dependencies and complete Storybook index configuration ([c442095](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/c44209542d2171869ea31578930392933b40268a))
+
 # [7.0.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v6.3.2...v7.0.0) (2025-10-02)
 
 
