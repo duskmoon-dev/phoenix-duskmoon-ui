@@ -21,7 +21,7 @@ config :duskmoon_storybook_web, Storybook,
   css_path: "/assets/app.css"
 
 config :tailwind,
-  version: "4.0.6",
+  version: "4.1.11",
   duskmoon: [
     args: ~w(
       --input=assets/css/phoenix_duskmoon.css
@@ -40,7 +40,7 @@ config :tailwind,
   ]
 
 config :bun,
-  version: "1.2.0",
+  version: "1.2.13",
   duskmoon: [
     args: ~w(build assets/js/phoenix_duskmoon.js --outdir=priv/static/),
     cd: Path.expand("../apps/phoenix_duskmoon", __DIR__),

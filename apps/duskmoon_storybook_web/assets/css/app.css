@@ -2,6 +2,7 @@
 @source '../js/**/*.js';
 @source '../../lib/**/*.exs';
 @source '../../lib/**/*.*ex';
+@source '../../storybook/**/*.exs';
 @source '../../../phoenix_duskmoon/assets/**/*.css';
 @source '../../../phoenix_duskmoon/lib/**/*.*ex';
 
