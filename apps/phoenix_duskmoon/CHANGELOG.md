@@ -1,3 +1,18 @@
+# [8.0.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.0.1...v8.0.0) (2025-10-13)
+
+
+### Features
+
+* Add 12 new advanced form input types with comprehensive storybook coverage ([856cebf](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/856cebfecbaa67dfdb5a2330acd8aaa04421d95b))
+* Add comprehensive Skeleton component and fix storybook configuration ([6e5b730](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/6e5b730240cfea521df7589bf79edb3b46d2c5aa))
+* Enhance components with comprehensive duskmoonui integration ([60fb90f](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/60fb90fc92c5bb3e709b3a3bbcb419127787ff3e))
+* Optimize /hook, /mdi, and /bsi pages with performance and UX improvements ([dc7e1b0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/dc7e1b0dc8c3761947b92f2ee7ccdd1211ebd10d))
+
+
+### BREAKING CHANGES
+
+* Storybook moved from lib/storybook to storybook/ directory
+
 ## [7.0.1](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.0.0...v7.0.1) (2025-10-08)
 
 
