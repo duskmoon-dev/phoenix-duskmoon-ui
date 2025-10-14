@@ -1,3 +1,10 @@
+# [8.1.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v8.0.0...v8.1.0) (2025-10-14)
+
+
+### Features
+
+* Refactor left_menu components with daisyUI integration and comprehensive test coverage ([3efb4ad](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/3efb4adf531e29fefead182d51ab67580ae8806e))
+
 # [8.0.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.0.1...v8.0.0) (2025-10-13)
 
 
