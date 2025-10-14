@@ -3,55 +3,71 @@ defmodule Storybook.Components.LeftMenu do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.LeftMenu.dm_left_menu/1
-  def description, do: "A left menu element."
+  def description, do: "A left menu element using daisyUI menu system."
 
   def variations do
     [
       %Variation{
         id: :default,
         attributes: %{
-          class: "shadow-xl",
-          active: "left_menu",
-          menus: [
-            {"Components",
-             [
-               {"actionbar", "Actionbar", "/storybook/components/actionbar"},
-               {"card", "Card", "/storybook/components/card"},
-               {"left_menu", "Left Menu", "/storybook/components/left_menu"},
-               {"markdown", "Markdown", "/storybook/components/markdown"},
-               {"pagination", "Pagination", "/storybook/components/pagination"},
-               {"table", "Table", "/storybook/components/table"}
-             ]}
-          ]
+          class: "w-56",
+          active: "dashboard"
         },
         slots: [
-          "<:title>Menu Demo Components</:title>",
-          "<:menu><a>Dashboard</a></:menu>",
-          """
-          <:menu>
-            <h2 class="menu-title">Title</h2>
-            <ul>
-              <li><a>Submenu 1</a></li>
-              <li><a>Submenu 2</a></li>
-            </ul>
-          </:menu>
-          <:menu>
-          <a>Parent</a>
-          <ul>
-            <li><a>Submenu 1</a></li>
-            <li><a>Submenu 2</a></li>
-          </ul>
-          </:menu>
-          <:menu>
-          <details open>
-            <summary>Parent</summary>
-            <ul>
-              <li><a>Submenu 1</a></li>
-              <li><a>Submenu 2</a></li>
-            </ul>
-          </details>
-          </:menu>
-          """
+          "<:title>Navigation</:title>",
+          "<:menu id=\"dashboard\">Dashboard</:menu>",
+          "<:menu id=\"components\">Components</:menu>",
+          "<:menu id=\"settings\">Settings</:menu>"
+        ]
+      },
+      %Variation{
+        id: :with_active_state,
+        attributes: %{
+          class: "w-56",
+          active: "components"
+        },
+        slots: [
+          "<:title>Menu with Active State</:title>",
+          "<:menu id=\"dashboard\">Dashboard</:menu>",
+          "<:menu id=\"components\">Components (Active)</:menu>",
+          "<:menu id=\"settings\">Settings</:menu>"
+        ]
+      },
+      %Variation{
+        id: :with_disabled_items,
+        attributes: %{
+          class: "w-56"
+        },
+        slots: [
+          "<:title>Menu with Disabled Items</:title>",
+          "<:menu>Enabled Item</:menu>",
+          "<:menu disabled>Disabled Item</:menu>",
+          "<:menu>Another Enabled Item</:menu>"
+        ]
+      },
+      %Variation{
+        id: :sizes,
+        attributes: %{
+          size: "sm",
+          class: "w-56"
+        },
+        slots: [
+          "<:title>Small Menu</:title>",
+          "<:menu>Small Item 1</:menu>",
+          "<:menu>Small Item 2</:menu>"
+        ]
+      },
+      %Variation{
+        id: :horizontal,
+        attributes: %{
+          horizontal: true,
+          class: "w-full"
+        },
+        slots: [
+          "<:menu>Home</:menu>",
+          "<:menu>Components</:menu>",
+          "<:menu>Documentation</:menu>",
+          "<:menu>About</:menu>"
         ]
       }
     ]
