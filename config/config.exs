@@ -13,7 +13,7 @@ config :duskmoon_storybook_web, DuskmoonStorybookWeb.Endpoint,
   pubsub_server: DuskmoonStorybook.PubSub,
   live_view: [signing_salt: "HkF5qV0r"]
 
-config :duskmoon_storybook_web, Storybook,
+config :duskmoon_storybook_web, DuskmoonStorybookWeb.Storybook,
   content_path: Path.expand("../apps/duskmoon_storybook_web/storybook", __DIR__),
   otp_app: :duskmoon_storybook_web,
   title: "Phoenix Duskmoon UI Storybook",
