@@ -4,7 +4,7 @@ defmodule PhoenixDuskmoon.Component.Card do
   """
   use PhoenixDuskmoon.Component, :html
 
-  import PhoenixDuskmoon.Component.Icons
+  import PhoenixDuskmoon.Component.Form
 
   # alias Phoenix.LiveView.JS
 
@@ -46,6 +46,19 @@ defmodule PhoenixDuskmoon.Component.Card do
     """
   )
 
+  attr(:variant, :string,
+    default: nil,
+    doc: "card layout variant (compact, side, bordered, glass)"
+  )
+
+  attr(:shadow, :string,
+    default: nil,
+    doc: "card shadow size (none, sm, md, lg, xl, 2xl)"
+  )
+
+  attr(:image, :string, default: nil, doc: "card image URL")
+  attr(:image_alt, :string, default: "", doc: "card image alt text")
+
   slot(:title,
     required: false,
     doc: """
@@ -72,9 +85,16 @@ defmodule PhoenixDuskmoon.Component.Card do
       id={@id}
       class={[
         "card",
+        @variant && "card-#{@variant}",
+        @shadow && "shadow-#{@shadow}",
         @class
       ]}
     >
+      <%= if @image do %>
+        <figure>
+          <img src={@image} alt={@image_alt} />
+        </figure>
+      <% end %>
       <div class={["card-body", @body_class]}>
         <div
           :for={title <- @title}
@@ -116,6 +136,19 @@ defmodule PhoenixDuskmoon.Component.Card do
   attr(:body_class, :any, default: "")
   attr(:skeleton_class, :any, default: "")
   attr(:assign, :any, default: nil)
+
+  attr(:variant, :string,
+    default: nil,
+    doc: "card layout variant (compact, side, bordered, glass)"
+  )
+
+  attr(:shadow, :string,
+    default: nil,
+    doc: "card shadow size (none, sm, md, lg, xl, 2xl)"
+  )
+
+  attr(:image, :string, default: nil, doc: "card image URL")
+  attr(:image_alt, :string, default: "", doc: "card image alt text")
   slot(:inner_block, required: true)
 
   slot(:title,
@@ -142,7 +175,12 @@ defmodule PhoenixDuskmoon.Component.Card do
     ~H"""
     <.async_result assign={@assign}>
       <:loading>
-        <div id={@id} class={["card", @class]}>
+        <div id={@id} class={["card", @variant && "card-#{@variant}", @shadow && "shadow-#{@shadow}", @class]}>
+          <%= if @image do %>
+            <figure>
+              <div class={["skeleton", @skeleton_class]}></div>
+            </figure>
+          <% end %>
           <div class={["card-body", @body_class]}>
             <div
               :for={title <- @title}
@@ -159,7 +197,12 @@ defmodule PhoenixDuskmoon.Component.Card do
         </div>
       </:loading>
       <:failed :let={reason}>
-        <div id={@id} class={["card", @class]}>
+        <div id={@id} class={["card", @variant && "card-#{@variant}", @shadow && "shadow-#{@shadow}", @class]}>
+          <%= if @image do %>
+            <figure>
+              <div class={["skeleton", @skeleton_class]}></div>
+            </figure>
+          <% end %>
           <div class={["card-body", @body_class]}>
             <div
               :for={title <- @title}
@@ -171,12 +214,9 @@ defmodule PhoenixDuskmoon.Component.Card do
             >
               <%= render_slot(title) %>
             </div>
-            <div role="alert" class="alert alert-error shrink-0">
-              <.dm_bsi name="exclamation-circle" class="w-5 h-5" />
-              <div class="flex flex-col">
-                <span class=""><%= reason |> inspect() %></span>
-              </div>
-            </div>
+            <.dm_alert variant="error">
+              <%= reason |> inspect() %>
+            </.dm_alert>
           </div>
         </div>
       </:failed>
@@ -184,9 +224,16 @@ defmodule PhoenixDuskmoon.Component.Card do
         id={@id}
         class={[
           "card",
+          @variant && "card-#{@variant}",
+          @shadow && "shadow-#{@shadow}",
           @class
         ]}
       >
+        <%= if @image do %>
+          <figure>
+            <img src={@image} alt={@image_alt} />
+          </figure>
+        <% end %>
         <div class={["card-body", @body_class]}>
           <div
             :for={title <- @title}

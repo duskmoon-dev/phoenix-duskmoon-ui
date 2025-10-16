@@ -13,15 +13,15 @@ config :duskmoon_storybook_web, DuskmoonStorybookWeb.Endpoint,
   pubsub_server: DuskmoonStorybook.PubSub,
   live_view: [signing_salt: "HkF5qV0r"]
 
-config :duskmoon_storybook_web, Storybook,
-  content_path: Path.expand("../apps/duskmoon_storybook_web/lib/storybook", __DIR__),
+config :duskmoon_storybook_web, DuskmoonStorybookWeb.Storybook,
+  content_path: Path.expand("../apps/duskmoon_storybook_web/storybook", __DIR__),
   otp_app: :duskmoon_storybook_web,
   title: "Phoenix Duskmoon UI Storybook",
   js_path: "/assets/app.js",
   css_path: "/assets/app.css"
 
 config :tailwind,
-  version: "4.0.6",
+  version: "4.1.11",
   duskmoon: [
     args: ~w(
       --input=assets/css/phoenix_duskmoon.css
@@ -40,7 +40,7 @@ config :tailwind,
   ]
 
 config :bun,
-  version: "1.2.0",
+  version: "1.2.13",
   duskmoon: [
     args: ~w(build assets/js/phoenix_duskmoon.js --outdir=priv/static/),
     cd: Path.expand("../apps/phoenix_duskmoon", __DIR__),

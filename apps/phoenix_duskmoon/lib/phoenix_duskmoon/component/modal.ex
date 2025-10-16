@@ -35,6 +35,26 @@ defmodule PhoenixDuskmoon.Component.Modal do
     doc: "Hide top right close button"
   )
 
+  attr(:position, :string,
+    default: nil,
+    doc: "Modal position (top, middle, bottom)"
+  )
+
+  attr(:backdrop, :boolean,
+    default: false,
+    doc: "Apply backdrop blur effect"
+  )
+
+  attr(:size, :string,
+    default: nil,
+    doc: "Modal size (tiny, small, medium, large, huge)"
+  )
+
+  attr(:responsive, :boolean,
+    default: false,
+    doc: "Make modal responsive"
+  )
+
   slot(:trigger, doc: "Modal trigger")
 
   slot(:title, doc: "Modal title") do
@@ -54,14 +74,20 @@ defmodule PhoenixDuskmoon.Component.Modal do
 
     ~H"""
     <%= render_slot(@trigger, @id) %>
-    <dialog
-      id={@id}
-      class={[
-        "modal",
-        @class
-      ]}
-    >
-      <div class="modal-box">
+     <dialog
+       id={@id}
+       class={[
+         "modal",
+         @position && "modal-#{@position}",
+         @backdrop && "modal-backdrop-blur",
+         @class
+       ]}
+     >
+       <div class={[
+         "modal-box",
+         @size && "modal-#{@size}",
+         @responsive && "modal-responsive"
+       ]}>
         <%= unless @hide_close do %>
         <form
           class="absolute right-2 top-2 cursor-pointer"

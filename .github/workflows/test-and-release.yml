@@ -2,12 +2,8 @@ name: test-and-release
 on:
   push:
     branches:
-      - 2.x
       - main
-      - alpha
-      - beta
-      - next
-      - next-major
+
 jobs:
   tests:
     name: Run tests (Elixir ${{matrix.elixir}}, OTP ${{matrix.otp}})

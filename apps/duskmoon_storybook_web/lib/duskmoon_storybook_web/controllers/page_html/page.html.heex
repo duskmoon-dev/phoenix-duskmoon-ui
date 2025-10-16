@@ -1,25 +1,25 @@
 <.dm_page_header
   class={[
     "bg-gradient-to-br from-[#ff6f61] to-[#639]",
-    "aniamite-bg",
+    "animate-bg",
     "text-slate-200 h-[680px] py-6"
   ]}
   nav_class={["bg-gradient-to-br from-[#ff6f61] to-[#639] text-slate-200 shadow"]}
 >
   <:menu to={~p"/"} class="border-b-2 border-slate-50">Home</:menu>
-  <:menu to={~p"/neumorphic"} class="opacity-60">Neumorphic</:menu>
-  <:menu to={~p"/hook"} class="opacity-60">Hook</:menu>
-  <:menu to={~p"/mdi"} class="opacity-60">MDI</:menu>
-  <:menu to={~p"/bsi"} class="opacity-60">BSI</:menu>
-  <:menu to={~p"/fun"} class="opacity-60">Fun</:menu>
-  <:menu to={~p"/storybook"} class="opacity-60">Storybook</:menu>
+  <:menu to={~p"/neumorphic"} class="opacity-60 hover:opacity-100 transition-opacity">Neumorphic</:menu>
+  <:menu to={~p"/hook"} class="opacity-60 hover:opacity-100 transition-opacity">Hook</:menu>
+  <:menu to={~p"/mdi"} class="opacity-60 hover:opacity-100 transition-opacity">MDI</:menu>
+  <:menu to={~p"/bsi"} class="opacity-60 hover:opacity-100 transition-opacity">BSI</:menu>
+  <:menu to={~p"/fun"} class="opacity-60 hover:opacity-100 transition-opacity">Fun</:menu>
+  <:menu to={~p"/storybook"} class="opacity-60 hover:opacity-100 transition-opacity">Storybook</:menu>
 
-  <:user_profile class="flex items-center">
-    <.dm_theme_switcher />
-    <.link href={"https://github.com/duskmoon-dev/phoenix-duskmoon-ui"}>
+   <:user_profile class="flex items-center gap-4">
+     <.dm_theme_switcher />
+    <.link href={"https://github.com/duskmoon-dev/phoenix-duskmoon-ui"} aria-label="GitHub Repository">
       <.dm_mdi name="github" class="w-12 h-12" />
     </.link>
-  </:user_profile>
+   </:user_profile>
 
   <h1 class={[
     "text-center font-bold text-slate-300 select-none",
@@ -34,7 +34,7 @@
   ]}>
     Duskmoon UI for Phoenix Framework
   </p>
-  <.link href="/#hook" class="my-2 md:my-4 px-6 py-2 text-xl md:text-2xl bg-rose-400 rounded-lg shadow-md hover:shadow-2xl">
+  <.link href="/#hook" class="my-2 md:my-4 px-6 py-2 text-xl md:text-2xl bg-rose-400 rounded-lg shadow-md hover:shadow-2xl transition-all duration-300 hover:scale-105">
     Learn More
   </.link>
 </.dm_page_header>
@@ -44,120 +44,218 @@
   <div class={[
     "page-section"
   ]}>
-    <a name="hook" />
-    <div class="container mx-auto px-4 flex flex-row justify-around">
-      <div class="flex flex-col justify-center">
-        <h3 class="font-bold text-[clamp(1.25rem,4vw,2.25rem)] my-4">Component Mount Hook - <i class="text-accent">WebComponentHook</i></h3>
-        <p class="my-2 text-lg text-info/70	">
-          Binding custom element's custom events to phoenix live events.
-        </p>
-        <p class="my-2 text-lg text-info/70	">
-          Binding phoenix live events to custom element's custom action.
-        </p>
-      </div>
-      <div class="flex justify-center items-center aspect-square min-w-40 [width:clamp(10rem,30vw,20rem)]">
-        <.dm_mdi name="webhook" class="w-full aspect-square" />
-      </div>
-    </div>
+     <section id="hook" aria-labelledby="hook-heading">
+       <div class="container mx-auto px-4 flex flex-row justify-around">
+         <div class="flex flex-col justify-center">
+           <h2 id="hook-heading" class="font-bold text-[clamp(1.25rem,4vw,2.25rem)] my-4">
+             Component Mount Hook - <span class="text-accent">WebComponentHook</span>
+           </h2>
+           <p class="my-2 text-lg text-info/70">
+             Binding custom element's custom events to phoenix live events.
+           </p>
+           <p class="my-2 text-lg text-info/70">
+             Binding phoenix live events to custom element's custom action.
+           </p>
+         </div>
+         <div class="flex justify-center items-center aspect-square min-w-40 [width:clamp(10rem,30vw,20rem)]" aria-hidden="true">
+           <.dm_mdi name="webhook" class="w-full aspect-square" />
+         </div>
+       </div>
+     </section>
   </div>
 
-  <div class={[
-    "page-section", "p-0", "bg-base-300/0"
-  ]}>
-    <div class="flex flex-col lg:flex-row justify-around gap-1">
-      <div class="w-full px-4 py-16 md:py-32 flex flex-col justify-center items-center text-primary bg-base-300">
-        <h3 class="font-bold text-4xl my-4 flex flex-row gap-4 items-center">
-          <.dm_mdi name="material-design" class="w-12 h-12" />
-          Material Design Icons
-        </h3>
-        <p class="my-2 text-lg">
-          Includs 7000+ Material Design Commmunity Icons.
-        </p>
-      </div>
-      <div class="w-full px-4 py-16 md:py-32 flex flex-col justify-center items-center text-violet-900 bg-base-300">
-        <h3 class="font-bold text-4xl my-4 flex flex-row gap-4 items-center">
-          <.dm_bsi name="bootstrap" class="w-12 h-12" />
-          Bootstrap Icons
-        </h3>
-        <p class="my-2 text-lg">
-          Includs 2000+ Bootstrap Icons.
-        </p>
-      </div>
-    </div>
-  </div>
+   <section class="page-section p-0 bg-base-300/0" aria-labelledby="icons-heading">
+     <div class="flex flex-col lg:flex-row justify-around gap-1">
+       <div class="w-full px-4 py-16 md:py-32 flex flex-col justify-center items-center text-primary bg-base-300">
+         <h3 class="font-bold text-4xl my-4 flex flex-row gap-4 items-center">
+           <.dm_mdi name="material-design" class="w-12 h-12" />
+           Material Design Icons
+         </h3>
+         <p class="my-2 text-lg">
+           Includes 7000+ Material Design Community Icons.
+         </p>
+       </div>
+       <div class="w-full px-4 py-16 md:py-32 flex flex-col justify-center items-center text-violet-900 bg-base-300">
+         <h3 class="font-bold text-4xl my-4 flex flex-row gap-4 items-center">
+           <.dm_bsi name="bootstrap" class="w-12 h-12" />
+           Bootstrap Icons
+         </h3>
+         <p class="my-2 text-lg">
+           Includes 2000+ Bootstrap Icons.
+         </p>
+       </div>
+     </div>
+   </section>
 
-  <div class={[
-    "page-section"
-  ]}>
-    <div class="container mx-auto flex flex-row justify-around">
-      <div class="w-full flex flex-col justify-center items-center">
-        <h3 class="font-bold text-6xl my-4 text-secondary">Components</h3>
-        <div class="my-4 flex flex-row gap-4 text-secondary/50">
-          <.link href="/storybook">Component Storybook</.link>
-          <div class="divider divider-horizontal"></div>
-          <.link href="https://hexdocs.pm/phoenix_duskmoon/">HEX Document</.link>
-        </div>
-        <div class="w-full my-4 gap-8 grid grid-cols-auto-fit-48 text-[clamp(1rem,2vw,1.5rem)]">
-          <.link class="flex flex-row items-center justify-center gap-4 opacity-60">
-            <.dm_mdi name={"page-layout-header"} class="w-4 h-4" />
-            PageHeader
-          </.link>
-          <.link class="flex flex-row items-center justify-center gap-4 opacity-60">
-            <.dm_mdi name={"page-layout-footer"} class="w-4 h-4" />
-            PageFooter
-          </.link>
-          <.link class="flex flex-row items-center justify-center gap-4 opacity-60">
-            <.dm_mdi name={"page-layout-header"} class="w-4 h-4" />
-            Appbar
-          </.link>
-          <.link class="flex flex-row items-center justify-center gap-4" id="actionbar" href="/storybook/components/actionbar">
-            <.dm_bsi name={"tools"} class="w-4 h-4" />
-            Actionbar
-          </.link>
-          <.link class="flex flex-row items-center justify-center gap-4" id="breadcrumb" href="/storybook/components/breadcrumb">
-            <.dm_bsi name={"segmented-nav"} class="w-4 h-4" />
-            Breadcrumb
-          </.link>
-          <.link class="flex flex-row items-center justify-center gap-4" id="button" href="/storybook/components/button">
-            <.dm_bsi name={"inbox"} class="w-4 h-4" />
-            Button
-          </.link>
-          <.link class="flex flex-row items-center justify-center gap-4" id="card" href="/storybook/components/card">
-            <.dm_bsi name={"card-text"} class="w-4 h-4" />
-            Card
-          </.link>
-          <.link class="flex flex-row items-center justify-center gap-4" id="left_menu" href="/storybook/components/left_menu">
-            <.dm_bsi name={"layout-sidebar"} class="w-4 h-4" />
-            Left Menu
-          </.link>
-          <.link class="flex flex-row items-center justify-center gap-4" id="loading" href="/storybook/components/loading">
-            <span class="loading loading-spinner loading-xs"></span>
-            Loading
-          </.link>
-          <.link class="flex flex-row items-center justify-center gap-4" id="markdown" href="/storybook/components/markdown">
-            <.dm_bsi name={"markdown"} class="w-4 h-4" />
-            Markdown
-          </.link>
-          <.link class="flex flex-row items-center justify-center gap-4" id="modal" href="/storybook/components/modal">
-            <.dm_bsi name={"chat-square"} class="w-4 h-4" />
-            Modal
-          </.link>
-          <.link class="flex flex-row items-center justify-center gap-4" id="pagination" href="/storybook/components/pagination">
-            <.dm_mdi name={"book-open-page-variant-outline"} class="w-4 h-4" />
-            Pagination
-          </.link>
-          <.link class="flex flex-row items-center justify-center gap-4" id="tab" href="/storybook/components/tab">
-            <.dm_mdi name={"tab"} class="w-4 h-4" />
-            Tab
-          </.link>
-          <.link class="flex flex-row items-center justify-center gap-4" id="table" href="/storybook/components/table">
-            <.dm_mdi name={"table"} class="w-4 h-4" />
-            Table
-          </.link>
-        </div>
-      </div>
-    </div>
-  </div>
+   <section class="page-section" aria-labelledby="components-heading">
+     <div class="container mx-auto flex flex-row justify-around">
+       <div class="w-full flex flex-col justify-center items-center">
+         <h2 id="components-heading" class="font-bold text-6xl my-4 text-secondary">Components</h2>
+         <nav class="my-4 flex flex-row gap-4 text-secondary/50" aria-label="Component Resources">
+           <.link href="/storybook">Component Storybook</.link>
+           <div class="divider divider-horizontal"></div>
+           <.link href="https://hexdocs.pm/phoenix_duskmoon/">HEX Document</.link>
+         </nav>
+         <!-- Core Components -->
+         <div class="w-full my-8">
+           <h3 class="text-2xl font-semibold text-secondary mb-4 text-center">Core Components</h3>
+           <div class="w-full gap-4 sm:gap-6 lg:gap-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 text-[clamp(0.875rem,1.5vw,1.25rem)]" role="list">
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="actionbar" href="/storybook/components/actionbar" role="listitem">
+               <.dm_bsi name={"tools"} class="w-4 h-4" />
+               Actionbar
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="breadcrumb" href="/storybook/components/breadcrumb" role="listitem">
+               <.dm_bsi name={"segmented-nav"} class="w-4 h-4" />
+               Breadcrumb
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="button" href="/storybook/components/button" role="listitem">
+               <.dm_bsi name={"inbox"} class="w-4 h-4" />
+               Button
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="card" href="/storybook/components/card" role="listitem">
+               <.dm_bsi name={"card-text"} class="w-4 h-4" />
+               Card
+             </.link>
+
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="link" href="/storybook/components/link" role="listitem">
+               <.dm_mdi name={"link"} class="w-4 h-4" />
+               Link
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="loading" href="/storybook/components/loading" role="listitem">
+               <span class="loading loading-spinner loading-xs"></span>
+               Loading
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="markdown" href="/storybook/components/markdown" role="listitem">
+               <.dm_bsi name={"markdown"} class="w-4 h-4" />
+               Markdown
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="modal" href="/storybook/components/modal" role="listitem">
+               <.dm_bsi name={"chat-square"} class="w-4 h-4" />
+               Modal
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="navbar" href="/storybook/components/navbar" role="listitem">
+               <.dm_mdi name={"navigation"} class="w-4 h-4" />
+               Navbar
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="pagination" href="/storybook/components/pagination" role="listitem">
+               <.dm_mdi name={"book-open-page-variant-outline"} class="w-4 h-4" />
+               Pagination
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="pagination_thin" href="/storybook/components/pagination_thin" role="listitem">
+               <.dm_mdi name={"chevron-double-right"} class="w-4 h-4" />
+               Pagination Thin
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="skeleton" href="/storybook/components/skeleton" role="listitem">
+               <.dm_mdi name={"bone"} class="w-4 h-4" />
+               Skeleton
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="tab" href="/storybook/components/tab" role="listitem">
+               <.dm_mdi name={"tab"} class="w-4 h-4" />
+               Tab
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="table" href="/storybook/components/table" role="listitem">
+               <.dm_mdi name={"table"} class="w-4 h-4" />
+               Table
+             </.link>
+           </div>
+         </div>
+
+         <!-- Layout Components -->
+         <div class="w-full my-8">
+           <h3 class="text-2xl font-semibold text-secondary mb-4 text-center">Layout Components</h3>
+           <div class="w-full gap-4 sm:gap-6 lg:gap-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 text-[clamp(0.875rem,1.5vw,1.25rem)]" role="list">
+             <.link class="flex flex-row items-center justify-center gap-4 opacity-60 hover:opacity-100 transition-opacity" role="listitem">
+               <.dm_mdi name={"page-layout-header"} class="w-4 h-4" />
+               PageHeader
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 opacity-60 hover:opacity-100 transition-opacity" role="listitem">
+               <.dm_mdi name={"page-layout-footer"} class="w-4 h-4" />
+               PageFooter
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 opacity-60 hover:opacity-100 transition-opacity" role="listitem">
+               <.dm_mdi name={"application"} class="w-4 h-4" />
+               Appbar
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="left_menu" href="/storybook/components/left_menu" role="listitem">
+               <.dm_bsi name={"layout-sidebar"} class="w-4 h-4" />
+               Left Menu
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="left_menu_group" href="/storybook/components/left_menu_group" role="listitem">
+               <.dm_mdi name={"folder"} class="w-4 h-4" />
+               Left Menu Group
+             </.link>
+           </div>
+         </div>
+
+         <!-- Form Components -->
+         <div class="w-full my-8">
+           <h3 class="text-2xl font-semibold text-secondary mb-4 text-center">Form Components</h3>
+           <div class="w-full gap-4 sm:gap-6 lg:gap-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 text-[clamp(0.875rem,1.5vw,1.25rem)]" role="list">
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="form" href="/storybook/components/form" role="listitem">
+               <.dm_mdi name={"form-select"} class="w-4 h-4" />
+               Form
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="color_picker" href="/storybook/components/form/color_picker" role="listitem">
+               <.dm_mdi name={"palette"} class="w-4 h-4" />
+               Color Picker
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="compact_input" href="/storybook/components/form/compact_input" role="listitem">
+               <.dm_mdi name={"form-textbox"} class="w-4 h-4" />
+               Compact Input
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="datepicker" href="/storybook/components/form/datepicker" role="listitem">
+               <.dm_mdi name={"calendar"} class="w-4 h-4" />
+               Datepicker
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="file_upload" href="/storybook/components/form/file_upload" role="listitem">
+               <.dm_mdi name={"upload"} class="w-4 h-4" />
+               File Upload
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="password_strength" href="/storybook/components/form/password_strength" role="listitem">
+               <.dm_mdi name={"lock-check"} class="w-4 h-4" />
+               Password Strength
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="range_slider" href="/storybook/components/form/range_slider" role="listitem">
+               <.dm_mdi name={"ray-start-end"} class="w-4 h-4" />
+               Range Slider
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="rating" href="/storybook/components/form/rating" role="listitem">
+               <.dm_mdi name={"star"} class="w-4 h-4" />
+               Rating
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="rich_text" href="/storybook/components/form/rich_text" role="listitem">
+               <.dm_mdi name={"format-text"} class="w-4 h-4" />
+               Rich Text
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="search_with_suggestions" href="/storybook/components/form/search_with_suggestions" role="listitem">
+               <.dm_mdi name={"magnify"} class="w-4 h-4" />
+               Search with Suggestions
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="slider_range" href="/storybook/components/form/slider_range" role="listitem">
+               <.dm_mdi name={"ray-start-end"} class="w-4 h-4" />
+               Slider Range
+             </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="switch" href="/storybook/components/form/switch" role="listitem">
+               <.dm_mdi name={"toggle-switch-off"} class="w-4 h-4" />
+               Switch
+             </.link>
+              <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="input" href="/storybook/components/form/input" role="listitem">
+                <.dm_mdi name={"form-textbox"} class="w-4 h-4" />
+                Input
+              </.link>
+              <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="tags" href="/storybook/components/form/tags" role="listitem">
+                <.dm_mdi name={"tag"} class="w-4 h-4" />
+                Tags
+              </.link>
+             <.link class="flex flex-row items-center justify-center gap-4 hover:opacity-100 transition-opacity" id="timepicker" href="/storybook/components/form/timepicker" role="listitem">
+               <.dm_mdi name={"clock"} class="w-4 h-4" />
+               Timepicker
+             </.link>
+           </div>
+         </div>
+       </div>
+     </div>
+   </section>
 
 </div>
 
