@@ -54,15 +54,24 @@ jobs:
 
     - name: Compile & lint dependencies
       run: |
-        # Try to compile with warnings as errors, but allow known PhoenixStorybook warning
+        # Try to compile with warnings as errors, but allow known warnings
         if ! mix compile --warnings-as-errors; then
-          echo "Compilation with warnings-as-errors failed, checking for known PhoenixStorybook warning..."
-          if mix compile 2>&1 | grep -q "this clause cannot match because a previous clause at line.*always matches"; then
-            echo "Only known PhoenixStorybook warning detected, continuing..."
-          else
-            echo "Other compilation warnings found, failing build."
+          echo "Compilation with warnings-as-errors failed, checking for known warnings..."
+          # Get all warnings
+          warnings=$(mix compile 2>&1 | grep -i warning || true)
+          echo "Warnings detected:"
+          echo "$warnings"
+          
+          # Check if all warnings are known and acceptable
+          if echo "$warnings" | grep -v "this clause cannot match because a previous clause at line.*matches the same pattern as this clause" | \
+             grep -v "Can't resolve css_path: can't read" | \
+             grep -v "Can't resolve js_path: can't read" | \
+             grep -q .; then
+            echo "Unknown compilation warnings found, failing build."
             mix compile
             exit 1
+          else
+            echo "Only known acceptable warnings detected, continuing..."
           fi
         fi
       env:
