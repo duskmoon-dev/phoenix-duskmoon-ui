@@ -1,3 +1,10 @@
+## [7.1.1](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.1.0...v7.1.1) (2025-10-17)
+
+
+### Bug Fixes
+
+* Update Node.js version to 22 and fix Docker registry URLs ([ce440fb](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/ce440fb111988984bad9fa313a5e03e36fcef542))
+
 # [7.1.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.0.1...v7.1.0) (2025-10-17)
 
 
