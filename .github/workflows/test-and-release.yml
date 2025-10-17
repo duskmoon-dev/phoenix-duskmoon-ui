@@ -65,8 +65,8 @@ jobs:
       - name: 💊 Setup Elixir
         uses: erlef/setup-beam@v1
         with:
-          otp-version: '26'
-          elixir-version: '1.17.3'
+          otp-version: '28'
+          elixir-version: '1.18'
       
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
@@ -133,5 +133,5 @@ jobs:
           tags: |
             docker.io/gsmlg/duskmoon-storybook:v${{ needs.release.outputs.version }}
             docker.io/gsmlg/duskmoon-storybook:${{ needs.release.outputs.channel || 'latest' }}
-            ghcr.io/gsmlg-dev/duskmoon-storybook:v${{ needs.release.outputs.version }}
-            ghcr.io/gsmlg-dev/duskmoon-storybook:${{ needs.release.outputs.channel || 'latest' }}
+            ghcr.io/duskmoon-dev/duskmoon-storybook:v${{ needs.release.outputs.version }}
+            ghcr.io/duskmoon-dev/duskmoon-storybook:${{ needs.release.outputs.channel || 'latest' }}
