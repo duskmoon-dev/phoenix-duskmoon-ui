@@ -68,6 +68,12 @@ jobs:
           otp-version: '26'
           elixir-version: '1.17.3'
       
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      
       - uses: oven-sh/setup-bun@v2
 
       - name: Install Deps
