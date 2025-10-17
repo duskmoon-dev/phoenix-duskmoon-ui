@@ -1,3 +1,17 @@
+# [7.1.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.0.1...v7.1.0) (2025-10-17)
+
+
+### Bug Fixes
+
+* Add Node.js 22 setup for semantic-release compatibility ([8850db4](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/8850db4a151fff81e11411f2d94bd25e31b7912f))
+* Remove npm cache configuration to avoid lock file errors ([4eeb684](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/4eeb684c7459a6b52dd8ae169e69a726b56a1395))
+* Specify correct npm cache path for Node.js setup ([f7aa4fe](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/f7aa4fe4b48a75aa69a1c2686e6459e18496c591))
+
+
+### Features
+
+* Enhance UI components with accessibility improvements and new features ([#13](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/13)) ([ca5a0dd](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/ca5a0ddcebaa241a70e810cc15401137ed20672d))
+
 # [8.1.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v8.0.0...v8.1.0) (2025-10-14)
 
 
