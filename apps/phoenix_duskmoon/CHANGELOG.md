@@ -1,3 +1,10 @@
+## [7.1.2](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.1.1...v7.1.2) (2025-10-17)
+
+
+### Bug Fixes
+
+* Use GHCR_TOKEN instead of PERSONAL_ACCESS_TOKEN for GitHub Container Registry ([cceeb80](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/cceeb805a5efda3b220ecb23210f583fc5152489))
+
 ## [7.1.1](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.1.0...v7.1.1) (2025-10-17)
 
 
