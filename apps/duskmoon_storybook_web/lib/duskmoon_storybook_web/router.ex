@@ -32,6 +32,6 @@ defmodule DuskmoonStorybookWeb.Router do
 
     get "/fun", FunController, :page
 
-    live_storybook("/storybook", backend_module: Storybook)
+    live_storybook("/storybook", backend_module: DuskmoonStorybookWeb.Storybook)
   end
 end

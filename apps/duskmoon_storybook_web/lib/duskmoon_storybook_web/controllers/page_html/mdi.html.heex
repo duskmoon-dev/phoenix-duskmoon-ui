@@ -31,17 +31,17 @@
       <.dm_input field_class="flex" label="Icon Name" name="filter" value={@filter} classic={true} />
       <button type="submit" class="btn btn-primary">Search</button>
     </.dm_form>
-    <button 
-      id="toggle-view" 
+    <button
+      id="toggle-view"
       class="btn btn-ghost"
       onclick="toggleIconView()"
     >
       <.dm_bsi name="grid" class="w-4 aspect-square" />
     </button>
   </div>
-  
+
   <div id="icon-container" class="grid grid-cols-auto-fill-[8rem] gap-3 max-h-[70vh] overflow-y-auto p-2">
-    <div 
+    <div
       :for={icon_name <- @mdi_icons}
       class="border border-base-300 hover:border-primary rounded-lg flex flex-col items-center justify-center p-3 transition-all hover:shadow-md cursor-pointer group"
       onclick={"copyIconName('#{icon_name}', this)"}
@@ -52,7 +52,7 @@
       <div class="flex items-center justify-center mb-2">
         <.dm_mdi name={icon_name} class="w-12 h-12 text-base-content group-hover:text-primary transition-colors" />
       </div>
-      <button 
+      <button
         class="btn btn-xs btn-ghost opacity-0 group-hover:opacity-100 transition-opacity"
         onclick={"event.stopPropagation(); copyIconName('#{icon_name}', this.parentElement)"}
       >
@@ -60,7 +60,7 @@
       </button>
     </div>
   </div>
-  
+
   <div id="loading-indicator" class="hidden fixed inset-0 bg-base-100/80 flex items-center justify-center z-50">
     <div class="loading loading-spinner loading-lg"></div>
   </div>
@@ -69,31 +69,31 @@
 <script>
   let currentView = 'grid';
   let searchTimeout;
-  
+
   function toggleIconView() {
     const container = document.getElementById('icon-container');
     const toggleBtn = document.getElementById('toggle-view');
-    
+
     if (currentView === 'grid') {
-      container.className = 'flex flex-col gap-2 max-h-[70vh] overflow-y-auto p-2';
+      container.className = 'flex flex-wrap gap-2 max-h-[70vh] overflow-y-auto p-2 *:w-32 *:flex-1';
       currentView = 'list';
     } else {
       container.className = 'grid grid-cols-auto-fill-[8rem] gap-3 max-h-[70vh] overflow-y-auto p-2';
       currentView = 'grid';
     }
   }
-  
+
   function copyIconName(iconName, element) {
     copyTextToClipboard(iconName);
     showCopyFeedback(element);
-    
+
     // Add visual feedback
     element.classList.add('ring-2', 'ring-success', 'ring-opacity-50');
     setTimeout(() => {
       element.classList.remove('ring-2', 'ring-success', 'ring-opacity-50');
     }, 1000);
   }
-  
+
   // Debounced search functionality
   function setupDebouncedSearch() {
     const searchInput = document.querySelector('input[name="filter"]');
@@ -101,7 +101,7 @@
       searchInput.addEventListener('input', function(e) {
         clearTimeout(searchTimeout);
         const loadingIndicator = document.getElementById('loading-indicator');
-        
+
         searchTimeout = setTimeout(() => {
           loadingIndicator.classList.remove('hidden');
           const form = e.target.closest('form');
@@ -110,7 +110,7 @@
       });
     }
   }
-  
+
   // Initialize when DOM is ready
   document.addEventListener('DOMContentLoaded', setupDebouncedSearch);
 </script>
