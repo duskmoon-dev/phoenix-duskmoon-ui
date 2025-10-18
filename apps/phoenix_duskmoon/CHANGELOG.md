@@ -1,3 +1,10 @@
+## [7.1.3](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.1.2...v7.1.3) (2025-10-18)
+
+
+### Bug Fixes
+
+* Use full module name for Storybook backend in router ([5975540](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/5975540903c9953cca7e9d163b705cd7dd7bafae))
+
 ## [7.1.2](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.1.1...v7.1.2) (2025-10-17)
 
 
