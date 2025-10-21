@@ -88,3 +88,69 @@ This is an Elixir umbrella project with Phoenix LiveView components and a Node.j
 3. Format code with `mix format` before committing
 4. Run tests with `mix test` - CI enforces formatting and compilation standards
 5. Use `mix tailwind` and `mix bun` commands for CSS/JS builds during development
+
+## Using Phoenix Duskmoon UI in Other Projects
+
+When working on Phoenix projects that use the Phoenix Duskmoon UI library:
+
+### Component Usage Pattern
+- All components are prefixed with `dm_` (e.g., `<.dm_btn>`, `<.dm_card>`, `<.dm_mdi>`)
+- Components require `use PhoenixDuskmoon.Component` and `use PhoenixDuskmoon.Fun` in view helpers
+- Common component patterns:
+  ```elixir
+  # Buttons with variants
+  <.dm_btn variant="primary" size="md">Click me</.dm_btn>
+  <.dm_btn variant="secondary" loading={@loading}>Loading</.dm_btn>
+  <.dm_btn variant="error" shape="circle">×</.dm_btn>
+
+  # Cards with slots
+  <.dm_card class="p-6">
+    <:header><h3>Title</h3></:header>
+    <p>Content here</p>
+    <:footer><.dm_btn>Action</.dm_btn></:footer>
+  </.dm_card>
+
+  # Icons (Material Design or Bootstrap)
+  <.dm_mdi>home</.dm_mdi>
+  <.dm_bsi>house</.dm_bsi>
+
+  # Forms with styling
+  <.dm_form for={@form} phx-submit="save">
+    <!-- form fields -->
+    <.dm_btn variant="primary" type="submit">Save</.dm_btn>
+  </.dm_form>
+  ```
+
+### Common Attributes
+- `variant`: primary, secondary, accent, info, success, warning, error, ghost, link, outline
+- `size`: xs, sm, md, lg
+- `shape`: square, circle
+- `loading`: boolean for loading state
+- `disabled`: boolean for disabled state
+- `class`: additional CSS classes
+
+### Layout Components
+- `<.dm_appbar>` - Top navigation bar with `:brand`, `:nav`, `:actions` slots
+- `<.dm_page_header>` - Page title section
+- `<.dm_breadcrumb>` - Navigation breadcrumbs
+- `<.dm_tab>` - Tabbed content areas
+- `<.dm_modal>` - Dialog modals with `:header`, `:footer` slots
+
+### CSS Integration
+Projects need these CSS imports:
+```css
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "duskmoonui";
+@import "phoenix_duskmoon/theme";
+@import "phoenix_duskmoon/components";
+```
+
+### Available Components
+- **Basic**: buttons, cards, links, icons
+- **Navigation**: appbar, navbar, breadcrumb, tabs
+- **Data Display**: tables, pagination, flash, markdown
+- **Forms**: form containers, loading, modal
+- **Layout**: page headers, footers, theme switcher
+
+When adding new UI components, follow the established pattern and use the appropriate Duskmoon UI components rather than custom HTML/CSS.
