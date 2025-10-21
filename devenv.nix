@@ -7,13 +7,14 @@ in
 {
   env.GREET = "Phoenix Duskmoon UI";
 
-  packages = [
-    pkgs-stable.git
-    pkgs-stable.figlet
-    pkgs-stable.lolcat
-    pkgs-stable.watchman
-    pkgs-stable.inotify-tools
-    pkgs-stable.tailwindcss_4
+  packages = with pkgs-stable; [
+    git
+    figlet
+    lolcat
+    watchman
+    tailwindcss_4
+  ] ++ lib.optionals stdenv.isLinux [
+    inotify-tools
   ];
 
   languages.elixir.enable = true;
