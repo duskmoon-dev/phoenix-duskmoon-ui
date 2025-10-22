@@ -1,62 +1,49 @@
-defmodule Storybook.Components.Form.Switch do
+defmodule Storybook.Components.Form.Checkbox do
   use PhoenixStorybook.Story, :component
 
-  def function, do: &PhoenixDuskmoon.Component.Form.Switch.dm_switch/1
-  def description, do: "Toggle switch component for boolean inputs."
+  def function, do: &PhoenixDuskmoon.Component.Form.Checkbox.dm_checkbox/1
+  def description, do: "Checkbox component for boolean selections."
 
   def variations do
     [
       %Variation{
         id: :default,
         attributes: %{
-          id: "switch-default",
-          name: "notifications",
-          label: "Enable notifications"
+          id: "checkbox-default",
+          name: "agree",
+          label: "I agree to the terms and conditions"
         }
       },
       %Variation{
         id: :checked,
         attributes: %{
-          id: "switch-checked",
-          name: "dark_mode",
-          label: "Dark mode",
+          id: "checkbox-checked",
+          name: "newsletter",
+          label: "Subscribe to newsletter",
           checked: true
         }
       },
       %Variation{
-        id: :with_color,
-        attributes: %{
-          id: "switch-color",
-          name: "auto_save",
-          label: "Auto-save",
-          color: "success"
-        }
-      },
-      %Variation{
         id: :sizes,
-        attributes: %{
-          id: "switch-sizes",
-          name: "size_example",
-          label: "Size examples"
-        },
+        attributes: %{},
         slots: [
           """
           <div class="space-y-4">
             <div>
               <label class="text-xs text-base-content/70">XS Size</label>
-              <.dm_switch id="xs" name="xs" label="XS switch" size="xs" />
+              <.dm_checkbox id="xs" name="xs" label="XS checkbox" size="xs" />
             </div>
             <div>
               <label class="text-xs text-base-content/70">SM Size</label>
-              <.dm_switch id="sm" name="sm" label="SM switch" size="sm" />
+              <.dm_checkbox id="sm" name="sm" label="SM checkbox" size="sm" />
             </div>
             <div>
               <label class="text-xs text-base-content/70">MD Size</label>
-              <.dm_switch id="md" name="md" label="MD switch" size="md" />
+              <.dm_checkbox id="md" name="md" label="MD checkbox" size="md" />
             </div>
             <div>
               <label class="text-xs text-base-content/70">LG Size</label>
-              <.dm_switch id="lg" name="lg" label="LG switch" size="lg" />
+              <.dm_checkbox id="lg" name="lg" label="LG checkbox" size="lg" />
             </div>
           </div>
           """
@@ -68,12 +55,12 @@ defmodule Storybook.Components.Form.Switch do
         slots: [
           """
           <div class="space-y-4">
-            <.dm_switch id="primary" name="primary" label="Primary" color="primary" />
-            <.dm_switch id="secondary" name="secondary" label="Secondary" color="secondary" />
-            <.dm_switch id="accent" name="accent" label="Accent" color="accent" />
-            <.dm_switch id="success" name="success" label="Success" color="success" />
-            <.dm_switch id="warning" name="warning" label="Warning" color="warning" />
-            <.dm_switch id="error" name="error" label="Error" color="error" />
+            <.dm_checkbox id="primary" name="primary" label="Primary option" color="primary" />
+            <.dm_checkbox id="secondary" name="secondary" label="Secondary option" color="secondary" />
+            <.dm_checkbox id="accent" name="accent" label="Accent option" color="accent" />
+            <.dm_checkbox id="success" name="success" label="Success option" color="success" />
+            <.dm_checkbox id="warning" name="warning" label="Warning option" color="warning" />
+            <.dm_checkbox id="error" name="error" label="Error option" color="error" />
           </div>
           """
         ]
@@ -81,9 +68,9 @@ defmodule Storybook.Components.Form.Switch do
       %Variation{
         id: :disabled,
         attributes: %{
-          id: "switch-disabled",
+          id: "checkbox-disabled",
           name: "disabled",
-          label: "Disabled switch",
+          label: "Disabled checkbox",
           disabled: true
         }
       }

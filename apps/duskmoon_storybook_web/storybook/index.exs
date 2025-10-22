@@ -1,6 +1,31 @@
 [
   %{
     kind: :folder,
+    name: "Demos",
+    path: "/demos",
+    entries: [
+      %{
+        kind: :story,
+        name: "Forms Showcase",
+        path: "/demos/forms_showcase",
+        module: Storybook.Components.FormsShowcase
+      },
+      %{
+        kind: :story,
+        name: "Fun Components Showcase",
+        path: "/demos/fun_showcase",
+        module: Storybook.Components.FunShowcase
+      },
+      %{
+        kind: :story,
+        name: "UI Components Showcase",
+        path: "/demos/ui_showcase",
+        module: Storybook.Components.UIShowcase
+      }
+    ]
+  },
+  %{
+    kind: :folder,
     name: "Components",
     path: "/components",
     entries: [
@@ -33,6 +58,42 @@
         name: "Form",
         path: "/components/form",
         entries: [
+          %{
+            kind: :story,
+            name: "Switch",
+            path: "/components/form/switch",
+            module: Storybook.Components.Form.Switch
+          },
+          %{
+            kind: :story,
+            name: "Slider",
+            path: "/components/form/slider",
+            module: Storybook.Components.Form.Slider
+          },
+          %{
+            kind: :story,
+            name: "Checkbox",
+            path: "/components/form/checkbox",
+            module: Storybook.Components.Form.Checkbox
+          },
+          %{
+            kind: :story,
+            name: "Radio",
+            path: "/components/form/radio",
+            module: Storybook.Components.Form.Radio
+          },
+          %{
+            kind: :story,
+            name: "Select",
+            path: "/components/form/select",
+            module: Storybook.Components.Form.Select
+          },
+          %{
+            kind: :story,
+            name: "Textarea",
+            path: "/components/form/textarea",
+            module: Storybook.Components.Form.Textarea
+          },
           %{
             kind: :story,
             name: "Compact Input",
@@ -112,6 +173,85 @@
         name: "Tab",
         path: "/components/tab",
         module: Storybook.Components.Tab
+      },
+      %{
+        kind: :folder,
+        name: "Fun Components",
+        path: "/components/fun",
+        entries: [
+          %{
+            kind: :story,
+            name: "Spotlight Search",
+            path: "/components/fun/spotlight_search",
+            module: Storybook.Components.Fun.SpotlightSearch
+          },
+          %{
+            kind: :story,
+            name: "Plasma Ball",
+            path: "/components/fun/plasma_ball",
+            module: Storybook.Components.Fun.PlasmaBall
+          },
+          %{
+            kind: :story,
+            name: "Eclipse",
+            path: "/components/fun/eclipse",
+            module: Storybook.Components.Fun.Eclipse
+          },
+          %{
+            kind: :story,
+            name: "Snow",
+            path: "/components/fun/snow",
+            module: Storybook.Components.Fun.Snow
+          },
+          %{
+            kind: :story,
+            name: "Signature",
+            path: "/components/fun/signature",
+            module: Storybook.Components.Fun.Signature
+          },
+          %{
+            kind: :story,
+            name: "Button Noise",
+            path: "/components/fun/button_noise",
+            module: Storybook.Components.Fun.ButtonNoise
+          }
+        ]
+      },
+      %{
+        kind: :story,
+        name: "Avatar",
+        path: "/components/avatar",
+        module: Storybook.Components.Avatar
+      },
+      %{
+        kind: :story,
+        name: "Badge",
+        path: "/components/badge",
+        module: Storybook.Components.Badge
+      },
+      %{
+        kind: :story,
+        name: "Divider",
+        path: "/components/divider",
+        module: Storybook.Components.Divider
+      },
+      %{
+        kind: :story,
+        name: "Dropdown",
+        path: "/components/dropdown",
+        module: Storybook.Components.Dropdown
+      },
+      %{
+        kind: :story,
+        name: "Progress",
+        path: "/components/progress",
+        module: Storybook.Components.Progress
+      },
+      %{
+        kind: :story,
+        name: "Tooltip",
+        path: "/components/tooltip",
+        module: Storybook.Components.Tooltip
       }
     ]
   }
