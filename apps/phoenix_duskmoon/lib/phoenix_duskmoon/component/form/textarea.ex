@@ -31,27 +31,31 @@ defmodule PhoenixDuskmoon.Component.Form.Textarea do
 
   use Phoenix.Component
 
-
   @doc type: :component
-  attr :id, :any, default: nil
-  attr :name, :any
-  attr :value, :any
-  attr :field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form"
-  attr :label, :string, default: nil
-  attr :placeholder, :string, default: nil
-  attr :rows, :integer, default: 3
-  attr :cols, :integer, default: nil
-  attr :size, :string, default: "md", values: ["xs", "sm", "md", "lg"]
-  attr :color, :string, default: "primary", values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
-  attr :resize, :string, default: "vertical", values: ["none", "vertical", "horizontal", "both"]
-  attr :disabled, :boolean, default: false
-  attr :readonly, :boolean, default: false
-  attr :required, :boolean, default: false
-  attr :maxlength, :integer, default: nil
-  attr :class, :string, default: nil
-  attr :label_class, :string, default: nil
-  attr :textarea_class, :string, default: nil
-  attr :rest, :global
+  attr(:id, :any, default: nil)
+  attr(:name, :any)
+  attr(:value, :any)
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
+  attr(:label, :string, default: nil)
+  attr(:placeholder, :string, default: nil)
+  attr(:rows, :integer, default: 3)
+  attr(:cols, :integer, default: nil)
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
+
+  attr(:color, :string,
+    default: "primary",
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+  )
+
+  attr(:resize, :string, default: "vertical", values: ["none", "vertical", "horizontal", "both"])
+  attr(:disabled, :boolean, default: false)
+  attr(:readonly, :boolean, default: false)
+  attr(:required, :boolean, default: false)
+  attr(:maxlength, :integer, default: nil)
+  attr(:class, :string, default: nil)
+  attr(:label_class, :string, default: nil)
+  attr(:textarea_class, :string, default: nil)
+  attr(:rest, :global)
 
   def dm_textarea(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns

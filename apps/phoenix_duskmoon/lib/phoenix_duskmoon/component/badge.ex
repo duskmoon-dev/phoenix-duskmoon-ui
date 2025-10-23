@@ -30,14 +30,18 @@ defmodule PhoenixDuskmoon.Component.Badge do
   use Phoenix.Component
 
   @doc type: :component
-  attr :color, :string, default: "primary", values: ["primary", "secondary", "accent", "info", "success", "warning", "error", "ghost"]
-  attr :size, :string, default: "md", values: ["xs", "sm", "md", "lg"]
-  attr :outline, :boolean, default: false
-  attr :ghost, :boolean, default: false
-  attr :class, :string, default: nil
-  attr :rest, :global
+  attr(:color, :string,
+    default: "primary",
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error", "ghost"]
+  )
 
-  slot :inner_block, required: true
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
+  attr(:outline, :boolean, default: false)
+  attr(:ghost, :boolean, default: false)
+  attr(:class, :string, default: nil)
+  attr(:rest, :global)
+
+  slot(:inner_block, required: true)
 
   def dm_badge(assigns) do
     ~H"""

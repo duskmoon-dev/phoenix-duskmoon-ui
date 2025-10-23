@@ -43,14 +43,13 @@ defmodule PhoenixDuskmoon.Component.Fun.Eclipse do
 
   use Phoenix.Component
 
-
   @doc type: :component
-  attr :id, :string, required: true
-  attr :size, :string, default: "medium", values: ["small", "medium", "large"]
-  attr :bg_color, :string, default: "#09090b"
-  attr :animation_speed, :float, default: 1.0
-  attr :class, :string, default: nil
-  attr :rest, :global
+  attr(:id, :string, required: true)
+  attr(:size, :string, default: "medium", values: ["small", "medium", "large"])
+  attr(:bg_color, :string, default: "#09090b")
+  attr(:animation_speed, :float, default: 1.0)
+  attr(:class, :string, default: nil)
+  attr(:rest, :global)
 
   def dm_fun_eclipse(assigns) do
     assigns

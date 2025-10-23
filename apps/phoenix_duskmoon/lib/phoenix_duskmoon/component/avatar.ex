@@ -53,22 +53,27 @@ defmodule PhoenixDuskmoon.Component.Avatar do
   use Phoenix.Component
 
   @doc type: :component
-  attr :src, :string, default: nil
-  attr :alt, :string, default: nil
-  attr :name, :string, default: nil
-  attr :placeholder_img, :any, default: nil
-  attr :size, :string, default: "md", values: ["xs", "sm", "md", "lg", "xl"]
-  attr :shape, :string, default: "circle", values: ["circle", "square"]
-  attr :color, :string, default: "primary", values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
-  attr :border, :boolean, default: false
-  attr :online, :boolean, default: false
-  attr :offline, :boolean, default: false
-  attr :class, :string, default: nil
-  attr :img_class, :string, default: nil
-  attr :placeholder_class, :string, default: nil
-  attr :rest, :global
+  attr(:src, :string, default: nil)
+  attr(:alt, :string, default: nil)
+  attr(:name, :string, default: nil)
+  attr(:placeholder_img, :any, default: nil)
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg", "xl"])
+  attr(:shape, :string, default: "circle", values: ["circle", "square"])
 
-  slot :placeholder, doc: "Custom placeholder content"
+  attr(:color, :string,
+    default: "primary",
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+  )
+
+  attr(:border, :boolean, default: false)
+  attr(:online, :boolean, default: false)
+  attr(:offline, :boolean, default: false)
+  attr(:class, :string, default: nil)
+  attr(:img_class, :string, default: nil)
+  attr(:placeholder_class, :string, default: nil)
+  attr(:rest, :global)
+
+  slot(:placeholder, doc: "Custom placeholder content")
 
   def dm_avatar(assigns) do
     ~H"""
@@ -116,14 +121,16 @@ defmodule PhoenixDuskmoon.Component.Avatar do
     """
   end
 
-  defp render_avatar_content(%{placeholder_img: placeholder_img} = assigns) when is_binary(placeholder_img) do
+  defp render_avatar_content(%{placeholder_img: placeholder_img} = assigns)
+       when is_binary(placeholder_img) do
     # Custom placeholder image
     assigns
     |> assign(img_src: placeholder_img)
     |> render_placeholder_image()
   end
 
-  defp render_avatar_content(%{placeholder_img: placeholder_img} = assigns) when placeholder_img == true do
+  defp render_avatar_content(%{placeholder_img: placeholder_img} = assigns)
+       when placeholder_img == true do
     # Show initials when placeholder is true
     render_initials(assigns)
   end

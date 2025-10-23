@@ -32,14 +32,19 @@ defmodule PhoenixDuskmoon.Component.Divider do
   use Phoenix.Component
 
   @doc type: :component
-  attr :orientation, :string, default: "horizontal", values: ["horizontal", "vertical"]
-  attr :color, :string, default: "base", values: ["base", "primary", "secondary", "accent", "info", "success", "warning", "error"]
-  attr :variant, :string, default: "solid", values: ["solid", "dashed", "dotted"]
-  attr :size, :string, default: "md", values: ["xs", "sm", "md", "lg"]
-  attr :class, :string, default: nil
-  attr :rest, :global
+  attr(:orientation, :string, default: "horizontal", values: ["horizontal", "vertical"])
 
-  slot :inner_block, required: false
+  attr(:color, :string,
+    default: "base",
+    values: ["base", "primary", "secondary", "accent", "info", "success", "warning", "error"]
+  )
+
+  attr(:variant, :string, default: "solid", values: ["solid", "dashed", "dotted"])
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
+  attr(:class, :string, default: nil)
+  attr(:rest, :global)
+
+  slot(:inner_block, required: false)
 
   def dm_divider(assigns) do
     ~H"""

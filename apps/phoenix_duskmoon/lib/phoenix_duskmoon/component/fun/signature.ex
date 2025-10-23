@@ -58,19 +58,18 @@ defmodule PhoenixDuskmoon.Component.Fun.Signature do
 
   use Phoenix.Component
 
-
   @doc type: :component
-  attr :id, :string, required: true
-  attr :content, :string, default: "A"
-  attr :size, :string, default: "medium", values: ["small", "medium", "large"]
-  attr :color, :string, default: "#ff0000aa"
-  attr :rotation, :integer, default: -30
-  attr :opacity, :float, default: 0.618
-  attr :right, :string, default: "2rem"
-  attr :top, :string, default: "2rem"
-  attr :position, :string, default: "absolute"
-  attr :class, :string, default: nil
-  attr :rest, :global
+  attr(:id, :string, required: true)
+  attr(:content, :string, default: "A")
+  attr(:size, :string, default: "medium", values: ["small", "medium", "large"])
+  attr(:color, :string, default: "#ff0000aa")
+  attr(:rotation, :integer, default: -30)
+  attr(:opacity, :float, default: 0.618)
+  attr(:right, :string, default: "2rem")
+  attr(:top, :string, default: "2rem")
+  attr(:position, :string, default: "absolute")
+  attr(:class, :string, default: nil)
+  attr(:rest, :global)
 
   def dm_fun_signature(assigns) do
     assigns
@@ -96,7 +95,10 @@ defmodule PhoenixDuskmoon.Component.Fun.Signature do
     """
   end
 
-  defp size_to_pixels("small"), do: 48  # 3rem
-  defp size_to_pixels("medium"), do: 80 # 5rem
-  defp size_to_pixels("large"), do: 128 # 8rem
+  # 3rem
+  defp size_to_pixels("small"), do: 48
+  # 5rem
+  defp size_to_pixels("medium"), do: 80
+  # 8rem
+  defp size_to_pixels("large"), do: 128
 end

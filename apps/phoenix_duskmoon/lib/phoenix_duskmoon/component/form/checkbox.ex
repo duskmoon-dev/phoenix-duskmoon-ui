@@ -25,24 +25,28 @@ defmodule PhoenixDuskmoon.Component.Form.Checkbox do
 
   use Phoenix.Component
 
-  
   alias PhoenixDuskmoon.Component.Form
 
   @doc type: :component
-  attr :id, :any, default: nil
-  attr :name, :any
-  attr :value, :any
-  attr :field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form"
-  attr :checked, :boolean, default: false
-  attr :label, :string, default: nil
-  attr :size, :string, default: "md", values: ["xs", "sm", "md", "lg"]
-  attr :color, :string, default: "primary", values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
-  attr :disabled, :boolean, default: false
-  attr :indeterminate, :boolean, default: false
-  attr :class, :string, default: nil
-  attr :label_class, :string, default: nil
-  attr :checkbox_class, :string, default: nil
-  attr :rest, :global
+  attr(:id, :any, default: nil)
+  attr(:name, :any)
+  attr(:value, :any)
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
+  attr(:checked, :boolean, default: false)
+  attr(:label, :string, default: nil)
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
+
+  attr(:color, :string,
+    default: "primary",
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+  )
+
+  attr(:disabled, :boolean, default: false)
+  attr(:indeterminate, :boolean, default: false)
+  attr(:class, :string, default: nil)
+  attr(:label_class, :string, default: nil)
+  attr(:checkbox_class, :string, default: nil)
+  attr(:rest, :global)
 
   def dm_checkbox(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns

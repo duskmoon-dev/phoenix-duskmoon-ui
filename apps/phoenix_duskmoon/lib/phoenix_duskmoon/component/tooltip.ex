@@ -33,15 +33,20 @@ defmodule PhoenixDuskmoon.Component.Tooltip do
   use Phoenix.Component
 
   @doc type: :component
-  attr :content, :string, required: true
-  attr :position, :string, default: "top", values: ["top", "bottom", "left", "right"]
-  attr :color, :string, default: "primary", values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
-  attr :open, :boolean, default: false
-  attr :class, :string, default: nil
-  attr :tooltip_class, :string, default: nil
-  attr :rest, :global
+  attr(:content, :string, required: true)
+  attr(:position, :string, default: "top", values: ["top", "bottom", "left", "right"])
 
-  slot :inner_block, required: true
+  attr(:color, :string,
+    default: "primary",
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+  )
+
+  attr(:open, :boolean, default: false)
+  attr(:class, :string, default: nil)
+  attr(:tooltip_class, :string, default: nil)
+  attr(:rest, :global)
+
+  slot(:inner_block, required: true)
 
   def dm_tooltip(assigns) do
     ~H"""

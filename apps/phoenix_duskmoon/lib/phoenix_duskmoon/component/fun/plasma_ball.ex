@@ -37,15 +37,14 @@ defmodule PhoenixDuskmoon.Component.Fun.PlasmaBall do
 
   use Phoenix.Component
 
-
   @doc type: :component
-  attr :id, :string, required: true
-  attr :size, :string, default: "medium", values: ["small", "medium", "large"]
-  attr :base_color, :string, default: "#222222"
-  attr :show_electrode, :boolean, default: true
-  attr :class, :string, default: nil
-  attr :phx_target, :any, default: nil
-  attr :rest, :global
+  attr(:id, :string, required: true)
+  attr(:size, :string, default: "medium", values: ["small", "medium", "large"])
+  attr(:base_color, :string, default: "#222222")
+  attr(:show_electrode, :boolean, default: true)
+  attr(:class, :string, default: nil)
+  attr(:phx_target, :any, default: nil)
+  attr(:rest, :global)
 
   def dm_fun_plasma_ball(assigns) do
     assigns

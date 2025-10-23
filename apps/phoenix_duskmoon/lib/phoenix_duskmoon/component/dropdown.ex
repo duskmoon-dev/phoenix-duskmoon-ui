@@ -46,19 +46,24 @@ defmodule PhoenixDuskmoon.Component.Dropdown do
   use Phoenix.Component
 
   @doc type: :component
-  attr :position, :string, default: "left", values: ["left", "right", "top", "bottom"]
-  attr :color, :string, default: "primary", values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
-  attr :open, :boolean, default: false
-  attr :class, :string, default: nil
-  attr :dropdown_class, :string, default: nil
-  attr :rest, :global
+  attr(:position, :string, default: "left", values: ["left", "right", "top", "bottom"])
+
+  attr(:color, :string,
+    default: "primary",
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+  )
+
+  attr(:open, :boolean, default: false)
+  attr(:class, :string, default: nil)
+  attr(:dropdown_class, :string, default: nil)
+  attr(:rest, :global)
 
   slot :trigger, required: true do
-    attr :class, :string
+    attr(:class, :string)
   end
 
   slot :content, required: true do
-    attr :class, :string
+    attr(:class, :string)
   end
 
   def dm_dropdown(assigns) do

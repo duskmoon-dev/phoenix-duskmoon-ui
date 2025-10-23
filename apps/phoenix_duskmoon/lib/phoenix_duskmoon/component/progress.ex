@@ -35,17 +35,22 @@ defmodule PhoenixDuskmoon.Component.Progress do
   use Phoenix.Component
 
   @doc type: :component
-  attr :value, :integer, default: 0
-  attr :max, :integer, default: 100
-  attr :color, :string, default: "primary", values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
-  attr :size, :string, default: "md", values: ["xs", "sm", "md", "lg"]
-  attr :show_label, :boolean, default: false
-  attr :animated, :boolean, default: false
-  attr :indeterminate, :boolean, default: false
-  attr :class, :string, default: nil
-  attr :label_class, :string, default: nil
-  attr :progress_class, :string, default: nil
-  attr :rest, :global
+  attr(:value, :integer, default: 0)
+  attr(:max, :integer, default: 100)
+
+  attr(:color, :string,
+    default: "primary",
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+  )
+
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
+  attr(:show_label, :boolean, default: false)
+  attr(:animated, :boolean, default: false)
+  attr(:indeterminate, :boolean, default: false)
+  attr(:class, :string, default: nil)
+  attr(:label_class, :string, default: nil)
+  attr(:progress_class, :string, default: nil)
+  attr(:rest, :global)
 
   def dm_progress(assigns) do
     assigns
@@ -162,7 +167,7 @@ defmodule PhoenixDuskmoon.Component.Progress do
   end
 
   defp calculate_percentage(value, max) when max > 0 do
-    value / max * 100
+    (value / max * 100)
     |> Float.round(1)
     |> to_string()
   end

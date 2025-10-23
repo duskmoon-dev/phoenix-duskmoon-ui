@@ -48,22 +48,22 @@ defmodule PhoenixDuskmoon.Component.Fun.Snow do
 
   use Phoenix.Component
 
-
   @doc type: :component
-  attr :id, :string, required: true
-  attr :count, :integer, default: 30
-  attr :size_range, :any, default: {5, 20}
-  attr :color, :string, default: "#FFFFFF"
-  attr :use_unicode, :boolean, default: false
-  attr :animation_duration, :any, default: {5, 15}
-  attr :container_class, :string, default: "relative w-full h-full"
-  attr :snowflake_class, :string, default: nil
-  attr :rest, :global
+  attr(:id, :string, required: true)
+  attr(:count, :integer, default: 30)
+  attr(:size_range, :any, default: {5, 20})
+  attr(:color, :string, default: "#FFFFFF")
+  attr(:use_unicode, :boolean, default: false)
+  attr(:animation_duration, :any, default: {5, 15})
+  attr(:container_class, :string, default: "relative w-full h-full")
+  attr(:snowflake_class, :string, default: nil)
+  attr(:rest, :global)
 
   def dm_fun_snow(assigns) do
     assigns
     |> assign(
-      snowflakes: generate_snowflakes(assigns.count, assigns.size_range, assigns.animation_duration)
+      snowflakes:
+        generate_snowflakes(assigns.count, assigns.size_range, assigns.animation_duration)
     )
     |> render_snow()
   end

@@ -27,25 +27,28 @@ defmodule PhoenixDuskmoon.Component.Form.Slider do
 
   use Phoenix.Component
 
-
-
   @doc type: :component
-  attr :id, :any, default: nil
-  attr :name, :any
-  attr :value, :any
-  attr :field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form"
-  attr :label, :string, default: nil
-  attr :min, :integer, default: 0
-  attr :max, :integer, default: 100
-  attr :step, :integer, default: 1
-  attr :color, :string, default: "primary", values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
-  attr :size, :string, default: "md", values: ["xs", "sm", "md", "lg"]
-  attr :disabled, :boolean, default: false
-  attr :show_value, :boolean, default: true
-  attr :class, :string, default: nil
-  attr :label_class, :string, default: nil
-  attr :slider_class, :string, default: nil
-  attr :rest, :global
+  attr(:id, :any, default: nil)
+  attr(:name, :any)
+  attr(:value, :any)
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
+  attr(:label, :string, default: nil)
+  attr(:min, :integer, default: 0)
+  attr(:max, :integer, default: 100)
+  attr(:step, :integer, default: 1)
+
+  attr(:color, :string,
+    default: "primary",
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+  )
+
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
+  attr(:disabled, :boolean, default: false)
+  attr(:show_value, :boolean, default: true)
+  attr(:class, :string, default: nil)
+  attr(:label_class, :string, default: nil)
+  attr(:slider_class, :string, default: nil)
+  attr(:rest, :global)
 
   def dm_slider(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns

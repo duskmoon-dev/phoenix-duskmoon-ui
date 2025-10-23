@@ -39,25 +39,29 @@ defmodule PhoenixDuskmoon.Component.Form.Select do
 
   use Phoenix.Component
 
-
   @doc type: :component
-  attr :id, :any, default: nil
-  attr :name, :any
-  attr :value, :any
-  attr :field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form"
-  attr :label, :string, default: nil
-  attr :options, :list, default: nil
-  attr :prompt, :string, default: nil
-  attr :size, :string, default: "md", values: ["xs", "sm", "md", "lg"]
-  attr :color, :string, default: "primary", values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
-  attr :disabled, :boolean, default: false
-  attr :multiple, :boolean, default: false
-  attr :class, :string, default: nil
-  attr :label_class, :string, default: nil
-  attr :select_class, :string, default: nil
-  attr :rest, :global
+  attr(:id, :any, default: nil)
+  attr(:name, :any)
+  attr(:value, :any)
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
+  attr(:label, :string, default: nil)
+  attr(:options, :list, default: nil)
+  attr(:prompt, :string, default: nil)
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
 
-  slot :inner_block, required: false
+  attr(:color, :string,
+    default: "primary",
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+  )
+
+  attr(:disabled, :boolean, default: false)
+  attr(:multiple, :boolean, default: false)
+  attr(:class, :string, default: nil)
+  attr(:label_class, :string, default: nil)
+  attr(:select_class, :string, default: nil)
+  attr(:rest, :global)
+
+  slot(:inner_block, required: false)
 
   def dm_select(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns

@@ -34,22 +34,21 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearch do
 
   use Phoenix.Component
 
-
   @doc type: :component
-  attr :id, :string, required: true
-  attr :placeholder, :string, default: "Search..."
-  attr :shortcut, :string, default: "cmd+k"
-  attr :open, :boolean, default: false
-  attr :loading, :boolean, default: false
-  attr :class, :string, default: nil
-  attr :phx_target, :any, default: nil
-  attr :rest, :global
+  attr(:id, :string, required: true)
+  attr(:placeholder, :string, default: "Search...")
+  attr(:shortcut, :string, default: "cmd+k")
+  attr(:open, :boolean, default: false)
+  attr(:loading, :boolean, default: false)
+  attr(:class, :string, default: nil)
+  attr(:phx_target, :any, default: nil)
+  attr(:rest, :global)
 
   slot :suggestion, required: false do
-    attr :icon, :string
-    attr :label, :string, required: true
-    attr :action, :string
-    attr :description, :string
+    attr(:icon, :string)
+    attr(:label, :string, required: true)
+    attr(:action, :string)
+    attr(:description, :string)
   end
 
   def dm_fun_spotlight_search(assigns) do

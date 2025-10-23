@@ -23,23 +23,27 @@ defmodule PhoenixDuskmoon.Component.Form.Switch do
 
   use Phoenix.Component
 
-
   alias PhoenixDuskmoon.Component.Form
 
   @doc type: :component
-  attr :id, :any, default: nil
-  attr :name, :any
-  attr :value, :any
-  attr :field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form"
-  attr :checked, :boolean, default: false
-  attr :label, :string, default: nil
-  attr :size, :string, default: "md", values: ["xs", "sm", "md", "lg"]
-  attr :color, :string, default: "primary", values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
-  attr :disabled, :boolean, default: false
-  attr :class, :string, default: nil
-  attr :label_class, :string, default: nil
-  attr :switch_class, :string, default: nil
-  attr :rest, :global
+  attr(:id, :any, default: nil)
+  attr(:name, :any)
+  attr(:value, :any)
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
+  attr(:checked, :boolean, default: false)
+  attr(:label, :string, default: nil)
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
+
+  attr(:color, :string,
+    default: "primary",
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+  )
+
+  attr(:disabled, :boolean, default: false)
+  attr(:class, :string, default: nil)
+  attr(:label_class, :string, default: nil)
+  attr(:switch_class, :string, default: nil)
+  attr(:rest, :global)
 
   def dm_switch(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns
@@ -81,10 +85,21 @@ defmodule PhoenixDuskmoon.Component.Form.Switch do
     """
   end
 
-  defp size_classes("xs"), do: "w-8 h-4 after:top-[1px] after:left-[1px] after:h-3 after:w-3 peer-checked:after:translate-x-4"
-  defp size_classes("sm"), do: "w-9 h-5 after:top-[1px] after:left-[1px] after:h-4 after:w-4 peer-checked:after:translate-x-4"
-  defp size_classes("md"), do: "w-11 h-6 after:top-[2px] after:left-[2px] after:h-5 after:w-5 peer-checked:after:translate-x-5"
-  defp size_classes("lg"), do: "w-14 h-7 after:top-[2px] after:left-[2px] after:h-6 after:w-6 peer-checked:after:translate-x-7"
+  defp size_classes("xs"),
+    do:
+      "w-8 h-4 after:top-[1px] after:left-[1px] after:h-3 after:w-3 peer-checked:after:translate-x-4"
+
+  defp size_classes("sm"),
+    do:
+      "w-9 h-5 after:top-[1px] after:left-[1px] after:h-4 after:w-4 peer-checked:after:translate-x-4"
+
+  defp size_classes("md"),
+    do:
+      "w-11 h-6 after:top-[2px] after:left-[2px] after:h-5 after:w-5 peer-checked:after:translate-x-5"
+
+  defp size_classes("lg"),
+    do:
+      "w-14 h-7 after:top-[2px] after:left-[2px] after:h-6 after:w-6 peer-checked:after:translate-x-7"
 
   defp color_classes("primary"), do: "peer-checked:bg-primary"
   defp color_classes("secondary"), do: "peer-checked:bg-secondary"
