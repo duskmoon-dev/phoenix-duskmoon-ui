@@ -1,3 +1,10 @@
+# [7.2.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.1.3...v7.2.0) (2025-10-23)
+
+
+### Features
+
+* add component modules and storybook stories with comprehensive tests ([78d0a0a](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/78d0a0afff885a5e6d4b0265b8220f327cb8e8fe))
+
 ## [7.1.3](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.1.2...v7.1.3) (2025-10-18)
 
 
