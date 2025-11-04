@@ -140,6 +140,22 @@ Storybook stories are defined in `.story.exs` files under `apps/duskmoon_storybo
 - Import `Phoenix.LiveViewTest` and use `render_component/2`
 - Use partial string matching with `=~` for HTML assertions (avoid exact matches that break with formatting)
 
+### Known Technical Debt
+
+**Form Input Component Refactoring Needed** (HIGH PRIORITY):
+- `apps/phoenix_duskmoon/lib/phoenix_duskmoon/component/form/input.ex` is 861 lines
+- Handles 30+ input types in a single file (violates single responsibility principle)
+- Significant code duplication in class building (repeated 20+ times)
+- Should be split into separate component modules:
+  - Basic inputs (text, email, password, etc.) - keep in main input.ex
+  - Choice inputs (checkbox, radio, toggle, switch) - extract to separate file
+  - Complex inputs (select, textarea) - extract to separate file
+  - Specialized inputs (slider, rating, date/time pickers, file upload, rich text, etc.) - extract to separate files
+- Create shared helper module for common class building logic
+- Refactoring blocked by: need to maintain backward compatibility, extensive testing required
+- Estimated effort: 2-3 days of work
+- See architecture analysis report for detailed breakdown
+
 ## File Structure
 
 - `apps/phoenix_duskmoon/` - Main component library (published to Hex)

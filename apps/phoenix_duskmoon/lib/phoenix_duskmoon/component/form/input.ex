@@ -163,11 +163,11 @@ defmodule PhoenixDuskmoon.Component.Form.Input do
           id={@id}
           name={@name}
           class={[
-            if(!@classic, do: "textarea textarea-bordered"),
-            @color && "textarea-#{@color}",
-            @size && "textarea-#{@size}",
+            if(!@classic, do: "select select-bordered"),
+            @color && "select-#{@color}",
+            @size && "select-#{@size}",
             @class,
-            @errors != [] && "textarea-error"
+            @errors != [] && "select-error"
           ]}
           multiple={@multiple}
           {@rest}
@@ -222,9 +222,9 @@ defmodule PhoenixDuskmoon.Component.Form.Input do
             <input
               type="radio"
               class={[
-                if(!@classic, do: "checkbox"),
-                @color && "checkbox-#{@color}",
-                @size && "checkbox-#{@size}",
+                if(!@classic, do: "radio"),
+                @color && "radio-#{@color}",
+                @size && "radio-#{@size}",
                 @class
               ]}
               name={@name}
@@ -248,12 +248,13 @@ defmodule PhoenixDuskmoon.Component.Form.Input do
         <textarea
           id={@id}
           name={@name}
-              class={[
-                if(!@classic, do: "radio"),
-                @color && "radio-#{@color}",
-                @size && "radio-#{@size}",
-                @class
-              ]}
+          class={[
+            if(!@classic, do: "textarea textarea-bordered"),
+            @color && "textarea-#{@color}",
+            @size && "textarea-#{@size}",
+            @class,
+            @errors != [] && "textarea-error"
+          ]}
           {@rest}
         ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
         <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
