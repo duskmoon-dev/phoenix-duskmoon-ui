@@ -1,9 +1,10 @@
 defmodule PhoenixDuskmoon.Mixfile do
   use Mix.Project
 
-  # Also change package.json version
+  # Version is automatically updated by semantic-release in CI
+  # Do not manually edit - use mix version.sync to sync from published version
   @source_url "https://github.com/duskmoon-dev/phoenix-duskmoon-ui.git"
-  @version "6.3.0"
+  @version "7.2.1"
 
   def project do
     [

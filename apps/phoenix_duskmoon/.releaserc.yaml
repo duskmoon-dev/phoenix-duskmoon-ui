@@ -14,6 +14,9 @@ plugins:
   - - "@semantic-release/git"
     - "assets":
         - "CHANGELOG.md"
+        - "mix.exs"
+        - "package.json"
+        - "../../mix.exs"
       "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
   - "@semantic-release/github"
   - - "@semantic-release/exec"
@@ -21,6 +24,7 @@ plugins:
         echo ${nextRelease.version};
         sed -i 's%@version "[0-9\.]\+"%@version "${nextRelease.version}"%' mix.exs;
         sed -i 's%"version": "[0-9\.]\+"%"version": "${nextRelease.version}"%' package.json;
+        sed -i 's%@version "[0-9\.]\+"%@version "${nextRelease.version}"%' ../../mix.exs;
         mix prepublish;
       "publishCmd" : |
         echo publish phoenix_duskmoon ${nextRelease.version};

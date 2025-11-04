@@ -67,10 +67,38 @@ Storybook stories are defined in `.story.exs` files under `apps/duskmoon_storybo
 - `bun install` - Install Node.js dependencies (in workspaces)
 - `mix cmd mix deps.get` - Run command in all umbrella apps
 
+### Version Management
+
+**Automated Releases**: This project uses [semantic-release](https://github.com/semantic-release/semantic-release) for fully automated version management and package publishing.
+
+**Version Files**:
+- `apps/phoenix_duskmoon/mix.exs` - Source of truth (@version)
+- `apps/phoenix_duskmoon/package.json` - npm package version
+- `mix.exs` (umbrella root) - Tracks phoenix_duskmoon version
+
+**Commands**:
+- `mix version.sync` - Sync all version files (run after pulling main branch)
+
+**How it works**:
+1. Commits to `main` branch trigger CI workflow
+2. Semantic-release analyzes commits using conventional commits format
+3. Determines next version based on commit types (feat, fix, etc.)
+4. Automatically updates all three version files
+5. Publishes to Hex.pm and npm registry
+6. Commits version changes back with `[skip ci]` tag
+7. Creates GitHub release with changelog
+
+**Important Notes**:
+- **Never manually edit** version numbers - let semantic-release handle it
+- Use conventional commit format: `feat:`, `fix:`, `docs:`, etc.
+- `BREAKING CHANGE:` in commit body triggers major version bump
+- After pulling from main, run `mix version.sync` to sync local files
+- Configuration in `apps/phoenix_duskmoon/.releaserc.yaml`
+
 ### Publishing
-- `mix prepublish` - Prepare package for publishing (copies README, builds CSS/JS)
-- Version is managed in `apps/phoenix_duskmoon/mix.exs` (@version)
-- Also update `package.json` version to match
+- Publishing is automated via semantic-release (see Version Management above)
+- `mix prepublish` - Prepare package manually (copies README, builds CSS/JS)
+- Only needed for local testing or manual publishing
 
 ### Testing and Quality
 - Tests run on Elixir 1.18 with OTP 27/28 in CI
