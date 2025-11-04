@@ -13,7 +13,7 @@ defmodule PhoenixDuskmoon.Component.Tooltip do
       </.dm_tooltip>
 
       <.dm_tooltip content="Press Ctrl+S to save" position="right" color="info">
-        <.dm_mdi>information</.dm_mdi>
+        <.dm_mdi name="information" />
       </.dm_tooltip>
 
   ## Attributes
