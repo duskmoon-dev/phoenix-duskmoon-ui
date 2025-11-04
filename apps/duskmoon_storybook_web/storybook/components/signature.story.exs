@@ -14,7 +14,7 @@ defmodule Storybook.Components.Signature do
         template: """
         <div class="bg-white border-2 border-gray-200 rounded-lg p-8 relative h-48">
           <p class="text-gray-600 text-sm mb-4">Document content here...</p>
-          <.variation />
+          <.dm_fun_signature id="signature-default" content="A" />
         </div>
         """
       },
@@ -31,7 +31,7 @@ defmodule Storybook.Components.Signature do
         <div class="bg-white border-2 border-gray-200 rounded-lg p-8 relative h-48">
           <p class="text-gray-600 text-sm mb-4">Purchase Order #12345</p>
           <p class="text-gray-600 text-sm mb-4">Total: $1,234.56</p>
-          <.variation />
+          <.dm_fun_signature id="signature-approved" content="Approved" size="medium" color="#0066cc" rotation="-15" />
         </div>
         """
       },
@@ -48,7 +48,7 @@ defmodule Storybook.Components.Signature do
         <div class="bg-white border-2 border-gray-200 rounded-lg p-8 relative h-48">
           <p class="text-gray-600 text-sm mb-4">Certificate of Authenticity</p>
           <p class="text-gray-600 text-sm mb-4">This document has been verified</p>
-          <.variation />
+          <.dm_fun_signature id="signature-verified" content="✓" size="large" color="#16a34a" rotation="0" />
         </div>
         """
       },
@@ -65,7 +65,7 @@ defmodule Storybook.Components.Signature do
         <div class="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg p-8 relative h-48">
           <p class="text-indigo-800 text-sm mb-4">Premium Quality Certified</p>
           <p class="text-indigo-600 text-sm mb-4">5-Star Rating</p>
-          <.variation />
+          <.dm_fun_signature id="signature-star" content="★" size="large" color="#fbbf24" rotation="0" />
         </div>
         """
       },
@@ -83,7 +83,7 @@ defmodule Storybook.Components.Signature do
         <div class="bg-white border-2 border-gray-200 rounded-lg p-8 relative h-48">
           <p class="text-gray-600 text-sm mb-4">Application for Review</p>
           <p class="text-gray-600 text-sm mb-4">Status: Under consideration</p>
-          <.variation />
+          <.dm_fun_signature id="signature-rejected" content="REJECTED" size="medium" color="#dc2626" rotation="45" opacity="0.8" />
         </div>
         """
       },
@@ -101,7 +101,7 @@ defmodule Storybook.Components.Signature do
         <div class="bg-white border-2 border-gray-200 rounded-lg p-8 relative h-48">
           <p class="text-gray-600 text-sm mb-4">Internal Document</p>
           <p class="text-gray-600 text-sm mb-4">For authorized eyes only</p>
-          <.variation />
+          <.dm_fun_signature id="signature-confidential" content="CONFIDENTIAL" size="medium" color="#7c3aed" rotation="-30" opacity="0.6" />
         </div>
         """
       },
@@ -122,7 +122,7 @@ defmodule Storybook.Components.Signature do
         <div class="bg-white border-2 border-gray-200 rounded-lg p-8 relative h-48 overflow-hidden">
           <p class="text-gray-600 text-sm mb-4">Project Proposal</p>
           <p class="text-gray-600 text-sm mb-4">Version 1.0 - Not for distribution</p>
-          <.variation />
+          <.dm_fun_signature id="signature-watermark" content="DRAFT" size="large" color="#9ca3af" rotation="-45" opacity="0.3" top="50%" right="50%" position="fixed" />
         </div>
         """
       },
@@ -140,7 +140,7 @@ defmodule Storybook.Components.Signature do
         <div class="bg-red-50 border-2 border-red-200 rounded-lg p-8 relative h-48">
           <p class="text-red-800 text-sm mb-4">High Priority Memo</p>
           <p class="text-red-600 text-sm mb-4">Immediate attention required</p>
-          <.variation />
+          <.dm_fun_signature id="signature-priority" content="URGENT" size="medium" color="#ea580c" rotation="0" opacity="0.9" />
         </div>
         """
       },
@@ -159,7 +159,7 @@ defmodule Storybook.Components.Signature do
         <div class="bg-white border-2 border-gray-200 rounded-lg p-8 relative h-48">
           <p class="text-gray-600 text-sm mb-4">Contract Agreement</p>
           <p class="text-gray-600 text-sm mb-4">Please initial here to confirm</p>
-          <.variation />
+          <.dm_fun_signature id="signature-custom" content="Initial" size="small" color="#059669" rotation="-20" right="1rem" top="1rem" />
         </div>
         """
       },

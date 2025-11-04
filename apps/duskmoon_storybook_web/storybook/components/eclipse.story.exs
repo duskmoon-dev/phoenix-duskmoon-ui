@@ -35,7 +35,7 @@ defmodule Storybook.Components.Eclipse do
         },
         template: """
         <div class="bg-black p-8 rounded-lg overflow-hidden">
-          <.variation />
+          <.dm_fun_eclipse id="eclipse-dark" size="medium" bg_color="#000000" />
         </div>
         """
       },
@@ -48,7 +48,7 @@ defmodule Storybook.Components.Eclipse do
         },
         template: """
         <div class="bg-gray-950 p-8 rounded-lg overflow-hidden">
-          <.variation />
+          <.dm_fun_eclipse id="eclipse-deep" size="medium" bg_color="#030712" />
         </div>
         """
       },
@@ -61,7 +61,7 @@ defmodule Storybook.Components.Eclipse do
         },
         template: """
         <div class="bg-indigo-950 p-8 rounded-lg overflow-hidden">
-          <.variation />
+          <.dm_fun_eclipse id="eclipse-purple" size="medium" bg_color="#1e1b4b" />
         </div>
         """
       },

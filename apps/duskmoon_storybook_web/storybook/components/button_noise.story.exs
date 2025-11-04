@@ -28,7 +28,7 @@ defmodule Storybook.Components.ButtonNoise do
         },
         template: """
         <div class="bg-slate-900 p-8 rounded-lg">
-          <.variation />
+          <.dm_fun_button_noise id="noise-electric" content="Power Up" color_scheme="electric" />
         </div>
         """
       },
@@ -41,7 +41,7 @@ defmodule Storybook.Components.ButtonNoise do
         },
         template: """
         <div class="bg-purple-950 p-8 rounded-lg">
-          <.variation />
+          <.dm_fun_button_noise id="noise-neon" content="Neon Glow" color_scheme="neon" />
         </div>
         """
       },

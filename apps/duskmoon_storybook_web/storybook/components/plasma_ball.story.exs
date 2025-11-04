@@ -35,7 +35,7 @@ defmodule Storybook.Components.PlasmaBall do
         },
         template: """
         <div class="bg-black p-8 rounded-lg">
-          <.variation />
+          <.dm_fun_plasma_ball id="plasma-dark" size="medium" base_color="#000000" />
         </div>
         """
       },
@@ -48,7 +48,7 @@ defmodule Storybook.Components.PlasmaBall do
         },
         template: """
         <div class="bg-purple-950 p-8 rounded-lg">
-          <.variation />
+          <.dm_fun_plasma_ball id="plasma-purple" size="medium" base_color="#2d1b69" />
         </div>
         """
       },
@@ -61,7 +61,7 @@ defmodule Storybook.Components.PlasmaBall do
         },
         template: """
         <div class="bg-blue-950 p-8 rounded-lg">
-          <.variation />
+          <.dm_fun_plasma_ball id="plasma-blue" size="medium" base_color="#0c4a6e" />
         </div>
         """
       },
@@ -84,7 +84,7 @@ defmodule Storybook.Components.PlasmaBall do
           <div class="text-center mb-4">
             <p class="text-slate-300 text-sm">Click the plasma ball to toggle the electricity effect!</p>
           </div>
-          <.variation />
+          <.dm_fun_plasma_ball id="plasma-interactive" size="medium" />
         </div>
         """
       },
