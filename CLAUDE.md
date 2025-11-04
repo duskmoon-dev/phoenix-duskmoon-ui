@@ -19,13 +19,38 @@ This is an Elixir umbrella project with Phoenix LiveView components and a Node.j
 - **Frontend Dependencies**: Uses `duskmoonui` npm package (extends `daisyui` with tertiary colors)
 - **Storybook**: Live component showcase for development and documentation
 
+### Component Organization
+
+Components are organized into three main categories:
+
+1. **Standard Components** (`PhoenixDuskmoon.Component.*`): UI components like buttons, cards, forms, navigation
+   - Imported via `use PhoenixDuskmoon.Component` in view helpers
+   - All use `dm_` prefix (e.g., `dm_btn`, `dm_card`, `dm_form`)
+
+2. **Form Components** (`PhoenixDuskmoon.Component.Form.*`): Specialized form inputs
+   - Separated into individual modules: Input, CompactInput, Checkbox, Radio, Select, Slider, Switch, Textarea
+   - The main Form module provides form container, labels, and error handling
+   - **Important**: Never use `<.variation />` in storybook templates - it's undefined. Use actual component calls like `<.dm_fun_snow id="..." />`
+
+3. **Fun Components** (`PhoenixDuskmoon.Component.Fun.*`): Interactive/animated components
+   - ButtonNoise, Eclipse, PlasmaBall, Signature, Snow, SpotlightSearch
+   - Imported via `use PhoenixDuskmoon.Fun` in view helpers
+   - Use `dm_fun_` prefix (e.g., `dm_fun_snow`, `dm_fun_plasma_ball`)
+
+### Storybook Architecture
+
+Storybook stories are defined in `.story.exs` files under `apps/duskmoon_storybook_web/storybook/components/`:
+- Each story uses `PhoenixStorybook.Story` with `%Variation{}` structs
+- Variations can have `attributes` or custom `template` blocks
+- When using templates, **always use explicit component calls** - the `.variation` helper is not available in template contexts
+
 ## Development Commands
 
 ### Essential Commands
 - `mix setup` - Setup all applications in the umbrella
 - `mix test` - Run all tests across all apps
 - `mix test path/to/file_test.exs` - Run specific test file
-- `mix test path/to/file_test.exs:line_number` - Run specific test
+- `mix test path/to/file_test.exs:line_number` - Run specific test at line
 - `mix format` - Format all code (required before commits)
 - `mix format --check-formatted` - Check formatting without changes
 - `mix compile --warnings-as-errors` - Compile with warnings as errors
@@ -42,10 +67,16 @@ This is an Elixir umbrella project with Phoenix LiveView components and a Node.j
 - `bun install` - Install Node.js dependencies (in workspaces)
 - `mix cmd mix deps.get` - Run command in all umbrella apps
 
+### Publishing
+- `mix prepublish` - Prepare package for publishing (copies README, builds CSS/JS)
+- Version is managed in `apps/phoenix_duskmoon/mix.exs` (@version)
+- Also update `package.json` version to match
+
 ### Testing and Quality
 - Tests run on Elixir 1.18 with OTP 27/28 in CI
-- `mix format --check-formatted` is enforced in PRs
-- Compilation with warnings as errors (with some known exceptions)
+- `mix format --check-formatted` is enforced in CI
+- Compilation with warnings as errors
+- Use `render_component/2` from Phoenix.LiveViewTest for component testing
 
 ## Code Style Guidelines
 
@@ -59,6 +90,8 @@ This is an Elixir umbrella project with Phoenix LiveView components and a Node.j
 - Components use `attr/3` and `slot/2` for LiveView HEEX components
 - All components must have `@doc type: :component`
 - Component naming: prefix with `dm_` (e.g., `dm_btn`, `dm_mdi`)
+- Form components go in `PhoenixDuskmoon.Component.Form.*` namespace
+- Fun/interactive components go in `PhoenixDuskmoon.Component.Fun.*` namespace
 - Use `render_component/2` for component tests
 
 ### Frontend/Styling
@@ -73,11 +106,23 @@ This is an Elixir umbrella project with Phoenix LiveView components and a Node.j
   @import "phoenix_duskmoon/components";
   ```
 
+### Test Writing
+- Test files mirror source structure: `apps/phoenix_duskmoon/test/phoenix_duskmoon/component/`
+- Use `async: true` for parallel test execution when possible
+- Import `Phoenix.LiveViewTest` and use `render_component/2`
+- Use partial string matching with `=~` for HTML assertions (avoid exact matches that break with formatting)
+
 ## File Structure
 
 - `apps/phoenix_duskmoon/` - Main component library (published to Hex)
+  - `lib/phoenix_duskmoon/component/` - Standard UI components
+  - `lib/phoenix_duskmoon/component/form/` - Form input components
+  - `lib/phoenix_duskmoon/component/fun/` - Interactive/animated components
+  - `test/` - Test files mirroring lib structure
+  - `assets/css/` - CSS source files
 - `apps/duskmoon_storybook/` - Storybook backend application
 - `apps/duskmoon_storybook_web/` - Storybook Phoenix web application
+  - `storybook/components/` - Story definitions (.story.exs files)
 - `package.json` - Root workspace configuration
 - Each app has its own `mix.exs` with shared dependencies
 
@@ -111,8 +156,8 @@ When working on Phoenix projects that use the Phoenix Duskmoon UI library:
   </.dm_card>
 
   # Icons (Material Design or Bootstrap)
-  <.dm_mdi>home</.dm_mdi>
-  <.dm_bsi>house</.dm_bsi>
+  <.dm_mdi name="home" />
+  <.dm_bsi name="house" />
 
   # Forms with styling
   <.dm_form for={@form} phx-submit="save">
@@ -147,10 +192,11 @@ Projects need these CSS imports:
 ```
 
 ### Available Components
-- **Basic**: buttons, cards, links, icons
+- **Basic**: buttons, cards, links, icons, avatar, badge, divider, dropdown, progress, tooltip
 - **Navigation**: appbar, navbar, breadcrumb, tabs
 - **Data Display**: tables, pagination, flash, markdown
-- **Forms**: form containers, loading, modal
-- **Layout**: page headers, footers, theme switcher
+- **Forms**: form containers, inputs, checkbox, radio, select, slider, switch, textarea
+- **Layout**: page headers, footers, theme switcher, loading, modal
+- **Fun**: button noise, eclipse, plasma ball, signature, snow effects, spotlight search
 
 When adding new UI components, follow the established pattern and use the appropriate Duskmoon UI components rather than custom HTML/CSS.
