@@ -1,3 +1,10 @@
+## [7.2.1](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.2.0...v7.2.1) (2025-11-04)
+
+
+### Bug Fixes
+
+* replace undefined .variation component with actual component references in storybook stories ([02f7b83](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/02f7b837fc1be72a30975e190de2954076b5fb95))
+
 # [7.2.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.1.3...v7.2.0) (2025-10-23)
 
 
