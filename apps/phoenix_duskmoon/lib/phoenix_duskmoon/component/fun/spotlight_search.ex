@@ -4,12 +4,14 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearch do
 
   ## Examples
 
-      <.dm_fun_spotlight_search id="global-search" phx-target={@myself}>
+      # Basic usage in a LiveView
+      <.dm_fun_spotlight_search id="global-search">
         <:suggestion icon="search" label="Search users" action="navigate_users" />
         <:suggestion icon="file" label="Search documents" action="navigate_docs" />
         <:suggestion icon="settings" label="Search settings" action="navigate_settings" />
       </.dm_fun_spotlight_search>
 
+      # With phx-target for use within a LiveComponent
       <.dm_fun_spotlight_search
         id="quick-search"
         placeholder="Quick search..."

@@ -33,7 +33,12 @@ defmodule PhoenixDuskmoon.Component.ThemeSwitcher do
     assigns = assigns |> assign_new(:rid, fn -> Enum.random(0..999_999) end)
 
     ~H"""
-    <div id={@id || "theme-switcher-#{@rid}"} class={["dropdown", @class]}>
+    <div
+      id={@id || "theme-switcher-#{@rid}"}
+      class={["dropdown", @class]}
+      phx-hook="ThemeSwitcher"
+      data-theme={@theme}
+    >
       <div tabindex="0" role="button" class="btn btn-ghost">
         Theme
         <svg
@@ -79,34 +84,6 @@ defmodule PhoenixDuskmoon.Component.ThemeSwitcher do
         </li>
       </ul>
     </div>
-    <script>
-      (function() {
-        const once = (cb) => {
-          let called = false;
-          requestAnimationFrame(() => {
-            if (called === false) {
-              called = true;
-              cb();
-            }
-          });
-        };
-        const serverTheme = "<%= @theme %>";
-        let theme = serverTheme || localStorage.getItem("theme") || "default";
-        const themeSwitcher = document.getElementById("<%= @id || "theme-switcher-#{@rid}" %>");
-        const themeControllers = themeSwitcher.querySelectorAll(".theme-controller");
-        themeControllers.forEach(c => c.checked = theme === c.value);
-
-        themeControllers.forEach(function(controller) {
-          controller.addEventListener("change", function(event) {
-            theme = event.target.value;
-            requestAnimationFrame(() => {
-              localStorage.setItem("theme", theme);
-            });
-          });
-        });
-
-      })();
-    </script>
     """
   end
 end

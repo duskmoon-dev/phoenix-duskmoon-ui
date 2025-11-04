@@ -4,18 +4,20 @@ defmodule PhoenixDuskmoon.Component.Fun.PlasmaBall do
 
   ## Examples
 
+      # Basic usage
       <.dm_fun_plasma_ball
         id="plasma-ball-1"
         size="medium"
         base_color="#222222"
-        phx-click="plasma_toggle"
-        phx-target={@myself}
       />
 
+      # With phx-click and phx-target for use within a LiveComponent
       <.dm_fun_plasma_ball
         id="plasma-ball-2"
         size="large"
         base_color="#1a1a2e"
+        phx-click="plasma_toggle"
+        phx-target={@myself}
         show_electrode={false}
       />
 

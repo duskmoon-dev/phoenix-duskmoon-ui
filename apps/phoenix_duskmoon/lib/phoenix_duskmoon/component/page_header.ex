@@ -157,6 +157,8 @@ defmodule PhoenixDuskmoon.Component.PageHeader do
         "flex flex-col",
         @class
       ]}
+      phx-hook="PageHeader"
+      data-nav-id={@nav_id}
     >
       <nav class={["w-full h-12", "flex items-center flex-none"]}>
         <div
@@ -233,41 +235,6 @@ defmodule PhoenixDuskmoon.Component.PageHeader do
         <%= render_slot(@inner_block) %>
       </div>
     </header>
-    <script type="module">
-    (function() {
-      function respondToVisibility(element, callback) {
-        var list = [];
-        for(let i = 0; i <= 10; i++) {
-          list.push(i / 10);
-        }
-        var options = {
-          root: null,
-          rootMargin: "0px",
-          threshold: list,
-        };
-
-        var observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            callback(entry.intersectionRatio);
-          });
-        }, options);
-
-        observer.observe(element);
-      }
-      var nid = '<%= @nav_id %>';
-      var hid = '<%= @id %>';
-      var nel = document.getElementById(nid);
-      var hel = document.getElementById(hid);
-      respondToVisibility(hel, function(intersectionRatio) {
-        if (intersectionRatio <= 0.5) {
-          nel.classList.remove('hidden');
-          nel.style.opacity = 1 - intersectionRatio;
-        } else {
-          nel.classList.add('hidden');
-        }
-      });
-    })();
-    </script>
     """
   end
 end

@@ -191,6 +191,59 @@ Projects need these CSS imports:
 @import "phoenix_duskmoon/components";
 ```
 
+### JavaScript Hooks Setup (Required)
+
+**IMPORTANT**: Some components require LiveView hooks to function properly. You must register these hooks in your application.
+
+Components that require hooks:
+- `<.dm_theme_switcher>` - Theme switching with localStorage
+- `<.dmf_spotlight>` - Keyboard shortcut handling (Cmd/Ctrl+K)
+- `<.dm_page_header>` - Intersection observer for scroll effects
+
+#### Setup Instructions
+
+1. In your `assets/js/app.js` or equivalent:
+
+```javascript
+import {LiveSocket} from "phoenix_live_view"
+import * as DuskmoonHooks from "phoenix_duskmoon/hooks"
+
+// When creating your LiveSocket:
+let liveSocket = new LiveSocket("/live", Socket, {
+  params: {_csrf_token: csrfToken},
+  hooks: DuskmoonHooks  // Add this line
+})
+```
+
+2. If you need to merge with existing hooks:
+
+```javascript
+import * as DuskmoonHooks from "phoenix_duskmoon/hooks"
+import MyCustomHooks from "./my_hooks"
+
+let hooks = {...DuskmoonHooks, ...MyCustomHooks}
+
+let liveSocket = new LiveSocket("/live", Socket, {
+  params: {_csrf_token: csrfToken},
+  hooks: hooks
+})
+```
+
+3. Individual hook imports (if needed):
+
+```javascript
+import {ThemeSwitcher, Spotlight, PageHeader} from "phoenix_duskmoon/hooks"
+
+let hooks = {
+  ThemeSwitcher,
+  Spotlight,
+  PageHeader,
+  // ... your other hooks
+}
+```
+
+**Note**: Components using hooks will not function correctly without this setup. The hooks handle client-side interactions like keyboard shortcuts, localStorage persistence, and scroll-based effects that cannot be handled server-side.
+
 ### Available Components
 - **Basic**: buttons, cards, links, icons, avatar, badge, divider, dropdown, progress, tooltip
 - **Navigation**: appbar, navbar, breadcrumb, tabs

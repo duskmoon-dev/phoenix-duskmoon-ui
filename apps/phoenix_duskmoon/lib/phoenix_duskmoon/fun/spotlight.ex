@@ -50,6 +50,7 @@ defmodule PhoenixDuskmoon.Fun.Spotlight do
     <dialog
       id={@id}
       class={["modal", "dm-fun-spotlight-search", @class]}
+      phx-hook="Spotlight"
     >
       <div class="modal-box">
         <label class="dm-fun-spotlight-input">
@@ -72,21 +73,6 @@ defmodule PhoenixDuskmoon.Fun.Spotlight do
         <button>close</button>
       </form>
     </dialog>
-    <script type="module">
-    const ssd = document.getElementById('<%= @id %>');
-    window.addEventListener('keydown', (evt) => {
-      if (evt.metaKey && evt.code == 'KeyK') {
-        ssd.showModal();
-        const cb = (evt) => {
-          if (evt.code === 'Escape') {
-            ssd.close();
-          }
-          window.removeEventListener('keydown', cb);
-        };
-        window.addEventListener('keydown', cb);
-      }
-    });
-    </script>
     """
   end
 end

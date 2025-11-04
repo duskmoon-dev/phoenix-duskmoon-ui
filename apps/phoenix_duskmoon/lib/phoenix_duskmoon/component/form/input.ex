@@ -86,6 +86,8 @@ defmodule PhoenixDuskmoon.Component.Form.Input do
                 multiple pattern placeholder readonly required rows size step)
   )
 
+  attr(:phx_target, :any, default: nil, doc: "the phx-target for events (for use in LiveComponents)")
+
   slot(:inner_block)
 
   def dm_input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -733,7 +735,7 @@ defmodule PhoenixDuskmoon.Component.Form.Input do
                 "range range-sm",
                 @color && "range-#{@color}"
               ]}
-              phx-target={@myself}
+              phx-target={@phx_target}
               phx-change="range_max_change"
             />
           </div>
