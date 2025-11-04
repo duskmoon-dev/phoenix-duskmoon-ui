@@ -34,7 +34,7 @@ defmodule Storybook.Components.Dropdown do
           <:trigger>
             <.dm_btn variant="primary">
               Actions
-              <.dm_mdi class="ml-1">chevron-down</.dm_mdi>
+              <.dm_mdi name="chevron-down" class="ml-1" />
             </.dm_btn>
           </:trigger>
           """,
@@ -56,16 +56,16 @@ defmodule Storybook.Components.Dropdown do
           """
           <:trigger>
             <.dm_btn variant="secondary">
-              <.dm_mdi>account-circle</.dm_mdi>
+              <.dm_mdi name="account-circle" />
               User
             </.dm_btn>
           </:trigger>
           """,
           """
           <:content>
-            <li><a><.dm_mdi class="mr-2">account</.dm_mdi>Profile</a></li>
-            <li><a><.dm_mdi class="mr-2">cog</.dm_mdi>Settings</a></li>
-            <li><a><.dm_mdi class="mr-2">logout</.dm_mdi>Logout</a></li>
+            <li><a><.dm_mdi name="account" class="mr-2" />Profile</a></li>
+            <li><a><.dm_mdi name="cog" class="mr-2" />Settings</a></li>
+            <li><a><.dm_mdi name="logout" class="mr-2" />Logout</a></li>
           </:content>
           """
         ]
@@ -79,7 +79,7 @@ defmodule Storybook.Components.Dropdown do
           """
           <:trigger>
             <.dm_btn variant="success">
-              <.dm_mdi class="mr-1">check</.dm_mdi>
+              <.dm_mdi name="check" class="mr-1" />
               Complete
             </.dm_btn>
           </:trigger>
@@ -103,7 +103,7 @@ defmodule Storybook.Components.Dropdown do
           """
           <:trigger>
             <.dm_btn variant="warning">
-              <.dm_mdi class="mr-1">alert</.dm_mdi>
+              <.dm_mdi name="alert" class="mr-1" />
               Warnings
             </.dm_btn>
           </:trigger>
@@ -126,7 +126,7 @@ defmodule Storybook.Components.Dropdown do
           """
           <:trigger>
             <.dm_btn variant="ghost" shape="square" size="sm">
-              <.dm_mdi>dots-vertical</.dm_mdi>
+              <.dm_mdi name="dots-vertical" />
             </.dm_btn>
           </:trigger>
           """,
@@ -148,7 +148,7 @@ defmodule Storybook.Components.Dropdown do
           """
           <:trigger>
             <.dm_btn variant="info">
-              <.dm_mdi class="mr-1">navigation</.dm_mdi>
+              <.dm_mdi name="navigation" class="mr-1" />
               Navigate
             </.dm_btn>
           </:trigger>

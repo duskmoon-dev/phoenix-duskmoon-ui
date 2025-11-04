@@ -206,7 +206,7 @@ For advanced theming, you can import additional CSS modules:
   <:actions>
     <.dm_theme_switcher />
     <.dm_btn variant="ghost" shape="circle">
-      <.dm_mdi>account_circle</.dm_mdi>
+      <.dm_mdi name="account_circle" />
     </.dm_btn>
   </:actions>
 </.dm_appbar>
@@ -231,10 +231,10 @@ The library includes Material Design Icons and Bootstrap Icons:
 
 ```elixir
 # Material Design Icons
-<.dm_mdi>home</.dm_mdi>
+<.dm_mdi name="home" />
 
 # Bootstrap Icons
-<.dm_bsi>house</.dm_bsi>
+<.dm_bsi name="house" />
 ```
 
 ### Custom Themes

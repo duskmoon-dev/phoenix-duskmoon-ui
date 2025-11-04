@@ -98,7 +98,7 @@ defmodule Storybook.Components.Tooltip do
         },
         slots: [
           """
-          <.dm_mdi>information</.dm_mdi>
+          <.dm_mdi name="information" />
           """
         ]
       },
@@ -111,7 +111,7 @@ defmodule Storybook.Components.Tooltip do
         slots: [
           """
           <.dm_btn variant="outline" shape="square">
-            <.dm_mdi>content-copy</.dm_mdi>
+            <.dm_mdi name="content-copy" />
           </.dm_btn>
           """
         ]

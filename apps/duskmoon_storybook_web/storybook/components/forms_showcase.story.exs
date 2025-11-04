@@ -26,7 +26,7 @@ defmodule Storybook.Components.FormsShowcase do
             <:subtitle>Comprehensive demonstration of Phoenix Duskmoon UI form components</:subtitle>
             <:actions>
               <.dm_btn variant="primary" phx-click="show_guide">
-                <.dm_mdi>help-circle</.dm_mdi>
+                <.dm_mdi name="help-circle" />
                 View Guide
               </.dm_btn>
             </:actions>
@@ -94,11 +94,11 @@ defmodule Storybook.Components.FormsShowcase do
 
                   <div class="flex items-center space-x-4">
                     <.dm_btn variant="primary" type="submit" loading={@loading_profile}>
-                      <.dm_mdi>content-save</.dm_mdi>
+                      <.dm_mdi name="content-save" />
                       Save Profile
                     </.dm_btn>
                     <.dm_btn variant="ghost" type="button">
-                      <.dm_mdi>cancel</.dm_mdi>
+                      <.dm_mdi name="cancel" />
                       Cancel
                     </.dm_btn>
                   </div>
@@ -153,11 +153,11 @@ defmodule Storybook.Components.FormsShowcase do
 
                   <div class="flex items-center space-x-4">
                     <.dm_btn variant="primary" type="submit">
-                      <.dm_mdi>content-save</.dm_mdi>
+                      <.dm_mdi name="content-save" />
                       Save Preferences
                     </.dm_btn>
                     <.dm_btn variant="outline" type="button">
-                      <.dm_mdi>restore</.dm_mdi>
+                      <.dm_mdi name="restore" />
                       Reset to Defaults
                     </.dm_btn>
                   </div>
@@ -349,7 +349,7 @@ defmodule Storybook.Components.FormsShowcase do
                       <option value="comments">Comments</option>
                     </.dm_form_dm_select>
                     <.dm_btn variant="primary" type="submit">
-                      <.dm_mdi>search</.dm_mdi>
+                      <.dm_mdi name="search" />
                       Search
                     </.dm_btn>
                   </.dm_form>
@@ -381,12 +381,12 @@ defmodule Storybook.Components.FormsShowcase do
                       </div>
                       <div class="flex justify-between">
                         <.dm_btn variant="ghost" disabled>
-                          <.dm_mdi>arrow-left</.dm_mdi>
+                          <.dm_mdi name="arrow-left" />
                           Previous
                         </.dm_btn>
                         <.dm_btn variant="primary">
                           Next
-                          <.dm_mdi>arrow-right</.dm_mdi>
+                          <.dm_mdi name="arrow-right" />
                         </.dm_btn>
                       </div>
                     </.dm_form>

@@ -29,11 +29,11 @@ defmodule Storybook.Components.UIShowcase do
             <:subtitle>Real-world examples of utility components working together in complete interfaces</:subtitle>
             <:actions>
               <.dm_btn variant="outline" phx-click="show_code">
-                <.dm_mdi>code-tags</.dm_mdi>
+                <.dm_mdi name="code-tags" />
                 View Code
               </.dm_btn>
               <.dm_btn variant="primary" phx-click="download_example">
-                <.dm_mdi>download</.dm_mdi>
+                <.dm_mdi name="download" />
                 Download Template
               </.dm_btn>
             </:actions>
@@ -57,7 +57,7 @@ defmodule Storybook.Components.UIShowcase do
               <.dm_appbar>
                 <:brand>
                   <div class="flex items-center space-x-2">
-                    <.dm_mdi class="text-2xl">rocket</.dm_mdi>
+                    <.dm_mdi name="rocket" class="text-2xl" />
                     <span class="font-bold">DemoApp</span>
                   </div>
                 </:brand>
@@ -74,10 +74,10 @@ defmodule Storybook.Components.UIShowcase do
 
                 <:actions>
                   <.dm_btn variant="ghost" size="sm">
-                    <.dm_mdi>search</.dm_mdi>
+                    <.dm_mdi name="search" />
                   </.dm_btn>
                   <.dm_btn variant="ghost" size="sm">
-                    <.dm_mdi>bell</.dm_mdi>
+                    <.dm_mdi name="bell" />
                     <.dm_badge variant="error" size="xs">3</.dm_badge>
                   </.dm_btn>
                   <.dm_dropdown>
@@ -93,15 +93,15 @@ defmodule Storybook.Components.UIShowcase do
                       </div>
                       <.dm_divider />
                       <.dm_btn variant="ghost" size="sm" class="w-full justify-start">
-                        <.dm_mdi>account</.dm_mdi>
+                        <.dm_mdi name="account" />
                         Profile
                       </.dm_btn>
                       <.dm_btn variant="ghost" size="sm" class="w-full justify-start">
-                        <.dm_mdi>settings</.dm_mdi>
+                        <.dm_mdi name="settings" />
                         Settings
                       </.dm_btn>
                       <.dm_btn variant="ghost" size="sm" class="w-full justify-start">
-                        <.dm_mdi>logout</.dm_mdi>
+                        <.dm_mdi name="logout" />
                         Logout
                       </.dm_btn>
                     </:content>
@@ -142,11 +142,11 @@ defmodule Storybook.Components.UIShowcase do
                       </div>
                       <div class="flex items-center space-x-2">
                         <.dm_btn variant="outline" size="sm">
-                          <.dm_mdi>download</.dm_mdi>
+                          <.dm_mdi name="download" />
                           Export
                         </.dm_btn>
                         <.dm_btn variant="primary" size="sm">
-                          <.dm_mdi>plus</.dm_mdi>
+                          <.dm_mdi name="plus" />
                           New Project
                         </.dm_btn>
                       </div>
@@ -174,7 +174,7 @@ defmodule Storybook.Components.UIShowcase do
                             <p class="text-2xl font-bold">24</p>
                             <p class="text-sm text-success">+12% from last month</p>
                           </div>
-                          <.dm_mdi class="text-3xl text-primary">folder</.dm_mdi>
+                          <.dm_mdi name="folder" class="text-3xl text-primary" />
                         </div>
                       </.dm_card>
 
@@ -185,7 +185,7 @@ defmodule Storybook.Components.UIShowcase do
                             <p class="text-2xl font-bold">142</p>
                             <p class="text-sm text-success">+8% from last week</p>
                           </div>
-                          <.dm_mdi class="text-3xl text-success">account-group</.dm_mdi>
+                          <.dm_mdi name="account-group" class="text-3xl text-success" />
                         </div>
                       </.dm_card>
 
@@ -196,7 +196,7 @@ defmodule Storybook.Components.UIShowcase do
                             <p class="text-2xl font-bold">$12,450</p>
                             <p class="text-sm text-error">-3% from last month</p>
                           </div>
-                          <.dm_mdi class="text-3xl text-warning">currency-usd</.dm_mdi>
+                          <.dm_mdi name="currency-usd" class="text-3xl text-warning" />
                         </div>
                       </.dm_card>
                     </div>
@@ -293,18 +293,18 @@ defmodule Storybook.Components.UIShowcase do
                       <h4 class="font-semibold">Sarah Chen</h4>
                       <p class="text-sm text-base-content/50">Product Designer</p>
                       <div class="flex justify-center items-center space-x-2 mt-2">
-                        <.dm_mdi class="text-sm">map-marker</.dm_mdi>
+                        <.dm_mdi name="map-marker" class="text-sm" />
                         <span class="text-sm">San Francisco</span>
                       </div>
                     </div>
                     <:footer>
                       <div class="flex space-x-2">
                         <.dm_btn variant="outline" size="sm" class="flex-1">
-                          <.dm_mdi>message</.dm_mdi>
+                          <.dm_mdi name="message" />
                           Message
                         </.dm_btn>
                         <.dm_btn variant="primary" size="sm" class="flex-1">
-                          <.dm_mdi>account-plus</.dm_mdi>
+                          <.dm_mdi name="account-plus" />
                           Follow
                         </.dm_btn>
                       </div>
@@ -319,7 +319,7 @@ defmodule Storybook.Components.UIShowcase do
                       <h4 class="font-semibold">Monthly Revenue</h4>
                       <.dm_tooltip content="View detailed analytics">
                         <.dm_btn variant="ghost" size="sm">
-                          <.dm_mdi>information</.dm_mdi>
+                          <.dm_mdi name="information" />
                         </.dm_btn>
                       </.dm_tooltip>
                     </div>
@@ -367,7 +367,7 @@ defmodule Storybook.Components.UIShowcase do
                   </div>
                   <:footer>
                     <.dm_btn variant="outline" size="sm" class="w-full">
-                      <.dm_mdi>plus</.dm_mdi>
+                      <.dm_mdi name="plus" />
                       Add Task
                     </.dm_btn>
                   </:footer>
@@ -383,7 +383,7 @@ defmodule Storybook.Components.UIShowcase do
                   <div class="space-y-4">
                     <div class="relative">
                       <input type="text" placeholder="Search projects..." class="input input-bordered w-full pl-10" />
-                      <.dm_mdi class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50">search</.dm_mdi>
+                      <.dm_mdi name="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50" />
                     </div>
                     <div class="flex flex-wrap gap-2">
                       <.dm_badge variant="primary" removable>Design</.dm_badge>
@@ -410,19 +410,19 @@ defmodule Storybook.Components.UIShowcase do
                   <:header><h4 class="font-semibold">Quick Actions</h4></:header>
                   <div class="grid grid-cols-2 gap-2">
                     <.dm_btn variant="outline" size="sm" class="flex flex-col h-16">
-                      <.dm_mdi class="text-xl">plus</.dm_mdi>
+                      <.dm_mdi name="plus" class="text-xl" />
                       <span class="text-xs">New Project</span>
                     </.dm_btn>
                     <.dm_btn variant="outline" size="sm" class="flex flex-col h-16">
-                      <.dm_mdi class="text-xl">upload</.dm_mdi>
+                      <.dm_mdi name="upload" class="text-xl" />
                       <span class="text-xs">Upload</span>
                     </.dm_btn>
                     <.dm_btn variant="outline" size="sm" class="flex flex-col h-16">
-                      <.dm_mdi class="text-xl">share</.dm_mdi>
+                      <.dm_mdi name="share" class="text-xl" />
                       <span class="text-xs">Share</span>
                     </.dm_btn>
                     <.dm_btn variant="outline" size="sm" class="flex flex-col h-16">
-                      <.dm_mdi class="text-xl">download</.dm_mdi>
+                      <.dm_mdi name="download" class="text-xl" />
                       <span class="text-xs">Export</span>
                     </.dm_btn>
                   </div>
@@ -441,7 +441,7 @@ defmodule Storybook.Components.UIShowcase do
                         <option>Viewer</option>
                       </select>
                       <.dm_btn variant="primary" size="sm">
-                        <.dm_mdi>plus</.dm_mdi>
+                        <.dm_mdi name="plus" />
                         Add
                       </.dm_btn>
                     </div>
@@ -590,19 +590,19 @@ defmodule Storybook.Components.UIShowcase do
                   <div class="flex items-center space-x-4">
                     <.dm_tooltip content="Click to save your work">
                       <.dm_btn variant="outline" size="sm">
-                        <.dm_mdi>content-save</.dm_mdi>
+                        <.dm_mdi name="content-save" />
                         Save
                       </.dm_btn>
                     </.dm_tooltip>
                     <.dm_tooltip content="Export as PDF">
                       <.dm_btn variant="outline" size="sm">
-                        <.dm_mdi>file-pdf</.dm_mdi>
+                        <.dm_mdi name="file-pdf" />
                         Export
                       </.dm_btn>
                     </.dm_tooltip>
                     <.dm_tooltip content="Share with your team">
                       <.dm_btn variant="outline" size="sm">
-                        <.dm_mdi>share</.dm_mdi>
+                        <.dm_mdi name="share" />
                         Share
                       </.dm_btn>
                     </.dm_tooltip>
@@ -616,7 +616,7 @@ defmodule Storybook.Components.UIShowcase do
           <.dm_card class="p-6">
             <:header>
               <div class="flex items-center space-x-2">
-                <.dm_mdi>lightbulb</.dm_mdi>
+                <.dm_mdi name="lightbulb" />
                 <h3 class="text-lg font-semibold">Best Practices & Guidelines</h3>
               </div>
             </:header>

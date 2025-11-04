@@ -30,7 +30,7 @@ defmodule Storybook.Components.FunShowcase do
             <:subtitle>Interactive and visual components that bring delight to your UI</:subtitle>
             <:actions>
               <.dm_btn variant="outline" phx-click="toggle_theme">
-                <.dm_mdi>theme-light-dark</.dm_mdi>
+                <.dm_mdi name="theme-light-dark" />
                 Toggle Theme
               </.dm_btn>
             </:actions>
@@ -40,7 +40,7 @@ defmodule Storybook.Components.FunShowcase do
           <.dm_card class="p-6">
             <:header>
               <div class="flex items-center space-x-2">
-                <.dm_mdi>search-web</.dm_mdi>
+                <.dm_mdi name="search-web" />
                 <h3>Spotlight Search</h3>
               </div>
             </:header>
@@ -51,11 +51,11 @@ defmodule Storybook.Components.FunShowcase do
 
               <div class="flex items-center space-x-4">
                 <.dm_btn variant="primary" phx-click="open_spotlight">
-                  <.dm_mdi>search</.dm_mdi>
+                  <.dm_mdi name="search" />
                   Open Spotlight (⌘+K)
                 </.dm_btn>
                 <.dm_btn variant="ghost" phx-click="open_spotlight_simple">
-                  <.dm_mdi>text-search</.dm_mdi>
+                  <.dm_mdi name="text-search" />
                   Simple Version
                 </.dm_btn>
               </div>
@@ -82,7 +82,7 @@ defmodule Storybook.Components.FunShowcase do
               <.dm_card class="p-6">
                 <:header>
                   <div class="flex items-center space-x-2">
-                    <.dm_mdi>creation</.dm_mdi>
+                    <.dm_mdi name="creation" />
                     <h3>Plasma Ball Effect</h3>
                   </div>
                 </:header>
@@ -93,15 +93,15 @@ defmodule Storybook.Components.FunShowcase do
 
                   <div class="flex items-center space-x-4 mb-4">
                     <.dm_btn variant="primary" phx-click="start_plasma">
-                      <.dm_mdi>play</.dm_mdi>
+                      <.dm_mdi name="play" />
                       Start Animation
                     </.dm_btn>
                     <.dm_btn variant="outline" phx-click="stop_plasma">
-                      <.dm_mdi>stop</.dm_mdi>
+                      <.dm_mdi name="stop" />
                       Stop Animation
                     </.dm_btn>
                     <.dm_btn variant="ghost" phx-click="reset_plasma">
-                      <.dm_mdi>refresh</.dm_mdi>
+                      <.dm_mdi name="refresh" />
                       Reset
                     </.dm_btn>
                   </div>
@@ -117,7 +117,7 @@ defmodule Storybook.Components.FunShowcase do
               <.dm_card class="p-6">
                 <:header>
                   <div class="flex items-center space-x-2">
-                    <.dm_mdi>weather-eclipse</.dm_mdi>
+                    <.dm_mdi name="weather-eclipse" />
                     <h3>Eclipse Animation</h3>
                   </div>
                 </:header>
@@ -128,13 +128,13 @@ defmodule Storybook.Components.FunShowcase do
 
                   <div class="flex items-center space-x-4 mb-4">
                     <.dm_btn variant="primary" phx-click="start_eclipse">
-                      <.dm_mdi>play</.dm_mdi>
+                      <.dm_mdi name="play" />
                       Start Eclipse
                     </.dm_btn>
                     <.dm_dropdown>
                       <:trigger>
                         <.dm_btn variant="outline">
-                          <.dm_mdi>palette</.dm_mdi>
+                          <.dm_mdi name="palette" />
                           Change Colors
                         </.dm_btn>
                       </:trigger>
@@ -145,7 +145,7 @@ defmodule Storybook.Components.FunShowcase do
                       </:content>
                     </.dm_dropdown>
                     <.dm_btn variant="ghost" phx-click="eclipse_speed">
-                      <.dm_mdi>speedometer</.dm_mdi>
+                      <.dm_mdi name="speedometer" />
                       Speed: <span id="eclipse-speed-text">Normal</span>
                     </.dm_btn>
                   </div>
@@ -161,7 +161,7 @@ defmodule Storybook.Components.FunShowcase do
               <.dm_card class="p-6">
                 <:header>
                   <div class="flex items-center space-x-2">
-                    <.dm_mdi>snowflake</.dm_mdi>
+                    <.dm_mdi name="snowflake" />
                     <h3>Snow Animation</h3>
                   </div>
                 </:header>
@@ -172,19 +172,19 @@ defmodule Storybook.Components.FunShowcase do
 
                   <div class="flex items-center space-x-4 mb-4">
                     <.dm_btn variant="primary" phx-click="start_snow">
-                      <.dm_mdi>play</.dm_mdi>
+                      <.dm_mdi name="play" />
                       Start Snow
                     </.dm_btn>
                     <.dm_btn variant="outline" phx-click="snow_light">
-                      <.dm_mdi>weather-snowy</.dm_mdi>
+                      <.dm_mdi name="weather-snowy" />
                       Light Snow
                     </.dm_btn>
                     <.dm_btn variant="outline" phx-click="snow_heavy">
-                      <.dm_mdi>weather-blizzard</.dm_mdi>
+                      <.dm_mdi name="weather-blizzard" />
                       Heavy Snow
                     </.dm_btn>
                     <.dm_btn variant="ghost" phx-click="stop_snow">
-                      <.dm_mdi>stop</.dm_mdi>
+                      <.dm_mdi name="stop" />
                       Stop
                     </.dm_btn>
                   </div>
@@ -192,7 +192,7 @@ defmodule Storybook.Components.FunShowcase do
                   <div class="bg-gradient-to-b from-sky-100 to-sky-50 rounded-lg p-4 relative h-96 overflow-hidden">
                     <div class="absolute inset-0 flex items-center justify-center">
                       <div class="text-center">
-                        <.dm_mdi class="text-6xl text-sky-400">pine-tree</.dm_mdi>
+                        <.dm_mdi name="pine-tree" class="text-6xl text-sky-400" />
                         <p class="mt-2 text-sky-700">Winter Wonderland</p>
                       </div>
                     </div>
@@ -209,7 +209,7 @@ defmodule Storybook.Components.FunShowcase do
               <.dm_card class="p-6">
                 <:header>
                   <div class="flex items-center space-x-2">
-                    <.dm_mdi>draw</.dm_mdi>
+                    <.dm_mdi name="draw" />
                     <h3>Signature Pad</h3>
                   </div>
                 </:header>
@@ -220,17 +220,17 @@ defmodule Storybook.Components.FunShowcase do
 
                   <div class="flex items-center space-x-4 mb-4">
                     <.dm_btn variant="primary" phx-click="save_signature">
-                      <.dm_mdi>content-save</.dm_mdi>
+                      <.dm_mdi name="content-save" />
                       Save Signature
                     </.dm_btn>
                     <.dm_btn variant="outline" phx-click="clear_signature">
-                      <.dm_mdi>eraser</.dm_mdi>
+                      <.dm_mdi name="eraser" />
                       Clear
                     </.dm_btn>
                     <.dm_dropdown>
                       <:trigger>
                         <.dm_btn variant="ghost">
-                          <.dm_mdi>palette-outline</.dm_mdi>
+                          <.dm_mdi name="palette-outline" />
                           Pen Color
                         </.dm_btn>
                       </:trigger>
@@ -241,11 +241,11 @@ defmodule Storybook.Components.FunShowcase do
                       </:content>
                     </.dm_dropdown>
                     <.dm_btn variant="ghost" phx-click="signature_thin">
-                      <.dm_mdi>pencil-outline</.dm_mdi>
+                      <.dm_mdi name="pencil-outline" />
                       Thin Pen
                     </.dm_btn>
                     <.dm_btn variant="ghost" phx-click="signature_thick">
-                      <.dm_mdi>brush</.dm_mdi>
+                      <.dm_mdi name="brush" />
                       Thick Pen
                     </.dm_btn>
                   </div>
@@ -261,7 +261,7 @@ defmodule Storybook.Components.FunShowcase do
               <.dm_card class="p-6">
                 <:header>
                   <div class="flex items-center space-x-2">
-                    <.dm_mdi>gesture-tap-button</.dm_mdi>
+                    <.dm_mdi name="gesture-tap-button" />
                     <h3>Button Noise Effects</h3>
                   </div>
                 </:header>
@@ -273,7 +273,7 @@ defmodule Storybook.Components.FunShowcase do
                   <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div class="text-center space-y-2">
                       <.dm_fun_button_noise id="noise-burst" variant="burst" class="w-full">
-                        <.dm_mdi>star</.dm_mdi>
+                        <.dm_mdi name="star" />
                         Burst
                       </.dm_fun_button_noise>
                       <span class="text-sm">Burst Effect</span>
@@ -281,7 +281,7 @@ defmodule Storybook.Components.FunShowcase do
 
                     <div class="text-center space-y-2">
                       <.dm_fun_button_noise id="noise-sparkle" variant="sparkle" class="w-full">
-                        <.dm_mdi>star-four-points</.dm_mdi>
+                        <.dm_mdi name="star-four-points" />
                         Sparkle
                       </.dm_fun_button_noise>
                       <span class="text-sm">Sparkle Effect</span>
@@ -289,7 +289,7 @@ defmodule Storybook.Components.FunShowcase do
 
                     <div class="text-center space-y-2">
                       <.dm_fun_button_noise id="noise-confetti" variant="confetti" class="w-full">
-                        <.dm_mdi>confetti</.dm_mdi>
+                        <.dm_mdi name="confetti" />
                         Confetti
                       </.dm_fun_button_noise>
                       <span class="text-sm">Confetti Effect</span>
@@ -297,7 +297,7 @@ defmodule Storybook.Components.FunShowcase do
 
                     <div class="text-center space-y-2">
                       <.dm_fun_button_noise id="noise-ripple" variant="ripple" class="w-full">
-                        <.dm_mdi>water</.dm_mdi>
+                        <.dm_mdi name="water" />
                         Ripple
                       </.dm_fun_button_noise>
                       <span class="text-sm">Ripple Effect</span>
@@ -308,22 +308,22 @@ defmodule Storybook.Components.FunShowcase do
                     <p class="text-sm font-medium mb-2">Custom Colors:</p>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <.dm_fun_button_noise id="noise-rainbow" variant="rainbow" class="w-full">
-                        <.dm_mdi>rainbow</.dm_mdi>
+                        <.dm_mdi name="rainbow" />
                         Rainbow
                       </.dm_fun_button_noise>
 
                       <.dm_fun_button_noise id="noise-gold" variant="gold" class="w-full">
-                        <.dm_mdi>star</.dm_mdi>
+                        <.dm_mdi name="star" />
                         Gold Stars
                       </.dm_fun_button_noise>
 
                       <.dm_fun_button_noise id="noise-hearts" variant="hearts" class="w-full">
-                        <.dm_mdi>heart</.dm_mdi>
+                        <.dm_mdi name="heart" />
                         Hearts
                       </.dm_fun_button_noise>
 
                       <.dm_fun_button_noise id="noise-music" variant="music" class="w-full">
-                        <.dm_mdi>music-note</.dm_mdi>
+                        <.dm_mdi name="music-note" />
                         Music Notes
                       </.dm_fun_button_noise>
                     </div>
@@ -337,7 +337,7 @@ defmodule Storybook.Components.FunShowcase do
           <.dm_card class="p-6">
             <:header>
               <div class="flex items-center space-x-2">
-                <.dm_mdi>application</.dm_mdi>
+                <.dm_mdi name="application" />
                 <h3>Real World Examples</h3>
               </div>
             </:header>
@@ -350,7 +350,7 @@ defmodule Storybook.Components.FunShowcase do
                     <div class="flex items-center justify-between mb-4">
                       <h5 class="font-medium">My Dashboard</h5>
                       <.dm_btn variant="ghost" size="sm" phx-click="open_spotlight_dashboard">
-                        <.dm_mdi>search</.dm_mdi>
+                        <.dm_mdi name="search" />
                         ⌘+K
                       </.dm_btn>
                     </div>
@@ -382,11 +382,11 @@ defmodule Storybook.Components.FunShowcase do
                     </div>
                     <div class="flex space-x-2">
                       <.dm_btn variant="primary" size="sm">
-                        <.dm_mdi>check</.dm_mdi>
+                        <.dm_mdi name="check" />
                         Sign Document
                       </.dm_btn>
                       <.dm_btn variant="ghost" size="sm" phx-click="clear_contract_signature">
-                        <.dm_mdi>refresh</.dm_midi>
+                        <.dm_mdi name="refresh" />
                         Clear
                       </.dm_btn>
                     </div>
@@ -423,11 +423,11 @@ defmodule Storybook.Components.FunShowcase do
                     </p>
                     <div class="space-y-2">
                       <.dm_fun_button_noise id="achievement-burst" variant="burst" class="w-full">
-                        <.dm_mdi>trophy</.dm_mdi>
+                        <.dm_mdi name="trophy" />
                         Claim Achievement
                       </.dm_fun_button_noise>
                       <.dm_fun_button_noise id="achievement-sparkle" variant="sparkle" class="w-full">
-                        <.dm_mdi>star</.dm_mdi>
+                        <.dm_mdi name="star" />
                         Share Progress
                       </.dm_fun_button_noise>
                     </div>
@@ -441,7 +441,7 @@ defmodule Storybook.Components.FunShowcase do
           <.dm_card class="p-6">
             <:header>
               <div class="flex items-center space-x-2">
-                <.dm_mdi>lightbulb</.dm_mdi>
+                <.dm_mdi name="lightbulb" />
                 <h3>Performance & Best Practices</h3>
               </div>
             </:header>
@@ -451,19 +451,19 @@ defmodule Storybook.Components.FunShowcase do
                   <h4 class="font-medium mb-2">Performance Considerations</h4>
                   <ul class="space-y-1 text-sm text-base-content/70">
                     <li class="flex items-start space-x-2">
-                      <.dm_mdi class="text-success mt-0.5">check-circle</.dm_mdi>
+                      <.dm_mdi name="check-circle" class="text-success mt-0.5" />
                       <span>Use sparingly to avoid overwhelming users</span>
                     </li>
                     <li class="flex items-start space-x-2">
-                      <.dm_mdi class="text-success mt-0.5">check-circle</.dm_mdi>
+                      <.dm_mdi name="check-circle" class="text-success mt-0.5" />
                       <span>Consider device capabilities and battery life</span>
                     </li>
                     <li class="flex items-start space-x-2">
-                      <.dm_mdi class="text-success mt-0.5">check-circle</.dm_midi>
+                      <.dm_mdi name="check-circle" class="text-success mt-0.5" />
                       <span>Provide options to disable animations</span>
                     </li>
                     <li class="flex items-start space-x-2">
-                      <.dm_mdi class="text-warning mt-0.5">alert</.dm_mdi>
+                      <.dm_mdi name="alert" class="text-warning mt-0.5" />
                       <span>Test performance on lower-end devices</span>
                     </li>
                   </ul>
@@ -473,19 +473,19 @@ defmodule Storybook.Components.FunShowcase do
                   <h4 class="font-medium mb-2">UX Guidelines</h4>
                   <ul class="space-y-1 text-sm text-base-content/70">
                     <li class="flex items-start space-x-2">
-                      <.dm_mdi class="text-success mt-0.5">check-circle</.dm_mdi>
+                      <.dm_mdi name="check-circle" class="text-success mt-0.5" />
                       <span>Animations should enhance, not distract</span>
                     </li>
                     <li class="flex items-start space-x-2">
-                      <.dm_mdi class="text-success mt-0.5">check-circle</.dm_mdi>
+                      <.dm_mdi name="check-circle" class="text-success mt-0.5" />
                       <span>Keep animations subtle and purposeful</span>
                     </li>
                     <li class="flex items-start space-x-2">
-                      <.dm_mdi class="text-success mt-0.5">check-circle</.dm_mdi>
+                      <.dm_mdi name="check-circle" class="text-success mt-0.5" />
                       <span>Respect user preferences for reduced motion</span>
                     </li>
                     <li class="flex items-start space-x-2">
-                      <.dm_mdi class="text-info mt-0.5">information</.dm_mdi>
+                      <.dm_mdi name="information" class="text-info mt-0.5" />
                       <span>Use to provide visual feedback and delight</span>
                     </li>
                   </ul>
