@@ -70,11 +70,19 @@ defmodule PhoenixDuskmoon.Component.Icons do
 
   def dm_mdi(assigns) do
     name = assigns.name
+    icon_path = Application.app_dir(:phoenix_duskmoon, "priv/mdi/svg/#{name}.svg")
 
     inner_svg =
-      File.read!(Application.app_dir(:phoenix_duskmoon, "priv/mdi/svg/#{name}.svg"))
-      |> String.replace(~r/<svg[^>]+>/, "")
-      |> String.replace("</svg>", "")
+      case File.read(icon_path) do
+        {:ok, content} ->
+          content
+          |> String.replace(~r/<svg[^>]+>/, "")
+          |> String.replace("</svg>", "")
+
+        {:error, _} ->
+          # Return error icon (alert-circle) when icon is not found
+          ~s(<path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />)
+      end
 
     assigns = assigns |> assign(:inner_svg, inner_svg)
 
@@ -149,11 +157,19 @@ defmodule PhoenixDuskmoon.Component.Icons do
 
   def dm_bsi(assigns) do
     name = assigns.name
+    icon_path = Application.app_dir(:phoenix_duskmoon, "priv/bsi/svg/#{name}.svg")
 
     inner_svg =
-      File.read!(Application.app_dir(:phoenix_duskmoon, "priv/bsi/svg/#{name}.svg"))
-      |> String.replace(~r/<svg[^>]+>/, "")
-      |> String.replace("</svg>", "")
+      case File.read(icon_path) do
+        {:ok, content} ->
+          content
+          |> String.replace(~r/<svg[^>]+>/, "")
+          |> String.replace("</svg>", "")
+
+        {:error, _} ->
+          # Return error icon (exclamation-circle) when icon is not found
+          ~s(<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>)
+      end
 
     assigns = assigns |> assign(:inner_svg, inner_svg)
 

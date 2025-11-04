@@ -132,4 +132,41 @@ defmodule PhoenixDuskmoon.Component.IconsTest do
     icons = bsi_icons()
     assert icons == Enum.sort(icons)
   end
+
+  test "renders error icon when Material Design Icon name does not exist" do
+    result = render_component(&dm_mdi/1, %{name: "nonexistent-icon-name"})
+
+    # Should still render an SVG
+    assert result =~ ~s[<svg xmlns="http://www.w3.org/2000/svg"]
+    assert result =~ ~s[viewBox="0 0 24 24"]
+    # Should render the alert-circle error icon path
+    assert result =~
+             ~s[<path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />]
+  end
+
+  test "renders error icon when Bootstrap Icon name does not exist" do
+    result = render_component(&dm_bsi/1, %{name: "nonexistent-icon-name"})
+
+    # Should still render an SVG
+    assert result =~ ~s[<svg xmlns="http://www.w3.org/2000/svg"]
+    assert result =~ ~s[viewBox="0 0 16 16"]
+    # Should render the exclamation-circle error icon paths
+    assert result =~ ~s[<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"]
+  end
+
+  test "error icon for Material Design respects custom color" do
+    result = render_component(&dm_mdi/1, %{name: "nonexistent-icon", color: "red"})
+
+    assert result =~ ~s[fill="red"]
+    # Should still render the error icon
+    assert result =~ ~s[M13,13H11V7H13]
+  end
+
+  test "error icon for Bootstrap respects custom color" do
+    result = render_component(&dm_bsi/1, %{name: "nonexistent-icon", color: "blue"})
+
+    assert result =~ ~s[fill="blue"]
+    # Should still render the error icon
+    assert result =~ ~s[M8 15A7 7 0]
+  end
 end
