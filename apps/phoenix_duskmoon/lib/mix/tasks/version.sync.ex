@@ -90,7 +90,8 @@ defmodule Mix.Tasks.Version.Sync do
 
   defp update_umbrella_mix(version) do
     umbrella_mix_path =
-      if File.exists?("mix.exs") and not String.contains?(File.read!("mix.exs"), "PhoenixDuskmoon.Mixfile") do
+      if File.exists?("mix.exs") and
+           not String.contains?(File.read!("mix.exs"), "PhoenixDuskmoon.Mixfile") do
         "mix.exs"
       else
         "../../mix.exs"

@@ -86,7 +86,10 @@ defmodule PhoenixDuskmoon.Component.Form.Input do
                 multiple pattern placeholder readonly required rows size step)
   )
 
-  attr(:phx_target, :any, default: nil, doc: "the phx-target for events (for use in LiveComponents)")
+  attr(:phx_target, :any,
+    default: nil,
+    doc: "the phx-target for events (for use in LiveComponents)"
+  )
 
   slot(:inner_block)
 

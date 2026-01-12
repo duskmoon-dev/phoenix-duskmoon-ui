@@ -151,7 +151,8 @@ defmodule PhoenixDuskmoon.Component.IconsTest do
     assert result =~ ~s[<svg xmlns="http://www.w3.org/2000/svg"]
     assert result =~ ~s[viewBox="0 0 16 16"]
     # Should render the exclamation-circle error icon paths
-    assert result =~ ~s[<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"]
+    assert result =~
+             ~s[<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"]
   end
 
   test "error icon for Material Design respects custom color" do

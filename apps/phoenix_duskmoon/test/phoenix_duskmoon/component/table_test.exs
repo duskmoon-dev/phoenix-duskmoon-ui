@@ -13,21 +13,21 @@ defmodule PhoenixDuskmoon.Component.TableTest do
     use Phoenix.Component
     import PhoenixDuskmoon.Component.Table
 
-    attr :data, :list, default: []
-    attr :border, :boolean, default: false
-    attr :zebra, :boolean, default: false
-    attr :pin_rows, :boolean, default: false
-    attr :pin_cols, :boolean, default: false
-    attr :size, :string, default: nil
-    attr :compact, :boolean, default: false
-    attr :stream, :boolean, default: false
-    attr :id, :string, default: nil
-    attr :class, :string, default: ""
-    attr :with_caption, :boolean, default: false
-    attr :with_expand, :boolean, default: false
-    attr :col_classes, :boolean, default: false
-    attr :empty, :boolean, default: false
-    attr :num_cols, :integer, default: 2
+    attr(:data, :list, default: [])
+    attr(:border, :boolean, default: false)
+    attr(:zebra, :boolean, default: false)
+    attr(:pin_rows, :boolean, default: false)
+    attr(:pin_cols, :boolean, default: false)
+    attr(:size, :string, default: nil)
+    attr(:compact, :boolean, default: false)
+    attr(:stream, :boolean, default: false)
+    attr(:id, :string, default: nil)
+    attr(:class, :string, default: "")
+    attr(:with_caption, :boolean, default: false)
+    attr(:with_expand, :boolean, default: false)
+    attr(:col_classes, :boolean, default: false)
+    attr(:empty, :boolean, default: false)
+    attr(:num_cols, :integer, default: 2)
 
     def render(assigns) do
       ~H"""
