@@ -1,5 +1,11 @@
 import Config
 
+config :tailwind,
+  tailwind_path: System.get_env("TAILWIND_PATH", "tailwindcss")
+
+config :bun,
+  bun_path: System.get_env("BUN_PATH", "bun")
+
 if System.get_env("PHX_SERVER") do
   config :duskmoon_storybook_web, DuskmoonStorybookWeb.Endpoint, server: true
 end

@@ -1,65 +1,48 @@
 @import "./utility.css";
 
 @plugin "duskmoonui/theme" {
-  name: "sunshine";
-  default: true;
-  prefersdark: false;
-  color-scheme: "light";
-  --color-base-100: oklch(100% 0.1 255);
-  --color-base-200: oklch(85% 0.1 255);
-  --color-base-300: oklch(70% 0.1 255);
-  --color-base-content: oklch(10% 0 255);
-  --color-primary: oklch(95.86% 0.0693 95.91);
-  --color-primary-content: oklch(20% 0 0);
-  --color-secondary: oklch(87.42% 0.143 87.01);
-  --color-secondary-content: oklch(27.42% 0.143 87.01);
-  --color-accent: oklch(85.23% 0.14 327);
-  --color-accent-content: oklch(41% 0.112 45.904);
-  --color-neutral: oklch(0% 0 0);
-  --color-neutral-content: oklch(80% 0.1 50);
-  --color-info: oklch(41.94% 0.114 254.39);
-  --color-info-content: oklch(91.94% 0.114 254.39);
-  --color-success: oklch(67.21% 0.19 133.55);
-  --color-success-content: oklch(27.21% 0.19 133.55);
-  --color-warning: oklch(68.19% 0.203 42.44);
-  --color-warning-content: oklch(18.19% 0.6 42);
-  --color-error: oklch(61.17% 0.237 28.15);
-  --color-error-content: oklch(90.01% 0.153 84.78);
-  --radius-selector: 0rem;
-  --radius-field: 0.5rem;
-  --radius-box: 2rem;
-  --size-selector: 0.1875rem;
-  --size-field: 0.1875rem;
-  --border: 0.5px;
-  --depth: 1;
-  --noise: 1;
-}
-
-@plugin "duskmoonui/theme" {
   name: "moonlight";
-  default: true;
+  default: false; /* only one theme should be default */
   prefersdark: true;
   color-scheme: "dark";
-  --color-base-100: oklch(22% 0.019 237.69);
-  --color-base-200: oklch(20% 0.019 237.69);
-  --color-base-300: oklch(18% 0.019 237.69);
-  --color-base-content: oklch(77.383% 0.043 245.096);
+
+  /* Base: keep your hue, but improve step contrast (100/200/300) for depth */
+  --color-base-100: oklch(20% 0.018 237.69);
+  --color-base-200: oklch(17% 0.017 237.69);
+  --color-base-300: oklch(14% 0.016 237.69);
+
+  /* Content: make “main text” more neutral/legible while staying moonlit */
+  --color-base-content: oklch(90% 0.012 245.096);
+
+  /* SOUL (locked) */
   --color-primary: oklch(85.45% 0 0);
   --color-primary-content: oklch(14.94% 0.031 39.947);
+
+  /* Secondary (locked) */
   --color-secondary: oklch(83.33% 0.0981 73.78);
   --color-secondary-content: oklch(14.507% 0.035 2.72);
+
+  /* Accent: keep your vibe, but make content safer (less tinted text) */
   --color-accent: oklch(75.65% 0.1303 335.51);
-  --color-accent-content: oklch(14.258% 0.033 299.844);
-  --color-neutral: oklch(23% 0 0);
-  --color-neutral-content: oklch(52.43% 0 0);
-  --color-info: oklch(82.42% 0.09757279812867503 240.7677443360475);
-  --color-info-content: oklch(17.111% 0.017 206.015);
+  --color-accent-content: oklch(14% 0.012 335.51);
+
+  /* Neutral: lift neutral-content so muted text/icons don’t look “disabled” */
+  --color-neutral: oklch(24% 0.008 240);
+  --color-neutral-content: oklch(78% 0.010 240);
+
+  /* Semantic: keep your colors, standardize content for filled components */
+  --color-info: oklch(82.42% 0.0976 240.77);
+  --color-info-content: oklch(15% 0.010 240.77);
+
   --color-success: oklch(82.19% 0.0621 133.3);
-  --color-success-content: oklch(17.112% 0.017 144.778);
-  --color-warning: oklch(76.36% 0.1752731353930708 61.96388739129725);
-  --color-warning-content: oklch(17.113% 0.016 74.427);
+  --color-success-content: oklch(15% 0.010 133.3);
+
+  --color-warning: oklch(76.36% 0.1753 61.96);
+  --color-warning-content: oklch(15% 0.010 61.96);
+
   --color-error: oklch(46.38% 0.1898 29.17);
-  --color-error-content: oklch(86.38% 0.298 39.17);
+  --color-error-content: oklch(92% 0.010 29.17);
+
   --radius-selector: 0rem;
   --radius-field: 0.5rem;
   --radius-box: 2rem;
