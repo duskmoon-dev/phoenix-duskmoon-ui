@@ -1,3 +1,56 @@
+# [8.0.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.2.1...v8.0.0) (2026-01-12)
+
+
+* fix!: remove critical XSS vulnerabilities from inline scripts and fix [@myself](https://github.com/myself) usage ([5801278](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/58012782f1344c70fccd9d55cdaf0b4cae4a7c07))
+
+
+### Bug Fixes
+
+* correct CSS classes for select, radio, and textarea inputs ([f79931c](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/f79931cf41b0ad7d62eeb7bfd9bc3b71ddb164f8))
+* correct dm_mdi syntax in tooltip component documentation ([aef2710](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/aef2710c74982f5fef268d7d217465cb63d15203))
+* correct icon component syntax across storybook and docs ([2b3e0b0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/2b3e0b0b66f1b8124304a503413b011b2d5e5edc))
+* synchronize version numbers and automate version management ([d3dfb41](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/d3dfb41bd90af425b0034bffdf7ecdd83137765e))
+
+
+### Features
+
+* add graceful error handling for missing icon files in dm_mdi and dm_bsi ([99241fe](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/99241fe6a2a8175832d0301e8846625d7338e2c1))
+* enhance moonlight theme colors and add build tool path configuration ([eaefe60](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/commit/eaefe60baee7cd9ff2db804512c178e3f0c477dd))
+
+
+### BREAKING CHANGES
+
+* Components now require LiveView hooks to be registered in your application.
+
+Security Fixes:
+- Remove unsafe inline JavaScript with EEx interpolation from theme_switcher.ex
+- Remove inline scripts with XSS vulnerabilities from spotlight.ex
+- Remove inline scripts from page_header.ex
+- All scripts moved to secure LiveView hooks using data attributes
+
+API Fixes:
+- Fix @myself usage in form/input.ex - add phx_target attribute
+- Fix misleading @myself documentation in spotlight_search.ex
+- Fix misleading @myself documentation in plasma_ball.ex
+- Components now correctly support phx-target for LiveComponent usage
+
+New Features:
+- Add ThemeSwitcher hook for theme persistence
+- Add Spotlight hook for keyboard shortcut handling
+- Add PageHeader hook for IntersectionObserver effects
+- Add hooks/index.js for easy import of all hooks
+- Add comprehensive hooks setup documentation in CLAUDE.md
+
+Migration Required:
+Users must now register hooks in their LiveSocket:
+  import * as DuskmoonHooks from "phoenix_duskmoon/hooks"
+  let liveSocket = new LiveSocket("/live", Socket, {hooks: DuskmoonHooks})
+
+See CLAUDE.md for detailed setup instructions.
+
+Closes: Critical security vulnerabilities identified in architecture analysis
+Affects: theme_switcher, spotlight, page_header, form/input components
+
 ## [7.2.1](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.2.0...v7.2.1) (2025-11-04)
 
 
