@@ -1,5 +1,5 @@
 /**
- * Phoenix Duskmoon UI Hooks
+ * Phoenix Duskmoon UI v9 Hooks
  *
  * Import and export all LiveView hooks required by Phoenix Duskmoon UI components.
  *
@@ -14,8 +14,20 @@
  *   hooks: DuskmoonHooks
  * })
  * ```
+ *
+ * ## Available Hooks:
+ *
+ * - WebComponentHook: Universal LiveView ↔ Custom Element bridge
+ * - FormElementHook: Specialized hook for form custom elements
+ * - ThemeSwitcher: Theme toggle with localStorage persistence
+ * - Spotlight: Keyboard shortcut (Cmd/Ctrl+K) for spotlight search
+ * - PageHeader: Intersection observer for scroll-based effects
  */
 
+// Core hooks for custom element integration
+export { WebComponentHook, FormElementHook } from '../phoenix_duskmoon.js';
+
+// Component-specific hooks
 export { ThemeSwitcher } from './theme_switcher.js';
 export { Spotlight } from './spotlight.js';
 export { PageHeader } from './page_header.js';

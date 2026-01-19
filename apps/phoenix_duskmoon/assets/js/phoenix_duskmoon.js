@@ -1,44 +1,244 @@
+/**
+ * Phoenix Duskmoon UI v9 - Web Component Integration
+ *
+ * Provides LiveView hooks for bridging Phoenix LiveView events
+ * with duskmoon-elements custom elements.
+ */
 
+/**
+ * WebComponentHook - Universal LiveView ↔ Custom Element bridge
+ *
+ * This hook enables seamless communication between Phoenix LiveView
+ * and duskmoon-elements custom elements (el-dm-*).
+ *
+ * ## Event Bridging Patterns
+ *
+ * ### Forward custom element events to LiveView:
+ * Use `duskmoon-send-{event}` attribute:
+ * ```html
+ * <el-dm-button duskmoon-send-click="handle_click">Click me</el-dm-button>
+ * ```
+ *
+ * ### Receive LiveView events in custom element:
+ * Use `duskmoon-receive-{event}` attribute:
+ * ```html
+ * <el-dm-input duskmoon-receive-reset="reset">Input</el-dm-input>
+ * ```
+ *
+ * ### Automatic dm-* event forwarding:
+ * Events prefixed with `dm-` (dm-click, dm-change, dm-input, etc.)
+ * are automatically forwarded to LiveView when corresponding
+ * `phx-{event}` attribute exists.
+ *
+ * ## Usage in Phoenix templates:
+ * ```heex
+ * <el-dm-button
+ *   phx-hook="WebComponentHook"
+ *   phx-click="button_clicked"
+ *   variant="primary"
+ * >
+ *   Click me
+ * </el-dm-button>
+ * ```
+ */
 export const WebComponentHook = {
-    mounted() {
-        const attrs = this.el.attributes;
-        const phxTarget = attrs["phx-target"].value;
-        const pushEvent = phxTarget
-        ? (event, payload, callback) =>
-            this.pushEventTo(phxTarget, event, payload, callback)
-        : this.pushEvent;
+  mounted() {
+    this._setupEventBridging();
+    this._setupAutomaticForwarding();
+  },
 
-        for (var i = 0; i < attrs.length; i++) {
-            if (/^duskmoon-send-/.test(attrs[i].name)) {
-                const eventName = attrs[i].name.replace(/^duskmoon-send-/, "");
-                const [phxEvent, callbackName] = attrs[i].value.split(';');
-                this.el.addEventListener(eventName, ({ detail }) => {
-                    pushEvent(phxEvent, detail, (e) => {
-                        this[callbackName]?.(e, detail, eventName)
-                    });
-                });
+  updated() {
+    // Re-check attributes on update in case they changed
+    this._setupAutomaticForwarding();
+  },
+
+  destroyed() {
+    // Cleanup is handled by the element removal
+  },
+
+  /**
+   * Setup explicit event bridging via duskmoon-send-* and duskmoon-receive-* attributes
+   */
+  _setupEventBridging() {
+    const attrs = this.el.attributes;
+    const phxTarget = this.el.getAttribute("phx-target");
+
+    // Helper to push events with optional target
+    const pushEvent = (event, payload, callback) => {
+      if (phxTarget) {
+        this.pushEventTo(phxTarget, event, payload, callback);
+      } else {
+        this.pushEvent(event, payload, callback);
+      }
+    };
+
+    for (let i = 0; i < attrs.length; i++) {
+      const attr = attrs[i];
+
+      // Handle duskmoon-send-{event}="{phxEvent};{optionalCallback}"
+      if (/^duskmoon-send-/.test(attr.name)) {
+        const eventName = attr.name.replace(/^duskmoon-send-/, "");
+        const [phxEvent, callbackName] = attr.value.split(";");
+
+        this.el.addEventListener(eventName, ({ detail }) => {
+          pushEvent(phxEvent, detail || {}, (response) => {
+            if (callbackName && typeof this[callbackName] === "function") {
+              this[callbackName](response, detail, eventName);
             }
-            if (/^duskmoon-receive-/.test(attrs[i].name)) {
-                const eventName = attrs[i].name.replace(/^duskmoon-receive-/, "");
-                const handler = attrs[i].value;
-                this.handleEvent(eventName, (payload) => {
-                    if (handler && this.el[handler]) {
-                        this.el[handler]?.(payload);
-                    } else {
-                        this.el.dispatchEvent(new CustomEvent(eventName, { detail: payload }));
-                    }
-                });
-            }
-            if ('duskmoon-receive' === attrs[i].name) {
-                const [phxEvent, callbackName] = attrs[i].value.split(';');
-                this.handleEvent(phxEvent, (payload) => {
-                    this.el[callbackName]?.(payload);
-                });
-            }
+          });
+        });
+      }
+
+      // Handle duskmoon-receive-{event}="{handlerMethodOrEmpty}"
+      if (/^duskmoon-receive-/.test(attr.name)) {
+        const eventName = attr.name.replace(/^duskmoon-receive-/, "");
+        const handler = attr.value;
+
+        this.handleEvent(eventName, (payload) => {
+          if (handler && typeof this.el[handler] === "function") {
+            this.el[handler](payload);
+          } else {
+            // Dispatch as custom event on the element
+            this.el.dispatchEvent(
+              new CustomEvent(eventName, {
+                detail: payload,
+                bubbles: true,
+                composed: true,
+              })
+            );
+          }
+        });
+      }
+
+      // Handle duskmoon-receive="{phxEvent};{callbackName}"
+      if (attr.name === "duskmoon-receive") {
+        const [phxEvent, callbackName] = attr.value.split(";");
+        this.handleEvent(phxEvent, (payload) => {
+          if (typeof this.el[callbackName] === "function") {
+            this.el[callbackName](payload);
+          }
+        });
+      }
+    }
+  },
+
+  /**
+   * Setup automatic forwarding for dm-* events to phx-* handlers
+   *
+   * This enables the common pattern of:
+   * <el-dm-button phx-hook="WebComponentHook" phx-click="handle_click">
+   *
+   * When el-dm-button emits 'dm-click', it automatically calls the phx-click handler
+   */
+  _setupAutomaticForwarding() {
+    // Standard duskmoon-elements events to forward
+    const dmEvents = [
+      "dm-click",
+      "dm-change",
+      "dm-input",
+      "dm-focus",
+      "dm-blur",
+      "dm-submit",
+      "dm-select",
+      "dm-close",
+      "dm-open",
+      "dm-toggle",
+    ];
+
+    const phxTarget = this.el.getAttribute("phx-target");
+
+    dmEvents.forEach((dmEvent) => {
+      // Map dm-click -> phx-click, dm-change -> phx-change, etc.
+      const phxAttr = "phx-" + dmEvent.replace("dm-", "");
+      const phxEvent = this.el.getAttribute(phxAttr);
+
+      if (phxEvent) {
+        // Remove existing listener to avoid duplicates on update
+        const listenerKey = `_dm_listener_${dmEvent}`;
+        if (this[listenerKey]) {
+          this.el.removeEventListener(dmEvent, this[listenerKey]);
         }
-    },
+
+        // Create and store the listener
+        this[listenerKey] = (e) => {
+          const detail = e.detail || {};
+
+          // Include common form data if available
+          const payload = {
+            ...detail,
+            value: this.el.value,
+            name: this.el.name,
+            checked: this.el.checked,
+          };
+
+          if (phxTarget) {
+            this.pushEventTo(phxTarget, phxEvent, payload);
+          } else {
+            this.pushEvent(phxEvent, payload);
+          }
+        };
+
+        this.el.addEventListener(dmEvent, this[listenerKey]);
+      }
+    });
+  },
 };
 
-if (window) {
-    window.__WebComponentHook__ = WebComponentHook;
+/**
+ * FormElementHook - Specialized hook for form custom elements
+ *
+ * Extends WebComponentHook with form-specific behavior:
+ * - Integrates with Phoenix.HTML.Form
+ * - Handles phx-feedback-for error display
+ * - Manages form field state
+ */
+export const FormElementHook = {
+  ...WebComponentHook,
+
+  mounted() {
+    // Call parent mounted
+    WebComponentHook.mounted.call(this);
+
+    // Setup form integration
+    this._setupFormIntegration();
+  },
+
+  _setupFormIntegration() {
+    const name = this.el.getAttribute("name");
+    const feedbackFor = this.el.getAttribute("phx-feedback-for") || name;
+
+    if (feedbackFor) {
+      // Watch for phx-no-feedback class changes to show/hide errors
+      this._setupFeedbackObserver(feedbackFor);
+    }
+  },
+
+  _setupFeedbackObserver(feedbackFor) {
+    // Find the form wrapper that Phoenix LiveView manages
+    const form = this.el.closest("form");
+    if (!form) return;
+
+    // Observe class changes on form for feedback state
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "class") {
+          const hasNoFeedback = form.classList.contains("phx-no-feedback");
+          // Dispatch event to custom element to show/hide errors
+          this.el.dispatchEvent(
+            new CustomEvent("dm-feedback-change", {
+              detail: { showFeedback: !hasNoFeedback, field: feedbackFor },
+            })
+          );
+        }
+      });
+    });
+
+    observer.observe(form, { attributes: true, attributeFilter: ["class"] });
+  },
+};
+
+// Export to window for non-module usage
+if (typeof window !== "undefined") {
+  window.__WebComponentHook__ = WebComponentHook;
+  window.__FormElementHook__ = FormElementHook;
 }
