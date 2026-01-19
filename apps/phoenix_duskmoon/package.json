@@ -1,12 +1,12 @@
 {
   "name": "phoenix_duskmoon",
-  "version": "7.2.1",
+  "version": "9.0.0-alpha.1",
   "type": "module",
   "exports": {
     ".": "./priv/static/phoenix_duskmoon.js",
+    "./hooks": "./assets/js/hooks/index.js",
     "./css": "./priv/static/phoenix_duskmoon.css",
     "./components": "./assets/css/components.css",
-    "./theme": "./assets/css/theme.css",
     "./neumorphic": "./assets/css/neumorphic.css",
     "./svg/mdi/*.svg": "./priv/mdi/svg/*.svg",
     "./svg/bsi/*.svg": "./priv/bsi/svg/*.svg"
@@ -26,15 +26,15 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@mdi/svg": "^7.4.47",
     "@tailwindcss/typography": "^0.5.16",
     "bootstrap-icons": "^1.11.3",
-    "duskmoonui": "^5.0.0",
     "postcss": "^8.5.3"
   },
   "peerDependencies": {
+    "@duskmoon-dev/core": ">=1.0.0",
+    "@duskmoon-dev/elements": ">=1.0.0"
   }
 }
