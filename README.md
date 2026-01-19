@@ -4,7 +4,9 @@
 
 Provides Duskmoon UI for Phoenix project.
 
-Require `tailwindcss >= 4.0` and `duskmoonui >= 5.0`
+**v9**: Uses `@duskmoon-dev/core` CSS design system and HTML Custom Elements (`duskmoon-elements`).
+
+Requires `tailwindcss >= 4.0`
 
 See the [docs](https://hexdocs.pm/phoenix_duskmoon/) for more information.
 
@@ -13,7 +15,14 @@ See the [docs](https://hexdocs.pm/phoenix_duskmoon/) for more information.
 
 Add deps in `mix.exs`
 ```elixir
-    {:phoenix_duskmoon, "~> 6.0"},
+    {:phoenix_duskmoon, "~> 9.0"},
+```
+
+Install npm packages:
+```bash
+npm install @duskmoon-dev/core duskmoon-elements
+# or
+bun add @duskmoon-dev/core duskmoon-elements
 ```
 
 Include in phoenix view helpers
@@ -37,9 +46,7 @@ Import `css`
 @source '../../lib/**/*.ex';
 
 @import "tailwindcss";
-@plugin "@tailwindcss/typography";
-@plugin "duskmoonui";
-@import "phoenix_duskmoon/theme";
+@import "@duskmoon-dev/core";
 @import "phoenix_duskmoon/components";
 ```
 

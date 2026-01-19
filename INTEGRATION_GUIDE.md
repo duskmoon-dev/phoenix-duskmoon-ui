@@ -20,7 +20,7 @@ Add to your `mix.exs` dependencies:
 def deps do
   [
     # ... other deps
-    {:phoenix_duskmoon, "~> 6.0"}
+    {:phoenix_duskmoon, "~> 9.0"}
   ]
 end
 ```
@@ -55,10 +55,14 @@ end
 Install the required npm packages:
 
 ```bash
-npm install tailwindcss duskmoonui @tailwindcss/typography
+npm install tailwindcss @duskmoon-dev/core duskmoon-elements
 # or
-yarn add tailwindcss duskmoonui @tailwindcss/typography
+yarn add tailwindcss @duskmoon-dev/core duskmoon-elements
+# or
+bun add tailwindcss @duskmoon-dev/core duskmoon-elements
 ```
+
+> **Note (v9)**: Phoenix Duskmoon UI v9 uses `@duskmoon-dev/core` instead of `duskmoonui` (daisyui).
 
 #### Configure TailwindCSS
 
@@ -70,9 +74,7 @@ In your `assets/css/app.css`:
 @source '../../lib/**/*.ex';
 
 @import "tailwindcss";
-@plugin "@tailwindcss/typography";
-@plugin "duskmoonui";
-@import "phoenix_duskmoon/theme";
+@import "@duskmoon-dev/core";
 @import "phoenix_duskmoon/components";
 ```
 
@@ -161,9 +163,9 @@ For advanced theming, you can import additional CSS modules:
 
 ```heex
 <.dm_card class="p-6">
-  <:header>
+  <:title>
     <h3 class="text-lg font-semibold">User Profile</h3>
-  </:header>
+  </:title>
 
   <p class="text-gray-600">User information and settings</p>
 
@@ -173,6 +175,8 @@ For advanced theming, you can import additional CSS modules:
   </:footer>
 </.dm_card>
 ```
+
+> **Note (v9)**: Components render as HTML Custom Elements (e.g., `<el-dm-card>`, `<el-dm-button>`) for improved encapsulation.
 
 ### Modal Dialog
 
@@ -239,12 +243,20 @@ The library includes Material Design Icons and Bootstrap Icons:
 
 ### Custom Themes
 
-You can extend the theme with custom CSS variables:
+You can extend the theme with CSS custom properties (v9 uses OKLCH colors):
 
 ```css
 :root {
-  --custom-primary: #your-color;
-  --custom-secondary: #your-color;
+  /* Customize theme colors using CSS custom properties */
+  --dm-color-primary: oklch(0.65 0.19 250);
+  --dm-color-secondary: oklch(0.75 0.15 200);
+  --dm-color-accent: oklch(0.7 0.2 150);
+
+  /* Semantic colors */
+  --dm-color-success: oklch(0.7 0.2 145);
+  --dm-color-warning: oklch(0.8 0.15 85);
+  --dm-color-error: oklch(0.6 0.2 25);
+  --dm-color-info: oklch(0.7 0.15 250);
 }
 ```
 
@@ -269,7 +281,7 @@ Most components support the `variant` attribute for different styles:
 If styles aren't applying:
 
 1. Check your TailwindCSS configuration includes the right sources
-2. Ensure `duskmoonui` plugin is loaded
+2. Ensure `@duskmoon-dev/core` is imported
 3. Verify CSS imports are in the correct order
 4. Run `mix tailwind default` to rebuild CSS
 

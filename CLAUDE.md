@@ -15,9 +15,40 @@ Phoenix Duskmoon UI is an umbrella project providing Duskmoon UI components for 
 This is an Elixir umbrella project with Phoenix LiveView components and a Node.js workspace:
 
 - **Umbrella Structure**: Run commands from root directory - they cascade to `apps/*` subdirectories
-- **Component Library**: Phoenix LiveView HEEX components with `@doc type: :component`
-- **Frontend Dependencies**: Uses `duskmoonui` npm package (extends `daisyui` with tertiary colors)
+- **Component Library**: Phoenix LiveView HEEX components wrapping HTML Custom Elements with `@doc type: :component`
+- **Frontend Dependencies**: Uses `@duskmoon-dev/core` (CSS design system) and `duskmoon-elements` (custom elements)
 - **Storybook**: Live component showcase for development and documentation
+
+### v9 Architecture (Custom Elements)
+
+Phoenix Duskmoon UI v9 uses HTML Custom Elements for rendering:
+
+```
+Phoenix LiveView
+       │
+       ▼
+┌──────────────────┐
+│  HEEX Components │  ← dm_btn, dm_card, dm_input (API layer)
+│  (dm_* prefix)   │
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│  Custom Elements │  ← <el-dm-button>, <el-dm-card> (rendering layer)
+│  (el-dm-* tags)  │
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ @duskmoon-dev/   │  ← CSS custom properties, design tokens
+│     core         │
+└──────────────────┘
+```
+
+**CSS Class Naming (BEM Convention)**:
+- Component: `dm-component` (e.g., `dm-btn`, `dm-card`, `dm-input`)
+- Variant/Modifier: `dm-component--variant` (e.g., `dm-btn--primary`, `dm-input--lg`)
+- Element: `dm-component__element` (e.g., `dm-card__header`, `dm-switch__track`)
 
 ### Component Organization
 
@@ -123,14 +154,13 @@ Storybook stories are defined in `.story.exs` files under `apps/duskmoon_storybo
 - Use `render_component/2` for component tests
 
 ### Frontend/Styling
-- CSS built with TailwindCSS v4+ using `duskmoonui` theme
-- The `duskmoonui` npm package extends `daisyui` with tertiary color support
+- CSS built with TailwindCSS v4+ using `@duskmoon-dev/core` design system
+- Components render as HTML Custom Elements (`<el-dm-button>`, `<el-dm-card>`, etc.)
+- CSS uses BEM naming: `dm-component`, `dm-component--variant`, `dm-component__element`
 - Import structure:
   ```css
   @import "tailwindcss";
-  @plugin "@tailwindcss/typography";
-  @plugin "duskmoonui";
-  @import "phoenix_duskmoon/theme";
+  @import "@duskmoon-dev/core";
   @import "phoenix_duskmoon/components";
   ```
 
@@ -139,22 +169,6 @@ Storybook stories are defined in `.story.exs` files under `apps/duskmoon_storybo
 - Use `async: true` for parallel test execution when possible
 - Import `Phoenix.LiveViewTest` and use `render_component/2`
 - Use partial string matching with `=~` for HTML assertions (avoid exact matches that break with formatting)
-
-### Known Technical Debt
-
-**Form Input Component Refactoring Needed** (HIGH PRIORITY):
-- `apps/phoenix_duskmoon/lib/phoenix_duskmoon/component/form/input.ex` is 861 lines
-- Handles 30+ input types in a single file (violates single responsibility principle)
-- Significant code duplication in class building (repeated 20+ times)
-- Should be split into separate component modules:
-  - Basic inputs (text, email, password, etc.) - keep in main input.ex
-  - Choice inputs (checkbox, radio, toggle, switch) - extract to separate file
-  - Complex inputs (select, textarea) - extract to separate file
-  - Specialized inputs (slider, rating, date/time pickers, file upload, rich text, etc.) - extract to separate files
-- Create shared helper module for common class building logic
-- Refactoring blocked by: need to maintain backward compatibility, extensive testing required
-- Estimated effort: 2-3 days of work
-- See architecture analysis report for detailed breakdown
 
 ## File Structure
 
@@ -185,16 +199,17 @@ When working on Phoenix projects that use the Phoenix Duskmoon UI library:
 ### Component Usage Pattern
 - All components are prefixed with `dm_` (e.g., `<.dm_btn>`, `<.dm_card>`, `<.dm_mdi>`)
 - Components require `use PhoenixDuskmoon.Component` and `use PhoenixDuskmoon.Fun` in view helpers
+- **v9 Note**: Components render as HTML Custom Elements (e.g., `<el-dm-button>`, `<el-dm-card>`)
 - Common component patterns:
   ```elixir
-  # Buttons with variants
+  # Buttons with variants (renders as <el-dm-button>)
   <.dm_btn variant="primary" size="md">Click me</.dm_btn>
   <.dm_btn variant="secondary" loading={@loading}>Loading</.dm_btn>
   <.dm_btn variant="error" shape="circle">×</.dm_btn>
 
-  # Cards with slots
+  # Cards with slots (renders as <el-dm-card>)
   <.dm_card class="p-6">
-    <:header><h3>Title</h3></:header>
+    <:title><h3>Title</h3></:title>
     <p>Content here</p>
     <:footer><.dm_btn>Action</.dm_btn></:footer>
   </.dm_card>
@@ -229,11 +244,11 @@ When working on Phoenix projects that use the Phoenix Duskmoon UI library:
 Projects need these CSS imports:
 ```css
 @import "tailwindcss";
-@plugin "@tailwindcss/typography";
-@plugin "duskmoonui";
-@import "phoenix_duskmoon/theme";
+@import "@duskmoon-dev/core";
 @import "phoenix_duskmoon/components";
 ```
+
+**Note**: v9 uses `@duskmoon-dev/core` which includes all theme variables (no separate theme import needed).
 
 ### JavaScript Hooks Setup (Required)
 
