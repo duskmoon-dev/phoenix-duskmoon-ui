@@ -6,24 +6,15 @@
 @source '../../../phoenix_duskmoon/assets/**/*.css';
 @source '../../../phoenix_duskmoon/lib/**/*.*ex';
 
-@plugin "duskmoonui";
-@plugin "@tailwindcss/typography";
-
 @import "tailwindcss";
-@import "phoenix_duskmoon/theme";
+@plugin "duskmoonui";
+/* TODO: Replace with @import "@duskmoon-dev/core"; when published */
+
+/* Theme compatibility layer: maps daisyUI vars to --dm-* namespace */
+@import "../../../phoenix_duskmoon/assets/css/theme-compat.css";
+
 @import "phoenix_duskmoon/components";
 @import "phoenix_duskmoon/neumorphic";
-
-@variant phx-click-loading ([".phx-click-loading&", ".phx-click-loading &"]);
-@variant phx-submit-loading ([".phx-submit-loading&", ".phx-submit-loading &"]);
-@variant phx-change-loading ([".phx-change-loading&", ".phx-change-loading &"]);
-
-@utility grid-cols-auto-fill-* {
-  grid-template-columns: repeat(auto-fill, minmax(min(calc(--value(integer) * 0.25rem), 100%), 1fr));
-}
-@utility grid-cols-auto-fit-* {
-  grid-template-columns: repeat(auto-fit, minmax(min(calc(--value(integer) * 0.25rem), 100%), 1fr));
-}
 
 
 @layer components {
