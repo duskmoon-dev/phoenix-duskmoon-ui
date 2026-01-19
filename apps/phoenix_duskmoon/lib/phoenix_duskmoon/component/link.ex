@@ -147,7 +147,7 @@ defmodule PhoenixDuskmoon.Component.Link do
     ~H"""
     <a
       id={@id}
-      class={["link link-hover", @class]}
+      class={["dm-link dm-link--hover", @class]}
       href={@navigate}
       data-phx-link="redirect"
       data-phx-link-state={if @replace, do: "replace", else: "push"}
@@ -160,7 +160,7 @@ defmodule PhoenixDuskmoon.Component.Link do
     ~H"""
     <a
       id={@id}
-      class={["link link-hover", @class]}
+      class={["dm-link dm-link--hover", @class]}
       href={@patch}
       data-phx-link="patch"
       data-phx-link-state={if @replace, do: "replace", else: "push"}
@@ -176,7 +176,7 @@ defmodule PhoenixDuskmoon.Component.Link do
     ~H"""
     <a
       id={@id}
-      class={["link link-hover", @class]}
+      class={["dm-link dm-link--hover", @class]}
       href={@href}
       data-method={if @method != "get", do: @method}
       data-csrf={if @method != "get", do: csrf_token(@csrf_token, @href)}
@@ -190,7 +190,7 @@ defmodule PhoenixDuskmoon.Component.Link do
     ~H"""
     <a
       id={@id}
-      class={["link link-hover", @class]}
+      class={["dm-link dm-link--hover", @class]}
       href="#" {@rest}><%= render_slot(@inner_block) %></a>
     """
   end

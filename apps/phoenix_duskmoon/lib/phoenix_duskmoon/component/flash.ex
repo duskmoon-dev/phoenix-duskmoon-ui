@@ -37,10 +37,10 @@ defmodule PhoenixDuskmoon.Component.Flash do
       phx-mounted={@autoshow && JS.show(to: "##{@id}")}
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> JS.hide(to: "##{@id}")}
       role="alert"
-      class={"hidden w-80 sm:w-96 toast toast-top toast-end z-[1000]"}
+      class={"hidden w-80 sm:w-96 dm-toast dm-toast--top dm-toast--end z-[1000]"}
       {@rest}
     >
-      <div class={["flex flex-col gap-2 relative alert", if(@kind == :info, do: "alert-info"), if(@kind == :error, do: "alert-error")]}>
+      <div class={["flex flex-col gap-2 relative dm-alert", if(@kind == :info, do: "dm-alert--info"), if(@kind == :error, do: "dm-alert--error")]}>
         <div :if={@title} class="flex items-center gap-1.5 w-full text-xs font-semibold leading-6">
           <.dm_bsi :if={@kind == :info} name="info-circle" class="w-4 h-4" />
           <.dm_bsi :if={@kind == :error} name="exclamation-circle" class="w-4 h-4" />
@@ -50,7 +50,7 @@ defmodule PhoenixDuskmoon.Component.Flash do
         <button
           :if={@close}
           type="button"
-          class="absolute top-2 right-2 btn btn-ghost btn-xs"
+          class="absolute top-2 right-2 dm-btn dm-btn--ghost dm-btn--xs"
           aria-label={"close"}
         >
           <.dm_bsi name="x" class="w-5 h-5 " />

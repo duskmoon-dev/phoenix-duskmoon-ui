@@ -6,31 +6,22 @@ defmodule PhoenixDuskmoon.Component.Form.Textarea do
 
       <.dm_form for={@form} phx-submit="save">
         <.dm_textarea field={@form[:description]} label="Description" />
-        <.dm_textarea field={@form[:notes]} label="Notes" rows="5" color="success" />
+        <.dm_textarea field={@form[:notes]} label="Notes" rows={5} color="success" />
         <.dm_textarea field={@form[:comment]} label="Comment" size="lg" resize="none" />
       </.dm_form>
 
-  ## Attributes
-
-  * `field` - Phoenix form field
-  * `label` - Textarea label text
-  * `placeholder` - Placeholder text
-  * `rows` - Number of visible text lines (default: 3)
-  * `cols` - Visible width of the text control
-  * `size` - Textarea size: xs, sm, md, lg (default: md)
-  * `color` - Textarea color: primary, secondary, accent, info, success, warning, error (default: primary)
-  * `resize` - Resize behavior: none, vertical, horizontal, both (default: vertical)
-  * `disabled` - Disable the textarea
-  * `readonly` - Make textarea readonly
-  * `required` - Make textarea required
-  * `maxlength` - Maximum number of characters
-  * `class` - Additional CSS classes
-  * `label_class` - Additional CSS classes for label
-  * `textarea_class` - Additional CSS classes for textarea element
   """
-
   use Phoenix.Component
 
+  @doc """
+  Renders a textarea input.
+
+  ## Examples
+
+      <.dm_textarea field={@form[:description]} label="Description" />
+      <.dm_textarea name="notes" label="Notes" rows={5} />
+
+  """
   @doc type: :component
   attr(:id, :any, default: nil)
   attr(:name, :any)
@@ -67,9 +58,9 @@ defmodule PhoenixDuskmoon.Component.Form.Textarea do
 
   def dm_textarea(assigns) do
     ~H"""
-    <div class={@class}>
-      <label :if={@label} for={@id} class={["label", @label_class]}>
-        <span class="label-text">{@label}</span>
+    <div class={["dm-form-group", @class]}>
+      <label :if={@label} for={@id} class={["dm-label", @label_class]}>
+        <span class="dm-label__text">{@label}</span>
       </label>
       <textarea
         id={@id}
@@ -82,11 +73,11 @@ defmodule PhoenixDuskmoon.Component.Form.Textarea do
         required={@required}
         maxlength={@maxlength}
         class={[
-          "textarea textarea-bordered w-full",
-          size_classes(@size),
-          color_classes(@color),
-          resize_classes(@resize),
-          @disabled && "textarea-disabled opacity-50 cursor-not-allowed",
+          "dm-textarea",
+          "dm-textarea--#{@size}",
+          "dm-textarea--#{@color}",
+          resize_class(@resize),
+          @disabled && "opacity-50 cursor-not-allowed",
           @textarea_class
         ]}
         {@rest}
@@ -95,21 +86,8 @@ defmodule PhoenixDuskmoon.Component.Form.Textarea do
     """
   end
 
-  defp size_classes("xs"), do: "textarea-xs"
-  defp size_classes("sm"), do: "textarea-sm"
-  defp size_classes("md"), do: "textarea-md"
-  defp size_classes("lg"), do: "textarea-lg"
-
-  defp color_classes("primary"), do: "textarea-primary"
-  defp color_classes("secondary"), do: "textarea-secondary"
-  defp color_classes("accent"), do: "textarea-accent"
-  defp color_classes("info"), do: "textarea-info"
-  defp color_classes("success"), do: "textarea-success"
-  defp color_classes("warning"), do: "textarea-warning"
-  defp color_classes("error"), do: "textarea-error"
-
-  defp resize_classes("none"), do: "resize-none"
-  defp resize_classes("vertical"), do: "resize-y"
-  defp resize_classes("horizontal"), do: "resize-x"
-  defp resize_classes("both"), do: "resize"
+  defp resize_class("none"), do: "dm-textarea--resize-none"
+  defp resize_class("vertical"), do: "dm-textarea--resize-y"
+  defp resize_class("horizontal"), do: "dm-textarea--resize-x"
+  defp resize_class("both"), do: "dm-textarea--resize-both"
 end

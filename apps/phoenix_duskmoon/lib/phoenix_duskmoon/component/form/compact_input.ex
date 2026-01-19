@@ -3,35 +3,29 @@ defmodule PhoenixDuskmoon.Component.Form.CompactInput do
   Compact form input components for PhoenixDuskmoon UI.
 
   This module provides compact input components that combine the label
-  and input in a more condensed layout, useful for forms with limited space
-  or when a more streamlined appearance is desired.
+  and input in a more condensed layout, useful for forms with limited space.
 
   ## Examples
 
       <.dm_compact_input field={@form[:email]} type="email" label="Email" />
       <.dm_compact_input name="username" label="Username" value="john" />
-      <.dm_compact_input type="select" name="country" label="Country" options={[{"USA", "us"}, {"Canada", "ca"}]} />
-  """
+      <.dm_compact_input type="select" name="country" label="Country" options={[{"USA", "us"}]} />
 
-  use PhoenixDuskmoon.Component, :html
+  """
+  use Phoenix.Component
+
   import PhoenixDuskmoon.Component.Form
 
   @doc """
-  Renders a compact input with label and error messages.
-
-  A `Phoenix.HTML.FormField` may be passed as argument,
-  which is used to retrieve the input name, id, and values.
-  Otherwise all attributes may be passed explicitly.
-
-  ## Types
-
-  Only input and select are supported.
+  Renders a compact input with inline label.
 
   ## Examples
 
-      <.dm_compact_input field={@form[:email]} type="email" />
+      <.dm_compact_input field={@form[:email]} type="email" label="Email" />
       <.dm_compact_input name="my-input" errors={["oh no!"]} />
+
   """
+  @doc type: :component
   attr(:field_class, :any, default: nil)
   attr(:id, :any, default: nil)
   attr(:class, :any, default: nil)
@@ -65,7 +59,6 @@ defmodule PhoenixDuskmoon.Component.Form.CompactInput do
   def dm_compact_input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns
     |> assign(field: nil, id: assigns.id || field.id)
-    # |> assign(:errors, Enum.map(field.errors, &translate_error(&1)))
     |> assign_new(:name, fn -> if assigns.multiple, do: field.name <> "[]", else: field.name end)
     |> assign_new(:value, fn -> field.value end)
     |> dm_compact_input()
@@ -73,59 +66,45 @@ defmodule PhoenixDuskmoon.Component.Form.CompactInput do
 
   def dm_compact_input(%{type: "select"} = assigns) do
     ~H"""
-    <div
-      class={[
-        "select select-bordered",
-        @errors != [] && "select-error",
-        @class
-      ]}
-    >
-      <label for={@id} class={["label", @errors != [] && "text-error"]}>
-        <%= @label %>
+    <div class={["dm-compact-input", @errors != [] && "dm-compact-input--error", @class]}>
+      <label for={@id} class={["dm-compact-input__label", @errors != [] && "dm-compact-input__label--error"]}>
+        {@label}
       </label>
       <select
         id={@id}
         name={@name}
-        class={[
-          "compact-select",
-        ]}
+        class="dm-compact-input__select"
         multiple={@multiple}
         {@rest}
       >
-        <option :if={@prompt} value=""><%= @prompt %></option>
-        <%= Phoenix.HTML.Form.options_for_select(@options, @value) %>
+        <option :if={@prompt} value="">{@prompt}</option>
+        {Phoenix.HTML.Form.options_for_select(@options, @value)}
       </select>
     </div>
-    <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+    <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
     """
   end
 
   def dm_compact_input(assigns) do
     ~H"""
     <div
-      class={[
-        "input input-bordered",
-        @errors != [] && "input-error",
-        @class
-      ]}
+      class={["dm-compact-input", @errors != [] && "dm-compact-input--error", @class]}
       phx-feedback-for={@name}
     >
-      <label for={@id} class={["label", @errors != [] && "text-error"]}>
-        <%= @label %>
+      <label for={@id} class={["dm-compact-input__label", @errors != [] && "dm-compact-input__label--error"]}>
+        {@label}
       </label>
       <input
         type={@type}
         name={@name}
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
-        class={[
-          "compact-input",
-        ]}
+        class="dm-compact-input__field"
         {@rest}
       />
-      <%= render_slot(@inner_block) %>
+      {render_slot(@inner_block)}
     </div>
-    <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+    <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
     """
   end
 end

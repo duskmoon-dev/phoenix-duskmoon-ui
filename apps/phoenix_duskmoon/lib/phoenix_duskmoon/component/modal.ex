@@ -1,43 +1,52 @@
 defmodule PhoenixDuskmoon.Component.Modal do
   @moduledoc """
-  Duskmoon UI Modal Component
+  Modal dialog component using el-dm-dialog custom element.
+
+  ## Examples
+
+      <.dm_modal>
+        <:trigger :let={dialog_id}>
+          <.dm_btn onclick={"\#{dialog_id}.showModal()"}>Open</.dm_btn>
+        </:trigger>
+        <:title>PhoenixDuskmoon</:title>
+        <:body>Modal content here</:body>
+        <:footer>
+          <.dm_btn>Close</.dm_btn>
+        </:footer>
+      </.dm_modal>
+
   """
-  use PhoenixDuskmoon.Component, :html
+  use Phoenix.Component
 
   import PhoenixDuskmoon.Component.Icons
 
   @doc """
-  Open ad dialog modal.
+  Renders a modal dialog.
 
   ## Examples
 
-  ```heex
-  <.dm_modal>
-    <:trigger :let={dialog_id}>
-      <button onclick={"\#{dialog_id}.showModal()"}>Open</button>
-    </:trigger>
-    <:title>PhoenixDuskmoon</:title>
-    <:body>PhoenixDuskmoon Storybook</:body>
-  </.dm_modal>
-  ```
+      <.dm_modal>
+        <:trigger :let={dialog_id}>
+          <button onclick={"\#{dialog_id}.showModal()"}>Open</button>
+        </:trigger>
+        <:title>Modal Title</:title>
+        <:body>Modal body content</:body>
+      </.dm_modal>
 
   """
   @doc type: :component
   attr(:id, :any, doc: "Modal id")
-
-  attr(:class, :any,
-    default: "",
-    doc: "Modal class"
-  )
+  attr(:class, :any, default: nil, doc: "Additional CSS classes")
 
   attr(:hide_close, :boolean,
     default: false,
-    doc: "Hide top right close button"
+    doc: "Hide the close button"
   )
 
   attr(:position, :string,
     default: nil,
-    doc: "Modal position (top, middle, bottom)"
+    values: [nil, "top", "middle", "bottom"],
+    doc: "Modal position"
   )
 
   attr(:backdrop, :boolean,
@@ -47,7 +56,8 @@ defmodule PhoenixDuskmoon.Component.Modal do
 
   attr(:size, :string,
     default: nil,
-    doc: "Modal size (tiny, small, medium, large, huge)"
+    values: [nil, "xs", "sm", "md", "lg", "xl"],
+    doc: "Modal size"
   )
 
   attr(:responsive, :boolean,
@@ -55,16 +65,22 @@ defmodule PhoenixDuskmoon.Component.Modal do
     doc: "Make modal responsive"
   )
 
-  slot(:trigger, doc: "Modal trigger")
+  attr(:rest, :global)
 
-  slot(:title, doc: "Modal title") do
-    attr(:class, :any, doc: "html class")
+  slot(:trigger, doc: "Element that opens the modal") do
+    attr(:class, :any)
   end
 
-  slot(:body, doc: "Modal content", required: true)
+  slot(:title, doc: "Modal title") do
+    attr(:class, :any)
+  end
 
-  slot(:footer, doc: "Modal footer, buttons") do
-    attr(:class, :any, doc: "html class")
+  slot(:body, doc: "Modal content", required: true) do
+    attr(:class, :any)
+  end
+
+  slot(:footer, doc: "Modal footer with actions") do
+    attr(:class, :any)
   end
 
   def dm_modal(assigns) do
@@ -73,56 +89,42 @@ defmodule PhoenixDuskmoon.Component.Modal do
       |> assign_new(:id, fn -> "modal-#{Enum.random(0..999_999)}" end)
 
     ~H"""
-    <%= render_slot(@trigger, @id) %>
-     <dialog
-       id={@id}
-       class={[
-         "modal",
-         @position && "modal-#{@position}",
-         @backdrop && "modal-backdrop-blur",
-         @class
-       ]}
-     >
-       <div class={[
-         "modal-box",
-         @size && "modal-#{@size}",
-         @responsive && "modal-responsive"
-       ]}>
-        <%= unless @hide_close do %>
-        <form
-          class="absolute right-2 top-2 cursor-pointer"
-          method="dialog"
-        >
-          <button class="btn btn-ghost"><.dm_mdi name={"window-close"} class="w-4 h-4" /></button>
-        </form>
-        <% end %>
-        <section class="flex flex-col min-h-22 min-w-36">
-          <header :for={title <- @title} class={[
-            "flex flex-row font-bold w-full text-2xl",
-            Map.get(title, :class, "")
-          ]}>
-            <%= render_slot(title) %>
-          </header>
-          <div :for={body <- @body}
-            class={[
-              "flex flex-1",
-              Map.get(body, :class, "")
-            ]}
-          >
-            <%= render_slot(body) %>
-          </div>
-          <footer
-            :for={footer <- @footer}
-            class={[
-              "modal-action",
-              Map.get(footer, :class, "")
-            ]}
-          >
-            <%= render_slot(footer) %>
-          </footer>
-        </section>
+    {render_slot(@trigger, @id)}
+    <el-dm-dialog
+      id={@id}
+      position={@position}
+      size={@size}
+      backdrop={@backdrop && "blur"}
+      responsive={@responsive}
+      class={@class}
+      {@rest}
+    >
+      <span
+        :for={title <- @title}
+        slot="header"
+        class={Map.get(title, :class)}
+      >
+        {render_slot(title)}
+      </span>
+      <form :if={!@hide_close} method="dialog" slot="close">
+        <el-dm-button variant="ghost" size="sm" shape="circle">
+          <.dm_mdi name="close" class="w-4 h-4" />
+        </el-dm-button>
+      </form>
+      <div
+        :for={body <- @body}
+        class={Map.get(body, :class)}
+      >
+        {render_slot(body)}
       </div>
-    </dialog>
+      <span
+        :for={footer <- @footer}
+        slot="footer"
+        class={Map.get(footer, :class)}
+      >
+        {render_slot(footer)}
+      </span>
+    </el-dm-dialog>
     """
   end
 end

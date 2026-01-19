@@ -10,21 +10,18 @@ defmodule PhoenixDuskmoon.Component.Form.Radio do
         <.dm_radio field={@form[:theme]} value="auto" label="Auto theme" size="lg" />
       </.dm_form>
 
-  ## Attributes
-
-  * `field` - Phoenix form field
-  * `value` - Radio button value
-  * `label` - Radio button label text
-  * `size` - Radio size: xs, sm, md, lg (default: md)
-  * `color` - Radio color: primary, secondary, accent, info, success, warning, error (default: primary)
-  * `disabled` - Disable the radio button
-  * `class` - Additional CSS classes
-  * `label_class` - Additional CSS classes for label
-  * `radio_class` - Additional CSS classes for radio element
   """
-
   use Phoenix.Component
 
+  @doc """
+  Renders a radio button input.
+
+  ## Examples
+
+      <.dm_radio field={@form[:theme]} value="light" label="Light" />
+      <.dm_radio name="size" value="sm" label="Small" />
+
+  """
   @doc type: :component
   attr(:id, :any, default: nil)
   attr(:name, :any)
@@ -55,7 +52,7 @@ defmodule PhoenixDuskmoon.Component.Form.Radio do
 
   def dm_radio(assigns) do
     ~H"""
-    <div class={@class}>
+    <div class={["dm-form-group", @class]}>
       <label class="flex items-center gap-2 cursor-pointer">
         <input
           type="radio"
@@ -65,32 +62,19 @@ defmodule PhoenixDuskmoon.Component.Form.Radio do
           checked={@checked}
           disabled={@disabled}
           class={[
-            "radio",
-            size_classes(@size),
-            color_classes(@color),
+            "dm-radio",
+            "dm-radio--#{@size}",
+            "dm-radio--#{@color}",
             @disabled && "opacity-50 cursor-not-allowed",
             @radio_class
           ]}
           {@rest}
         />
-        <span :if={@label} class={["label-text", @label_class]}>
+        <span :if={@label} class={["dm-label__text", @label_class]}>
           {@label}
         </span>
       </label>
     </div>
     """
   end
-
-  defp size_classes("xs"), do: "radio-xs"
-  defp size_classes("sm"), do: "radio-sm"
-  defp size_classes("md"), do: "radio-md"
-  defp size_classes("lg"), do: "radio-lg"
-
-  defp color_classes("primary"), do: "radio-primary"
-  defp color_classes("secondary"), do: "radio-secondary"
-  defp color_classes("accent"), do: "radio-accent"
-  defp color_classes("info"), do: "radio-info"
-  defp color_classes("success"), do: "radio-success"
-  defp color_classes("warning"), do: "radio-warning"
-  defp color_classes("error"), do: "radio-error"
 end

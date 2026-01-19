@@ -150,13 +150,13 @@ defmodule PhoenixDuskmoon.Component.Table do
       role="table"
       id={@id}
       class={[
-        "table border-collapse border-spacing-0",
-        if(@border, do: "border"),
-        if(@zebra, do: "table-zebra"),
-        if(@pin_rows, do: "table-pin-rows"),
-        if(@pin_cols, do: "table-pin-cols"),
-        @size && "table-#{@size}",
-        if(@compact, do: "table-compact"),
+        "dm-table border-collapse border-spacing-0",
+        if(@border, do: "dm-table--bordered"),
+        if(@zebra, do: "dm-table--zebra"),
+        if(@pin_rows, do: "dm-table--pin-rows"),
+        if(@pin_cols, do: "dm-table--pin-cols"),
+        @size && "dm-table--#{@size}",
+        if(@compact, do: "dm-table--compact"),
         @class,
       ]}
     >
@@ -167,7 +167,7 @@ defmodule PhoenixDuskmoon.Component.Table do
         class={Map.get(caption, :class, "")}
       ><%= render_slot(caption) %></caption>
       <thead role="row-group" class="hidden md:table-header-group sticky top-0">
-        <tr role="row" class="table-row table-header-row">
+        <tr role="row" class="dm-table__row dm-table__row--header">
           <th
             :for={col <- @col}
             role="columnheader"
@@ -185,7 +185,7 @@ defmodule PhoenixDuskmoon.Component.Table do
             :for={{row_id, row} <- @data}
             role="row"
             id={row_id}
-            class={"table-row"}
+            class={"dm-table__row"}
           >
             <td
               :for={col <- @col}
@@ -203,7 +203,7 @@ defmodule PhoenixDuskmoon.Component.Table do
           <%= for row <- @data do %>
             <tr
               role="row"
-              class={"table-row"}
+              class={"dm-table__row"}
             >
               <td
                 :for={col <- @col}
@@ -218,7 +218,7 @@ defmodule PhoenixDuskmoon.Component.Table do
             <tr
               role="row"
               class={[
-                "table-row-expand",
+                "dm-table__row dm-table__row--expand",
                 Map.get(expand, :class, "")
               ]}
               :if={length(@expand) > 0}

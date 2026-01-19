@@ -1,60 +1,79 @@
 defmodule PhoenixDuskmoon.Component.Breadcrumb do
   @moduledoc """
-  Duskmoon UI Breadcrumb Component
+  Breadcrumb navigation component using el-dm-breadcrumbs custom element.
+
+  ## Examples
+
+      <.dm_breadcrumb>
+        <:crumb>Home</:crumb>
+        <:crumb>Products</:crumb>
+        <:crumb>Details</:crumb>
+      </.dm_breadcrumb>
+
+      <.dm_breadcrumb>
+        <:crumb to="/">Home</:crumb>
+        <:crumb to="/products">Products</:crumb>
+        <:crumb>Current Page</:crumb>
+      </.dm_breadcrumb>
 
   """
-  use PhoenixDuskmoon.Component, :html
+  use Phoenix.Component
 
   @doc """
-  Generates breadcrumbs for navigation.
+  Generates breadcrumb navigation.
 
-  ## Example
+  ## Examples
+
       <.dm_breadcrumb>
-        <:crumb>Menu1</:crumb>
-        <:crumb>Menu2</:crumb>
+        <:crumb>Home</:crumb>
+        <:crumb>Category</:crumb>
+        <:crumb>Item</:crumb>
       </.dm_breadcrumb>
+
   """
   @doc type: :component
-  attr(:id, :any,
-    default: false,
-    doc: """
-    html attribute id
-    """
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "Additional CSS classes")
+
+  attr(:separator, :string,
+    default: nil,
+    doc: "Custom separator character"
   )
 
-  attr(:class, :any,
-    default: "",
-    doc: """
-    html attribute class
-    """
-  )
+  attr(:rest, :global)
 
   slot(:crumb,
     required: true,
-    doc: """
-    Render menu
-    """
+    doc: "Breadcrumb item"
   ) do
     attr(:id, :any)
     attr(:class, :string)
-    attr(:to, :string)
+    attr(:to, :string, doc: "Link destination")
   end
 
   def dm_breadcrumb(assigns) do
     ~H"""
-    <div
+    <el-dm-breadcrumbs
       id={@id}
-      class={[
-        "breadcrumbs",
-        @class,
-      ]}
+      separator={@separator}
+      class={@class}
+      {@rest}
     >
-      <ul>
-        <li :for={crumb <- @crumb} class={Map.get(crumb, :class, nil)}>
-          <%= render_slot(crumb) %>
-        </li>
-      </ul>
-    </div>
+      <span
+        :for={{crumb, i} <- Enum.with_index(@crumb)}
+        slot="item"
+        id={Map.get(crumb, :id)}
+        class={Map.get(crumb, :class)}
+        data-href={Map.get(crumb, :to)}
+        aria-current={if i == length(@crumb) - 1, do: "page", else: nil}
+      >
+        <%= if Map.get(crumb, :to) do %>
+          <a href={Map.get(crumb, :to)}>{render_slot(crumb)}</a>
+        <% else %>
+          {render_slot(crumb)}
+        <% end %>
+      </span>
+    </el-dm-breadcrumbs>
     """
   end
 end

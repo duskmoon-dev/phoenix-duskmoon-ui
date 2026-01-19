@@ -1,263 +1,209 @@
 defmodule PhoenixDuskmoon.Component.Card do
   @moduledoc """
-  Duskmoon UI Card Component
+  Card component using el-dm-card custom element.
+
+  Provides card containers with optional header, content, and footer sections.
+
+  ## Examples
+
+      <.dm_card>
+        <:title>Star Wars</:title>
+        Star Wars is an American epic space opera...
+      </.dm_card>
+
+      <.dm_card image="/poster.jpg">
+        <:title>Movie Title</:title>
+        <:action><.dm_btn>Watch</.dm_btn></:action>
+      </.dm_card>
+
   """
-  use PhoenixDuskmoon.Component, :html
+  use Phoenix.Component
 
   import PhoenixDuskmoon.Component.Form
 
-  # alias Phoenix.LiveView.JS
-
   @doc """
-  Generates card
+  Generates a card container.
 
-  ## Example
+  ## Examples
 
       <.dm_card>
-        <:title>
-        Star Wars
-        </:title>
-        Star Wars is an American epic space opera multimedia
-        franchise created by George Lucas,
-        which began with the eponymous 1977 film and
-        quickly became a worldwide pop-culture phenomenon.
+        <:title>Card Title</:title>
+        Card content here.
+        <:action><.dm_btn>Action</.dm_btn></:action>
       </.dm_card>
 
   """
   @doc type: :component
-  attr(:id, :any,
-    default: false,
-    doc: """
-    html attribute id
-    """
-  )
-
-  attr(:class, :any,
-    default: "",
-    doc: """
-    html attribute class
-    """
-  )
-
-  attr(:body_class, :any,
-    default: "",
-    doc: """
-    card body attribute class
-    """
-  )
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "Additional CSS classes")
+  attr(:body_class, :any, default: nil, doc: "CSS classes for card body")
 
   attr(:variant, :string,
     default: nil,
-    doc: "card layout variant (compact, side, bordered, glass)"
+    values: [nil, "compact", "side", "bordered", "glass"],
+    doc: "Card layout variant"
   )
 
   attr(:shadow, :string,
     default: nil,
-    doc: "card shadow size (none, sm, md, lg, xl, 2xl)"
+    values: [nil, "none", "sm", "md", "lg", "xl", "2xl"],
+    doc: "Card shadow size"
   )
 
-  attr(:image, :string, default: nil, doc: "card image URL")
-  attr(:image_alt, :string, default: "", doc: "card image alt text")
+  attr(:image, :string, default: nil, doc: "Card image URL")
+  attr(:image_alt, :string, default: "", doc: "Card image alt text")
+
+  attr(:rest, :global)
 
   slot(:title,
     required: false,
-    doc: """
-    Render a card title.
-    """
+    doc: "Card title content"
   ) do
-    attr(:id, :any, doc: "title id")
-    attr(:class, :any, doc: "title class")
+    attr(:id, :any, doc: "Title element id")
+    attr(:class, :any, doc: "Title CSS classes")
   end
 
   slot(:action,
     required: false,
-    doc: """
-    Render a card action.
-    """
+    doc: "Card action buttons"
   ) do
-    attr(:id, :any, doc: "action id")
-    attr(:class, :any, doc: "action class")
+    attr(:id, :any, doc: "Action container id")
+    attr(:class, :any, doc: "Action container CSS classes")
   end
+
+  slot(:inner_block, required: false, doc: "Card body content")
 
   def dm_card(assigns) do
     ~H"""
-    <div
+    <el-dm-card
       id={@id}
-      class={[
-        "card",
-        @variant && "card-#{@variant}",
-        @shadow && "shadow-#{@shadow}",
-        @class
-      ]}
+      variant={@variant}
+      shadow={@shadow}
+      class={@class}
+      {@rest}
     >
-      <%= if @image do %>
-        <figure>
-          <img src={@image} alt={@image_alt} />
-        </figure>
-      <% end %>
-      <div class={["card-body", @body_class]}>
-        <div
-          :for={title <- @title}
-          id={Map.get(title, :id)}
-          class={[
-            "card-title",
-            Map.get(title, :class, ""),
-          ]}
-        >
-          <%= render_slot(title) %>
-        </div>
-        <%= render_slot(@inner_block) %>
-        <div
-          :for={action <- @action}
-          id={Map.get(action, :id)}
-          class={[
-            "card-actions",
-            Map.get(action, :class, ""),
-          ]}
-        >
-          <%= render_slot(action) %>
-        </div>
+      <img :if={@image} slot="image" src={@image} alt={@image_alt} />
+      <span
+        :for={title <- @title}
+        slot="header"
+        id={Map.get(title, :id)}
+        class={Map.get(title, :class)}
+      >
+        {render_slot(title)}
+      </span>
+      <div :if={@body_class} class={@body_class}>
+        {render_slot(@inner_block)}
       </div>
-    </div>
+      <template :if={!@body_class}>
+        {render_slot(@inner_block)}
+      </template>
+      <span
+        :for={action <- @action}
+        slot="footer"
+        id={Map.get(action, :id)}
+        class={Map.get(action, :class)}
+      >
+        {render_slot(action)}
+      </span>
+    </el-dm-card>
     """
   end
 
   @doc """
-  Renders a card with async value.
+  Renders a card with async value support.
+
+  Shows loading skeleton while data is being fetched, error state on failure,
+  and renders content when data is available.
 
   ## Examples
 
       <.dm_async_card :let={data} assign={@data}>
+        <:title>User Profile</:title>
+        <%= data.name %>
       </.dm_async_card>
 
   """
+  @doc type: :component
   attr(:id, :any, default: nil)
-  attr(:class, :any, default: "")
-  attr(:body_class, :any, default: "")
-  attr(:skeleton_class, :any, default: "")
-  attr(:assign, :any, default: nil)
+  attr(:class, :any, default: nil)
+  attr(:body_class, :any, default: nil)
+  attr(:skeleton_class, :any, default: nil, doc: "CSS classes for skeleton loader")
+  attr(:assign, :any, default: nil, doc: "Phoenix.LiveView.AsyncResult assign")
 
-  attr(:variant, :string,
-    default: nil,
-    doc: "card layout variant (compact, side, bordered, glass)"
-  )
+  attr(:variant, :string, default: nil)
+  attr(:shadow, :string, default: nil)
+  attr(:image, :string, default: nil)
+  attr(:image_alt, :string, default: "")
 
-  attr(:shadow, :string,
-    default: nil,
-    doc: "card shadow size (none, sm, md, lg, xl, 2xl)"
-  )
+  attr(:rest, :global)
 
-  attr(:image, :string, default: nil, doc: "card image URL")
-  attr(:image_alt, :string, default: "", doc: "card image alt text")
   slot(:inner_block, required: true)
 
-  slot(:title,
-    required: false,
-    doc: """
-    Render a card title.
-    """
-  ) do
-    attr(:id, :any, doc: "title id")
-    attr(:class, :any, doc: "title class")
+  slot(:title, required: false) do
+    attr(:id, :any)
+    attr(:class, :any)
   end
 
-  slot(:action,
-    required: false,
-    doc: """
-    Render a card action.
-    """
-  ) do
-    attr(:id, :any, doc: "action id")
-    attr(:class, :any, doc: "action class")
+  slot(:action, required: false) do
+    attr(:id, :any)
+    attr(:class, :any)
   end
 
   def dm_async_card(assigns) do
     ~H"""
     <.async_result assign={@assign}>
       <:loading>
-        <div id={@id} class={["card", @variant && "card-#{@variant}", @shadow && "shadow-#{@shadow}", @class]}>
-          <%= if @image do %>
-            <figure>
-              <div class={["skeleton", @skeleton_class]}></div>
-            </figure>
-          <% end %>
-          <div class={["card-body", @body_class]}>
-            <div
-              :for={title <- @title}
-              id={Map.get(title, :id)}
-              class={[
-                "card-title",
-                Map.get(title, :class, ""),
-              ]}
-            >
-              <%= render_slot(title) %>
-            </div>
-            <div class={["skeleton w-full h-full", @skeleton_class]}></div>
-          </div>
-        </div>
+        <el-dm-card
+          id={@id}
+          variant={@variant}
+          shadow={@shadow}
+          class={@class}
+          {@rest}
+        >
+          <div :if={@image} slot="image" class={["dm-skeleton", @skeleton_class]} style="width: 100%; height: 200px;"></div>
+          <span :for={title <- @title} slot="header" id={Map.get(title, :id)} class={Map.get(title, :class)}>
+            {render_slot(title)}
+          </span>
+          <div class={["dm-skeleton", @skeleton_class]} style="width: 100%; height: 4rem;"></div>
+        </el-dm-card>
       </:loading>
       <:failed :let={reason}>
-        <div id={@id} class={["card", @variant && "card-#{@variant}", @shadow && "shadow-#{@shadow}", @class]}>
-          <%= if @image do %>
-            <figure>
-              <div class={["skeleton", @skeleton_class]}></div>
-            </figure>
-          <% end %>
-          <div class={["card-body", @body_class]}>
-            <div
-              :for={title <- @title}
-              id={Map.get(title, :id)}
-              class={[
-                "card-title",
-                Map.get(title, :class, ""),
-              ]}
-            >
-              <%= render_slot(title) %>
-            </div>
-            <.dm_alert variant="error">
-              <%= reason |> inspect() %>
-            </.dm_alert>
-          </div>
-        </div>
+        <el-dm-card
+          id={@id}
+          variant={@variant}
+          shadow={@shadow}
+          class={@class}
+          {@rest}
+        >
+          <span :for={title <- @title} slot="header" id={Map.get(title, :id)} class={Map.get(title, :class)}>
+            {render_slot(title)}
+          </span>
+          <.dm_alert variant="error">
+            {reason |> inspect()}
+          </.dm_alert>
+        </el-dm-card>
       </:failed>
-      <div
+      <el-dm-card
         id={@id}
-        class={[
-          "card",
-          @variant && "card-#{@variant}",
-          @shadow && "shadow-#{@shadow}",
-          @class
-        ]}
+        variant={@variant}
+        shadow={@shadow}
+        class={@class}
+        {@rest}
       >
-        <%= if @image do %>
-          <figure>
-            <img src={@image} alt={@image_alt} />
-          </figure>
-        <% end %>
-        <div class={["card-body", @body_class]}>
-          <div
-            :for={title <- @title}
-            id={Map.get(title, :id)}
-            class={[
-              "card-title",
-              Map.get(title, :class, ""),
-            ]}
-          >
-            <%= render_slot(title) %>
-          </div>
-          <%= render_slot(@inner_block, Map.get(@assign, :result)) %>
-          <div
-            :for={action <- @action}
-            id={Map.get(action, :id)}
-            class={[
-              "card-actions",
-              Map.get(action, :class, ""),
-            ]}
-          >
-            <%= render_slot(action, Map.get(@assign, :result)) %>
-          </div>
+        <img :if={@image} slot="image" src={@image} alt={@image_alt} />
+        <span :for={title <- @title} slot="header" id={Map.get(title, :id)} class={Map.get(title, :class)}>
+          {render_slot(title)}
+        </span>
+        <div :if={@body_class} class={@body_class}>
+          {render_slot(@inner_block, Map.get(@assign, :result))}
         </div>
-      </div>
+        <template :if={!@body_class}>
+          {render_slot(@inner_block, Map.get(@assign, :result))}
+        </template>
+        <span :for={action <- @action} slot="footer" id={Map.get(action, :id)} class={Map.get(action, :class)}>
+          {render_slot(action, Map.get(@assign, :result))}
+        </span>
+      </el-dm-card>
     </.async_result>
     """
   end

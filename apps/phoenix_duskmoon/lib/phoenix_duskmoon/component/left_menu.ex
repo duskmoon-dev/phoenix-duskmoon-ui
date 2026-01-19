@@ -1,66 +1,55 @@
 defmodule PhoenixDuskmoon.Component.LeftMenu do
   @moduledoc """
-  Duskmoon UI LeftMenu Component
-
-  Uses daisyUI menu classes for consistent styling and functionality.
-  """
-  use PhoenixDuskmoon.Component, :html
-
-  @doc """
-  Generates left menu using daisyUI menu system
+  Menu component for navigation sidebars.
 
   ## Examples
 
-      <.dm_left_menu class="bg-base-200 rounded-box w-56" active="actionbar">
-        <:title class="menu-title">Phx WebComponents</:title>
+      <.dm_left_menu active="item1">
+        <:title>Menu Title</:title>
+        <:menu id="item1">Item 1</:menu>
+        <:menu id="item2">Item 2</:menu>
+      </.dm_left_menu>
+
+  """
+  use Phoenix.Component
+
+  @doc """
+  Generates a left menu using the dm-menu styling system.
+
+  ## Examples
+
+      <.dm_left_menu class="dm-menu--bg" active="actionbar">
+        <:title class="uppercase">Phx WebComponents</:title>
         <:menu id="actionbar">Actionbar</:menu>
         <:menu id="appbar">Appbar</:menu>
       </.dm_left_menu>
-      
-      <.dm_left_menu size="sm" class="bg-base-200 rounded-box">
-        <:menu class="menu-active">Active Item</:menu>
+
+      <.dm_left_menu size="sm">
+        <:menu>Active Item</:menu>
         <:menu>Regular Item</:menu>
-        <:menu class="menu-disabled">Disabled Item</:menu>
+        <:menu disabled>Disabled Item</:menu>
       </.dm_left_menu>
+
   """
   @doc type: :component
-  attr(:id, :any,
-    default: false,
-    doc: "html attribute id"
-  )
-
-  attr(:class, :any,
-    default: "",
-    doc: "html attribute class"
-  )
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "Additional CSS classes")
 
   attr(:size, :string,
     default: "md",
     values: ["xs", "sm", "md", "lg", "xl"],
-    doc: "menu size variant"
+    doc: "Menu size variant"
   )
 
-  attr(:horizontal, :boolean,
-    default: false,
-    doc: "render menu horizontally instead of vertically"
-  )
+  attr(:horizontal, :boolean, default: false, doc: "Render menu horizontally")
+  attr(:active, :string, default: "", doc: "Active menu id")
+  attr(:rest, :global)
 
-  attr(:active, :string,
-    default: "",
-    doc: "active menu id"
-  )
-
-  slot(:title,
-    required: false,
-    doc: "Render menu title"
-  ) do
+  slot(:title, required: false, doc: "Menu title") do
     attr(:class, :any)
   end
 
-  slot(:menu,
-    required: false,
-    doc: "Render menu item"
-  ) do
+  slot(:menu, required: false, doc: "Menu item") do
     attr(:id, :string)
     attr(:class, :any)
     attr(:disabled, :boolean)
@@ -73,33 +62,28 @@ defmodule PhoenixDuskmoon.Component.LeftMenu do
       |> assign_new(:menu, fn -> [] end)
 
     ~H"""
-    <nav id={@id} class={[@class]}>
+    <nav id={@id} class={@class} {@rest}>
       <ul class={[
-        "menu",
-        "menu-#{@size}",
-        @horizontal && "menu-horizontal",
-        "bg-base-200",
-        "rounded-box",
-        "w-full"
+        "dm-menu",
+        "dm-menu--#{@size}",
+        @horizontal && "dm-menu--horizontal"
       ]}>
         <li
           :for={title <- @title}
-          class={[
-            "menu-title",
-            Map.get(title, :class, "")
-          ]}
+          class={["dm-menu__title", Map.get(title, :class)]}
         >
-          <%= render_slot(title) %>
+          {render_slot(title)}
         </li>
         <li
           :for={m <- @menu}
           class={[
-            Map.get(m, :class, ""),
-            Map.get(m, :disabled) && "menu-disabled",
-            Map.get(m, :id, nil) == @active && "menu-active"
+            "dm-menu__item",
+            Map.get(m, :class),
+            Map.get(m, :disabled) && "dm-menu__item--disabled",
+            Map.get(m, :id) == @active && "dm-menu__item--active"
           ]}
         >
-          <%= render_slot(m) %>
+          {render_slot(m)}
         </li>
       </ul>
     </nav>
@@ -107,65 +91,43 @@ defmodule PhoenixDuskmoon.Component.LeftMenu do
   end
 
   @doc """
-  Generates left menu group with daisyUI menu structure
+  Generates a left menu group with collapsible support.
 
   ## Examples
 
-      <.dm_left_menu_group active="mdi" class="bg-base-200 rounded-box">
+      <.dm_left_menu_group active="mdi">
         <:title>Icons</:title>
         <:menu id="mdi" to={~p"/icons/mdi"}>MD Icon</:menu>
         <:menu id="bsi" to={~p"/icons/bsi"}>BS Icon</:menu>
       </.dm_left_menu_group>
-      
-      <.dm_left_menu_group size="sm" collapsible=true>
+
+      <.dm_left_menu_group size="sm" collapsible>
         <:title>Settings</:title>
         <:menu id="profile" to={~p"/settings/profile"}>Profile</:menu>
         <:menu id="security" to={~p"/settings/security"}>Security</:menu>
       </.dm_left_menu_group>
+
   """
   @doc type: :component
-  attr(:id, :any,
-    default: false,
-    doc: "html attribute id"
-  )
-
-  attr(:class, :any,
-    default: "",
-    doc: "html attribute class"
-  )
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "Additional CSS classes")
 
   attr(:size, :string,
     default: "md",
     values: ["xs", "sm", "md", "lg", "xl"],
-    doc: "menu size variant"
+    doc: "Menu size variant"
   )
 
-  attr(:collapsible, :boolean,
-    default: false,
-    doc: "make the group collapsible using details/summary"
-  )
+  attr(:collapsible, :boolean, default: false, doc: "Make the group collapsible")
+  attr(:open, :boolean, default: true, doc: "Initial state of collapsible group")
+  attr(:active, :string, default: "", doc: "Active menu id")
+  attr(:rest, :global)
 
-  attr(:open, :boolean,
-    default: true,
-    doc: "initial state of collapsible group"
-  )
-
-  attr(:active, :string,
-    default: "",
-    doc: "active menu id"
-  )
-
-  slot(:title,
-    required: true,
-    doc: "Render menu title"
-  ) do
+  slot(:title, required: true, doc: "Menu title") do
     attr(:class, :any)
   end
 
-  slot(:menu,
-    required: false,
-    doc: "Render menu item"
-  ) do
+  slot(:menu, required: false, doc: "Menu item") do
     attr(:id, :string)
     attr(:class, :any)
     attr(:to, :string)
@@ -178,56 +140,46 @@ defmodule PhoenixDuskmoon.Component.LeftMenu do
       |> assign_new(:menu, fn -> [] end)
 
     ~H"""
-    <div id={@id} class={[@class]}>
-      <ul class={[
-        "menu",
-        "menu-#{@size}",
-        "bg-base-200",
-        "rounded-box",
-        "w-full"
-      ]}>
+    <div id={@id} class={@class} {@rest}>
+      <ul class={["dm-menu", "dm-menu--#{@size}"]}>
         <%= if @collapsible do %>
-          <li>
+          <li class="dm-menu__group">
             <details open={@open}>
-              <summary class={[
-                "menu-title",
-                Map.get(List.first(@title), :class, "")
-              ]}>
-                <%= render_slot(List.first(@title)) %>
+              <summary class={["dm-menu__title", Map.get(List.first(@title), :class)]}>
+                {render_slot(List.first(@title))}
               </summary>
               <ul>
                 <li
                   :for={m <- @menu}
                   class={[
-                    Map.get(m, :class, ""),
-                    Map.get(m, :disabled) && "menu-disabled",
-                    Map.get(m, :id, nil) == @active && "menu-active"
+                    "dm-menu__item",
+                    Map.get(m, :class),
+                    Map.get(m, :disabled) && "dm-menu__item--disabled",
+                    Map.get(m, :id) == @active && "dm-menu__item--active"
                   ]}
                 >
                   <.link navigate={Map.get(m, :to, "#")}>
-                    <%= render_slot(m) %>
+                    {render_slot(m)}
                   </.link>
                 </li>
               </ul>
             </details>
           </li>
         <% else %>
-          <li class={[
-            "menu-title",
-            Map.get(List.first(@title), :class, "")
-          ]}>
-            <%= render_slot(List.first(@title)) %>
+          <li class={["dm-menu__title", Map.get(List.first(@title), :class)]}>
+            {render_slot(List.first(@title))}
           </li>
           <li
             :for={m <- @menu}
             class={[
-              Map.get(m, :class, ""),
-              Map.get(m, :disabled, false) && "menu-disabled",
-              Map.get(m, :id, nil) == @active && "menu-active"
+              "dm-menu__item",
+              Map.get(m, :class),
+              Map.get(m, :disabled) && "dm-menu__item--disabled",
+              Map.get(m, :id) == @active && "dm-menu__item--active"
             ]}
           >
             <.link navigate={Map.get(m, :to, "#")}>
-              <%= render_slot(m) %>
+              {render_slot(m)}
             </.link>
           </li>
         <% end %>

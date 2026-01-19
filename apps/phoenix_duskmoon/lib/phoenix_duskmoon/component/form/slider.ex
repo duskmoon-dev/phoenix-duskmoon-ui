@@ -5,28 +5,22 @@ defmodule PhoenixDuskmoon.Component.Form.Slider do
   ## Examples
 
       <.dm_form for={@form} phx-submit="save">
-        <.dm_slider field={@form[:volume]} label="Volume" min="0" max="100" />
-        <.dm_slider field={@form[:brightness]} label="Brightness" min="0" max="100" color="success" />
+        <.dm_slider field={@form[:volume]} label="Volume" min={0} max={100} />
+        <.dm_slider field={@form[:brightness]} label="Brightness" min={0} max={100} color="success" />
       </.dm_form>
 
-  ## Attributes
-
-  * `field` - Phoenix form field
-  * `label` - Slider label text
-  * `min` - Minimum value (default: 0)
-  * `max` - Maximum value (default: 100)
-  * `step` - Step increment (default: 1)
-  * `color` - Slider color: primary, secondary, accent, info, success, warning, error (default: primary)
-  * `size` - Slider size: xs, sm, md, lg (default: md)
-  * `disabled` - Disable the slider
-  * `show_value` - Show current value (default: true)
-  * `class` - Additional CSS classes
-  * `label_class` - Additional CSS classes for label
-  * `slider_class` - Additional CSS classes for slider element
   """
-
   use Phoenix.Component
 
+  @doc """
+  Renders a range slider input.
+
+  ## Examples
+
+      <.dm_slider field={@form[:volume]} label="Volume" min={0} max={100} />
+      <.dm_slider name="brightness" label="Brightness" value={50} />
+
+  """
   @doc type: :component
   attr(:id, :any, default: nil)
   attr(:name, :any)
@@ -60,12 +54,12 @@ defmodule PhoenixDuskmoon.Component.Form.Slider do
 
   def dm_slider(assigns) do
     ~H"""
-    <div class={@class}>
-      <div class="flex items-center justify-between mb-2" :if={@label}>
-        <label for={@id} class={["label-text", @label_class]}>
+    <div class={["dm-form-group", @class]}>
+      <div :if={@label} class="flex items-center justify-between mb-2">
+        <label for={@id} class={["dm-label__text", @label_class]}>
           {@label}
         </label>
-        <span :if={@show_value} class="text-sm font-medium text-base-content/70">
+        <span :if={@show_value} class="text-sm font-medium opacity-70">
           {@value}
         </span>
       </div>
@@ -80,33 +74,20 @@ defmodule PhoenixDuskmoon.Component.Form.Slider do
           step={@step}
           disabled={@disabled}
           class={[
-            "range",
-            size_classes(@size),
-            color_classes(@color),
+            "dm-range",
+            "dm-range--#{@size}",
+            "dm-range--#{@color}",
             @disabled && "opacity-50 cursor-not-allowed",
             @slider_class
           ]}
           {@rest}
         />
       </div>
-      <div class="flex justify-between text-xs mt-1" :if={@show_value}>
+      <div :if={@show_value} class="flex justify-between text-xs mt-1 opacity-60">
         <span>{@min}</span>
         <span>{@max}</span>
       </div>
     </div>
     """
   end
-
-  defp size_classes("xs"), do: "range-xs"
-  defp size_classes("sm"), do: "range-sm"
-  defp size_classes("md"), do: "range-md"
-  defp size_classes("lg"), do: "range-lg"
-
-  defp color_classes("primary"), do: "range-primary"
-  defp color_classes("secondary"), do: "range-secondary"
-  defp color_classes("accent"), do: "range-accent"
-  defp color_classes("info"), do: "range-info"
-  defp color_classes("success"), do: "range-success"
-  defp color_classes("warning"), do: "range-warning"
-  defp color_classes("error"), do: "range-error"
 end

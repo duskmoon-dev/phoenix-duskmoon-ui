@@ -1,76 +1,98 @@
 defmodule PhoenixDuskmoon.Component.Button do
   @moduledoc """
-  Duskmoon UI Button Component
+  Button component using el-dm-button custom element.
+
+  Provides three button modes:
+  - Standard button with variants and sizes
+  - Button with confirmation dialog
+  - Noise effect button (decorative)
+
+  ## Examples
+
+      <.dm_btn>Click me</.dm_btn>
+
+      <.dm_btn variant="primary" size="lg">Primary</.dm_btn>
+
+      <.dm_btn variant="error" confirm="Are you sure?">Delete</.dm_btn>
+
+      <.dm_btn noise content="SUBMIT">Submit</.dm_btn>
 
   """
-  use PhoenixDuskmoon.Component, :html
-  import PhoenixDuskmoon.Component.Icons
+  use Phoenix.Component
 
   @doc """
   Generates a button.
-  [INSERT LVATTRDOCS]
+
   ## Examples
-  ```heex
-  <.dm_btn id="show-btn">Show</.dm_btn>
-  ```
-  ```heex
-  <.dm_btn id="remove-btn" confirm_action={JS.push("remove", value: %{"id" => @id})}>Remove</.dm_btn>
-  ```
+
+      <.dm_btn id="show-btn">Show</.dm_btn>
+
+      <.dm_btn variant="primary" size="lg">Primary Button</.dm_btn>
+
+      <.dm_btn confirm="Are you sure?" confirm_title="Confirm Action">Delete</.dm_btn>
+
   """
   @doc type: :component
   attr(:id, :any, required: false)
-  attr(:class, :any, default: nil, doc: "the class of the button")
+  attr(:class, :any, default: nil, doc: "Additional CSS classes")
 
   attr(:variant, :string,
     default: nil,
-    doc:
-      "the color variant of the button (primary, secondary, accent, info, success, warning, error, ghost, link, outline)"
+    values: [
+      nil,
+      "primary",
+      "secondary",
+      "accent",
+      "info",
+      "success",
+      "warning",
+      "error",
+      "ghost",
+      "link",
+      "outline"
+    ],
+    doc: "Button color variant"
   )
 
   attr(:size, :string,
     default: nil,
-    doc: "the size of the button (xs, sm, md, lg)"
+    values: [nil, "xs", "sm", "md", "lg"],
+    doc: "Button size"
   )
 
   attr(:shape, :string,
     default: nil,
-    doc: "the shape of the button (square, circle)"
+    values: [nil, "square", "circle"],
+    doc: "Button shape"
   )
 
-  attr(:glass, :boolean, default: false, doc: "apply glass effect to the button")
-  attr(:loading, :boolean, default: false, doc: "show loading state")
-  attr(:disabled, :boolean, default: false, doc: "disable the button")
+  attr(:loading, :boolean, default: false, doc: "Show loading state")
+  attr(:disabled, :boolean, default: false, doc: "Disable the button")
 
-  attr(:noise, :boolean, default: false, doc: "the noise of the button")
-  attr(:content, :string, default: "", doc: "the content of noise button")
+  # Noise button attributes
+  attr(:noise, :boolean, default: false, doc: "Use noise effect button style")
+  attr(:content, :string, default: "", doc: "Content text for noise button")
 
-  attr(:confirm_class, :any,
-    default: nil,
-    doc: "the class of the confirm action button in dialog"
-  )
-
-  attr(:cancel_class, :any, default: nil, doc: "the class of the cancel action button in dialog")
-  attr(:show_cancel_action, :boolean, default: true)
-
-  attr(:confirm_title, :string, default: "")
-  attr(:confirm, :string, default: "")
+  # Confirm dialog attributes
+  attr(:confirm, :string, default: "", doc: "Confirmation message (enables confirm dialog)")
+  attr(:confirm_title, :string, default: "", doc: "Title for confirmation dialog")
+  attr(:confirm_class, :any, default: nil, doc: "CSS class for confirm button")
+  attr(:cancel_class, :any, default: nil, doc: "CSS class for cancel button")
+  attr(:show_cancel_action, :boolean, default: true, doc: "Show cancel button in dialog")
 
   attr(:rest, :global,
-    doc: """
-    Additional attributes to confirm action button.
-    """
+    include: ~w(phx-click phx-target phx-value-id phx-disable-with name value type form),
+    doc: "Additional HTML attributes"
   )
 
   slot(:inner_block,
     required: true,
-    doc: """
-    The content rendered inside of the `button` tag.
-    """
+    doc: "Button content"
   )
 
   slot(:confirm_action,
     required: false,
-    doc: "the action of the confirm action button in dialog"
+    doc: "Custom confirm action button content"
   )
 
   @spec dm_btn(map()) :: Phoenix.LiveView.Rendered.t()
@@ -80,55 +102,40 @@ defmodule PhoenixDuskmoon.Component.Button do
       |> assign_new(:id, fn -> "btn-#{Enum.random(0..999_999)}" end)
 
     ~H"""
-    <button
+    <el-dm-button
       id={@id}
-      class={[
-        "btn",
-        @variant && "btn-#{@variant}",
-        @size && "btn-#{@size}",
-        @shape && "btn-#{@shape}",
-        @glass && "glass",
-        @loading && "loading",
-        @disabled && "btn-disabled",
-        @class
-      ]}
+      variant={@variant}
+      size={@size}
+      shape={@shape}
+      loading={@loading}
+      disabled={@disabled}
+      class={@class}
       onclick={"document.getElementById('confirm-dialog-#{@id}').showModal()"}
-      {@rest}
-    ><%= render_slot(@inner_block) %></button>
-    <dialog id={"confirm-dialog-#{@id}"} class="modal">
-      <div class="modal-box">
-        <form method="dialog">
-          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-            <.dm_mdi class="w-4 h-4" name="close" />
-          </button>
-        </form>
-        <h3
-          :if={String.length(@confirm_title) > 0}
-          class="font-bold text-lg text-primary"
-        >
-          <%= @confirm_title %>
-        </h3>
-        <p class="py-4">
-          <%= @confirm %>
-        </p>
-        <div class="modal-action">
-          <%= if length(@confirm_action) > 0 do %>
-            <%= render_slot(@confirm_action) %>
-          <% else %>
-            <form method="dialog">
-              <button class={["btn", @confirm_class]} {@rest}>
-                Yes
-              </button>
-            </form>
-          <% end %>
-          <form :if={@show_cancel_action} method="dialog">
-            <button class={["btn", @cancel_class]}>
-              Cancel
-            </button>
+    >
+      {render_slot(@inner_block)}
+    </el-dm-button>
+    <el-dm-dialog id={"confirm-dialog-#{@id}"}>
+      <span slot="header" :if={String.length(@confirm_title) > 0}>
+        {@confirm_title}
+      </span>
+      <p>{@confirm}</p>
+      <div slot="footer">
+        <%= if length(@confirm_action) > 0 do %>
+          {render_slot(@confirm_action)}
+        <% else %>
+          <form method="dialog">
+            <el-dm-button variant="primary" class={@confirm_class} {@rest}>
+              Yes
+            </el-dm-button>
           </form>
-        </div>
+        <% end %>
+        <form :if={@show_cancel_action} method="dialog">
+          <el-dm-button variant="ghost" class={@cancel_class}>
+            Cancel
+          </el-dm-button>
+        </form>
       </div>
-    </dialog>
+    </el-dm-dialog>
     """
   end
 
@@ -142,9 +149,11 @@ defmodule PhoenixDuskmoon.Component.Button do
       id={@id}
       class={["btn-noise", @class]}
       data-content={@content}
-      style={"--aps: running"}
+      style="--aps: running"
       {@rest}
-    ><i :for={_ <- 0..72} /></button>
+    >
+      <i :for={_ <- 0..72} />
+    </button>
     """
   end
 
@@ -154,20 +163,19 @@ defmodule PhoenixDuskmoon.Component.Button do
       |> assign_new(:id, fn -> nil end)
 
     ~H"""
-    <button
+    <el-dm-button
       id={@id}
-      class={[
-        "btn",
-        @variant && "btn-#{@variant}",
-        @size && "btn-#{@size}",
-        @shape && "btn-#{@shape}",
-        @glass && "glass",
-        @loading && "loading",
-        @disabled && "btn-disabled",
-        @class
-      ]}
+      variant={@variant}
+      size={@size}
+      shape={@shape}
+      loading={@loading}
+      disabled={@disabled}
+      class={@class}
+      phx-hook={if @rest["phx-click"], do: "WebComponentHook"}
       {@rest}
-    ><%= render_slot(@inner_block) %></button>
+    >
+      {render_slot(@inner_block)}
+    </el-dm-button>
     """
   end
 end

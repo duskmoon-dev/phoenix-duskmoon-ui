@@ -16,29 +16,19 @@ defmodule PhoenixDuskmoon.Component.Form.Select do
           <option value="apple">Apple</option>
           <option value="orange">Orange</option>
         </optgroup>
-        <optgroup label="Vegetables">
-          <option value="carrot">Carrot</option>
-          <option value="broccoli">Broccoli</option>
-        </optgroup>
       </.dm_select>
 
-  ## Attributes
-
-  * `field` - Phoenix form field
-  * `label` - Select label text
-  * `options` - List of {value, label} tuples or keyword list
-  * `prompt` - Placeholder text for empty selection
-  * `size` - Select size: xs, sm, md, lg (default: md)
-  * `color` - Select color: primary, secondary, accent, info, success, warning, error (default: primary)
-  * `disabled` - Disable the select
-  * `multiple` - Enable multiple selection
-  * `class` - Additional CSS classes
-  * `label_class` - Additional CSS classes for label
-  * `select_class` - Additional CSS classes for select element
   """
-
   use Phoenix.Component
 
+  @doc """
+  Renders a select dropdown.
+
+  ## Examples
+
+      <.dm_select field={@form[:country]} label="Country" options={[{"us", "USA"}, {"uk", "UK"}]} />
+
+  """
   @doc type: :component
   attr(:id, :any, default: nil)
   attr(:name, :any)
@@ -73,9 +63,9 @@ defmodule PhoenixDuskmoon.Component.Form.Select do
 
   def dm_select(assigns) do
     ~H"""
-    <div class={@class}>
-      <label :if={@label} for={@id} class={["label", @label_class]}>
-        <span class="label-text">{@label}</span>
+    <div class={["dm-form-group", @class]}>
+      <label :if={@label} for={@id} class={["dm-label", @label_class]}>
+        <span class="dm-label__text">{@label}</span>
       </label>
       <select
         id={@id}
@@ -83,9 +73,9 @@ defmodule PhoenixDuskmoon.Component.Form.Select do
         multiple={@multiple}
         disabled={@disabled}
         class={[
-          "select select-bordered w-full",
-          size_classes(@size),
-          color_classes(@color),
+          "dm-select",
+          "dm-select--#{@size}",
+          "dm-select--#{@color}",
           @disabled && "opacity-50 cursor-not-allowed",
           @select_class
         ]}
@@ -111,20 +101,7 @@ defmodule PhoenixDuskmoon.Component.Form.Select do
   defp render_options(assigns) do
     ~H"""
     <option :if={@prompt} value="">{@prompt}</option>
-    <slot />
+    {render_slot(@inner_block)}
     """
   end
-
-  defp size_classes("xs"), do: "select-xs"
-  defp size_classes("sm"), do: "select-sm"
-  defp size_classes("md"), do: "select-md"
-  defp size_classes("lg"), do: "select-lg"
-
-  defp color_classes("primary"), do: "select-primary"
-  defp color_classes("secondary"), do: "select-secondary"
-  defp color_classes("accent"), do: "select-accent"
-  defp color_classes("info"), do: "select-info"
-  defp color_classes("success"), do: "select-success"
-  defp color_classes("warning"), do: "select-warning"
-  defp color_classes("error"), do: "select-error"
 end

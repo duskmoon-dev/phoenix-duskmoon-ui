@@ -1,6 +1,6 @@
 defmodule PhoenixDuskmoon.Component.Form do
   @moduledoc """
-  Duskmoon UI Form Component
+  Form components for PhoenixDuskmoon UI.
 
   This module provides form-related components including form containers,
   labels, error messages, and alerts. Input components are provided in
@@ -18,26 +18,26 @@ defmodule PhoenixDuskmoon.Component.Form do
           <.button>Save</.button>
         </:actions>
       </.dm_form>
+
   """
-  use PhoenixDuskmoon.Component, :html
+  use Phoenix.Component
 
   import PhoenixDuskmoon.Component.Icons
 
   @doc """
-  Renders a simple form.
-
-  Generate default `for` attribute for the form.
+  Renders a form container.
 
   ## Examples
 
       <.dm_form :let={f} for={@form} phx-change="validate" phx-submit="save">
         <.dm_input field={f[:email]} label="Email"/>
-        <.dm_input field={f[:username]} label="Username" />
         <:actions>
           <.button>Save</.button>
         </:actions>
       </.dm_form>
+
   """
+  @doc type: :component
   attr(:id, :any, default: nil)
   attr(:class, :any, default: nil)
   attr(:for, :any, doc: "the datastructure for the form")
@@ -63,9 +63,9 @@ defmodule PhoenixDuskmoon.Component.Form do
       as={@as}
       {@rest}
     >
-      <%= render_slot(@inner_block, f) %>
+      {render_slot(@inner_block, f)}
       <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
-        <%= render_slot(action, f) %>
+        {render_slot(action, f)}
       </div>
     </.form>
     """
@@ -73,7 +73,13 @@ defmodule PhoenixDuskmoon.Component.Form do
 
   @doc """
   Renders a label.
+
+  ## Examples
+
+      <.dm_label for="email">Email</.dm_label>
+
   """
+  @doc type: :component
   attr(:id, :any, default: nil)
   attr(:class, :any, default: nil)
   attr(:for, :string, default: nil)
@@ -81,30 +87,36 @@ defmodule PhoenixDuskmoon.Component.Form do
 
   def dm_label(assigns) do
     ~H"""
-    <label for={@for} id={@id} class={["label", @class]}>
-      <%= render_slot(@inner_block) %>
+    <label for={@for} id={@id} class={["dm-label", @class]}>
+      {render_slot(@inner_block)}
     </label>
     """
   end
 
   @doc """
-  Generates a generic error message.
+  Generates an error message.
+
+  ## Examples
+
+      <.dm_error>Something went wrong</.dm_error>
+
   """
+  @doc type: :component
   attr(:id, :any, default: nil)
   attr(:class, :any, default: nil)
   slot(:inner_block, required: true)
 
   def dm_error(assigns) do
     ~H"""
-    <span class="flex items-center gap-1 text-sm leading-6 text-error">
+    <span id={@id} class={["dm-error-text flex items-center gap-1", @class]}>
       <.dm_bsi name="exclamation-circle" class="h-3 w-3 flex-none" />
-      <%= render_slot(@inner_block) %>
+      {render_slot(@inner_block)}
     </span>
     """
   end
 
   @doc """
-  Generates an alert component using daisyui classes.
+  Generates an alert component.
 
   ## Examples
 
@@ -115,7 +127,9 @@ defmodule PhoenixDuskmoon.Component.Form do
       <.dm_alert variant="error" icon="exclamation-triangle">
         Something went wrong!
       </.dm_alert>
+
   """
+  @doc type: :component
   attr(:id, :any, default: nil)
   attr(:class, :any, default: nil)
 
@@ -142,11 +156,11 @@ defmodule PhoenixDuskmoon.Component.Form do
       end)
 
     ~H"""
-    <div id={@id} class={["alert", "alert-#{@variant}", @class]}>
+    <div id={@id} class={["dm-alert", "dm-alert--#{@variant}", @class]}>
       <.dm_mdi name={@icon} class="h-5 w-5 flex-none" />
       <div>
-        <h3 :if={@title} class="font-bold"><%= @title %></h3>
-        <div class="text-sm"><%= render_slot(@inner_block) %></div>
+        <h3 :if={@title} class="font-bold">{@title}</h3>
+        <div class="text-sm">{render_slot(@inner_block)}</div>
       </div>
     </div>
     """

@@ -10,23 +10,20 @@ defmodule PhoenixDuskmoon.Component.Form.Checkbox do
         <.dm_checkbox field={@form[:features]} label="Enable advanced features" size="lg" />
       </.dm_form>
 
-  ## Attributes
-
-  * `field` - Phoenix form field
-  * `label` - Checkbox label text
-  * `size` - Checkbox size: xs, sm, md, lg (default: md)
-  * `color` - Checkbox color: primary, secondary, accent, info, success, warning, error (default: primary)
-  * `disabled` - Disable the checkbox
-  * `indeterminate` - Set indeterminate state
-  * `class` - Additional CSS classes
-  * `label_class` - Additional CSS classes for label
-  * `checkbox_class` - Additional CSS classes for checkbox element
   """
-
   use Phoenix.Component
 
   alias PhoenixDuskmoon.Component.Form
 
+  @doc """
+  Renders a checkbox input.
+
+  ## Examples
+
+      <.dm_checkbox field={@form[:agree]} label="I agree" />
+      <.dm_checkbox name="remember" label="Remember me" checked />
+
+  """
   @doc type: :component
   attr(:id, :any, default: nil)
   attr(:name, :any)
@@ -46,6 +43,7 @@ defmodule PhoenixDuskmoon.Component.Form.Checkbox do
   attr(:class, :string, default: nil)
   attr(:label_class, :string, default: nil)
   attr(:checkbox_class, :string, default: nil)
+  attr(:multiple, :boolean, default: false)
   attr(:rest, :global)
 
   def dm_checkbox(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -59,7 +57,7 @@ defmodule PhoenixDuskmoon.Component.Form.Checkbox do
 
   def dm_checkbox(assigns) do
     ~H"""
-    <div class={@class}>
+    <div class={["dm-form-group", @class]}>
       <label class="flex items-center gap-2 cursor-pointer">
         <input
           type="checkbox"
@@ -69,33 +67,20 @@ defmodule PhoenixDuskmoon.Component.Form.Checkbox do
           checked={@checked}
           disabled={@disabled}
           class={[
-            "checkbox",
-            size_classes(@size),
-            color_classes(@color),
+            "dm-checkbox",
+            "dm-checkbox--#{@size}",
+            "dm-checkbox--#{@color}",
             @disabled && "opacity-50 cursor-not-allowed",
             @checkbox_class
           ]}
           phx-indeterminate={@indeterminate}
           {@rest}
         />
-        <span :if={@label} class={["label-text", @label_class]}>
+        <span :if={@label} class={["dm-label__text", @label_class]}>
           {@label}
         </span>
       </label>
     </div>
     """
   end
-
-  defp size_classes("xs"), do: "checkbox-xs"
-  defp size_classes("sm"), do: "checkbox-sm"
-  defp size_classes("md"), do: "checkbox-md"
-  defp size_classes("lg"), do: "checkbox-lg"
-
-  defp color_classes("primary"), do: "checkbox-primary"
-  defp color_classes("secondary"), do: "checkbox-secondary"
-  defp color_classes("accent"), do: "checkbox-accent"
-  defp color_classes("info"), do: "checkbox-info"
-  defp color_classes("success"), do: "checkbox-success"
-  defp color_classes("warning"), do: "checkbox-warning"
-  defp color_classes("error"), do: "checkbox-error"
 end

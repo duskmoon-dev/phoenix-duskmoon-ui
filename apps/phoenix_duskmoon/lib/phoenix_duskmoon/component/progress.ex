@@ -70,10 +70,10 @@ defmodule PhoenixDuskmoon.Component.Progress do
 
       <progress
         class={[
-          "progress progress-#{@color}",
+          "dm-progress dm-progress--#{@color}",
           size_classes(@size),
-          @animated && "progress-animated",
-          @indeterminate && "progress-indeterminate",
+          @animated && "dm-progress--animated",
+          @indeterminate && "dm-progress--indeterminate",
           @progress_class
         ]}
         value={@indeterminate && nil || @value}
@@ -88,7 +88,7 @@ defmodule PhoenixDuskmoon.Component.Progress do
 
     <style>
       /* Animated striped progress */
-      .progress-animated::-webkit-progress-value {
+      .dm-progress--animated::-webkit-progress-value {
         background-image: linear-gradient(
           45deg,
           rgba(255, 255, 255, 0.2) 25%,
@@ -103,7 +103,7 @@ defmodule PhoenixDuskmoon.Component.Progress do
         animation: progress-bar-stripes 1s linear infinite;
       }
 
-      .progress-animated::-moz-progress-bar {
+      .dm-progress--animated::-moz-progress-bar {
         background-image: linear-gradient(
           45deg,
           rgba(255, 255, 255, 0.2) 25%,
@@ -128,7 +128,7 @@ defmodule PhoenixDuskmoon.Component.Progress do
       }
 
       /* Indeterminate progress */
-      .progress-indeterminate::-webkit-progress-value {
+      .dm-progress--indeterminate::-webkit-progress-value {
         background-image: linear-gradient(
           90deg,
           transparent,
@@ -138,7 +138,7 @@ defmodule PhoenixDuskmoon.Component.Progress do
         animation: progress-indeterminate 2s ease-in-out infinite;
       }
 
-      .progress-indeterminate::-moz-progress-bar {
+      .dm-progress--indeterminate::-moz-progress-bar {
         background-image: linear-gradient(
           90deg,
           transparent,
@@ -174,8 +174,8 @@ defmodule PhoenixDuskmoon.Component.Progress do
 
   defp calculate_percentage(_, _), do: "0"
 
-  defp size_classes("xs"), do: "progress-xs"
-  defp size_classes("sm"), do: "progress-sm"
-  defp size_classes("md"), do: "progress-md"
-  defp size_classes("lg"), do: "progress-lg"
+  defp size_classes("xs"), do: "dm-progress--xs"
+  defp size_classes("sm"), do: "dm-progress--sm"
+  defp size_classes("md"), do: "dm-progress--md"
+  defp size_classes("lg"), do: "dm-progress--lg"
 end

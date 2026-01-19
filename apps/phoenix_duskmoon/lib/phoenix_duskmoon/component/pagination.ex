@@ -1,13 +1,20 @@
 defmodule PhoenixDuskmoon.Component.Pagination do
   @moduledoc """
-  Duskmoon UI Pagination Component
+  Pagination component using el-dm-pagination custom element.
+
+  ## Examples
+
+      <.dm_pagination page_num={5} page_size={15} total={100} update_event="update-page"/>
+
+      <.dm_pagination_thin page_num={1} page_size={10} total={50} loading={false} />
+
   """
-  use PhoenixDuskmoon.Component, :html
+  use Phoenix.Component
 
   import PhoenixDuskmoon.Component.Icons
 
   @doc """
-  Generates a pagination.
+  Generates a pagination control.
 
   ## Examples
 
@@ -15,84 +22,31 @@ defmodule PhoenixDuskmoon.Component.Pagination do
 
   """
   @doc type: :component
-  attr(:id, :any,
-    default: false,
-    doc: """
-    html attribute id
-    """
-  )
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "Additional CSS classes")
 
-  attr(:class, :any,
-    default: "",
-    doc: """
-    html attribute class
-    """
-  )
-
-  attr(:page_size, :integer,
-    default: 10,
-    doc: """
-    items shows per page
-    """
-  )
-
-  attr(:page_num, :integer,
-    default: 1,
-    doc: """
-    page num
-    """
-  )
-
-  attr(:total, :integer,
-    default: 0,
-    doc: """
-    total items count
-    """
-  )
-
-  attr(:show_total, :boolean,
-    default: false,
-    doc: """
-    whether show total items count
-    """
-  )
+  attr(:page_size, :integer, default: 10, doc: "Items per page")
+  attr(:page_num, :integer, default: 1, doc: "Current page number")
+  attr(:total, :integer, default: 0, doc: "Total number of items")
+  attr(:show_total, :boolean, default: false, doc: "Show total count")
 
   attr(:update_event, :string,
     default: "update_current_page",
-    doc: """
-    Phoenix live event name for page status update.
-    """
+    doc: "LiveView event name for page changes"
   )
 
-  attr(:page_url, :any,
-    default: nil,
-    doc: """
-    Page url.
-    """
-  )
-
-  attr(:page_url_marker, :string,
-    default: "{page}",
-    doc: """
-    Marker in page url. Default is `{page}`.
-    Replace this marker with page number.
-    """
-  )
+  attr(:page_url, :any, default: nil, doc: "URL pattern for page links")
+  attr(:page_url_marker, :string, default: "{page}", doc: "Marker to replace with page number")
 
   attr(:page_link_type, :string,
     default: "patch",
     values: ~w(patch navigate href),
-    doc: """
-    Phoenix link type.
-    """
+    doc: "Phoenix link type"
   )
 
-  slot(:inner_block,
-    required: false,
-    doc: """
-    Page slot
-    """
-  )
+  attr(:rest, :global)
+
+  slot(:inner_block, required: false)
 
   def dm_pagination(assigns) do
     {max_page, pages} = generate_pages(assigns.total, assigns.page_size, assigns.page_num)
@@ -103,224 +57,147 @@ defmodule PhoenixDuskmoon.Component.Pagination do
       |> assign(:pages, pages)
 
     ~H"""
-    <div
+    <nav
       id={@id}
-      class={[
-        "flex items-center gap-4",
-        @class
-      ]}
+      class={["dm-pagination", @class]}
+      aria-label="Pagination"
+      {@rest}
     >
-      <div :if={@show_total} class="flex flex-row items-center gap-2">
+      <div :if={@show_total} class="dm-pagination__total">
         <.dm_mdi name="view-dashboard" class="w-5 h-5" />
-        <code><%= @total %></code>
+        <code>{@total}</code>
       </div>
-      <nav class="join" aria-label="Pagination">
-        <a
-          phx-click={if(@page_num == 1, do: false, else: @update_event)}
+      <el-dm-pagination
+        current-page={@page_num}
+        total-pages={@max_page}
+      >
+        <button
+          slot="prev"
+          phx-click={if(@page_num == 1, do: nil, else: @update_event)}
           phx-value-current={if(@page_num == 1, do: nil, else: @page_num - 1)}
-          disabled={if(@page_num == 1, do: true, else: false)}
-          class={[
-            "join-item btn btn-sm",
-          ]}
+          disabled={@page_num == 1}
           data-phx-link={@page_link_type}
           data-phx-link-state="push"
-          href={if(!is_nil(@page_url), do: String.replace(@page_url, @page_url_marker, "#{if(@page_num == 1, do: 1, else: @page_num - 1)}"), else: nil)}
+          href={page_url(@page_url, @page_url_marker, max(@page_num - 1, 1))}
         >
           <span class="sr-only">Previous</span>
           <.dm_mdi name="page-previous" class="w-5 h-5" />
-        </a>
+        </button>
 
         <%= for p <- @pages do %>
           <%= if is_binary(p) do %>
-            <a
-              disabled="disabled"
-              class={[
-                "join-item btn btn-sm",
-              ]}
-            ><%= p %></a>
+            <span slot="page" class="dm-pagination__ellipsis">{p}</span>
           <% else %>
-            <a
-              phx-click={@update_event} phx-value-current={p}
-              aria-current={if p == @page_num, do: "page", else: false }
-              class={[
-                "join-item btn btn-sm",
-                if(p == @page_num, do: "btn-primary", else: ""),
-              ]}
+            <button
+              slot="page"
+              phx-click={@update_event}
+              phx-value-current={p}
+              aria-current={if p == @page_num, do: "page", else: nil}
+              data-active={p == @page_num}
               data-phx-link={@page_link_type}
               data-phx-link-state="push"
-              href={if(!is_nil(@page_url), do: String.replace(@page_url, @page_url_marker, "#{p}"), else: nil)}
-            ><%= p %></a>
+              href={page_url(@page_url, @page_url_marker, p)}
+            >
+              {p}
+            </button>
           <% end %>
         <% end %>
 
-        <a
-          phx-click={if @page_num == @max_page, do: false, else: @update_event}
-          phx-value-current={if @page_num == @max_page, do: nil, else: @page_num + 1}
-          disabled={if @page_num == @max_page, do: true, else: false}
-          class={[
-            "join-item btn btn-sm",
-          ]}
+        <button
+          slot="next"
+          phx-click={if(@page_num == @max_page, do: nil, else: @update_event)}
+          phx-value-current={if(@page_num == @max_page, do: nil, else: @page_num + 1)}
+          disabled={@page_num == @max_page}
           data-phx-link={@page_link_type}
           data-phx-link-state="push"
-          href={if(!is_nil(@page_url), do: String.replace(@page_url, @page_url_marker, "#{if @page_num == @max_page, do: @page_num, else: @page_num + 1}"), else: nil)}
+          href={page_url(@page_url, @page_url_marker, min(@page_num + 1, @max_page))}
         >
-          <i class="sr-only">Next</i>
+          <span class="sr-only">Next</span>
           <.dm_mdi name="page-next" class="w-5 h-5" />
-        </a>
-      </nav>
-      <%= render_slot(@inner_block) %>
-    </div>
+        </button>
+      </el-dm-pagination>
+      {render_slot(@inner_block)}
+    </nav>
     """
   end
 
   @doc """
-  Generates a Pagination.
-  Use duskmoonui style.
+  Generates a compact/thin pagination control.
+
+  Shows only current page with prev/next buttons, suitable for mobile or limited space.
 
   ## Examples
 
       <.dm_pagination_thin page_num={5} page_size={15} total={100} update_event="update-page" loading={false} />
 
   """
-  attr(:id, :any,
-    default: false,
-    doc: """
-    html attribute id
-    """
-  )
-
-  attr(:class, :any,
-    default: "",
-    doc: """
-    html attribute class
-    """
-  )
-
-  attr(
-    :loading,
-    :boolean,
-    default: false,
-    doc: """
-    when loading, disable the pagination
-    """
-  )
-
-  attr(
-    :show_page_jumper,
-    :boolean,
-    default: false,
-    doc: """
-    show quick jumper
-    """
-  )
-
-  attr(:page_size, :integer,
-    default: 10,
-    doc: """
-    items shows per page
-    """
-  )
-
-  attr(:page_num, :integer,
-    default: 1,
-    doc: """
-    page num
-    """
-  )
-
-  attr(:total, :integer,
-    default: 0,
-    doc: """
-    total items count
-    """
-  )
-
-  attr(:show_total, :boolean,
-    default: false,
-    doc: """
-    whether show total items count
-    """
-  )
-
-  attr(:update_event, :string,
-    default: "update_current_page",
-    doc: """
-    Phoenix live event name for page status update.
-    """
-  )
+  @doc type: :component
+  attr(:id, :any, default: nil)
+  attr(:class, :any, default: nil)
+  attr(:loading, :boolean, default: false, doc: "Show loading state")
+  attr(:show_page_jumper, :boolean, default: false, doc: "Show page number input")
+  attr(:page_size, :integer, default: 10)
+  attr(:page_num, :integer, default: 1)
+  attr(:total, :integer, default: 0)
+  attr(:show_total, :boolean, default: false)
+  attr(:update_event, :string, default: "update_current_page")
+  attr(:rest, :global)
 
   def dm_pagination_thin(assigns) do
-    {max_page, pages} = generate_pages(assigns.total, assigns.page_size, assigns.page_num)
+    {max_page, _pages} = generate_pages(assigns.total, assigns.page_size, assigns.page_num)
 
-    assigns =
-      assigns
-      |> assign(:max_page, max_page)
-      |> assign(:pages, pages)
+    assigns = assigns |> assign(:max_page, max_page)
 
     ~H"""
-    <div
+    <nav
       id={@id}
-      class={[
-        "flex items-center gap-4",
-        @class
-      ]}
+      class={["dm-pagination dm-pagination--thin", @class]}
+      aria-label="Pagination"
+      {@rest}
     >
-      <div :if={@show_total} class={["flex flex-row items-center gap-2"]}>
+      <div :if={@show_total} class="dm-pagination__total">
         <.dm_mdi name="view-dashboard" class="w-5 h-5" />
-        <code class="font-medium"><%= @total %></code>
+        <code>{@total}</code>
       </div>
-      <nav class="join">
-        <span
-          phx-click={if(@page_num == 1 || @loading, do: false, else: @update_event)}
-          phx-value-current={if @page_num == 1, do: nil, else: @page_num - 1}
-          disabled={if @page_num == 1, do: true, else: false}
-          class={[
-            if(@page_num == 1, do: "", else: "cursor-pointer"),
-            "join-item btn btn-sm",
-            if(@loading, do: "cursor-wait")
-          ]}
+      <div class="dm-pagination__controls">
+        <button
+          phx-click={if(@page_num == 1 || @loading, do: nil, else: @update_event)}
+          phx-value-current={if(@page_num == 1, do: nil, else: @page_num - 1)}
+          disabled={@page_num == 1}
+          class={["dm-pagination__btn", @loading && "dm-pagination__btn--loading"]}
         >
           <span class="sr-only">Previous</span>
           <.dm_mdi name="chevron-left" class="w-5 h-5" />
-        </span>
+        </button>
 
-        <span
-          phx-click={if(@loading, do: false, else: @update_event)}
+        <button
+          phx-click={if(@loading, do: nil, else: @update_event)}
           phx-value-current={@page_num}
-          aria-current={"page"}
-          class={[
-            "join-item btn btn-sm",
-            "bg-primary text-primary-content",
-          ]}
+          aria-current="page"
+          class="dm-pagination__current"
         >
-          <span :if={@loading} class="loading loading-spinner loading-xs"></span>
-          <%= @page_num %>
-        </span>
+          <span :if={@loading} class="dm-pagination__spinner"></span>
+          {@page_num}
+        </button>
 
-        <span
-          phx-click={if(@page_num == @max_page || @loading, do: false, else: @update_event)}
-          phx-value-current={if @page_num == @max_page, do: nil, else: @page_num + 1}
-          disabled={if @page_num == @max_page, do: true, else: false}
-          class={[
-            if(@page_num == @max_page, do: "", else: "cursor-pointer"),
-            "join-item btn btn-sm",
-            if(@loading, do: "cursor-wait")
-          ]}
+        <button
+          phx-click={if(@page_num == @max_page || @loading, do: nil, else: @update_event)}
+          phx-value-current={if(@page_num == @max_page, do: nil, else: @page_num + 1)}
+          disabled={@page_num == @max_page}
+          class={["dm-pagination__btn", @loading && "dm-pagination__btn--loading"]}
         >
           <span class="sr-only">Next</span>
           <.dm_mdi name="chevron-right" class="w-5 h-5" />
-        </span>
-      </nav>
-      <div
-        :if={@show_page_jumper}
-        class="text-medium flex-nowrap flex items-center gap-2"
-      >
-        <span><.dm_mdi name="arrow-right-top" class="w-4 h-4" /></span>
-        <form class="font-medium" phx-change={if(@loading, do: false, else: @update_event)}>
+        </button>
+      </div>
+
+      <div :if={@show_page_jumper} class="dm-pagination__jumper">
+        <.dm_mdi name="arrow-right-top" class="w-4 h-4" />
+        <form phx-change={if(@loading, do: nil, else: @update_event)}>
           <input
             type="number"
             name="current"
-            class={["input input-sm w-auto"]}
+            class="dm-pagination__input"
             min={1}
             max={@max_page}
             phx-debounce={300}
@@ -329,14 +206,17 @@ defmodule PhoenixDuskmoon.Component.Pagination do
           />
         </form>
       </div>
-    </div>
+    </nav>
     """
   end
+
+  defp page_url(nil, _marker, _page), do: nil
+  defp page_url(url, marker, page), do: String.replace(url, marker, "#{page}")
 
   defp generate_pages(total, page_size, page_num) do
     max_page =
       if total > 0 do
-        (total / page_size) |> ceil
+        (total / page_size) |> ceil()
       else
         1
       end
@@ -347,22 +227,25 @@ defmodule PhoenixDuskmoon.Component.Pagination do
           [1]
 
         max_page < 7 ->
-          1..max_page |> Enum.map(& &1)
+          1..max_page |> Enum.to_list()
 
         page_num < 3 ->
-          [1, 2, 3] ++ ["..."] ++ [max_page - 2, max_page - 1, max_page]
+          [1, 2, 3, "...", max_page - 2, max_page - 1, max_page]
 
         page_num == 3 ->
-          [1, 2, 3, 4] ++ ["..."] ++ [max_page - 2, max_page - 1, max_page]
+          [1, 2, 3, 4, "...", max_page - 2, max_page - 1, max_page]
 
         page_num > 3 && page_num < max_page - 2 ->
-          [1] ++ ["...", page_num - 1, page_num, page_num + 1, "..."] ++ [max_page]
+          [1, "...", page_num - 1, page_num, page_num + 1, "...", max_page]
 
         page_num == max_page - 2 ->
-          [1, 2, 3] ++ ["...", max_page - 3, max_page - 2, max_page - 1, max_page]
+          [1, 2, 3, "...", max_page - 3, max_page - 2, max_page - 1, max_page]
 
         page_num > max_page - 2 ->
-          [1, 2, 3] ++ ["...", max_page - 2, max_page - 1, max_page]
+          [1, 2, 3, "...", max_page - 2, max_page - 1, max_page]
+
+        true ->
+          [1]
       end
 
     {max_page, pages}

@@ -70,16 +70,16 @@ defmodule PhoenixDuskmoon.Component.Dropdown do
     ~H"""
     <div
       class={[
-        "dropdown",
-        "dropdown-#{@position}",
-        @open && "dropdown-open",
+        "dm-dropdown",
+        "dm-dropdown--#{@position}",
+        @open && "dm-dropdown--open",
         @class
       ]}
       {@rest}
     >
       <div
         :for={trigger <- @trigger}
-        class={["dropdown-toggle", trigger[:class]]}
+        class={["dm-dropdown__toggle", trigger[:class]]}
         tabindex="0"
         role="button"
       >
@@ -89,8 +89,8 @@ defmodule PhoenixDuskmoon.Component.Dropdown do
       <ul
         :for={content <- @content}
         class={[
-          "dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52",
-          "dropdown-content-#{@color}",
+          "dm-dropdown__content dm-menu p-2 shadow bg-base-100 rounded-box w-52",
+          "dm-dropdown__content--#{@color}",
           content[:class],
           @dropdown_class
         ]}
