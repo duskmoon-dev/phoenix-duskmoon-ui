@@ -10,7 +10,7 @@ defmodule Storybook.Components.Button do
       %Variation{
         id: :default,
         attributes: %{
-          class: "btn-primary"
+          variant: "primary"
         },
         slots: [
           """
@@ -19,13 +19,27 @@ defmodule Storybook.Components.Button do
         ]
       },
       %Variation{
+        id: :secondary,
+        attributes: %{
+          variant: "secondary"
+        },
+        slots: ["Secondary Action"]
+      },
+      %Variation{
+        id: :sizes,
+        description: "Button size variants",
+        attributes: %{
+          variant: "primary",
+          size: "lg"
+        },
+        slots: ["Large Button"]
+      },
+      %Variation{
         id: :remove,
         attributes: %{
-          class: "btn-error",
+          variant: "error",
           confirm_title: "Attention!",
-          confirm: "Do you really want to remove it?",
-          confirm_class: "btn-error btn-sm",
-          cancel_class: "btn-ghost btn-sm"
+          confirm: "Do you really want to remove it?"
         },
         slots: [
           """
@@ -36,17 +50,15 @@ defmodule Storybook.Components.Button do
       %Variation{
         id: :export,
         attributes: %{
-          class: "btn-info",
-          confirm: "Are you sure you want to export?",
-          confirm_class: "btn-info btn-sm",
-          cancel_class: "btn-ghost btn-sm"
+          variant: "info",
+          confirm: "Are you sure you want to export?"
         },
         slots: [
           """
           Export
           <:confirm_action>
           <form method="dialog">
-            <button class="btn btn-sm btn-info" phx-click="export">Export CSV</button>
+            <el-dm-button variant="info" size="sm" phx-click="export">Export CSV</el-dm-button>
           </form>
           </:confirm_action>
           """
@@ -55,7 +67,6 @@ defmodule Storybook.Components.Button do
       %Variation{
         id: :with_noise,
         attributes: %{
-          class: "",
           noise: true,
           content: "Waiting for noise"
         },
@@ -64,6 +75,22 @@ defmodule Storybook.Components.Button do
           Primary Action
           """
         ]
+      },
+      %Variation{
+        id: :loading,
+        attributes: %{
+          variant: "primary",
+          loading: true
+        },
+        slots: ["Loading..."]
+      },
+      %Variation{
+        id: :disabled,
+        attributes: %{
+          variant: "primary",
+          disabled: true
+        },
+        slots: ["Disabled"]
       }
     ]
   end

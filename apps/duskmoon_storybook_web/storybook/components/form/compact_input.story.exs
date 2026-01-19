@@ -2,7 +2,7 @@ defmodule Storybook.Components.Form.CompactInput do
   # :live_component or :page are also available
   use PhoenixStorybook.Story, :component
 
-  def function, do: &PhoenixDuskmoon.Component.Form.dm_compact_input/1
+  def function, do: &PhoenixDuskmoon.Component.Form.CompactInput.dm_compact_input/1
   def description, do: "A compact input element."
 
   def variations do

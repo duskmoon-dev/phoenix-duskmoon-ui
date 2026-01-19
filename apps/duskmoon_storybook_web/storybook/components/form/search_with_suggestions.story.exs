@@ -1,7 +1,7 @@
 defmodule Storybook.Components.Form.SearchWithSuggestions do
   use PhoenixStorybook.Story, :component
 
-  def function, do: &PhoenixDuskmoon.Component.Form.dm_input/1
+  def function, do: &PhoenixDuskmoon.Component.Form.Input.dm_input/1
   def description, do: "A search input with autocomplete suggestions."
 
   def variations do

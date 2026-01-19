@@ -1,7 +1,7 @@
 defmodule Storybook.Components.Form.FileUpload do
   use PhoenixStorybook.Story, :component
 
-  def function, do: &PhoenixDuskmoon.Component.Form.dm_input/1
+  def function, do: &PhoenixDuskmoon.Component.Form.Input.dm_input/1
   def description, do: "An enhanced file upload with progress and preview."
 
   def variations do

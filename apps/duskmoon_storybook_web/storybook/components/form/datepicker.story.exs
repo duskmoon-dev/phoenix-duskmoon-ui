@@ -1,7 +1,7 @@
 defmodule Storybook.Components.Form.Datepicker do
   use PhoenixStorybook.Story, :component
 
-  def function, do: &PhoenixDuskmoon.Component.Form.dm_input/1
+  def function, do: &PhoenixDuskmoon.Component.Form.Input.dm_input/1
   def description, do: "An advanced date picker with calendar UI."
 
   def variations do

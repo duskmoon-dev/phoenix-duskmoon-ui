@@ -1,7 +1,7 @@
 defmodule Storybook.Components.Form.Rating do
   use PhoenixStorybook.Story, :component
 
-  def function, do: &PhoenixDuskmoon.Component.Form.dm_input/1
+  def function, do: &PhoenixDuskmoon.Component.Form.Input.dm_input/1
   def description, do: "A star rating component for numerical ratings."
 
   def variations do
