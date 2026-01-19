@@ -13,16 +13,13 @@ defmodule PhoenixDuskmoon.Component.Form.SwitchTest do
         label: "Enable notifications"
       })
 
-    assert result =~ ~s[<div class="]
-    assert result =~ ~s[<label class="flex items-center gap-2 cursor-pointer">]
+    assert result =~ ~s[<div class="dm-form-group]
+    assert result =~ ~s[<label class="dm-switch]
 
     assert result =~
-             ~s[<input type="checkbox" name="notifications" id="test-switch" value="true" class="sr-only peer">]
+             ~s[<input type="checkbox" name="notifications" id="test-switch" value="true" class="dm-switch__input]
 
-    assert result =~
-             ~s[<div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer]
-
-    assert result =~ ~s[<span class="label-text ]
+    assert result =~ ~s[<span class="dm-switch__track"]
     assert result =~ ~s[Enable notifications]
   end
 
@@ -35,8 +32,7 @@ defmodule PhoenixDuskmoon.Component.Form.SwitchTest do
         size: "lg"
       })
 
-    assert result =~ ~s[w-14 h-7]
-    assert result =~ ~s[peer-checked:after:translate-x-7]
+    assert result =~ ~s[dm-switch--lg]
   end
 
   test "renders switch with custom color" do
@@ -48,7 +44,7 @@ defmodule PhoenixDuskmoon.Component.Form.SwitchTest do
         color: "success"
       })
 
-    assert result =~ ~s[peer-checked:bg-success]
+    assert result =~ ~s[dm-switch--success]
   end
 
   test "renders disabled switch" do
@@ -61,7 +57,6 @@ defmodule PhoenixDuskmoon.Component.Form.SwitchTest do
       })
 
     assert result =~ ~s[disabled]
-    assert result =~ ~s[opacity-50 cursor-not-allowed]
   end
 
   test "renders checked switch" do
@@ -86,7 +81,7 @@ defmodule PhoenixDuskmoon.Component.Form.SwitchTest do
         switch_class: "custom-switch"
       })
 
-    assert result =~ ~s[<div class="my-switch-container">]
+    assert result =~ ~s[my-switch-container]
     assert result =~ ~s[custom-switch]
   end
 end

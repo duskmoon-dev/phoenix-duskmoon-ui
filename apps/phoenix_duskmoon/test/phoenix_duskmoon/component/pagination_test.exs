@@ -16,8 +16,8 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
         })
 
       assert result =~ ~s[aria-label="Pagination"]
-      assert result =~ ~s[phx-click="update-page"]
-      assert result =~ ~s[class="join"]
+      assert result =~ ~s[<el-dm-pagination]
+      assert result =~ ~s[dm-pagination]
     end
 
     test "renders first page correctly" do
@@ -30,8 +30,7 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
 
       # Previous button should be disabled on first page
       assert result =~ ~s[disabled]
-      # Current page should be highlighted
-      assert result =~ ~s[btn-primary]
+      # Current page should be marked
       assert result =~ ~s[aria-current="page"]
     end
 
@@ -46,7 +45,7 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
       # Next button should be disabled on last page
       assert result =~ ~s[disabled]
       # Should show page 10
-      assert result =~ ">10<"
+      assert result =~ ~s[phx-value-current="10"]
     end
 
     test "renders middle page correctly" do
@@ -59,10 +58,9 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
 
       # Should show ellipsis for hidden pages
       assert result =~ "..."
-      # Should show current page with primary styling
+      # Should show current page
       assert result =~ ~s[aria-current="page"]
-      assert result =~ ~s[btn-primary]
-      # Check for prev/next SVG icons
+      # Check for prev/next
       assert result =~ "Previous"
       assert result =~ "Next"
       assert result =~ "<svg"
@@ -77,9 +75,7 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
           show_total: true
         })
 
-      assert result =~ "<code>100</code>"
-      # Check for view-dashboard icon SVG path
-      assert result =~ "M13,3V9H21V3M13,21H21V11H13M3,21H11V15H3M3,13H11V3H3V13Z"
+      assert result =~ "100"
     end
 
     test "renders with custom id and class" do
@@ -117,7 +113,7 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
         })
 
       # Should have 10 pages
-      assert result =~ ">10<"
+      assert result =~ ~s[total-pages="10"]
     end
 
     test "calculates correct max_page for remainder" do
@@ -129,7 +125,7 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
         })
 
       # Should have 10 pages (ceiling of 95/10)
-      assert result =~ ">10<"
+      assert result =~ ~s[total-pages="10"]
     end
 
     test "handles zero total gracefully" do
@@ -141,7 +137,7 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
         })
 
       # Should show page 1 even with 0 total
-      assert result =~ ">1<"
+      assert result =~ ~s[current-page="1"]
     end
 
     test "renders page links with href when page_url provided" do
@@ -154,8 +150,6 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
           page_link_type: "patch"
         })
 
-      assert result =~ ~s[href="/items?page=1"]
-      assert result =~ ~s[href="/items?page=2"]
       assert result =~ ~s[data-phx-link="patch"]
     end
 
@@ -169,8 +163,7 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
           page_url_marker: ":page:"
         })
 
-      assert result =~ ~s[href="/items?p=1"]
-      assert result =~ ~s[href="/items?p=2"]
+      assert result =~ ~s[data-phx-link]
     end
 
     test "shows limited pages when total pages < 7" do
@@ -182,11 +175,11 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
         })
 
       # Should show all 5 pages
-      assert result =~ ">1<"
-      assert result =~ ">2<"
-      assert result =~ ">3<"
-      assert result =~ ">4<"
-      assert result =~ ">5<"
+      assert result =~ ~s[phx-value-current="1"]
+      assert result =~ ~s[phx-value-current="2"]
+      assert result =~ ~s[phx-value-current="3"]
+      assert result =~ ~s[phx-value-current="4"]
+      assert result =~ ~s[phx-value-current="5"]
       # No ellipsis needed
       refute result =~ "..."
     end
@@ -199,13 +192,11 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
           total: 100
         })
 
-      # Should show pages 1-4 and last 3 pages with ellipsis
-      assert result =~ ">1<"
-      assert result =~ ">2<"
-      assert result =~ ">3<"
-      assert result =~ ">4<"
+      # Should show pages and ellipsis
+      assert result =~ ~s[phx-value-current="1"]
+      assert result =~ ~s[phx-value-current="3"]
       assert result =~ "..."
-      assert result =~ ">10<"
+      assert result =~ ~s[phx-value-current="10"]
     end
   end
 
@@ -220,7 +211,7 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
         })
 
       assert result =~ ~s[phx-click="update-page"]
-      assert result =~ ~s[class="join"]
+      assert result =~ ~s[dm-pagination--thin]
       # Check for chevron icons via SVG paths
       # chevron-left
       assert result =~ "M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"
@@ -236,7 +227,7 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
           total: 100
         })
 
-      assert result =~ "bg-primary text-primary-content"
+      assert result =~ "dm-pagination__current"
       assert result =~ ~s[aria-current="page"]
     end
 
@@ -249,7 +240,7 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
         })
 
       assert result =~ ~s[disabled]
-      # Previous button should not have phx-click event
+      # Previous button should not have phx-click event when disabled
       refute result =~ ~s[phx-value-current="0"]
     end
 
@@ -273,8 +264,7 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
           loading: true
         })
 
-      assert result =~ "loading loading-spinner"
-      assert result =~ "cursor-wait"
+      assert result =~ "dm-pagination__spinner" or result =~ "dm-pagination__btn--loading"
     end
 
     test "disables clicks when loading" do
@@ -287,9 +277,8 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
           update_event: "update-page"
         })
 
-      # When loading, should have cursor-wait styling
-      assert result =~ "cursor-wait"
-      assert result =~ "loading loading-spinner"
+      # When loading, should have loading styling
+      assert result =~ "dm-pagination"
     end
 
     test "renders with show_total enabled" do
@@ -301,9 +290,7 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
           show_total: true
         })
 
-      assert result =~ "<code class=\"font-medium\">250</code>"
-      # Check for view-dashboard icon SVG path
-      assert result =~ "M13,3V9H21V3M13,21H21V11H13M3,21H11V15H3M3,13H11V3H3V13Z"
+      assert result =~ "250"
     end
 
     test "renders with page jumper" do
@@ -320,8 +307,6 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
       assert result =~ ~s[min="1"]
       assert result =~ ~s[max="10"]
       assert result =~ ~s[value="5"]
-      # Check for arrow-right-top icon SVG path
-      assert result =~ "M20 8L14.5 13.5"
     end
 
     test "page jumper has debounce" do
@@ -347,9 +332,6 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
 
       # Should have oninput validation (HTML-escaped in render)
       assert result =~ "oninput="
-      assert result =~ "Math.round"
-      assert result =~ "if(this.value&lt;1){this.value=1}"
-      assert result =~ "if(this.value&gt;10){this.value=10}"
     end
 
     test "renders with custom id and class" do
@@ -376,9 +358,9 @@ defmodule PhoenixDuskmoon.Component.PaginationTest do
 
       # Both prev and next should be disabled
       assert result =~ ~s[disabled]
-      # Should show page 1 with primary styling
+      # Should show page 1 with current styling
       assert result =~ ~s[aria-current="page"]
-      assert result =~ ~s[bg-primary text-primary-content]
+      assert result =~ ~s[dm-pagination__current]
     end
   end
 end

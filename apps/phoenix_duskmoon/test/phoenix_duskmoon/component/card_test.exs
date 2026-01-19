@@ -6,109 +6,151 @@ defmodule PhoenixDuskmoon.Component.CardTest do
   import PhoenixDuskmoon.Component.Card
 
   test "renders basic card" do
-    assert render_component(&dm_card/1, %{
-             inner_block: %{inner_block: fn _, _ -> "Card content" end}
-           }) ==
-             ~s[<div class="card ">\n  \n  <div class="card-body ">\n    \n    Card content\n    \n  </div>\n</div>]
+    result =
+      render_component(&dm_card/1, %{
+        inner_block: %{inner_block: fn _, _ -> "Card content" end}
+      })
+
+    assert result =~ ~s[<el-dm-card]
+    assert result =~ ~s[Card content]
+    assert result =~ ~s[</el-dm-card>]
   end
 
-  test "renders card with custom class" do
-    assert render_component(&dm_card/1, %{
-             class: "card-compact",
-             inner_block: %{inner_block: fn _, _ -> "Compact card" end}
-           }) ==
-             ~s[<div class="card card-compact">\n  \n  <div class="card-body ">\n    \n    Compact card\n    \n  </div>\n</div>]
+  test "renders card with custom id and class" do
+    result =
+      render_component(&dm_card/1, %{
+        id: "my-card",
+        class: "my-custom-class",
+        inner_block: %{inner_block: fn _, _ -> "Content" end}
+      })
+
+    assert result =~ ~s[<el-dm-card]
+    assert result =~ ~s[id="my-card"]
+    assert result =~ ~s[class="my-custom-class"]
   end
 
-  test "renders card with custom body class" do
-    assert render_component(&dm_card/1, %{
-             body_class: "p-4",
-             inner_block: %{inner_block: fn _, _ -> "Custom padding" end}
-           }) ==
-             ~s[<div class="card ">\n  \n  <div class="card-body p-4">\n    \n    Custom padding\n    \n  </div>\n</div>]
-  end
-
-  test "renders card with id" do
-    assert render_component(&dm_card/1, %{
-             id: "test-card",
-             inner_block: %{inner_block: fn _, _ -> "Test card" end}
-           }) ==
-             ~s[<div id="test-card" class="card ">\n  \n  <div class="card-body ">\n    \n    Test card\n    \n  </div>\n</div>]
-  end
-
-  test "renders card with title" do
+  test "renders card with title slot" do
     result =
       render_component(&dm_card/1, %{
         title: [%{inner_block: fn _, _ -> "Card Title" end}],
-        inner_block: %{inner_block: fn _, _ -> "Card content" end}
+        inner_block: %{inner_block: fn _, _ -> "Content" end}
       })
 
-    assert result =~ ~s[<div class="card-title ">\n      Card Title\n    </div>]
-    assert result =~ ~s[Card content]
+    assert result =~ ~s[slot="header"]
+    assert result =~ ~s[Card Title]
   end
 
-  test "renders card with title and custom title class" do
+  test "renders card with title slot with id and class" do
     result =
       render_component(&dm_card/1, %{
-        title: [%{class: "text-xl", inner_block: fn _, _ -> "Custom Title" end}],
-        inner_block: %{inner_block: fn _, _ -> "Card content" end}
+        title: [%{id: "title-id", class: "title-class", inner_block: fn _, _ -> "Card Title" end}],
+        inner_block: %{inner_block: fn _, _ -> "Content" end}
       })
 
-    assert result =~ ~s[<div class="card-title text-xl">\n      Custom Title\n    </div>]
+    assert result =~ ~s[slot="header"]
+    assert result =~ ~s[id="title-id"]
+    assert result =~ ~s[class="title-class"]
   end
 
-  test "renders card with title and id" do
-    result =
-      render_component(&dm_card/1, %{
-        title: [%{id: "title-id", inner_block: fn _, _ -> "Titled Card" end}],
-        inner_block: %{inner_block: fn _, _ -> "Card content" end}
-      })
-
-    assert result =~ ~s[<div id="title-id" class="card-title ">\n      Titled Card\n    </div>]
-  end
-
-  test "renders card with action" do
+  test "renders card with action slot" do
     result =
       render_component(&dm_card/1, %{
         action: [%{inner_block: fn _, _ -> "Action Button" end}],
-        inner_block: %{inner_block: fn _, _ -> "Card content" end}
+        inner_block: %{inner_block: fn _, _ -> "Content" end}
       })
 
-    assert result =~ ~s[<div class="card-actions ">\n      Action Button\n    </div>]
-    assert result =~ ~s[Card content]
+    assert result =~ ~s[slot="footer"]
+    assert result =~ ~s[Action Button]
   end
 
-  test "renders card with action and custom action class" do
+  test "renders card with action slot with id and class" do
     result =
       render_component(&dm_card/1, %{
-        action: [%{class: "justify-end", inner_block: fn _, _ -> "Custom Action" end}],
-        inner_block: %{inner_block: fn _, _ -> "Card content" end}
+        action: [%{id: "action-id", class: "action-class", inner_block: fn _, _ -> "Action" end}],
+        inner_block: %{inner_block: fn _, _ -> "Content" end}
       })
 
-    assert result =~ ~s[<div class="card-actions justify-end">\n      Custom Action\n    </div>]
+    assert result =~ ~s[slot="footer"]
+    assert result =~ ~s[id="action-id"]
+    assert result =~ ~s[class="action-class"]
   end
 
-  test "renders card with action and id" do
-    result =
-      render_component(&dm_card/1, %{
-        action: [%{id: "action-id", inner_block: fn _, _ -> "Action" end}],
-        inner_block: %{inner_block: fn _, _ -> "Card content" end}
-      })
+  test "renders card with variant" do
+    for variant <- ["compact", "side", "bordered", "glass"] do
+      result =
+        render_component(&dm_card/1, %{
+          variant: variant,
+          inner_block: %{inner_block: fn _, _ -> "Content" end}
+        })
 
-    assert result =~ ~s[<div id="action-id" class="card-actions ">\n      Action\n    </div>]
+      assert result =~ ~s[<el-dm-card]
+      assert result =~ ~s[variant="#{variant}"]
+    end
   end
 
-  test "renders card with title and action" do
+  test "renders card with shadow" do
+    for shadow <- ["none", "sm", "md", "lg", "xl", "2xl"] do
+      result =
+        render_component(&dm_card/1, %{
+          shadow: shadow,
+          inner_block: %{inner_block: fn _, _ -> "Content" end}
+        })
+
+      assert result =~ ~s[<el-dm-card]
+      assert result =~ ~s[shadow="#{shadow}"]
+    end
+  end
+
+  test "renders card with image" do
     result =
       render_component(&dm_card/1, %{
-        title: [%{inner_block: fn _, _ -> "Card Title" end}],
-        action: [%{inner_block: fn _, _ -> "Action Button" end}],
-        inner_block: %{inner_block: fn _, _ -> "Card content" end}
+        image: "/images/test.jpg",
+        image_alt: "Test image",
+        inner_block: %{inner_block: fn _, _ -> "Content" end}
       })
 
-    assert result =~ ~s[<div class="card-title ">\n      Card Title\n    </div>]
-    assert result =~ ~s[Card content]
-    assert result =~ ~s[<div class="card-actions ">\n      Action Button\n    </div>]
+    assert result =~ ~s[<img]
+    assert result =~ ~s[slot="image"]
+    assert result =~ ~s[src="/images/test.jpg"]
+    assert result =~ ~s[alt="Test image"]
+  end
+
+  test "renders card with body_class" do
+    result =
+      render_component(&dm_card/1, %{
+        body_class: "p-4 bg-base-200",
+        inner_block: %{inner_block: fn _, _ -> "Content" end}
+      })
+
+    assert result =~ ~s[class="p-4 bg-base-200"]
+  end
+
+  test "renders card with all slots" do
+    result =
+      render_component(&dm_card/1, %{
+        title: [%{inner_block: fn _, _ -> "Title" end}],
+        action: [%{inner_block: fn _, _ -> "Action" end}],
+        inner_block: %{inner_block: fn _, _ -> "Body Content" end}
+      })
+
+    assert result =~ ~s[<el-dm-card]
+    assert result =~ ~s[slot="header"]
+    assert result =~ ~s[Title]
+    assert result =~ ~s[Body Content]
+    assert result =~ ~s[slot="footer"]
+    assert result =~ ~s[Action]
+  end
+
+  test "renders card with global attributes" do
+    result =
+      render_component(&dm_card/1, %{
+        "data-testid": "test-card",
+        "aria-label": "Test card",
+        inner_block: %{inner_block: fn _, _ -> "Content" end}
+      })
+
+    assert result =~ ~s[data-testid="test-card"]
+    assert result =~ ~s[aria-label="Test card"]
   end
 
   test "renders card with multiple titles and actions" do
@@ -125,25 +167,11 @@ defmodule PhoenixDuskmoon.Component.CardTest do
         inner_block: %{inner_block: fn _, _ -> "Card content" end}
       })
 
-    assert result =~ ~s[<div class="card-title ">\n      Title 1\n    </div>]
-    assert result =~ ~s[<div class="card-title ">\n      Title 2\n    </div>]
-    assert result =~ ~s[<div class="card-actions ">\n      Action 1\n    </div>]
-    assert result =~ ~s[<div class="card-actions ">\n      Action 2\n    </div>]
+    assert result =~ ~s[Title 1]
+    assert result =~ ~s[Title 2]
+    assert result =~ ~s[Action 1]
+    assert result =~ ~s[Action 2]
   end
-
-  # TODO: Fix async card tests - they require proper AsyncResult struct setup
-  # test "renders async card with loading state" do
-  # end
-  # test "renders async card with failed state" do
-  # end
-  # test "renders async card with success state" do
-  # end
-  # test "renders async card with custom skeleton class" do
-  # end
-  # test "renders async card with title in loading state" do
-  # end
-  # test "renders async card with action in success state" do
-  # end
 
   # TODO: Fix async card tests - they require proper AsyncResult struct setup
   # test "renders async card with loading state" do

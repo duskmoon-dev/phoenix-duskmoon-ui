@@ -6,24 +6,93 @@ defmodule PhoenixDuskmoon.Component.ButtonTest do
   import PhoenixDuskmoon.Component.Button
 
   test "renders basic button" do
-    assert render_component(&dm_btn/1, %{inner_block: %{inner_block: fn _, _ -> "Click me" end}}) ==
-             ~s[<button class="btn ">Click me</button>]
+    result =
+      render_component(&dm_btn/1, %{inner_block: %{inner_block: fn _, _ -> "Click me" end}})
+
+    assert result =~ ~s[<el-dm-button]
+    assert result =~ "Click me"
+    assert result =~ ~s[</el-dm-button>]
   end
 
   test "renders button with custom class" do
-    assert render_component(&dm_btn/1, %{
-             class: "btn-primary",
-             inner_block: %{inner_block: fn _, _ -> "Primary" end}
-           }) ==
-             ~s[<button class="btn btn-primary">Primary</button>]
+    result =
+      render_component(&dm_btn/1, %{
+        class: "my-custom-class",
+        inner_block: %{inner_block: fn _, _ -> "Primary" end}
+      })
+
+    assert result =~ ~s[<el-dm-button]
+    assert result =~ ~s[class="my-custom-class"]
+    assert result =~ "Primary"
+    assert result =~ ~s[</el-dm-button>]
   end
 
   test "renders button with id" do
-    assert render_component(&dm_btn/1, %{
-             id: "test-button",
-             inner_block: %{inner_block: fn _, _ -> "Test" end}
-           }) ==
-             ~s[<button id="test-button" class="btn ">Test</button>]
+    result =
+      render_component(&dm_btn/1, %{
+        id: "test-button",
+        inner_block: %{inner_block: fn _, _ -> "Test" end}
+      })
+
+    assert result =~ ~s[<el-dm-button]
+    assert result =~ ~s[id="test-button"]
+    assert result =~ "Test"
+    assert result =~ ~s[</el-dm-button>]
+  end
+
+  test "renders button with variant" do
+    result =
+      render_component(&dm_btn/1, %{
+        variant: "primary",
+        inner_block: %{inner_block: fn _, _ -> "Primary" end}
+      })
+
+    assert result =~ ~s[<el-dm-button]
+    assert result =~ ~s[variant="primary"]
+  end
+
+  test "renders button with size" do
+    result =
+      render_component(&dm_btn/1, %{
+        size: "lg",
+        inner_block: %{inner_block: fn _, _ -> "Large" end}
+      })
+
+    assert result =~ ~s[<el-dm-button]
+    assert result =~ ~s[size="lg"]
+  end
+
+  test "renders button with shape" do
+    result =
+      render_component(&dm_btn/1, %{
+        shape: "circle",
+        inner_block: %{inner_block: fn _, _ -> "O" end}
+      })
+
+    assert result =~ ~s[<el-dm-button]
+    assert result =~ ~s[shape="circle"]
+  end
+
+  test "renders button with loading state" do
+    result =
+      render_component(&dm_btn/1, %{
+        loading: true,
+        inner_block: %{inner_block: fn _, _ -> "Loading" end}
+      })
+
+    assert result =~ ~s[<el-dm-button]
+    assert result =~ ~s[loading]
+  end
+
+  test "renders button with disabled state" do
+    result =
+      render_component(&dm_btn/1, %{
+        disabled: true,
+        inner_block: %{inner_block: fn _, _ -> "Disabled" end}
+      })
+
+    assert result =~ ~s[<el-dm-button]
+    assert result =~ ~s[disabled]
   end
 
   test "renders button with noise effect" do
@@ -47,13 +116,14 @@ defmodule PhoenixDuskmoon.Component.ButtonTest do
         inner_block: %{inner_block: fn _, _ -> "Delete" end}
       })
 
-    assert result =~ ~s[class="btn "]
+    assert result =~ ~s[<el-dm-button]
     assert result =~ ~s[onclick="document.getElementById(&#39;confirm-dialog-]
-    assert result =~ ~s[<dialog id="confirm-dialog-]
-    assert result =~ ~s[<p class="py-4">]
+    assert result =~ ~s[<el-dm-dialog id="confirm-dialog-]
     assert result =~ ~s[Are you sure?]
-    assert result =~ ~s[<button class="btn ">\n            Yes\n          </button>]
-    assert result =~ ~s[<button class="btn ">\n          Cancel\n        </button>]
+    assert result =~ ~s[<el-dm-button variant="primary"]
+    assert result =~ ~s[Yes]
+    assert result =~ ~s[<el-dm-button variant="ghost"]
+    assert result =~ ~s[Cancel]
   end
 
   test "renders button with confirmation dialog and custom title" do
@@ -64,9 +134,8 @@ defmodule PhoenixDuskmoon.Component.ButtonTest do
         inner_block: %{inner_block: fn _, _ -> "Delete" end}
       })
 
-    assert result =~ ~s[<h3 class="font-bold text-lg text-primary">]
+    assert result =~ ~s[slot="header"]
     assert result =~ ~s[Confirm Delete]
-    assert result =~ ~s[<p class="py-4">]
     assert result =~ ~s[Are you sure?]
   end
 
@@ -74,13 +143,13 @@ defmodule PhoenixDuskmoon.Component.ButtonTest do
     result =
       render_component(&dm_btn/1, %{
         confirm: "Are you sure?",
-        confirm_class: "btn-error",
-        cancel_class: "btn-ghost",
+        confirm_class: "my-confirm-class",
+        cancel_class: "my-cancel-class",
         inner_block: %{inner_block: fn _, _ -> "Delete" end}
       })
 
-    assert result =~ ~s[<button class="btn btn-error">\n            Yes\n          </button>]
-    assert result =~ ~s[<button class="btn btn-ghost">\n          Cancel\n        </button>]
+    assert result =~ ~s[class="my-confirm-class"]
+    assert result =~ ~s[class="my-cancel-class"]
   end
 
   test "renders button with confirmation dialog without cancel action" do
@@ -91,7 +160,8 @@ defmodule PhoenixDuskmoon.Component.ButtonTest do
         inner_block: %{inner_block: fn _, _ -> "Delete" end}
       })
 
-    assert result =~ ~s[<button class="btn ">\n            Yes\n          </button>]
+    assert result =~ ~s[<el-dm-button variant="primary"]
+    assert result =~ ~s[Yes]
     refute result =~ ~s[Cancel]
   end
 
@@ -104,7 +174,7 @@ defmodule PhoenixDuskmoon.Component.ButtonTest do
       })
 
     assert result =~ ~s[Custom Action]
-    assert result =~ ~s[<button class="btn ">\n          Cancel\n        </button>]
+    assert result =~ ~s[Cancel]
   end
 
   test "renders button with global attributes" do

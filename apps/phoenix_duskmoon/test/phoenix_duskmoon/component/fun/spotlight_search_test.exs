@@ -13,8 +13,8 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearchTest do
         phx_target: nil
       })
 
-    assert result =~ ~s[<dialog id="spotlight-search" class="dm-fun-spotlight-search modal ]
-    assert result =~ ~s[<div class="modal-box p-0">]
+    assert result =~ ~s[<dialog id="spotlight-search" class="dm-fun-spotlight-search dm-modal ]
+    assert result =~ ~s[<div class="dm-modal__box p-0">]
     assert result =~ ~s[<div class="dm-fun-spotlight-input">]
     assert result =~ ~s[<input type="text" placeholder="Search..."]
     assert result =~ ~s[autocomplete="off"]
@@ -100,6 +100,6 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearchTest do
         phx_target: nil
       })
 
-    assert result =~ ~s[<kbd class="kbd kbd-xs">ctrl+k</kbd>]
+    assert result =~ ~s[<kbd class="dm-kbd dm-kbd--xs">ctrl+k</kbd>]
   end
 end

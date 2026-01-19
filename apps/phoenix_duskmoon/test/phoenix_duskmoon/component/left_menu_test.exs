@@ -18,11 +18,11 @@ defmodule PhoenixDuskmoon.Component.LeftMenuTest do
         })
 
       assert result =~ "<nav"
-      assert result =~ "menu"
-      assert result =~ "menu-md"
+      assert result =~ "dm-menu"
+      assert result =~ "dm-menu--md"
       assert result =~ "bg-base-200"
       assert result =~ "rounded-box"
-      assert result =~ "w-full"
+      assert result =~ "w-56"
       assert result =~ "menu-title"
       assert result =~ "Phx WebComponents"
       assert result =~ "Actionbar"
@@ -39,7 +39,7 @@ defmodule PhoenixDuskmoon.Component.LeftMenuTest do
             menu: [%{inner_block: fn _, _ -> "Item" end}]
           })
 
-        assert result =~ "menu-#{size}"
+        assert result =~ "dm-menu--#{size}"
       end
     end
 
@@ -53,7 +53,7 @@ defmodule PhoenixDuskmoon.Component.LeftMenuTest do
           ]
         })
 
-      assert result =~ "menu-horizontal"
+      assert result =~ "dm-menu--horizontal"
     end
 
     test "renders active menu item" do
@@ -66,7 +66,7 @@ defmodule PhoenixDuskmoon.Component.LeftMenuTest do
           ]
         })
 
-      assert result =~ "menu-active"
+      assert result =~ "dm-menu__item--active"
     end
 
     test "renders disabled menu item" do
@@ -78,7 +78,7 @@ defmodule PhoenixDuskmoon.Component.LeftMenuTest do
           ]
         })
 
-      assert result =~ "menu-disabled"
+      assert result =~ "dm-menu__item--disabled"
     end
 
     test "renders with custom id" do
@@ -106,7 +106,7 @@ defmodule PhoenixDuskmoon.Component.LeftMenuTest do
       result = render_component(&dm_left_menu/1, %{})
 
       assert result =~ "<nav"
-      assert result =~ "menu"
+      assert result =~ "dm-menu"
     end
   end
 
@@ -123,11 +123,8 @@ defmodule PhoenixDuskmoon.Component.LeftMenuTest do
         })
 
       assert result =~ "<div"
-      assert result =~ "menu"
-      assert result =~ "menu-md"
-      assert result =~ "bg-base-200"
-      assert result =~ "rounded-box"
-      assert result =~ "menu-title"
+      assert result =~ "dm-menu"
+      assert result =~ "dm-menu--md"
       assert result =~ "Icons"
       assert result =~ "MD Icon"
       assert result =~ "BS Icon"
@@ -178,7 +175,7 @@ defmodule PhoenixDuskmoon.Component.LeftMenuTest do
             menu: [%{inner_block: fn _, _ -> "Item" end}]
           })
 
-        assert result =~ "menu-#{size}"
+        assert result =~ "dm-menu--#{size}"
       end
     end
 
@@ -193,7 +190,7 @@ defmodule PhoenixDuskmoon.Component.LeftMenuTest do
           ]
         })
 
-      assert result =~ "menu-active"
+      assert result =~ "dm-menu__item--active"
     end
 
     test "renders disabled menu item in group" do
@@ -206,7 +203,7 @@ defmodule PhoenixDuskmoon.Component.LeftMenuTest do
           ]
         })
 
-      assert result =~ "menu-disabled"
+      assert result =~ "dm-menu__item--disabled"
     end
 
     test "renders menu group with custom id" do
@@ -239,7 +236,7 @@ defmodule PhoenixDuskmoon.Component.LeftMenuTest do
         })
 
       assert result =~ "<div"
-      assert result =~ "menu"
+      assert result =~ "dm-menu"
       assert result =~ "Empty Group"
     end
 

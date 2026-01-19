@@ -12,7 +12,7 @@ defmodule PhoenixDuskmoon.Component.LinkTest do
         inner_block: %{inner_block: fn _, _ -> "Test Link" end}
       })
 
-    assert result =~ ~s[<a class="link link-hover " href="/test">Test Link</a>]
+    assert result =~ ~s[<a class="dm-link dm-link--hover " href="/test">Test Link</a>]
   end
 
   test "renders link with custom id" do
@@ -23,7 +23,8 @@ defmodule PhoenixDuskmoon.Component.LinkTest do
         inner_block: %{inner_block: fn _, _ -> "Test Link" end}
       })
 
-    assert result =~ ~s[<a id="test-link" class="link link-hover " href="/test">Test Link</a>]
+    assert result =~
+             ~s[<a id="test-link" class="dm-link dm-link--hover " href="/test">Test Link</a>]
   end
 
   test "renders link with custom class" do
@@ -34,7 +35,8 @@ defmodule PhoenixDuskmoon.Component.LinkTest do
         inner_block: %{inner_block: fn _, _ -> "Test Link" end}
       })
 
-    assert result =~ ~s[<a class="link link-hover text-blue-500" href="/test">Test Link</a>]
+    assert result =~
+             ~s[<a class="dm-link dm-link--hover text-blue-500" href="/test">Test Link</a>]
   end
 
   test "renders link with navigate attribute" do
@@ -44,7 +46,7 @@ defmodule PhoenixDuskmoon.Component.LinkTest do
         inner_block: %{inner_block: fn _, _ -> "Live Link" end}
       })
 
-    assert result =~ ~s[<a class="link link-hover " href="/live-route"]
+    assert result =~ ~s[<a class="dm-link dm-link--hover " href="/live-route"]
     assert result =~ ~s[data-phx-link="redirect"]
     assert result =~ ~s[data-phx-link-state="push"]
     assert result =~ ~s[>Live Link</a>]
@@ -69,7 +71,7 @@ defmodule PhoenixDuskmoon.Component.LinkTest do
         inner_block: %{inner_block: fn _, _ -> "Patch Link" end}
       })
 
-    assert result =~ ~s[<a class="link link-hover " href="/patch-route"]
+    assert result =~ ~s[<a class="dm-link dm-link--hover " href="/patch-route"]
     assert result =~ ~s[data-phx-link="patch"]
     assert result =~ ~s[data-phx-link-state="push"]
     assert result =~ ~s[>Patch Link</a>]
@@ -161,7 +163,7 @@ defmodule PhoenixDuskmoon.Component.LinkTest do
         inner_block: %{inner_block: fn _, _ -> "Default Link" end}
       })
 
-    assert result =~ ~s[<a class="link link-hover " href="#">Default Link</a>]
+    assert result =~ ~s[<a class="dm-link dm-link--hover " href="#">Default Link</a>]
   end
 
   test "renders link with href='#' when href is nil" do
@@ -171,7 +173,7 @@ defmodule PhoenixDuskmoon.Component.LinkTest do
         inner_block: %{inner_block: fn _, _ -> "Nil Link" end}
       })
 
-    assert result =~ ~s[<a class="link link-hover " href="#">Nil Link</a>]
+    assert result =~ ~s[<a class="dm-link dm-link--hover " href="#">Nil Link</a>]
   end
 
   test "renders link with href='#' when href is '#'" do
@@ -181,7 +183,7 @@ defmodule PhoenixDuskmoon.Component.LinkTest do
         inner_block: %{inner_block: fn _, _ -> "Hash Link" end}
       })
 
-    assert result =~ ~s[<a class="link link-hover " href="#">Hash Link</a>]
+    assert result =~ ~s[<a class="dm-link dm-link--hover " href="#">Hash Link</a>]
   end
 
   test "renders link with get method (default)" do
@@ -195,7 +197,7 @@ defmodule PhoenixDuskmoon.Component.LinkTest do
     refute result =~ ~s[data-method=]
     refute result =~ ~s[data-csrf=]
     refute result =~ ~s[data-to=]
-    assert result =~ ~s[<a class="link link-hover " href="/get-request">Get Request</a>]
+    assert result =~ ~s[<a class="dm-link dm-link--hover " href="/get-request">Get Request</a>]
   end
 
   test "renders link with target attribute" do

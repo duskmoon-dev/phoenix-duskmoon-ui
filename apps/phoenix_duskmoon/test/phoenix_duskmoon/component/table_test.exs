@@ -119,7 +119,7 @@ defmodule PhoenixDuskmoon.Component.TableTest do
           zebra: true
         })
 
-      assert result =~ "table-zebra"
+      assert result =~ "dm-table--zebra"
     end
 
     test "renders table with pinned rows" do
@@ -129,7 +129,7 @@ defmodule PhoenixDuskmoon.Component.TableTest do
           pin_rows: true
         })
 
-      assert result =~ "table-pin-rows"
+      assert result =~ "dm-table--pin-rows"
     end
 
     test "renders table with pinned columns" do
@@ -139,7 +139,7 @@ defmodule PhoenixDuskmoon.Component.TableTest do
           pin_cols: true
         })
 
-      assert result =~ "table-pin-cols"
+      assert result =~ "dm-table--pin-cols"
     end
 
     test "renders table with size variants" do
@@ -150,7 +150,7 @@ defmodule PhoenixDuskmoon.Component.TableTest do
             size: size
           })
 
-        assert result =~ "table-#{size}"
+        assert result =~ "dm-table--#{size}"
       end
     end
 
@@ -161,7 +161,7 @@ defmodule PhoenixDuskmoon.Component.TableTest do
           compact: true
         })
 
-      assert result =~ "table-compact"
+      assert result =~ "dm-table--compact"
     end
 
     test "renders table with caption" do
@@ -206,7 +206,7 @@ defmodule PhoenixDuskmoon.Component.TableTest do
           with_expand: true
         })
 
-      assert result =~ "table-row-expand"
+      assert result =~ "dm-table__row--expand"
       assert result =~ "Details: New York"
       assert result =~ "Details: Los Angeles"
     end
@@ -266,11 +266,11 @@ defmodule PhoenixDuskmoon.Component.TableTest do
         })
 
       assert result =~ "border"
-      assert result =~ "table-zebra"
-      assert result =~ "table-compact"
-      assert result =~ "table-lg"
-      assert result =~ "table-pin-rows"
-      assert result =~ "table-pin-cols"
+      assert result =~ "dm-table--zebra"
+      assert result =~ "dm-table--compact"
+      assert result =~ "dm-table--lg"
+      assert result =~ "dm-table--pin-rows"
+      assert result =~ "dm-table--pin-cols"
     end
 
     test "renders with stream mode enabled" do

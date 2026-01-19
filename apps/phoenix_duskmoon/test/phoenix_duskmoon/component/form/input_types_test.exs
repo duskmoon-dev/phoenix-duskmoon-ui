@@ -21,7 +21,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
       assert result =~ ~s[name="country"]
       assert result =~ ~s[class="]
       # Should use select classes, not textarea classes (bug fix verification)
-      assert result =~ ~s[select select-bordered]
+      assert result =~ ~s[dm-select"]
       refute result =~ ~s[textarea]
     end
 
@@ -35,7 +35,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[select-primary]
+      assert result =~ ~s[dm-select--primary]
     end
 
     test "renders select with size" do
@@ -48,7 +48,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[select-lg]
+      assert result =~ ~s[dm-select--lg]
     end
 
     test "renders select with error state" do
@@ -61,7 +61,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[select-error]
+      assert result =~ ~s[dm-select--error]
       assert result =~ "is required"
     end
 
@@ -133,7 +133,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
       assert result =~ ~s[id="desc-textarea"]
       assert result =~ ~s[name="description"]
       # Should use textarea classes, not radio classes (bug fix verification)
-      assert result =~ ~s[textarea textarea-bordered]
+      assert result =~ ~s[dm-textarea"]
       refute result =~ ~s[radio]
       assert result =~ "Some text content"
     end
@@ -147,7 +147,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[textarea-success]
+      assert result =~ ~s[dm-textarea--success]
     end
 
     test "renders textarea with size" do
@@ -159,7 +159,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[textarea-lg]
+      assert result =~ ~s[dm-textarea--lg]
     end
 
     test "renders textarea with error state" do
@@ -171,7 +171,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[textarea-error]
+      assert result =~ ~s[dm-textarea--error]
       assert result =~ "cannot be blank"
       assert result =~ "is too short"
     end
@@ -256,7 +256,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[radio-primary]
+      assert result =~ ~s[dm-radio--primary]
     end
 
     test "renders radio group with size" do
@@ -269,7 +269,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[radio-lg]
+      assert result =~ ~s[dm-radio--lg]
     end
 
     test "renders radio group with label" do
@@ -313,7 +313,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
       assert result =~ ~s[type="checkbox"]
       assert result =~ ~s[id="agree-checkbox"]
       assert result =~ ~s[name="agree"]
-      assert result =~ ~s[class="checkbox"]
+      assert result =~ ~s[class="dm-checkbox"]
       assert result =~ "I agree to the terms"
     end
 
@@ -383,7 +383,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
       assert result =~ ~s[type="checkbox"]
       assert result =~ ~s[id="notifications-toggle"]
       assert result =~ ~s[name="notifications"]
-      assert result =~ ~s[class="toggle"]
+      assert result =~ ~s[class="dm-switch"]
       assert result =~ "Enable notifications"
     end
 
@@ -421,7 +421,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[toggle-primary]
+      assert result =~ ~s[dm-switch--primary]
     end
 
     test "renders toggle with size" do
@@ -434,7 +434,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[toggle-lg]
+      assert result =~ ~s[dm-switch--lg]
     end
 
     test "renders toggle with hidden false value" do
@@ -478,7 +478,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
       assert result =~ ~s[type="range"]
       assert result =~ ~s[id="volume-slider"]
       assert result =~ ~s[name="volume"]
-      assert result =~ ~s[class="range"]
+      assert result =~ ~s[class="dm-range"]
       assert result =~ "Volume"
     end
 
@@ -523,7 +523,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: 50
         })
 
-      assert result =~ ~s[range-primary]
+      assert result =~ ~s[dm-range--primary]
     end
 
     test "renders range slider with size" do
@@ -536,7 +536,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: 50
         })
 
-      assert result =~ ~s[range-lg]
+      assert result =~ ~s[dm-range--lg]
     end
 
     test "renders range slider displaying current value" do
@@ -593,7 +593,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
       assert result =~ ~s[type="file"]
       assert result =~ ~s[id="file-upload"]
       assert result =~ ~s[name="upload"]
-      assert result =~ ~s[file-input file-input-bordered]
+      assert result =~ ~s[dm-input dm-input--file]
       assert result =~ "Upload file"
     end
 
@@ -607,7 +607,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[file-input-primary]
+      assert result =~ ~s[dm-input--primary]
     end
 
     test "renders file input with size" do
@@ -620,7 +620,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[file-input-lg]
+      assert result =~ ~s[dm-input--lg]
     end
 
     test "renders file input with error state" do
@@ -633,7 +633,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[file-input-error]
+      assert result =~ ~s[dm-input--error]
       assert result =~ "file too large"
       assert result =~ "invalid format"
     end
@@ -666,7 +666,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
       assert result =~ ~s[type="text"]
       assert result =~ ~s[id="username-input"]
       assert result =~ ~s[name="username"]
-      assert result =~ ~s[input input-bordered]
+      assert result =~ ~s[dm-input"]
       assert result =~ "Username"
     end
 
@@ -692,7 +692,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[input-primary]
+      assert result =~ ~s[dm-input--primary]
     end
 
     test "renders text input with size" do
@@ -705,7 +705,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[input-lg]
+      assert result =~ ~s[dm-input--lg]
     end
 
     test "renders text input with error state" do
@@ -718,7 +718,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[input-error]
+      assert result =~ ~s[dm-input--error]
       assert result =~ "is required"
     end
 
@@ -750,7 +750,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
       assert result =~ ~s[type="email"]
       assert result =~ ~s[id="email-input"]
       assert result =~ ~s[name="email"]
-      assert result =~ ~s[input input-bordered]
+      assert result =~ ~s[dm-input"]
       assert result =~ "Email"
     end
 
@@ -776,7 +776,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[input-error]
+      assert result =~ ~s[dm-input--error]
       assert result =~ "is invalid"
     end
   end
@@ -795,7 +795,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
       assert result =~ ~s[type="password"]
       assert result =~ ~s[id="password-input"]
       assert result =~ ~s[name="password"]
-      assert result =~ ~s[input input-bordered]
+      assert result =~ ~s[dm-input"]
       assert result =~ "Password"
     end
 
@@ -809,7 +809,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[input-primary]
+      assert result =~ ~s[dm-input--primary]
     end
 
     test "renders password input with error state" do
@@ -822,7 +822,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[input-error]
+      assert result =~ ~s[dm-input--error]
       assert result =~ "is too weak"
     end
   end
@@ -841,7 +841,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
       assert result =~ ~s[type="number"]
       assert result =~ ~s[id="age-input"]
       assert result =~ ~s[name="age"]
-      assert result =~ ~s[input input-bordered]
+      assert result =~ ~s[dm-input"]
       assert result =~ "Age"
     end
 
@@ -884,7 +884,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[input-error]
+      assert result =~ ~s[dm-input--error]
       assert result =~ "must be positive"
     end
   end
@@ -903,7 +903,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
       assert result =~ ~s[type="url"]
       assert result =~ ~s[id="website-input"]
       assert result =~ ~s[name="website"]
-      assert result =~ ~s[input input-bordered]
+      assert result =~ ~s[dm-input"]
       assert result =~ "Website"
     end
 
@@ -929,7 +929,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[input-error]
+      assert result =~ ~s[dm-input--error]
       assert result =~ "is invalid"
     end
   end
@@ -948,7 +948,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
       assert result =~ ~s[type="tel"]
       assert result =~ ~s[id="phone-input"]
       assert result =~ ~s[name="phone"]
-      assert result =~ ~s[input input-bordered]
+      assert result =~ ~s[dm-input"]
       assert result =~ "Phone"
     end
 
@@ -974,7 +974,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[input-error]
+      assert result =~ ~s[dm-input--error]
       assert result =~ "is invalid format"
     end
   end
