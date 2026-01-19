@@ -4,10 +4,9 @@
 
 @import "tailwindcss";
 @plugin "duskmoonui";
-/* TODO: Replace with @import "@duskmoon-dev/core"; when published */
 
-/* Theme compatibility layer: maps daisyUI vars to --dm-* namespace */
-@import "./theme-compat.css";
+/* Design system and component styles from upstream */
+@import "@duskmoon-dev/core";
 
-/* Phoenix Duskmoon UI v9 - Custom Elements Components */
-@import "./components.css";
+/* Neumorphic theme (optional) */
+@import "./neumorphic.css";
