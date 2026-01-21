@@ -26,7 +26,10 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@duskmoon-dev/core": ">=1.0.0",
+    "@duskmoon-dev/elements": ">=0.5.0"
+  },
   "devDependencies": {
     "@mdi/svg": "^7.4.47",
     "@tailwindcss/typography": "^0.5.16",
@@ -34,7 +37,5 @@
     "postcss": "^8.5.3"
   },
   "peerDependencies": {
-    "@duskmoon-dev/core": ">=1.0.0",
-    "@duskmoon-dev/elements": ">=1.0.0"
   }
 }

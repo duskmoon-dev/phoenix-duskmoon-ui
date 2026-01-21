@@ -8,7 +8,6 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.16",
-    "duskmoonui": "^5.0.0",
     "postcss": "^8.5.3"
   }
 }
