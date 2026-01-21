@@ -59,18 +59,19 @@
   
     &:is(:disabled, [disabled], .btn-disabled) {
       &:not(.btn-link, .btn-ghost) {
-        @apply bg-base-content/10;
+        background-color: color-mix(in oklch, var(--color-base-content, currentColor) 10%, transparent);
         box-shadow: none;
       }
-  
+
       @apply pointer-events-none;
       --btn-border: #0000;
       --btn-noise: none;
       --btn-fg: color-mix(in oklch, var(--neumorphic-text-color) 20%, #0000);
-  
+
       @media (hover: hover) {
         &:hover {
-          @apply bg-neutral/20 pointer-events-none;
+          background-color: color-mix(in oklch, var(--color-neutral, currentColor) 20%, transparent);
+          @apply pointer-events-none;
           --btn-border: #0000;
           --btn-fg: color-mix(in oklch, var(--neumorphic-text-color) 20%, #0000);
         }
