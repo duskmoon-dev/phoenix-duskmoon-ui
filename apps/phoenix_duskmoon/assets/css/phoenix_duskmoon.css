@@ -3,7 +3,6 @@
 @source '../../lib/**/*.ex';
 
 @import "tailwindcss";
-@plugin "duskmoonui";
 
 /* Design system and component styles from upstream */
 @import "@duskmoon-dev/core";
