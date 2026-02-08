@@ -13,7 +13,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
   """
   use Phoenix.Component
 
-  alias PhoenixDuskmoon.Component.Form
+  alias PhoenixDuskmoon.Component.DataEntry.Form
 
   @doc """
   Renders a checkbox input.

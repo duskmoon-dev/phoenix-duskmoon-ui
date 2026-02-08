@@ -11,7 +11,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
   """
   use Phoenix.Component
 
-  import PhoenixDuskmoon.Component.Icons
+  import PhoenixDuskmoon.Component.Icon.Icons
 
   @doc """
   Generates a pagination control.

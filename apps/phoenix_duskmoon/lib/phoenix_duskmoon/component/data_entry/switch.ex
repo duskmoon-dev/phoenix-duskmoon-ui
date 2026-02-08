@@ -12,7 +12,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
   """
   use Phoenix.Component
 
-  alias PhoenixDuskmoon.Component.Form
+  alias PhoenixDuskmoon.Component.DataEntry.Form
 
   @doc """
   Renders a toggle switch input.

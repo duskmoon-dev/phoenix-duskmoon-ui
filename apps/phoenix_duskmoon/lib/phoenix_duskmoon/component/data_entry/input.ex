@@ -16,8 +16,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   """
 
   use PhoenixDuskmoon.Component, :html
-  import PhoenixDuskmoon.Component.Icons
-  import PhoenixDuskmoon.Component.Form
+  import PhoenixDuskmoon.Component.Icon.Icons
+  import PhoenixDuskmoon.Component.DataEntry.Form
 
   @doc """
   Renders an input with label and error messages.

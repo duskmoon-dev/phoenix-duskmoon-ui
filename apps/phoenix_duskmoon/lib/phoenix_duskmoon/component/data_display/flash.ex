@@ -9,7 +9,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
   """
   use PhoenixDuskmoon.Component, :html
 
-  import PhoenixDuskmoon.Component.Icons
+  import PhoenixDuskmoon.Component.Icon.Icons
 
   @doc """
   Renders flash notices.

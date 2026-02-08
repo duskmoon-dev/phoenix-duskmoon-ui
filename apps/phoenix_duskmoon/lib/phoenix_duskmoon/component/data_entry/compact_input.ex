@@ -14,7 +14,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
   """
   use Phoenix.Component
 
-  import PhoenixDuskmoon.Component.Form
+  import PhoenixDuskmoon.Component.DataEntry.Form
 
   @doc """
   Renders a compact input with inline label.

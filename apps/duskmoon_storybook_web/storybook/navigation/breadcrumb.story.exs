@@ -15,7 +15,7 @@ defmodule Storybook.Navigation.Breadcrumb do
         slots: [
           """
           <:crumb class="flex gap-2">
-            <PhoenixDuskmoon.Component.Icons.dm_mdi name="home" class="w-4 h-4" />
+            <PhoenixDuskmoon.Component.Icon.Icons.dm_mdi name="home" class="w-4 h-4" />
             <a href="/">Home</a>
           </:crumb>
           <:crumb>

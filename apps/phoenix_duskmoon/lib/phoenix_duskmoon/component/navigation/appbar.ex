@@ -13,9 +13,9 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
   """
   use Phoenix.Component
 
-  import PhoenixDuskmoon.Component.Link
-  import PhoenixDuskmoon.Component.Icons
-  import PhoenixDuskmoon.Component.Divider
+  import PhoenixDuskmoon.Component.Action.Link
+  import PhoenixDuskmoon.Component.Icon.Icons
+  import PhoenixDuskmoon.Component.Layout.Divider
 
   @doc """
   Generates an appbar using custom element.

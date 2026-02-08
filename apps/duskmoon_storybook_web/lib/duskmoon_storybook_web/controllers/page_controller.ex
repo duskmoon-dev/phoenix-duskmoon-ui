@@ -15,7 +15,7 @@ defmodule DuskmoonStorybookWeb.PageController do
 
   def mdi(conn, %{"filter" => filter}) do
     icons =
-      PhoenixDuskmoon.Component.Icons.mdi_icons()
+      PhoenixDuskmoon.Component.Icon.Icons.mdi_icons()
       |> Enum.filter(fn n ->
         reg = Regex.compile!("#{filter}", [:caseless])
         Regex.match?(reg, n)
@@ -25,13 +25,13 @@ defmodule DuskmoonStorybookWeb.PageController do
   end
 
   def mdi(conn, _params) do
-    icons = PhoenixDuskmoon.Component.Icons.mdi_icons()
+    icons = PhoenixDuskmoon.Component.Icon.Icons.mdi_icons()
     render(conn, :mdi, mdi_icons: icons, active_menu: "mdi", filter: "")
   end
 
   def bsi(conn, %{"filter" => filter}) do
     icons =
-      PhoenixDuskmoon.Component.Icons.bsi_icons()
+      PhoenixDuskmoon.Component.Icon.Icons.bsi_icons()
       |> Enum.filter(fn n ->
         reg = Regex.compile!("#{filter}", [:caseless])
         Regex.match?(reg, n)
@@ -41,7 +41,7 @@ defmodule DuskmoonStorybookWeb.PageController do
   end
 
   def bsi(conn, _params) do
-    icons = PhoenixDuskmoon.Component.Icons.bsi_icons()
+    icons = PhoenixDuskmoon.Component.Icon.Icons.bsi_icons()
     render(conn, :bsi, bsi_icons: icons, active_menu: "bsi", filter: "")
   end
 end

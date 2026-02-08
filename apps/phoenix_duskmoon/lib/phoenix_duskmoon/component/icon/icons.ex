@@ -20,7 +20,7 @@ defmodule PhoenixDuskmoon.Component.Icon.Icons do
 
   Can be found at [Material Design Icons](https://duskmoon-storybook.gsmlg.dev/mdi)
 
-      > PhoenixDuskmoon.Component.Icons.mdi_icons()
+      > PhoenixDuskmoon.Component.Icon.Icons.mdi_icons()
         #=> [
         #=>   "abacus",
         #=>   "abjad-arabic",
@@ -104,7 +104,7 @@ defmodule PhoenixDuskmoon.Component.Icon.Icons do
 
   Can be found at [Bootstrap Icons](https://duskmoon-storybook.gsmlg.dev/bsi)
 
-      > PhoenixDuskmoon.Component.Icons.bsi_icons()
+      > PhoenixDuskmoon.Component.Icon.Icons.bsi_icons()
         #=> [
           "0-circle-fill",
           "0-circle",

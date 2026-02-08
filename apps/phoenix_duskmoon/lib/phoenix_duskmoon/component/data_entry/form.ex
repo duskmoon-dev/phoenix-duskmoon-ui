@@ -6,8 +6,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
   labels, error messages, and alerts. Input components are provided in
   separate modules for better organization:
 
-  * `PhoenixDuskmoon.Component.Form.Input` - All input types (dm_input)
-  * `PhoenixDuskmoon.Component.Form.CompactInput` - Compact inputs (dm_compact_input)
+  * `PhoenixDuskmoon.Component.DataEntry.Input` - All input types (dm_input)
+  * `PhoenixDuskmoon.Component.DataEntry.CompactInput` - Compact inputs (dm_compact_input)
 
   ## Examples
 
@@ -22,7 +22,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
   """
   use Phoenix.Component
 
-  import PhoenixDuskmoon.Component.Icons
+  import PhoenixDuskmoon.Component.Icon.Icons
 
   @doc """
   Renders a form container.

@@ -18,7 +18,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
   """
   use Phoenix.Component
 
-  import PhoenixDuskmoon.Component.Icons
+  import PhoenixDuskmoon.Component.Icon.Icons
 
   @doc """
   Renders a modal dialog.
