@@ -50,45 +50,62 @@ defmodule PhoenixDuskmoon.Component do
   @doc false
   def component do
     quote do
-      import PhoenixDuskmoon.Component.Actionbar
-      import PhoenixDuskmoon.Component.Appbar
-      import PhoenixDuskmoon.Component.Avatar
-      import PhoenixDuskmoon.Component.Badge
-      import PhoenixDuskmoon.Component.Breadcrumb
-      import PhoenixDuskmoon.Component.Button
-      import PhoenixDuskmoon.Component.Card
-      import PhoenixDuskmoon.Component.Divider
-      import PhoenixDuskmoon.Component.Dropdown
-      import PhoenixDuskmoon.Component.Flash
-      import PhoenixDuskmoon.Component.Form
-      import PhoenixDuskmoon.Component.Form.Checkbox
-      import PhoenixDuskmoon.Component.Form.CompactInput
-      import PhoenixDuskmoon.Component.Form.Input
-      import PhoenixDuskmoon.Component.Form.Radio
-      import PhoenixDuskmoon.Component.Form.Select
-      import PhoenixDuskmoon.Component.Form.Slider
-      import PhoenixDuskmoon.Component.Form.Switch
-      import PhoenixDuskmoon.Component.Form.Textarea
+      # Action components
+      import PhoenixDuskmoon.Component.Action.Button
+      import PhoenixDuskmoon.Component.Action.Link
+      import PhoenixDuskmoon.Component.Action.Dropdown
+
+      # Data Display components
+      import PhoenixDuskmoon.Component.DataDisplay.Avatar
+      import PhoenixDuskmoon.Component.DataDisplay.Badge
+      import PhoenixDuskmoon.Component.DataDisplay.Card
+      import PhoenixDuskmoon.Component.DataDisplay.Flash
+      import PhoenixDuskmoon.Component.DataDisplay.Markdown
+      import PhoenixDuskmoon.Component.DataDisplay.Pagination
+      import PhoenixDuskmoon.Component.DataDisplay.Progress
+      import PhoenixDuskmoon.Component.DataDisplay.Skeleton
+      import PhoenixDuskmoon.Component.DataDisplay.Table
+      import PhoenixDuskmoon.Component.DataDisplay.Tooltip
+
+      # Data Entry components
+      import PhoenixDuskmoon.Component.DataEntry.Form
+      import PhoenixDuskmoon.Component.DataEntry.Checkbox
+      import PhoenixDuskmoon.Component.DataEntry.CompactInput
+      import PhoenixDuskmoon.Component.DataEntry.Input
+      import PhoenixDuskmoon.Component.DataEntry.Radio
+      import PhoenixDuskmoon.Component.DataEntry.Select
+      import PhoenixDuskmoon.Component.DataEntry.Slider
+      import PhoenixDuskmoon.Component.DataEntry.Switch
+      import PhoenixDuskmoon.Component.DataEntry.Textarea
+
+      # Feedback components
+      import PhoenixDuskmoon.Component.Feedback.Dialog
+      import PhoenixDuskmoon.Component.Feedback.Loading
+
+      # Navigation components
+      import PhoenixDuskmoon.Component.Navigation.Actionbar
+      import PhoenixDuskmoon.Component.Navigation.Appbar
+      import PhoenixDuskmoon.Component.Navigation.Breadcrumb
+      import PhoenixDuskmoon.Component.Navigation.LeftMenu
+      import PhoenixDuskmoon.Component.Navigation.Navbar
+      import PhoenixDuskmoon.Component.Navigation.PageFooter
+      import PhoenixDuskmoon.Component.Navigation.PageHeader
+      import PhoenixDuskmoon.Component.Navigation.Tab
+
+      # Layout components
+      import PhoenixDuskmoon.Component.Layout.Divider
+      import PhoenixDuskmoon.Component.Layout.ThemeSwitcher
+
+      # Icon components
+      import PhoenixDuskmoon.Component.Icon.Icons
+
+      # Fun components
       import PhoenixDuskmoon.Component.Fun.ButtonNoise
       import PhoenixDuskmoon.Component.Fun.Eclipse
       import PhoenixDuskmoon.Component.Fun.PlasmaBall
       import PhoenixDuskmoon.Component.Fun.Signature
       import PhoenixDuskmoon.Component.Fun.Snow
       import PhoenixDuskmoon.Component.Fun.SpotlightSearch
-      import PhoenixDuskmoon.Component.Icons
-      import PhoenixDuskmoon.Component.LeftMenu
-      import PhoenixDuskmoon.Component.Link
-      import PhoenixDuskmoon.Component.Loading
-      import PhoenixDuskmoon.Component.Markdown
-      import PhoenixDuskmoon.Component.Modal
-      import PhoenixDuskmoon.Component.PageFooter
-      import PhoenixDuskmoon.Component.PageHeader
-      import PhoenixDuskmoon.Component.Pagination
-      import PhoenixDuskmoon.Component.Progress
-      import PhoenixDuskmoon.Component.Tab
-      import PhoenixDuskmoon.Component.Table
-      import PhoenixDuskmoon.Component.ThemeSwitcher
-      import PhoenixDuskmoon.Component.Tooltip
     end
   end
 

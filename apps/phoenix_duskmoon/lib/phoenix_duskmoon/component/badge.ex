@@ -1,67 +1,10 @@
 defmodule PhoenixDuskmoon.Component.Badge do
   @moduledoc """
-  Badge component for status indicators and labels.
+  Backwards-compatible re-export module.
 
-  Uses the `el-dm-badge` custom element from duskmoon-elements.
-
-  ## Examples
-
-      <.dm_badge>New</.dm_badge>
-
-      <.dm_badge variant="success">Active</.dm_badge>
-
-      <.dm_badge variant="error" size="lg">Error</.dm_badge>
-
-      <.dm_badge variant="warning" outline>Warning</.dm_badge>
-
-  ## Attributes
-
-  * `variant` - Badge variant: primary, secondary, accent, info, success, warning, error, ghost, neutral (default: primary)
-  * `size` - Badge size: xs, sm, md, lg (default: md)
-  * `outline` - Show outline style (default: false)
-  * `class` - Additional CSS classes
-
-  ## Slots
-
-  * `:inner_block` - Badge content (required)
+  This module delegates to `PhoenixDuskmoon.Component.DataDisplay.Badge`.
+  Use the new module path for new code.
   """
 
-  use Phoenix.Component
-
-  @doc type: :component
-  attr(:variant, :string,
-    default: "primary",
-    values: [
-      "primary",
-      "secondary",
-      "accent",
-      "info",
-      "success",
-      "warning",
-      "error",
-      "ghost",
-      "neutral"
-    ]
-  )
-
-  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
-  attr(:outline, :boolean, default: false)
-  attr(:class, :string, default: nil)
-  attr(:rest, :global)
-
-  slot(:inner_block, required: true)
-
-  def dm_badge(assigns) do
-    ~H"""
-    <el-dm-badge
-      variant={@variant}
-      size={@size}
-      outline={@outline}
-      class={@class}
-      {@rest}
-    >
-      {render_slot(@inner_block)}
-    </el-dm-badge>
-    """
-  end
+  defdelegate dm_badge(assigns), to: PhoenixDuskmoon.Component.DataDisplay.Badge
 end
