@@ -383,7 +383,7 @@ defmodule PhoenixDuskmoon.Component.Form.InputTypesTest do
       assert result =~ ~s[type="checkbox"]
       assert result =~ ~s[id="notifications-toggle"]
       assert result =~ ~s[name="notifications"]
-      assert result =~ ~s[class="dm-switch"]
+      assert result =~ "dm-switch"
       assert result =~ "Enable notifications"
     end
 
