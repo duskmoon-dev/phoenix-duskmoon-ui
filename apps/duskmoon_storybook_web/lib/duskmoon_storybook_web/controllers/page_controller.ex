@@ -5,10 +5,6 @@ defmodule DuskmoonStorybookWeb.PageController do
     render(conn, :page, layout: false, active_menu: "page")
   end
 
-  def neumorphic(conn, _params) do
-    render(conn, :neumorphic, layout: false, active_menu: "neumorphic")
-  end
-
   def hook(conn, %{"mode" => mode} = _params) do
     render(conn, :hook, mode: mode, active_menu: "darkmoon-hook")
   end

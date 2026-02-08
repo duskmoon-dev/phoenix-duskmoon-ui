@@ -1,11 +1,8 @@
 @source "../js/**/*.js";
-@source '../../lib/**/*.exs';
-@source '../../lib/**/*.ex';
+@source "../../lib/**/*.exs";
+@source "../../lib/**/*.ex";
 
 @import "tailwindcss";
 
 /* Design system and component styles from upstream */
 @import "@duskmoon-dev/core";
-
-/* Neumorphic theme (optional) */
-@import "./neumorphic.css";

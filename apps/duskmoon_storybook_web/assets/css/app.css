@@ -11,9 +11,6 @@
 /* Design system and component styles from upstream */
 @import "@duskmoon-dev/core";
 
-@import "phoenix_duskmoon/neumorphic";
-
-
 @layer components {
   .rainbow {
     z-index: -1;
