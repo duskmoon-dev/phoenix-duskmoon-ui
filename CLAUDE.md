@@ -10,13 +10,26 @@ Phoenix Duskmoon UI is an umbrella project providing Duskmoon UI components for 
 2. **duskmoon_storybook** - Storybook backend/context
 3. **duskmoon_storybook_web** - Live Storybook web application for component showcase
 
+## Upstream Dependencies Policy
+
+**This project ONLY uses `@duskmoon-dev/core` and `@duskmoon-dev/elements` for styling and custom elements.** Do NOT use `@gsmlg/lit` or other UI libraries.
+
+- **CSS/Theming**: Use `@duskmoon-dev/core` CSS classes. Read `.claude/skills/duskmoon-dev-core/SKILL.md` for the full API.
+- **Custom Elements**: Use `@duskmoon-dev/el-*` packages. Read `.claude/skills/duskmoon-elements/SKILL.md` and its `references/` for the full API.
+- **Missing features**: If `@duskmoon-dev/core` or `@duskmoon-dev/elements` is missing a needed CSS class, component, or feature, file a GitHub issue as a feature request to the upstream repo instead of working around it with other libraries.
+
+### Upstream GitHub Repos for Issues
+
+- **CSS/Theme issues**: https://github.com/duskmoon-dev/duskmoonui
+- **Custom Element issues**: https://github.com/duskmoon-dev/duskmoon-elements
+
 ## Architecture
 
 This is an Elixir umbrella project with Phoenix LiveView components and a Node.js workspace:
 
 - **Umbrella Structure**: Run commands from root directory - they cascade to `apps/*` subdirectories
 - **Component Library**: Phoenix LiveView HEEX components wrapping HTML Custom Elements with `@doc type: :component`
-- **Frontend Dependencies**: Uses `@duskmoon-dev/core` (CSS design system) and `duskmoon-elements` (custom elements)
+- **Frontend Dependencies**: Uses `@duskmoon-dev/core` (CSS design system) and `@duskmoon-dev/elements` (custom elements)
 - **Storybook**: Live component showcase for development and documentation
 
 ### v9 Architecture (Custom Elements)
@@ -70,10 +83,27 @@ Components are organized into three main categories:
 
 ### Storybook Architecture
 
-Storybook stories are defined in `.story.exs` files under `apps/duskmoon_storybook_web/storybook/components/`:
+**PhoenixStorybook stories** are in `.story.exs` files under `apps/duskmoon_storybook_web/storybook/{category}/`:
 - Each story uses `PhoenixStorybook.Story` with `%Variation{}` structs
-- Variations can have `attributes` or custom `template` blocks
 - When using templates, **always use explicit component calls** - the `.variation` helper is not available in template contexts
+
+**Demo pages** (standalone controller-based pages) live under `apps/duskmoon_storybook_web/lib/duskmoon_storybook_web/controllers/components/`:
+- 8 controllers (one per category): ActionController, DataDisplayController, DataEntryController, FeedbackController, NavigationController, LayoutController, IconController, FunComponentController
+- Each controller has a matching HTML module and HEEX templates directory
+- Routes are scoped under `/components/{category}/{component}` in `router.ex`
+- The sidebar in `app.html.heex` links to all demo pages
+- The appbar uses plain HTML with `@duskmoon-dev/core` CSS classes (`.appbar`, `.appbar-sticky`, `.appbar-primary`, etc.) — not a custom element
+
+### Custom Elements Registration
+
+The storybook registers individual `@duskmoon-dev/el-*` packages in `apps/duskmoon_storybook_web/assets/js/app.js`:
+```javascript
+import "@duskmoon-dev/el-button/register";
+import "@duskmoon-dev/el-card/register";
+// ... etc
+```
+
+Each `el-*` element must be explicitly imported for its custom element tag to be defined. Without registration, content inside the custom element's `<template>` is inert/invisible.
 
 ## Development Commands
 
@@ -87,7 +117,7 @@ Storybook stories are defined in `.story.exs` files under `apps/duskmoon_storybo
 - `mix compile --warnings-as-errors` - Compile with warnings as errors
 
 ### Application-Specific Commands
-- `mix phx.server` - Start storybook web server (run from root)
+- `mix phx.server` - Start storybook web server (run from root, listens on port 4600)
 - `mix tailwind storybook` - Build Storybook CSS
 - `mix bun storybook` - Build Storybook JS
 - `mix tailwind duskmoon` - Build main package CSS
@@ -163,6 +193,7 @@ Storybook stories are defined in `.story.exs` files under `apps/duskmoon_storybo
   @import "@duskmoon-dev/core";
   @import "phoenix_duskmoon/components";
   ```
+- For CSS-only layouts (e.g., appbar, footer), prefer `@duskmoon-dev/core` CSS classes over custom elements when appropriate
 
 ### Test Writing
 - Test files mirror source structure: `apps/phoenix_duskmoon/test/phoenix_duskmoon/component/`
@@ -180,7 +211,9 @@ Storybook stories are defined in `.story.exs` files under `apps/duskmoon_storybo
   - `assets/css/` - CSS source files
 - `apps/duskmoon_storybook/` - Storybook backend application
 - `apps/duskmoon_storybook_web/` - Storybook Phoenix web application
-  - `storybook/components/` - Story definitions (.story.exs files)
+  - `storybook/` - PhoenixStorybook story definitions (.story.exs) organized by category
+  - `lib/.../controllers/components/` - Demo page controllers, HTML modules, and HEEX templates
+  - `assets/js/app.js` - Custom element registration
 - `package.json` - Root workspace configuration
 - Each app has its own `mix.exs` with shared dependencies
 
