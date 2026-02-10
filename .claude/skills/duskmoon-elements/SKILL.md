@@ -1,194 +1,186 @@
-# Claude Code Skills Reference
+---
+name: duskmoon-elements
+description: Use the DuskMoon Elements custom element library (`<el-dm-*>` web components). Use when building web pages or apps with DuskMoon elements, registering elements, setting properties/attributes, listening to events, using slots, applying themes, or styling with CSS custom properties. Covers all 31 element packages including button, card, input, dialog, table, tabs, pro-data-grid, and more.
+---
 
-This document describes the Claude Code skills and commands available in the DuskMoon Elements repository. These extend Claude Code with project-specific capabilities when working in this monorepo.
+# DuskMoon Elements
 
-## Overview
+31 custom element packages built on `@duskmoon-dev/el-core`. Each element is a standard Web Component with Shadow DOM.
 
-Skills and commands are defined in `.claude/skills/` and `.claude/commands/` respectively. They give Claude Code specialized knowledge about this project's patterns, conventions, and workflows.
-
-## Project-Specific Skills
-
-### `/create_element` — Element Package Management
-
-Creates, modifies, or removes element packages in `elements/`. This is the primary skill for adding new components to the library.
-
-**When to use:** Any time you need to add a new `<el-dm-*>` component.
-
-**What it does:**
-1. Scaffolds the full package structure (`package.json`, `tsconfig.json`, source files)
-2. Creates the component class extending `BaseElement`
-3. Updates the bundle package (`packages/elements/`) with imports, exports, and references
-4. Updates root `package.json` build/release scripts
-5. Creates a playground test page
-6. Creates documentation in `packages/docs/`
-
-**Example:**
-```
-/create_element tooltip
-```
-
-**Key conventions enforced:**
-- Package: `@duskmoon-dev/el-{name}`
-- Tag: `<el-dm-{name}>`
-- Class: `ElDm{Name}`
-- Strips `@layer` wrappers from `@duskmoon-dev/core` styles for Shadow DOM
-- Includes verification checklist (build, typecheck, lint, format)
-
-### `/duskmoon-dev-core` — CSS Library Reference
-
-Reference for the `@duskmoon-dev/core` CSS component library that provides base styles used by element packages.
-
-**When to use:** When writing component styles, checking available CSS classes, or understanding how core CSS integrates with Shadow DOM.
-
-**What it provides:**
-- Installation and setup instructions
-- Full list of available CSS components and their class names
-- Color system and theme variables
-- Usage examples for buttons, cards, forms, alerts, navigation, etc.
-- Guide for importing component CSS into custom elements (including `@layer` stripping)
-
-**Example:**
-```
-/duskmoon-dev-core
-```
-
-## Project Commands
-
-### `/sync-core` — Core Package Sync Analysis
-
-Compares local `@duskmoon-dev/el-core` with the published npm version and generates an update plan for element packages.
-
-**When to use:** After making changes to the core package, to understand the impact on all 30 element packages.
-
-**What it does:**
-1. Compares local vs published API surface (exports, method signatures, types)
-2. Scans element packages for core API usage
-3. Categorizes changes as breaking, deprecation, or new feature
-4. Generates per-element impact assessment with priority levels
-5. Produces actionable update plan with file locations and before/after code
-6. Optionally applies updates with user approval
-
-**Example:**
-```
-/sync-core                  # Analyze all elements
-/sync-core button switch    # Analyze specific elements only
-```
-
-**Priority levels:**
-- CRITICAL — Uses removed/renamed API (won't compile)
-- HIGH — Uses deprecated API (works but should update)
-- MEDIUM — Could benefit from new features
-- LOW — No changes needed
-
-### `/speckit.*` — Feature Specification Toolkit
-
-A suite of commands for structured feature development:
-
-| Command | Description |
-|---------|-------------|
-| `/speckit.specify` | Create or update a feature specification from a description |
-| `/speckit.clarify` | Identify underspecified areas and ask up to 5 clarification questions |
-| `/speckit.plan` | Generate implementation plan with design artifacts |
-| `/speckit.tasks` | Generate dependency-ordered `tasks.md` from design artifacts |
-| `/speckit.taskstoissues` | Convert tasks into GitHub issues |
-| `/speckit.implement` | Execute the implementation plan from `tasks.md` |
-| `/speckit.checklist` | Generate a custom checklist for the feature |
-| `/speckit.analyze` | Cross-artifact consistency check across spec, plan, and tasks |
-| `/speckit.constitution` | Create or update project principles |
-
-**Typical workflow:**
-```
-/speckit.specify "Add a color picker element"
-/speckit.clarify
-/speckit.plan
-/speckit.tasks
-/speckit.implement
-```
-
-## Configuration Files
-
-### `.claude/CLAUDE.md` (CLAUDE.md)
-
-Project-level instructions loaded into every Claude Code session. Contains:
-- Build and development commands
-- Architecture overview (monorepo structure, core package, element pattern)
-- TypeScript project references explanation
-- Workspace dependency notes
-
-### `AGENTS.md`
-
-Machine-readable conventions for agentic coding tools:
-- Repository layout
-- Build, lint, test commands
-- Code style guidelines (TypeScript, formatting, naming)
-- Custom element patterns
-- Testing guidelines
-
-## Working with This Repository in Claude Code
-
-### Common Workflows
-
-**Add a new element:**
-```
-/create_element {name}
-```
-
-**After modifying core, check element impact:**
-```
-/sync-core
-```
-
-**Plan a new feature end-to-end:**
-```
-/speckit.specify "description"
-/speckit.plan
-/speckit.tasks
-/speckit.implement
-```
-
-**Check what CSS classes are available:**
-```
-/duskmoon-dev-core
-```
-
-### Quick Reference: Key Paths
-
-| What | Path |
-|------|------|
-| Core package source | `packages/core/src/` |
-| Core public API | `packages/core/src/index.ts` |
-| Element packages | `elements/{name}/src/` |
-| Bundle package | `packages/elements/src/` |
-| Test setup (happy-dom) | `test-setup.ts` |
-| Bun config | `bunfig.toml` |
-| Playground | `playground/` |
-| Documentation site | `packages/docs/` |
-| CI workflows | `.github/workflows/` |
-
-### Quick Reference: Key Commands
+## Installation
 
 ```bash
-bun install              # Install dependencies
-bun run build:all        # Build everything (core first)
-bun run test             # Run all 416 tests
-bun run typecheck        # Type check all packages
-bun run lint:check       # ESLint (zero warnings policy)
-bun run format:check     # Prettier check
-bun run playground       # Start playground at :4220
-bun run docs:dev         # Start docs site at :4331
+# Individual element
+bun add @duskmoon-dev/el-button
+
+# All elements at once
+bun add @duskmoon-dev/elements
 ```
 
-### Core API Exports
+## Registration
 
-The `@duskmoon-dev/el-core` package exports:
+```typescript
+// Option 1: Explicit (tree-shakable)
+import { register } from '@duskmoon-dev/el-button';
+register();
 
-| Category | Exports |
-|----------|---------|
-| **Base class** | `BaseElement`, `PropertyDefinition`, `PropertyDefinitions` |
-| **Styles** | `css`, `combineStyles`, `cssVars`, `defaultTheme`, `resetStyles`, `lightThemeColors` |
-| **Animations** | `animationStyles`, `animation`, `transition`, `durations`, `easings` |
-| **Themes** | `sunshineTheme`, `moonlightTheme`, `oceanTheme`, `forestTheme`, `roseTheme`, `themes`, `applyTheme` |
-| **Mixins** | `FocusableMixin`, `FormMixin`, `EventListenerMixin`, `SlotObserverMixin` |
-| **Validation** | `validate`, `validateAsync`, `validators` |
-| **Performance** | `debounce`, `throttle`, `scheduleIdle` |
-| **Types** | `Size`, `Variant`, `ValidationState`, `FormElementProps`, `ValidatableProps`, etc. |
+// Option 2: Side-effect auto-register
+import '@duskmoon-dev/el-button/register';
+
+// Option 3: Register all elements
+import { registerAll } from '@duskmoon-dev/elements';
+registerAll();
+```
+
+## Usage in HTML
+
+```html
+<el-dm-button variant="filled" color="primary" size="md">
+  Click me
+</el-dm-button>
+
+<el-dm-dialog id="my-dialog">
+  <span slot="header">Title</span>
+  Dialog content here.
+  <div slot="footer">
+    <el-dm-button onclick="this.closest('el-dm-dialog').hide()">Close</el-dm-button>
+  </div>
+</el-dm-dialog>
+```
+
+## Properties & Attributes
+
+Set via HTML attributes (kebab-case) or JS properties (camelCase). Properties with `reflect: true` sync both directions.
+
+```html
+<!-- HTML attributes -->
+<el-dm-button variant="outlined" disabled>Save</el-dm-button>
+
+<!-- JS properties -->
+<script>
+  const btn = document.querySelector('el-dm-button');
+  btn.variant = 'outlined';
+  btn.disabled = true;
+</script>
+```
+
+Common properties across elements:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `variant` | String | Visual variant (`filled`, `outlined`, `soft`, `text`, `ghost`) |
+| `color` | String | Color theme (`primary`, `secondary`, `success`, `warning`, `error`, `info`) |
+| `size` | String | Size (`sm`, `md`, `lg`) |
+| `disabled` | Boolean | Disable interaction |
+
+Complex data (arrays, objects) must be set via JS — use `attribute: false`:
+
+```javascript
+const table = document.querySelector('el-dm-table');
+table.columns = [{ field: 'name', header: 'Name' }];
+table.data = [{ name: 'Alice' }, { name: 'Bob' }];
+```
+
+## Events
+
+Listen with `addEventListener`. Events bubble and are composed (cross shadow DOM).
+
+```javascript
+const table = document.querySelector('el-dm-table');
+table.addEventListener('sort', (e) => {
+  console.log(e.detail); // { column: 'name', direction: 'asc' }
+});
+table.addEventListener('row-click', (e) => {
+  console.log(e.detail); // { row: {...}, rowIndex: 0 }
+});
+```
+
+Common events:
+
+| Element | Event | Detail |
+|---------|-------|--------|
+| dialog | `open`, `close` | — |
+| table | `sort` | `{ column, direction }` |
+| table | `select` | `{ selectedIds, selectedRows }` |
+| table | `page-change` | `{ page, pageSize }` |
+| pagination | `page-change` | `{ page }` |
+| tabs | `tab-change` | `{ index, tab }` |
+| input | `dm-input`, `dm-change` | `{ value }` |
+
+## Slots
+
+Named slots project light DOM content into the element's shadow DOM.
+
+```html
+<el-dm-button>
+  <span slot="prefix">🔍</span>
+  Search
+  <span slot="suffix">→</span>
+</el-dm-button>
+
+<el-dm-card>
+  <span slot="header">Card Title</span>
+  Card body content
+  <div slot="footer">Footer</div>
+</el-dm-card>
+```
+
+Common slots: (default), `header`, `footer`, `prefix`, `suffix`, `empty`, `actions`.
+
+## CSS Parts
+
+Style shadow DOM internals from outside using `::part()`:
+
+```css
+el-dm-button::part(button) {
+  border-radius: 0;
+}
+el-dm-dialog::part(backdrop) {
+  backdrop-filter: blur(4px);
+}
+el-dm-table::part(thead) {
+  background: var(--color-surface-container-high);
+}
+```
+
+## Theming
+
+Elements use CSS custom properties from `@duskmoon-dev/el-core`. Apply a preset theme:
+
+```typescript
+import { applyTheme } from '@duskmoon-dev/el-core';
+
+applyTheme(document.documentElement, 'moonlight'); // dark
+applyTheme(document.documentElement, 'sunshine');   // light
+// Also: 'ocean', 'forest', 'rose'
+```
+
+Override individual variables:
+
+```css
+:root {
+  --color-primary: oklch(60% 0.15 250);
+  --color-surface: #ffffff;
+}
+```
+
+Key variables: `--color-primary`, `--color-surface`, `--color-on-surface`, `--color-outline`, `--color-surface-container`.
+
+See [references/core-api.md](references/core-api.md) for full CSS variable list.
+
+## Batched Rendering
+
+Property changes are batched via `queueMicrotask`. Multiple changes in the same tick produce a single re-render:
+
+```javascript
+const el = document.querySelector('el-dm-button');
+el.variant = 'outlined';
+el.color = 'error';
+el.size = 'lg';
+// → single re-render
+```
+
+## References
+
+- [Element catalog](references/element-catalog.md) — all 31 packages by category with class names
+- [Core API](references/core-api.md) — BaseElement API, mixins, style utilities, CSS variables, themes, validation

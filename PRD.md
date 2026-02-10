@@ -610,20 +610,384 @@ Components to ADD that wrap available `@duskmoon-dev/elements`:
 
 ---
 
-## 10. Success Criteria
+## 10. TODO Checklist
 
-- [ ] All components organized into 8 categories
-- [ ] All available custom elements have Phoenix wrapper components
-- [ ] Every component has a storybook page with demos and docs
-- [ ] Every component has at least one test
+### Phase 1: Scaffold & Reorganize
+
+#### 1.1 Create category directories
+- [ ] Create `lib/phoenix_duskmoon/component/action/`
+- [ ] Create `lib/phoenix_duskmoon/component/data_display/`
+- [ ] Create `lib/phoenix_duskmoon/component/data_entry/`
+- [ ] Create `lib/phoenix_duskmoon/component/feedback/`
+- [ ] Create `lib/phoenix_duskmoon/component/navigation/`
+- [ ] Create `lib/phoenix_duskmoon/component/layout/`
+- [ ] Create `lib/phoenix_duskmoon/component/icon/`
+- [ ] Create `lib/phoenix_duskmoon/component/fun/` (already exists — verify)
+
+#### 1.2 Move & rename component modules — Action
+- [ ] Move `button.ex` → `action/button.ex`, rename module to `Action.Button`
+- [ ] Move `link.ex` → `action/link.ex`, rename module to `Action.Link`
+- [ ] Move `dropdown.ex` → `action/dropdown.ex`, rename module to `Action.Dropdown`
+
+#### 1.3 Move & rename component modules — Data Display
+- [ ] Move `avatar.ex` → `data_display/avatar.ex`, rename module to `DataDisplay.Avatar`
+- [ ] Move `badge.ex` → `data_display/badge.ex`, rename module to `DataDisplay.Badge`
+- [ ] Move `card.ex` → `data_display/card.ex`, rename module to `DataDisplay.Card`
+- [ ] Move `flash.ex` → `data_display/flash.ex`, rename module to `DataDisplay.Flash`
+- [ ] Move `markdown.ex` → `data_display/markdown.ex`, rename module to `DataDisplay.Markdown`
+- [ ] Move `pagination.ex` → `data_display/pagination.ex`, rename module to `DataDisplay.Pagination`
+- [ ] Move `progress.ex` → `data_display/progress.ex`, rename module to `DataDisplay.Progress`
+- [ ] Move `skeleton.ex` → `data_display/skeleton.ex`, rename module to `DataDisplay.Skeleton`
+- [ ] Move `table.ex` → `data_display/table.ex`, rename module to `DataDisplay.Table`
+- [ ] Move `tooltip.ex` → `data_display/tooltip.ex`, rename module to `DataDisplay.Tooltip`
+
+#### 1.4 Move & rename component modules — Data Entry
+- [ ] Move `form/checkbox.ex` → `data_entry/checkbox.ex`, rename to `DataEntry.Checkbox`
+- [ ] Move `form/compact_input.ex` → `data_entry/compact_input.ex`, rename to `DataEntry.CompactInput`
+- [ ] Move `form.ex` → `data_entry/form.ex`, rename to `DataEntry.Form`
+- [ ] Move `form/input.ex` → `data_entry/input.ex`, rename to `DataEntry.Input`
+- [ ] Move `form/radio.ex` → `data_entry/radio.ex`, rename to `DataEntry.Radio`
+- [ ] Move `form/select.ex` → `data_entry/select.ex`, rename to `DataEntry.Select`
+- [ ] Move `form/slider.ex` → `data_entry/slider.ex`, rename to `DataEntry.Slider`
+- [ ] Move `form/switch.ex` → `data_entry/switch.ex`, rename to `DataEntry.Switch`
+- [ ] Move `form/textarea.ex` → `data_entry/textarea.ex`, rename to `DataEntry.Textarea`
+
+#### 1.5 Move & rename component modules — Feedback
+- [ ] Move `loading.ex` → `feedback/loading.ex`, rename to `Feedback.Loading`
+- [ ] Move `modal.ex` → `feedback/dialog.ex`, rename to `Feedback.Dialog`
+
+#### 1.6 Move & rename component modules — Navigation
+- [ ] Move `actionbar.ex` → `navigation/actionbar.ex`, rename to `Navigation.Actionbar`
+- [ ] Move `appbar.ex` → `navigation/appbar.ex`, rename to `Navigation.Appbar`
+- [ ] Move `breadcrumb.ex` → `navigation/breadcrumb.ex`, rename to `Navigation.Breadcrumb`
+- [ ] Move `left_menu.ex` → `navigation/left_menu.ex`, rename to `Navigation.LeftMenu`
+- [ ] Move `navbar.ex` → `navigation/navbar.ex`, rename to `Navigation.Navbar`
+- [ ] Move `page_footer.ex` → `navigation/page_footer.ex`, rename to `Navigation.PageFooter`
+- [ ] Move `page_header.ex` → `navigation/page_header.ex`, rename to `Navigation.PageHeader`
+- [ ] Move `tab.ex` → `navigation/tab.ex`, rename to `Navigation.Tab`
+
+#### 1.7 Move & rename component modules — Layout
+- [ ] Move `divider.ex` → `layout/divider.ex`, rename to `Layout.Divider`
+- [ ] Move `theme_switcher.ex` → `layout/theme_switcher.ex`, rename to `Layout.ThemeSwitcher`
+
+#### 1.8 Move & rename component modules — Icon
+- [ ] Move `icons.ex` → `icon/icons.ex`, rename to `Icon.Icons`
+
+#### 1.9 Move & rename component modules — Fun
+- [ ] Verify `fun/button_noise.ex` → `Fun.ButtonNoise` (already in fun/)
+- [ ] Verify `fun/eclipse.ex` → `Fun.Eclipse`
+- [ ] Verify `fun/plasma_ball.ex` → `Fun.PlasmaBall`
+- [ ] Verify `fun/signature.ex` → `Fun.Signature`
+- [ ] Verify `fun/snow.ex` → `Fun.Snow`
+- [ ] Verify `fun/spotlight_search.ex` → `Fun.SpotlightSearch`
+
+#### 1.10 Update import/helper modules
+- [ ] Update `lib/phoenix_duskmoon/component.ex` — import from new paths
+- [ ] Create category import modules (`Action`, `DataDisplay`, `DataEntry`, etc.)
+- [ ] Update `lib/phoenix_duskmoon/fun.ex` — verify fun imports still work
+- [ ] Create backwards-compatible re-exports at old module paths (defdelegate)
+- [ ] Update any cross-component references (Flash→Icons, Card→Form, Appbar→Link, etc.)
+
+#### 1.11 Move test files to match new structure
+- [ ] Create `test/phoenix_duskmoon/component/action/`
+- [ ] Create `test/phoenix_duskmoon/component/data_display/`
+- [ ] Create `test/phoenix_duskmoon/component/data_entry/`
+- [ ] Create `test/phoenix_duskmoon/component/feedback/`
+- [ ] Create `test/phoenix_duskmoon/component/navigation/`
+- [ ] Create `test/phoenix_duskmoon/component/layout/`
+- [ ] Create `test/phoenix_duskmoon/component/icon/`
+- [ ] Move `button_test.exs` → `action/button_test.exs`
+- [ ] Move `card_test.exs` → `data_display/card_test.exs`
+- [ ] Move `avatar_test.exs` → `data_display/avatar_test.exs`
+- [ ] Move `badge_test.exs` → `data_display/badge_test.exs` (if exists)
+- [ ] Move `icons_test.exs` → `icon/icons_test.exs`
+- [ ] Move `link_test.exs` → `action/link_test.exs`
+- [ ] Move `markdown_test.exs` → `data_display/markdown_test.exs`
+- [ ] Move `pagination_test.exs` → `data_display/pagination_test.exs`
+- [ ] Move `skeleton_test.exs` → `data_display/skeleton_test.exs`
+- [ ] Move `table_test.exs` → `data_display/table_test.exs`
+- [ ] Move `left_menu_test.exs` → `navigation/left_menu_test.exs`
+- [ ] Move `form/input_types_test.exs` → `data_entry/input_types_test.exs`
+- [ ] Move `form/switch_test.exs` → `data_entry/switch_test.exs`
+- [ ] Move `fun/spotlight_search_test.exs` → `fun/spotlight_search_test.exs`
+- [ ] Update test module names to match new component modules
+
+#### 1.12 Verify Phase 1
 - [ ] `mix compile --warnings-as-errors` passes
-- [ ] `mix test` passes (all existing + new tests)
+- [ ] `mix test` passes (all existing tests)
 - [ ] `mix format --check-formatted` passes
-- [ ] Storybook renders all component pages correctly
-- [ ] No references to neumorphic CSS remain
-- [ ] `@duskmoon-dev/core` is the sole design system dependency
-- [ ] CSS bundle size is smaller than before refactor
-- [ ] All hooks documented and exported correctly
+
+---
+
+### Phase 2: Migrate Existing Components to Custom Elements
+
+#### 2.1 Components with direct element mapping (currently NOT using custom elements)
+- [ ] `Navbar` → render as `<el-dm-navbar>`
+- [ ] `Progress` → render as `<el-dm-progress>`
+- [ ] `Tooltip` → render as `<el-dm-tooltip>`
+- [ ] `Table` → render as `<el-dm-table>`
+- [ ] `Markdown` → render as `<el-dm-markdown>`
+- [ ] `Dropdown` → render as `<el-dm-menu>`
+- [ ] `LeftMenu` → render as `<el-dm-menu>` / `<el-dm-drawer>`
+- [ ] `Form` → render as `<el-dm-form>`
+- [ ] `Input` → render as `<el-dm-input>`
+- [ ] `CompactInput` → render as `<el-dm-input>` (compact variant)
+- [ ] `Slider` → render as `<el-dm-slider>`
+- [ ] `Switch` → render as `<el-dm-switch>`
+- [ ] `Flash` → render as `<el-dm-alert>`
+
+#### 2.2 Components already using custom elements (verify/update)
+- [ ] `Button` — verify `<el-dm-button>` mapping is complete
+- [ ] `Card` — verify `<el-dm-card>` mapping is complete
+- [ ] `Badge` — verify `<el-dm-badge>` mapping is complete
+- [ ] `Breadcrumb` — verify `<el-dm-breadcrumbs>` mapping is complete
+- [ ] `Modal/Dialog` — verify `<el-dm-dialog>` mapping is complete
+- [ ] `Tab` — verify `<el-dm-tabs>` mapping is complete
+- [ ] `Pagination` — verify `<el-dm-pagination>` mapping is complete
+
+#### 2.3 Update/add tests for migrated components
+- [ ] Add/update test for `Navbar`
+- [ ] Add/update test for `Progress`
+- [ ] Add/update test for `Tooltip`
+- [ ] Add/update test for `Table`
+- [ ] Add/update test for `Markdown`
+- [ ] Add/update test for `Dropdown`
+- [ ] Add/update test for `LeftMenu`
+- [ ] Add/update test for `Form`
+- [ ] Add/update test for `Input`
+- [ ] Add/update test for `CompactInput`
+- [ ] Add/update test for `Slider`
+- [ ] Add/update test for `Switch`
+- [ ] Add/update test for `Flash`
+
+#### 2.4 Verify Phase 2
+- [ ] `mix compile --warnings-as-errors` passes
+- [ ] `mix test` passes
+- [ ] Storybook renders migrated components correctly
+
+---
+
+### Phase 3: New Components
+
+#### 3.1 High Priority — create component + test + story
+- [ ] `Feedback.Alert` — wraps `<el-dm-alert>` (component, test, story)
+- [ ] `DataEntry.Datepicker` — wraps `<el-dm-datepicker>` (component, test, story)
+
+#### 3.2 Medium Priority — create component + test + story
+- [ ] `Layout.Accordion` — wraps `<el-dm-accordion>` (component, test, story)
+- [ ] `DataEntry.Autocomplete` — wraps `<el-dm-autocomplete>` (component, test, story)
+- [ ] `DataDisplay.Chip` — wraps `<el-dm-chip>` (component, test, story)
+- [ ] `Navigation.Drawer` — wraps `<el-dm-drawer>` (component, test, story)
+- [ ] `DataEntry.FileUpload` — wraps `<el-dm-file-upload>` (component, test, story)
+- [ ] `Feedback.Popover` — wraps `<el-dm-popover>` (component, test, story)
+
+#### 3.3 Low Priority — create component + test + story
+- [ ] `Navigation.BottomNav` — wraps `<el-dm-bottom-navigation>` (component, test, story)
+- [ ] `Navigation.Stepper` — wraps `<el-dm-stepper>` (component, test, story)
+- [ ] `DataDisplay.Timeline` — CSS-only (component, test, story)
+
+#### 3.4 Verify Phase 3
+- [ ] All new components compile
+- [ ] All new tests pass
+- [ ] All new storybook stories render
+
+---
+
+### Phase 4: Storybook Refactor
+
+#### 4.1 Create storybook category structure
+- [ ] Create `storybook/action/` directory + `index.exs`
+- [ ] Create `storybook/data_display/` directory + `index.exs`
+- [ ] Create `storybook/data_entry/` directory + `index.exs`
+- [ ] Create `storybook/feedback/` directory + `index.exs`
+- [ ] Create `storybook/navigation/` directory + `index.exs`
+- [ ] Create `storybook/layout/` directory + `index.exs`
+- [ ] Create `storybook/icon/` directory + `index.exs`
+- [ ] Create `storybook/fun/` directory + `index.exs`
+- [ ] Update root `storybook/index.exs` to reference category folders
+
+#### 4.2 Rewrite stories — Action (3 stories)
+- [ ] `action/button.story.exs` — variants, sizes, states, compositions
+- [ ] `action/link.story.exs` — variants, external links, phx-navigate
+- [ ] `action/dropdown.story.exs` — basic, with icons, positions
+
+#### 4.3 Rewrite stories — Data Display (12 stories)
+- [ ] `data_display/avatar.story.exs`
+- [ ] `data_display/badge.story.exs`
+- [ ] `data_display/card.story.exs`
+- [ ] `data_display/chip.story.exs` (new)
+- [ ] `data_display/flash.story.exs`
+- [ ] `data_display/markdown.story.exs`
+- [ ] `data_display/pagination.story.exs`
+- [ ] `data_display/progress.story.exs`
+- [ ] `data_display/skeleton.story.exs`
+- [ ] `data_display/table.story.exs`
+- [ ] `data_display/timeline.story.exs` (new)
+- [ ] `data_display/tooltip.story.exs`
+
+#### 4.4 Rewrite stories — Data Entry (12 stories)
+- [ ] `data_entry/autocomplete.story.exs` (new)
+- [ ] `data_entry/checkbox.story.exs`
+- [ ] `data_entry/compact_input.story.exs`
+- [ ] `data_entry/datepicker.story.exs` (new)
+- [ ] `data_entry/file_upload.story.exs` (new)
+- [ ] `data_entry/form.story.exs`
+- [ ] `data_entry/input.story.exs`
+- [ ] `data_entry/radio.story.exs`
+- [ ] `data_entry/select.story.exs`
+- [ ] `data_entry/slider.story.exs`
+- [ ] `data_entry/switch.story.exs`
+- [ ] `data_entry/textarea.story.exs`
+
+#### 4.5 Rewrite stories — Feedback (5 stories)
+- [ ] `feedback/alert.story.exs` (new)
+- [ ] `feedback/dialog.story.exs`
+- [ ] `feedback/loading.story.exs`
+- [ ] `feedback/modal.story.exs`
+- [ ] `feedback/popover.story.exs` (new)
+
+#### 4.6 Rewrite stories — Navigation (9 stories)
+- [ ] `navigation/appbar.story.exs`
+- [ ] `navigation/actionbar.story.exs`
+- [ ] `navigation/bottom_nav.story.exs` (new)
+- [ ] `navigation/breadcrumb.story.exs`
+- [ ] `navigation/drawer.story.exs` (new)
+- [ ] `navigation/left_menu.story.exs`
+- [ ] `navigation/navbar.story.exs`
+- [ ] `navigation/stepper.story.exs` (new)
+- [ ] `navigation/tab.story.exs`
+
+#### 4.7 Rewrite stories — Layout (3 stories)
+- [ ] `layout/accordion.story.exs` (new)
+- [ ] `layout/divider.story.exs`
+- [ ] `layout/theme_switcher.story.exs`
+
+#### 4.8 Rewrite stories — Icon (1 story)
+- [ ] `icon/icons.story.exs`
+
+#### 4.9 Rewrite stories — Fun (6 stories)
+- [ ] `fun/button_noise.story.exs`
+- [ ] `fun/eclipse.story.exs`
+- [ ] `fun/plasma_ball.story.exs`
+- [ ] `fun/signature.story.exs`
+- [ ] `fun/snow.story.exs`
+- [ ] `fun/spotlight_search.story.exs`
+
+#### 4.10 Clean up legacy storybook files
+- [ ] Remove `storybook/components/ui_showcase.story.exs`
+- [ ] Remove `storybook/components/forms_showcase.story.exs`
+- [ ] Remove `storybook/components/fun_showcase.story.exs`
+- [ ] Remove old `storybook/components/` directory (after all stories moved)
+- [ ] Remove storybook stories for features not in v9 (color_picker, range_slider, rating, rich_text, search_with_suggestions, tags, password_strength, timepicker, slider_range)
+
+#### 4.11 Verify Phase 4
+- [ ] All 51 storybook stories render correctly
+- [ ] Category navigation works in storybook sidebar
+- [ ] No orphan story files remain in old locations
+
+---
+
+### Phase 5: CSS/JS Cleanup
+
+#### 5.1 CSS cleanup
+- [ ] Remove `assets/css/neumorphic.css`
+- [ ] Remove `assets/css/neumorphic/` directory (button.css, checkbox.css, radio.css, range.css, table.css)
+- [ ] Audit `phoenix_duskmoon.css` — remove any classes duplicated by `@duskmoon-dev/core`
+- [ ] Create minimal `assets/css/components.css` for Phoenix-specific overrides only
+- [ ] Update `phoenix_duskmoon.css` to new target structure
+
+#### 5.2 JavaScript cleanup
+- [ ] Simplify `phoenix_duskmoon.js` — ensure `@duskmoon-dev/elements` import
+- [ ] Review `WebComponentHook` — remove any logic now handled by custom elements
+- [ ] Review `FormElementHook` — remove duplicated behavior
+- [ ] Verify `hooks/index.js` exports all hooks cleanly
+
+#### 5.3 Package exports
+- [ ] Update `apps/phoenix_duskmoon/package.json` exports map
+- [ ] Verify `priv/static/phoenix_duskmoon.js` builds correctly
+- [ ] Verify `priv/static/phoenix_duskmoon.css` builds correctly
+
+#### 5.4 Verify Phase 5
+- [ ] `mix tailwind duskmoon` builds without errors
+- [ ] `mix bun duskmoon` builds without errors
+- [ ] CSS bundle smaller than pre-refactor (compare file sizes)
+- [ ] No neumorphic references remain in codebase
+
+---
+
+### Phase 6: Backwards Compatibility Removal & Final Polish
+
+#### 6.1 Remove backwards-compatible shims
+- [ ] Remove re-export/defdelegate modules at old paths
+- [ ] Update all internal imports to use new category paths
+- [ ] Remove old empty `component/form/` directory (if empty)
+
+#### 6.2 Update storybook app references
+- [ ] Update `storybook.ex` — story paths point to new category folders
+- [ ] Update `router.ex` if storybook routes reference old paths
+- [ ] Update storybook CSS/JS if any component references changed
+
+#### 6.3 Fill test coverage gaps
+- [ ] Add tests for `Action.Link`
+- [ ] Add tests for `Action.Dropdown`
+- [ ] Add tests for `DataDisplay.Avatar`
+- [ ] Add tests for `DataDisplay.Badge`
+- [ ] Add tests for `DataDisplay.Flash`
+- [ ] Add tests for `DataDisplay.Progress`
+- [ ] Add tests for `DataDisplay.Tooltip`
+- [ ] Add tests for `DataEntry.Checkbox`
+- [ ] Add tests for `DataEntry.CompactInput`
+- [ ] Add tests for `DataEntry.Form`
+- [ ] Add tests for `DataEntry.Radio`
+- [ ] Add tests for `DataEntry.Select`
+- [ ] Add tests for `DataEntry.Slider`
+- [ ] Add tests for `DataEntry.Textarea`
+- [ ] Add tests for `Feedback.Loading`
+- [ ] Add tests for `Feedback.Dialog`
+- [ ] Add tests for `Navigation.Actionbar`
+- [ ] Add tests for `Navigation.Appbar`
+- [ ] Add tests for `Navigation.Breadcrumb`
+- [ ] Add tests for `Navigation.Navbar`
+- [ ] Add tests for `Navigation.PageFooter`
+- [ ] Add tests for `Navigation.PageHeader`
+- [ ] Add tests for `Navigation.Tab`
+- [ ] Add tests for `Layout.Divider`
+- [ ] Add tests for `Layout.ThemeSwitcher`
+- [ ] Add tests for `Fun.ButtonNoise`
+- [ ] Add tests for `Fun.Eclipse`
+- [ ] Add tests for `Fun.PlasmaBall`
+- [ ] Add tests for `Fun.Signature`
+- [ ] Add tests for `Fun.Snow`
+
+#### 6.4 Update documentation
+- [ ] Update `CLAUDE.md` — new component paths, categories, import patterns
+- [ ] Update `INTEGRATION_GUIDE.md` — new usage patterns
+- [ ] Update `README.md` — v9 architecture overview
+- [ ] Update `.claude/skills/` — reflect new structure
+
+#### 6.5 Final verification
+- [ ] `mix compile --warnings-as-errors` passes
+- [ ] `mix test` passes — all components tested
+- [ ] `mix format --check-formatted` passes
+- [ ] Storybook renders all 51 pages correctly
+- [ ] No deprecated module references remain
+- [ ] No neumorphic CSS references remain
+- [ ] `@duskmoon-dev/core` is sole design system dependency
+- [ ] All hooks exported and documented
+
+---
+
+### Summary Counts
+
+| Phase | Tasks | Status |
+|-------|-------|--------|
+| Phase 1: Scaffold & Reorganize | 68 | Not started |
+| Phase 2: Migrate to Custom Elements | 37 | Not started |
+| Phase 3: New Components | 14 | Not started |
+| Phase 4: Storybook Refactor | 62 | Not started |
+| Phase 5: CSS/JS Cleanup | 14 | Not started |
+| Phase 6: Final Polish | 43 | Not started |
+| **Total** | **238** | **Not started** |
 
 ---
 
