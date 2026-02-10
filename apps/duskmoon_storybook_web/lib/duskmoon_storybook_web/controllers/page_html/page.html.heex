@@ -1,0 +1,503 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  .dm-home { --gold: #e8b866; --gold-dim: #c49a4a; --cyan: #67d4d4; --indigo: #0b1023; --indigo-mid: #131b38; --indigo-light: #1a2548; font-family: 'Outfit', sans-serif; }
+  .dm-home code, .dm-home .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* Starfield */
+  .dm-starfield { position: absolute; inset: 0; overflow: hidden; }
+  .dm-starfield::before, .dm-starfield::after {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 65%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 55% 15%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 80%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 85% 35%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 20% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 45% 45%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 92% 60%, rgba(255,255,255,0.5) 0%, transparent 100%);
+  }
+  .dm-starfield::after {
+    background-image:
+      radial-gradient(1px 1px at 15% 50%, rgba(232,184,102,0.6) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 60% 30%, rgba(103,212,212,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 70%, rgba(232,184,102,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 40% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 5% 75%, rgba(103,212,212,0.3) 0%, transparent 100%);
+    animation: dm-twinkle 4s ease-in-out infinite alternate;
+  }
+  @keyframes dm-twinkle { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+
+  /* Moon glow */
+  .dm-moon-glow {
+    filter: drop-shadow(0 0 40px rgba(232,184,102,0.4)) drop-shadow(0 0 80px rgba(232,184,102,0.15));
+    animation: dm-moon-pulse 6s ease-in-out infinite alternate;
+  }
+  @keyframes dm-moon-pulse {
+    0% { filter: drop-shadow(0 0 40px rgba(232,184,102,0.4)) drop-shadow(0 0 80px rgba(232,184,102,0.15)); }
+    100% { filter: drop-shadow(0 0 60px rgba(232,184,102,0.5)) drop-shadow(0 0 100px rgba(232,184,102,0.2)); }
+  }
+
+  /* Hero gradient overlay */
+  .dm-hero-gradient {
+    background: linear-gradient(180deg,
+      rgba(11,16,35,0.3) 0%,
+      rgba(30,20,60,0.6) 40%,
+      rgba(80,30,60,0.4) 70%,
+      rgba(11,16,35,0.95) 100%
+    );
+  }
+
+  /* Glass card */
+  .dm-glass {
+    background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .dm-glass:hover {
+    border-color: rgba(232,184,102,0.25);
+    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+    box-shadow: 0 8px 32px rgba(232,184,102,0.08), inset 0 1px 0 rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+  }
+
+  /* Component link */
+  .dm-comp-link {
+    position: relative; padding: 0.625rem 1rem; border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    color: rgba(255,255,255,0.55);
+  }
+  .dm-comp-link:hover {
+    color: var(--gold);
+    background: rgba(232,184,102,0.08);
+  }
+  .dm-comp-link::after {
+    content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 1px;
+    background: var(--gold); transition: all 0.3s ease; transform: translateX(-50%);
+  }
+  .dm-comp-link:hover::after { width: 60%; }
+
+  /* Section divider line */
+  .dm-section-line {
+    width: 4rem; height: 2px; border-radius: 1px;
+    background: linear-gradient(90deg, var(--gold), var(--cyan));
+  }
+
+  /* Fade-in stagger */
+  .dm-fade-in { animation: dm-fade-up 0.8s ease-out both; }
+  @keyframes dm-fade-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Feature pill */
+  .dm-pill {
+    padding: 0.375rem 1rem; border-radius: 9999px; font-size: 0.8rem; letter-spacing: 0.04em;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6);
+    transition: all 0.3s ease;
+  }
+  .dm-pill:hover { border-color: rgba(232,184,102,0.3); color: var(--gold); }
+
+  /* Category badge */
+  .dm-cat-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.25rem 0.875rem; border-radius: 9999px; font-size: 0.75rem;
+    text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;
+  }
+</style>
+
+<div class="dm-home w-full">
+
+<%!-- ═══ APPBAR ═══ --%>
+<.dm_appbar title="Duskmoon UI" class="appbar-transparent appbar-blur appbar-elevated z-50" sticky={true}>
+  <:logo>
+    <span style="color: var(--gold)"><.dm_mdi name="moon-waning-crescent" class="w-7 h-7" /></span>
+  </:logo>
+  <:menu to={~p"/components/action/button"}>Components</:menu>
+  <:menu to={~p"/storybook"}>Storybook</:menu>
+  <:user_profile>
+    <.dm_theme_switcher />
+    <.dm_link href={"https://github.com/duskmoon-dev/phoenix-duskmoon-ui"} class="appbar-action">
+      <.dm_mdi name="github" class="w-7 h-7" />
+    </.dm_link>
+  </:user_profile>
+</.dm_appbar>
+
+<%!-- ═══ HERO ═══ --%>
+<section class="relative w-full min-h-[92vh] flex flex-col items-center justify-center overflow-hidden"
+         style="background: linear-gradient(170deg, #0b1023 0%, #1a1040 35%, #3d1a3a 55%, #1a1040 75%, #0b1023 100%)">
+  <div class="dm-starfield"></div>
+  <div class="dm-hero-gradient absolute inset-0"></div>
+
+  <div class="relative z-10 flex flex-col items-center px-6 text-center">
+    <%!-- Moon icon --%>
+    <div class="dm-moon-glow mb-8">
+      <span style="color: #e8c878"><.dm_mdi name="moon-waning-crescent" class="w-24 h-24 md:w-32 md:h-32" /></span>
+    </div>
+
+    <h1 class="dm-fade-in text-6xl md:text-8xl lg:text-9xl font-extrabold tracking-tight leading-none"
+        style="animation-delay: 0.1s; color: #f0e6d0">
+      Duskmoon UI
+    </h1>
+
+    <p class="dm-fade-in mt-6 text-lg md:text-xl max-w-xl leading-relaxed"
+       style="animation-delay: 0.25s; color: rgba(240,230,208,0.55)">
+      A Phoenix component library built on Web Components,<br class="hidden md:inline"/>
+      Tailwind CSS v4, and Material Design 3.
+    </p>
+
+    <div class="dm-fade-in flex flex-wrap gap-3 mt-8 justify-center" style="animation-delay: 0.4s">
+      <span class="dm-pill">Phoenix LiveView</span>
+      <span class="dm-pill">Custom Elements</span>
+      <span class="dm-pill">Tailwind v4</span>
+      <span class="dm-pill">MD3 Colors</span>
+    </div>
+
+    <div class="dm-fade-in flex flex-row gap-4 mt-12" style="animation-delay: 0.55s">
+      <.link
+        href={~p"/components/action/button"}
+        class="px-7 py-3 rounded-lg font-semibold text-base tracking-wide transition-all duration-300 hover:scale-105 hover:shadow-lg"
+        style="background: linear-gradient(135deg, #e8b866, #c49a4a); color: #0b1023; box-shadow: 0 4px 24px rgba(232,184,102,0.25)"
+      >
+        Explore Components
+      </.link>
+      <.link
+        href={~p"/storybook"}
+        class="px-7 py-3 rounded-lg font-semibold text-base tracking-wide transition-all duration-300 hover:scale-105"
+        style="border: 1px solid rgba(255,255,255,0.15); color: rgba(240,230,208,0.7)"
+      >
+        Storybook
+      </.link>
+    </div>
+  </div>
+
+  <%!-- Bottom fade --%>
+  <div class="absolute bottom-0 left-0 right-0 h-32" style="background: linear-gradient(to top, #0b1023, transparent)"></div>
+</section>
+
+<%!-- ═══ FEATURES ═══ --%>
+<section class="w-full py-24" style="background: #0b1023">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <div class="dm-section-line mx-auto mb-6"></div>
+      <h2 class="text-3xl md:text-4xl font-bold" style="color: #f0e6d0">Built for Modern Phoenix</h2>
+      <p class="mt-4 text-base max-w-lg mx-auto" style="color: rgba(240,230,208,0.45)">
+        Every component is a HEEX function wrapping a Web Component, styled by a pure CSS design system.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="dm-glass rounded-xl p-8">
+        <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5"
+             style="background: rgba(232,184,102,0.12)">
+          <span style="color: var(--gold)"><.dm_mdi name="language-html5" class="w-6 h-6" /></span>
+        </div>
+        <h3 class="text-lg font-semibold mb-2" style="color: #f0e6d0">Custom Elements</h3>
+        <p class="text-sm leading-relaxed" style="color: rgba(240,230,208,0.45)">
+          Components render as <code class="mono text-xs px-1.5 py-0.5 rounded" style="background: rgba(255,255,255,0.06); color: var(--cyan)">&lt;el-dm-*&gt;</code> Web Components with Shadow DOM encapsulation.
+        </p>
+      </div>
+
+      <div class="dm-glass rounded-xl p-8">
+        <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5"
+             style="background: rgba(103,212,212,0.1)">
+          <span style="color: var(--cyan)"><.dm_mdi name="palette-outline" class="w-6 h-6" /></span>
+        </div>
+        <h3 class="text-lg font-semibold mb-2" style="color: #f0e6d0">@duskmoon-dev/core</h3>
+        <p class="text-sm leading-relaxed" style="color: rgba(240,230,208,0.45)">
+          Pure CSS design system for Tailwind v4 with Material Design 3 extended color system and theme switching.
+        </p>
+      </div>
+
+      <div class="dm-glass rounded-xl p-8">
+        <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5"
+             style="background: rgba(232,184,102,0.12)">
+          <span style="color: var(--gold)"><.dm_mdi name="fire" class="w-6 h-6" /></span>
+        </div>
+        <h3 class="text-lg font-semibold mb-2" style="color: #f0e6d0">Phoenix LiveView</h3>
+        <p class="text-sm leading-relaxed" style="color: rgba(240,230,208,0.45)">
+          All components are HEEX function components with <code class="mono text-xs px-1.5 py-0.5 rounded" style="background: rgba(255,255,255,0.06); color: var(--cyan)">dm_*</code> prefix, slots, and full attr validation.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%!-- ═══ ICONS ═══ --%>
+<section class="w-full py-20" style="background: linear-gradient(180deg, #0b1023 0%, #0e1430 100%)">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="dm-glass rounded-xl p-10 flex flex-col items-center text-center">
+        <span style="color: var(--gold); opacity: 0.8"><.dm_mdi name="material-design" class="w-16 h-16 mb-4" /></span>
+        <h3 class="text-2xl font-bold mb-2" style="color: #f0e6d0">Material Design Icons</h3>
+        <p class="mono text-sm" style="color: var(--gold); opacity: 0.6">7,000+ icons</p>
+        <p class="text-sm mt-3" style="color: rgba(240,230,208,0.4)">
+          Full Material Design Community icon set as inline SVG components.
+        </p>
+      </div>
+      <div class="dm-glass rounded-xl p-10 flex flex-col items-center text-center">
+        <span style="color: var(--cyan); opacity: 0.8"><.dm_bsi name="bootstrap" class="w-16 h-16 mb-4" /></span>
+        <h3 class="text-2xl font-bold mb-2" style="color: #f0e6d0">Bootstrap Icons</h3>
+        <p class="mono text-sm" style="color: var(--cyan); opacity: 0.6">2,000+ icons</p>
+        <p class="text-sm mt-3" style="color: rgba(240,230,208,0.4)">
+          Complete Bootstrap icon set rendered as lightweight inline SVGs.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%!-- ═══ COMPONENT CATALOG ═══ --%>
+<section class="w-full py-24" style="background: #0b1023">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-12">
+      <div class="dm-section-line mx-auto mb-6"></div>
+      <h2 class="text-4xl md:text-5xl font-bold" style="color: #f0e6d0">Components</h2>
+      <nav class="mt-6 flex flex-row gap-6 justify-center">
+        <.link href={~p"/components/action/button"} class="text-sm transition-colors duration-200" style="color: rgba(240,230,208,0.4)"
+               onmouseover="this.style.color='#e8b866'" onmouseout="this.style.color='rgba(240,230,208,0.4)'">
+          Component Pages
+        </.link>
+        <span style="color: rgba(255,255,255,0.12)">|</span>
+        <.link href={~p"/storybook"} class="text-sm transition-colors duration-200" style="color: rgba(240,230,208,0.4)"
+               onmouseover="this.style.color='#e8b866'" onmouseout="this.style.color='rgba(240,230,208,0.4)'">
+          Storybook
+        </.link>
+        <span style="color: rgba(255,255,255,0.12)">|</span>
+        <.link href="https://hexdocs.pm/phoenix_duskmoon/" class="text-sm transition-colors duration-200" style="color: rgba(240,230,208,0.4)"
+               onmouseover="this.style.color='#e8b866'" onmouseout="this.style.color='rgba(240,230,208,0.4)'">
+          HEX Docs
+        </.link>
+      </nav>
+    </div>
+
+    <%!-- Action --%>
+    <div class="mb-10">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="dm-cat-badge" style="background: rgba(232,184,102,0.1); color: var(--gold)">
+          <.dm_mdi name="cursor-default-click" class="w-3.5 h-3.5" /> Action
+        </span>
+        <div class="flex-1 h-px" style="background: rgba(255,255,255,0.05)"></div>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/action/button"}>
+          <.dm_mdi name="button-pointer" class="w-4 h-4 opacity-50" /> Button
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/action/link"}>
+          <.dm_bsi name="link" class="w-4 h-4 opacity-50" /> Link
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/action/dropdown"}>
+          <.dm_mdi name="menu-down" class="w-4 h-4 opacity-50" /> Dropdown
+        </.link>
+      </div>
+    </div>
+
+    <%!-- Data Display --%>
+    <div class="mb-10">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="dm-cat-badge" style="background: rgba(103,212,212,0.1); color: var(--cyan)">
+          <.dm_mdi name="monitor-dashboard" class="w-3.5 h-3.5" /> Data Display
+        </span>
+        <div class="flex-1 h-px" style="background: rgba(255,255,255,0.05)"></div>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-display/avatar"}>
+          <.dm_mdi name="account-circle" class="w-4 h-4 opacity-50" /> Avatar
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-display/badge"}>
+          <.dm_bsi name="badge-tm" class="w-4 h-4 opacity-50" /> Badge
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-display/card"}>
+          <.dm_bsi name="card-text" class="w-4 h-4 opacity-50" /> Card
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-display/flash"}>
+          <.dm_mdi name="flash" class="w-4 h-4 opacity-50" /> Flash
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-display/markdown"}>
+          <.dm_bsi name="markdown" class="w-4 h-4 opacity-50" /> Markdown
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-display/pagination"}>
+          <.dm_mdi name="book-open-page-variant-outline" class="w-4 h-4 opacity-50" /> Pagination
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-display/progress"}>
+          <.dm_mdi name="progress-check" class="w-4 h-4 opacity-50" /> Progress
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-display/skeleton"}>
+          <.dm_mdi name="rectangle-outline" class="w-4 h-4 opacity-50" /> Skeleton
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-display/table"}>
+          <.dm_mdi name="table" class="w-4 h-4 opacity-50" /> Table
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-display/tooltip"}>
+          <.dm_mdi name="tooltip-text" class="w-4 h-4 opacity-50" /> Tooltip
+        </.link>
+      </div>
+    </div>
+
+    <%!-- Data Entry --%>
+    <div class="mb-10">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="dm-cat-badge" style="background: rgba(232,184,102,0.1); color: var(--gold)">
+          <.dm_mdi name="form-textbox" class="w-3.5 h-3.5" /> Data Entry
+        </span>
+        <div class="flex-1 h-px" style="background: rgba(255,255,255,0.05)"></div>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-entry/checkbox"}>
+          <.dm_mdi name="checkbox-marked" class="w-4 h-4 opacity-50" /> Checkbox
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-entry/compact-input"}>
+          <.dm_mdi name="form-textbox" class="w-4 h-4 opacity-50" /> Compact Input
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-entry/form"}>
+          <.dm_mdi name="format-list-checks" class="w-4 h-4 opacity-50" /> Form
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-entry/input"}>
+          <.dm_mdi name="form-textbox" class="w-4 h-4 opacity-50" /> Input
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-entry/radio"}>
+          <.dm_mdi name="radiobox-marked" class="w-4 h-4 opacity-50" /> Radio
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-entry/select"}>
+          <.dm_mdi name="form-dropdown" class="w-4 h-4 opacity-50" /> Select
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-entry/slider"}>
+          <.dm_mdi name="tune-vertical" class="w-4 h-4 opacity-50" /> Slider
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-entry/switch"}>
+          <.dm_mdi name="toggle-switch" class="w-4 h-4 opacity-50" /> Switch
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/data-entry/textarea"}>
+          <.dm_mdi name="text-box" class="w-4 h-4 opacity-50" /> Textarea
+        </.link>
+      </div>
+    </div>
+
+    <%!-- Feedback --%>
+    <div class="mb-10">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="dm-cat-badge" style="background: rgba(103,212,212,0.1); color: var(--cyan)">
+          <.dm_mdi name="message-alert-outline" class="w-3.5 h-3.5" /> Feedback
+        </span>
+        <div class="flex-1 h-px" style="background: rgba(255,255,255,0.05)"></div>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/feedback/dialog"}>
+          <.dm_bsi name="chat-square" class="w-4 h-4 opacity-50" /> Dialog
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/feedback/loading"}>
+          <.dm_mdi name="loading" class="w-4 h-4 opacity-50" /> Loading
+        </.link>
+      </div>
+    </div>
+
+    <%!-- Navigation --%>
+    <div class="mb-10">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="dm-cat-badge" style="background: rgba(232,184,102,0.1); color: var(--gold)">
+          <.dm_mdi name="compass-outline" class="w-3.5 h-3.5" /> Navigation
+        </span>
+        <div class="flex-1 h-px" style="background: rgba(255,255,255,0.05)"></div>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/navigation/actionbar"}>
+          <.dm_bsi name="tools" class="w-4 h-4 opacity-50" /> Actionbar
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/navigation/appbar"}>
+          <.dm_mdi name="dock-top" class="w-4 h-4 opacity-50" /> Appbar
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/navigation/breadcrumb"}>
+          <.dm_bsi name="segmented-nav" class="w-4 h-4 opacity-50" /> Breadcrumb
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/navigation/left-menu"}>
+          <.dm_bsi name="layout-sidebar" class="w-4 h-4 opacity-50" /> Left Menu
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/navigation/navbar"}>
+          <.dm_mdi name="page-layout-header" class="w-4 h-4 opacity-50" /> Navbar
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/navigation/page-footer"}>
+          <.dm_mdi name="page-layout-footer" class="w-4 h-4 opacity-50" /> Page Footer
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/navigation/page-header"}>
+          <.dm_mdi name="page-layout-header" class="w-4 h-4 opacity-50" /> Page Header
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/navigation/tab"}>
+          <.dm_mdi name="tab-minus" class="w-4 h-4 opacity-50" /> Tab
+        </.link>
+      </div>
+    </div>
+
+    <%!-- Layout --%>
+    <div class="mb-10">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="dm-cat-badge" style="background: rgba(103,212,212,0.1); color: var(--cyan)">
+          <.dm_mdi name="view-dashboard-outline" class="w-3.5 h-3.5" /> Layout
+        </span>
+        <div class="flex-1 h-px" style="background: rgba(255,255,255,0.05)"></div>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/layout/divider"}>
+          <.dm_mdi name="minus" class="w-4 h-4 opacity-50" /> Divider
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/layout/theme-switcher"}>
+          <.dm_mdi name="theme-light-dark" class="w-4 h-4 opacity-50" /> Theme Switcher
+        </.link>
+      </div>
+    </div>
+
+    <%!-- Fun --%>
+    <div class="mb-10">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="dm-cat-badge" style="background: linear-gradient(135deg, rgba(232,184,102,0.1), rgba(103,212,212,0.1)); color: var(--gold)">
+          <.dm_mdi name="sparkles" class="w-3.5 h-3.5" /> Fun
+        </span>
+        <div class="flex-1 h-px" style="background: rgba(255,255,255,0.05)"></div>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/fun/button-noise"}>
+          <.dm_mdi name="blur" class="w-4 h-4 opacity-50" /> Button Noise
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/fun/eclipse"}>
+          <.dm_mdi name="moon-waning-crescent" class="w-4 h-4 opacity-50" /> Eclipse
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/fun/plasma-ball"}>
+          <.dm_mdi name="flash" class="w-4 h-4 opacity-50" /> Plasma Ball
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/fun/signature"}>
+          <.dm_mdi name="stamper" class="w-4 h-4 opacity-50" /> Signature
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/fun/snow"}>
+          <.dm_mdi name="snowflake" class="w-4 h-4 opacity-50" /> Snow
+        </.link>
+        <.link class="dm-comp-link flex items-center gap-2 text-sm" href={~p"/components/fun/spotlight-search"}>
+          <.dm_mdi name="magnify" class="w-4 h-4 opacity-50" /> Spotlight Search
+        </.link>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%!-- ═══ FOOTER ═══ --%>
+<div style="background: linear-gradient(180deg, #0b1023 0%, #060810 100%); border-top: 1px solid rgba(255,255,255,0.05)">
+<.dm_page_footer class="w-full">
+  <:section title="Web Sites" title_class="font-semibold" body_class="opacity-50">
+    <.link href="https://github.com/duskmoon-dev">Github Repos</.link>
+    <.link href="https://gsmlg.org/blogs">Blog</.link>
+    <.link href="https://gsmlg.org/tools">Tools</.link>
+  </:section>
+  <:section title="Other Libraries" title_class="font-semibold" body_class="opacity-50">
+    <.link href="https://gsmlg-dev.github.io/yew-duskmoon-ui/">Yew Duskmoon UI</.link>
+    <.link href="https://gsmlg-dev.github.io/lit">Web Component</.link>
+    <.link href="https://gsmlg-dev.github.io/react">React Component</.link>
+    <.link href="https://gsmlg-dev.github.io/three-fiber">3D Component</.link>
+  </:section>
+  <:copyright title="Copyright - GSMLG.dev" title_class="font-semibold" body_class="opacity-50">
+    Made with ❤ for building a better Web.
+  </:copyright>
+</.dm_page_footer>
+</div>
+
+</div>

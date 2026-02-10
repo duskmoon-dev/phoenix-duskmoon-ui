@@ -22,7 +22,7 @@ defmodule DuskmoonStorybookWeb.Router do
   scope "/", DuskmoonStorybookWeb do
     pipe_through :browser
 
-    get "/", PageController, :redirect_to_components
+    get "/", PageController, :page
 
     live_storybook("/storybook", backend_module: DuskmoonStorybookWeb.Storybook)
   end
