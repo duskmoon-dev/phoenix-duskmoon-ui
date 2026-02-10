@@ -4,18 +4,21 @@
     "description": "Duskmoon UI Umbrella Project",
     "homepage": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui#readme",
     "bugs": {
-      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues"
+        "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues"
     },
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/duskmoon-dev/phoenix-duskmoon-ui.git"
+        "type": "git",
+        "url": "git+https://github.com/duskmoon-dev/phoenix-duskmoon-ui.git"
     },
     "license": "see LICENSE.txt",
     "author": "Jonathan Gao",
     "type": "module",
     "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "workspaces": ["apps/duskmoon_storybook_web", "apps/phoenix_duskmoon"]
-  }
-  
+    "workspaces": ["apps/duskmoon_storybook_web", "apps/phoenix_duskmoon"],
+    "dependencies": {
+        "cytoscape": "^3.33.1",
+        "mermaid": "^11.12.2"
+    }
+}

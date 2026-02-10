@@ -1,5 +1,25 @@
 import "phoenix_html";
 
+// Register custom elements individually
+import "@duskmoon-dev/el-button/register";
+import "@duskmoon-dev/el-card/register";
+import "@duskmoon-dev/el-input/register";
+import "@duskmoon-dev/el-switch/register";
+import "@duskmoon-dev/el-alert/register";
+import "@duskmoon-dev/el-dialog/register";
+import "@duskmoon-dev/el-badge/register";
+import "@duskmoon-dev/el-tooltip/register";
+import "@duskmoon-dev/el-progress/register";
+import "@duskmoon-dev/el-form/register";
+import "@duskmoon-dev/el-slider/register";
+import "@duskmoon-dev/el-breadcrumbs/register";
+import "@duskmoon-dev/el-menu/register";
+import "@duskmoon-dev/el-navbar/register";
+import "@duskmoon-dev/el-pagination/register";
+import "@duskmoon-dev/el-tabs/register";
+import "@duskmoon-dev/el-table/register";
+import "@duskmoon-dev/el-markdown/register";
+
 // Clipboard functionality
 function fallbackCopyTextToClipboard(text) {
   var textArea = document.createElement("textarea");
