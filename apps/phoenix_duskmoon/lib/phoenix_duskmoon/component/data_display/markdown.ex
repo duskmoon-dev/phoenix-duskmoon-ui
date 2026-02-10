@@ -2,43 +2,32 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Markdown do
   @moduledoc """
   Duskmoon UI Markdown Component
 
-  Render markdown in to remark-element.
+  Render markdown using `<el-dm-markdown>` custom element from `@duskmoon-dev/el-markdown`.
 
-  The remark-element supported markdown featrues:
-    * github flavor
-    * auto highlight code with lowlight.js and auto detect system light/dark themes.
-    * charts render by mermaid.js
+  Supported markdown features:
+    * GitHub Flavored Markdown
+    * Syntax highlighting with highlight.js
+    * Mermaid diagram rendering (optional)
 
-  Require `remark-element` in your project.
+  Requires `@duskmoon-dev/el-markdown` registered in your project:
 
   ```js
-
-      import '@gsmlg/lit/remark-element';
-  ```
-
-  ```html
-
-      <script type="module" src="https://esm.run/@gsmlg/lit"></script>
-      <script type="module">
-        import 'https://esm.run/@gsmlg/lit/remark-element';
-      </script>
+  import '@duskmoon-dev/el-markdown/register';
   ```
 
   """
   use PhoenixDuskmoon.Component, :html
 
   @doc """
-  Generates a html customElement remark-element to preview markdown.
-
-  Docs of remark-element (See https://gsmlg-dev.github.io/lit/?path=/story/gsmlg-remark-element--basic).
+  Generates `<el-dm-markdown>` custom element to render markdown content.
 
   ## Examples
 
       <.dm_markdown class="dark"># Hello</.dm_markdown>
-      #=> <remark-element class="dark"># Hello</remark-element>
+      #=> <el-dm-markdown class="dark"># Hello</el-dm-markdown>
 
-      <.dm_markdown class="btn"># Hello</.dm_markdown>
-      #=> <remark-element class="btn"># Hello</remark-element>
+      <.dm_markdown content="# Hello" />
+      #=> <el-dm-markdown># Hello</el-dm-markdown>
 
   """
   @doc type: :component
@@ -59,7 +48,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Markdown do
   attr(:debug, :boolean,
     default: false,
     doc: """
-    remark-element attribute, enable debug
+    el-dm-markdown attribute, enable debug
     """
   )
 
@@ -72,7 +61,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Markdown do
 
   def dm_markdown(assigns) do
     ~H"""
-    <remark-element id={@id} debug={@debug} class={@class}><%= @content %></remark-element>
+    <el-dm-markdown id={@id} debug={@debug} class={@class}><%= @content %></el-dm-markdown>
     """
   end
 end

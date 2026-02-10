@@ -5,8 +5,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.MarkdownTest do
   import Phoenix.LiveViewTest
   import PhoenixDuskmoon.Component.DataDisplay.Markdown
 
-  test "remark empty" do
+  test "renders el-dm-markdown element" do
     assert render_component(&dm_markdown/1, content: "value") ==
-             ~s[<remark-element class="">value</remark-element>]
+             ~s[<el-dm-markdown class="">value</el-dm-markdown>]
   end
 end
