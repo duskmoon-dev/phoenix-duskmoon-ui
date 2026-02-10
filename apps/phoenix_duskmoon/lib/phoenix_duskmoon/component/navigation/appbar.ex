@@ -63,7 +63,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
         {render_slot(@logo)}
       </div>
       <span class="appbar-title">{@title}</span>
-      <nav :if={@menu != []} class="appbar-actions">
+      <div class="appbar-trailing">
         <%= for menu <- @menu do %>
           <.dm_link
             navigate={Map.get(menu, :to, "")}
@@ -72,8 +72,6 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
             {render_slot(menu)}
           </.dm_link>
         <% end %>
-      </nav>
-      <div :if={@user_profile != []} class="appbar-trailing">
         {render_slot(@user_profile)}
       </div>
     </header>
