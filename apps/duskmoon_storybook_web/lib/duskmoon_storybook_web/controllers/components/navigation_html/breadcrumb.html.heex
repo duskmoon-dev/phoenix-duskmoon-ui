@@ -1,0 +1,48 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/navigation/breadcrumb"}>Navigation</:crumb>
+  <:crumb>Breadcrumb</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Breadcrumb</span>
+    <span class="text-sm opacity-60">dm_breadcrumb</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Breadcrumb navigation component. Wraps `<el-dm-breadcrumbs>` custom element.
+
+  ## Usage
+  ```elixir
+  <.dm_breadcrumb>
+    <:crumb to="/">Home</:crumb>
+    <:crumb to="/products">Products</:crumb>
+    <:crumb>Current Page</:crumb>
+  </.dm_breadcrumb>
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic</h3>
+  <.dm_breadcrumb>
+    <:crumb to={~p"/"}>Home</:crumb>
+    <:crumb to={~p"/components/navigation/breadcrumb"}>Navigation</:crumb>
+    <:crumb>Breadcrumb</:crumb>
+  </.dm_breadcrumb>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Custom Separator</h3>
+  <.dm_breadcrumb separator=">">
+    <:crumb to="#">Step 1</:crumb>
+    <:crumb to="#">Step 2</:crumb>
+    <:crumb>Step 3</:crumb>
+  </.dm_breadcrumb>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Long Path</h3>
+  <.dm_breadcrumb>
+    <:crumb to="#">Home</:crumb>
+    <:crumb to="#">Category</:crumb>
+    <:crumb to="#">Subcategory</:crumb>
+    <:crumb to="#">Product</:crumb>
+    <:crumb>Details</:crumb>
+  </.dm_breadcrumb>
+</.dm_card>

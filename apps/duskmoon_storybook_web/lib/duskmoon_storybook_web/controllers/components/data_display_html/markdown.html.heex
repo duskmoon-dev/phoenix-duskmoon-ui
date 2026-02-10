@@ -1,0 +1,58 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/markdown"}>Data Display</:crumb>
+  <:crumb>Markdown</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Markdown</span>
+    <span class="text-sm opacity-60">dm_markdown</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Markdown renderer using `<remark-element>` web component. Supports GitHub-flavored markdown with code highlighting.
+
+  ## Usage
+  ```elixir
+  <.dm_markdown content={"# Hello\\\\nThis is **bold** text."} />
+  ```
+
+  ## Features
+  - GitHub-flavored markdown
+  - Code syntax highlighting
+  - Tables, lists, blockquotes
+  - Inline code and code blocks
+
+  ## Example Rendering
+
+  ### Text Formatting
+  This is **bold**, *italic*, and ~~strikethrough~~ text.
+
+  ### Code Block
+  ```elixir
+  defmodule Example do
+    def hello, do: "world"
+  end
+  ```
+
+  ### Table
+  | Feature | Status |
+  |---------|--------|
+  | Markdown | Supported |
+  | Code Highlight | Supported |
+  | Tables | Supported |
+
+  ### Blockquote
+  > This is a blockquote with some important information.
+
+  ### Lists
+  1. First item
+  2. Second item
+  3. Third item
+
+  - Unordered item A
+  - Unordered item B
+  """ %>
+  <.dm_markdown content={md_content} />
+</.dm_card>

@@ -1,0 +1,32 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/fun/button-noise"}>Fun</:crumb>
+  <:crumb>Button Noise</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Button Noise</span>
+    <span class="text-sm opacity-60">dm_fun_button_noise</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Animated button with 72 light bars that create a noise effect on hover.
+
+  ## Usage
+  ```elixir
+  <.dm_fun_button_noise id="my-btn" content="CLICK ME" />
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Default</h3>
+  <div class="flex flex-wrap gap-8 items-center justify-center p-8 bg-base-200 rounded-lg">
+    <.dm_fun_button_noise id="btn-noise-default" content="HOVER ME" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Color Schemes</h3>
+  <div class="flex flex-wrap gap-8 items-center justify-center p-8 bg-base-200 rounded-lg">
+    <.dm_fun_button_noise id="btn-noise-electric" content="ELECTRIC" color_scheme="electric" />
+    <.dm_fun_button_noise id="btn-noise-neon" content="NEON" color_scheme="neon" />
+  </div>
+</.dm_card>

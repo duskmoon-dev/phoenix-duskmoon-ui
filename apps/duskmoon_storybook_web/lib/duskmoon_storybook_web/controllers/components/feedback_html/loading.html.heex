@@ -1,0 +1,53 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/feedback/loading"}>Feedback</:crumb>
+  <:crumb>Loading</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Loading</span>
+    <span class="text-sm opacity-60">dm_loading_spinner, dm_loading_ex</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Loading indicator components. Two variants: a simple spinner and an animated particle loader.
+
+  ## Usage
+  ```elixir
+  <.dm_loading_spinner size="md" variant="primary" text="Loading..." />
+  <.dm_loading_ex size={15} />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Spinner Variants</h3>
+  <div class="flex flex-wrap gap-8 items-center">
+    <.dm_loading_spinner variant="primary" />
+    <.dm_loading_spinner variant="secondary" />
+    <.dm_loading_spinner variant="accent" />
+    <.dm_loading_spinner variant="info" />
+    <.dm_loading_spinner variant="success" />
+    <.dm_loading_spinner variant="warning" />
+    <.dm_loading_spinner variant="error" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Spinner Sizes</h3>
+  <div class="flex flex-wrap gap-8 items-center">
+    <.dm_loading_spinner size="xs" variant="primary" />
+    <.dm_loading_spinner size="sm" variant="primary" />
+    <.dm_loading_spinner size="md" variant="primary" />
+    <.dm_loading_spinner size="lg" variant="primary" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Text</h3>
+  <div class="flex flex-wrap gap-8 items-center">
+    <.dm_loading_spinner variant="primary" text="Loading..." />
+    <.dm_loading_spinner variant="success" text="Saving..." />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Particle Loader</h3>
+  <div class="flex justify-center p-8 bg-base-200 rounded-lg">
+    <.dm_loading_ex size={12} />
+  </div>
+</.dm_card>

@@ -1,0 +1,62 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/skeleton"}>Data Display</:crumb>
+  <:crumb>Skeleton</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Skeleton</span>
+    <span class="text-sm opacity-60">dm_skeleton</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Skeleton loading components for placeholder content while data loads. Multiple variants available.
+
+  ## Usage
+  ```elixir
+  <.dm_skeleton width="w-full" height="h-8" />
+  <.dm_skeleton_text lines={3} />
+  <.dm_skeleton_card show_avatar={true} />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Skeleton</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_skeleton width="w-full" height="h-4" />
+    <.dm_skeleton width="w-3/4" height="h-4" />
+    <.dm_skeleton width="w-1/2" height="h-4" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Text Skeleton</h3>
+  <div class="max-w-md">
+    <.dm_skeleton_text lines={4} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Avatar Skeleton</h3>
+  <div class="flex gap-4">
+    <.dm_skeleton_avatar size="sm" />
+    <.dm_skeleton_avatar size="md" />
+    <.dm_skeleton_avatar size="lg" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Card Skeleton</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <.dm_skeleton_card />
+    <.dm_skeleton_card show_avatar={true} show_action={true} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Table Skeleton</h3>
+  <.dm_skeleton_table rows={3} columns={4} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">List Skeleton</h3>
+  <div class="max-w-md">
+    <.dm_skeleton_list items={3} show_avatar={true} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Comment Skeleton</h3>
+  <div class="max-w-lg">
+    <.dm_skeleton_comment show_replies={2} />
+  </div>
+</.dm_card>

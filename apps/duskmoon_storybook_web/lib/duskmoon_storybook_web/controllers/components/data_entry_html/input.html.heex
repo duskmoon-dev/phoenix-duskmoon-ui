@@ -1,0 +1,67 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/input"}>Data Entry</:crumb>
+  <:crumb>Input</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Input</span>
+    <span class="text-sm opacity-60">dm_input</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Versatile input component supporting many types: text, email, password, select, checkbox, toggle, range, and more.
+
+  ## Usage
+  ```elixir
+  <.dm_input name="email" label="Email" type="email" value="" />
+  <.dm_input name="role" label="Role" type="select" options={[{"admin", "Admin"}, {"user", "User"}]} value="" />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Text Types</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_input name="inp-text" label="Text" type="text" value="" placeholder="Enter text" />
+    <.dm_input name="inp-email" label="Email" type="email" value="" placeholder="Enter email" />
+    <.dm_input name="inp-password" label="Password" type="password" value="" placeholder="Enter password" />
+    <.dm_input name="inp-number" label="Number" type="number" value="" placeholder="0" />
+    <.dm_input name="inp-search" label="Search" type="search" value="" placeholder="Search..." />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Colors</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_input name="inp-primary" label="Primary" value="" color="primary" />
+    <.dm_input name="inp-secondary" label="Secondary" value="" color="secondary" />
+    <.dm_input name="inp-success" label="Success" value="" color="success" />
+    <.dm_input name="inp-error" label="Error" value="" color="error" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_input name="inp-xs" label="Extra Small" value="" size="xs" />
+    <.dm_input name="inp-sm" label="Small" value="" size="sm" />
+    <.dm_input name="inp-lg" label="Large" value="" size="lg" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Select</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_input name="inp-select" label="Role" type="select" value="" options={[{"admin", "Admin"}, {"editor", "Editor"}, {"viewer", "Viewer"}]} prompt="Choose a role" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Textarea</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_input name="inp-textarea" label="Message" type="textarea" value="" placeholder="Enter your message..." />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Toggle</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_input name="inp-toggle" label="Enable notifications" type="toggle" value="true" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Range Slider</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_input name="inp-range" label="Volume" type="range_slider" value="50" min="0" max="100" step="1" />
+  </div>
+</.dm_card>

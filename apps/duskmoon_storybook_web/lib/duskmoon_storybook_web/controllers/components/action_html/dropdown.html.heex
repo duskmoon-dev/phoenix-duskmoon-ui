@@ -1,0 +1,89 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/action/dropdown"}>Action</:crumb>
+  <:crumb>Dropdown</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Dropdown</span>
+    <span class="text-sm opacity-60">dm_dropdown</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Dropdown menu component with customizable position and color.
+
+  ## Usage
+  ```elixir
+  <.dm_dropdown>
+    <:trigger>Click me</:trigger>
+    <:content>
+      <li><a>Item 1</a></li>
+      <li><a>Item 2</a></li>
+    </:content>
+  </.dm_dropdown>
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Positions</h3>
+  <div class="flex flex-wrap gap-8 items-start">
+    <.dm_dropdown position="left">
+      <:trigger>Left</:trigger>
+      <:content>
+        <li><a>Item 1</a></li>
+        <li><a>Item 2</a></li>
+      </:content>
+    </.dm_dropdown>
+
+    <.dm_dropdown position="right">
+      <:trigger>Right</:trigger>
+      <:content>
+        <li><a>Item 1</a></li>
+        <li><a>Item 2</a></li>
+      </:content>
+    </.dm_dropdown>
+
+    <.dm_dropdown position="top">
+      <:trigger>Top</:trigger>
+      <:content>
+        <li><a>Item 1</a></li>
+        <li><a>Item 2</a></li>
+      </:content>
+    </.dm_dropdown>
+
+    <.dm_dropdown position="bottom">
+      <:trigger>Bottom</:trigger>
+      <:content>
+        <li><a>Item 1</a></li>
+        <li><a>Item 2</a></li>
+      </:content>
+    </.dm_dropdown>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Colors</h3>
+  <div class="flex flex-wrap gap-8 items-start">
+    <.dm_dropdown color="primary">
+      <:trigger>Primary</:trigger>
+      <:content>
+        <li><a>Item 1</a></li>
+        <li><a>Item 2</a></li>
+      </:content>
+    </.dm_dropdown>
+
+    <.dm_dropdown color="secondary">
+      <:trigger>Secondary</:trigger>
+      <:content>
+        <li><a>Item 1</a></li>
+        <li><a>Item 2</a></li>
+      </:content>
+    </.dm_dropdown>
+
+    <.dm_dropdown color="accent">
+      <:trigger>Accent</:trigger>
+      <:content>
+        <li><a>Item 1</a></li>
+        <li><a>Item 2</a></li>
+      </:content>
+    </.dm_dropdown>
+  </div>
+</.dm_card>

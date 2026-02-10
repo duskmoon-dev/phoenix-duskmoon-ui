@@ -1,0 +1,46 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/checkbox"}>Data Entry</:crumb>
+  <:crumb>Checkbox</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Checkbox</span>
+    <span class="text-sm opacity-60">dm_checkbox</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Checkbox input component with label, color, and size options.
+
+  ## Usage
+  ```elixir
+  <.dm_checkbox name="agree" label="I agree" color="primary" />
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Colors</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_checkbox name="cb-primary" label="Primary" color="primary" checked={true} />
+    <.dm_checkbox name="cb-secondary" label="Secondary" color="secondary" checked={true} />
+    <.dm_checkbox name="cb-accent" label="Accent" color="accent" checked={true} />
+    <.dm_checkbox name="cb-success" label="Success" color="success" checked={true} />
+    <.dm_checkbox name="cb-warning" label="Warning" color="warning" checked={true} />
+    <.dm_checkbox name="cb-error" label="Error" color="error" checked={true} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_checkbox name="cb-xs" label="XS" size="xs" checked={true} />
+    <.dm_checkbox name="cb-sm" label="SM" size="sm" checked={true} />
+    <.dm_checkbox name="cb-md" label="MD" size="md" checked={true} />
+    <.dm_checkbox name="cb-lg" label="LG" size="lg" checked={true} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">States</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_checkbox name="cb-unchecked" label="Unchecked" />
+    <.dm_checkbox name="cb-checked" label="Checked" checked={true} />
+    <.dm_checkbox name="cb-disabled" label="Disabled" disabled={true} />
+  </div>
+</.dm_card>

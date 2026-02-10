@@ -1,0 +1,52 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/radio"}>Data Entry</:crumb>
+  <:crumb>Radio</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Radio</span>
+    <span class="text-sm opacity-60">dm_radio</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Radio button component for single-choice selection.
+
+  ## Usage
+  ```elixir
+  <.dm_radio name="color" value="red" label="Red" />
+  <.dm_radio name="color" value="blue" label="Blue" checked={true} />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Colors</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_radio name="radio-color" value="primary" label="Primary" color="primary" checked={true} />
+    <.dm_radio name="radio-color-s" value="secondary" label="Secondary" color="secondary" checked={true} />
+    <.dm_radio name="radio-color-a" value="accent" label="Accent" color="accent" checked={true} />
+    <.dm_radio name="radio-color-su" value="success" label="Success" color="success" checked={true} />
+    <.dm_radio name="radio-color-e" value="error" label="Error" color="error" checked={true} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_radio name="radio-size" value="xs" label="XS" size="xs" checked={true} />
+    <.dm_radio name="radio-size-s" value="sm" label="SM" size="sm" checked={true} />
+    <.dm_radio name="radio-size-m" value="md" label="MD" size="md" checked={true} />
+    <.dm_radio name="radio-size-l" value="lg" label="LG" size="lg" checked={true} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Radio Group</h3>
+  <div class="flex flex-col gap-2">
+    <.dm_radio name="plan" value="free" label="Free Plan" checked={true} />
+    <.dm_radio name="plan" value="pro" label="Pro Plan" />
+    <.dm_radio name="plan" value="enterprise" label="Enterprise Plan" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Disabled</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_radio name="radio-dis" value="disabled" label="Disabled" disabled={true} />
+  </div>
+</.dm_card>

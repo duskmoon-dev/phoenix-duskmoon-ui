@@ -1,0 +1,109 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/icon/icons"}>Icon</:crumb>
+  <:crumb>Icons</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Icons</span>
+    <span class="text-sm opacity-60">dm_mdi, dm_bsi</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Icon components supporting Material Design Icons (MDI) and Bootstrap Icons (BSI).
+
+  ## Usage
+  ```elixir
+  <.dm_mdi name="home" class="w-6 h-6" />
+  <.dm_bsi name="house" class="w-6 h-6" />
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Material Design Icons</h3>
+  <div class="flex flex-wrap gap-6 items-center">
+    <div class="flex flex-col items-center gap-1">
+      <.dm_mdi name="home" class="w-8 h-8" />
+      <span class="text-xs opacity-60">home</span>
+    </div>
+    <div class="flex flex-col items-center gap-1">
+      <.dm_mdi name="account" class="w-8 h-8" />
+      <span class="text-xs opacity-60">account</span>
+    </div>
+    <div class="flex flex-col items-center gap-1">
+      <.dm_mdi name="cog" class="w-8 h-8" />
+      <span class="text-xs opacity-60">cog</span>
+    </div>
+    <div class="flex flex-col items-center gap-1">
+      <.dm_mdi name="magnify" class="w-8 h-8" />
+      <span class="text-xs opacity-60">magnify</span>
+    </div>
+    <div class="flex flex-col items-center gap-1">
+      <.dm_mdi name="bell" class="w-8 h-8" />
+      <span class="text-xs opacity-60">bell</span>
+    </div>
+    <div class="flex flex-col items-center gap-1">
+      <.dm_mdi name="heart" class="w-8 h-8" />
+      <span class="text-xs opacity-60">heart</span>
+    </div>
+    <div class="flex flex-col items-center gap-1">
+      <.dm_mdi name="star" class="w-8 h-8" />
+      <span class="text-xs opacity-60">star</span>
+    </div>
+    <div class="flex flex-col items-center gap-1">
+      <.dm_mdi name="github" class="w-8 h-8" />
+      <span class="text-xs opacity-60">github</span>
+    </div>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Bootstrap Icons</h3>
+  <div class="flex flex-wrap gap-6 items-center">
+    <div class="flex flex-col items-center gap-1">
+      <.dm_bsi name="house" class="w-8 h-8" />
+      <span class="text-xs opacity-60">house</span>
+    </div>
+    <div class="flex flex-col items-center gap-1">
+      <.dm_bsi name="person" class="w-8 h-8" />
+      <span class="text-xs opacity-60">person</span>
+    </div>
+    <div class="flex flex-col items-center gap-1">
+      <.dm_bsi name="gear" class="w-8 h-8" />
+      <span class="text-xs opacity-60">gear</span>
+    </div>
+    <div class="flex flex-col items-center gap-1">
+      <.dm_bsi name="search" class="w-8 h-8" />
+      <span class="text-xs opacity-60">search</span>
+    </div>
+    <div class="flex flex-col items-center gap-1">
+      <.dm_bsi name="bell" class="w-8 h-8" />
+      <span class="text-xs opacity-60">bell</span>
+    </div>
+    <div class="flex flex-col items-center gap-1">
+      <.dm_bsi name="heart" class="w-8 h-8" />
+      <span class="text-xs opacity-60">heart</span>
+    </div>
+    <div class="flex flex-col items-center gap-1">
+      <.dm_bsi name="star" class="w-8 h-8" />
+      <span class="text-xs opacity-60">star</span>
+    </div>
+    <div class="flex flex-col items-center gap-1">
+      <.dm_bsi name="github" class="w-8 h-8" />
+      <span class="text-xs opacity-60">github</span>
+    </div>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
+  <div class="flex flex-wrap gap-4 items-end">
+    <.dm_mdi name="home" class="w-4 h-4" />
+    <.dm_mdi name="home" class="w-6 h-6" />
+    <.dm_mdi name="home" class="w-8 h-8" />
+    <.dm_mdi name="home" class="w-12 h-12" />
+    <.dm_mdi name="home" class="w-16 h-16" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Full Browsers</h3>
+  <p class="text-base-content/70">
+    The full icon sets include 7000+ Material Design Icons and 2000+ Bootstrap Icons.
+    See the <.dm_link href="https://hexdocs.pm/phoenix_duskmoon/">HEX documentation</.dm_link> for the complete list.
+  </p>
+</.dm_card>

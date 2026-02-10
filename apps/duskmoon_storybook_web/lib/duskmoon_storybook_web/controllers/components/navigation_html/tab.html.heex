@@ -1,0 +1,85 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/navigation/tab"}>Navigation</:crumb>
+  <:crumb>Tab</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Tab</span>
+    <span class="text-sm opacity-60">dm_tab</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Tab navigation component for switching between content panels. Wraps `<el-dm-tabs>` custom element.
+
+  ## Usage
+  ```elixir
+  <.dm_tab active_tab_index={0}>
+    <:tab>Tab 1</:tab>
+    <:tab>Tab 2</:tab>
+    <:tab_content>Content 1</:tab_content>
+    <:tab_content>Content 2</:tab_content>
+  </.dm_tab>
+  ```
+
+  > **Note:** Only the active tab content is rendered server-side.
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Tabs</h3>
+  <.dm_tab active_tab_index={0}>
+    <:tab>Overview</:tab>
+    <:tab>Features</:tab>
+    <:tab>Pricing</:tab>
+    <:tab_content>
+      <div class="p-4">
+        <h4 class="font-bold mb-2">Overview</h4>
+        <p>This is the overview content panel.</p>
+      </div>
+    </:tab_content>
+    <:tab_content>
+      <div class="p-4">
+        <h4 class="font-bold mb-2">Features</h4>
+        <p>This is the features content panel.</p>
+      </div>
+    </:tab_content>
+    <:tab_content>
+      <div class="p-4">
+        <h4 class="font-bold mb-2">Pricing</h4>
+        <p>This is the pricing content panel.</p>
+      </div>
+    </:tab_content>
+  </.dm_tab>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Variants</h3>
+  <div class="flex flex-col gap-6">
+    <div>
+      <p class="text-sm opacity-60 mb-2">Lifted</p>
+      <.dm_tab active_tab_index={0} variant="lifted">
+        <:tab>Tab A</:tab>
+        <:tab>Tab B</:tab>
+        <:tab_content><div class="p-4">Content A</div></:tab_content>
+        <:tab_content><div class="p-4">Content B</div></:tab_content>
+      </.dm_tab>
+    </div>
+    <div>
+      <p class="text-sm opacity-60 mb-2">Bordered</p>
+      <.dm_tab active_tab_index={0} variant="bordered">
+        <:tab>Tab A</:tab>
+        <:tab>Tab B</:tab>
+        <:tab_content><div class="p-4">Content A</div></:tab_content>
+        <:tab_content><div class="p-4">Content B</div></:tab_content>
+      </.dm_tab>
+    </div>
+    <div>
+      <p class="text-sm opacity-60 mb-2">Boxed</p>
+      <.dm_tab active_tab_index={0} variant="boxed">
+        <:tab>Tab A</:tab>
+        <:tab>Tab B</:tab>
+        <:tab_content><div class="p-4">Content A</div></:tab_content>
+        <:tab_content><div class="p-4">Content B</div></:tab_content>
+      </.dm_tab>
+    </div>
+  </div>
+</.dm_card>

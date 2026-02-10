@@ -1,0 +1,41 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/navigation/page-header"}>Navigation</:crumb>
+  <:crumb>Page Header</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Page Header</span>
+    <span class="text-sm opacity-60">dm_page_header</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Hero-style page header with navigation and scroll-aware behavior using `PageHeader` hook.
+
+  ## Usage
+  ```elixir
+  <.dm_page_header class="bg-gradient-to-r from-purple-500 to-pink-500 text-white min-h-[300px]">
+    <:menu to="/about">About</:menu>
+    <h1 class="text-5xl font-bold">Welcome</h1>
+  </.dm_page_header>
+  ```
+
+  > **Note:** Requires `PageHeader` hook for scroll-aware navigation.
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Example</h3>
+  <div class="border border-base-300 rounded-lg overflow-hidden">
+    <.dm_page_header
+      id="demo-page-header"
+      nav_id="demo-page-header-nav"
+      class="bg-gradient-to-r from-cyan-500 to-blue-500 text-white min-h-[200px]"
+    >
+      <:menu to="#">Home</:menu>
+      <:menu to="#">Docs</:menu>
+      <:menu to="#">API</:menu>
+      <h1 class="text-4xl font-bold">Welcome to Duskmoon UI</h1>
+      <p class="mt-2 text-lg opacity-80">Beautiful components for Phoenix</p>
+    </.dm_page_header>
+  </div>
+</.dm_card>

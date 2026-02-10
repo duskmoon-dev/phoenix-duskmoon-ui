@@ -1,0 +1,39 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/action/link"}>Action</:crumb>
+  <:crumb>Link</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Link</span>
+    <span class="text-sm opacity-60">dm_link</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Link component for navigation. Supports LiveView navigate, patch, and standard href.
+
+  ## Usage
+  ```elixir
+  <.dm_link navigate="/page">Go to page</.dm_link>
+  <.dm_link href="https://example.com">External</.dm_link>
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Navigation Link</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_link navigate={~p"/"}>Navigate to Home</.dm_link>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">External Link</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_link href="https://github.com/duskmoon-dev/phoenix-duskmoon-ui" target="_blank">
+      <.dm_mdi name="github" class="w-5 h-5 inline" /> GitHub Repository
+    </.dm_link>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Default Link</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_link>Link with no destination</.dm_link>
+  </div>
+</.dm_card>

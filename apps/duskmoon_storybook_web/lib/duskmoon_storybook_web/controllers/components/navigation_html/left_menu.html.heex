@@ -1,0 +1,87 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/navigation/left-menu"}>Navigation</:crumb>
+  <:crumb>Left Menu</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Left Menu</span>
+    <span class="text-sm opacity-60">dm_left_menu, dm_left_menu_group</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Sidebar navigation menu with support for groups and collapsible sections.
+
+  ## Usage
+  ```elixir
+  <.dm_left_menu active="dashboard">
+    <:title>Navigation</:title>
+    <:menu>
+      <.dm_left_menu_group active="dashboard">
+        <:title>Main</:title>
+        <:menu id="dashboard" to="/dashboard">Dashboard</:menu>
+        <:menu id="settings" to="/settings">Settings</:menu>
+      </.dm_left_menu_group>
+    </:menu>
+  </.dm_left_menu>
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Menu with Groups</h3>
+  <div class="w-64 bg-base-200 rounded-lg">
+    <.dm_left_menu active="item-1">
+      <:title class="font-bold text-primary">Demo Menu</:title>
+      <:menu>
+        <.dm_left_menu_group active="item-1">
+          <:title>Section A</:title>
+          <:menu id="item-1" to="#">
+            <.dm_mdi name="home" class="w-4 h-4" /> Dashboard
+          </:menu>
+          <:menu id="item-2" to="#">
+            <.dm_mdi name="account" class="w-4 h-4" /> Profile
+          </:menu>
+        </.dm_left_menu_group>
+      </:menu>
+      <:menu>
+        <.dm_left_menu_group active="item-1">
+          <:title>Section B</:title>
+          <:menu id="item-3" to="#">
+            <.dm_mdi name="cog" class="w-4 h-4" /> Settings
+          </:menu>
+          <:menu id="item-4" to="#" disabled={true}>
+            <.dm_mdi name="lock" class="w-4 h-4" /> Locked
+          </:menu>
+        </.dm_left_menu_group>
+      </:menu>
+    </.dm_left_menu>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
+  <div class="flex flex-wrap gap-4">
+    <div class="w-48 bg-base-200 rounded-lg">
+      <.dm_left_menu size="xs">
+        <:title>XS Menu</:title>
+        <:menu>
+          <.dm_left_menu_group>
+            <:title>Items</:title>
+            <:menu id="xs-1" to="#">Item 1</:menu>
+            <:menu id="xs-2" to="#">Item 2</:menu>
+          </.dm_left_menu_group>
+        </:menu>
+      </.dm_left_menu>
+    </div>
+    <div class="w-64 bg-base-200 rounded-lg">
+      <.dm_left_menu size="lg">
+        <:title>LG Menu</:title>
+        <:menu>
+          <.dm_left_menu_group>
+            <:title>Items</:title>
+            <:menu id="lg-1" to="#">Item 1</:menu>
+            <:menu id="lg-2" to="#">Item 2</:menu>
+          </.dm_left_menu_group>
+        </:menu>
+      </.dm_left_menu>
+    </div>
+  </div>
+</.dm_card>

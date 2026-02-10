@@ -1,0 +1,38 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/layout/theme-switcher"}>Layout</:crumb>
+  <:crumb>Theme Switcher</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Theme Switcher</span>
+    <span class="text-sm opacity-60">dm_theme_switcher</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Theme toggle component for switching between light/dark themes. Uses `ThemeSwitcher` hook for localStorage persistence.
+
+  ## Usage
+  ```elixir
+  <.dm_theme_switcher />
+  ```
+
+  > **Note:** Requires `ThemeSwitcher` LiveView hook. Available themes: default, sunshine, moonlight.
+
+  ## Setup
+  ```javascript
+  import {ThemeSwitcher} from "phoenix_duskmoon/hooks"
+  let liveSocket = new LiveSocket("/live", Socket, {
+    hooks: { ThemeSwitcher }
+  })
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Live Theme Switcher</h3>
+  <p class="mb-4 text-base-content/70">Click the dropdown to switch themes. The selection persists in localStorage.</p>
+  <div class="flex items-center gap-4">
+    <.dm_theme_switcher />
+  </div>
+</.dm_card>

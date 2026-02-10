@@ -1,0 +1,59 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/table"}>Data Display</:crumb>
+  <:crumb>Table</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Table</span>
+    <span class="text-sm opacity-60">dm_table</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Table component for displaying structured data with sorting, zebra striping, and expandable rows.
+
+  ## Usage
+  ```elixir
+  <.dm_table data={@users}>
+    <:col :let={user} label="Name">{user.name}</:col>
+    <:col :let={user} label="Email">{user.email}</:col>
+  </.dm_table>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Table</h3>
+  <.dm_table data={[
+    %{name: "Alice", role: "Admin", status: "Active"},
+    %{name: "Bob", role: "Editor", status: "Active"},
+    %{name: "Charlie", role: "Viewer", status: "Inactive"}
+  ]}>
+    <:col :let={row} label="Name"><%= row.name %></:col>
+    <:col :let={row} label="Role"><%= row.role %></:col>
+    <:col :let={row} label="Status"><%= row.status %></:col>
+  </.dm_table>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Zebra Striping</h3>
+  <.dm_table zebra={true} data={[
+    %{id: 1, product: "Widget A", price: "$10.00"},
+    %{id: 2, product: "Widget B", price: "$20.00"},
+    %{id: 3, product: "Widget C", price: "$15.00"},
+    %{id: 4, product: "Widget D", price: "$25.00"}
+  ]}>
+    <:col :let={row} label="ID"><%= row.id %></:col>
+    <:col :let={row} label="Product"><%= row.product %></:col>
+    <:col :let={row} label="Price"><%= row.price %></:col>
+  </.dm_table>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Bordered & Compact</h3>
+  <.dm_table border={true} compact={true} data={[
+    %{key: "API_KEY", value: "sk-***", env: "production"},
+    %{key: "DB_HOST", value: "localhost", env: "development"},
+    %{key: "PORT", value: "4000", env: "all"}
+  ]}>
+    <:col :let={row} label="Key"><%= row.key %></:col>
+    <:col :let={row} label="Value"><%= row.value %></:col>
+    <:col :let={row} label="Environment"><%= row.env %></:col>
+  </.dm_table>
+</.dm_card>

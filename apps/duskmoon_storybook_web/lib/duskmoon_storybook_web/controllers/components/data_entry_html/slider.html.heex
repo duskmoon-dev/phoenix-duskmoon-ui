@@ -1,0 +1,49 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/slider"}>Data Entry</:crumb>
+  <:crumb>Slider</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Slider</span>
+    <span class="text-sm opacity-60">dm_slider</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Range slider component for numeric value selection.
+
+  ## Usage
+  ```elixir
+  <.dm_slider name="volume" label="Volume" value={50} min={0} max={100} />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Colors</h3>
+  <div class="flex flex-col gap-6 max-w-md">
+    <.dm_slider name="sl-primary" label="Primary" value={60} color="primary" />
+    <.dm_slider name="sl-secondary" label="Secondary" value={40} color="secondary" />
+    <.dm_slider name="sl-accent" label="Accent" value={75} color="accent" />
+    <.dm_slider name="sl-success" label="Success" value={80} color="success" />
+    <.dm_slider name="sl-error" label="Error" value={30} color="error" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
+  <div class="flex flex-col gap-6 max-w-md">
+    <.dm_slider name="sl-xs" label="XS" value={50} size="xs" />
+    <.dm_slider name="sl-sm" label="SM" value={50} size="sm" />
+    <.dm_slider name="sl-md" label="MD" value={50} size="md" />
+    <.dm_slider name="sl-lg" label="LG" value={50} size="lg" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Custom Range</h3>
+  <div class="flex flex-col gap-6 max-w-md">
+    <.dm_slider name="sl-custom" label="Temperature" value={22} min={10} max={40} step={1} color="warning" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Disabled</h3>
+  <div class="flex flex-col gap-6 max-w-md">
+    <.dm_slider name="sl-disabled" label="Disabled" value={50} disabled={true} />
+  </div>
+</.dm_card>

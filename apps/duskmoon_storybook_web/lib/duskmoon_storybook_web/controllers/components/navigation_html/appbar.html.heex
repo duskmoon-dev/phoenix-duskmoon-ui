@@ -1,0 +1,47 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/navigation/appbar"}>Navigation</:crumb>
+  <:crumb>Appbar</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Appbar</span>
+    <span class="text-sm opacity-60">dm_appbar, dm_simple_appbar</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Application bar components for top-level navigation. Two variants: full `dm_appbar` (custom element) and `dm_simple_appbar` (HTML only, responsive).
+
+  ## Usage
+  ```elixir
+  <.dm_appbar title="My App">
+    <:logo><img src="/logo.png" /></:logo>
+    <:menu to="/about">About</:menu>
+    <:user_profile>Profile</:user_profile>
+  </.dm_appbar>
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Simple Appbar</h3>
+  <div class="border border-base-300 rounded-lg overflow-hidden">
+    <.dm_simple_appbar title="Demo App" class="bg-primary text-primary-content">
+      <:menu to="#">Home</:menu>
+      <:menu to="#">About</:menu>
+      <:user_profile>
+        <.dm_avatar name="U" size="sm" />
+      </:user_profile>
+    </.dm_simple_appbar>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Full Appbar</h3>
+  <div class="border border-base-300 rounded-lg overflow-hidden">
+    <.dm_appbar title="Full App" class="bg-secondary text-secondary-content">
+      <:menu to="#">Dashboard</:menu>
+      <:menu to="#">Settings</:menu>
+      <:user_profile>
+        <.dm_avatar name="A" size="sm" />
+      </:user_profile>
+    </.dm_appbar>
+  </div>
+</.dm_card>

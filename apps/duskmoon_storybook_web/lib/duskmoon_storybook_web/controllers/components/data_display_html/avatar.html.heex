@@ -1,0 +1,58 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/avatar"}>Data Display</:crumb>
+  <:crumb>Avatar</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Avatar</span>
+    <span class="text-sm opacity-60">dm_avatar</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Avatar component for displaying user profile images or initials.
+
+  ## Usage
+  ```elixir
+  <.dm_avatar name="John Doe" size="lg" />
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_avatar name="XS" size="xs" />
+    <.dm_avatar name="SM" size="sm" />
+    <.dm_avatar name="MD" size="md" />
+    <.dm_avatar name="LG" size="lg" />
+    <.dm_avatar name="XL" size="xl" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Colors</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_avatar name="P" color="primary" />
+    <.dm_avatar name="S" color="secondary" />
+    <.dm_avatar name="A" color="accent" />
+    <.dm_avatar name="I" color="info" />
+    <.dm_avatar name="OK" color="success" />
+    <.dm_avatar name="W" color="warning" />
+    <.dm_avatar name="E" color="error" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Shapes</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_avatar name="Circle" shape="circle" size="lg" />
+    <.dm_avatar name="Square" shape="square" size="lg" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Online / Offline Status</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_avatar name="On" online={true} size="lg" />
+    <.dm_avatar name="Off" offline={true} size="lg" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Border</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_avatar name="BD" border={true} size="lg" />
+  </div>
+</.dm_card>

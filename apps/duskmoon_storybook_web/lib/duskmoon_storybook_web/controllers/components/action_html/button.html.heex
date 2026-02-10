@@ -1,0 +1,66 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/action/button"}>Action</:crumb>
+  <:crumb>Button</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Button</span>
+    <span class="text-sm opacity-60">dm_btn</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Button component for triggering actions. Wraps `<el-dm-button>` custom element.
+
+  ## Usage
+  ```elixir
+  <.dm_btn variant="primary">Click me</.dm_btn>
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Variants</h3>
+  <div class="flex flex-wrap gap-4">
+    <.dm_btn variant="primary">Primary</.dm_btn>
+    <.dm_btn variant="secondary">Secondary</.dm_btn>
+    <.dm_btn variant="accent">Accent</.dm_btn>
+    <.dm_btn variant="info">Info</.dm_btn>
+    <.dm_btn variant="success">Success</.dm_btn>
+    <.dm_btn variant="warning">Warning</.dm_btn>
+    <.dm_btn variant="error">Error</.dm_btn>
+    <.dm_btn variant="ghost">Ghost</.dm_btn>
+    <.dm_btn variant="link">Link</.dm_btn>
+    <.dm_btn variant="outline">Outline</.dm_btn>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_btn variant="primary" size="xs">XS</.dm_btn>
+    <.dm_btn variant="primary" size="sm">SM</.dm_btn>
+    <.dm_btn variant="primary" size="md">MD</.dm_btn>
+    <.dm_btn variant="primary" size="lg">LG</.dm_btn>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Shapes</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_btn variant="primary" shape="square">
+      <.dm_mdi name="plus" class="w-5 h-5" />
+    </.dm_btn>
+    <.dm_btn variant="primary" shape="circle">
+      <.dm_mdi name="plus" class="w-5 h-5" />
+    </.dm_btn>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">States</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_btn variant="primary" loading={true}>Loading</.dm_btn>
+    <.dm_btn variant="primary" disabled={true}>Disabled</.dm_btn>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Confirm Dialog</h3>
+  <div class="flex flex-wrap gap-4 items-center">
+    <.dm_btn variant="error" confirm="Are you sure you want to delete this?" confirm_title="Confirm Delete">
+      Delete
+    </.dm_btn>
+  </div>
+</.dm_card>

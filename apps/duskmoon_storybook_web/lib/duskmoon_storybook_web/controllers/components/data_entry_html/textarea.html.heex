@@ -1,0 +1,55 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/textarea"}>Data Entry</:crumb>
+  <:crumb>Textarea</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Textarea</span>
+    <span class="text-sm opacity-60">dm_textarea</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Multi-line text input component with label, color, size, and resize options.
+
+  ## Usage
+  ```elixir
+  <.dm_textarea name="bio" label="Biography" placeholder="Tell us about yourself..." />
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_textarea name="ta-basic" label="Message" value="" placeholder="Type your message..." />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Colors</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_textarea name="ta-primary" label="Primary" value="" color="primary" />
+    <.dm_textarea name="ta-success" label="Success" value="" color="success" />
+    <.dm_textarea name="ta-error" label="Error" value="" color="error" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_textarea name="ta-xs" label="XS" value="" size="xs" />
+    <.dm_textarea name="ta-sm" label="SM" value="" size="sm" />
+    <.dm_textarea name="ta-md" label="MD" value="" size="md" />
+    <.dm_textarea name="ta-lg" label="LG" value="" size="lg" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Resize Options</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_textarea name="ta-none" label="No Resize" value="" resize="none" />
+    <.dm_textarea name="ta-vertical" label="Vertical" value="" resize="vertical" />
+    <.dm_textarea name="ta-horizontal" label="Horizontal" value="" resize="horizontal" />
+    <.dm_textarea name="ta-both" label="Both" value="" resize="both" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">States</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_textarea name="ta-disabled" label="Disabled" value="" disabled={true} />
+    <.dm_textarea name="ta-readonly" label="Readonly" value="This text is read-only" readonly={true} />
+  </div>
+</.dm_card>

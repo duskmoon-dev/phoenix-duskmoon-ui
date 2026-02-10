@@ -1,0 +1,61 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/layout/divider"}>Layout</:crumb>
+  <:crumb>Divider</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Divider</span>
+    <span class="text-sm opacity-60">dm_divider</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Divider component for separating content sections. Supports horizontal/vertical orientation, colors, styles, and sizes.
+
+  ## Usage
+  ```elixir
+  <.dm_divider />
+  <.dm_divider variant="primary" style="dashed">OR</.dm_divider>
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic</h3>
+  <.dm_divider />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Content</h3>
+  <.dm_divider>OR</.dm_divider>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Colors</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_divider variant="primary" />
+    <.dm_divider variant="secondary" />
+    <.dm_divider variant="accent" />
+    <.dm_divider variant="success" />
+    <.dm_divider variant="error" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Styles</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_divider style="solid">Solid</.dm_divider>
+    <.dm_divider style="dashed">Dashed</.dm_divider>
+    <.dm_divider style="dotted">Dotted</.dm_divider>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_divider size="xs" variant="primary" />
+    <.dm_divider size="sm" variant="primary" />
+    <.dm_divider size="md" variant="primary" />
+    <.dm_divider size="lg" variant="primary" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Vertical</h3>
+  <div class="flex items-center gap-4 h-24">
+    <span>Left</span>
+    <.dm_divider orientation="vertical" variant="primary" />
+    <span>Center</span>
+    <.dm_divider orientation="vertical" variant="secondary" />
+    <span>Right</span>
+  </div>
+</.dm_card>

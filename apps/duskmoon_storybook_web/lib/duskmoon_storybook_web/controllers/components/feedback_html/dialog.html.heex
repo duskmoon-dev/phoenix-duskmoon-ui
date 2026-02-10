@@ -1,0 +1,79 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/feedback/dialog"}>Feedback</:crumb>
+  <:crumb>Dialog</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Dialog</span>
+    <span class="text-sm opacity-60">dm_modal</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Modal dialog component for overlaying content. Wraps `<el-dm-dialog>` custom element.
+
+  ## Usage
+  ```elixir
+  <.dm_modal id="my-modal">
+    <:trigger :let={dialog_id}>
+      <.dm_btn variant="primary" onclick={"document.getElementById('\#{dialog_id}').showModal()"}>Open</.dm_btn>
+    </:trigger>
+    <:title>Modal Title</:title>
+    <:body>Modal content here</:body>
+    <:footer><.dm_btn variant="primary">Confirm</.dm_btn></:footer>
+  </.dm_modal>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Modal</h3>
+  <.dm_modal id="demo-modal-basic">
+    <:trigger :let={dialog_id}>
+      <.dm_btn variant="primary" onclick={"document.getElementById('#{dialog_id}').showModal()"}>Open Modal</.dm_btn>
+    </:trigger>
+    <:title>Basic Modal</:title>
+    <:body>
+      <p>This is a basic modal dialog with a title, body, and footer.</p>
+    </:body>
+    <:footer>
+      <.dm_btn variant="primary" size="sm">Confirm</.dm_btn>
+    </:footer>
+  </.dm_modal>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
+  <div class="flex flex-wrap gap-4">
+    <.dm_modal id="demo-modal-sm" size="sm">
+      <:trigger :let={dialog_id}>
+        <.dm_btn variant="outline" onclick={"document.getElementById('#{dialog_id}').showModal()"}>Small</.dm_btn>
+      </:trigger>
+      <:title>Small Modal</:title>
+      <:body><p>A small modal dialog.</p></:body>
+    </.dm_modal>
+
+    <.dm_modal id="demo-modal-md" size="md">
+      <:trigger :let={dialog_id}>
+        <.dm_btn variant="outline" onclick={"document.getElementById('#{dialog_id}').showModal()"}>Medium</.dm_btn>
+      </:trigger>
+      <:title>Medium Modal</:title>
+      <:body><p>A medium modal dialog.</p></:body>
+    </.dm_modal>
+
+    <.dm_modal id="demo-modal-lg" size="lg">
+      <:trigger :let={dialog_id}>
+        <.dm_btn variant="outline" onclick={"document.getElementById('#{dialog_id}').showModal()"}>Large</.dm_btn>
+      </:trigger>
+      <:title>Large Modal</:title>
+      <:body><p>A large modal dialog.</p></:body>
+    </.dm_modal>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Backdrop</h3>
+  <.dm_modal id="demo-modal-backdrop" backdrop={true}>
+    <:trigger :let={dialog_id}>
+      <.dm_btn variant="accent" onclick={"document.getElementById('#{dialog_id}').showModal()"}>Backdrop Blur</.dm_btn>
+    </:trigger>
+    <:title>Backdrop Modal</:title>
+    <:body><p>This modal has a blurred backdrop effect.</p></:body>
+  </.dm_modal>
+</.dm_card>

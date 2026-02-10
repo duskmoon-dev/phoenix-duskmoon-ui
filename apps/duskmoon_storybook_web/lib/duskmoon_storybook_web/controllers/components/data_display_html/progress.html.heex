@@ -1,0 +1,51 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/progress"}>Data Display</:crumb>
+  <:crumb>Progress</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Progress</span>
+    <span class="text-sm opacity-60">dm_progress</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Progress bar component for displaying completion status.
+
+  ## Usage
+  ```elixir
+  <.dm_progress value={75} color="primary" show_label={true} />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Colors</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_progress value={70} color="primary" show_label={true} />
+    <.dm_progress value={60} color="secondary" show_label={true} />
+    <.dm_progress value={80} color="accent" show_label={true} />
+    <.dm_progress value={50} color="info" show_label={true} />
+    <.dm_progress value={90} color="success" show_label={true} />
+    <.dm_progress value={40} color="warning" show_label={true} />
+    <.dm_progress value={30} color="error" show_label={true} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_progress value={60} size="xs" color="primary" />
+    <.dm_progress value={60} size="sm" color="primary" />
+    <.dm_progress value={60} size="md" color="primary" />
+    <.dm_progress value={60} size="lg" color="primary" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Animated</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_progress value={75} color="success" animated={true} show_label={true} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Indeterminate</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_progress indeterminate={true} color="primary" />
+  </div>
+</.dm_card>

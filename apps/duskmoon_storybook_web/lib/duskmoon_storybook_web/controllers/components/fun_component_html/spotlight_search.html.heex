@@ -1,0 +1,52 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/fun/spotlight-search"}>Fun</:crumb>
+  <:crumb>Spotlight Search</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Spotlight Search</span>
+    <span class="text-sm opacity-60">dm_fun_spotlight_search</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  macOS-style spotlight search dialog with keyboard shortcut support and suggestion list.
+
+  ## Usage
+  ```elixir
+  <.dm_fun_spotlight_search id="my-search" placeholder="Search..." shortcut="cmd+k">
+    <:suggestion label="Dashboard" description="Go to dashboard" icon="home" />
+    <:suggestion label="Settings" description="App settings" icon="cog" />
+  </.dm_fun_spotlight_search>
+  ```
+
+  > **Note:** Requires `Spotlight` LiveView hook for keyboard shortcut handling.
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Overview</h3>
+  <p class="text-base-content/70 mb-4">
+    The spotlight search component creates a modal search dialog similar to macOS Spotlight or VS Code's command palette.
+    It requires LiveView for full interactivity (keyboard shortcuts, search events, suggestion selection).
+  </p>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Features</h3>
+  <div class="flex flex-col gap-2">
+    <div class="flex items-center gap-2">
+      <.dm_mdi name="keyboard" class="w-5 h-5 text-primary" />
+      <span>Keyboard shortcut activation (Cmd/Ctrl+K)</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <.dm_mdi name="magnify" class="w-5 h-5 text-primary" />
+      <span>Real-time search with suggestions</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <.dm_mdi name="loading" class="w-5 h-5 text-primary animate-spin" />
+      <span>Loading state indicator</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <.dm_mdi name="close" class="w-5 h-5 text-primary" />
+      <span>Escape to dismiss</span>
+    </div>
+  </div>
+</.dm_card>

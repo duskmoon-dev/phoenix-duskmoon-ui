@@ -1,0 +1,57 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/form"}>Data Entry</:crumb>
+  <:crumb>Form</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Form</span>
+    <span class="text-sm opacity-60">dm_form, dm_label, dm_error, dm_alert</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Form container and helper components including labels, error messages, and alerts.
+
+  ## Usage
+  ```elixir
+  <.dm_form for={@form} phx-submit="save">
+    <.dm_label for="name">Name</.dm_label>
+    <.dm_input name="name" value="" />
+    <.dm_btn variant="primary" type="submit">Save</.dm_btn>
+  </.dm_form>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Label</h3>
+  <div class="flex flex-col gap-2 max-w-md">
+    <.dm_label>Username</.dm_label>
+    <.dm_label>Email Address</.dm_label>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Error Messages</h3>
+  <div class="flex flex-col gap-2 max-w-md">
+    <.dm_error>This field is required</.dm_error>
+    <.dm_error>Must be at least 8 characters</.dm_error>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Alerts</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_alert variant="info" title="Info">This is an informational alert.</.dm_alert>
+    <.dm_alert variant="success" title="Success">Operation completed successfully.</.dm_alert>
+    <.dm_alert variant="warning" title="Warning">Please review your changes.</.dm_alert>
+    <.dm_alert variant="error" title="Error">An error occurred while saving.</.dm_alert>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Complete Form Example</h3>
+  <div class="max-w-md">
+    <.dm_form for={@conn} action={~p"/"} method="get" class="flex flex-col gap-4">
+      <.dm_label for="demo-name">Name</.dm_label>
+      <.dm_input name="demo-name" value="" placeholder="Enter your name" />
+      <.dm_label for="demo-email">Email</.dm_label>
+      <.dm_input name="demo-email" type="email" value="" placeholder="Enter your email" />
+      <.dm_btn variant="primary" type="submit">Submit</.dm_btn>
+    </.dm_form>
+  </div>
+</.dm_card>

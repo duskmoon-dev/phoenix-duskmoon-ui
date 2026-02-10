@@ -1,0 +1,62 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/tooltip"}>Data Display</:crumb>
+  <:crumb>Tooltip</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Tooltip</span>
+    <span class="text-sm opacity-60">dm_tooltip</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Tooltip component for displaying additional information on hover.
+
+  ## Usage
+  ```elixir
+  <.dm_tooltip content="Helpful tip" position="top">
+    Hover me
+  </.dm_tooltip>
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Positions</h3>
+  <div class="flex flex-wrap gap-8 items-center py-8">
+    <.dm_tooltip content="Top tooltip" position="top">
+      <.dm_btn variant="outline">Top</.dm_btn>
+    </.dm_tooltip>
+    <.dm_tooltip content="Bottom tooltip" position="bottom">
+      <.dm_btn variant="outline">Bottom</.dm_btn>
+    </.dm_tooltip>
+    <.dm_tooltip content="Left tooltip" position="left">
+      <.dm_btn variant="outline">Left</.dm_btn>
+    </.dm_tooltip>
+    <.dm_tooltip content="Right tooltip" position="right">
+      <.dm_btn variant="outline">Right</.dm_btn>
+    </.dm_tooltip>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Colors</h3>
+  <div class="flex flex-wrap gap-8 items-center py-8">
+    <.dm_tooltip content="Primary" color="primary">
+      <.dm_btn variant="primary">Primary</.dm_btn>
+    </.dm_tooltip>
+    <.dm_tooltip content="Secondary" color="secondary">
+      <.dm_btn variant="secondary">Secondary</.dm_btn>
+    </.dm_tooltip>
+    <.dm_tooltip content="Success" color="success">
+      <.dm_btn variant="success">Success</.dm_btn>
+    </.dm_tooltip>
+    <.dm_tooltip content="Error" color="error">
+      <.dm_btn variant="error">Error</.dm_btn>
+    </.dm_tooltip>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Always Open</h3>
+  <div class="flex flex-wrap gap-8 items-center py-8">
+    <.dm_tooltip content="I'm always visible" open={true}>
+      <.dm_btn variant="info">Always Open</.dm_btn>
+    </.dm_tooltip>
+  </div>
+</.dm_card>

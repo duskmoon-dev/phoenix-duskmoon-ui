@@ -1,0 +1,52 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/navigation/actionbar"}>Navigation</:crumb>
+  <:crumb>Actionbar</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Actionbar</span>
+    <span class="text-sm opacity-60">dm_actionbar</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Action bar component for placing left/right aligned actions, typically used for page toolbars.
+
+  ## Usage
+  ```elixir
+  <.dm_actionbar>
+    <:left><.dm_btn variant="primary">Save</.dm_btn></:left>
+    <:right><.dm_btn variant="ghost">Cancel</.dm_btn></:right>
+  </.dm_actionbar>
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Actionbar</h3>
+  <.dm_actionbar class="bg-base-200 p-4 rounded-lg">
+    <:left>
+      <.dm_btn variant="primary" size="sm">Save</.dm_btn>
+      <.dm_btn variant="ghost" size="sm">Discard</.dm_btn>
+    </:left>
+    <:right>
+      <.dm_btn variant="error" size="sm">Delete</.dm_btn>
+    </:right>
+  </.dm_actionbar>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Icons</h3>
+  <.dm_actionbar class="bg-base-200 p-4 rounded-lg">
+    <:left>
+      <.dm_btn variant="ghost" size="sm">
+        <.dm_mdi name="arrow-left" class="w-4 h-4" /> Back
+      </.dm_btn>
+    </:left>
+    <:right>
+      <.dm_btn variant="primary" size="sm">
+        <.dm_mdi name="content-save" class="w-4 h-4" /> Save
+      </.dm_btn>
+      <.dm_btn variant="ghost" size="sm">
+        <.dm_mdi name="dots-vertical" class="w-4 h-4" />
+      </.dm_btn>
+    </:right>
+  </.dm_actionbar>
+</.dm_card>

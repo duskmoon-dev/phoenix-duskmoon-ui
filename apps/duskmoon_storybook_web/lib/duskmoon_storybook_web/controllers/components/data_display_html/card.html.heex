@@ -1,0 +1,75 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/card"}>Data Display</:crumb>
+  <:crumb>Card</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Card</span>
+    <span class="text-sm opacity-60">dm_card</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Card component for grouping content. Wraps `<el-dm-card>` custom element with title and action slots.
+
+  ## Usage
+  ```elixir
+  <.dm_card>
+    <:title>Card Title</:title>
+    Card content goes here.
+    <:action><.dm_btn variant="primary">Action</.dm_btn></:action>
+  </.dm_card>
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Card</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <.dm_card>
+      <:title>Simple Card</:title>
+      <p>This is a basic card with a title and content.</p>
+    </.dm_card>
+
+    <.dm_card>
+      <:title>Card with Action</:title>
+      <p>This card includes an action button in the footer.</p>
+      <:action>
+        <.dm_btn variant="primary" size="sm">Learn More</.dm_btn>
+      </:action>
+    </.dm_card>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Variants</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <.dm_card variant="compact">
+      <:title>Compact</:title>
+      <p>A compact card with reduced padding.</p>
+    </.dm_card>
+
+    <.dm_card variant="bordered">
+      <:title>Bordered</:title>
+      <p>A card with visible border.</p>
+    </.dm_card>
+
+    <.dm_card variant="glass">
+      <:title>Glass</:title>
+      <p>A card with glass morphism effect.</p>
+    </.dm_card>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Shadow Levels</h3>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <.dm_card shadow="sm">
+      <:title>Small Shadow</:title>
+      <p>shadow="sm"</p>
+    </.dm_card>
+    <.dm_card shadow="md">
+      <:title>Medium Shadow</:title>
+      <p>shadow="md"</p>
+    </.dm_card>
+    <.dm_card shadow="xl">
+      <:title>XL Shadow</:title>
+      <p>shadow="xl"</p>
+    </.dm_card>
+  </div>
+</.dm_card>

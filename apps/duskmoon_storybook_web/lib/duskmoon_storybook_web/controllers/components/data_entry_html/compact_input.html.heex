@@ -1,0 +1,36 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/compact-input"}>Data Entry</:crumb>
+  <:crumb>Compact Input</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Compact Input</span>
+    <span class="text-sm opacity-60">dm_compact_input</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Compact input component with integrated label, ideal for dense forms.
+
+  ## Usage
+  ```elixir
+  <.dm_compact_input name="email" label="Email" type="email" value="" />
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Text Input Types</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_compact_input name="ci-text" label="Text" type="text" value="" />
+    <.dm_compact_input name="ci-email" label="Email" type="email" value="" />
+    <.dm_compact_input name="ci-password" label="Password" type="password" value="" />
+    <.dm_compact_input name="ci-number" label="Number" type="number" value="" />
+    <.dm_compact_input name="ci-date" label="Date" type="date" value="" />
+    <.dm_compact_input name="ci-url" label="URL" type="url" value="" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Select</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_compact_input name="ci-select" label="Country" type="select" value="" options={[{"us", "United States"}, {"uk", "United Kingdom"}, {"jp", "Japan"}]} />
+  </div>
+</.dm_card>

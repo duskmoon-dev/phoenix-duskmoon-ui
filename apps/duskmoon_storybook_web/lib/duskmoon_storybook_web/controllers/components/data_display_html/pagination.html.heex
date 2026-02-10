@@ -1,0 +1,38 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/pagination"}>Data Display</:crumb>
+  <:crumb>Pagination</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Pagination</span>
+    <span class="text-sm opacity-60">dm_pagination</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Pagination components for navigating multi-page content. Supports both full and thin variants.
+
+  ## Usage
+  ```elixir
+  <.dm_pagination page_num={1} page_size={10} total={100} />
+  <.dm_pagination_thin page_num={1} page_size={10} total={50} />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Full Pagination</h3>
+  <div class="flex flex-col gap-6">
+    <.dm_pagination page_num={3} page_size={10} total={100} show_total={true} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Thin Pagination</h3>
+  <div class="flex flex-col gap-6">
+    <.dm_pagination_thin page_num={2} page_size={10} total={50} show_total={true} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Page Jumper</h3>
+  <div class="flex flex-col gap-6">
+    <.dm_pagination_thin page_num={1} page_size={10} total={100} show_page_jumper={true} />
+  </div>
+</.dm_card>

@@ -1,0 +1,37 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/fun/snow"}>Fun</:crumb>
+  <:crumb>Snow</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Snow</span>
+    <span class="text-sm opacity-60">dm_fun_snow</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Animated falling snowflake effect with customizable count, size, color, and speed.
+
+  ## Usage
+  ```elixir
+  <.dm_fun_snow id="my-snow" count={30} color="#FFFFFF" />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Default Snow</h3>
+  <div class="bg-gradient-to-b from-slate-700 to-slate-900 rounded-lg overflow-hidden" style="height: 300px;">
+    <.dm_fun_snow id="snow-default" count={20} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Colored Snow</h3>
+  <div class="bg-gradient-to-b from-blue-900 to-purple-900 rounded-lg overflow-hidden" style="height: 300px;">
+    <.dm_fun_snow id="snow-colored" count={25} color="#89CFF0" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Unicode Snowflakes</h3>
+  <div class="bg-gradient-to-b from-cyan-800 to-blue-900 rounded-lg overflow-hidden" style="height: 300px;">
+    <.dm_fun_snow id="snow-unicode" count={15} use_unicode={true} />
+  </div>
+</.dm_card>
