@@ -49,6 +49,12 @@
       },
       %{
         kind: :story,
+        name: "Flash",
+        path: "/data_display/flash",
+        module: Storybook.DataDisplay.Flash
+      },
+      %{
+        kind: :story,
         name: "Markdown",
         path: "/data_display/markdown",
         module: Storybook.DataDisplay.Markdown
@@ -178,6 +184,12 @@
     entries: [
       %{
         kind: :story,
+        name: "Appbar",
+        path: "/navigation/appbar",
+        module: Storybook.Navigation.Appbar
+      },
+      %{
+        kind: :story,
         name: "Action Bar",
         path: "/navigation/actionbar",
         module: Storybook.Navigation.Actionbar
@@ -208,6 +220,18 @@
       },
       %{
         kind: :story,
+        name: "Page Header",
+        path: "/navigation/page_header",
+        module: Storybook.Navigation.PageHeader
+      },
+      %{
+        kind: :story,
+        name: "Page Footer",
+        path: "/navigation/page_footer",
+        module: Storybook.Navigation.PageFooter
+      },
+      %{
+        kind: :story,
         name: "Tab",
         path: "/navigation/tab",
         module: Storybook.Navigation.Tab
@@ -224,6 +248,25 @@
         name: "Divider",
         path: "/layout/divider",
         module: Storybook.Layout.Divider
+      },
+      %{
+        kind: :story,
+        name: "Theme Switcher",
+        path: "/layout/theme_switcher",
+        module: Storybook.Layout.ThemeSwitcher
+      }
+    ]
+  },
+  %{
+    kind: :folder,
+    name: "Icon",
+    path: "/icon",
+    entries: [
+      %{
+        kind: :story,
+        name: "Icons",
+        path: "/icon/icons",
+        module: Storybook.Icon.Icons
       }
     ]
   },
