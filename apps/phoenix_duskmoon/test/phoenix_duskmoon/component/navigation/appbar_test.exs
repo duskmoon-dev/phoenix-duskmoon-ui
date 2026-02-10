@@ -8,7 +8,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
   test "renders basic appbar" do
     result = render_component(&dm_appbar/1, %{title: "MyApp"})
 
-    assert result =~ "<app-bar"
+    assert result =~ "<header"
+    assert result =~ "appbar"
     assert result =~ "MyApp"
   end
 

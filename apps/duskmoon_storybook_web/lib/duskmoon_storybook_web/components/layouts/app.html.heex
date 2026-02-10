@@ -1,18 +1,15 @@
 <div class="rainbow"></div>
-<header class="appbar appbar-sticky appbar-primary appbar-elevated z-50">
-  <div class="appbar-brand">
+<.dm_appbar title="Duskmoon UI" class="appbar-primary appbar-elevated z-50">
+  <:logo>
     <.dm_mdi name="moon-waning-crescent" class="w-8 h-8" />
-    <span class="appbar-title text-lg font-bold">Duskmoon UI</span>
-  </div>
-  <nav class="appbar-actions">
-    <.link navigate={~p"/storybook"} class="appbar-action">
-      Storybook
-    </.link>
+  </:logo>
+  <:menu to={~p"/storybook"}>Storybook</:menu>
+  <:user_profile>
     <.dm_link href={"https://github.com/duskmoon-dev/phoenix-duskmoon-ui"} class="appbar-action">
       <.dm_mdi name="github" class="w-8 h-8" />
     </.dm_link>
-  </nav>
-</header>
+  </:user_profile>
+</.dm_appbar>
 
 <main class="container flex flex-row justify-start items-start relative">
   <.flash_group flash={@flash} />
