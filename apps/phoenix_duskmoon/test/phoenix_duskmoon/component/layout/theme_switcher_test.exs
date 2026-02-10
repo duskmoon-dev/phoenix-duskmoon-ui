@@ -8,13 +8,13 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcherTest do
   test "renders theme switcher" do
     result = render_component(&dm_theme_switcher/1, %{})
 
-    assert result =~ "dm-dropdown"
+    assert result =~ "dropdown"
   end
 
   test "renders theme switcher with current theme" do
     result = render_component(&dm_theme_switcher/1, %{theme: "dark"})
 
-    assert result =~ "dm-dropdown"
+    assert result =~ "dropdown"
   end
 
   test "renders theme switcher with custom class" do

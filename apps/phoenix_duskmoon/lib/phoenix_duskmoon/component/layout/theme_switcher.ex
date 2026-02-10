@@ -35,11 +35,11 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
     ~H"""
     <div
       id={@id || "theme-switcher-#{@rid}"}
-      class={["dm-dropdown", @class]}
+      class={["dropdown dropdown-end", @class]}
       phx-hook="ThemeSwitcher"
       data-theme={@theme}
     >
-      <div tabindex="0" role="button" class="dm-btn dm-btn--ghost">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-sm">
         Theme
         <svg
           width="12px"
@@ -51,12 +51,12 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
           <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
         </svg>
       </div>
-      <ul tabindex="0" class="dm-dropdown__content z-1">
+      <ul tabindex="0" class="dropdown-content z-50">
         <li>
           <input
             type="radio"
             name="theme-dropdown"
-            class="theme-controller w-full dm-btn dm-btn--sm dm-btn--secondary dm-btn--block justify-center"
+            class="theme-controller w-full btn btn-sm btn-secondary btn-block justify-center"
             aria-label="Auto"
             value="default"
             checked={@theme == "default"}
@@ -66,7 +66,7 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
           <input
             type="radio"
             name="theme-dropdown"
-            class="theme-controller w-full dm-btn dm-btn--sm dm-btn--secondary dm-btn--block justify-center"
+            class="theme-controller w-full btn btn-sm btn-secondary btn-block justify-center"
             aria-label="Sunshine"
             value="sunshine"
             checked={@theme == "sunshine"}
@@ -76,7 +76,7 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
           <input
             type="radio"
             name="theme-dropdown"
-            class="theme-controller w-full dm-btn dm-btn--sm dm-btn--secondary dm-btn--block justify-center"
+            class="theme-controller w-full btn btn-sm btn-secondary btn-block justify-center"
             aria-label="Moonlight"
             value="moonlight"
             checked={@theme == "moonlight"}
