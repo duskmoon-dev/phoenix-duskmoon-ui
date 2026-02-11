@@ -326,9 +326,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
   def dm_input(%{type: "range_slider"} = assigns) do
     assigns =
-      assign_new(assigns, :min, fn -> 0 end)
-      |> assign_new(:max, fn -> 100 end)
-      |> assign_new(:step, fn -> 1 end)
+      assign_new(assigns, :min, fn -> assigns.rest[:min] || 0 end)
+      |> assign_new(:max, fn -> assigns.rest[:max] || 100 end)
+      |> assign_new(:step, fn -> assigns.rest[:step] || 1 end)
 
     ~H"""
     <div class={["dm-form-group", @field_class]} phx-feedback-for={@name}>
@@ -371,8 +371,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
   def dm_input(%{type: "rating"} = assigns) do
     assigns =
-      assign_new(assigns, :max, fn -> 5 end)
-      |> assign_new(:readonly, fn -> false end)
+      assign_new(assigns, :max, fn -> assigns.rest[:max] || 5 end)
+      |> assign_new(:readonly, fn -> assigns.rest[:readonly] || false end)
 
     ~H"""
     <div class={["dm-form-group", @field_class]} phx-feedback-for={@name}>
@@ -733,9 +733,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
   def dm_input(%{type: "slider_range"} = assigns) do
     assigns =
-      assign_new(assigns, :min, fn -> 0 end)
-      |> assign_new(:max, fn -> 100 end)
-      |> assign_new(:step, fn -> 1 end)
+      assign_new(assigns, :min, fn -> assigns.rest[:min] || 0 end)
+      |> assign_new(:max, fn -> assigns.rest[:max] || 100 end)
+      |> assign_new(:step, fn -> assigns.rest[:step] || 1 end)
 
     assigns =
       assign(

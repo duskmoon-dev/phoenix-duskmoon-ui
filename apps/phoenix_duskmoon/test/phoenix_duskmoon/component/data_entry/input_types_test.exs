@@ -577,6 +577,22 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
 
       assert result =~ "value too high"
     end
+
+    test "renders range slider with custom non-default min and max" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "range_slider",
+          name: "temperature",
+          label: "Temperature",
+          value: 50,
+          min: 10,
+          max: 200
+        })
+
+      # Custom min=10 and max=200 should render in both the input attrs and display spans
+      assert result =~ ~s[min="10"]
+      assert result =~ ~s[max="200"]
+    end
   end
 
   describe "file input type" do
