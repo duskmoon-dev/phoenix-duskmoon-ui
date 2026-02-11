@@ -235,6 +235,145 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
       assert result =~ "..."
       assert result =~ ~s[phx-value-current="10"]
     end
+
+    test "renders page 2 with near-start ellipsis layout" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 2,
+          page_size: 10,
+          total: 100
+        })
+
+      # page_num < 3 => [1, 2, 3, "...", 8, 9, 10]
+      assert result =~ ~s[phx-value-current="1"]
+      assert result =~ ~s[phx-value-current="2"]
+      assert result =~ ~s[phx-value-current="3"]
+      assert result =~ "..."
+      assert result =~ ~s[phx-value-current="10"]
+    end
+
+    test "renders near-end page (max_page - 2) with correct layout" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 8,
+          page_size: 10,
+          total: 100
+        })
+
+      # page_num == max_page - 2 => [1, 2, 3, "...", 7, 8, 9, 10]
+      assert result =~ ~s[phx-value-current="1"]
+      assert result =~ "..."
+      assert result =~ ~s[phx-value-current="7"]
+      assert result =~ ~s[phx-value-current="8"]
+      assert result =~ ~s[phx-value-current="9"]
+      assert result =~ ~s[phx-value-current="10"]
+    end
+
+    test "renders near-end page (> max_page - 2) with end layout" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 9,
+          page_size: 10,
+          total: 100
+        })
+
+      # page_num > max_page - 2 => [1, 2, 3, "...", 8, 9, 10]
+      assert result =~ ~s[phx-value-current="1"]
+      assert result =~ "..."
+      assert result =~ ~s[phx-value-current="8"]
+      assert result =~ ~s[phx-value-current="9"]
+      assert result =~ ~s[phx-value-current="10"]
+    end
+
+    test "renders page_link_type navigate" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 2,
+          page_size: 10,
+          total: 50,
+          page_link_type: "navigate",
+          page_url: "/items?page={page}"
+        })
+
+      assert result =~ ~s[data-phx-link="navigate"]
+    end
+
+    test "renders page_link_type href" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 2,
+          page_size: 10,
+          total: 50,
+          page_link_type: "href",
+          page_url: "/items?page={page}"
+        })
+
+      assert result =~ ~s[data-phx-link="href"]
+    end
+
+    test "renders page_url substitution in prev/next buttons" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 3,
+          page_size: 10,
+          total: 50,
+          page_url: "/items?page={page}"
+        })
+
+      assert result =~ ~s[href="/items?page=2"]
+      assert result =~ ~s[href="/items?page=4"]
+    end
+
+    test "renders page_url substitution in page buttons" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 30,
+          page_url: "/items?p={page}"
+        })
+
+      assert result =~ ~s[href="/items?p=1"]
+      assert result =~ ~s[href="/items?p=2"]
+      assert result =~ ~s[href="/items?p=3"]
+    end
+
+    test "renders single page pagination (total <= page_size)" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 100,
+          total: 50
+        })
+
+      # max_page = 1, both prev and next disabled
+      assert result =~ ~s[total-pages="1"]
+      assert result =~ ~s[disabled]
+    end
+
+    test "renders rest attributes" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 50,
+          "data-testid": "pag"
+        })
+
+      assert result =~ ~s[data-testid="pag"]
+    end
+
+    test "renders inner_block content" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 50,
+          inner_block: [%{inner_block: fn _, _ -> "Custom content" end}]
+        })
+
+      assert result =~ "Custom content"
+    end
   end
 
   describe "dm_pagination_thin component" do
@@ -422,6 +561,125 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
       # Should show page 1 with current styling
       assert result =~ ~s[aria-current="page"]
       assert result =~ ~s[dm-pagination__current]
+    end
+
+    test "loading on first page disables prev click" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 100,
+          loading: true,
+          update_event: "update-page"
+        })
+
+      # prev disabled (page_num==1), loading adds btn--loading class
+      assert result =~ ~s[disabled]
+      assert result =~ "dm-pagination__btn--loading"
+    end
+
+    test "loading on last page disables next click" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 10,
+          page_size: 10,
+          total: 100,
+          loading: true,
+          update_event: "update-page"
+        })
+
+      assert result =~ ~s[disabled]
+      assert result =~ "dm-pagination__btn--loading"
+    end
+
+    test "loading shows spinner in current page button" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 5,
+          page_size: 10,
+          total: 100,
+          loading: true
+        })
+
+      assert result =~ "dm-pagination__spinner"
+    end
+
+    test "loading does not show spinner when not loading" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 5,
+          page_size: 10,
+          total: 100,
+          loading: false
+        })
+
+      refute result =~ "dm-pagination__spinner"
+    end
+
+    test "show_page_jumper and loading combined disables jumper event" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 3,
+          page_size: 10,
+          total: 100,
+          loading: true,
+          show_page_jumper: true,
+          update_event: "change-page"
+        })
+
+      assert result =~ "dm-pagination__jumper"
+      # Form exists but phx-change should be nil when loading
+      assert result =~ "<form"
+    end
+
+    test "show_total and show_page_jumper combined" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 2,
+          page_size: 10,
+          total: 100,
+          show_total: true,
+          show_page_jumper: true
+        })
+
+      assert result =~ "dm-pagination__total"
+      assert result =~ "100"
+      assert result =~ "dm-pagination__jumper"
+      assert result =~ ~s[type="number"]
+    end
+
+    test "renders rest attributes" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 50,
+          "data-testid": "thin-pag"
+        })
+
+      assert result =~ ~s[data-testid="thin-pag"]
+    end
+
+    test "renders with all options combined" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          id: "full-thin",
+          class: "my-thin",
+          page_num: 3,
+          page_size: 10,
+          total: 100,
+          show_total: true,
+          show_page_jumper: true,
+          update_event: "change-pg"
+        })
+
+      assert result =~ ~s[id="full-thin"]
+      assert result =~ "my-thin"
+      assert result =~ "dm-pagination--thin"
+      assert result =~ "100"
+      assert result =~ "dm-pagination__jumper"
+      assert result =~ ~s[max="10"]
+      assert result =~ ~s[value="3"]
     end
   end
 end
