@@ -231,4 +231,29 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
       assert result =~ "dm-checkbox--lg"
     end
   end
+
+  test "renders checkbox with aria-invalid and error messages when errors present" do
+    result =
+      render_component(&dm_checkbox/1, %{
+        name: "agree",
+        id: "agree-cb",
+        errors: ["must be accepted"]
+      })
+
+    assert result =~ ~s[aria-invalid="true"]
+    assert result =~ ~s[aria-describedby="agree-cb-errors"]
+    assert result =~ ~s[id="agree-cb-errors"]
+    assert result =~ "must be accepted"
+  end
+
+  test "renders checkbox without aria-invalid when no errors" do
+    result =
+      render_component(&dm_checkbox/1, %{
+        name: "agree",
+        id: "agree-cb"
+      })
+
+    refute result =~ "aria-invalid"
+    refute result =~ "aria-describedby"
+  end
 end

@@ -266,4 +266,31 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
       assert result =~ "dm-radio--lg"
     end
   end
+
+  test "renders radio with aria-invalid and error messages when errors present" do
+    result =
+      render_component(&dm_radio/1, %{
+        name: "choice",
+        id: "choice-a",
+        value: "a",
+        errors: ["must select one"]
+      })
+
+    assert result =~ ~s[aria-invalid="true"]
+    assert result =~ ~s[aria-describedby="choice-a-errors"]
+    assert result =~ ~s[id="choice-a-errors"]
+    assert result =~ "must select one"
+  end
+
+  test "renders radio without aria-invalid when no errors" do
+    result =
+      render_component(&dm_radio/1, %{
+        name: "choice",
+        id: "choice-a",
+        value: "a"
+      })
+
+    refute result =~ "aria-invalid"
+    refute result =~ "aria-describedby"
+  end
 end

@@ -385,4 +385,33 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
       assert result =~ "Select priority"
     end
   end
+
+  test "renders select with aria-invalid and error messages when errors present" do
+    result =
+      render_component(&dm_select/1, %{
+        name: "country",
+        id: "country-select",
+        value: nil,
+        options: [{"us", "USA"}],
+        errors: ["is required"]
+      })
+
+    assert result =~ ~s[aria-invalid="true"]
+    assert result =~ ~s[aria-describedby="country-select-errors"]
+    assert result =~ ~s[id="country-select-errors"]
+    assert result =~ "is required"
+  end
+
+  test "renders select without aria-invalid when no errors" do
+    result =
+      render_component(&dm_select/1, %{
+        name: "country",
+        id: "country-select",
+        value: nil,
+        options: [{"us", "USA"}]
+      })
+
+    refute result =~ "aria-invalid"
+    refute result =~ "aria-describedby"
+  end
 end

@@ -207,4 +207,31 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
 
     assert result =~ ~s[for="vol-slider"]
   end
+
+  test "renders slider with aria-invalid and error messages when errors present" do
+    result =
+      render_component(&dm_slider/1, %{
+        name: "volume",
+        id: "vol-slider",
+        value: 50,
+        errors: ["is out of range"]
+      })
+
+    assert result =~ ~s[aria-invalid="true"]
+    assert result =~ ~s[aria-describedby="vol-slider-errors"]
+    assert result =~ ~s[id="vol-slider-errors"]
+    assert result =~ "is out of range"
+  end
+
+  test "renders slider without aria-invalid when no errors" do
+    result =
+      render_component(&dm_slider/1, %{
+        name: "volume",
+        id: "vol-slider",
+        value: 50
+      })
+
+    refute result =~ "aria-invalid"
+    refute result =~ "aria-describedby"
+  end
 end

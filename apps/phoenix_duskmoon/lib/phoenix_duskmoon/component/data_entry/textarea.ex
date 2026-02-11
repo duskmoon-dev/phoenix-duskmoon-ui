@@ -13,6 +13,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
   """
   use Phoenix.Component
 
+  import PhoenixDuskmoon.Component.DataEntry.Form
+
   @doc """
   Renders a textarea input.
 
@@ -39,6 +41,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
   )
 
   attr(:resize, :string, default: "vertical", values: ["none", "vertical", "horizontal", "both"])
+  attr(:errors, :list, default: [])
   attr(:disabled, :boolean, default: false)
   attr(:readonly, :boolean, default: false)
   attr(:required, :boolean, default: false)
@@ -72,6 +75,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
         readonly={@readonly}
         required={@required}
         maxlength={@maxlength}
+        aria-invalid={@errors != [] && "true"}
+        aria-describedby={@errors != [] && @id && "#{@id}-errors"}
         class={[
           "dm-textarea",
           "dm-textarea--#{@size}",
@@ -82,6 +87,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
         ]}
         {@rest}
       >{@value}</textarea>
+      <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+      </div>
     </div>
     """
   end

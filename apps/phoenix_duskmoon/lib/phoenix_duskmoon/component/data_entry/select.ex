@@ -21,6 +21,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
   """
   use Phoenix.Component
 
+  import PhoenixDuskmoon.Component.DataEntry.Form
+
   @doc """
   Renders a select dropdown.
 
@@ -44,6 +46,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
     values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
   )
 
+  attr(:errors, :list, default: [])
   attr(:disabled, :boolean, default: false)
   attr(:multiple, :boolean, default: false)
   attr(:class, :string, default: nil)
@@ -72,6 +75,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
         name={@name}
         multiple={@multiple}
         disabled={@disabled}
+        aria-invalid={@errors != [] && "true"}
+        aria-describedby={@errors != [] && @id && "#{@id}-errors"}
         class={[
           "dm-select",
           "dm-select--#{@size}",
@@ -83,6 +88,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
       >
         {render_options(assigns)}
       </select>
+      <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+      </div>
     </div>
     """
   end

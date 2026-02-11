@@ -13,6 +13,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
   """
   use Phoenix.Component
 
+  import PhoenixDuskmoon.Component.DataEntry.Form
+
   @doc """
   Renders a radio button input.
 
@@ -36,6 +38,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
     values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
   )
 
+  attr(:errors, :list, default: [])
   attr(:disabled, :boolean, default: false)
   attr(:class, :string, default: nil)
   attr(:label_class, :string, default: nil)
@@ -61,6 +64,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
           value={@value}
           checked={@checked}
           disabled={@disabled}
+          aria-invalid={@errors != [] && "true"}
+          aria-describedby={@errors != [] && @id && "#{@id}-errors"}
           class={[
             "dm-radio",
             "dm-radio--#{@size}",
@@ -74,6 +79,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
           {@label}
         </span>
       </label>
+      <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+      </div>
     </div>
     """
   end

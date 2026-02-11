@@ -14,6 +14,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
   use Phoenix.Component
 
   alias PhoenixDuskmoon.Component.DataEntry.Form
+  import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
 
   @doc """
   Renders a checkbox input.
@@ -38,6 +39,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
     values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
   )
 
+  attr(:errors, :list, default: [])
   attr(:disabled, :boolean, default: false)
   attr(:indeterminate, :boolean, default: false)
   attr(:class, :string, default: nil)
@@ -66,6 +68,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
           value="true"
           checked={@checked}
           disabled={@disabled}
+          aria-invalid={@errors != [] && "true"}
+          aria-describedby={@errors != [] && @id && "#{@id}-errors"}
           class={[
             "dm-checkbox",
             "dm-checkbox--#{@size}",
@@ -80,6 +84,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
           {@label}
         </span>
       </label>
+      <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+      </div>
     </div>
     """
   end

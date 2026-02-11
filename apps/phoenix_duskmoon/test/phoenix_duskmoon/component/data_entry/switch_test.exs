@@ -242,4 +242,29 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
 
     assert result =~ ~s[aria-checked="false"]
   end
+
+  test "renders switch with aria-invalid and error messages when errors present" do
+    result =
+      render_component(&dm_switch/1, %{
+        name: "opt",
+        id: "opt-switch",
+        errors: ["must be enabled"]
+      })
+
+    assert result =~ ~s[aria-invalid="true"]
+    assert result =~ ~s[aria-describedby="opt-switch-errors"]
+    assert result =~ ~s[id="opt-switch-errors"]
+    assert result =~ "must be enabled"
+  end
+
+  test "renders switch without aria-invalid when no errors" do
+    result =
+      render_component(&dm_switch/1, %{
+        name: "opt",
+        id: "opt-switch"
+      })
+
+    refute result =~ "aria-invalid"
+    refute result =~ "aria-describedby"
+  end
 end

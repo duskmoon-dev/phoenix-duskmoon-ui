@@ -12,6 +12,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
   """
   use Phoenix.Component
 
+  import PhoenixDuskmoon.Component.DataEntry.Form
+
   @doc """
   Renders a range slider input.
 
@@ -36,6 +38,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
     values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
   )
 
+  attr(:errors, :list, default: [])
   attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
   attr(:disabled, :boolean, default: false)
   attr(:show_value, :boolean, default: true)
@@ -73,6 +76,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
           max={@max}
           step={@step}
           disabled={@disabled}
+          aria-invalid={@errors != [] && "true"}
+          aria-describedby={@errors != [] && @id && "#{@id}-errors"}
           class={[
             "dm-range",
             "dm-range--#{@size}",
@@ -86,6 +91,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
       <div :if={@show_value} class="flex justify-between text-xs mt-1 opacity-60">
         <span>{@min}</span>
         <span>{@max}</span>
+      </div>
+      <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>
     </div>
     """

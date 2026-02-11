@@ -289,4 +289,31 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
       assert result =~ "dm-textarea--resize-none"
     end
   end
+
+  test "renders textarea with aria-invalid and error messages when errors present" do
+    result =
+      render_component(&dm_textarea/1, %{
+        name: "bio",
+        id: "bio-textarea",
+        value: nil,
+        errors: ["is too short"]
+      })
+
+    assert result =~ ~s[aria-invalid="true"]
+    assert result =~ ~s[aria-describedby="bio-textarea-errors"]
+    assert result =~ ~s[id="bio-textarea-errors"]
+    assert result =~ "is too short"
+  end
+
+  test "renders textarea without aria-invalid when no errors" do
+    result =
+      render_component(&dm_textarea/1, %{
+        name: "bio",
+        id: "bio-textarea",
+        value: nil
+      })
+
+    refute result =~ "aria-invalid"
+    refute result =~ "aria-describedby"
+  end
 end
