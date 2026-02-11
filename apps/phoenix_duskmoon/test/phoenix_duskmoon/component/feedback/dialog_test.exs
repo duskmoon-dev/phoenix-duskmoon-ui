@@ -357,4 +357,20 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
 
     refute result =~ "aria-labelledby"
   end
+
+  test "renders modal with default close_label Close" do
+    result = render_component(&dm_modal/1, %{body: body()})
+
+    assert result =~ ~s[aria-label="Close"]
+  end
+
+  test "renders modal with custom close_label" do
+    result =
+      render_component(&dm_modal/1, %{
+        body: body(),
+        close_label: "Dismiss"
+      })
+
+    assert result =~ ~s[aria-label="Dismiss"]
+  end
 end

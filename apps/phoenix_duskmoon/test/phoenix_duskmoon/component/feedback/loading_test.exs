@@ -312,5 +312,11 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
       assert result =~ "dm-loading-spinner--warning"
       assert result =~ "dm-loading-spinner__icon"
     end
+
+    test "renders spinner icon with aria-hidden for screen readers" do
+      result = render_component(&dm_loading_spinner/1, %{})
+
+      assert result =~ ~s[aria-hidden="true"]
+    end
   end
 end

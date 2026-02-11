@@ -65,6 +65,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
     doc: "Make modal responsive"
   )
 
+  attr(:close_label, :string, default: "Close", doc: "Accessible label for the close button")
   attr(:rest, :global)
 
   slot(:trigger, doc: "Element that opens the modal") do
@@ -111,7 +112,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
         {render_slot(title)}
       </span>
       <form :if={!@hide_close} method="dialog" slot="close">
-        <el-dm-button variant="ghost" size="sm" shape="circle" aria-label="Close">
+        <el-dm-button variant="ghost" size="sm" shape="circle" aria-label={@close_label}>
           <.dm_mdi name="close" class="w-4 h-4" />
         </el-dm-button>
       </form>

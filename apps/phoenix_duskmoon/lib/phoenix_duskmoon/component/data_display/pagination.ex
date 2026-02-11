@@ -44,6 +44,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
     doc: "Phoenix link type"
   )
 
+  attr(:prev_label, :string, default: "Previous", doc: "Screen reader label for the previous button")
+  attr(:next_label, :string, default: "Next", doc: "Screen reader label for the next button")
   attr(:rest, :global)
 
   slot(:inner_block, required: false)
@@ -81,7 +83,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
           data-phx-link-state="push"
           href={page_url(@page_url, @page_url_marker, max(@page_num - 1, 1))}
         >
-          <span class="sr-only">Previous</span>
+          <span class="sr-only">{@prev_label}</span>
           <.dm_mdi name="page-previous" class="w-5 h-5" />
         </button>
 
@@ -114,7 +116,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
           data-phx-link-state="push"
           href={page_url(@page_url, @page_url_marker, min(@page_num + 1, @max_page))}
         >
-          <span class="sr-only">Next</span>
+          <span class="sr-only">{@next_label}</span>
           <.dm_mdi name="page-next" class="w-5 h-5" />
         </button>
       </el-dm-pagination>
@@ -143,6 +145,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
   attr(:total, :integer, default: 0)
   attr(:show_total, :boolean, default: false)
   attr(:update_event, :string, default: "update_current_page")
+  attr(:prev_label, :string, default: "Previous", doc: "Screen reader label for the previous button")
+  attr(:next_label, :string, default: "Next", doc: "Screen reader label for the next button")
   attr(:rest, :global)
 
   def dm_pagination_thin(assigns) do
@@ -169,7 +173,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
           disabled={@page_num == 1}
           class={["dm-pagination__btn", @loading && "dm-pagination__btn--loading"]}
         >
-          <span class="sr-only">Previous</span>
+          <span class="sr-only">{@prev_label}</span>
           <.dm_mdi name="chevron-left" class="w-5 h-5" />
         </button>
 
@@ -179,7 +183,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
           aria-current="page"
           class="dm-pagination__current"
         >
-          <span :if={@loading} class="dm-pagination__spinner"></span>
+          <span :if={@loading} class="dm-pagination__spinner" aria-hidden="true"></span>
           {@page_num}
         </button>
 
@@ -190,7 +194,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
           disabled={@page_num == @max_page}
           class={["dm-pagination__btn", @loading && "dm-pagination__btn--loading"]}
         >
-          <span class="sr-only">Next</span>
+          <span class="sr-only">{@next_label}</span>
           <.dm_mdi name="chevron-right" class="w-5 h-5" />
         </button>
       </div>

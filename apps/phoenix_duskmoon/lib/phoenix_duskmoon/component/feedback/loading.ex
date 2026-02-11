@@ -66,7 +66,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
         "dm-loading-spinner--#{@size}",
         "dm-loading-spinner--#{@variant}"
       ]}>
-        <span class="dm-loading-spinner__icon"></span>
+        <span class="dm-loading-spinner__icon" aria-hidden="true"></span>
       </span>
       <span :if={@text} class="dm-loading-spinner__text">{@text}</span>
     </div>

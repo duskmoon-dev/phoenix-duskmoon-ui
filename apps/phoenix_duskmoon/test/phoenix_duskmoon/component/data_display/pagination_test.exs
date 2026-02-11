@@ -758,4 +758,46 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
       assert length(parts) >= 3
     end
   end
+
+  describe "configurable prev/next labels" do
+    test "dm_pagination renders default sr-only Previous/Next" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 2,
+          page_size: 10,
+          total: 50
+        })
+
+      assert result =~ ">Previous</span>"
+      assert result =~ ">Next</span>"
+    end
+
+    test "dm_pagination renders custom prev_label and next_label" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 2,
+          page_size: 10,
+          total: 50,
+          prev_label: "Anterior",
+          next_label: "Siguiente"
+        })
+
+      assert result =~ ">Anterior</span>"
+      assert result =~ ">Siguiente</span>"
+    end
+
+    test "dm_pagination_thin renders custom prev_label and next_label" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 2,
+          page_size: 10,
+          total: 50,
+          prev_label: "Prev",
+          next_label: "Nxt"
+        })
+
+      assert result =~ ">Prev</span>"
+      assert result =~ ">Nxt</span>"
+    end
+  end
 end
