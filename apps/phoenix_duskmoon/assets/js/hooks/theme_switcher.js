@@ -14,16 +14,18 @@ export const ThemeSwitcher = {
       controller.checked = theme === controller.value;
     });
 
-    // Handle theme changes
+    // Handle theme changes — store references for cleanup
+    this._changeListeners = [];
     themeControllers.forEach(controller => {
-      controller.addEventListener("change", (event) => {
+      const listener = (event) => {
         theme = event.target.value;
         requestAnimationFrame(() => {
           localStorage.setItem("theme", theme);
-          // Dispatch event to LiveView if needed
           this.pushEvent("theme_changed", { theme: theme });
         });
-      });
+      };
+      controller.addEventListener("change", listener);
+      this._changeListeners.push({ controller, listener });
     });
   },
 
@@ -35,6 +37,15 @@ export const ThemeSwitcher = {
       themeControllers.forEach(controller => {
         controller.checked = serverTheme === controller.value;
       });
+    }
+  },
+
+  destroyed() {
+    if (this._changeListeners) {
+      this._changeListeners.forEach(({ controller, listener }) => {
+        controller.removeEventListener("change", listener);
+      });
+      this._changeListeners = null;
     }
   }
 };

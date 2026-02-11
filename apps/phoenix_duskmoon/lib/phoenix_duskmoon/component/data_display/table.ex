@@ -226,7 +226,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
               id={Map.get(expand, :id, false)}
             >
               <td
-                colspan={length(@col)}
+                colspan={max(length(@col), 1)}
                 role="cell"
                 class={[
                   "p-0",
