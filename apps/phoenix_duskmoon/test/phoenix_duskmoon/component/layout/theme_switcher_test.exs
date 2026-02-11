@@ -244,4 +244,16 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcherTest do
 
     assert result =~ ~s[aria-label="Sombre"]
   end
+
+  test "renders theme switcher with custom button_text" do
+    result = render_component(&dm_theme_switcher/1, %{button_text: "Thème"})
+
+    assert result =~ "Thème"
+  end
+
+  test "renders theme switcher with aria-haspopup on button" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    assert result =~ ~s[aria-haspopup="listbox"]
+  end
 end

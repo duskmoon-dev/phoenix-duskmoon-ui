@@ -34,6 +34,7 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
     doc: "Accessible label for the theme selector button"
   )
 
+  attr(:button_text, :string, default: "Theme", doc: "Visible text for the theme selector button")
   attr(:auto_label, :string, default: "Auto", doc: "Label for the auto/default theme option")
   attr(:light_label, :string, default: "Sunshine", doc: "Label for the light theme option")
   attr(:dark_label, :string, default: "Moonlight", doc: "Label for the dark theme option")
@@ -48,8 +49,8 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
       phx-hook="ThemeSwitcher"
       data-theme={@theme}
     >
-      <div tabindex="0" role="button" class="btn btn-ghost btn-sm" aria-label={@select_theme_label}>
-        Theme
+      <div tabindex="0" role="button" class="btn btn-ghost btn-sm" aria-label={@select_theme_label} aria-haspopup="listbox">
+        {@button_text}
         <svg
           width="12px"
           height="12px"
