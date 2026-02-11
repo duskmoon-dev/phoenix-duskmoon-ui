@@ -24,7 +24,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
     attr(:id, :string, default: nil)
     attr(:class, :string, default: "")
     attr(:with_caption, :boolean, default: false)
+    attr(:caption_id, :string, default: nil)
+    attr(:caption_class, :string, default: nil)
     attr(:with_expand, :boolean, default: false)
+    attr(:expand_id, :string, default: nil)
+    attr(:expand_class, :string, default: nil)
     attr(:col_classes, :boolean, default: false)
     attr(:empty, :boolean, default: false)
     attr(:num_cols, :integer, default: 2)
@@ -43,7 +47,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
         compact={@compact}
         stream={@stream}
       >
-        <:caption :if={@with_caption}>Test Caption</:caption>
+        <:caption :if={@with_caption} id={@caption_id} class={@caption_class}>Test Caption</:caption>
         <:col :let={row} label="Name" label_class={if(@col_classes, do: "text-primary")} class={if(@col_classes, do: "font-bold")}>
           <%= row.name %>
         </:col>
@@ -53,7 +57,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
         <:col :if={@num_cols >= 3} :let={row} label="City">
           <%= row.city %>
         </:col>
-        <:expand :if={@with_expand} :let={row}>
+        <:expand :if={@with_expand} :let={row} id={@expand_id} class={@expand_class}>
           Details: <%= row.city %>
         </:expand>
       </.dm_table>
@@ -429,6 +433,98 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
 
       assert result =~ "Solo"
       refute result =~ "Alice"
+    end
+
+    test "renders caption with custom id and class" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data,
+          with_caption: true,
+          caption_id: "tbl-caption",
+          caption_class: "text-lg font-bold"
+        })
+
+      assert result =~ ~s[id="tbl-caption"]
+      assert result =~ "text-lg font-bold"
+      assert result =~ "Test Caption"
+    end
+
+    test "renders expand row with custom id and class" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data,
+          with_expand: true,
+          expand_id: "expand-row",
+          expand_class: "bg-gray-50"
+        })
+
+      assert result =~ ~s[id="expand-row"]
+      assert result =~ "bg-gray-50"
+      assert result =~ "dm-table__row--expand"
+    end
+
+    test "stream body has id attribute" do
+      stream_data = [{"row-1", %{name: "Alice", age: 30, city: "NY"}}]
+
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: stream_data,
+          stream: true,
+          id: "my-table"
+        })
+
+      assert result =~ ~s[phx-update="stream"]
+      # Stream body gets a generated id
+      assert result =~ "@id-stream-body"
+    end
+
+    test "stream mode renders row ids from tuples" do
+      stream_data = [
+        {"user-1", %{name: "Alice", age: 30, city: "NY"}},
+        {"user-2", %{name: "Bob", age: 25, city: "LA"}},
+        {"user-3", %{name: "Charlie", age: 35, city: "CHI"}}
+      ]
+
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: stream_data,
+          stream: true
+        })
+
+      assert result =~ ~s[id="user-1"]
+      assert result =~ ~s[id="user-2"]
+      assert result =~ ~s[id="user-3"]
+      assert result =~ "Alice"
+      assert result =~ "Bob"
+      assert result =~ "Charlie"
+    end
+
+    test "stream mode applies border to cells" do
+      stream_data = [{"row-1", %{name: "Alice", age: 30, city: "NY"}}]
+
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: stream_data,
+          stream: true,
+          border: true
+        })
+
+      assert result =~ "dm-table--bordered"
+      assert result =~ "border"
+    end
+
+    test "stream mode applies column class" do
+      stream_data = [{"row-1", %{name: "Alice", age: 30, city: "NY"}}]
+
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: stream_data,
+          stream: true,
+          col_classes: true
+        })
+
+      assert result =~ "font-bold"
+      assert result =~ "text-primary"
     end
   end
 end

@@ -276,6 +276,111 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
     end
   end
 
+  describe "dm_form rest attrs" do
+    test "renders form with phx-change rest attribute" do
+      result =
+        render_component(&dm_form/1, %{
+          for: %{},
+          "phx-change": "validate",
+          inner_block: inner_block()
+        })
+
+      assert result =~ ~s[phx-change="validate"]
+    end
+
+    test "renders form with phx-submit rest attribute" do
+      result =
+        render_component(&dm_form/1, %{
+          for: %{},
+          "phx-submit": "save",
+          inner_block: inner_block()
+        })
+
+      assert result =~ ~s[phx-submit="save"]
+    end
+
+    test "renders form with autocomplete rest attribute" do
+      result =
+        render_component(&dm_form/1, %{
+          for: %{},
+          autocomplete: "off",
+          inner_block: inner_block()
+        })
+
+      assert result =~ ~s[autocomplete="off"]
+    end
+
+    test "renders form with multiple action slots" do
+      result =
+        render_component(&dm_form/1, %{
+          for: %{},
+          inner_block: inner_block(),
+          actions: [
+            %{inner_block: fn _, _ -> "Save" end},
+            %{inner_block: fn _, _ -> "Cancel" end}
+          ]
+        })
+
+      assert result =~ "Save"
+      assert result =~ "Cancel"
+      # Each action gets its own flex wrapper
+      count = result |> String.split("flex items-center justify-between") |> length()
+      assert count >= 3
+    end
+  end
+
+  describe "dm_alert icon" do
+    test "renders alert with custom icon override renders SVG" do
+      result =
+        render_component(&dm_alert/1, %{
+          variant: "info",
+          icon: "star",
+          inner_block: inner_block("Custom icon")
+        })
+
+      # Custom icon "star" renders as SVG path (different from default info icon)
+      assert result =~ "<svg"
+      assert result =~ "Custom icon"
+      assert result =~ "dm-alert--info"
+    end
+
+    test "renders alert with different icon per variant renders different SVGs" do
+      # Each variant gets a unique default icon, producing different SVG paths
+      results =
+        for variant <- ~w(info success warning error) do
+          render_component(&dm_alert/1, %{
+            variant: variant,
+            inner_block: inner_block("msg")
+          })
+        end
+
+      # Each result should have an SVG
+      for result <- results do
+        assert result =~ "<svg"
+      end
+
+      # The SVG paths should differ between variants (different icons)
+      [info, success, _warning, _error] = results
+      refute info == success
+    end
+
+    test "renders alert with title and custom class combined" do
+      result =
+        render_component(&dm_alert/1, %{
+          variant: "warning",
+          title: "Caution",
+          class: "border-l-4",
+          inner_block: inner_block("Be careful")
+        })
+
+      assert result =~ "Caution"
+      assert result =~ "font-bold"
+      assert result =~ "border-l-4"
+      assert result =~ "dm-alert--warning"
+      assert result =~ "Be careful"
+    end
+  end
+
   describe "dm_label extras" do
     test "renders label with id" do
       result =

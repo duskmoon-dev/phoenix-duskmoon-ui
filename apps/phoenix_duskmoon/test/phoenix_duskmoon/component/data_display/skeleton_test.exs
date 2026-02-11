@@ -278,6 +278,108 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     end
   end
 
+  describe "dm_skeleton_form/1 edge cases" do
+    test "renders form skeleton with auto-generated field_types for 5 fields" do
+      result = render_component(&dm_skeleton_form/1, %{fields: 5})
+
+      # Auto-gen: ["text", "select", "textarea", "checkbox"] + 1 padded "text"
+      # text => h-10, textarea => h-24, checkbox => h-4 w-4
+      assert result =~ "dm-skeleton h-10 w-full"
+      assert result =~ "dm-skeleton h-24 w-full"
+      assert result =~ "dm-skeleton h-4 w-4"
+    end
+
+    test "renders form skeleton with fields 0 shows no field groups" do
+      result = render_component(&dm_skeleton_form/1, %{fields: 0, show_submit: false})
+
+      refute result =~ "dm-form-group"
+    end
+
+    test "renders form skeleton with fields 0 and submit shows only submit" do
+      result = render_component(&dm_skeleton_form/1, %{fields: 0, show_submit: true})
+
+      # Only 1 dm-form-group for the submit button
+      assert result |> String.split("dm-form-group") |> length() == 2
+    end
+
+    test "renders form skeleton with 1 field auto-generates text type" do
+      result = render_component(&dm_skeleton_form/1, %{fields: 1, show_submit: false})
+
+      assert result =~ "dm-skeleton h-10 w-full"
+      assert result |> String.split("dm-form-group") |> length() == 2
+    end
+
+    test "renders form skeleton with select field type" do
+      result =
+        render_component(&dm_skeleton_form/1, %{
+          fields: 1,
+          field_types: ["select"],
+          show_submit: false
+        })
+
+      # select renders same as text: h-10 w-full
+      assert result =~ "dm-skeleton h-10 w-full"
+    end
+
+    test "renders form skeleton with unknown field type defaults to text size" do
+      result =
+        render_component(&dm_skeleton_form/1, %{
+          fields: 1,
+          field_types: ["unknown_type"],
+          show_submit: false
+        })
+
+      # Unknown type falls through to default: h-10 w-full
+      assert result =~ "dm-skeleton h-10 w-full"
+    end
+  end
+
+  describe "dm_skeleton_text/1 edge cases" do
+    test "renders text skeleton with 1 line (only last line)" do
+      result = render_component(&dm_skeleton_text/1, %{lines: 1})
+
+      assert result =~ "space-y-2"
+      # Only the last line rendered (no loop for lines > 1)
+      assert result
+             |> String.split("<div class=\"dm-skeleton h-4")
+             |> length()
+             |> Kernel.-(1) == 1
+    end
+
+    test "renders text skeleton with id" do
+      result = render_component(&dm_skeleton_text/1, %{id: "text-skel"})
+
+      assert result =~ ~s[id="text-skel"]
+    end
+
+    test "renders text skeleton with custom class" do
+      result = render_component(&dm_skeleton_text/1, %{class: "my-text-skeleton"})
+
+      assert result =~ "my-text-skeleton"
+    end
+  end
+
+  describe "dm_skeleton_comment/1 edge cases" do
+    test "renders comment skeleton with show_replies 0 (no replies section)" do
+      result = render_component(&dm_skeleton_comment/1, %{show_replies: 0})
+
+      refute result =~ "ml-12 space-y-4"
+      refute result =~ "flex gap-3"
+    end
+
+    test "renders comment skeleton with id" do
+      result = render_component(&dm_skeleton_comment/1, %{id: "comment-skel"})
+
+      assert result =~ ~s[id="comment-skel"]
+    end
+
+    test "renders comment skeleton with custom class" do
+      result = render_component(&dm_skeleton_comment/1, %{class: "my-comment"})
+
+      assert result =~ "my-comment"
+    end
+  end
+
   describe "dm_skeleton_comment/1" do
     test "renders basic comment skeleton" do
       result = render_component(&dm_skeleton_comment/1, %{})
