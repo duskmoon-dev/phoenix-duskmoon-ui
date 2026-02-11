@@ -193,6 +193,15 @@
     </:menu>
     <:menu>
       <.dm_left_menu_group active={assigns[:active_menu]}>
+        <:title>Icon</:title>
+        <:menu id="icon-icons" to={~p"/components/icon/icons"}>
+          <.dm_mdi name={"shape"} class="w-4 h-4" />
+          Icons
+        </:menu>
+      </.dm_left_menu_group>
+    </:menu>
+    <:menu>
+      <.dm_left_menu_group active={assigns[:active_menu]}>
         <:title>Fun</:title>
         <:menu id="fun-button-noise" to={~p"/components/fun/button-noise"}>
           <.dm_mdi name={"blur"} class="w-4 h-4" />
