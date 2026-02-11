@@ -161,6 +161,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             name={@name}
             value="true"
             checked={@checked}
+            aria-invalid={@errors != [] && "true"}
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             {@rest}
           />
@@ -226,6 +227,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               name={"#{@name}[]"}
               checked={Enum.member?(if(is_list(@value), do: @value, else: []), opt_value)}
               value={opt_value}
+              aria-invalid={@errors != [] && "true"}
             />
             <%= opt_label %>
           </label>
@@ -256,6 +258,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               name={@name}
               checked={to_string(@value) == to_string(opt_value)}
               value={opt_value}
+              aria-invalid={@errors != [] && "true"}
             />
             <%= opt_label %>
           </label>
@@ -346,6 +349,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             min={@min}
             max={@max}
             step={@step}
+            aria-invalid={@errors != [] && "true"}
+            aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             class={[
               @class,
               if(!@classic, do: "dm-range"),
@@ -380,7 +385,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         <%= @label %> <span class="text-sm font-normal text-base-content/70">(<%= @value || 0 %>/<%= @max %>)</span>
       </.dm_label>
       <div class="flex flex-col gap-2">
-        <div class="flex items-center gap-1" role="group" aria-label={"#{@label} rating"}>
+        <div class="flex items-center gap-1" role="group" aria-label={"#{@label} rating"} aria-invalid={@errors != [] && "true"} aria-describedby={@errors != [] && @id && "#{@id}-errors"}>
           <input type="hidden" name={@name} id={@id} value={@value || 0} />
           <%= for i <- 1..@max do %>
             <button
@@ -426,6 +431,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               @size && "dm-input--#{@size}",
               @errors != [] && "dm-input--error"
             ]}
+            aria-invalid={@errors != [] && "true"}
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             {@rest}
           />
@@ -457,6 +463,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               @size && "dm-input--#{@size}",
               @errors != [] && "dm-input--error"
             ]}
+            aria-invalid={@errors != [] && "true"}
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             {@rest}
           />
@@ -482,6 +489,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               id={@id}
               name={@name}
               value={@value || "#000000"}
+              aria-invalid={@errors != [] && "true"}
               aria-describedby={@errors != [] && @id && "#{@id}-errors"}
               class={[
                 "w-12 h-12 rounded cursor-pointer",
@@ -539,6 +547,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             name={@name}
             value="true"
             checked={@checked}
+            aria-invalid={@errors != [] && "true"}
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             class={[
               "dm-switch dm-switch--lg",
@@ -568,6 +577,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             id={@id}
             name={@name}
             value={@value}
+            aria-invalid={@errors != [] && "true"}
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             class={[
               @class,
@@ -611,6 +621,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             name={@name}
             class="hidden"
             multiple={@multiple}
+            aria-invalid={@errors != [] && "true"}
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             {@rest}
           />
@@ -673,6 +684,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           aria-multiline="true"
           aria-label={@label}
           id={@id}
+          aria-invalid={@errors != [] && "true"}
           aria-describedby={@errors != [] && @id && "#{@id}-errors"}
           class={[
             "min-h-[150px] p-3 border border-base-300 rounded-b-lg focus:outline-none focus:border-primary",
@@ -699,7 +711,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     <div class={["dm-form-group", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@errors != [] && "text-error"}><%= @label %></.dm_label>
       <div class="flex flex-col gap-2">
-        <div class="flex flex-wrap gap-2 p-2 border border-base-300 rounded-lg" role="group" aria-label={"#{@label} tags"}>
+        <div class="flex flex-wrap gap-2 p-2 border border-base-300 rounded-lg" role="group" aria-label={"#{@label} tags"} aria-invalid={@errors != [] && "true"} aria-describedby={@errors != [] && @id && "#{@id}-errors"}>
           <%= for tag <- @tags do %>
             <span class={[
               "dm-badge dm-badge--lg gap-1",
@@ -768,6 +780,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               min={@min}
               max={@max}
               step={@step}
+              aria-invalid={@errors != [] && "true"}
               class={[
                 "dm-range dm-range--sm",
                 @color && "dm-range--#{@color}"
@@ -781,6 +794,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               min={@min}
               max={@max}
               step={@step}
+              aria-invalid={@errors != [] && "true"}
+              aria-describedby={@errors != [] && @id && "#{@id}-errors"}
               class={[
                 "dm-range dm-range--sm",
                 @color && "dm-range--#{@color}"
@@ -818,6 +833,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             id={@id}
             name={@name}
             value={@value}
+            aria-invalid={@errors != [] && "true"}
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             class={[
               @class,

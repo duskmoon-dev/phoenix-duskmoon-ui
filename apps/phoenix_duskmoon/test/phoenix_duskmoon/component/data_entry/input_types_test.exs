@@ -2461,4 +2461,266 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[aria-label="Keywords tags"]
     end
   end
+
+  describe "aria-invalid across input types" do
+    test "toggle type has aria-invalid when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "toggle",
+          name: "notify",
+          id: "notify-toggle",
+          value: "false",
+          errors: ["is required"]
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ ~s[aria-describedby="notify-toggle-errors"]
+    end
+
+    test "toggle type has no aria-invalid without errors" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "toggle",
+          name: "notify",
+          id: "notify-toggle",
+          value: "false"
+        })
+
+      refute result =~ "aria-invalid"
+    end
+
+    test "checkbox_group has aria-invalid on individual checkboxes when errors" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "checkbox_group",
+          name: "colors",
+          id: "colors-group",
+          options: [{"Red", "r"}, {"Blue", "b"}],
+          value: [],
+          errors: ["select at least one"]
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ "select at least one"
+    end
+
+    test "radio_group has aria-invalid on individual radios when errors" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "radio_group",
+          name: "size",
+          id: "size-group",
+          options: [{"Small", "sm"}, {"Large", "lg"}],
+          value: nil,
+          errors: ["must choose a size"]
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ "must choose a size"
+    end
+
+    test "range_slider has aria-invalid when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "range_slider",
+          name: "volume",
+          id: "volume-slider",
+          value: 50,
+          errors: ["out of range"]
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ ~s[aria-describedby="volume-slider-errors"]
+      assert result =~ "out of range"
+    end
+
+    test "rating has aria-invalid on group when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rating",
+          name: "stars",
+          id: "stars-rating",
+          value: 0,
+          label: "Rating",
+          errors: ["please rate"]
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ ~s[aria-describedby="stars-rating-errors"]
+      assert result =~ "please rate"
+    end
+
+    test "datepicker has aria-invalid when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "datepicker",
+          name: "birthday",
+          id: "birthday-picker",
+          value: nil,
+          errors: ["is required"]
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ ~s[aria-describedby="birthday-picker-errors"]
+    end
+
+    test "timepicker has aria-invalid when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "timepicker",
+          name: "alarm",
+          id: "alarm-picker",
+          value: nil,
+          errors: ["is required"]
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ ~s[aria-describedby="alarm-picker-errors"]
+    end
+
+    test "color_picker has aria-invalid when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "color_picker",
+          name: "theme_color",
+          id: "color-pick",
+          value: "#ff0000",
+          errors: ["invalid color"]
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ ~s[aria-describedby="color-pick-errors"]
+    end
+
+    test "switch has aria-invalid when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "switch",
+          name: "agree",
+          id: "agree-switch",
+          value: "false",
+          errors: ["must agree"]
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ ~s[aria-describedby="agree-switch-errors"]
+    end
+
+    test "search_with_suggestions has aria-invalid when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "search_with_suggestions",
+          name: "query",
+          id: "search-field",
+          value: "",
+          errors: ["too short"]
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ ~s[aria-describedby="search-field-errors"]
+    end
+
+    test "file_upload has aria-invalid when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "file_upload",
+          name: "avatar",
+          id: "avatar-upload",
+          value: nil,
+          errors: ["file required"]
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ ~s[aria-describedby="avatar-upload-errors"]
+    end
+
+    test "rich_text has aria-invalid when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rich_text",
+          name: "content",
+          id: "content-editor",
+          value: "",
+          label: "Content",
+          errors: ["cannot be blank"]
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ ~s[aria-describedby="content-editor-errors"]
+    end
+
+    test "tags has aria-invalid on group when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "tags",
+          name: "keywords",
+          id: "keywords-field",
+          label: "Keywords",
+          value: [],
+          errors: ["add at least one tag"]
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ ~s[aria-describedby="keywords-field-errors"]
+      assert result =~ "add at least one tag"
+    end
+
+    test "slider_range has aria-invalid when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "slider_range",
+          name: "price",
+          id: "price-range",
+          value: [10, 90],
+          label: "Price",
+          errors: ["invalid range"]
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ ~s[aria-describedby="price-range-errors"]
+      assert result =~ "invalid range"
+    end
+
+    test "password_strength has aria-invalid when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          id: "pw-field",
+          value: "weak",
+          label: "Password",
+          errors: ["too weak"]
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ ~s[aria-describedby="pw-field-errors"]
+      assert result =~ "too weak"
+    end
+
+    test "no aria-invalid on any type when no errors" do
+      types_and_attrs = [
+        {"toggle", %{value: "false"}},
+        {"checkbox_group", %{options: [{"A", "a"}], value: []}},
+        {"radio_group", %{options: [{"A", "a"}], value: nil}},
+        {"range_slider", %{value: 50}},
+        {"rating", %{value: 3, label: "Rate"}},
+        {"datepicker", %{value: nil}},
+        {"timepicker", %{value: nil}},
+        {"color_picker", %{value: "#000000"}},
+        {"switch", %{value: "false"}},
+        {"search_with_suggestions", %{value: ""}},
+        {"file_upload", %{value: nil}},
+        {"rich_text", %{value: "", label: "Body"}},
+        {"tags", %{value: [], label: "Tags"}},
+        {"slider_range", %{value: [0, 100], label: "Range"}},
+        {"password_strength", %{value: "", label: "PW"}}
+      ]
+
+      for {type, extra} <- types_and_attrs do
+        base = %{type: type, name: "test", id: "test-id"}
+        result = render_component(&dm_input/1, Map.merge(base, extra))
+        refute result =~ "aria-invalid", "#{type} should NOT have aria-invalid without errors"
+      end
+    end
+  end
 end
