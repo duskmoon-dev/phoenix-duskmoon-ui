@@ -781,19 +781,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
                 "dm-range dm-range--sm",
                 @color && "dm-range--#{@color}"
               ]}
-            />
-            <input
-              type="range"
-              id={"#{@id}_max"}
-              name={"#{@name}_max"}
-              value={@max_val}
-              min={@min}
-              max={@max}
-              step={@step}
-              class={[
-                "dm-range dm-range--sm",
-                @color && "dm-range--#{@color}"
-              ]}
               phx-target={@phx_target}
               phx-change="range_max_change"
             />

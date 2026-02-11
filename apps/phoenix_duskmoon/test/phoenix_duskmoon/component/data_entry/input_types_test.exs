@@ -1817,6 +1817,23 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
 
       assert result =~ "invalid range"
     end
+
+    test "renders unique IDs for min and max range inputs" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "slider_range",
+          name: "price",
+          id: "price",
+          label: "Price",
+          value: [10, 90]
+        })
+
+      assert result =~ ~s[id="price_min"]
+      assert result =~ ~s[id="price_max"]
+      # Exactly 2 range inputs (min + max), no duplicates
+      range_count = length(String.split(result, ~s[type="range"])) - 1
+      assert range_count == 2
+    end
   end
 
   describe "aria-invalid on error state" do
