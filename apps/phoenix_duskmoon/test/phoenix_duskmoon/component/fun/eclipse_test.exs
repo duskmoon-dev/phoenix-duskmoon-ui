@@ -245,4 +245,10 @@ defmodule PhoenixDuskmoon.Component.Fun.EclipseTest do
 
     assert result =~ ~s[id="eclipse-id-test"]
   end
+
+  test "renders eclipse with aria-hidden for decorative content" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "eclipse-a11y"})
+
+    assert result =~ ~s[aria-hidden="true"]
+  end
 end

@@ -88,6 +88,7 @@ defmodule PhoenixDuskmoon.Component.Fun.Signature do
       style={
         "--size: #{@size_px}px; --sign-color: #{@color}; --rotate: #{@rotation}deg; --opacity: #{@opacity}; --right: #{@right}; --top: #{@top}; position: #{@position};"
       }
+      aria-hidden="true"
       data-content={@content}
       {@rest}
     >

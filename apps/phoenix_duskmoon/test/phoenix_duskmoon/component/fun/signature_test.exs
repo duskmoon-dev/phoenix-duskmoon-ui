@@ -223,4 +223,10 @@ defmodule PhoenixDuskmoon.Component.Fun.SignatureTest do
 
     assert result =~ ~s[data-content="✓"]
   end
+
+  test "renders signature with aria-hidden for decorative content" do
+    result = render_component(&dm_fun_signature/1, %{id: "sig-a11y"})
+
+    assert result =~ ~s[aria-hidden="true"]
+  end
 end

@@ -75,6 +75,7 @@ defmodule PhoenixDuskmoon.Component.Fun.Eclipse do
         @class
       ]}
       style={"--size: #{@size_px}px; --bg-color: #{@bg_color};"}
+      aria-hidden="true"
       {@rest}
     >
       <!-- Layer 1: Fast rotating layer -->
