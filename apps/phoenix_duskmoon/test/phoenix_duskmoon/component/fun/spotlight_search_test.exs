@@ -281,4 +281,10 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearchTest do
     assert result =~ "Just a label"
     assert result =~ "dm-fun-spotlight-suggestion-list-item"
   end
+
+  test "renders close button with aria-label" do
+    result = render_component(&dm_fun_spotlight_search/1, base_attrs())
+
+    assert result =~ ~s[aria-label="Close search"]
+  end
 end

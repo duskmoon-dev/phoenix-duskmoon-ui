@@ -89,6 +89,7 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearch do
             phx-click="spotlight_close"
             phx-target={@phx_target}
             class="text-base-content/50 hover:text-base-content"
+            aria-label="Close search"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

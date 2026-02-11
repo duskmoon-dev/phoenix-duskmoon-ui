@@ -1239,6 +1239,19 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[dm-input--error]
       assert result =~ "invalid color"
     end
+
+    test "renders color picker without swatches by default" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "color_picker",
+          name: "color",
+          label: "Color",
+          value: nil
+        })
+
+      # Swatches section not rendered when swatches is nil
+      refute result =~ "Select color"
+    end
   end
 
   describe "switch input type" do

@@ -504,6 +504,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             type="button"
             class="w-8 h-8 rounded border-2 border-base-300 hover:border-base-content transition-colors"
             style={"background-color: #{swatch}"}
+            aria-label={"Select color #{swatch}"}
             :for={swatch <- @swatches}
           />
         </div>
