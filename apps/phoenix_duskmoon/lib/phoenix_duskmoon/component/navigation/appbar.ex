@@ -34,7 +34,12 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :any, default: nil, doc: "Additional CSS classes (e.g., appbar-primary, appbar-elevated)")
+
+  attr(:class, :any,
+    default: nil,
+    doc: "Additional CSS classes (e.g., appbar-primary, appbar-elevated)"
+  )
+
   attr(:title, :string, default: "", doc: "Appbar title")
   attr(:sticky, :boolean, default: true, doc: "Whether the appbar is sticky")
   attr(:rest, :global)
