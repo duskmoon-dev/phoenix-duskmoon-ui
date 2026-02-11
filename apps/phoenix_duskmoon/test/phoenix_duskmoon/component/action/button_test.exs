@@ -188,4 +188,133 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ ~s[data-testid="test-button"]
     assert result =~ ~s[aria-label="Test button"]
   end
+
+  test "renders button with all variant options" do
+    for variant <- ~w(primary secondary accent info success warning error ghost link outline) do
+      result =
+        render_component(&dm_btn/1, %{
+          variant: variant,
+          inner_block: %{inner_block: fn _, _ -> "Btn" end}
+        })
+
+      assert result =~ ~s[variant="#{variant}"]
+    end
+  end
+
+  test "renders button with all size options" do
+    for size <- ~w(xs sm md lg) do
+      result =
+        render_component(&dm_btn/1, %{
+          size: size,
+          inner_block: %{inner_block: fn _, _ -> "Btn" end}
+        })
+
+      assert result =~ ~s[size="#{size}"]
+    end
+  end
+
+  test "renders button with square shape" do
+    result =
+      render_component(&dm_btn/1, %{
+        shape: "square",
+        inner_block: %{inner_block: fn _, _ -> "S" end}
+      })
+
+    assert result =~ ~s[shape="square"]
+  end
+
+  test "renders noise button with custom class" do
+    result =
+      render_component(&dm_btn/1, %{
+        noise: true,
+        content: "SUBMIT",
+        class: "mx-auto",
+        inner_block: %{inner_block: fn _, _ -> "" end}
+      })
+
+    assert result =~ "btn-noise"
+    assert result =~ "mx-auto"
+    assert result =~ ~s[data-content="SUBMIT"]
+  end
+
+  test "renders noise button with 73 i elements" do
+    result =
+      render_component(&dm_btn/1, %{
+        noise: true,
+        content: "X",
+        inner_block: %{inner_block: fn _, _ -> "" end}
+      })
+
+    # 0..72 = 73 elements
+    i_count = length(String.split(result, "<i></i>")) - 1
+    assert i_count == 73
+  end
+
+  test "renders button with confirm and custom id" do
+    result =
+      render_component(&dm_btn/1, %{
+        id: "del-btn",
+        confirm: "Really delete?",
+        inner_block: %{inner_block: fn _, _ -> "Delete" end}
+      })
+
+    assert result =~ ~s[id="del-btn"]
+    assert result =~ ~s[id="confirm-dialog-del-btn"]
+    assert result =~ "Really delete?"
+  end
+
+  test "renders button with confirm dialog header only when title is non-empty" do
+    # With empty confirm_title, no header slot should render
+    result =
+      render_component(&dm_btn/1, %{
+        confirm: "Sure?",
+        confirm_title: "",
+        inner_block: %{inner_block: fn _, _ -> "Go" end}
+      })
+
+    refute result =~ ~s[slot="header"]
+  end
+
+  test "renders button with phx-click passes through to el-dm-button" do
+    result =
+      render_component(&dm_btn/1, %{
+        "phx-click": "handle_click",
+        inner_block: %{inner_block: fn _, _ -> "Click" end}
+      })
+
+    assert result =~ ~s[phx-click="handle_click"]
+  end
+
+  test "renders button without phx-hook when no phx-click" do
+    result =
+      render_component(&dm_btn/1, %{
+        inner_block: %{inner_block: fn _, _ -> "No hook" end}
+      })
+
+    refute result =~ "WebComponentHook"
+  end
+
+  test "renders button with all standard attributes combined" do
+    result =
+      render_component(&dm_btn/1, %{
+        id: "combo-btn",
+        variant: "error",
+        size: "lg",
+        shape: "circle",
+        loading: true,
+        disabled: true,
+        class: "my-class",
+        "data-testid": "combo",
+        inner_block: %{inner_block: fn _, _ -> "X" end}
+      })
+
+    assert result =~ ~s[id="combo-btn"]
+    assert result =~ ~s[variant="error"]
+    assert result =~ ~s[size="lg"]
+    assert result =~ ~s[shape="circle"]
+    assert result =~ "loading"
+    assert result =~ "disabled"
+    assert result =~ "my-class"
+    assert result =~ "data-testid=\"combo\""
+  end
 end

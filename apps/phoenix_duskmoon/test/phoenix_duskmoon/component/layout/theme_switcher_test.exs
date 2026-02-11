@@ -105,4 +105,56 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcherTest do
     assert result =~ "dropdown-content"
     assert result =~ "z-50"
   end
+
+  test "renders theme switcher with three li elements" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    li_count = length(String.split(result, "<li>")) - 1
+    assert li_count == 3
+  end
+
+  test "renders theme switcher with ul containing tabindex" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    assert result =~ "<ul"
+    assert result =~ ~s[tabindex="0"]
+  end
+
+  test "renders theme switcher button with tabindex for keyboard access" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    # Both the button div and ul have tabindex
+    assert result =~ ~s[role="button"]
+    assert result =~ ~s[tabindex="0"]
+  end
+
+  test "renders theme switcher with empty theme by default" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    assert result =~ ~s[data-theme=""]
+  end
+
+  test "renders theme switcher moonlight checked when theme is moonlight" do
+    result = render_component(&dm_theme_switcher/1, %{theme: "moonlight"})
+
+    assert result =~ ~s[data-theme="moonlight"]
+  end
+
+  test "renders theme switcher with all attributes combined" do
+    result =
+      render_component(&dm_theme_switcher/1, %{
+        id: "my-theme",
+        class: "custom-switcher",
+        theme: "sunshine"
+      })
+
+    assert result =~ ~s[id="my-theme"]
+    assert result =~ "custom-switcher"
+    assert result =~ "dropdown"
+    assert result =~ ~s[data-theme="sunshine"]
+    assert result =~ ~s[phx-hook="ThemeSwitcher"]
+    assert result =~ ~s[value="default"]
+    assert result =~ ~s[value="sunshine"]
+    assert result =~ ~s[value="moonlight"]
+  end
 end

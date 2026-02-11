@@ -182,4 +182,79 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
     assert result =~ "extra-class"
     assert result =~ ~s[data-tip="Full options"]
   end
+
+  test "renders tooltip with HTML entities in content" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: "Use < and > carefully",
+        inner_block: inner_block()
+      })
+
+    # Phoenix escapes HTML entities in attributes
+    assert result =~ "data-tip="
+    assert result =~ "&lt;"
+    assert result =~ "&gt;"
+  end
+
+  test "renders tooltip with long content" do
+    long_text = String.duplicate("word ", 50) |> String.trim()
+
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: long_text,
+        inner_block: inner_block()
+      })
+
+    assert result =~ "data-tip="
+  end
+
+  test "renders tooltip with all positions in loop" do
+    for pos <- ~w(top bottom left right) do
+      result =
+        render_component(&dm_tooltip/1, %{
+          content: "Tip",
+          position: pos,
+          inner_block: inner_block()
+        })
+
+      assert result =~ "tooltip-#{pos}"
+    end
+  end
+
+  test "renders tooltip with slot element" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: "Tip",
+        inner_block: inner_block()
+      })
+
+    # inner_block renders as <slot></slot> in test context
+    assert result =~ "<slot></slot>"
+  end
+
+  test "renders tooltip with rest attribute aria-describedby" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: "Help",
+        "aria-describedby": "help-text",
+        inner_block: inner_block()
+      })
+
+    assert result =~ ~s[aria-describedby="help-text"]
+  end
+
+  test "renders tooltip base class is always present" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: "Tip",
+        position: "bottom",
+        color: "warning",
+        open: true,
+        class: "extra",
+        inner_block: inner_block()
+      })
+
+    # The base "tooltip" class should always be in the class list
+    assert result =~ "tooltip "
+  end
 end

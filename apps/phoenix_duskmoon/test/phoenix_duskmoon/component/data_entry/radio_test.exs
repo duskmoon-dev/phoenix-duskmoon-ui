@@ -111,4 +111,81 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
 
     assert result =~ "custom-radio"
   end
+
+  test "renders radio without disabled styles when not disabled" do
+    result = render_component(&dm_radio/1, %{name: "choice", value: "a"})
+
+    refute result =~ "opacity-50"
+    refute result =~ "cursor-not-allowed"
+  end
+
+  test "renders radio with rest attributes" do
+    result =
+      render_component(&dm_radio/1, %{
+        name: "choice",
+        value: "a",
+        "data-testid": "radio-option",
+        "aria-describedby": "help"
+      })
+
+    assert result =~ "data-testid=\"radio-option\""
+    assert result =~ "aria-describedby=\"help\""
+  end
+
+  test "renders radio with label wrapping input in flex layout" do
+    result = render_component(&dm_radio/1, %{name: "choice", value: "a", label: "Pick"})
+
+    assert result =~ "<label"
+    assert result =~ "flex items-center gap-2"
+    assert result =~ "cursor-pointer"
+  end
+
+  test "renders radio with unchecked state by default" do
+    result = render_component(&dm_radio/1, %{name: "choice", value: "a"})
+
+    refute result =~ "checked"
+  end
+
+  test "renders radio with combined label_class and radio_class" do
+    result =
+      render_component(&dm_radio/1, %{
+        name: "choice",
+        value: "a",
+        label: "Styled",
+        label_class: "font-bold",
+        radio_class: "border-2"
+      })
+
+    assert result =~ "font-bold"
+    assert result =~ "border-2"
+  end
+
+  test "renders radio with all attributes combined" do
+    result =
+      render_component(&dm_radio/1, %{
+        name: "theme",
+        id: "radio-dark",
+        value: "dark",
+        label: "Dark Mode",
+        label_class: "text-lg",
+        radio_class: "border-accent",
+        class: "my-wrapper",
+        size: "lg",
+        color: "accent",
+        checked: true,
+        "data-testid": "theme-radio"
+      })
+
+    assert result =~ ~s[name="theme"]
+    assert result =~ ~s[id="radio-dark"]
+    assert result =~ ~s[value="dark"]
+    assert result =~ "Dark Mode"
+    assert result =~ "text-lg"
+    assert result =~ "border-accent"
+    assert result =~ "my-wrapper"
+    assert result =~ "dm-radio--lg"
+    assert result =~ "dm-radio--accent"
+    assert result =~ "checked"
+    assert result =~ "data-testid=\"theme-radio\""
+  end
 end

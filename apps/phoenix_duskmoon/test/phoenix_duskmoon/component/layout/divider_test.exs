@@ -115,4 +115,72 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
 
     assert result =~ "data-testid=\"section-divider\""
   end
+
+  test "renders divider with empty inner_block list does not show content span" do
+    result = render_component(&dm_divider/1, %{inner_block: []})
+
+    refute result =~ "dm-divider__content"
+  end
+
+  test "renders divider content span wraps text correctly" do
+    result =
+      render_component(&dm_divider/1, %{
+        inner_block: [%{inner_block: fn _, _ -> "Section Break" end}]
+      })
+
+    assert result =~ "dm-divider__content"
+    assert result =~ "Section Break"
+  end
+
+  test "renders divider as div element" do
+    result = render_component(&dm_divider/1, %{})
+
+    assert result =~ "<div"
+    assert result =~ "</div>"
+  end
+
+  test "renders divider with all defaults in class list" do
+    result = render_component(&dm_divider/1, %{})
+
+    assert result =~ "dm-divider"
+    assert result =~ "dm-divider--horizontal"
+    assert result =~ "dm-divider--base"
+    assert result =~ "dm-divider--solid"
+    assert result =~ "dm-divider--md"
+  end
+
+  test "renders divider with multiple rest attributes" do
+    result =
+      render_component(&dm_divider/1, %{
+        "data-testid": "div-1",
+        "aria-hidden": "true"
+      })
+
+    assert result =~ "data-testid=\"div-1\""
+    assert result =~ "aria-hidden=\"true\""
+  end
+
+  test "renders divider with all attributes and content combined" do
+    result =
+      render_component(&dm_divider/1, %{
+        orientation: "vertical",
+        variant: "error",
+        style: "dotted",
+        size: "lg",
+        class: "my-custom-divider",
+        "data-testid": "full-divider",
+        inner_block: [%{inner_block: fn _, _ -> "OR" end}]
+      })
+
+    assert result =~ "dm-divider--vertical"
+    assert result =~ "dm-divider--error"
+    assert result =~ "dm-divider--dotted"
+    assert result =~ "dm-divider--lg"
+    assert result =~ "my-custom-divider"
+    assert result =~ "data-testid=\"full-divider\""
+    assert result =~ "dm-divider__content"
+    assert result =~ "OR"
+    assert result =~ ~s[role="separator"]
+    assert result =~ ~s[aria-orientation="vertical"]
+  end
 end
