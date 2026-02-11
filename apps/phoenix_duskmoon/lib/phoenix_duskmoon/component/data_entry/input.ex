@@ -129,6 +129,39 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     doc: "hint text shown when password strength is strong"
   )
 
+  attr(:remove_file_label, :string,
+    default: "Remove file",
+    doc: "accessible label for the remove file button in file_upload type"
+  )
+
+  attr(:toolbar_label, :string,
+    default: "Text formatting",
+    doc: "accessible label for the rich_text toolbar"
+  )
+
+  attr(:bold_label, :string, default: "Bold", doc: "accessible label for the bold button")
+  attr(:italic_label, :string, default: "Italic", doc: "accessible label for the italic button")
+
+  attr(:underline_label, :string,
+    default: "Underline",
+    doc: "accessible label for the underline button"
+  )
+
+  attr(:bulleted_list_label, :string,
+    default: "Bulleted list",
+    doc: "accessible label for the bulleted list button"
+  )
+
+  attr(:numbered_list_label, :string,
+    default: "Numbered list",
+    doc: "accessible label for the numbered list button"
+  )
+
+  attr(:insert_link_label, :string,
+    default: "Insert link",
+    doc: "accessible label for the insert link button"
+  )
+
   slot(:inner_block)
 
   def dm_input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -669,7 +702,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         <div :if={@value} class="flex items-center gap-2 p-2 bg-base-200 rounded">
           <.dm_mdi name="file" class="w-4 h-4" />
           <span class="text-sm flex-1"><%= @value %></span>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label="Remove file">
+          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label={@remove_file_label}>
             <.dm_mdi name="close" class="w-3 h-3" />
           </button>
         </div>
@@ -686,25 +719,25 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     <div class={["dm-form-group", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@errors != [] && "text-error"}><%= @label %></.dm_label>
       <div class="flex flex-col gap-2">
-        <div class="toolbar flex items-center gap-1 p-2 bg-base-200 rounded-t-lg" role="toolbar" aria-label="Text formatting">
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label="Bold">
+        <div class="toolbar flex items-center gap-1 p-2 bg-base-200 rounded-t-lg" role="toolbar" aria-label={@toolbar_label}>
+          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label={@bold_label}>
             <.dm_mdi name="format-bold" class="w-4 h-4" />
           </button>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label="Italic">
+          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label={@italic_label}>
             <.dm_mdi name="format-italic" class="w-4 h-4" />
           </button>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label="Underline">
+          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label={@underline_label}>
             <.dm_mdi name="format-underline" class="w-4 h-4" />
           </button>
           <div class="dm-divider dm-divider--horizontal"></div>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label="Bulleted list">
+          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label={@bulleted_list_label}>
             <.dm_mdi name="format-list-bulleted" class="w-4 h-4" />
           </button>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label="Numbered list">
+          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label={@numbered_list_label}>
             <.dm_mdi name="format-list-numbered" class="w-4 h-4" />
           </button>
           <div class="dm-divider dm-divider--horizontal"></div>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label="Insert link">
+          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label={@insert_link_label}>
             <.dm_mdi name="link" class="w-4 h-4" />
           </button>
         </div>

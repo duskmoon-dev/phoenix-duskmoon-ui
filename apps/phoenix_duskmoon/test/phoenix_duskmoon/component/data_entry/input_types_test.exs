@@ -2836,4 +2836,70 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       end
     end
   end
+
+  describe "configurable rich_text and file_upload labels" do
+    test "file upload renders custom remove_file_label" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "file_upload",
+          name: "avatar",
+          id: "avatar",
+          label: "Avatar",
+          value: "photo.jpg",
+          remove_file_label: "Supprimer le fichier"
+        })
+
+      assert result =~ ~s[aria-label="Supprimer le fichier"]
+    end
+
+    test "rich text renders custom toolbar_label" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rich_text",
+          name: "body",
+          id: "body",
+          label: "Body",
+          value: nil,
+          toolbar_label: "Mise en forme du texte"
+        })
+
+      assert result =~ ~s[aria-label="Mise en forme du texte"]
+    end
+
+    test "rich text renders custom bold/italic/underline labels" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rich_text",
+          name: "body",
+          id: "body",
+          label: "Body",
+          value: nil,
+          bold_label: "Gras",
+          italic_label: "Italique",
+          underline_label: "Souligner"
+        })
+
+      assert result =~ ~s[aria-label="Gras"]
+      assert result =~ ~s[aria-label="Italique"]
+      assert result =~ ~s[aria-label="Souligner"]
+    end
+
+    test "rich text renders custom list and link labels" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rich_text",
+          name: "body",
+          id: "body",
+          label: "Body",
+          value: nil,
+          bulleted_list_label: "Liste à puces",
+          numbered_list_label: "Liste numérotée",
+          insert_link_label: "Insérer un lien"
+        })
+
+      assert result =~ ~s[aria-label="Liste à puces"]
+      assert result =~ ~s[aria-label="Liste numérotée"]
+      assert result =~ ~s[aria-label="Insérer un lien"]
+    end
+  end
 end
