@@ -52,6 +52,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
 
   use Phoenix.Component
 
+  @doc """
+  Renders a user avatar with image, initials, or placeholder.
+
+  ## Examples
+
+      <.dm_avatar src="/images/user.jpg" alt="User" />
+      <.dm_avatar name="John Doe" color="primary" />
+  """
   @doc type: :component
   attr(:src, :string, default: nil)
   attr(:alt, :string, default: nil)

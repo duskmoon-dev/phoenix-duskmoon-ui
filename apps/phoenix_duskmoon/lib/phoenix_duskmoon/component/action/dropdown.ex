@@ -45,6 +45,16 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
 
   use Phoenix.Component
 
+  @doc """
+  Renders a dropdown menu triggered by a button or element.
+
+  ## Examples
+
+      <.dm_dropdown>
+        <:trigger><.dm_btn>Menu</.dm_btn></:trigger>
+        <:content><li><a>Item</a></li></:content>
+      </.dm_dropdown>
+  """
   @doc type: :component
   attr(:position, :string, default: "left", values: ["left", "right", "top", "bottom"])
 

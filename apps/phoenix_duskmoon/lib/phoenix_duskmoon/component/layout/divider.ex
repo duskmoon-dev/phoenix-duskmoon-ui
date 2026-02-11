@@ -33,6 +33,15 @@ defmodule PhoenixDuskmoon.Component.Layout.Divider do
 
   use Phoenix.Component
 
+  @doc """
+  Renders a divider for separating content sections.
+
+  ## Examples
+
+      <.dm_divider />
+      <.dm_divider orientation="vertical" />
+      <.dm_divider variant="primary">Section</.dm_divider>
+  """
   @doc type: :component
   attr(:orientation, :string, default: "horizontal", values: ["horizontal", "vertical"])
 

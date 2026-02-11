@@ -32,6 +32,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
 
   use Phoenix.Component
 
+  @doc """
+  Renders a tooltip that appears on hover over the child element.
+
+  ## Examples
+
+      <.dm_tooltip content="Save changes"><.dm_btn>Save</.dm_btn></.dm_tooltip>
+      <.dm_tooltip content="Warning" position="bottom" color="warning">Hover me</.dm_tooltip>
+  """
   @doc type: :component
   attr(:content, :string, required: true)
   attr(:position, :string, default: "top", values: ["top", "bottom", "left", "right"])
