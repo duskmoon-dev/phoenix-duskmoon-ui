@@ -283,4 +283,56 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
     assert result =~ "footer-cls"
     assert result =~ "data-testid=\"full-modal\""
   end
+
+  test "renders modal with multiple title slots" do
+    result =
+      render_component(&dm_modal/1, %{
+        title: [
+          %{inner_block: fn _, _ -> "Title One" end},
+          %{inner_block: fn _, _ -> "Title Two" end}
+        ],
+        body: body()
+      })
+
+    assert result =~ "Title One"
+    assert result =~ "Title Two"
+    # Each title gets its own span with slot="header"
+    header_count = length(String.split(result, ~s[slot="header"])) - 1
+    assert header_count == 2
+  end
+
+  test "renders modal with multiple footer slots" do
+    result =
+      render_component(&dm_modal/1, %{
+        body: body(),
+        footer: [
+          %{inner_block: fn _, _ -> "Action A" end},
+          %{inner_block: fn _, _ -> "Action B" end}
+        ]
+      })
+
+    assert result =~ "Action A"
+    assert result =~ "Action B"
+    footer_count = length(String.split(result, ~s[slot="footer"])) - 1
+    assert footer_count == 2
+  end
+
+  test "renders modal close button with aria-label" do
+    result = render_component(&dm_modal/1, %{body: body()})
+
+    assert result =~ ~s[aria-label="Close"]
+    assert result =~ ~s[method="dialog"]
+  end
+
+  test "renders modal without title slot when not provided" do
+    result = render_component(&dm_modal/1, %{body: body()})
+
+    refute result =~ ~s[slot="header"]
+  end
+
+  test "renders modal without footer slot when not provided" do
+    result = render_component(&dm_modal/1, %{body: body()})
+
+    refute result =~ ~s[slot="footer"]
+  end
 end

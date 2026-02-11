@@ -526,5 +526,37 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
       assert result =~ "font-bold"
       assert result =~ "text-primary"
     end
+
+    test "renders caption with stream mode combined" do
+      stream_data = [{"row-1", %{name: "Alice", age: 30, city: "NY"}}]
+
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: stream_data,
+          stream: true,
+          with_caption: true,
+          caption_id: "stream-cap",
+          caption_class: "stream-caption-cls"
+        })
+
+      assert result =~ ~s[phx-update="stream"]
+      assert result =~ ~s[role="caption"]
+      assert result =~ "Test Caption"
+      assert result =~ ~s[id="stream-cap"]
+      assert result =~ "stream-caption-cls"
+    end
+
+    test "stream mode renders data-label on cells" do
+      stream_data = [{"row-1", %{name: "Alice", age: 30, city: "NY"}}]
+
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: stream_data,
+          stream: true
+        })
+
+      assert result =~ ~s[data-label="Name"]
+      assert result =~ ~s[data-label="Age"]
+    end
   end
 end
