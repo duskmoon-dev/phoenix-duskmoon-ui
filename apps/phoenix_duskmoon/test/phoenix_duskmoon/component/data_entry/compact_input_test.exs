@@ -386,4 +386,138 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
     assert result =~ ~s[aria-describedby="country-select-errors"]
     assert result =~ ~s[id="country-select-errors"]
   end
+
+  describe "FormField integration" do
+    test "renders compact input with form field using field id and name" do
+      field = Phoenix.Component.to_form(%{"email" => "test@example.com"}, as: "user")[:email]
+
+      result = render_component(&dm_compact_input/1, %{field: field, label: "Email"})
+
+      assert result =~ ~s[id="user_email"]
+      assert result =~ ~s(name="user[email]")
+      assert result =~ ~s[value="test@example.com"]
+    end
+
+    test "renders compact input with field value nil" do
+      field = Phoenix.Component.to_form(%{"name" => nil}, as: "user")[:name]
+
+      result = render_component(&dm_compact_input/1, %{field: field, label: "Name"})
+
+      assert result =~ ~s[id="user_name"]
+      assert result =~ "<input"
+    end
+
+    test "renders compact input with custom id overriding field id" do
+      field = Phoenix.Component.to_form(%{"email" => ""}, as: "user")[:email]
+
+      result =
+        render_component(&dm_compact_input/1, %{
+          field: field,
+          id: "custom-email",
+          label: "Email"
+        })
+
+      assert result =~ ~s[id="custom-email"]
+    end
+
+    test "renders compact select with form field" do
+      field = Phoenix.Component.to_form(%{"country" => "us"}, as: "user")[:country]
+
+      result =
+        render_component(&dm_compact_input/1, %{
+          field: field,
+          type: "select",
+          label: "Country",
+          options: [{"us", "USA"}, {"ca", "Canada"}]
+        })
+
+      assert result =~ ~s[id="user_country"]
+      assert result =~ ~s(name="user[country]")
+      assert result =~ "<select"
+    end
+
+    test "renders compact select with multiple field appending [] to name" do
+      field = Phoenix.Component.to_form(%{"tags" => ""}, as: "post")[:tags]
+
+      result =
+        render_component(&dm_compact_input/1, %{
+          field: field,
+          type: "select",
+          label: "Tags",
+          multiple: true,
+          options: [{"elixir", "Elixir"}, {"phoenix", "Phoenix"}]
+        })
+
+      assert result =~ ~s(name="post[tags][]")
+      assert result =~ "multiple"
+    end
+
+    test "renders compact input with field and type combined" do
+      field = Phoenix.Component.to_form(%{"age" => "25"}, as: "user")[:age]
+
+      result =
+        render_component(&dm_compact_input/1, %{
+          field: field,
+          type: "number",
+          label: "Age"
+        })
+
+      assert result =~ ~s[type="number"]
+      assert result =~ ~s[id="user_age"]
+      assert result =~ "Age"
+    end
+  end
+
+  test "renders compact input with all text options combined" do
+    result =
+      render_component(&dm_compact_input/1, %{
+        name: "email",
+        id: "email-field",
+        value: "test@test.com",
+        label: "Email",
+        type: "email",
+        class: "my-wrapper",
+        errors: ["is invalid"],
+        placeholder: "Enter email",
+        required: true
+      })
+
+    assert result =~ ~s[id="email-field"]
+    assert result =~ ~s[name="email"]
+    assert result =~ ~s[type="email"]
+    assert result =~ ~s[value="test@test.com"]
+    assert result =~ "Email"
+    assert result =~ "my-wrapper"
+    assert result =~ "dm-compact-input--error"
+    assert result =~ "is invalid"
+    assert result =~ ~s[placeholder="Enter email"]
+    assert result =~ "required"
+    assert result =~ ~s[aria-invalid="true"]
+    assert result =~ ~s[aria-describedby="email-field-errors"]
+  end
+
+  test "renders compact select with all options combined" do
+    result =
+      render_component(&dm_compact_input/1, %{
+        name: "country",
+        id: "country-field",
+        value: nil,
+        label: "Country",
+        type: "select",
+        class: "select-wrapper",
+        prompt: "Choose...",
+        options: [{"us", "USA"}, {"ca", "Canada"}],
+        errors: ["is required"]
+      })
+
+    assert result =~ ~s[id="country-field"]
+    assert result =~ "Country"
+    assert result =~ "select-wrapper"
+    assert result =~ "Choose..."
+    assert result =~ "USA"
+    assert result =~ "Canada"
+    assert result =~ "dm-compact-input--error"
+    assert result =~ "is required"
+    assert result =~ ~s[aria-invalid="true"]
+  end
 end

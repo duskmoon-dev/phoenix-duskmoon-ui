@@ -254,4 +254,111 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
 
     assert result =~ "dm-range"
   end
+
+  describe "FormField integration" do
+    test "renders slider with form field using field id and name" do
+      field = Phoenix.Component.to_form(%{"volume" => "50"}, as: "settings")[:volume]
+
+      result = render_component(&dm_slider/1, %{field: field})
+
+      assert result =~ ~s[id="settings_volume"]
+      assert result =~ ~s(name="settings[volume]")
+    end
+
+    test "renders slider with field value" do
+      field = Phoenix.Component.to_form(%{"volume" => "75"}, as: "settings")[:volume]
+
+      result = render_component(&dm_slider/1, %{field: field})
+
+      assert result =~ ~s[value="75"]
+    end
+
+    test "renders slider with field value falling back to min when nil" do
+      field = Phoenix.Component.to_form(%{"volume" => nil}, as: "settings")[:volume]
+
+      result = render_component(&dm_slider/1, %{field: field, min: 10})
+
+      assert result =~ ~s[value="10"]
+    end
+
+    test "renders slider with custom id overriding field id" do
+      field = Phoenix.Component.to_form(%{"volume" => ""}, as: "settings")[:volume]
+
+      result = render_component(&dm_slider/1, %{field: field, id: "custom-slider"})
+
+      assert result =~ ~s[id="custom-slider"]
+    end
+
+    test "renders slider with field and styling combined" do
+      field = Phoenix.Component.to_form(%{"brightness" => "80"}, as: "display")[:brightness]
+
+      result =
+        render_component(&dm_slider/1, %{
+          field: field,
+          label: "Brightness",
+          color: "warning",
+          size: "lg",
+          min: 0,
+          max: 100,
+          step: 5
+        })
+
+      assert result =~ "Brightness"
+      assert result =~ "dm-range--warning"
+      assert result =~ "dm-range--lg"
+      assert result =~ ~s[step="5"]
+    end
+  end
+
+  test "renders slider with all options combined" do
+    result =
+      render_component(&dm_slider/1, %{
+        name: "vol",
+        id: "vol-slider",
+        value: 60,
+        label: "Volume",
+        label_class: "text-lg",
+        slider_class: "border-2",
+        class: "wrapper",
+        min: 10,
+        max: 200,
+        step: 5,
+        size: "lg",
+        color: "error",
+        show_value: true,
+        disabled: true,
+        errors: ["out of range"],
+        "data-testid": "slider"
+      })
+
+    assert result =~ ~s[id="vol-slider"]
+    assert result =~ ~s[name="vol"]
+    assert result =~ ~s[value="60"]
+    assert result =~ "Volume"
+    assert result =~ "text-lg"
+    assert result =~ "border-2"
+    assert result =~ "wrapper"
+    assert result =~ ~s[min="10"]
+    assert result =~ ~s[max="200"]
+    assert result =~ ~s[step="5"]
+    assert result =~ "dm-range--lg"
+    assert result =~ "dm-range--error"
+    assert result =~ "disabled"
+    assert result =~ "out of range"
+    assert result =~ ~s[aria-invalid="true"]
+    assert result =~ ~s[data-testid="slider"]
+  end
+
+  test "renders slider with multiple errors" do
+    result =
+      render_component(&dm_slider/1, %{
+        name: "vol",
+        id: "vol",
+        value: 50,
+        errors: ["is too low", "must be a multiple of 5"]
+      })
+
+    assert result =~ "is too low"
+    assert result =~ "must be a multiple of 5"
+  end
 end
