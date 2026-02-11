@@ -87,6 +87,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
                 multiple pattern placeholder readonly required rows size step)
   )
 
+  attr(:swatches, :list, default: nil, doc: "list of color swatches for color_picker type")
+
   attr(:phx_target, :any,
     default: nil,
     doc: "the phx-target for events (for use in LiveComponents)"

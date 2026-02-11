@@ -116,6 +116,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
           <!-- Online/Offline indicator -->
           <div
             :if={@online || @offline}
+            role="status"
             aria-label={if @online, do: "Online", else: "Offline"}
             class={[
               "absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-base-100",

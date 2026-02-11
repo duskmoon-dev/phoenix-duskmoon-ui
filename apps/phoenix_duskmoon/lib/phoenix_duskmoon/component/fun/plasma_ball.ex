@@ -75,7 +75,7 @@ defmodule PhoenixDuskmoon.Component.Fun.PlasmaBall do
       </div>
 
       <!-- Toggle switch -->
-      <input type="checkbox" class="switcher" phx-target={@phx_target} />
+      <input type="checkbox" class="switcher" aria-label="Toggle plasma effect" phx-target={@phx_target} />
 
       <!-- Glass ball with effects -->
       <div class="glassball">

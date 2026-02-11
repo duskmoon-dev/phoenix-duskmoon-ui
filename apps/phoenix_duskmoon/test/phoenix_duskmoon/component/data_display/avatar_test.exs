@@ -379,4 +379,16 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
     assert result =~ "bg-gradient"
     assert result =~ "T"
   end
+
+  test "renders online indicator with role=status" do
+    result = render_component(&dm_avatar/1, %{name: "T", online: true})
+
+    assert result =~ ~s[role="status"]
+  end
+
+  test "renders offline indicator with role=status" do
+    result = render_component(&dm_avatar/1, %{name: "T", offline: true})
+
+    assert result =~ ~s[role="status"]
+  end
 end

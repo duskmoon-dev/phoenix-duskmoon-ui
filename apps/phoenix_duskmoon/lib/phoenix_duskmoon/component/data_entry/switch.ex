@@ -60,6 +60,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
         <input
           type="checkbox"
           role="switch"
+          aria-checked={to_string(@checked)}
           name={@name}
           id={@id}
           value="true"

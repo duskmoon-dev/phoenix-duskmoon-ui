@@ -230,4 +230,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
     assert result =~ "lbl-cls"
     assert result =~ "sw-cls"
   end
+
+  test "renders switch with aria-checked=true when checked" do
+    result = render_component(&dm_switch/1, %{name: "opt", checked: true})
+
+    assert result =~ ~s[aria-checked="true"]
+  end
+
+  test "renders switch with aria-checked=false when unchecked" do
+    result = render_component(&dm_switch/1, %{name: "opt", checked: false})
+
+    assert result =~ ~s[aria-checked="false"]
+  end
 end

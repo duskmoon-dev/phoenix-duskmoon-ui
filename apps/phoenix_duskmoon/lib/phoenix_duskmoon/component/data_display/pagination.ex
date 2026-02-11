@@ -201,6 +201,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
           <input
             type="number"
             name="current"
+            aria-label="Jump to page"
             class="dm-pagination__input"
             min={1}
             max={@max_page}

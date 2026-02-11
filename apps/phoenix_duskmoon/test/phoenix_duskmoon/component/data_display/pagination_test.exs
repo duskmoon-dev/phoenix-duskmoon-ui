@@ -681,5 +681,81 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
       assert result =~ ~s[max="10"]
       assert result =~ ~s[value="3"]
     end
+
+    test "renders page jumper input with aria-label" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 100,
+          show_page_jumper: true
+        })
+
+      assert result =~ ~s[aria-label="Jump to page"]
+    end
+  end
+
+  describe "generate_pages boundary cases" do
+    test "renders exactly 6 pages without ellipsis (max_page < 7)" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 60
+        })
+
+      # max_page = 6, all pages shown without ellipsis
+      assert result =~ ~s[total-pages="6"]
+      assert result =~ ~s[phx-value-current="1"]
+      assert result =~ ~s[phx-value-current="6"]
+      refute result =~ "..."
+    end
+
+    test "renders penultimate page correctly (page_num == max_page - 2)" do
+      # total=100, page_size=10 => max_page=10, page_num=8 => [1,2,3,...,7,8,9,10]
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 8,
+          page_size: 10,
+          total: 100
+        })
+
+      assert result =~ ~s[phx-value-current="7"]
+      assert result =~ ~s[phx-value-current="8"]
+      assert result =~ ~s[phx-value-current="9"]
+      assert result =~ ~s[phx-value-current="10"]
+      assert result =~ "..."
+    end
+
+    test "renders page_num == 3 with expanded near-start layout" do
+      # page_num=3, max_page=10 => [1,2,3,4,...,8,9,10]
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 3,
+          page_size: 10,
+          total: 100
+        })
+
+      assert result =~ ~s[phx-value-current="4"]
+      assert result =~ "..."
+    end
+
+    test "renders large total with middle page ellipsis on both sides" do
+      # total=10000, page_size=10 => max_page=1000, page_num=500
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 500,
+          page_size: 10,
+          total: 10000
+        })
+
+      assert result =~ ~s[total-pages="1000"]
+      assert result =~ ~s[phx-value-current="499"]
+      assert result =~ ~s[phx-value-current="500"]
+      assert result =~ ~s[phx-value-current="501"]
+      # Should have ellipsis on both sides
+      parts = String.split(result, "...")
+      assert length(parts) >= 3
+    end
   end
 end

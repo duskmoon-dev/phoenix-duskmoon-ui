@@ -1252,6 +1252,50 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       # Swatches section not rendered when swatches is nil
       refute result =~ "Select color"
     end
+
+    test "renders color picker with swatches buttons" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "color_picker",
+          name: "color",
+          id: "swatch-pick",
+          label: "Color",
+          value: "#ff0000",
+          swatches: ["#ff0000", "#00ff00", "#0000ff"]
+        })
+
+      assert result =~ ~s[aria-label="Select color #ff0000"]
+      assert result =~ ~s[aria-label="Select color #00ff00"]
+      assert result =~ ~s[aria-label="Select color #0000ff"]
+      assert result =~ ~s[background-color: #ff0000]
+      assert result =~ ~s[background-color: #00ff00]
+    end
+
+    test "renders color picker with size sm" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "color_picker",
+          name: "color",
+          label: "Color",
+          value: nil,
+          size: "sm"
+        })
+
+      assert result =~ "w-8 h-8"
+    end
+
+    test "renders color picker with size lg" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "color_picker",
+          name: "color",
+          label: "Color",
+          value: nil,
+          size: "lg"
+        })
+
+      assert result =~ "w-16 h-16"
+    end
   end
 
   describe "switch input type" do
@@ -1746,6 +1790,56 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
         })
 
       assert result =~ ~s[dm-input--primary]
+    end
+
+    test "renders empty password as weak" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          label: "Password",
+          value: ""
+        })
+
+      assert result =~ "Weak"
+    end
+
+    test "renders exactly 8 uppercase-only password as medium" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          label: "Password",
+          value: "ABCDEFGH"
+        })
+
+      # 8 chars meets length threshold, has uppercase => medium
+      assert result =~ "Medium"
+    end
+
+    test "renders 7-char password as weak regardless of complexity" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          label: "Password",
+          value: "Aa1!Bb2"
+        })
+
+      # 7 chars < 8 threshold => weak
+      assert result =~ "Weak"
+    end
+
+    test "renders 12+ char password with all char types as strong" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          label: "Password",
+          value: "AbcDef123!@#"
+        })
+
+      assert result =~ "Strong"
     end
   end
 

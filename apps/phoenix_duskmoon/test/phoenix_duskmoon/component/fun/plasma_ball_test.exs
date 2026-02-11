@@ -212,4 +212,10 @@ defmodule PhoenixDuskmoon.Component.Fun.PlasmaBallTest do
     assert result =~ "electrode"
     refute result =~ "hide-electrode"
   end
+
+  test "renders plasma ball checkbox with aria-label for toggle" do
+    result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-a11y"})
+
+    assert result =~ ~s[aria-label="Toggle plasma effect"]
+  end
 end
