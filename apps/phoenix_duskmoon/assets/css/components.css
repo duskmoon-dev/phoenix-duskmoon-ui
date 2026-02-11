@@ -1,0 +1,43 @@
+/*
+ * Phoenix Duskmoon UI - Component-specific styles
+ *
+ * These styles provide Phoenix-specific overrides and layout utilities
+ * not covered by @duskmoon-dev/core. Import this file in consumer apps:
+ *
+ *   @import "phoenix_duskmoon/components";
+ *
+ * This file is intentionally minimal — most styling comes from
+ * @duskmoon-dev/core design tokens and custom elements.
+ */
+
+/* Phoenix LiveView flash container positioning */
+.dm-flash-group {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Phoenix form error styling integration */
+.dm-form-error {
+  color: var(--dm-error, #ef4444);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Page header scroll effect (works with PageHeader hook) */
+.dm-page-header--scrolled {
+  box-shadow: var(--dm-shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.1));
+}
+
+/* Spotlight search overlay */
+.dm-spotlight-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background-color: rgb(0 0 0 / 0.5);
+  backdrop-filter: blur(4px);
+}
