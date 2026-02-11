@@ -15,7 +15,7 @@ defmodule Storybook.DataDisplay.Badge do
       %Variation{
         id: :color_variants,
         attributes: %{
-          color: "success"
+          variant: "success"
         },
         slots: [
           "Active"
@@ -24,7 +24,7 @@ defmodule Storybook.DataDisplay.Badge do
       %Variation{
         id: :error_badge,
         attributes: %{
-          color: "error"
+          variant: "error"
         },
         slots: [
           "Error"
@@ -33,7 +33,7 @@ defmodule Storybook.DataDisplay.Badge do
       %Variation{
         id: :warning_badge,
         attributes: %{
-          color: "warning"
+          variant: "warning"
         },
         slots: [
           "Warning"
@@ -42,7 +42,7 @@ defmodule Storybook.DataDisplay.Badge do
       %Variation{
         id: :info_badge,
         attributes: %{
-          color: "info"
+          variant: "info"
         },
         slots: [
           "Info"
@@ -51,7 +51,7 @@ defmodule Storybook.DataDisplay.Badge do
       %Variation{
         id: :secondary_badge,
         attributes: %{
-          color: "secondary"
+          variant: "secondary"
         },
         slots: [
           "Secondary"
@@ -60,7 +60,7 @@ defmodule Storybook.DataDisplay.Badge do
       %Variation{
         id: :accent_badge,
         attributes: %{
-          color: "accent"
+          variant: "accent"
         },
         slots: [
           "Accent"
@@ -79,7 +79,7 @@ defmodule Storybook.DataDisplay.Badge do
         id: :small_badge,
         attributes: %{
           size: "sm",
-          color: "success"
+          variant: "success"
         },
         slots: [
           "Small"
@@ -89,7 +89,7 @@ defmodule Storybook.DataDisplay.Badge do
         id: :large_badge,
         attributes: %{
           size: "lg",
-          color: "error"
+          variant: "error"
         },
         slots: [
           "Large"
@@ -98,7 +98,7 @@ defmodule Storybook.DataDisplay.Badge do
       %Variation{
         id: :outline_style,
         attributes: %{
-          color: "primary",
+          variant: "primary",
           outline: true
         },
         slots: [
@@ -108,7 +108,7 @@ defmodule Storybook.DataDisplay.Badge do
       %Variation{
         id: :outline_warning,
         attributes: %{
-          color: "warning",
+          variant: "warning",
           outline: true
         },
         slots: [
@@ -118,7 +118,7 @@ defmodule Storybook.DataDisplay.Badge do
       %Variation{
         id: :ghost_style,
         attributes: %{
-          color: "ghost"
+          variant: "ghost"
         },
         slots: [
           "Ghost"
@@ -127,7 +127,7 @@ defmodule Storybook.DataDisplay.Badge do
       %Variation{
         id: :outline_success,
         attributes: %{
-          color: "success",
+          variant: "success",
           outline: true
         },
         slots: [
@@ -137,7 +137,7 @@ defmodule Storybook.DataDisplay.Badge do
       %Variation{
         id: :status_indicators,
         attributes: %{
-          color: "success",
+          variant: "success",
           size: "sm"
         },
         slots: [
@@ -147,7 +147,7 @@ defmodule Storybook.DataDisplay.Badge do
       %Variation{
         id: :status_offline,
         attributes: %{
-          color: "error",
+          variant: "error",
           size: "sm"
         },
         slots: [
@@ -157,7 +157,7 @@ defmodule Storybook.DataDisplay.Badge do
       %Variation{
         id: :count_badge,
         attributes: %{
-          color: "accent"
+          variant: "accent"
         },
         slots: [
           "42"
@@ -166,7 +166,7 @@ defmodule Storybook.DataDisplay.Badge do
       %Variation{
         id: :notification_badge,
         attributes: %{
-          color: "error",
+          variant: "error",
           size: "xs"
         },
         slots: [

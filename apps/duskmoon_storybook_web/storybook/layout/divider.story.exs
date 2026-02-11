@@ -25,7 +25,7 @@ defmodule Storybook.Layout.Divider do
       %Variation{
         id: :primary_color,
         attributes: %{
-          color: "primary"
+          variant: "primary"
         },
         slots: [
           "Primary Section"
@@ -34,7 +34,7 @@ defmodule Storybook.Layout.Divider do
       %Variation{
         id: :success_divider,
         attributes: %{
-          color: "success"
+          variant: "success"
         },
         slots: [
           "Success"
@@ -43,7 +43,7 @@ defmodule Storybook.Layout.Divider do
       %Variation{
         id: :warning_divider,
         attributes: %{
-          color: "warning"
+          variant: "warning"
         },
         slots: [
           "Warning Area"
@@ -52,7 +52,7 @@ defmodule Storybook.Layout.Divider do
       %Variation{
         id: :error_divider,
         attributes: %{
-          color: "error"
+          variant: "error"
         },
         slots: [
           "Error Section"
@@ -61,7 +61,7 @@ defmodule Storybook.Layout.Divider do
       %Variation{
         id: :info_divider,
         attributes: %{
-          color: "info"
+          variant: "info"
         },
         slots: [
           "Information"
@@ -70,8 +70,8 @@ defmodule Storybook.Layout.Divider do
       %Variation{
         id: :dashed_variant,
         attributes: %{
-          variant: "dashed",
-          color: "primary"
+          style: "dashed",
+          variant: "primary"
         },
         slots: [
           "Dashed Divider"
@@ -80,8 +80,8 @@ defmodule Storybook.Layout.Divider do
       %Variation{
         id: :dotted_variant,
         attributes: %{
-          variant: "dotted",
-          color: "accent"
+          style: "dotted",
+          variant: "accent"
         },
         slots: [
           "Dotted Divider"
@@ -91,14 +91,14 @@ defmodule Storybook.Layout.Divider do
         id: :small_divider,
         attributes: %{
           size: "xs",
-          color: "secondary"
+          variant: "secondary"
         }
       },
       %Variation{
         id: :large_divider,
         attributes: %{
           size: "lg",
-          color: "primary"
+          variant: "primary"
         },
         slots: [
           "Large Divider"
@@ -107,8 +107,8 @@ defmodule Storybook.Layout.Divider do
       %Variation{
         id: :settings_section,
         attributes: %{
-          color: "primary",
-          variant: "dashed"
+          variant: "primary",
+          style: "dashed"
         },
         slots: [
           "Settings"
@@ -118,7 +118,7 @@ defmodule Storybook.Layout.Divider do
         id: :vertical_with_color,
         attributes: %{
           orientation: "vertical",
-          color: "success"
+          variant: "success"
         }
       },
       %Variation{
@@ -126,13 +126,13 @@ defmodule Storybook.Layout.Divider do
         attributes: %{
           orientation: "vertical",
           size: "lg",
-          color: "accent"
+          variant: "accent"
         }
       },
       %Variation{
         id: :accent_colored,
         attributes: %{
-          color: "accent"
+          variant: "accent"
         },
         slots: [
           "Accent Content"
@@ -141,7 +141,7 @@ defmodule Storybook.Layout.Divider do
       %Variation{
         id: :secondary_colored,
         attributes: %{
-          color: "secondary"
+          variant: "secondary"
         },
         slots: [
           "Secondary Section"
