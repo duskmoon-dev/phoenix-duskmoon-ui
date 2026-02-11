@@ -1569,6 +1569,34 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
 
       assert result =~ "multiple"
     end
+
+    test "renders file upload with custom drop_text" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "file_upload",
+          name: "upload",
+          label: "Upload",
+          value: nil,
+          drop_text: "Drag your files here"
+        })
+
+      assert result =~ "Drag your files here"
+      refute result =~ "Drop files here or click to browse"
+    end
+
+    test "renders file upload with custom choose_files_text" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "file_upload",
+          name: "upload",
+          label: "Upload",
+          value: nil,
+          choose_files_text: "Browse..."
+        })
+
+      assert result =~ "Browse..."
+      refute result =~ "Choose Files"
+    end
   end
 
   describe "rich_text input type" do
@@ -1698,6 +1726,20 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
         })
 
       assert result =~ "too many tags"
+    end
+
+    test "renders tags with custom add_tag_placeholder" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "tags",
+          name: "tags",
+          label: "Tags",
+          value: nil,
+          add_tag_placeholder: "Type a tag..."
+        })
+
+      assert result =~ ~s[placeholder="Type a tag..."]
+      refute result =~ "Add tag..."
     end
   end
 
@@ -1915,6 +1957,45 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
         })
 
       assert result =~ "Strong"
+    end
+
+    test "renders password with custom weak hint" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          label: "Password",
+          value: "abc",
+          password_hint_weak: "Too simple!"
+        })
+
+      assert result =~ "Too simple!"
+    end
+
+    test "renders password with custom medium hint" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          label: "Password",
+          value: "Password1",
+          password_hint_medium: "Almost there"
+        })
+
+      assert result =~ "Almost there"
+    end
+
+    test "renders password with custom strong hint" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          label: "Password",
+          value: "AbcDef123!@#",
+          password_hint_strong: "Excellent!"
+        })
+
+      assert result =~ "Excellent!"
     end
   end
 

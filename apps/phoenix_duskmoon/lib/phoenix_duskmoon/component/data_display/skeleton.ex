@@ -360,7 +360,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
     ~H"""
     <form id={@id} aria-busy="true" class={build_form_classes(@class)}>
-      <%= for {field_type, index} <- Enum.with_index(@field_types) do %>
+      <%= for field_type <- @field_types do %>
         <div class="dm-form-group">
           <div class="dm-label">
             <div class={build_label_classes(@animation)}></div>

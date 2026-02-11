@@ -99,6 +99,36 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     doc: "the phx-target for events (for use in LiveComponents)"
   )
 
+  attr(:drop_text, :string,
+    default: "Drop files here or click to browse",
+    doc: "text shown in the file_upload drop zone"
+  )
+
+  attr(:choose_files_text, :string,
+    default: "Choose Files",
+    doc: "text for the file_upload browse button"
+  )
+
+  attr(:add_tag_placeholder, :string,
+    default: "Add tag...",
+    doc: "placeholder for the tags input field"
+  )
+
+  attr(:password_hint_weak, :string,
+    default: "• Add uppercase letters, numbers, and special characters",
+    doc: "hint text shown when password strength is weak"
+  )
+
+  attr(:password_hint_medium, :string,
+    default: "• Add more special characters or increase length",
+    doc: "hint text shown when password strength is medium"
+  )
+
+  attr(:password_hint_strong, :string,
+    default: "• Strong password!",
+    doc: "hint text shown when password strength is strong"
+  )
+
   slot(:inner_block)
 
   def dm_input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -614,7 +644,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
       <div class="flex flex-col gap-2">
         <div class="border-2 border-dashed border-base-300 rounded-lg p-6 text-center hover:border-base-content transition-colors">
           <.dm_mdi name="cloud-upload" class="w-12 h-12 mx-auto text-base-content/50 mb-2" />
-          <p class="text-sm text-base-content/70 mb-2">Drop files here or click to browse</p>
+          <p class="text-sm text-base-content/70 mb-2">{@drop_text}</p>
           <input
             type="file"
             id={@id}
@@ -633,7 +663,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               @size && "dm-btn--#{@size}"
             ]}
           >
-            Choose Files
+            {@choose_files_text}
           </button>
         </div>
         <div :if={@value} class="flex items-center gap-2 p-2 bg-base-200 rounded">
@@ -731,7 +761,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             type="text"
             id={@id}
             class="dm-input dm-input--sm flex-1 min-w-[100px] border-none focus:outline-none"
-            placeholder="Add tag..."
+            placeholder={@add_tag_placeholder}
           />
         </div>
         <input type="hidden" name={@name} value={inspect(@tags)} />
@@ -874,9 +904,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           </span>
         </div>
         <div class="text-xs text-base-content/60">
-          <p :if={@strength == "weak"}>• Add uppercase letters, numbers, and special characters</p>
-          <p :if={@strength == "medium"}>• Add more special characters or increase length</p>
-          <p :if={@strength == "strong"}>• Strong password!</p>
+          <p :if={@strength == "weak"}>{@password_hint_weak}</p>
+          <p :if={@strength == "medium"}>{@password_hint_medium}</p>
+          <p :if={@strength == "strong"}>{@password_hint_strong}</p>
         </div>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>

@@ -73,6 +73,16 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
   attr(:info_title, :string, default: "Success!", doc: "title for info flash messages")
   attr(:error_title, :string, default: "Error!", doc: "title for error flash messages")
 
+  attr(:disconnected_title, :string,
+    default: "We can't find the internet",
+    doc: "title for the disconnected flash message"
+  )
+
+  attr(:reconnecting_text, :string,
+    default: "Attempting to reconnect",
+    doc: "text shown while attempting to reconnect"
+  )
+
   def dm_flash_group(assigns) do
     ~H"""
     <.dm_flash id="flash-info" kind={:info} title={@info_title} flash={@flash} />
@@ -80,13 +90,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
     <.dm_flash
       id="disconnected"
       kind={:error}
-      title="We can't find the internet"
+      title={@disconnected_title}
       close={false}
       autoshow={false}
       phx-disconnected={JS.show(to: "#disconnected")}
       phx-connected={JS.hide(to: "#disconnected")}
     >
-      Attempting to reconnect <.dm_bsi name="arrow-repeat" class="inline ml-1 w-3 h-3 animate-spin" />
+      {@reconnecting_text} <.dm_bsi name="arrow-repeat" class="inline ml-1 w-3 h-3 animate-spin" />
     </.dm_flash>
     """
   end

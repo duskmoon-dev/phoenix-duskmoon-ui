@@ -339,4 +339,38 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
       assert result =~ "Oh no!"
     end
   end
+
+  describe "dm_flash_group customizable disconnected messages" do
+    test "renders flash group with custom disconnected_title" do
+      result =
+        render_component(&dm_flash_group/1, %{
+          flash: %{},
+          disconnected_title: "No network"
+        })
+
+      assert result =~ "No network"
+    end
+
+    test "renders flash group with custom reconnecting_text" do
+      result =
+        render_component(&dm_flash_group/1, %{
+          flash: %{},
+          reconnecting_text: "Trying again"
+        })
+
+      assert result =~ "Trying again"
+    end
+
+    test "renders flash group with both custom disconnected messages" do
+      result =
+        render_component(&dm_flash_group/1, %{
+          flash: %{},
+          disconnected_title: "Connection lost",
+          reconnecting_text: "Reconnecting..."
+        })
+
+      assert result =~ "Connection lost"
+      assert result =~ "Reconnecting..."
+    end
+  end
 end
