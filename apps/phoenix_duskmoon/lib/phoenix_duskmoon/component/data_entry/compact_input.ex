@@ -76,13 +76,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
         class="dm-compact-input__select"
         multiple={@multiple}
         aria-invalid={@errors != [] && "true"}
+        aria-describedby={@errors != [] && @id && "#{@id}-errors"}
         {@rest}
       >
         <option :if={@prompt} value="">{@prompt}</option>
         {Phoenix.HTML.Form.options_for_select(@options, @value)}
       </select>
     </div>
-    <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+    <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+      <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+    </div>
     """
   end
 
@@ -102,11 +105,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class="dm-compact-input__field"
         aria-invalid={@errors != [] && "true"}
+        aria-describedby={@errors != [] && @id && "#{@id}-errors"}
         {@rest}
       />
       {render_slot(@inner_block)}
     </div>
-    <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+    <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+      <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+    </div>
     """
   end
 end

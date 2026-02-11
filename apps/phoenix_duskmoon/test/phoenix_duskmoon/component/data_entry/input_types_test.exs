@@ -1899,4 +1899,138 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[aria-invalid="true"]
     end
   end
+
+  describe "aria-describedby for error messages" do
+    test "default text input has aria-describedby linking to error container" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "email",
+          id: "email-field",
+          label: "Email",
+          errors: ["is required"],
+          value: nil
+        })
+
+      assert result =~ ~s[aria-describedby="email-field-errors"]
+      assert result =~ ~s[id="email-field-errors"]
+      assert result =~ "is required"
+    end
+
+    test "default text input omits aria-describedby when no errors" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "email",
+          id: "email-field",
+          label: "Email",
+          errors: [],
+          value: nil
+        })
+
+      refute result =~ "aria-describedby"
+      refute result =~ "email-field-errors"
+    end
+
+    test "select input has aria-describedby when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "select",
+          name: "country",
+          id: "country-select",
+          options: [{"USA", "us"}],
+          errors: ["must be selected"],
+          value: nil
+        })
+
+      assert result =~ ~s[aria-describedby="country-select-errors"]
+      assert result =~ ~s[id="country-select-errors"]
+    end
+
+    test "textarea has aria-describedby when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "textarea",
+          name: "bio",
+          id: "bio-field",
+          errors: ["too short"],
+          value: nil
+        })
+
+      assert result =~ ~s[aria-describedby="bio-field-errors"]
+      assert result =~ ~s[id="bio-field-errors"]
+    end
+
+    test "checkbox has aria-describedby when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "checkbox",
+          name: "agree",
+          id: "agree-cb",
+          errors: ["must accept"],
+          value: nil
+        })
+
+      assert result =~ ~s[aria-describedby="agree-cb-errors"]
+      assert result =~ ~s[id="agree-cb-errors"]
+    end
+
+    test "file input has aria-describedby when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "file",
+          name: "avatar",
+          id: "avatar-upload",
+          label: "Avatar",
+          errors: ["file too large"],
+          value: nil
+        })
+
+      assert result =~ ~s[aria-describedby="avatar-upload-errors"]
+      assert result =~ ~s[id="avatar-upload-errors"]
+    end
+
+    test "switch input has aria-describedby when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "switch",
+          name: "notifications",
+          id: "notif-switch",
+          label: "Notifications",
+          errors: ["must be enabled"],
+          value: nil
+        })
+
+      assert result =~ ~s[aria-describedby="notif-switch-errors"]
+      assert result =~ ~s[id="notif-switch-errors"]
+    end
+
+    test "error container is not rendered when errors list is empty" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "select",
+          name: "country",
+          id: "country-select",
+          options: [{"USA", "us"}],
+          errors: [],
+          value: nil
+        })
+
+      refute result =~ "country-select-errors"
+      refute result =~ "aria-describedby"
+    end
+
+    test "password_strength has aria-describedby when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "pass",
+          id: "pass-field",
+          label: "Password",
+          errors: ["too weak"],
+          value: nil
+        })
+
+      assert result =~ ~s[aria-describedby="pass-field-errors"]
+      assert result =~ ~s[id="pass-field-errors"]
+    end
+  end
 end
