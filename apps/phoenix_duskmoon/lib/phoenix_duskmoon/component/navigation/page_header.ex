@@ -71,6 +71,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
     ~H"""
     <nav
       id={@nav_id}
+      aria-label="Site navigation"
       class={[
         "w-full h-12",
         "flex items-center flex-none",
@@ -160,7 +161,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
       phx-hook="PageHeader"
       data-nav-id={@nav_id}
     >
-      <nav class={["w-full h-12", "flex items-center flex-none"]}>
+      <nav aria-label="Site navigation" class={["w-full h-12", "flex items-center flex-none"]}>
         <div
           class={[
             "container mx-auto",

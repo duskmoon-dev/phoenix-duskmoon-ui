@@ -358,4 +358,13 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeaderTest do
     parts = String.split(result, "bg-base-300")
     assert length(parts) >= 3
   end
+
+  test "nav elements have aria-label for screen readers" do
+    result =
+      render_component(&dm_page_header/1, %{
+        inner_block: inner_block()
+      })
+
+    assert result =~ ~s[aria-label="Site navigation"]
+  end
 end

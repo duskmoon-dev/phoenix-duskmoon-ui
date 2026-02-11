@@ -70,11 +70,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
   """
   @doc type: :component
   attr(:flash, :map, required: true, doc: "the map of flash messages")
+  attr(:info_title, :string, default: "Success!", doc: "title for info flash messages")
+  attr(:error_title, :string, default: "Error!", doc: "title for error flash messages")
 
   def dm_flash_group(assigns) do
     ~H"""
-    <.dm_flash id="flash-info" kind={:info} title={"Success!"} flash={@flash} />
-    <.dm_flash id="flash-error" kind={:error} title={"Error!"} flash={@flash} />
+    <.dm_flash id="flash-info" kind={:info} title={@info_title} flash={@flash} />
+    <.dm_flash id="flash-error" kind={:error} title={@error_title} flash={@flash} />
     <.dm_flash
       id="disconnected"
       kind={:error}

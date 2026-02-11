@@ -303,4 +303,40 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
       assert error_result =~ "dm-alert--error"
     end
   end
+
+  describe "dm_flash_group customizable titles" do
+    test "renders flash group with custom info_title" do
+      result =
+        render_component(&dm_flash_group/1, %{
+          flash: %{"info" => "Done"},
+          info_title: "All good!"
+        })
+
+      assert result =~ "All good!"
+      refute result =~ "Success!"
+    end
+
+    test "renders flash group with custom error_title" do
+      result =
+        render_component(&dm_flash_group/1, %{
+          flash: %{"error" => "Failed"},
+          error_title: "Oops!"
+        })
+
+      assert result =~ "Oops!"
+      refute result =~ ">Error!<"
+    end
+
+    test "renders flash group with both custom titles" do
+      result =
+        render_component(&dm_flash_group/1, %{
+          flash: %{"info" => "OK", "error" => "Bad"},
+          info_title: "Yay!",
+          error_title: "Oh no!"
+        })
+
+      assert result =~ "Yay!"
+      assert result =~ "Oh no!"
+    end
+  end
 end
