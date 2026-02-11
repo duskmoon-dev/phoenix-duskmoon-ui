@@ -107,19 +107,21 @@ defmodule PhoenixDuskmoon.Component.Fun.EclipseTest do
     assert result =~ "Static background layer"
   end
 
-  test "renders eclipse with size and bg_color CSS variable placeholders" do
-    # Eclipse uses style="..." (not style={...}), so #{@var} renders literally
-    for size <- ~w(small medium large) do
+  test "renders eclipse with correct size pixel values for each preset" do
+    for {size, expected_px} <- [{"small", "400"}, {"medium", "600"}, {"large", "800"}] do
       result = render_component(&dm_fun_eclipse/1, %{id: "e", size: size})
-      assert result =~ ~s[--size:]
-      assert result =~ ~s[--bg-color:]
+      assert result =~ "--size: #{expected_px}px"
     end
   end
 
-  test "renders eclipse with dm-fun-eclipse class for default medium size" do
+  test "renders eclipse with custom bg_color in CSS variable" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e", bg_color: "#1a1a2e"})
+    assert result =~ "--bg-color: #1a1a2e"
+  end
+
+  test "renders eclipse with default bg_color" do
     result = render_component(&dm_fun_eclipse/1, %{id: "e"})
-    assert result =~ "dm-fun-eclipse"
-    assert result =~ "style="
+    assert result =~ "--bg-color: #09090b"
   end
 
   test "renders eclipse animation durations proportional to speed 4.0" do
@@ -142,8 +144,8 @@ defmodule PhoenixDuskmoon.Component.Fun.EclipseTest do
       })
 
     assert result =~ ~s[id="e-full"]
-    assert result =~ "--size:"
-    assert result =~ "--bg-color:"
+    assert result =~ "--size: 800px"
+    assert result =~ "--bg-color: #000000"
     assert result =~ "animation-duration: 15s"
     assert result =~ "my-eclipse"
     assert result =~ "data-testid=\"eclipse-combo\""

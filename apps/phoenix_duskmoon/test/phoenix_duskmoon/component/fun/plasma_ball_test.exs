@@ -37,19 +37,19 @@ defmodule PhoenixDuskmoon.Component.Fun.PlasmaBallTest do
   test "renders plasma ball with small size" do
     result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-5", size: "small"})
 
-    assert result =~ "dm-fun-plasma-ball"
+    assert result =~ "--size: 250px"
   end
 
   test "renders plasma ball with large size" do
     result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-6", size: "large"})
 
-    assert result =~ "dm-fun-plasma-ball"
+    assert result =~ "--size: 450px"
   end
 
-  test "renders plasma ball with custom base_color" do
-    result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-7", base_color: "#1a1a2e"})
+  test "renders plasma ball with default base_color CSS variable" do
+    result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-7"})
 
-    assert result =~ "dm-fun-plasma-ball"
+    assert result =~ "--base-color: #222222"
   end
 
   test "renders plasma ball with electrode visible by default" do
@@ -96,18 +96,17 @@ defmodule PhoenixDuskmoon.Component.Fun.PlasmaBallTest do
     assert result =~ "aria-label=\"Plasma ball effect\""
   end
 
-  test "renders plasma ball with CSS variable placeholders for all sizes" do
-    # PlasmaBall uses style="..." (not style={...}), so #{@var} renders literally
-    for size <- ~w(small medium large) do
+  test "renders plasma ball with correct size pixel values for each preset" do
+    for {size, expected_px} <- [{"small", "250"}, {"medium", "350"}, {"large", "450"}] do
       result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-sz", size: size})
-      assert result =~ "--size:"
-      assert result =~ "--base-color:"
+      assert result =~ "--size: #{expected_px}px"
+      assert result =~ "--base-color: #222222"
     end
   end
 
-  test "renders plasma ball style attribute with size and base_color variables" do
-    result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-sv"})
-    assert result =~ ~s[style="--size:]
+  test "renders plasma ball with custom base_color in CSS variable" do
+    result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-sv", base_color: "#1a1a2e"})
+    assert result =~ "--base-color: #1a1a2e"
   end
 
   test "renders plasma ball with 4 ray groups" do
@@ -148,8 +147,8 @@ defmodule PhoenixDuskmoon.Component.Fun.PlasmaBallTest do
       })
 
     assert result =~ ~s[id="plasma-all"]
-    assert result =~ "--size:"
-    assert result =~ "--base-color:"
+    assert result =~ "--size: 450px"
+    assert result =~ "--base-color: #000033"
     assert result =~ "hide-electrode"
     assert result =~ "my-plasma"
     assert result =~ "data-testid=\"combo\""

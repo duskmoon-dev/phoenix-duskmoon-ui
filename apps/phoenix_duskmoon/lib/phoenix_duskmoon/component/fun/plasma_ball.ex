@@ -62,7 +62,7 @@ defmodule PhoenixDuskmoon.Component.Fun.PlasmaBall do
         "dm-fun-plasma-ball",
         @class
       ]}
-      style="--size: #{@size_px}px; --base-color: #{@base_color};"
+      style={"--size: #{@size_px}px; --base-color: #{@base_color};"}
       phx-click="plasma_toggle"
       phx-target={@phx_target}
       {@rest}

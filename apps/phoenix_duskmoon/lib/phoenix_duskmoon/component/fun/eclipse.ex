@@ -72,7 +72,7 @@ defmodule PhoenixDuskmoon.Component.Fun.Eclipse do
         "dm-fun-eclipse",
         @class
       ]}
-      style="--size: #{@size_px}px; --bg-color: #{@bg_color};"
+      style={"--size: #{@size_px}px; --bg-color: #{@bg_color};"}
       {@rest}
     >
       <!-- Layer 1: Fast rotating layer -->
