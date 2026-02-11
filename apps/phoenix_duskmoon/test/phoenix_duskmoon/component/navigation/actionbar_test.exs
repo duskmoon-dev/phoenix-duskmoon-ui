@@ -177,4 +177,42 @@ defmodule PhoenixDuskmoon.Component.Navigation.ActionbarTest do
     assert result =~ ~s[id="action-btn"]
     assert result =~ "Save"
   end
+
+  test "renders actionbar wrapper as div element" do
+    result = render_component(&dm_actionbar/1, %{})
+
+    assert result =~ "<div"
+  end
+
+  test "renders actionbar with left_class and right_class combined" do
+    result =
+      render_component(&dm_actionbar/1, %{
+        left_class: "font-semibold text-lg",
+        right_class: "flex gap-4"
+      })
+
+    assert result =~ "font-semibold text-lg"
+    assert result =~ "flex gap-4"
+  end
+
+  test "renders actionbar with three right slot items" do
+    result =
+      render_component(&dm_actionbar/1, %{
+        right: [
+          %{inner_block: fn _, _ -> "Edit" end},
+          %{inner_block: fn _, _ -> "Copy" end},
+          %{inner_block: fn _, _ -> "Delete" end}
+        ]
+      })
+
+    assert result =~ "Edit"
+    assert result =~ "Copy"
+    assert result =~ "Delete"
+  end
+
+  test "renders actionbar without id when not provided" do
+    result = render_component(&dm_actionbar/1, %{})
+
+    refute result =~ ~s[id="]
+  end
 end

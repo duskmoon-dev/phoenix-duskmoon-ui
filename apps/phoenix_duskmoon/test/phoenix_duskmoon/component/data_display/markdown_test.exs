@@ -139,4 +139,44 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.MarkdownTest do
     assert result =~ "Line 2"
     assert result =~ "Line 3"
   end
+
+  test "renders markdown with default empty content" do
+    result = render_component(&dm_markdown/1, %{})
+
+    assert result =~ "<el-dm-markdown"
+    assert result =~ "</el-dm-markdown>"
+  end
+
+  test "renders markdown with table syntax" do
+    content = "| Name | Age |\n|------|-----|\n| Alice | 30 |"
+    result = render_component(&dm_markdown/1, %{content: content})
+
+    assert result =~ "Alice"
+    assert result =~ "30"
+  end
+
+  test "renders markdown with heading levels" do
+    content = "# H1\n## H2\n### H3"
+    result = render_component(&dm_markdown/1, %{content: content})
+
+    assert result =~ "# H1"
+    assert result =~ "## H2"
+    assert result =~ "### H3"
+  end
+
+  test "renders markdown with link syntax" do
+    content = "[click here](https://example.com)"
+    result = render_component(&dm_markdown/1, %{content: content})
+
+    assert result =~ "click here"
+    assert result =~ "example.com"
+  end
+
+  test "renders markdown with bold and italic syntax" do
+    content = "**bold** and *italic* text"
+    result = render_component(&dm_markdown/1, %{content: content})
+
+    assert result =~ "**bold**"
+    assert result =~ "*italic*"
+  end
 end

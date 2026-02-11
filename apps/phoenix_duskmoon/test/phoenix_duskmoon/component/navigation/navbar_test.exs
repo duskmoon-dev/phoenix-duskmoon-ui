@@ -195,4 +195,36 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
 
     assert result =~ ~s[aria-label="Main navigation"]
   end
+
+  test "renders navbar without id when not provided" do
+    result = render_component(&dm_navbar/1, %{})
+
+    refute result =~ ~s[id="]
+  end
+
+  test "renders navbar with multiple elements in center_part" do
+    result =
+      render_component(&dm_navbar/1, %{
+        center_part: [
+          %{inner_block: fn _, _ -> "Link 1" end},
+          %{inner_block: fn _, _ -> "Link 2" end}
+        ]
+      })
+
+    assert result =~ "Link 1"
+    assert result =~ "Link 2"
+  end
+
+  test "renders navbar with multiple elements in end_part" do
+    result =
+      render_component(&dm_navbar/1, %{
+        end_part: [
+          %{inner_block: fn _, _ -> "Notifications" end},
+          %{inner_block: fn _, _ -> "Profile" end}
+        ]
+      })
+
+    assert result =~ "Notifications"
+    assert result =~ "Profile"
+  end
 end
