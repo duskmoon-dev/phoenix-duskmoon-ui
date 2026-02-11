@@ -49,7 +49,7 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
       phx-hook="ThemeSwitcher"
       data-theme={@theme}
     >
-      <div tabindex="0" role="button" class="btn btn-ghost btn-sm" aria-label={@select_theme_label} aria-haspopup="listbox">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-sm" aria-label={@select_theme_label} aria-haspopup="true">
         {@button_text}
         <svg
           width="12px"
@@ -62,7 +62,7 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
           <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
         </svg>
       </div>
-      <ul tabindex="0" class="dropdown-content z-50">
+      <ul tabindex="0" class="dropdown-content z-50" role="radiogroup" aria-label={@select_theme_label}>
         <li>
           <input
             type="radio"

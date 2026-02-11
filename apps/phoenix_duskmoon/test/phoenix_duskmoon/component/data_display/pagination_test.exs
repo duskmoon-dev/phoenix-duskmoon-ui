@@ -58,12 +58,26 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
 
       # Should show ellipsis for hidden pages
       assert result =~ "..."
+      # Ellipsis should have accessible label
+      assert result =~ ~s[aria-label="More pages"]
       # Should show current page
       assert result =~ ~s[aria-current="page"]
       # Check for prev/next
       assert result =~ "Previous"
       assert result =~ "Next"
       assert result =~ "<svg"
+    end
+
+    test "renders ellipsis with custom label" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 5,
+          page_size: 10,
+          total: 100,
+          ellipsis_label: "Skipped pages"
+        })
+
+      assert result =~ ~s[aria-label="Skipped pages"]
     end
 
     test "renders with show_total enabled" do

@@ -66,6 +66,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
     doc: "Accessible label for the next page button"
   )
 
+  attr(:ellipsis_label, :string,
+    default: "More pages",
+    doc: "Accessible label for ellipsis indicators"
+  )
+
   attr(:rest, :global)
 
   slot(:inner_block, required: false)
@@ -110,7 +115,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
 
         <%= for p <- @pages do %>
           <%= if is_binary(p) do %>
-            <span slot="page" class="dm-pagination__ellipsis">{p}</span>
+            <span slot="page" class="dm-pagination__ellipsis" aria-label={@ellipsis_label}>{p}</span>
           <% else %>
             <button
               type="button"
