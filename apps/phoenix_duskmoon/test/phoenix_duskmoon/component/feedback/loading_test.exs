@@ -185,5 +185,52 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
       assert result =~ ~s[role="status"]
       assert result =~ "<i"
     end
+
+    test "renders with item_count 0 clamped to 1 nth-child rule" do
+      result = render_component(&dm_loading_ex/1, %{item_count: 0})
+
+      # max(0, 1) = 1, so should have nth-child(1) rule
+      assert result =~ "nth-child(1)"
+      # Should NOT have nth-child(2)
+      refute result =~ "nth-child(2)"
+    end
+
+    test "renders with item_count 1 generates single particle" do
+      result = render_component(&dm_loading_ex/1, %{item_count: 1})
+
+      assert result =~ "nth-child(1)"
+      refute result =~ "nth-child(2)"
+    end
+
+    test "renders oklch color in CSS" do
+      result = render_component(&dm_loading_ex/1, %{})
+
+      assert result =~ "oklch(75% 0.15 var(--hue, 0))"
+    end
+
+    test "renders CSS with rotation keyframes" do
+      result = render_component(&dm_loading_ex/1, %{})
+
+      assert result =~ "loaderSpin-"
+      assert result =~ "item-move-"
+      assert result =~ "rotate(360deg)"
+    end
+
+    test "renders particles with --hue CSS variable" do
+      result = render_component(&dm_loading_ex/1, %{item_count: 3})
+
+      assert result =~ "--hue:"
+      assert result =~ "--rz:"
+      assert result =~ "--delay:"
+    end
+
+    test "renders with item_count 3 has exactly 3 nth-child rules" do
+      result = render_component(&dm_loading_ex/1, %{item_count: 3})
+
+      assert result =~ "nth-child(1)"
+      assert result =~ "nth-child(2)"
+      assert result =~ "nth-child(3)"
+      refute result =~ "nth-child(4)"
+    end
   end
 end

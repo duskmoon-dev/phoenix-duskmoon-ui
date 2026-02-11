@@ -2151,4 +2151,100 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[aria-label="Toggle password visibility"]
     end
   end
+
+  describe "FormField path" do
+    test "renders input from FormField extracting id and name" do
+      field = Phoenix.Component.to_form(%{"email" => "test@example.com"}, as: "user")[:email]
+
+      result =
+        render_component(&dm_input/1, %{
+          field: field,
+          type: "text",
+          label: "Email"
+        })
+
+      assert result =~ ~s(name="user[email]")
+      assert result =~ ~s(id="user_email")
+      assert result =~ "test@example.com"
+    end
+
+    test "renders input from FormField with multiple appending brackets" do
+      field = Phoenix.Component.to_form(%{"tags" => []}, as: "post")[:tags]
+
+      result =
+        render_component(&dm_input/1, %{
+          field: field,
+          type: "text",
+          label: "Tags",
+          multiple: true
+        })
+
+      assert result =~ ~s(name="post[tags][]")
+    end
+  end
+
+  describe "rating edge cases" do
+    test "renders rating buttons with aria-labels for each star" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rating",
+          name: "stars",
+          id: "stars",
+          label: "Rating",
+          value: 3,
+          max: 5
+        })
+
+      assert result =~ ~s[aria-label="Rate 1 out of 5"]
+      assert result =~ ~s[aria-label="Rate 5 out of 5"]
+    end
+
+    test "renders rating color applied only to filled stars" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rating",
+          name: "stars",
+          id: "stars",
+          label: "Rating",
+          value: 2,
+          color: "warning",
+          max: 3
+        })
+
+      # Should have text-warning for filled stars (1 and 2)
+      assert result =~ "text-warning"
+      # The hidden input should have value 2
+      assert result =~ ~s[value="2"]
+    end
+
+    test "renders rating with nil value shows 0/max" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rating",
+          name: "stars",
+          id: "stars",
+          label: "Rating",
+          value: nil
+        })
+
+      assert result =~ "(0/5)"
+    end
+  end
+
+  describe "checkbox_group edge cases" do
+    test "renders checkbox_group with nil value has no checked boxes" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "checkbox_group",
+          name: "colors",
+          id: "colors",
+          label: "Colors",
+          options: [{"Red", "red"}, {"Blue", "blue"}],
+          value: nil
+        })
+
+      # nil value => [] => no checkboxes checked
+      refute result =~ "checked"
+    end
+  end
 end

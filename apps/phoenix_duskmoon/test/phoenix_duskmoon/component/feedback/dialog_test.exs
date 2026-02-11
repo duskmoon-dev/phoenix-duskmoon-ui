@@ -213,4 +213,74 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
 
     assert result =~ ~s[aria-label="Close"]
   end
+
+  test "renders modal without trigger when trigger slot omitted" do
+    result = render_component(&dm_modal/1, %{body: body()})
+
+    # No trigger-related content outside the dialog
+    assert result =~ "<el-dm-dialog"
+  end
+
+  test "renders modal with multiple body slots" do
+    result =
+      render_component(&dm_modal/1, %{
+        body: [
+          %{inner_block: fn _, _ -> "Body part 1" end},
+          %{inner_block: fn _, _ -> "Body part 2" end}
+        ]
+      })
+
+    assert result =~ "Body part 1"
+    assert result =~ "Body part 2"
+  end
+
+  test "renders modal backdrop attribute absent when backdrop false" do
+    result = render_component(&dm_modal/1, %{backdrop: false, body: body()})
+
+    # When backdrop is false, `@backdrop && "blur"` evaluates to false,
+    # and Phoenix suppresses the attribute entirely
+    refute result =~ "backdrop="
+  end
+
+  test "renders modal with responsive and size combined" do
+    result =
+      render_component(&dm_modal/1, %{
+        responsive: true,
+        size: "lg",
+        body: body()
+      })
+
+    assert result =~ "responsive"
+    assert result =~ ~s[size="lg"]
+  end
+
+  test "renders modal with all options combined" do
+    result =
+      render_component(&dm_modal/1, %{
+        id: "full-modal",
+        class: "custom-modal",
+        backdrop: true,
+        position: "middle",
+        size: "md",
+        responsive: true,
+        title: [%{class: "title-cls", inner_block: fn _, _ -> "Title" end}],
+        body: [%{class: "body-cls", inner_block: fn _, _ -> "Body" end}],
+        footer: [%{class: "footer-cls", inner_block: fn _, _ -> "Footer" end}],
+        "data-testid": "full-modal"
+      })
+
+    assert result =~ ~s[id="full-modal"]
+    assert result =~ "custom-modal"
+    assert result =~ ~s[backdrop="blur"]
+    assert result =~ ~s[position="middle"]
+    assert result =~ ~s[size="md"]
+    assert result =~ "responsive"
+    assert result =~ "Title"
+    assert result =~ "title-cls"
+    assert result =~ "Body"
+    assert result =~ "body-cls"
+    assert result =~ "Footer"
+    assert result =~ "footer-cls"
+    assert result =~ "data-testid=\"full-modal\""
+  end
 end
