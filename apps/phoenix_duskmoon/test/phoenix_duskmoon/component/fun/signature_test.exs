@@ -187,4 +187,40 @@ defmodule PhoenixDuskmoon.Component.Fun.SignatureTest do
 
     assert result =~ "position: relative"
   end
+
+  test "renders signature with negative rotation" do
+    result = render_component(&dm_fun_signature/1, %{id: "sig-neg", rotation: -90})
+
+    assert result =~ "--rotate: -90deg"
+  end
+
+  test "renders signature with large rotation" do
+    result = render_component(&dm_fun_signature/1, %{id: "sig-360", rotation: 360})
+
+    assert result =~ "--rotate: 360deg"
+  end
+
+  test "renders signature with custom right value" do
+    result = render_component(&dm_fun_signature/1, %{id: "sig-r", right: "50%"})
+
+    assert result =~ "--right: 50%"
+  end
+
+  test "renders signature with custom top value" do
+    result = render_component(&dm_fun_signature/1, %{id: "sig-t", top: "0"})
+
+    assert result =~ "--top: 0"
+  end
+
+  test "renders signature with default color" do
+    result = render_component(&dm_fun_signature/1, %{id: "sig-dc"})
+
+    assert result =~ "--sign-color: #ff0000aa"
+  end
+
+  test "renders signature with emoji content" do
+    result = render_component(&dm_fun_signature/1, %{id: "sig-emoji", content: "✓"})
+
+    assert result =~ ~s[data-content="✓"]
+  end
 end

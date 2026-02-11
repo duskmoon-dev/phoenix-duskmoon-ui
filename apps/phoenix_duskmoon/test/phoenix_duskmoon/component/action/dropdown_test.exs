@@ -306,4 +306,52 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
 
     assert result =~ ~s[aria-expanded="true"]
   end
+
+  test "renders dropdown with all options combined" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        position: "bottom",
+        color: "error",
+        open: true,
+        class: "outer",
+        dropdown_class: "inner",
+        trigger: [%{class: "trig-cls", inner_block: fn _, _ -> "Open" end}],
+        content: [%{class: "cont-cls", inner_block: fn _, _ -> "<li>Delete</li>" end}],
+        "data-testid": "full-dropdown"
+      })
+
+    assert result =~ "dm-dropdown--bottom"
+    assert result =~ "dm-dropdown--open"
+    assert result =~ "dm-dropdown__content--error"
+    assert result =~ "outer"
+    assert result =~ "inner"
+    assert result =~ "trig-cls"
+    assert result =~ "cont-cls"
+    assert result =~ "Open"
+    assert result =~ "Delete"
+    assert result =~ ~s[data-testid="full-dropdown"]
+  end
+
+  test "renders dropdown wrapper as div element" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert String.starts_with?(String.trim(result), "<div")
+  end
+
+  test "renders dropdown with all position variants in loop" do
+    for pos <- ~w(left right top bottom) do
+      result =
+        render_component(&dm_dropdown/1, %{
+          position: pos,
+          trigger: trigger(),
+          content: content()
+        })
+
+      assert result =~ "dm-dropdown--#{pos}"
+    end
+  end
 end

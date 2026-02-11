@@ -7,7 +7,9 @@ defmodule PhoenixDuskmoon.Component.Action.Link do
 
   @doc """
   Generates a link for live and href navigation.
-  [INSERT LVATTRDOCS]
+
+  Supports LiveView navigation (`:navigate`, `:patch`) and standard HTTP links (`:href`).
+
   ## Examples
   ```heex
   <.dm_link href="/">Regular anchor link</.dm_link>

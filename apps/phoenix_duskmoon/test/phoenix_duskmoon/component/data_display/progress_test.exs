@@ -253,4 +253,58 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
     assert result =~ "my-label"
     assert result =~ "my-bar"
   end
+
+  describe "configurable label text" do
+    test "renders progress with custom label_text" do
+      result =
+        render_component(&dm_progress/1, %{
+          value: 50,
+          show_label: true,
+          label_text: "Upload"
+        })
+
+      assert result =~ "Upload"
+      refute result =~ "Progress"
+    end
+
+    test "renders progress with custom complete_text" do
+      result =
+        render_component(&dm_progress/1, %{
+          value: 50,
+          show_label: true,
+          complete_text: "Done"
+        })
+
+      assert result =~ "Done"
+      refute result =~ "Complete"
+    end
+
+    test "renders progress with both custom label_text and complete_text" do
+      result =
+        render_component(&dm_progress/1, %{
+          value: 75,
+          max: 100,
+          show_label: true,
+          label_text: "Loading",
+          complete_text: "Loaded"
+        })
+
+      assert result =~ "Loading"
+      assert result =~ "Loaded"
+      assert result =~ "75.0%"
+      refute result =~ "Progress"
+      refute result =~ "Complete"
+    end
+
+    test "renders default label_text and complete_text" do
+      result =
+        render_component(&dm_progress/1, %{
+          value: 50,
+          show_label: true
+        })
+
+      assert result =~ "Progress"
+      assert result =~ "Complete"
+    end
+  end
 end

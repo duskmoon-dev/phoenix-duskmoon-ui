@@ -243,4 +243,57 @@ defmodule PhoenixDuskmoon.Component.Navigation.ActionbarTest do
 
     assert result =~ ~s[role="toolbar"]
   end
+
+  test "renders actionbar with left slot item without id uses nil" do
+    result =
+      render_component(&dm_actionbar/1, %{
+        left: [%{inner_block: fn _, _ -> "No ID" end}]
+      })
+
+    assert result =~ "No ID"
+  end
+
+  test "renders actionbar with right slot item without class uses nil" do
+    result =
+      render_component(&dm_actionbar/1, %{
+        right: [%{inner_block: fn _, _ -> "No Class" end}]
+      })
+
+    assert result =~ "No Class"
+  end
+
+  test "renders actionbar with empty left and right slots" do
+    result =
+      render_component(&dm_actionbar/1, %{
+        left: [],
+        right: []
+      })
+
+    assert result =~ "dm-actionbar__left"
+    assert result =~ "dm-actionbar__right"
+  end
+
+  test "renders actionbar left slot items each as separate wrapping div" do
+    result =
+      render_component(&dm_actionbar/1, %{
+        left: [
+          %{class: "item-a", inner_block: fn _, _ -> "A" end},
+          %{class: "item-b", inner_block: fn _, _ -> "B" end},
+          %{class: "item-c", inner_block: fn _, _ -> "C" end}
+        ]
+      })
+
+    assert result =~ "item-a"
+    assert result =~ "item-b"
+    assert result =~ "item-c"
+  end
+
+  test "renders actionbar with phx-click rest attribute" do
+    result =
+      render_component(&dm_actionbar/1, %{
+        "phx-click": "toolbar-action"
+      })
+
+    assert result =~ ~s[phx-click="toolbar-action"]
+  end
 end

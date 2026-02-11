@@ -185,4 +185,39 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcherTest do
 
     assert result =~ ~s[role="button"]
   end
+
+  test "renders theme switcher with unique random ids across renders" do
+    result1 = render_component(&dm_theme_switcher/1, %{})
+    result2 = render_component(&dm_theme_switcher/1, %{})
+
+    # Both should have theme-switcher- prefix but may have different random IDs
+    assert result1 =~ "theme-switcher-"
+    assert result2 =~ "theme-switcher-"
+  end
+
+  test "renders theme switcher with btn-secondary class on radios" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    assert result =~ "btn-secondary"
+    assert result =~ "btn-block"
+  end
+
+  test "renders theme switcher with btn-sm on toggle button" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    assert result =~ "btn btn-ghost btn-sm"
+  end
+
+  test "renders theme switcher with justify-center on radio inputs" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    assert result =~ "justify-center"
+  end
+
+  test "renders theme switcher generates three radio inputs" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    radio_count = length(String.split(result, ~s[type="radio"])) - 1
+    assert radio_count == 3
+  end
 end

@@ -192,4 +192,42 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.MarkdownTest do
     refute result =~ ~s[debug="true"]
     refute result =~ ~s[debug=""]
   end
+
+  test "renders markdown with image syntax in content" do
+    content = "![alt text](https://example.com/image.png)"
+    result = render_component(&dm_markdown/1, %{content: content})
+
+    assert result =~ "alt text"
+    assert result =~ "example.com/image.png"
+  end
+
+  test "renders markdown with blockquote syntax" do
+    content = "> This is a blockquote"
+    result = render_component(&dm_markdown/1, %{content: content})
+
+    assert result =~ "&gt; This is a blockquote"
+  end
+
+  test "renders markdown with horizontal rule syntax" do
+    content = "Above\n---\nBelow"
+    result = render_component(&dm_markdown/1, %{content: content})
+
+    assert result =~ "Above"
+    assert result =~ "Below"
+  end
+
+  test "renders markdown with mermaid code block" do
+    content = "```mermaid\ngraph TD;\n  A-->B;\n```"
+    result = render_component(&dm_markdown/1, %{content: content})
+
+    assert result =~ "mermaid"
+    assert result =~ "A--&gt;B"
+  end
+
+  test "renders markdown content is properly enclosed in custom element" do
+    result = render_component(&dm_markdown/1, %{content: "# Test"})
+
+    assert String.starts_with?(String.trim(result), "<el-dm-markdown")
+    assert String.ends_with?(String.trim(result), "</el-dm-markdown>")
+  end
 end

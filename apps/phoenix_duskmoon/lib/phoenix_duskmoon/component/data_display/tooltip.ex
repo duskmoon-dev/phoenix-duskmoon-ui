@@ -68,7 +68,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
       data-tip={@content}
       {@rest}
     >
-      <slot />
+      {render_slot(@inner_block)}
     </div>
     """
   end

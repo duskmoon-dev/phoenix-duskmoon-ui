@@ -50,6 +50,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
   attr(:class, :string, default: nil)
   attr(:label_class, :string, default: nil)
   attr(:progress_class, :string, default: nil)
+  attr(:label_text, :string, default: "Progress", doc: "Text for the progress label")
+  attr(:complete_text, :string, default: "Complete", doc: "Text appended after percentage")
   attr(:rest, :global)
 
   def dm_progress(assigns) do
@@ -63,7 +65,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
     <div class={@class}>
       <div :if={@show_label} class="flex justify-between items-center mb-2">
         <span class={@label_class}>
-          Progress
+          {@label_text}
         </span>
         <span class="text-sm font-medium">{@percentage}%</span>
       </div>
@@ -85,7 +87,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
       ></progress>
 
       <div :if={@show_label} class="text-sm text-base-content/70 mt-1">
-        {@percentage}% Complete
+        {@percentage}% {@complete_text}
       </div>
     </div>
 

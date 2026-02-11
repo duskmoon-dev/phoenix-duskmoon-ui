@@ -243,4 +243,48 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
 
     assert result =~ ~s[aria-label="Site navigation"]
   end
+
+  test "renders navbar without class when nil" do
+    result = render_component(&dm_navbar/1, %{class: nil})
+
+    assert result =~ "dm-navbar"
+  end
+
+  test "renders navbar with empty start_part slot" do
+    result =
+      render_component(&dm_navbar/1, %{
+        start_part: []
+      })
+
+    assert result =~ "dm-navbar__start"
+  end
+
+  test "renders navbar with only end_part populated" do
+    result =
+      render_component(&dm_navbar/1, %{
+        end_part: [%{inner_block: fn _, _ -> "Logout" end}]
+      })
+
+    assert result =~ "Logout"
+    assert result =~ "dm-navbar__start"
+    assert result =~ "dm-navbar__end"
+  end
+
+  test "renders navbar sections as div elements" do
+    result = render_component(&dm_navbar/1, %{})
+
+    # All three sections are div elements inside the nav
+    parts = String.split(result, "<div")
+    # At least 3 inner divs (start, center, end)
+    assert length(parts) >= 4
+  end
+
+  test "renders navbar with data-testid rest attribute" do
+    result =
+      render_component(&dm_navbar/1, %{
+        "data-testid": "main-nav"
+      })
+
+    assert result =~ ~s[data-testid="main-nav"]
+  end
 end

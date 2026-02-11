@@ -221,15 +221,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
     end
   end
 
-  test "renders tooltip with slot element" do
+  test "renders tooltip with inner block content" do
     result =
       render_component(&dm_tooltip/1, %{
         content: "Tip",
         inner_block: inner_block()
       })
 
-    # inner_block renders as <slot></slot> in test context
-    assert result =~ "<slot></slot>"
+    assert result =~ "Hover me"
   end
 
   test "renders tooltip with rest attribute aria-describedby" do
