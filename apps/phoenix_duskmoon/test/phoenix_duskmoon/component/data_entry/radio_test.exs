@@ -220,4 +220,50 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
 
     refute result =~ ~s[id="]
   end
+
+  describe "FormField integration" do
+    test "renders radio with form field using field id" do
+      field = Phoenix.Component.to_form(%{"theme" => "dark"}, as: "user")[:theme]
+
+      result = render_component(&dm_radio/1, %{field: field, value: "dark"})
+
+      assert result =~ ~s[id="user_theme"]
+      assert result =~ ~s(name="user[theme]")
+      assert result =~ ~s[value="dark"]
+    end
+
+    test "renders radio with field value passed through" do
+      field = Phoenix.Component.to_form(%{"theme" => "dark"}, as: "user")[:theme]
+
+      result = render_component(&dm_radio/1, %{field: field, value: "dark"})
+
+      assert result =~ ~s[value="dark"]
+      assert result =~ ~s(name="user[theme]")
+    end
+
+    test "renders radio with custom id overriding field id" do
+      field = Phoenix.Component.to_form(%{"theme" => "light"}, as: "user")[:theme]
+
+      result = render_component(&dm_radio/1, %{field: field, value: "dark", id: "custom-id"})
+
+      assert result =~ ~s[id="custom-id"]
+    end
+
+    test "renders radio with field and label combined" do
+      field = Phoenix.Component.to_form(%{"theme" => ""}, as: "user")[:theme]
+
+      result =
+        render_component(&dm_radio/1, %{
+          field: field,
+          value: "dark",
+          label: "Dark Mode",
+          color: "accent",
+          size: "lg"
+        })
+
+      assert result =~ "Dark Mode"
+      assert result =~ "dm-radio--accent"
+      assert result =~ "dm-radio--lg"
+    end
+  end
 end

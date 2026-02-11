@@ -183,6 +183,110 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
         "data-testid": "bio-field"
       })
 
-    assert result =~ "data-testid=\"bio-field\""
+    assert result =~ ~s[data-testid="bio-field"]
+  end
+
+  test "renders textarea label for attribute matches textarea id" do
+    result =
+      render_component(&dm_textarea/1, %{
+        name: "bio",
+        value: nil,
+        id: "bio-id",
+        label: "Bio"
+      })
+
+    assert result =~ ~s[for="bio-id"]
+    assert result =~ ~s[id="bio-id"]
+  end
+
+  test "renders textarea with all attributes combined" do
+    result =
+      render_component(&dm_textarea/1, %{
+        name: "notes",
+        id: "notes-area",
+        value: "Hello",
+        label: "Notes",
+        label_class: "text-sm",
+        textarea_class: "border-2",
+        class: "wrapper",
+        placeholder: "Enter notes...",
+        rows: 8,
+        cols: 60,
+        size: "lg",
+        color: "success",
+        resize: "both",
+        disabled: true,
+        readonly: true,
+        required: true,
+        maxlength: 1000,
+        "data-testid": "notes"
+      })
+
+    assert result =~ ~s[id="notes-area"]
+    assert result =~ ~s[name="notes"]
+    assert result =~ "Hello"
+    assert result =~ "Notes"
+    assert result =~ "text-sm"
+    assert result =~ "border-2"
+    assert result =~ "wrapper"
+    assert result =~ ~s[placeholder="Enter notes..."]
+    assert result =~ ~s[rows="8"]
+    assert result =~ ~s[cols="60"]
+    assert result =~ "dm-textarea--lg"
+    assert result =~ "dm-textarea--success"
+    assert result =~ "dm-textarea--resize-both"
+    assert result =~ "disabled"
+    assert result =~ "readonly"
+    assert result =~ "required"
+    assert result =~ ~s[maxlength="1000"]
+  end
+
+  describe "FormField integration" do
+    test "renders textarea with form field using field id and name" do
+      field = Phoenix.Component.to_form(%{"bio" => "My bio text"}, as: "user")[:bio]
+
+      result = render_component(&dm_textarea/1, %{field: field})
+
+      assert result =~ ~s[id="user_bio"]
+      assert result =~ ~s(name="user[bio]")
+      assert result =~ "My bio text"
+    end
+
+    test "renders textarea with field value nil" do
+      field = Phoenix.Component.to_form(%{"bio" => ""}, as: "user")[:bio]
+
+      result = render_component(&dm_textarea/1, %{field: field})
+
+      assert result =~ ~s[id="user_bio"]
+      assert result =~ "<textarea"
+    end
+
+    test "renders textarea with custom id overriding field id" do
+      field = Phoenix.Component.to_form(%{"bio" => ""}, as: "user")[:bio]
+
+      result = render_component(&dm_textarea/1, %{field: field, id: "custom-area"})
+
+      assert result =~ ~s[id="custom-area"]
+    end
+
+    test "renders textarea with field and styling combined" do
+      field = Phoenix.Component.to_form(%{"bio" => ""}, as: "user")[:bio]
+
+      result =
+        render_component(&dm_textarea/1, %{
+          field: field,
+          label: "Biography",
+          color: "warning",
+          size: "lg",
+          rows: 10,
+          resize: "none"
+        })
+
+      assert result =~ "Biography"
+      assert result =~ "dm-textarea--warning"
+      assert result =~ "dm-textarea--lg"
+      assert result =~ ~s[rows="10"]
+      assert result =~ "dm-textarea--resize-none"
+    end
   end
 end

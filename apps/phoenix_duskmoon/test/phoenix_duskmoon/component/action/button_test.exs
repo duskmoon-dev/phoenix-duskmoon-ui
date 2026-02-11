@@ -317,4 +317,89 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ "my-class"
     assert result =~ "data-testid=\"combo\""
   end
+
+  test "renders noise button with aria-label matching content" do
+    result =
+      render_component(&dm_btn/1, %{
+        noise: true,
+        content: "SUBMIT",
+        inner_block: %{inner_block: fn _, _ -> "" end}
+      })
+
+    assert result =~ ~s[aria-label="SUBMIT"]
+  end
+
+  test "renders noise button with aria-hidden on span" do
+    result =
+      render_component(&dm_btn/1, %{
+        noise: true,
+        content: "GO",
+        inner_block: %{inner_block: fn _, _ -> "" end}
+      })
+
+    assert result =~ ~s[aria-hidden="true"]
+  end
+
+  test "renders noise button with rest attributes passthrough" do
+    result =
+      render_component(&dm_btn/1, %{
+        noise: true,
+        content: "SEND",
+        "data-testid": "noise-btn",
+        inner_block: %{inner_block: fn _, _ -> "" end}
+      })
+
+    assert result =~ ~s[data-testid="noise-btn"]
+  end
+
+  test "renders confirm button with variant on outer button" do
+    result =
+      render_component(&dm_btn/1, %{
+        confirm: "Delete?",
+        variant: "error",
+        size: "sm",
+        inner_block: %{inner_block: fn _, _ -> "Delete" end}
+      })
+
+    assert result =~ ~s[variant="error"]
+    assert result =~ ~s[size="sm"]
+  end
+
+  test "renders confirm dialog Yes button passes rest attributes" do
+    result =
+      render_component(&dm_btn/1, %{
+        confirm: "Are you sure?",
+        "phx-click": "delete",
+        inner_block: %{inner_block: fn _, _ -> "Delete" end}
+      })
+
+    # The phx-click should be on the Yes button inside the dialog
+    assert result =~ ~s[phx-click="delete"]
+  end
+
+  test "renders button without confirm when confirm is empty string" do
+    result =
+      render_component(&dm_btn/1, %{
+        confirm: "",
+        inner_block: %{inner_block: fn _, _ -> "Normal Button" end}
+      })
+
+    refute result =~ "el-dm-dialog"
+    refute result =~ "confirm-dialog"
+    assert result =~ "Normal Button"
+  end
+
+  test "renders button with form-related global attributes" do
+    result =
+      render_component(&dm_btn/1, %{
+        type: "submit",
+        name: "action",
+        value: "save",
+        inner_block: %{inner_block: fn _, _ -> "Save" end}
+      })
+
+    assert result =~ ~s[type="submit"]
+    assert result =~ ~s[name="action"]
+    assert result =~ ~s[value="save"]
+  end
 end

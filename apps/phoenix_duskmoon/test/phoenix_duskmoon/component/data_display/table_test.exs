@@ -340,5 +340,95 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
       assert result =~ "Age"
       assert result =~ "City"
     end
+
+    test "non-stream mode does not include phx-update attribute" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data
+        })
+
+      refute result =~ "phx-update"
+    end
+
+    test "stream body has phx-update stream attribute" do
+      stream_data = [{"row-1", %{name: "Alice", age: 30, city: "NY"}}]
+
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: stream_data,
+          stream: true
+        })
+
+      assert result =~ ~s[phx-update="stream"]
+    end
+
+    test "column headers have font-bold class" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data
+        })
+
+      assert result =~ "font-bold"
+    end
+
+    test "table rows have dm-table__row class" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data
+        })
+
+      assert result =~ "dm-table__row"
+    end
+
+    test "expand row with 2 columns spans 2" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data,
+          with_expand: true,
+          num_cols: 2
+        })
+
+      assert result =~ ~s[colspan="2"]
+    end
+
+    test "expand row cell has p-0 class" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data,
+          with_expand: true
+        })
+
+      assert result =~ "p-0"
+    end
+
+    test "border applies to table element class" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data,
+          border: true,
+          with_expand: true
+        })
+
+      assert result =~ "dm-table--bordered"
+    end
+
+    test "renders table header with sticky positioning" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data
+        })
+
+      assert result =~ "sticky top-0"
+    end
+
+    test "renders single row of data" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: [%{name: "Solo", age: 1, city: "Z"}]
+        })
+
+      assert result =~ "Solo"
+      refute result =~ "Alice"
+    end
   end
 end

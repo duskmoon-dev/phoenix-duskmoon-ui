@@ -311,5 +311,108 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CardTest do
       assert result =~ ~s[src="/test.jpg"]
       assert result =~ ~s[alt="Test"]
     end
+
+    test "renders async card with body_class wrapping content in div" do
+      result =
+        render_component(&dm_async_card/1, %{
+          assign: %Phoenix.LiveView.AsyncResult{ok?: true, result: nil},
+          body_class: "p-6",
+          inner_block: %{inner_block: fn _, _ -> "Wrapped content" end}
+        })
+
+      assert result =~ ~s[class="p-6"]
+      assert result =~ "Wrapped content"
+    end
+
+    test "renders async card with global attributes" do
+      result =
+        render_component(&dm_async_card/1, %{
+          assign: %Phoenix.LiveView.AsyncResult{ok?: true, result: nil},
+          "data-testid": "async-card",
+          inner_block: %{inner_block: fn _, _ -> "Content" end}
+        })
+
+      assert result =~ ~s[data-testid="async-card"]
+    end
+
+    test "renders async card with id and class in all states" do
+      for state <- [
+            %Phoenix.LiveView.AsyncResult{loading: true},
+            %Phoenix.LiveView.AsyncResult{failed: {:error, "err"}},
+            %Phoenix.LiveView.AsyncResult{ok?: true, result: nil}
+          ] do
+        inner =
+          if state.ok? do
+            %{inner_block: fn _, _ -> "Content" end}
+          else
+            fn _, _ -> "Content" end
+          end
+
+        result =
+          render_component(&dm_async_card/1, %{
+            assign: state,
+            id: "state-card",
+            class: "state-class",
+            inner_block: inner
+          })
+
+        assert result =~ ~s[id="state-card"]
+        assert result =~ "state-class"
+      end
+    end
+  end
+
+  test "renders card without image when image is nil" do
+    result =
+      render_component(&dm_card/1, %{
+        inner_block: %{inner_block: fn _, _ -> "Content" end}
+      })
+
+    refute result =~ "<img"
+    refute result =~ ~s[slot="image"]
+  end
+
+  test "renders card body in template when body_class is nil" do
+    result =
+      render_component(&dm_card/1, %{
+        inner_block: %{inner_block: fn _, _ -> "Unwrapped" end}
+      })
+
+    assert result =~ "<template>"
+    assert result =~ "Unwrapped"
+  end
+
+  test "renders card body in div when body_class is provided" do
+    result =
+      render_component(&dm_card/1, %{
+        body_class: "p-4",
+        inner_block: %{inner_block: fn _, _ -> "Wrapped" end}
+      })
+
+    assert result =~ ~s[class="p-4"]
+    refute result =~ "<template>"
+    assert result =~ "Wrapped"
+  end
+
+  test "renders card without title or action slots" do
+    result =
+      render_component(&dm_card/1, %{
+        inner_block: %{inner_block: fn _, _ -> "Solo content" end}
+      })
+
+    refute result =~ ~s[slot="header"]
+    refute result =~ ~s[slot="footer"]
+    assert result =~ "Solo content"
+  end
+
+  test "renders card with nil variant and shadow" do
+    result =
+      render_component(&dm_card/1, %{
+        inner_block: %{inner_block: fn _, _ -> "Content" end}
+      })
+
+    # variant and shadow should not be present when nil
+    refute result =~ ~s[variant="]
+    refute result =~ ~s[shadow="]
   end
 end

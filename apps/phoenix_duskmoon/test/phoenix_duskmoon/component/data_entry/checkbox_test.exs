@@ -179,4 +179,56 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
 
     refute result =~ "cursor-not-allowed"
   end
+
+  describe "FormField integration" do
+    test "renders checkbox with form field using field id and name" do
+      field = Phoenix.Component.to_form(%{"agree" => "true"}, as: "user")[:agree]
+
+      result = render_component(&dm_checkbox/1, %{field: field})
+
+      assert result =~ ~s[id="user_agree"]
+      assert result =~ ~s(name="user[agree]")
+    end
+
+    test "renders checkbox with field value" do
+      field = Phoenix.Component.to_form(%{"agree" => "true"}, as: "user")[:agree]
+
+      result = render_component(&dm_checkbox/1, %{field: field})
+
+      assert result =~ ~s[value="true"]
+      assert result =~ ~s(name="user[agree]")
+    end
+
+    test "renders checkbox with multiple appending [] to name" do
+      field = Phoenix.Component.to_form(%{"tags" => ""}, as: "user")[:tags]
+
+      result = render_component(&dm_checkbox/1, %{field: field, multiple: true})
+
+      assert result =~ ~s(name="user[tags][]")
+    end
+
+    test "renders checkbox with custom id overriding field id" do
+      field = Phoenix.Component.to_form(%{"agree" => ""}, as: "user")[:agree]
+
+      result = render_component(&dm_checkbox/1, %{field: field, id: "custom-cb"})
+
+      assert result =~ ~s[id="custom-cb"]
+    end
+
+    test "renders checkbox with field and styling combined" do
+      field = Phoenix.Component.to_form(%{"agree" => ""}, as: "user")[:agree]
+
+      result =
+        render_component(&dm_checkbox/1, %{
+          field: field,
+          label: "I agree",
+          color: "success",
+          size: "lg"
+        })
+
+      assert result =~ "I agree"
+      assert result =~ "dm-checkbox--success"
+      assert result =~ "dm-checkbox--lg"
+    end
+  end
 end

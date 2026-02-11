@@ -312,4 +312,77 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
     assert result =~ "selected"
     assert result =~ "data-testid=\"combo-select\""
   end
+
+  describe "FormField integration" do
+    test "renders select with form field using field id and name" do
+      field = Phoenix.Component.to_form(%{"country" => "us"}, as: "user")[:country]
+
+      result =
+        render_component(&dm_select/1, %{
+          field: field,
+          options: [{"us", "USA"}, {"ca", "Canada"}]
+        })
+
+      assert result =~ ~s[id="user_country"]
+      assert result =~ ~s(name="user[country]")
+    end
+
+    test "renders select with field value selecting correct option" do
+      field = Phoenix.Component.to_form(%{"country" => "ca"}, as: "user")[:country]
+
+      result =
+        render_component(&dm_select/1, %{
+          field: field,
+          options: [{"us", "USA"}, {"ca", "Canada"}]
+        })
+
+      assert result =~ "selected"
+    end
+
+    test "renders select with multiple field appending [] to name" do
+      field = Phoenix.Component.to_form(%{"colors" => ""}, as: "user")[:colors]
+
+      result =
+        render_component(&dm_select/1, %{
+          field: field,
+          multiple: true,
+          options: [{"r", "Red"}, {"g", "Green"}]
+        })
+
+      assert result =~ ~s(name="user[colors][]")
+      assert result =~ "multiple"
+    end
+
+    test "renders select with custom id overriding field id" do
+      field = Phoenix.Component.to_form(%{"country" => ""}, as: "user")[:country]
+
+      result =
+        render_component(&dm_select/1, %{
+          field: field,
+          id: "custom-select",
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ ~s[id="custom-select"]
+    end
+
+    test "renders select with field and styling combined" do
+      field = Phoenix.Component.to_form(%{"priority" => ""}, as: "user")[:priority]
+
+      result =
+        render_component(&dm_select/1, %{
+          field: field,
+          label: "Priority",
+          color: "warning",
+          size: "lg",
+          prompt: "Select priority",
+          options: [{"low", "Low"}, {"high", "High"}]
+        })
+
+      assert result =~ "Priority"
+      assert result =~ "dm-select--warning"
+      assert result =~ "dm-select--lg"
+      assert result =~ "Select priority"
+    end
+  end
 end
