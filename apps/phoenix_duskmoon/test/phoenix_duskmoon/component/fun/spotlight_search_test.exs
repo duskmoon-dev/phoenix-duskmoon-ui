@@ -395,6 +395,26 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearchTest do
     assert result =~ "bg-transparent border-none outline-none w-full"
   end
 
+  test "renders custom dialog_label on dialog" do
+    result =
+      render_component(
+        &dm_fun_spotlight_search/1,
+        base_attrs(%{dialog_label: "Recherche rapide"})
+      )
+
+    assert result =~ ~s[aria-label="Recherche rapide"]
+  end
+
+  test "renders custom close_label on close button" do
+    result =
+      render_component(
+        &dm_fun_spotlight_search/1,
+        base_attrs(%{close_label: "Fermer la recherche"})
+      )
+
+    assert result =~ ~s[aria-label="Fermer la recherche"]
+  end
+
   test "renders loading indicator in both input area and content area" do
     result =
       render_component(

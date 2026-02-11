@@ -44,6 +44,17 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearch do
   attr(:loading, :boolean, default: false)
   attr(:class, :string, default: nil)
   attr(:phx_target, :any, default: nil)
+
+  attr(:dialog_label, :string,
+    default: "Spotlight search",
+    doc: "Accessible label for the dialog"
+  )
+
+  attr(:close_label, :string,
+    default: "Close search",
+    doc: "Accessible label for the close button"
+  )
+
   attr(:rest, :global)
 
   slot :suggestion, required: false do
@@ -59,7 +70,7 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearch do
       id={@id}
       open={@open}
       role="dialog"
-      aria-label="Spotlight search"
+      aria-label={@dialog_label}
       class={[
         "dm-fun-spotlight-search dm-modal",
         @class
@@ -89,7 +100,7 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearch do
             phx-click="spotlight_close"
             phx-target={@phx_target}
             class="text-base-content/50 hover:text-base-content"
-            aria-label="Close search"
+            aria-label={@close_label}
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

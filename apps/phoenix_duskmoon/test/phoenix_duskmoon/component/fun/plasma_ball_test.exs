@@ -230,4 +230,14 @@ defmodule PhoenixDuskmoon.Component.Fun.PlasmaBallTest do
 
     assert result =~ "dm-fun-plasma-ball"
   end
+
+  test "renders custom toggle_label on checkbox" do
+    result =
+      render_component(&dm_fun_plasma_ball/1, %{
+        id: "plasma-i18n",
+        toggle_label: "Activer l'effet plasma"
+      })
+
+    assert result =~ ~s[aria-label="Activer l&#39;effet plasma"]
+  end
 end

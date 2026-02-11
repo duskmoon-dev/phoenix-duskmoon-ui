@@ -46,6 +46,12 @@ defmodule PhoenixDuskmoon.Component.Fun.PlasmaBall do
   attr(:show_electrode, :boolean, default: true)
   attr(:class, :string, default: nil)
   attr(:phx_target, :any, default: nil)
+
+  attr(:toggle_label, :string,
+    default: "Toggle plasma effect",
+    doc: "Accessible label for the toggle switch"
+  )
+
   attr(:rest, :global)
 
   def dm_fun_plasma_ball(assigns) do
@@ -75,7 +81,7 @@ defmodule PhoenixDuskmoon.Component.Fun.PlasmaBall do
       </div>
 
       <!-- Toggle switch -->
-      <input type="checkbox" class="switcher" aria-label="Toggle plasma effect" phx-target={@phx_target} />
+      <input type="checkbox" class="switcher" aria-label={@toggle_label} phx-target={@phx_target} />
 
       <!-- Glass ball with effects -->
       <div class="glassball">

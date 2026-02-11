@@ -391,4 +391,23 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
 
     assert result =~ ~s[role="status"]
   end
+
+  test "renders custom online_label on online indicator" do
+    result = render_component(&dm_avatar/1, %{name: "T", online: true, online_label: "En ligne"})
+
+    assert result =~ ~s[aria-label="En ligne"]
+  end
+
+  test "renders custom offline_label on offline indicator" do
+    result =
+      render_component(&dm_avatar/1, %{name: "T", offline: true, offline_label: "Hors ligne"})
+
+    assert result =~ ~s[aria-label="Hors ligne"]
+  end
+
+  test "renders custom default_icon_label on default SVG icon" do
+    result = render_component(&dm_avatar/1, %{default_icon_label: "Utilisateur"})
+
+    assert result =~ ~s[aria-label="Utilisateur"]
+  end
 end

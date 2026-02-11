@@ -79,6 +79,22 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
   attr(:class, :string, default: nil)
   attr(:img_class, :string, default: nil)
   attr(:placeholder_class, :string, default: nil)
+
+  attr(:online_label, :string,
+    default: "Online",
+    doc: "Accessible label for the online indicator"
+  )
+
+  attr(:offline_label, :string,
+    default: "Offline",
+    doc: "Accessible label for the offline indicator"
+  )
+
+  attr(:default_icon_label, :string,
+    default: "User",
+    doc: "Accessible label for the default user icon"
+  )
+
   attr(:rest, :global)
 
   slot(:placeholder, doc: "Custom placeholder content")
@@ -117,7 +133,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
           <div
             :if={@online || @offline}
             role="status"
-            aria-label={if @online, do: "Online", else: "Offline"}
+            aria-label={if @online, do: @online_label, else: @offline_label}
             class={[
               "absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-base-100",
               @online && "bg-success",
@@ -183,7 +199,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
       viewBox="0 0 20 20"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label="User"
+      aria-label={@default_icon_label}
     >
       <path
         fill-rule="evenodd"
