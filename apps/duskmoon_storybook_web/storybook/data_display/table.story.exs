@@ -26,7 +26,7 @@ defmodule Storybook.DataDisplay.Table do
             <%= r.portrayal %>
           </:col>
           <:col :let={r} label="" class="align-top">
-            <button class="btn" phx-click={JS.toggle_class("hidden", to: "tr:has(#description-#\{Map.get(r, :id)\})")}>
+            <button type="button" class="btn" phx-click={JS.toggle_class("hidden", to: "tr:has(#description-#\{Map.get(r, :id)\})")}>
               Expand
             </button>
           </:col>

@@ -19,7 +19,7 @@ defmodule Storybook.Navigation.Breadcrumb do
             <a href="/">Home</a>
           </:crumb>
           <:crumb>
-            <button>Page</button>
+            <button type="button">Page</button>
           </:crumb>
           """
         ]
@@ -35,7 +35,7 @@ defmodule Storybook.Navigation.Breadcrumb do
             <a href="/">Home</a>
           </:crumb>
           <:crumb>
-            <button>Page</button>
+            <button type="button">Page</button>
           </:crumb>
           """
         ]

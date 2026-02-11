@@ -3,7 +3,7 @@ defmodule Storybook.Navigation.Actionbar do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.Navigation.Actionbar.dm_actionbar/1
-  def description, do: "A actionbar element."
+  def description, do: "An actionbar element."
 
   def variations do
     [
@@ -18,7 +18,7 @@ defmodule Storybook.Navigation.Actionbar do
             Star Wars
           </:left>
           <:right>
-            <button>action</button>
+            <button type="button">action</button>
           </:right>
           """
         ]

@@ -44,7 +44,7 @@ defmodule Storybook.Feedback.Modal do
               Cancel
             </button>
             </form>
-            <button class="btn">
+            <button type="button" class="btn">
               OK
             </button>
           </:footer>

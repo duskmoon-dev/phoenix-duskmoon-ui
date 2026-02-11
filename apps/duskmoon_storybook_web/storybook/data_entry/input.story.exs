@@ -109,9 +109,9 @@ defmodule Storybook.DataEntry.Input do
           multiple: true,
           options: [
             {"United States", "us"},
-            {"United Kigndom", "uk"},
-            {"Franch", "fr"},
-            {"German", "ge"}
+            {"United Kingdom", "uk"},
+            {"France", "fr"},
+            {"Germany", "de"}
           ]
         }
       },
@@ -124,9 +124,9 @@ defmodule Storybook.DataEntry.Input do
           value: nil,
           options: [
             {"United States", "us"},
-            {"United Kigndom", "uk"},
-            {"Franch", "fr"},
-            {"German", "ge"}
+            {"United Kingdom", "uk"},
+            {"France", "fr"},
+            {"Germany", "de"}
           ]
         }
       },
