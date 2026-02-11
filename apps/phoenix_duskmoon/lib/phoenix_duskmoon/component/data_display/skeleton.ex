@@ -17,6 +17,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       <.dm_skeleton class="w-32 h-4" />
       <.dm_skeleton variant="circle" size="md" />
   """
+  @doc type: :component
   attr(:id, :any, default: nil)
   attr(:class, :any, default: nil)
 
@@ -70,6 +71,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       <.dm_skeleton_text lines={3} />
       <.dm_skeleton_text lines={2} last_line_width="w-3/4" />
   """
+  @doc type: :component
   attr(:id, :any, default: nil)
   attr(:class, :any, default: nil)
   attr(:lines, :integer, default: 3, doc: "Number of skeleton lines")
@@ -116,6 +118,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       <.dm_skeleton_avatar size="md" />
       <.dm_skeleton_avatar size="lg" class="ring ring-primary" />
   """
+  @doc type: :component
   attr(:id, :any, default: nil)
   attr(:class, :any, default: nil)
   attr(:size, :string, default: "md", doc: "Avatar size (xs, sm, md, lg, xl)")
@@ -160,6 +163,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       <.dm_skeleton_card />
       <.dm_skeleton_card show_avatar={true} lines={4} />
   """
+  @doc type: :component
   attr(:id, :any, default: nil)
   attr(:class, :any, default: nil)
   attr(:show_avatar, :boolean, default: false, doc: "Show avatar skeleton")
@@ -228,6 +232,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       <.dm_skeleton_table rows={5} columns={4} />
       <.dm_skeleton_table rows={3} columns={2} show_header={true} />
   """
+  @doc type: :component
   attr(:id, :any, default: nil)
   attr(:class, :any, default: nil)
   attr(:rows, :integer, default: 5, doc: "Number of table rows")
@@ -274,6 +279,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       <.dm_skeleton_list items={5} show_avatar={true} />
       <.dm_skeleton_list items={3} lines_per_item={2} />
   """
+  @doc type: :component
   attr(:id, :any, default: nil)
   attr(:class, :any, default: nil)
   attr(:items, :integer, default: 5, doc: "Number of list items")
@@ -313,6 +319,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       <.dm_skeleton_form fields={4} show_submit={true} />
       <.dm_skeleton_form fields={3} field_types={["text", "select", "textarea"]} />
   """
+  @doc type: :component
   attr(:id, :any, default: nil)
   attr(:class, :any, default: nil)
   attr(:fields, :integer, default: 4, doc: "Number of form fields")
@@ -378,6 +385,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       <.dm_skeleton_comment />
       <.dm_skeleton_comment show_replies={2} />
   """
+  @doc type: :component
   attr(:id, :any, default: nil)
   attr(:class, :any, default: nil)
   attr(:show_replies, :integer, default: 0, doc: "Number of reply skeletons to show")

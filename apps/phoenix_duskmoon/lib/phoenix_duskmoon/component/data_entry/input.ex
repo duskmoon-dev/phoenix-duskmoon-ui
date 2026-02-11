@@ -44,6 +44,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
       <.dm_input field={@form[:email]} type="email" />
       <.dm_input name="my-input" errors={["oh no!"]} />
   """
+  @doc type: :component
   attr(:field_class, :any, default: nil)
   attr(:id, :any, default: nil)
   attr(:class, :any, default: nil)
