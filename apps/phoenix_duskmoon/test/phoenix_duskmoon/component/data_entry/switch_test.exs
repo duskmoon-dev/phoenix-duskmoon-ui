@@ -106,4 +106,68 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
 
     assert result =~ ~s[value="true"]
   end
+
+  test "renders switch with label_class" do
+    result =
+      render_component(&dm_switch/1, %{
+        name: "opt",
+        label: "Dark mode",
+        label_class: "font-bold"
+      })
+
+    assert result =~ "font-bold"
+  end
+
+  test "renders switch with rest attributes" do
+    result =
+      render_component(&dm_switch/1, %{
+        name: "opt",
+        "data-testid": "my-switch",
+        "phx-change": "toggle"
+      })
+
+    assert result =~ "data-testid=\"my-switch\""
+    assert result =~ "phx-change=\"toggle\""
+  end
+
+  test "renders unchecked switch by default" do
+    result = render_component(&dm_switch/1, %{name: "opt"})
+
+    refute result =~ "checked=\"checked\""
+  end
+
+  test "renders switch with checked and disabled" do
+    result = render_component(&dm_switch/1, %{name: "opt", checked: true, disabled: true})
+
+    assert result =~ "checked"
+    assert result =~ "disabled"
+  end
+
+  test "renders switch with label and label_class combined" do
+    result =
+      render_component(&dm_switch/1, %{
+        name: "opt",
+        label: "Enable",
+        label_class: "text-sm text-gray-500"
+      })
+
+    assert result =~ "Enable"
+    assert result =~ "text-sm text-gray-500"
+    assert result =~ "dm-label__text"
+  end
+
+  test "renders switch label inside label element" do
+    result =
+      render_component(&dm_switch/1, %{name: "opt", label: "Notify"})
+
+    assert result =~ "<label"
+    assert result =~ "Notify"
+  end
+
+  test "renders switch with ml-2 spacing on label text" do
+    result =
+      render_component(&dm_switch/1, %{name: "opt", label: "Opt in"})
+
+    assert result =~ "ml-2"
+  end
 end

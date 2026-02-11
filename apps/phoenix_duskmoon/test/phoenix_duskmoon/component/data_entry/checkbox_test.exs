@@ -105,4 +105,78 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
 
     assert result =~ ~s[value="true"]
   end
+
+  test "renders checkbox with label_class" do
+    result =
+      render_component(&dm_checkbox/1, %{
+        name: "opt",
+        label: "Accept terms",
+        label_class: "text-sm"
+      })
+
+    assert result =~ "text-sm"
+  end
+
+  test "renders checkbox with rest attributes" do
+    result =
+      render_component(&dm_checkbox/1, %{
+        name: "opt",
+        "data-testid": "terms-checkbox",
+        "aria-label": "Accept terms"
+      })
+
+    assert result =~ "data-testid=\"terms-checkbox\""
+    assert result =~ "aria-label=\"Accept terms\""
+  end
+
+  test "renders unchecked checkbox by default" do
+    result = render_component(&dm_checkbox/1, %{name: "opt"})
+
+    refute result =~ "checked=\"checked\""
+  end
+
+  test "renders checkbox with checked and disabled" do
+    result =
+      render_component(&dm_checkbox/1, %{name: "opt", checked: true, disabled: true})
+
+    assert result =~ "checked"
+    assert result =~ "disabled"
+    assert result =~ "opacity-50"
+  end
+
+  test "renders checkbox with indeterminate and checked" do
+    result =
+      render_component(&dm_checkbox/1, %{
+        name: "opt",
+        checked: true,
+        indeterminate: true
+      })
+
+    assert result =~ "checked"
+    assert result =~ "phx-indeterminate"
+  end
+
+  test "renders checkbox with cursor-pointer label" do
+    result = render_component(&dm_checkbox/1, %{name: "opt"})
+
+    assert result =~ "cursor-pointer"
+  end
+
+  test "renders checkbox label with flex layout" do
+    result = render_component(&dm_checkbox/1, %{name: "opt"})
+
+    assert result =~ "flex items-center gap-2"
+  end
+
+  test "renders non-indeterminate checkbox by default" do
+    result = render_component(&dm_checkbox/1, %{name: "opt"})
+
+    refute result =~ "phx-indeterminate"
+  end
+
+  test "renders enabled checkbox by default" do
+    result = render_component(&dm_checkbox/1, %{name: "opt"})
+
+    refute result =~ "cursor-not-allowed"
+  end
 end

@@ -111,4 +111,100 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
 
     assert result =~ "custom-range"
   end
+
+  test "renders slider with show_value false hides value display" do
+    result =
+      render_component(&dm_slider/1, %{
+        name: "vol",
+        value: 75,
+        label: "Volume",
+        show_value: false
+      })
+
+    # Label still renders
+    assert result =~ "Volume"
+    # Min/max labels should not render
+    refute result =~ "flex justify-between text-xs"
+  end
+
+  test "renders slider with custom wrapper class" do
+    result =
+      render_component(&dm_slider/1, %{name: "vol", value: nil, class: "my-wrapper"})
+
+    assert result =~ "my-wrapper"
+    assert result =~ "dm-form-group"
+  end
+
+  test "renders slider with label_class" do
+    result =
+      render_component(&dm_slider/1, %{
+        name: "vol",
+        value: nil,
+        label: "Volume",
+        label_class: "text-lg"
+      })
+
+    assert result =~ "text-lg"
+  end
+
+  test "renders slider with rest attributes" do
+    result =
+      render_component(&dm_slider/1, %{
+        name: "vol",
+        value: nil,
+        "data-testid": "volume-slider",
+        "aria-label": "Volume control"
+      })
+
+    assert result =~ "data-testid=\"volume-slider\""
+    assert result =~ "aria-label=\"Volume control\""
+  end
+
+  test "renders min and max labels when show_value is true" do
+    result =
+      render_component(&dm_slider/1, %{name: "vol", value: 50, min: 10, max: 200})
+
+    # Min and max labels should show the range endpoints
+    assert result =~ ">10</span>"
+    assert result =~ ">200</span>"
+  end
+
+  test "renders value display next to label when show_value is true" do
+    result =
+      render_component(&dm_slider/1, %{name: "vol", value: 42, label: "Volume"})
+
+    assert result =~ "Volume"
+    assert result =~ "42"
+  end
+
+  test "renders slider with default step 1" do
+    result = render_component(&dm_slider/1, %{name: "vol", value: nil})
+
+    assert result =~ ~s[step="1"]
+  end
+
+  test "renders slider with boundary value 0" do
+    result = render_component(&dm_slider/1, %{name: "vol", value: 0})
+
+    assert result =~ ~s[value="0"]
+  end
+
+  test "renders slider with value at max boundary" do
+    result = render_component(&dm_slider/1, %{name: "vol", value: 100, max: 100})
+
+    assert result =~ ~s[value="100"]
+    assert result =~ ~s[max="100"]
+  end
+
+  test "renders label with for attribute when id provided" do
+    result =
+      render_component(&dm_slider/1, %{
+        name: "vol",
+        value: nil,
+        id: "vol-slider",
+        label: "Volume"
+      })
+
+    assert result =~ ~s[for="vol-slider"]
+  end
 end

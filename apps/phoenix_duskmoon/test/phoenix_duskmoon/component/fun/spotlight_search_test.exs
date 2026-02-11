@@ -156,4 +156,112 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearchTest do
     assert result =~ "spotlight_keydown"
     assert result =~ "spotlight_change"
   end
+
+  test "loading state hides close button" do
+    result = render_component(&dm_fun_spotlight_search/1, base_attrs(%{loading: true}))
+
+    assert result =~ "dm-fun-spotlight-loading"
+    refute result =~ "spotlight_close"
+  end
+
+  test "loading state hides suggestion list" do
+    result =
+      render_component(
+        &dm_fun_spotlight_search/1,
+        base_attrs(%{
+          loading: true,
+          suggestion: [
+            %{icon: "search", label: "Hidden", description: nil, action: nil}
+          ]
+        })
+      )
+
+    refute result =~ "dm-fun-spotlight-suggestion-list-item"
+  end
+
+  test "closed dialog does not have open attribute" do
+    result = render_component(&dm_fun_spotlight_search/1, base_attrs(%{open: false}))
+
+    refute result =~ ~s[<dialog id="spotlight" open]
+  end
+
+  test "renders suggestion without description" do
+    result =
+      render_component(
+        &dm_fun_spotlight_search/1,
+        base_attrs(%{
+          suggestion: [
+            %{icon: "x", label: "No desc", description: nil, action: "go"}
+          ]
+        })
+      )
+
+    assert result =~ "No desc"
+    assert result =~ "go"
+  end
+
+  test "renders suggestion without action" do
+    result =
+      render_component(
+        &dm_fun_spotlight_search/1,
+        base_attrs(%{
+          suggestion: [
+            %{icon: "x", label: "No action", description: "Has desc", action: nil}
+          ]
+        })
+      )
+
+    assert result =~ "No action"
+    assert result =~ "Has desc"
+  end
+
+  test "renders multiple suggestions with correct indices" do
+    result =
+      render_component(
+        &dm_fun_spotlight_search/1,
+        base_attrs(%{
+          suggestion: [
+            %{icon: "a", label: "First", description: nil, action: nil},
+            %{icon: "b", label: "Second", description: nil, action: nil},
+            %{icon: "c", label: "Third", description: nil, action: nil}
+          ]
+        })
+      )
+
+    assert result =~ ~s[phx-value-index="0"]
+    assert result =~ ~s[phx-value-index="1"]
+    assert result =~ ~s[phx-value-index="2"]
+    assert result =~ "First"
+    assert result =~ "Second"
+    assert result =~ "Third"
+  end
+
+  test "empty suggestion list renders container but no items" do
+    result = render_component(&dm_fun_spotlight_search/1, base_attrs())
+
+    # Empty list is truthy — container renders but no items
+    refute result =~ "dm-fun-spotlight-suggestion-list-item"
+  end
+
+  test "phx_target is set on dialog" do
+    result =
+      render_component(&dm_fun_spotlight_search/1, base_attrs(%{phx_target: "#my-component"}))
+
+    assert result =~ ~s[phx-target="#my-component"]
+  end
+
+  test "renders suggestion with label only" do
+    result =
+      render_component(
+        &dm_fun_spotlight_search/1,
+        base_attrs(%{
+          suggestion: [
+            %{icon: "x", label: "Just a label", description: nil, action: nil}
+          ]
+        })
+      )
+
+    assert result =~ "Just a label"
+    assert result =~ "dm-fun-spotlight-suggestion-list-item"
+  end
 end

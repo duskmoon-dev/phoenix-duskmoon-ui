@@ -185,4 +185,84 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
     assert result =~ "data-testid=\"my-dropdown\""
     assert result =~ "aria-label=\"Navigation menu\""
   end
+
+  test "renders default color primary" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ "dm-dropdown__content--primary"
+  end
+
+  test "renders content ul with tabindex 0" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    # The <ul> content element should have tabindex for keyboard access
+    assert result =~ "<ul"
+    assert result =~ ~s[tabindex="0"]
+  end
+
+  test "renders content with shadow and background classes" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ "shadow"
+    assert result =~ "bg-base-100"
+    assert result =~ "rounded-box"
+  end
+
+  test "renders dropdown with position and open combined" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        position: "right",
+        open: true,
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ "dm-dropdown--right"
+    assert result =~ "dm-dropdown--open"
+  end
+
+  test "renders dropdown with custom class and dropdown_class combined" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        class: "outer-custom",
+        dropdown_class: "inner-custom",
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ "outer-custom"
+    assert result =~ "inner-custom"
+  end
+
+  test "renders content with p-2 padding" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ "p-2"
+  end
+
+  test "renders content with w-52 default width" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ "w-52"
+  end
 end
