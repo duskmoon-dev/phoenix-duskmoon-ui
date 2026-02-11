@@ -5,46 +5,166 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
   import Phoenix.LiveViewTest
   import PhoenixDuskmoon.Component.Feedback.Loading
 
-  test "renders loading spinner" do
-    result = render_component(&dm_loading_spinner/1, %{})
+  describe "dm_loading_spinner/1" do
+    test "renders loading container" do
+      result = render_component(&dm_loading_spinner/1, %{})
 
-    assert result =~ "dm-loading-container"
+      assert result =~ "dm-loading-container"
+    end
+
+    test "renders spinner icon element" do
+      result = render_component(&dm_loading_spinner/1, %{})
+
+      assert result =~ "dm-loading-spinner__icon"
+    end
+
+    test "renders with role status" do
+      result = render_component(&dm_loading_spinner/1, %{})
+
+      assert result =~ ~s[role="status"]
+    end
+
+    test "renders with default aria-label Loading" do
+      result = render_component(&dm_loading_spinner/1, %{})
+
+      assert result =~ ~s[aria-label="Loading"]
+    end
+
+    test "renders with default size md" do
+      result = render_component(&dm_loading_spinner/1, %{})
+
+      assert result =~ "dm-loading-spinner--md"
+    end
+
+    test "renders with all size options" do
+      for size <- ~w(xs sm md lg) do
+        result = render_component(&dm_loading_spinner/1, %{size: size})
+        assert result =~ "dm-loading-spinner--#{size}"
+      end
+    end
+
+    test "renders with default variant primary" do
+      result = render_component(&dm_loading_spinner/1, %{})
+
+      assert result =~ "dm-loading-spinner--primary"
+    end
+
+    test "renders with all variant options" do
+      for variant <- ~w(primary secondary accent info success warning error) do
+        result = render_component(&dm_loading_spinner/1, %{variant: variant})
+        assert result =~ "dm-loading-spinner--#{variant}"
+      end
+    end
+
+    test "renders with text" do
+      result = render_component(&dm_loading_spinner/1, %{text: "Loading..."})
+
+      assert result =~ "Loading..."
+      assert result =~ "dm-loading-spinner__text"
+    end
+
+    test "renders without text span by default" do
+      result = render_component(&dm_loading_spinner/1, %{})
+
+      refute result =~ "dm-loading-spinner__text"
+    end
+
+    test "renders with text as aria-label" do
+      result = render_component(&dm_loading_spinner/1, %{text: "Please wait"})
+
+      assert result =~ ~s[aria-label="Please wait"]
+    end
+
+    test "renders with custom id" do
+      result = render_component(&dm_loading_spinner/1, %{id: "my-loader"})
+
+      assert result =~ ~s[id="my-loader"]
+    end
+
+    test "renders with custom class" do
+      result = render_component(&dm_loading_spinner/1, %{class: "my-spinner"})
+
+      assert result =~ "my-spinner"
+    end
+
+    test "renders with rest attributes" do
+      result = render_component(&dm_loading_spinner/1, %{"data-testid": "loader"})
+
+      assert result =~ "data-testid=\"loader\""
+    end
   end
 
-  test "renders loading spinner with size" do
-    result = render_component(&dm_loading_spinner/1, %{size: "lg"})
+  describe "dm_loading_ex/1" do
+    test "renders advanced particle loader with role status" do
+      result = render_component(&dm_loading_ex/1, %{})
 
-    assert result =~ "dm-loading-container"
-    assert result =~ "dm-loading-spinner--lg"
-  end
+      assert result =~ ~s[role="status"]
+      assert result =~ ~s[aria-label="Loading"]
+    end
 
-  test "renders loading spinner with variant" do
-    result = render_component(&dm_loading_spinner/1, %{variant: "success"})
+    test "renders loader with style block" do
+      result = render_component(&dm_loading_ex/1, %{})
 
-    assert result =~ "dm-loading-spinner--success"
-  end
+      assert result =~ "<style"
+      assert result =~ "@keyframes"
+    end
 
-  test "renders loading spinner with text" do
-    result = render_component(&dm_loading_spinner/1, %{text: "Loading..."})
+    test "renders default 88 particles" do
+      result = render_component(&dm_loading_ex/1, %{})
 
-    assert result =~ "Loading..."
-  end
+      count = length(String.split(result, "<i")) - 1
+      # The <i> tags inside the div (not in style block)
+      assert count >= 88
+    end
 
-  test "renders advanced particle loader" do
-    result = render_component(&dm_loading_ex/1, %{})
+    test "renders custom item count" do
+      result = render_component(&dm_loading_ex/1, %{item_count: 20})
 
-    assert result =~ "loader-"
-  end
+      # The style block generates nth-child rules for each particle
+      assert result =~ "nth-child(20)"
+      refute result =~ "nth-child(21)"
+    end
 
-  test "renders advanced loader with custom item count" do
-    result = render_component(&dm_loading_ex/1, %{item_count: 44})
+    test "renders with custom speed" do
+      result = render_component(&dm_loading_ex/1, %{speed: "2s"})
 
-    assert result =~ "loader-"
-  end
+      assert result =~ "--duration: 2s"
+    end
 
-  test "renders advanced loader with custom speed" do
-    result = render_component(&dm_loading_ex/1, %{speed: "2s"})
+    test "renders with default speed 4s" do
+      result = render_component(&dm_loading_ex/1, %{})
 
-    assert result =~ "2s"
+      assert result =~ "--duration: 4s"
+    end
+
+    test "renders with custom size" do
+      result = render_component(&dm_loading_ex/1, %{size: 44})
+
+      assert result =~ "--size: 44em"
+    end
+
+    test "renders with default size 21" do
+      result = render_component(&dm_loading_ex/1, %{})
+
+      assert result =~ "--size: 21em"
+    end
+
+    test "renders with custom id" do
+      result = render_component(&dm_loading_ex/1, %{id: "fancy-loader"})
+
+      assert result =~ ~s[id="fancy-loader"]
+    end
+
+    test "renders with custom class" do
+      result = render_component(&dm_loading_ex/1, %{class: "my-loader"})
+
+      assert result =~ "my-loader"
+    end
+
+    test "renders with rest attributes" do
+      result = render_component(&dm_loading_ex/1, %{"data-testid": "particle-loader"})
+
+      assert result =~ "data-testid=\"particle-loader\""
+    end
   end
 end
