@@ -390,4 +390,20 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeaderTest do
 
     assert toggle_count == 2
   end
+
+  test "mobile menu checkboxes use sr-only instead of hidden for keyboard access" do
+    result = render_component(&dm_page_header/1, %{inner_block: inner_block()})
+
+    # Both checkboxes should use sr-only (visually hidden, keyboard accessible)
+    assert result =~ ~s[class="sr-only peer"]
+    # Should NOT use display:none hidden
+    refute result =~ ~s[class="hidden peer"]
+  end
+
+  test "mobile menu checkboxes do not have aria-hidden" do
+    result = render_component(&dm_page_header/1, %{inner_block: inner_block()})
+
+    # Checkboxes should be accessible to screen readers
+    refute Regex.match?(~r/<input[^>]*aria-hidden/, result)
+  end
 end

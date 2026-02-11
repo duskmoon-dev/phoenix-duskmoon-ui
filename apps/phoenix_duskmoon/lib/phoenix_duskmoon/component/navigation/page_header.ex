@@ -126,7 +126,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
         <label for="mobile-menu" aria-label={@toggle_menu_label}>
           <PhoenixDuskmoon.Component.Icon.Icons.dm_mdi name="menu" class="w-8 h-8 cursor-pointer" />
         </label>
-        <input class="hidden peer" id="mobile-menu" type="checkbox" aria-hidden="true" />
+        <input class="sr-only peer" id="mobile-menu" type="checkbox" />
         <div
           class={[
             "hidden peer-checked:flex flex-col items-center",
@@ -208,7 +208,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
           <label for="dm-mobile-menu-control" aria-label={@toggle_menu_label}>
             <PhoenixDuskmoon.Component.Icon.Icons.dm_mdi name="menu" class="w-8 h-8" />
           </label>
-          <input class="hidden peer" id="dm-mobile-menu-control" type="checkbox" aria-hidden="true" />
+          <input class="sr-only peer" id="dm-mobile-menu-control" type="checkbox" />
           <div
             class={[
               "hidden peer-checked:flex flex-col items-start",
