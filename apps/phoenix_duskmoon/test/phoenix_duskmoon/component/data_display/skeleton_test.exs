@@ -8,27 +8,27 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
   describe "dm_skeleton/1" do
     test "renders basic skeleton" do
       assert render_component(&dm_skeleton/1, %{}) ==
-               ~s[<div aria-busy="true" class="dm-skeleton"></div>]
+               ~s[<div aria-busy="true" aria-label="Loading" class="dm-skeleton"></div>]
     end
 
     test "renders skeleton with custom class" do
       assert render_component(&dm_skeleton/1, %{class: "w-32 h-4"}) ==
-               ~s[<div aria-busy="true" class="dm-skeleton w-32 h-4"></div>]
+               ~s[<div aria-busy="true" aria-label="Loading" class="dm-skeleton w-32 h-4"></div>]
     end
 
     test "renders skeleton with variant" do
       assert render_component(&dm_skeleton/1, %{variant: "circle"}) ==
-               ~s[<div aria-busy="true" class="dm-skeleton dm-skeleton--circle"></div>]
+               ~s[<div aria-busy="true" aria-label="Loading" class="dm-skeleton dm-skeleton--circle"></div>]
     end
 
     test "renders skeleton with size" do
       assert render_component(&dm_skeleton/1, %{size: "md"}) ==
-               ~s[<div aria-busy="true" class="dm-skeleton dm-skeleton--md"></div>]
+               ~s[<div aria-busy="true" aria-label="Loading" class="dm-skeleton dm-skeleton--md"></div>]
     end
 
     test "renders skeleton with animation" do
       assert render_component(&dm_skeleton/1, %{animation: "pulse"}) ==
-               ~s[<div aria-busy="true" class="dm-skeleton animate-pulse"></div>]
+               ~s[<div aria-busy="true" aria-label="Loading" class="dm-skeleton animate-pulse"></div>]
     end
 
     test "renders skeleton with all options" do
@@ -40,12 +40,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
                height: "h-16",
                class: "rounded-full"
              }) ==
-               ~s[<div aria-busy="true" class="dm-skeleton dm-skeleton--avatar dm-skeleton--lg animate-wave w-16 h-16 rounded-full"></div>]
+               ~s[<div aria-busy="true" aria-label="Loading" class="dm-skeleton dm-skeleton--avatar dm-skeleton--lg animate-wave w-16 h-16 rounded-full"></div>]
     end
 
     test "renders skeleton with id" do
       assert render_component(&dm_skeleton/1, %{id: "skeleton-1"}) ==
-               ~s[<div id="skeleton-1" aria-busy="true" class="dm-skeleton"></div>]
+               ~s[<div id="skeleton-1" aria-busy="true" aria-label="Loading" class="dm-skeleton"></div>]
     end
   end
 
@@ -518,6 +518,93 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
       assert result =~ "border-l"
       assert result =~ "animate-bounce"
       assert result =~ "ml-12"
+    end
+  end
+
+  describe "configurable loading_label" do
+    test "dm_skeleton uses default Loading label" do
+      result = render_component(&dm_skeleton/1, %{})
+
+      assert result =~ ~s[aria-label="Loading"]
+    end
+
+    test "dm_skeleton accepts custom loading_label" do
+      result = render_component(&dm_skeleton/1, %{loading_label: "Chargement"})
+
+      assert result =~ ~s[aria-label="Chargement"]
+    end
+
+    test "dm_skeleton_text uses default Loading content label" do
+      result = render_component(&dm_skeleton_text/1, %{})
+
+      assert result =~ ~s[aria-label="Loading content"]
+    end
+
+    test "dm_skeleton_text accepts custom loading_label" do
+      result = render_component(&dm_skeleton_text/1, %{loading_label: "Cargando contenido"})
+
+      assert result =~ ~s[aria-label="Cargando contenido"]
+    end
+
+    test "dm_skeleton_card uses default Loading card label" do
+      result = render_component(&dm_skeleton_card/1, %{})
+
+      assert result =~ ~s[aria-label="Loading card"]
+    end
+
+    test "dm_skeleton_card accepts custom loading_label" do
+      result = render_component(&dm_skeleton_card/1, %{loading_label: "Laden Karte"})
+
+      assert result =~ ~s[aria-label="Laden Karte"]
+    end
+
+    test "dm_skeleton_table uses default Loading table label" do
+      result = render_component(&dm_skeleton_table/1, %{})
+
+      assert result =~ ~s[aria-label="Loading table"]
+    end
+
+    test "dm_skeleton_table accepts custom loading_label" do
+      result = render_component(&dm_skeleton_table/1, %{loading_label: "Chargement tableau"})
+
+      assert result =~ ~s[aria-label="Chargement tableau"]
+    end
+
+    test "dm_skeleton_list uses default Loading list label" do
+      result = render_component(&dm_skeleton_list/1, %{})
+
+      assert result =~ ~s[aria-label="Loading list"]
+    end
+
+    test "dm_skeleton_list accepts custom loading_label" do
+      result = render_component(&dm_skeleton_list/1, %{loading_label: "Cargando lista"})
+
+      assert result =~ ~s[aria-label="Cargando lista"]
+    end
+
+    test "dm_skeleton_form uses default Loading form label" do
+      result = render_component(&dm_skeleton_form/1, %{})
+
+      assert result =~ ~s[aria-label="Loading form"]
+    end
+
+    test "dm_skeleton_form accepts custom loading_label" do
+      result = render_component(&dm_skeleton_form/1, %{loading_label: "Laden Formular"})
+
+      assert result =~ ~s[aria-label="Laden Formular"]
+    end
+
+    test "dm_skeleton_comment uses default Loading comments label" do
+      result = render_component(&dm_skeleton_comment/1, %{})
+
+      assert result =~ ~s[aria-label="Loading comments"]
+    end
+
+    test "dm_skeleton_comment accepts custom loading_label" do
+      result =
+        render_component(&dm_skeleton_comment/1, %{loading_label: "Chargement commentaires"})
+
+      assert result =~ ~s[aria-label="Chargement commentaires"]
     end
   end
 

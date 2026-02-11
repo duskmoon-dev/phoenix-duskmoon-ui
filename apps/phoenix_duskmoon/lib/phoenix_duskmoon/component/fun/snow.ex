@@ -73,6 +73,7 @@ defmodule PhoenixDuskmoon.Component.Fun.Snow do
     <div
       id={@id}
       class={[@container_class, "overflow-hidden"]}
+      aria-hidden="true"
       {@rest}
     >
       <div

@@ -266,4 +266,10 @@ defmodule PhoenixDuskmoon.Component.Fun.SnowTest do
     assert result =~ "position: absolute"
     assert result =~ "top: -100px"
   end
+
+  test "renders snow container with aria-hidden for decorative content" do
+    result = render_component(&dm_fun_snow/1, %{id: "snow-a11y"})
+
+    assert result =~ ~s[aria-hidden="true"]
+  end
 end

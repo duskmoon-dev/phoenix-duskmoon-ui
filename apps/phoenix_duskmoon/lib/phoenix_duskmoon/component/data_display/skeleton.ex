@@ -38,12 +38,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   attr(:width, :string, default: nil, doc: "Custom width (e.g., 'w-32', 'w-full')")
   attr(:height, :string, default: nil, doc: "Custom height (e.g., 'h-4', 'h-8')")
+  attr(:loading_label, :string, default: "Loading", doc: "Accessible label for the loading state")
 
   def dm_skeleton(assigns) do
     ~H"""
     <div
       id={@id}
       aria-busy="true"
+      aria-label={@loading_label}
       class={build_skeleton_classes(@variant, @size, @animation, @width, @height, @class)}
     />
     """
@@ -80,9 +82,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   attr(:last_line_width, :string, default: "w-full", doc: "Width of the last line")
   attr(:animation, :string, default: nil, doc: "Animation type")
 
+  attr(:loading_label, :string,
+    default: "Loading content",
+    doc: "Accessible label for the loading state"
+  )
+
   def dm_skeleton_text(assigns) do
     ~H"""
-    <div id={@id} aria-busy="true" class={build_container_classes(@class)}>
+    <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_container_classes(@class)}>
       <%= if @lines > 1 do %>
         <%= for i <- 1..(@lines - 1) do %>
         <div class={build_line_classes(@line_height, "w-full", @animation)}></div>
@@ -172,9 +179,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   attr(:show_action, :boolean, default: false, doc: "Show action button skeleton")
   attr(:animation, :string, default: nil, doc: "Animation type")
 
+  attr(:loading_label, :string,
+    default: "Loading card",
+    doc: "Accessible label for the loading state"
+  )
+
   def dm_skeleton_card(assigns) do
     ~H"""
-    <div id={@id} aria-busy="true" class={build_card_classes(@class)}>
+    <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_card_classes(@class)}>
       <div class="dm-card__body">
         <div class="flex items-start gap-4">
           <%= if @show_avatar do %>
@@ -240,9 +252,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   attr(:show_header, :boolean, default: true, doc: "Show table header")
   attr(:animation, :string, default: nil, doc: "Animation type")
 
+  attr(:loading_label, :string,
+    default: "Loading table",
+    doc: "Accessible label for the loading state"
+  )
+
   def dm_skeleton_table(assigns) do
     ~H"""
-    <div id={@id} aria-busy="true" class={["overflow-x-auto", @class]}>
+    <div id={@id} aria-busy="true" aria-label={@loading_label} class={["overflow-x-auto", @class]}>
       <table class="dm-table">
         <%= if @show_header do %>
           <thead>
@@ -288,9 +305,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   attr(:lines_per_item, :integer, default: 1, doc: "Number of text lines per item")
   attr(:animation, :string, default: nil, doc: "Animation type")
 
+  attr(:loading_label, :string,
+    default: "Loading list",
+    doc: "Accessible label for the loading state"
+  )
+
   def dm_skeleton_list(assigns) do
     ~H"""
-    <div id={@id} aria-busy="true" class={build_list_container_classes(@class)}>
+    <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_list_container_classes(@class)}>
       <%= for _i <- 1..@items do %>
         <div class="flex items-start gap-3">
           <%= if @show_avatar do %>
@@ -332,6 +354,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   attr(:show_submit, :boolean, default: true, doc: "Show submit button skeleton")
   attr(:animation, :string, default: nil, doc: "Animation type")
 
+  attr(:loading_label, :string,
+    default: "Loading form",
+    doc: "Accessible label for the loading state"
+  )
+
   def dm_skeleton_form(assigns) do
     # Always ensure field_types is a valid list
     field_types =
@@ -359,7 +386,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     assigns = assign(assigns, :field_types, field_types)
 
     ~H"""
-    <form id={@id} aria-busy="true" class={build_form_classes(@class)}>
+    <form id={@id} aria-busy="true" aria-label={@loading_label} class={build_form_classes(@class)}>
       <%= for field_type <- @field_types do %>
         <div class="dm-form-group">
           <div class="dm-label">
@@ -391,9 +418,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   attr(:show_replies, :integer, default: 0, doc: "Number of reply skeletons to show")
   attr(:animation, :string, default: nil, doc: "Animation type")
 
+  attr(:loading_label, :string,
+    default: "Loading comments",
+    doc: "Accessible label for the loading state"
+  )
+
   def dm_skeleton_comment(assigns) do
     ~H"""
-    <div id={@id} aria-busy="true" class={build_comment_container_classes(@class)}>
+    <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_comment_container_classes(@class)}>
       <!-- Main comment -->
       <div class="flex gap-4">
         <.dm_skeleton_avatar size="sm" animation={@animation} />
