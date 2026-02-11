@@ -198,4 +198,70 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
     assert result =~ "Home"
     assert result =~ ~s[href="/home"]
   end
+
+  test "renders appbar menu item with custom class combined with appbar-action" do
+    result =
+      render_component(&dm_appbar/1, %{
+        title: "App",
+        menu: [
+          %{to: "/test", class: "font-bold", inner_block: fn _, _ -> "Test" end}
+        ]
+      })
+
+    assert result =~ "appbar-action"
+    assert result =~ "font-bold"
+  end
+
+  test "renders appbar with empty menu list" do
+    result = render_component(&dm_appbar/1, %{title: "App", menu: []})
+
+    assert result =~ "appbar-trailing"
+    refute result =~ "appbar-action"
+  end
+
+  test "renders appbar with both logo and user_profile" do
+    result =
+      render_component(&dm_appbar/1, %{
+        title: "App",
+        logo: [%{inner_block: fn _, _ -> "Logo" end}],
+        user_profile: [%{inner_block: fn _, _ -> "Profile" end}]
+      })
+
+    assert result =~ "Logo"
+    assert result =~ "Profile"
+    assert result =~ "appbar-brand"
+    assert result =~ "appbar-trailing"
+  end
+
+  test "renders simple appbar with logo slot" do
+    result =
+      render_component(&dm_simple_appbar/1, %{
+        title: "App",
+        logo: [%{inner_block: fn _, _ -> "MyLogo" end}]
+      })
+
+    assert result =~ "MyLogo"
+    assert result =~ "appbar-brand"
+  end
+
+  test "renders simple appbar with user_profile slot" do
+    result =
+      render_component(&dm_simple_appbar/1, %{
+        title: "App",
+        user_profile: [%{inner_block: fn _, _ -> "UserArea" end}]
+      })
+
+    assert result =~ "UserArea"
+  end
+
+  test "renders simple appbar with divider between menu and user_profile in mobile" do
+    result =
+      render_component(&dm_simple_appbar/1, %{
+        title: "App",
+        menu: [%{to: "/a", inner_block: fn _, _ -> "A" end}],
+        user_profile: [%{inner_block: fn _, _ -> "U" end}]
+      })
+
+    assert result =~ "dm-divider"
+  end
 end

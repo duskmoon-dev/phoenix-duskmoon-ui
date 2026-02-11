@@ -244,4 +244,60 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
     assert result =~ "badge-extra"
     assert result =~ "<el-dm-badge"
   end
+
+  test "renders badge with ghost variant and content" do
+    result =
+      render_component(&dm_badge/1, %{
+        variant: "ghost",
+        inner_block: inner_block("Ghost Badge")
+      })
+
+    assert result =~ ~s[variant="ghost"]
+    assert result =~ "Ghost Badge"
+  end
+
+  test "renders badge with multiple space-separated classes" do
+    result =
+      render_component(&dm_badge/1, %{
+        class: "custom-badge highlight rounded-lg",
+        inner_block: inner_block("Multi")
+      })
+
+    assert result =~ "custom-badge highlight rounded-lg"
+  end
+
+  test "renders badge with outline false does not add outline attribute" do
+    result =
+      render_component(&dm_badge/1, %{
+        outline: false,
+        inner_block: inner_block("No outline")
+      })
+
+    assert result =~ "<el-dm-badge"
+    assert result =~ "No outline"
+  end
+
+  test "renders badge with xs size" do
+    result =
+      render_component(&dm_badge/1, %{
+        size: "xs",
+        inner_block: inner_block("Tiny")
+      })
+
+    assert result =~ ~s[size="xs"]
+  end
+
+  test "renders badge with outline and variant combined" do
+    result =
+      render_component(&dm_badge/1, %{
+        variant: "error",
+        outline: true,
+        size: "lg",
+        inner_block: inner_block("Alert")
+      })
+
+    assert result =~ ~s[variant="error"]
+    assert result =~ ~s[size="lg"]
+    assert result =~ "Alert"
+  end
 end

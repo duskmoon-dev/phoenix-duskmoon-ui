@@ -188,4 +188,42 @@ defmodule PhoenixDuskmoon.Component.Fun.SnowTest do
 
     assert result =~ "overflow-hidden"
   end
+
+  test "renders no snowflakes with negative count" do
+    result = render_component(&dm_fun_snow/1, %{id: "snow-neg", count: -5})
+
+    assert result =~ ~s[id="snow-neg"]
+    count = length(String.split(result, "--snowflake-size")) - 1
+    assert count == 0
+  end
+
+  test "renders snowflakes with use_unicode false explicitly" do
+    result = render_component(&dm_fun_snow/1, %{id: "snow-no-uni", use_unicode: false, count: 3})
+
+    refute result =~ "snowflake-unicode"
+    count = length(String.split(result, "--snowflake-size")) - 1
+    assert count == 3
+  end
+
+  test "renders style block even with count 0" do
+    result = render_component(&dm_fun_snow/1, %{id: "snow-style-zero", count: 0})
+
+    assert result =~ "<style>"
+    assert result =~ "@keyframes snowfall"
+  end
+
+  test "renders snowflake color in inline style" do
+    result = render_component(&dm_fun_snow/1, %{id: "snow-clr", count: 1, color: "#AABB00"})
+
+    assert result =~ "--snowflake-color: #AABB00"
+  end
+
+  test "renders snowflakes with dm-fun-snowflake class" do
+    result = render_component(&dm_fun_snow/1, %{id: "snow-cls", count: 2})
+
+    # Each snowflake div should have the dm-fun-snowflake class
+    flake_count = length(String.split(result, "dm-fun-snowflake")) - 1
+    # At least 2 from divs + references in <style> block
+    assert flake_count >= 2
+  end
 end

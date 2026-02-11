@@ -251,5 +251,56 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
 
       assert result =~ ~s[id="flash"]
     end
+
+    test "does not render icon when title is nil" do
+      result =
+        render_component(&dm_flash/1, %{
+          kind: :info,
+          flash: %{"info" => "No icon expected"}
+        })
+
+      assert result =~ "No icon expected"
+      refute result =~ "info-circle"
+    end
+
+    test "renders close button with aria-label" do
+      result =
+        render_component(&dm_flash/1, %{
+          kind: :info,
+          flash: %{"info" => "Close me"}
+        })
+
+      assert result =~ ~s[aria-label="close"]
+      assert result =~ ~s[type="button"]
+    end
+
+    test "renders toast positioning classes" do
+      result =
+        render_component(&dm_flash/1, %{
+          kind: :info,
+          flash: %{"info" => "Positioned"}
+        })
+
+      assert result =~ "dm-toast"
+      assert result =~ "dm-toast--top"
+      assert result =~ "dm-toast--end"
+    end
+
+    test "renders dm-alert class with kind-specific variant" do
+      info_result =
+        render_component(&dm_flash/1, %{
+          kind: :info,
+          flash: %{"info" => "Info alert"}
+        })
+
+      error_result =
+        render_component(&dm_flash/1, %{
+          kind: :error,
+          flash: %{"error" => "Error alert"}
+        })
+
+      assert info_result =~ "dm-alert--info"
+      assert error_result =~ "dm-alert--error"
+    end
   end
 end
