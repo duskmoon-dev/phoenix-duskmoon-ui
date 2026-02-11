@@ -35,21 +35,22 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
   use Phoenix.Component
 
   @doc type: :component
-  attr(:value, :integer, default: 0)
-  attr(:max, :integer, default: 100)
+  attr(:value, :integer, default: 0, doc: "Current progress value")
+  attr(:max, :integer, default: 100, doc: "Maximum progress value")
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    doc: "Progress bar color variant"
   )
 
-  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
-  attr(:show_label, :boolean, default: false)
-  attr(:animated, :boolean, default: false)
-  attr(:indeterminate, :boolean, default: false)
-  attr(:class, :string, default: nil)
-  attr(:label_class, :string, default: nil)
-  attr(:progress_class, :string, default: nil)
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "Progress bar size")
+  attr(:show_label, :boolean, default: false, doc: "Show percentage label")
+  attr(:animated, :boolean, default: false, doc: "Enable animation")
+  attr(:indeterminate, :boolean, default: false, doc: "Show indeterminate progress")
+  attr(:class, :string, default: nil, doc: "Additional CSS classes for the wrapper")
+  attr(:label_class, :string, default: nil, doc: "CSS classes for the label")
+  attr(:progress_class, :string, default: nil, doc: "CSS classes for the progress bar")
   attr(:label_text, :string, default: "Progress", doc: "Text for the progress label")
   attr(:complete_text, :string, default: "Complete", doc: "Text appended after percentage")
   attr(:rest, :global)

@@ -56,23 +56,24 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
       </.dm_dropdown>
   """
   @doc type: :component
-  attr(:position, :string, default: "left", values: ["left", "right", "top", "bottom"])
+  attr(:position, :string, default: "left", values: ["left", "right", "top", "bottom"], doc: "Dropdown position")
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    doc: "Dropdown color variant"
   )
 
-  attr(:open, :boolean, default: false)
-  attr(:class, :string, default: nil)
-  attr(:dropdown_class, :string, default: nil)
+  attr(:open, :boolean, default: false, doc: "Whether the dropdown is open")
+  attr(:class, :string, default: nil, doc: "Additional CSS classes")
+  attr(:dropdown_class, :string, default: nil, doc: "CSS classes for the dropdown menu")
   attr(:rest, :global)
 
-  slot :trigger, required: true do
+  slot :trigger, required: true, doc: "Element that toggles the dropdown" do
     attr(:class, :string)
   end
 
-  slot :content, required: true do
+  slot :content, required: true, doc: "Dropdown menu content" do
     attr(:class, :string)
   end
 
