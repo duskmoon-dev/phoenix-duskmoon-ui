@@ -103,7 +103,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
         inner_block: %{inner_block: fn _, _ -> "Noise Button" end}
       })
 
-    assert result =~ ~s[<button class="btn-noise]
+    assert result =~ "btn-noise"
     assert result =~ ~s[data-content="Noise"]
     assert result =~ ~s[style="--aps: running"]
     assert result =~ ~s[<i></i>]
@@ -463,5 +463,15 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ "Nope"
     refute result =~ ">Yes<"
     refute result =~ ">Cancel<"
+  end
+
+  test "noise button has type=button to prevent form submission" do
+    result =
+      render_component(&dm_btn/1, %{
+        noise: true,
+        content: "Click me"
+      })
+
+    assert result =~ ~s[type="button"]
   end
 end

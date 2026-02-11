@@ -148,6 +148,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
 
     ~H"""
     <button
+      type="button"
       id={@id}
       class={["btn-noise", @class]}
       data-content={@content}

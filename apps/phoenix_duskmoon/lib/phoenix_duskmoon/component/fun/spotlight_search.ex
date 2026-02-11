@@ -111,10 +111,12 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearch do
         <div :if={@loading} class="dm-fun-spotlight-loading">
         </div>
 
-        <div :if={!@loading && @suggestion} class="dm-fun-spotlight-suggestion-list">
+        <div :if={!@loading && @suggestion} class="dm-fun-spotlight-suggestion-list" role="listbox">
           <div
             :for={{suggestion, index} <- Enum.with_index(@suggestion)}
             class="dm-fun-spotlight-suggestion-list-item"
+            role="option"
+            tabindex="0"
             phx-click="spotlight_select"
             phx-value-index={index}
             phx-target={@phx_target}

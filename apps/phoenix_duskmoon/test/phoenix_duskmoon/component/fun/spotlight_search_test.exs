@@ -426,4 +426,33 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearchTest do
     parts = String.split(result, "dm-fun-spotlight-loading")
     assert length(parts) >= 3
   end
+
+  test "suggestion list has role=listbox for accessibility" do
+    result =
+      render_component(
+        &dm_fun_spotlight_search/1,
+        base_attrs(%{
+          suggestion: [
+            %{icon: "x", label: "Item", description: nil, action: nil}
+          ]
+        })
+      )
+
+    assert result =~ ~s[role="listbox"]
+  end
+
+  test "suggestion items have role=option and tabindex for keyboard access" do
+    result =
+      render_component(
+        &dm_fun_spotlight_search/1,
+        base_attrs(%{
+          suggestion: [
+            %{icon: "x", label: "Item", description: nil, action: nil}
+          ]
+        })
+      )
+
+    assert result =~ ~s[role="option"]
+    assert result =~ ~s[tabindex="0"]
+  end
 end
