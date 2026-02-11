@@ -200,4 +200,57 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
     assert result =~ ~s[aria-valuemin="0"]
     assert result =~ ~s[aria-valuemax="100"]
   end
+
+  test "renders progress with value exceeding max" do
+    result = render_component(&dm_progress/1, %{value: 150, max: 100, show_label: true})
+
+    # 150/100 * 100 = 150.0%
+    assert result =~ "150.0%"
+  end
+
+  test "renders progress with max 0 shows 0 percent" do
+    result = render_component(&dm_progress/1, %{value: 50, max: 0, show_label: true})
+
+    # calculate_percentage(_, max) when max <= 0 returns "0"
+    assert result =~ "0%"
+  end
+
+  test "renders progress with fractional percentage" do
+    result = render_component(&dm_progress/1, %{value: 1, max: 3, show_label: true})
+
+    # 1/3 * 100 = 33.3%
+    assert result =~ "33.3%"
+  end
+
+  test "renders indeterminate progress omits value attr from progress element" do
+    result = render_component(&dm_progress/1, %{indeterminate: true})
+
+    # When indeterminate, value should be nil (not rendered as HTML attr)
+    [_, progress_part] = String.split(result, "<progress", parts: 2)
+    [progress_attrs, _] = String.split(progress_part, ">", parts: 2)
+    refute progress_attrs =~ ~s[value=]
+  end
+
+  test "renders progress with all options combined" do
+    result =
+      render_component(&dm_progress/1, %{
+        value: 75,
+        max: 100,
+        color: "success",
+        size: "lg",
+        show_label: true,
+        animated: true,
+        class: "my-wrapper",
+        label_class: "my-label",
+        progress_class: "my-bar"
+      })
+
+    assert result =~ "dm-progress--success"
+    assert result =~ "dm-progress--lg"
+    assert result =~ "75.0%"
+    assert result =~ "dm-progress--animated"
+    assert result =~ "my-wrapper"
+    assert result =~ "my-label"
+    assert result =~ "my-bar"
+  end
 end

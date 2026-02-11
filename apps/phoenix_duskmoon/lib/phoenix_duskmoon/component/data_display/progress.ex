@@ -76,7 +76,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
           @indeterminate && "dm-progress--indeterminate",
           @progress_class
         ]}
-        value={@indeterminate && nil || @value}
+        value={if(@indeterminate, do: nil, else: @value)}
         max={@max}
         aria-valuenow={if(!@indeterminate, do: @value)}
         aria-valuemin={0}

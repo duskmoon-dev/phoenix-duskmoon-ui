@@ -212,4 +212,77 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
     assert result =~ ~s[role="img"]
     assert result =~ ~s[aria-label="User"]
   end
+
+  test "renders avatar with three word name takes first two initials" do
+    result = render_component(&dm_avatar/1, %{name: "Alice Bob Charlie"})
+
+    # Enum.take(2) means first two words: "A" + "B"
+    assert result =~ "AB"
+  end
+
+  test "renders avatar with empty name shows default SVG icon" do
+    result = render_component(&dm_avatar/1, %{name: ""})
+
+    assert result =~ "<svg"
+    assert result =~ ~s[aria-label="User"]
+  end
+
+  test "renders avatar with nil name shows default SVG icon" do
+    result = render_component(&dm_avatar/1, %{name: nil})
+
+    assert result =~ "<svg"
+    assert result =~ ~s[aria-label="User"]
+  end
+
+  test "renders avatar with placeholder_img true shows initials" do
+    result = render_component(&dm_avatar/1, %{name: "Jane Smith", placeholder_img: true})
+
+    assert result =~ "JS"
+  end
+
+  test "renders avatar with placeholder_img string shows custom image" do
+    result =
+      render_component(&dm_avatar/1, %{
+        name: "Jane",
+        placeholder_img: "/img/placeholder.png"
+      })
+
+    assert result =~ ~s[src="/img/placeholder.png"]
+    assert result =~ ~s[alt="Placeholder"]
+    # Should NOT show initials when placeholder_img is a string
+    refute result =~ ">J<"
+  end
+
+  test "renders avatar without online/offline indicator by default" do
+    result = render_component(&dm_avatar/1, %{name: "T"})
+
+    refute result =~ ~s[aria-label="Online"]
+    refute result =~ ~s[aria-label="Offline"]
+  end
+
+  test "renders avatar with src does not show placeholder div" do
+    result =
+      render_component(&dm_avatar/1, %{
+        src: "https://example.com/img.jpg",
+        alt: "User"
+      })
+
+    # Should have img tag, not the SVG default icon
+    assert result =~ "<img"
+    assert result =~ ~s[src="https://example.com/img.jpg"]
+    refute result =~ ~s[aria-label="User"]
+  end
+
+  test "renders avatar initials in uppercase" do
+    result = render_component(&dm_avatar/1, %{name: "john doe"})
+
+    assert result =~ "JD"
+  end
+
+  test "renders avatar initials content in text-lg span" do
+    result = render_component(&dm_avatar/1, %{name: "Test User"})
+
+    assert result =~ "text-lg"
+    assert result =~ "TU"
+  end
 end
