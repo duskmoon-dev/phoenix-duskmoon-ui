@@ -281,6 +281,15 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
       assert result =~ ~s[value="10"]
     end
 
+    test "renders slider with field value of zero without falling back to min" do
+      field = Phoenix.Component.to_form(%{"volume" => 0}, as: "settings")[:volume]
+
+      result = render_component(&dm_slider/1, %{field: field, min: 10})
+
+      assert result =~ ~s[value="0"]
+      refute result =~ ~s[value="10"]
+    end
+
     test "renders slider with custom id overriding field id" do
       field = Phoenix.Component.to_form(%{"volume" => ""}, as: "settings")[:volume]
 

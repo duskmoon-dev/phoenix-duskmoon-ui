@@ -145,15 +145,20 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
 
   def dm_alert(assigns) do
     assigns =
-      assign_new(assigns, :icon, fn ->
-        case assigns.variant do
-          "info" -> "information-circle"
-          "success" -> "check-circle"
-          "warning" -> "exclamation-triangle"
-          "error" -> "exclamation-circle"
-          _ -> "information-circle"
-        end
-      end)
+      if assigns.icon do
+        assigns
+      else
+        icon =
+          case assigns.variant do
+            "info" -> "information-circle"
+            "success" -> "check-circle"
+            "warning" -> "exclamation-triangle"
+            "error" -> "exclamation-circle"
+            _ -> "information-circle"
+          end
+
+        assign(assigns, :icon, icon)
+      end
 
     ~H"""
     <div id={@id} role="alert" class={["dm-alert", "dm-alert--#{@variant}", @class]}>

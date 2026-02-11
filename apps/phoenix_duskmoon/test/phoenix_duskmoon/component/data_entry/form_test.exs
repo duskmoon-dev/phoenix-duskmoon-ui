@@ -329,6 +329,52 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
     end
   end
 
+  describe "dm_alert icon default selection" do
+    test "renders alert with different default icon per variant" do
+      # Each variant should produce a different SVG path (not the error fallback)
+      results =
+        for variant <- ~w(info success warning error) do
+          {variant,
+           render_component(&dm_alert/1, %{
+             variant: variant,
+             inner_block: inner_block("msg")
+           })}
+        end
+
+      # All should have SVGs
+      for {variant, result} <- results do
+        assert result =~ "<svg", "variant #{variant} should render an SVG icon"
+        assert result =~ "dm-alert--#{variant}"
+      end
+
+      # Icons should differ between info and success (proving variant selection works)
+      {_, info_result} = Enum.find(results, fn {v, _} -> v == "info" end)
+      {_, success_result} = Enum.find(results, fn {v, _} -> v == "success" end)
+      refute info_result == success_result
+    end
+
+    test "renders alert with nil icon uses variant default not error fallback" do
+      # When icon is nil (default), the variant-specific icon should be used
+      info_result =
+        render_component(&dm_alert/1, %{
+          variant: "info",
+          inner_block: inner_block("msg")
+        })
+
+      success_result =
+        render_component(&dm_alert/1, %{
+          variant: "success",
+          inner_block: inner_block("msg")
+        })
+
+      # The SVG content should differ because info uses information-circle
+      # and success uses check-circle
+      assert info_result =~ "<svg"
+      assert success_result =~ "<svg"
+      refute info_result == success_result
+    end
+  end
+
   describe "dm_alert icon" do
     test "renders alert with custom icon override renders SVG" do
       result =

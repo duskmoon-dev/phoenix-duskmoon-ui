@@ -43,6 +43,7 @@
  */
 export const WebComponentHook = {
   mounted() {
+    this._sendListeners = [];
     this._setupEventBridging();
     this._setupAutomaticForwarding();
   },
@@ -53,7 +54,25 @@ export const WebComponentHook = {
   },
 
   destroyed() {
-    // Cleanup is handled by the element removal
+    // Remove duskmoon-send-* event listeners
+    if (this._sendListeners) {
+      this._sendListeners.forEach(({ event, listener }) => {
+        this.el.removeEventListener(event, listener);
+      });
+      this._sendListeners = null;
+    }
+    // Remove dm-* automatic forwarding listeners
+    const dmEvents = [
+      "dm-click", "dm-change", "dm-input", "dm-focus", "dm-blur",
+      "dm-submit", "dm-select", "dm-close", "dm-open", "dm-toggle",
+    ];
+    dmEvents.forEach((dmEvent) => {
+      const listenerKey = `_dm_listener_${dmEvent}`;
+      if (this[listenerKey]) {
+        this.el.removeEventListener(dmEvent, this[listenerKey]);
+        this[listenerKey] = null;
+      }
+    });
   },
 
   /**
@@ -80,13 +99,15 @@ export const WebComponentHook = {
         const eventName = attr.name.replace(/^duskmoon-send-/, "");
         const [phxEvent, callbackName] = attr.value.split(";");
 
-        this.el.addEventListener(eventName, ({ detail }) => {
+        const listener = ({ detail }) => {
           pushEvent(phxEvent, detail || {}, (response) => {
             if (callbackName && typeof this[callbackName] === "function") {
               this[callbackName](response, detail, eventName);
             }
           });
-        });
+        };
+        this.el.addEventListener(eventName, listener);
+        this._sendListeners.push({ event: eventName, listener });
       }
 
       // Handle duskmoon-receive-{event}="{handlerMethodOrEmpty}"

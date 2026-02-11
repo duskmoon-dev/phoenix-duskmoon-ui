@@ -30,9 +30,11 @@ export const PageHeader = {
 
         if (intersectionRatio <= 0.5) {
           navEl.classList.remove('hidden');
+          navEl.setAttribute('aria-hidden', 'false');
           navEl.style.opacity = 1 - intersectionRatio;
         } else {
           navEl.classList.add('hidden');
+          navEl.setAttribute('aria-hidden', 'true');
         }
       });
     }, options);
