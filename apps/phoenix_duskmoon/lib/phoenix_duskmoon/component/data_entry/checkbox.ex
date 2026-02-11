@@ -60,7 +60,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
   def dm_checkbox(assigns) do
     ~H"""
     <div class={["dm-form-group", @class]}>
-      <label class="flex items-center gap-2 cursor-pointer">
+      <label class={["flex items-center gap-2", !@disabled && "cursor-pointer", @disabled && "cursor-not-allowed"]}>
         <input
           type="checkbox"
           name={@name}

@@ -267,4 +267,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
     refute result =~ "aria-invalid"
     refute result =~ "aria-describedby"
   end
+
+  test "renders disabled switch with opacity and cursor styling" do
+    result =
+      render_component(&dm_switch/1, %{
+        name: "opt",
+        disabled: true
+      })
+
+    assert result =~ "disabled"
+    assert result =~ "opacity-50"
+    assert result =~ "cursor-not-allowed"
+  end
 end

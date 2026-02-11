@@ -58,7 +58,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
   def dm_switch(assigns) do
     ~H"""
     <div class={["dm-form-group", @class]}>
-      <label class={["dm-switch", "dm-switch--#{@size}", "dm-switch--#{@color}"]}>
+      <label class={["dm-switch", "dm-switch--#{@size}", "dm-switch--#{@color}", @disabled && "opacity-50 cursor-not-allowed"]}>
         <input
           type="checkbox"
           role="switch"

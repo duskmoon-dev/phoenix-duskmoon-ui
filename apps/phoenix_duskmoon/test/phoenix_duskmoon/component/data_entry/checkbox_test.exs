@@ -256,4 +256,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
     refute result =~ "aria-invalid"
     refute result =~ "aria-describedby"
   end
+
+  test "renders disabled checkbox label without cursor-pointer" do
+    result =
+      render_component(&dm_checkbox/1, %{
+        name: "agree",
+        disabled: true,
+        label: "Disabled option"
+      })
+
+    assert result =~ "cursor-not-allowed"
+    refute result =~ "cursor-pointer"
+  end
 end

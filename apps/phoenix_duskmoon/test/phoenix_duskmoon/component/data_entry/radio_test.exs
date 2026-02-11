@@ -293,4 +293,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
     refute result =~ "aria-invalid"
     refute result =~ "aria-describedby"
   end
+
+  test "renders disabled radio label without cursor-pointer" do
+    result =
+      render_component(&dm_radio/1, %{
+        name: "choice",
+        value: "a",
+        disabled: true,
+        label: "Disabled Option"
+      })
+
+    assert result =~ "cursor-not-allowed"
+    refute result =~ "cursor-pointer"
+  end
 end
