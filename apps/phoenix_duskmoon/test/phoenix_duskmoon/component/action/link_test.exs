@@ -303,4 +303,125 @@ defmodule PhoenixDuskmoon.Component.Action.LinkTest do
     assert result =~ "<a"
     assert result =~ ~s[href="#"]
   end
+
+  test "renders navigate link with all options" do
+    result =
+      render_component(&dm_link/1, %{
+        id: "nav-link",
+        navigate: "/dashboard",
+        replace: true,
+        class: "text-bold",
+        "data-testid": "nav",
+        inner_block: %{inner_block: fn _, _ -> "Dashboard" end}
+      })
+
+    assert result =~ ~s[id="nav-link"]
+    assert result =~ ~s[href="/dashboard"]
+    assert result =~ ~s[data-phx-link="redirect"]
+    assert result =~ ~s[data-phx-link-state="replace"]
+    assert result =~ "text-bold"
+    assert result =~ "data-testid=\"nav\""
+    assert result =~ "Dashboard"
+  end
+
+  test "renders patch link with all options" do
+    result =
+      render_component(&dm_link/1, %{
+        id: "patch-link",
+        patch: "/settings/edit",
+        replace: false,
+        class: "underline",
+        inner_block: %{inner_block: fn _, _ -> "Edit" end}
+      })
+
+    assert result =~ ~s[id="patch-link"]
+    assert result =~ ~s[href="/settings/edit"]
+    assert result =~ ~s[data-phx-link="patch"]
+    assert result =~ ~s[data-phx-link-state="push"]
+    assert result =~ "underline"
+    assert result =~ "Edit"
+  end
+
+  test "renders href link with all options" do
+    result =
+      render_component(&dm_link/1, %{
+        id: "full-link",
+        href: "/api/submit",
+        method: "post",
+        csrf_token: "my-token",
+        class: "btn",
+        target: "_blank",
+        rel: "noopener",
+        inner_block: %{inner_block: fn _, _ -> "Submit" end}
+      })
+
+    assert result =~ ~s[id="full-link"]
+    assert result =~ ~s[href="/api/submit"]
+    assert result =~ ~s[data-method="post"]
+    assert result =~ ~s[data-csrf="my-token"]
+    assert result =~ ~s[data-to="/api/submit"]
+    assert result =~ "btn"
+    assert result =~ ~s[target="_blank"]
+    assert result =~ ~s[rel="noopener"]
+    assert result =~ "Submit"
+  end
+
+  test "renders navigate link with replace false uses push state" do
+    result =
+      render_component(&dm_link/1, %{
+        navigate: "/test",
+        replace: false,
+        inner_block: %{inner_block: fn _, _ -> "Test" end}
+      })
+
+    assert result =~ ~s[data-phx-link-state="push"]
+  end
+
+  test "renders fallback link with custom id and class" do
+    result =
+      render_component(&dm_link/1, %{
+        id: "fallback",
+        class: "inactive-link",
+        inner_block: %{inner_block: fn _, _ -> "No Nav" end}
+      })
+
+    assert result =~ ~s[id="fallback"]
+    assert result =~ "inactive-link"
+    assert result =~ ~s[href="#"]
+    assert result =~ "No Nav"
+  end
+
+  test "renders link with disabled attribute" do
+    result =
+      render_component(&dm_link/1, %{
+        href: "/test",
+        disabled: true,
+        inner_block: %{inner_block: fn _, _ -> "Disabled" end}
+      })
+
+    assert result =~ "disabled"
+  end
+
+  test "renders link with hreflang attribute" do
+    result =
+      render_component(&dm_link/1, %{
+        href: "/fr/page",
+        hreflang: "fr",
+        inner_block: %{inner_block: fn _, _ -> "French" end}
+      })
+
+    assert result =~ ~s[hreflang="fr"]
+  end
+
+  test "renders link with download attribute" do
+    result =
+      render_component(&dm_link/1, %{
+        href: "/file.pdf",
+        download: "report.pdf",
+        inner_block: %{inner_block: fn _, _ -> "Download" end}
+      })
+
+    assert result =~ "download"
+    assert result =~ "report.pdf"
+  end
 end

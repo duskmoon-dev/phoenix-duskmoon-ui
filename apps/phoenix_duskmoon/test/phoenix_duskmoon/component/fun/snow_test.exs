@@ -226,4 +226,44 @@ defmodule PhoenixDuskmoon.Component.Fun.SnowTest do
     # At least 2 from divs + references in <style> block
     assert flake_count >= 2
   end
+
+  test "renders snow with all options combined" do
+    result =
+      render_component(&dm_fun_snow/1, %{
+        id: "snow-all",
+        count: 5,
+        size_range: {8, 25},
+        color: "#FF00FF",
+        use_unicode: true,
+        animation_duration: {3, 12},
+        container_class: "h-screen fixed",
+        snowflake_class: "glow-effect",
+        "data-testid": "full-snow"
+      })
+
+    assert result =~ ~s[id="snow-all"]
+    count = length(String.split(result, "--snowflake-size")) - 1
+    assert count == 5
+    assert result =~ "--snowflake-color: #FF00FF"
+    assert result =~ "snowflake-unicode"
+    assert result =~ "h-screen fixed"
+    assert result =~ "glow-effect"
+    assert result =~ "data-testid=\"full-snow\""
+  end
+
+  test "renders snow odd/even swaying keyframes" do
+    result = render_component(&dm_fun_snow/1, %{id: "snow-sway2"})
+
+    assert result =~ "nth-child(odd)"
+    assert result =~ "nth-child(even)"
+    assert result =~ "swayLeft"
+    assert result =~ "swayRight"
+  end
+
+  test "renders snowflake position absolute in style block" do
+    result = render_component(&dm_fun_snow/1, %{id: "snow-pos"})
+
+    assert result =~ "position: absolute"
+    assert result =~ "top: -100px"
+  end
 end
