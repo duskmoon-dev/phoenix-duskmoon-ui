@@ -214,9 +214,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
   defp page_url(url, marker, page), do: String.replace(url, marker, "#{page}")
 
   defp generate_pages(total, page_size, page_num) do
+    safe_page_size = max(page_size, 1)
+
     max_page =
       if total > 0 do
-        (total / page_size) |> ceil()
+        (total / safe_page_size) |> ceil()
       else
         1
       end

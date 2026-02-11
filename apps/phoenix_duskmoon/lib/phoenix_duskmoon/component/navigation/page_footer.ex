@@ -58,6 +58,13 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
     attr(:body_class, :string)
   end
 
+  slot(:inner_block,
+    required: false,
+    doc: """
+    Optional content rendered before the section grid.
+    """
+  )
+
   def dm_page_footer(assigns) do
     ~H"""
 

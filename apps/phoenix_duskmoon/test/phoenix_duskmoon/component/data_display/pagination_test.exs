@@ -184,6 +184,31 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
       refute result =~ "..."
     end
 
+    test "handles page_size of 0 without crashing" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 0,
+          total: 100
+        })
+
+      # Should treat page_size=0 as 1 and not crash
+      assert result =~ ~s[<el-dm-pagination]
+      assert result =~ ~s[current-page="1"]
+    end
+
+    test "handles negative page_size without crashing" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: -5,
+          total: 100
+        })
+
+      assert result =~ ~s[<el-dm-pagination]
+      assert result =~ ~s[current-page="1"]
+    end
+
     test "shows ellipsis when on page 3" do
       result =
         render_component(&dm_pagination/1, %{
@@ -346,6 +371,18 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
 
       assert result =~ ~s[id="thin-pagination"]
       assert result =~ "my-pagination"
+    end
+
+    test "handles page_size of 0 without crashing" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 1,
+          page_size: 0,
+          total: 100
+        })
+
+      assert result =~ ~s[dm-pagination--thin]
+      assert result =~ ~s[aria-current="page"]
     end
 
     test "handles edge case with 1 total page" do
