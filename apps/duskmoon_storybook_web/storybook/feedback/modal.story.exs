@@ -3,10 +3,6 @@ defmodule Storybook.Feedback.Modal do
 
   def function, do: &PhoenixDuskmoon.Component.Feedback.Dialog.dm_modal/1
 
-  def imports do
-    [{PhoenixDuskmoon.Modal, dm_show_modal: 0}]
-  end
-
   def variations do
     [
       %Variation{
@@ -15,7 +11,7 @@ defmodule Storybook.Feedback.Modal do
         slots: [
           """
           <:trigger :let={f}>
-            <button class="btn btn-primary" onclick={"document.getElementById('\#{f}').showModal()"}>Open</button>
+            <button type="button" class="btn btn-primary" onclick={"document.getElementById('\#{f}').showModal()"}>Open</button>
           </:trigger>
           """,
           "<:title>PhoenixDuskmoon</:title>",
@@ -27,7 +23,7 @@ defmodule Storybook.Feedback.Modal do
         slots: [
           """
           <:trigger :let={f}>
-            <button class="btn btn-secondary" onclick={"document.getElementById('\#{f}').showModal()"}>Open</button>
+            <button type="button" class="btn btn-secondary" onclick={"document.getElementById('\#{f}').showModal()"}>Open</button>
           </:trigger>
           """,
           """
@@ -37,7 +33,7 @@ defmodule Storybook.Feedback.Modal do
           """,
           """
           <:body>
-            PhoenixDuskmoonb Storybook
+            PhoenixDuskmoon Storybook
             Show Modal
           </:body>
           """,
@@ -63,13 +59,13 @@ defmodule Storybook.Feedback.Modal do
         slots: [
           """
           <:trigger :let={f}>
-            <button class="btn btn-accent" onclick={"document.getElementById('\#{f}').showModal()"}>Open</button>
+            <button type="button" class="btn btn-accent" onclick={"document.getElementById('\#{f}').showModal()"}>Open</button>
           </:trigger>
           """,
           """
           <:body class="flex justify-center items-center text-4xl text-rose-600">
             <form method="dialog">
-              <button>PhoenixDuskmoonb Is Awesome...</button>
+              <button>PhoenixDuskmoon Is Awesome...</button>
             </form>
           </:body>
           """

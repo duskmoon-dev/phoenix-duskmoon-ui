@@ -57,7 +57,7 @@ defmodule Storybook.Navigation.Appbar do
           <:menu to="/about">About</:menu>
           <:menu to="/contact">Contact</:menu>
           <:user_profile>
-            <button class="btn btn-sm btn-ghost">Login</button>
+            <button type="button" class="btn btn-sm btn-ghost">Login</button>
           </:user_profile>
           """
         ]
