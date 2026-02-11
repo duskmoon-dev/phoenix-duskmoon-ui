@@ -176,4 +176,58 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
 
     assert result =~ ~s[role="switch"]
   end
+
+  test "renders switch with form field extracting id and name" do
+    field = Phoenix.Component.to_form(%{"enabled" => "true"}, as: "settings")[:enabled]
+
+    result = render_component(&dm_switch/1, %{field: field})
+
+    assert result =~ ~s(name="settings[enabled]")
+    assert result =~ ~s(id="settings_enabled")
+  end
+
+  test "renders switch with form field multiple appends brackets" do
+    field = Phoenix.Component.to_form(%{"roles" => []}, as: "user")[:roles]
+
+    result = render_component(&dm_switch/1, %{field: field, multiple: true})
+
+    assert result =~ ~s(name="user[roles][]")
+  end
+
+  test "renders switch with form field extracting value" do
+    field = Phoenix.Component.to_form(%{"active" => "true"}, as: "cfg")[:active]
+
+    result = render_component(&dm_switch/1, %{field: field})
+
+    assert result =~ ~s(name="cfg[active]")
+    assert result =~ ~s(id="cfg_active")
+    assert result =~ ~s[value="true"]
+  end
+
+  test "renders switch with all options combined" do
+    result =
+      render_component(&dm_switch/1, %{
+        name: "opt",
+        id: "full-switch",
+        label: "All options",
+        size: "lg",
+        color: "accent",
+        checked: true,
+        disabled: true,
+        class: "wrapper-cls",
+        label_class: "lbl-cls",
+        switch_class: "sw-cls"
+      })
+
+    assert result =~ ~s[id="full-switch"]
+    assert result =~ ~s[name="opt"]
+    assert result =~ "All options"
+    assert result =~ "dm-switch--lg"
+    assert result =~ "dm-switch--accent"
+    assert result =~ "checked"
+    assert result =~ "disabled"
+    assert result =~ "wrapper-cls"
+    assert result =~ "lbl-cls"
+    assert result =~ "sw-cls"
+  end
 end
