@@ -166,5 +166,12 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
 
       assert result =~ "data-testid=\"particle-loader\""
     end
+
+    test "renders with item_count 0 without crashing" do
+      result = render_component(&dm_loading_ex/1, %{item_count: 0})
+
+      assert result =~ ~s[role="status"]
+      assert result =~ "<i"
+    end
   end
 end

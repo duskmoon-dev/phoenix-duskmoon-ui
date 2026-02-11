@@ -193,4 +193,11 @@ defmodule PhoenixDuskmoon.Component.Fun.EclipseTest do
 
     assert result =~ "--size: 600px"
   end
+
+  test "renders eclipse with animation_speed 0.0 without crashing" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e-zero", animation_speed: 0.0})
+
+    assert result =~ "dm-fun-eclipse"
+    assert result =~ "animation-duration:"
+  end
 end

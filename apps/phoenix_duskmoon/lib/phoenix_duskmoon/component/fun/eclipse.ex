@@ -52,14 +52,16 @@ defmodule PhoenixDuskmoon.Component.Fun.Eclipse do
   attr(:rest, :global)
 
   def dm_fun_eclipse(assigns) do
+    speed = max(assigns.animation_speed, 0.01)
+
     assigns
     |> assign(size_px: size_to_pixels(assigns.size))
     |> assign(
-      layer_1_duration: round(30 / assigns.animation_speed),
-      layer_2_duration: round(20 / assigns.animation_speed),
-      layer_3_duration: round(20 / assigns.animation_speed),
-      layer_4_duration: round(40 / assigns.animation_speed),
-      layer_5_duration: round(40 / assigns.animation_speed)
+      layer_1_duration: round(30 / speed),
+      layer_2_duration: round(20 / speed),
+      layer_3_duration: round(20 / speed),
+      layer_4_duration: round(40 / speed),
+      layer_5_duration: round(40 / speed)
     )
     |> render_eclipse()
   end

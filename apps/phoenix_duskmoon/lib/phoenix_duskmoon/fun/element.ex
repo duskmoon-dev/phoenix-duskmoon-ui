@@ -427,7 +427,10 @@ defmodule PhoenixDuskmoon.Fun.Element do
   )
 
   def dmf_loading_ex(assigns) do
-    assigns = assigns |> assign(:random_inner, Enum.random(10_000..100_000))
+    assigns =
+      assigns
+      |> assign(:random_inner, Enum.random(10_000..100_000))
+      |> assign(:item_count, max(assigns.item_count, 1))
 
     ~H"""
     <style data-id={@random_inner}>

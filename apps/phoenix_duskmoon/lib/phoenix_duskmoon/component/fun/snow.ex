@@ -137,6 +137,8 @@ defmodule PhoenixDuskmoon.Component.Fun.Snow do
     """
   end
 
+  defp generate_snowflakes(count, _size_range, _duration_range) when count < 1, do: []
+
   defp generate_snowflakes(count, {min_size, max_size}, {min_duration, max_duration}) do
     1..count
     |> Enum.map(fn _ ->

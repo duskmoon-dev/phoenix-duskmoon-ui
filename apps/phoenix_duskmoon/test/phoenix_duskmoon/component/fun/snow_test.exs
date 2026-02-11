@@ -161,4 +161,13 @@ defmodule PhoenixDuskmoon.Component.Fun.SnowTest do
     assert result =~ "h-screen relative"
     assert result =~ "sparkle glow"
   end
+
+  test "renders snow with count 0 without crashing" do
+    result = render_component(&dm_fun_snow/1, %{id: "snow-zero", count: 0})
+
+    assert result =~ ~s[id="snow-zero"]
+    # No snowflakes should be rendered
+    count = length(String.split(result, "--snowflake-size")) - 1
+    assert count == 0
+  end
 end
