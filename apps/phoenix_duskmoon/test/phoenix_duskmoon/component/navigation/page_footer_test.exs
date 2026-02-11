@@ -168,4 +168,143 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooterTest do
     assert result =~ "grid"
     assert result =~ "container mx-auto"
   end
+
+  test "renders footer copyright with custom class" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: [],
+        copyright: [
+          %{class: "copyright-custom", inner_block: fn _, _ -> "2024" end}
+        ]
+      })
+
+    assert result =~ "copyright-custom"
+    assert result =~ "self-center"
+  end
+
+  test "renders footer copyright with title_class" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: [],
+        copyright: [
+          %{title: "Legal", title_class: "text-lg", inner_block: fn _, _ -> "MIT" end}
+        ]
+      })
+
+    assert result =~ "text-lg"
+    assert result =~ "Legal"
+  end
+
+  test "renders footer copyright with body_class" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: [],
+        copyright: [
+          %{body_class: "text-xs", inner_block: fn _, _ -> "All rights reserved" end}
+        ]
+      })
+
+    assert result =~ "text-xs"
+  end
+
+  test "renders footer copyright without title when not provided" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: [],
+        copyright: [
+          %{inner_block: fn _, _ -> "No title here" end}
+        ]
+      })
+
+    assert result =~ "No title here"
+    # No <h4> in copyright when title is not set
+    # Check that only the self-center div is rendered without h4
+    assert result =~ "self-center"
+  end
+
+  test "renders footer with empty sections list" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: [],
+        section: []
+      })
+
+    assert result =~ "<footer"
+    assert result =~ "grid"
+  end
+
+  test "renders footer with empty copyright list" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: [],
+        copyright: []
+      })
+
+    assert result =~ "<footer"
+  end
+
+  test "renders footer section with empty string title does not show h4" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: [],
+        section: [
+          %{title: "", inner_block: fn _, _ -> "Content only" end}
+        ]
+      })
+
+    assert result =~ "Content only"
+    refute result =~ "<h4"
+  end
+
+  test "renders footer with three sections in grid" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: [],
+        section: [
+          %{title: "Products", inner_block: fn _, _ -> "Product links" end},
+          %{title: "Company", inner_block: fn _, _ -> "Company info" end},
+          %{title: "Support", inner_block: fn _, _ -> "Support links" end}
+        ]
+      })
+
+    assert result =~ "Products"
+    assert result =~ "Company"
+    assert result =~ "Support"
+    assert result =~ "grid-cols-2 md:grid-cols-3"
+  end
+
+  test "renders footer with all attributes combined" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: [],
+        class: "bg-gray-900 text-white",
+        section: [
+          %{
+            title: "Links",
+            class: "col-span-1",
+            title_class: "uppercase",
+            body_class: "gap-1",
+            inner_block: fn _, _ -> "Link items" end
+          }
+        ],
+        copyright: [
+          %{
+            title: "Legal",
+            class: "col-span-1",
+            title_class: "text-sm",
+            body_class: "opacity-75",
+            inner_block: fn _, _ -> "2024 Company" end
+          }
+        ]
+      })
+
+    assert result =~ "bg-gray-900 text-white"
+    assert result =~ "Links"
+    assert result =~ "uppercase"
+    assert result =~ "gap-1"
+    assert result =~ "col-span-1"
+    assert result =~ "Legal"
+    assert result =~ "2024 Company"
+    assert result =~ "opacity-75"
+  end
 end

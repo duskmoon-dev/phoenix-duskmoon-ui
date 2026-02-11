@@ -204,4 +204,152 @@ defmodule PhoenixDuskmoon.Component.Navigation.TabTest do
 
     assert result =~ ~s[data-testid="tab-component"]
   end
+
+  test "renders tab button with phx_click attribute" do
+    result =
+      render_component(&dm_tab/1, %{
+        tab: [
+          %{id: "t1", phx_click: "select_tab", inner_block: fn _, _ -> "Tab" end}
+        ],
+        tab_content: [%{id: "c1", inner_block: fn _, _ -> "Content" end}]
+      })
+
+    assert result =~ ~s[phx-click="select_tab"]
+  end
+
+  test "renders tab button with custom class" do
+    result =
+      render_component(&dm_tab/1, %{
+        tab: [
+          %{id: "t1", class: "tab-custom-class", inner_block: fn _, _ -> "Styled Tab" end}
+        ],
+        tab_content: [%{id: "c1", inner_block: fn _, _ -> "Content" end}]
+      })
+
+    assert result =~ "tab-custom-class"
+  end
+
+  test "renders tab content with custom class" do
+    result =
+      render_component(&dm_tab/1, %{
+        tab: [%{id: "t1", inner_block: fn _, _ -> "Tab" end}],
+        tab_content: [
+          %{id: "c1", class: "panel-custom", inner_block: fn _, _ -> "Content" end}
+        ]
+      })
+
+    assert result =~ "panel-custom"
+  end
+
+  test "renders active-index attribute on el-dm-tabs when using index" do
+    result =
+      render_component(&dm_tab/1, %{
+        active_tab_index: 2,
+        tab: [
+          %{id: "t1", inner_block: fn _, _ -> "Tab 1" end},
+          %{id: "t2", inner_block: fn _, _ -> "Tab 2" end},
+          %{id: "t3", inner_block: fn _, _ -> "Tab 3" end}
+        ],
+        tab_content: [
+          %{id: "c1", inner_block: fn _, _ -> "C1" end},
+          %{id: "c2", inner_block: fn _, _ -> "C2" end},
+          %{id: "c3", inner_block: fn _, _ -> "C3" end}
+        ]
+      })
+
+    assert result =~ ~s[active-index="2"]
+    assert result =~ "C3"
+    refute result =~ "C1"
+    refute result =~ "C2"
+  end
+
+  test "renders empty tabs and content gracefully" do
+    result =
+      render_component(&dm_tab/1, %{
+        tab: [],
+        tab_content: []
+      })
+
+    assert result =~ "<el-dm-tabs"
+    assert result =~ "</el-dm-tabs>"
+  end
+
+  test "renders tab with default horizontal orientation" do
+    result =
+      render_component(&dm_tab/1, %{
+        tab: [%{id: "t1", inner_block: fn _, _ -> "Tab" end}],
+        tab_content: [%{id: "c1", inner_block: fn _, _ -> "Content" end}]
+      })
+
+    assert result =~ ~s[orientation="horizontal"]
+  end
+
+  test "renders named tab matching correctly with three tabs" do
+    result =
+      render_component(&dm_tab/1, %{
+        active_tab_name: "middle",
+        tab: [
+          %{id: "t1", name: "first", inner_block: fn _, _ -> "First" end},
+          %{id: "t2", name: "middle", inner_block: fn _, _ -> "Middle" end},
+          %{id: "t3", name: "last", inner_block: fn _, _ -> "Last" end}
+        ],
+        tab_content: [
+          %{id: "c1", name: "first", inner_block: fn _, _ -> "First Content" end},
+          %{id: "c2", name: "middle", inner_block: fn _, _ -> "Middle Content" end},
+          %{id: "c3", name: "last", inner_block: fn _, _ -> "Last Content" end}
+        ]
+      })
+
+    assert result =~ "Middle Content"
+    refute result =~ "First Content"
+    refute result =~ "Last Content"
+  end
+
+  test "renders tab content with combined content_class and panel class" do
+    result =
+      render_component(&dm_tab/1, %{
+        content_class: "p-4",
+        tab: [%{id: "t1", inner_block: fn _, _ -> "Tab" end}],
+        tab_content: [
+          %{id: "c1", class: "bg-base-200", inner_block: fn _, _ -> "Content" end}
+        ]
+      })
+
+    assert result =~ "p-4"
+    assert result =~ "bg-base-200"
+  end
+
+  test "renders tabs with all attributes combined" do
+    result =
+      render_component(&dm_tab/1, %{
+        id: "full-tabs",
+        class: "my-tab-container",
+        header_class: "tab-header",
+        content_class: "tab-content",
+        orientation: "vertical",
+        variant: "boxed",
+        size: "lg",
+        active_tab_name: "second",
+        tab: [
+          %{id: "t1", name: "first", class: "tab-a", inner_block: fn _, _ -> "Tab A" end},
+          %{id: "t2", name: "second", class: "tab-b", inner_block: fn _, _ -> "Tab B" end}
+        ],
+        tab_content: [
+          %{id: "c1", name: "first", inner_block: fn _, _ -> "Content A" end},
+          %{id: "c2", name: "second", inner_block: fn _, _ -> "Content B" end}
+        ],
+        "data-testid": "full-tab"
+      })
+
+    assert result =~ ~s[id="full-tabs"]
+    assert result =~ "my-tab-container"
+    assert result =~ "tab-header"
+    assert result =~ ~s[orientation="vertical"]
+    assert result =~ ~s[variant="boxed"]
+    assert result =~ ~s[size="lg"]
+    assert result =~ ~s[active-name="second"]
+    assert result =~ "Content B"
+    refute result =~ "Content A"
+    assert result =~ "data-testid=\"full-tab\""
+  end
 end

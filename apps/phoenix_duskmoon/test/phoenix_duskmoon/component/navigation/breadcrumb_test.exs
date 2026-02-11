@@ -152,4 +152,104 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
     assert result =~ "Category"
     assert result =~ "Final"
   end
+
+  test "renders separator attribute value on el-dm-breadcrumbs" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        separator: "/",
+        crumb: crumbs(["Home", "Page"])
+      })
+
+    assert result =~ ~s[separator="/"]
+  end
+
+  test "renders crumb with both to and class" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        crumb: crumbs([{"Home", %{to: "/", class: "font-bold"}}])
+      })
+
+    assert result =~ ~s[href="/"]
+    assert result =~ "font-bold"
+    assert result =~ ~s[data-href="/"]
+  end
+
+  test "renders only last crumb with aria-current in long chain" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        crumb: crumbs(["A", "B", "C", "D", "E"])
+      })
+
+    # Only the last crumb should have aria-current
+    parts = String.split(result, ~s[aria-current="page"])
+    assert length(parts) - 1 == 1
+  end
+
+  test "renders first crumb without aria-current when multiple" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        crumb: crumbs(["Home", "Products", "Detail"])
+      })
+
+    # Split by each span with slot="item" to inspect individually
+    assert result =~ ~s[aria-current="page"]
+    assert result =~ "Detail"
+  end
+
+  test "renders crumb with id and class and link combined" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        crumb: crumbs([{"Dashboard", %{id: "crumb-dash", class: "active", to: "/dash"}}])
+      })
+
+    assert result =~ ~s[id="crumb-dash"]
+    assert result =~ "active"
+    assert result =~ ~s[href="/dash"]
+  end
+
+  test "renders breadcrumb without separator by default" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        crumb: crumbs(["Home"])
+      })
+
+    refute result =~ ~s[separator="]
+  end
+
+  test "renders breadcrumb with arrow separator" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        separator: ">>",
+        crumb: crumbs(["Home", "Page"])
+      })
+
+    assert result =~ ~s[separator="&gt;&gt;"]
+  end
+
+  test "renders breadcrumb with all attributes combined" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        id: "main-breadcrumb",
+        class: "text-sm",
+        separator: ">",
+        "aria-label": "Breadcrumb navigation",
+        crumb:
+          crumbs([
+            {"Home", %{to: "/", id: "c-home", class: "font-bold"}},
+            {"Products", %{to: "/products"}},
+            "Current Item"
+          ])
+      })
+
+    assert result =~ ~s[id="main-breadcrumb"]
+    assert result =~ "text-sm"
+    assert result =~ "separator"
+    assert result =~ "aria-label=\"Breadcrumb navigation\""
+    assert result =~ ~s[href="/"]
+    assert result =~ ~s[id="c-home"]
+    assert result =~ "font-bold"
+    assert result =~ ~s[href="/products"]
+    assert result =~ "Current Item"
+    assert result =~ ~s[aria-current="page"]
+  end
 end

@@ -177,4 +177,139 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
 
     assert result =~ "selected"
   end
+
+  test "renders select with multiple attribute" do
+    result =
+      render_component(&dm_select/1, %{
+        name: "colors",
+        value: nil,
+        multiple: true,
+        options: [{"r", "Red"}, {"g", "Green"}, {"b", "Blue"}]
+      })
+
+    assert result =~ "multiple"
+    assert result =~ "Red"
+    assert result =~ "Green"
+    assert result =~ "Blue"
+  end
+
+  test "renders select with label_class" do
+    result =
+      render_component(&dm_select/1, %{
+        name: "opt",
+        value: nil,
+        label: "Pick one",
+        label_class: "text-lg font-semibold",
+        options: [{"1", "One"}]
+      })
+
+    assert result =~ "text-lg font-semibold"
+    assert result =~ "dm-label"
+  end
+
+  test "renders select without label by default" do
+    result =
+      render_component(&dm_select/1, %{
+        name: "opt",
+        value: nil,
+        options: [{"1", "One"}]
+      })
+
+    refute result =~ "dm-label"
+    refute result =~ "<label"
+  end
+
+  test "renders select with inner_block instead of options" do
+    result =
+      render_component(&dm_select/1, %{
+        name: "opt",
+        value: nil,
+        inner_block: [%{inner_block: fn _, _ -> "Custom option content" end}]
+      })
+
+    assert result =~ "Custom option content"
+    assert result =~ "<select"
+  end
+
+  test "renders select with prompt and inner_block" do
+    result =
+      render_component(&dm_select/1, %{
+        name: "opt",
+        value: nil,
+        prompt: "Choose...",
+        inner_block: [%{inner_block: fn _, _ -> "Option A" end}]
+      })
+
+    assert result =~ "Choose..."
+    assert result =~ "Option A"
+  end
+
+  test "renders select with rest attributes" do
+    result =
+      render_component(&dm_select/1, %{
+        name: "opt",
+        value: nil,
+        "data-testid": "my-select",
+        "aria-label": "Select option",
+        options: [{"1", "One"}]
+      })
+
+    assert result =~ "data-testid=\"my-select\""
+    assert result =~ "aria-label=\"Select option\""
+  end
+
+  test "renders select with non-disabled default" do
+    result =
+      render_component(&dm_select/1, %{
+        name: "opt",
+        value: nil,
+        options: [{"1", "One"}]
+      })
+
+    refute result =~ "opacity-50"
+    refute result =~ "cursor-not-allowed"
+  end
+
+  test "renders select label with for attribute matching id" do
+    result =
+      render_component(&dm_select/1, %{
+        name: "opt",
+        id: "my-id",
+        value: nil,
+        label: "My Label",
+        options: [{"1", "One"}]
+      })
+
+    assert result =~ ~s[for="my-id"]
+    assert result =~ ~s[id="my-id"]
+  end
+
+  test "renders select with all attributes combined" do
+    result =
+      render_component(&dm_select/1, %{
+        name: "full",
+        id: "full-select",
+        value: "b",
+        label: "Full Select",
+        label_class: "text-sm",
+        select_class: "border-2",
+        class: "wrapper-class",
+        size: "lg",
+        color: "error",
+        prompt: "Pick one",
+        options: [{"a", "Alpha"}, {"b", "Beta"}],
+        "data-testid": "combo-select"
+      })
+
+    assert result =~ ~s[id="full-select"]
+    assert result =~ "Full Select"
+    assert result =~ "text-sm"
+    assert result =~ "border-2"
+    assert result =~ "wrapper-class"
+    assert result =~ "dm-select--lg"
+    assert result =~ "dm-select--error"
+    assert result =~ "Pick one"
+    assert result =~ "selected"
+    assert result =~ "data-testid=\"combo-select\""
+  end
 end
