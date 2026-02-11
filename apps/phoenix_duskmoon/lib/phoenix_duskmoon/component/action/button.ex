@@ -76,6 +76,8 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   # Confirm dialog attributes
   attr(:confirm, :string, default: "", doc: "Confirmation message (enables confirm dialog)")
   attr(:confirm_title, :string, default: "", doc: "Title for confirmation dialog")
+  attr(:confirm_text, :string, default: "Yes", doc: "Text for the confirm button in dialog")
+  attr(:cancel_text, :string, default: "Cancel", doc: "Text for the cancel button in dialog")
   attr(:confirm_class, :any, default: nil, doc: "CSS class for confirm button")
   attr(:cancel_class, :any, default: nil, doc: "CSS class for cancel button")
   attr(:show_cancel_action, :boolean, default: true, doc: "Show cancel button in dialog")
@@ -125,13 +127,13 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
         <% else %>
           <form method="dialog">
             <el-dm-button variant="primary" class={@confirm_class} {@rest}>
-              Yes
+              {@confirm_text}
             </el-dm-button>
           </form>
         <% end %>
         <form :if={@show_cancel_action} method="dialog">
           <el-dm-button variant="ghost" class={@cancel_class}>
-            Cancel
+            {@cancel_text}
           </el-dm-button>
         </form>
       </div>

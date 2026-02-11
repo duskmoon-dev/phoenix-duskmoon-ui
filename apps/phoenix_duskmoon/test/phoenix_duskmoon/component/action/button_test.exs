@@ -426,4 +426,42 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ "Yes"
     assert result =~ "Cancel"
   end
+
+  test "renders confirm dialog with custom confirm_text" do
+    result =
+      render_component(&dm_btn/1, %{
+        confirm: "Delete this?",
+        confirm_text: "Confirm",
+        inner_block: %{inner_block: fn _, _ -> "Delete" end}
+      })
+
+    assert result =~ "Confirm"
+    refute result =~ ">Yes<"
+  end
+
+  test "renders confirm dialog with custom cancel_text" do
+    result =
+      render_component(&dm_btn/1, %{
+        confirm: "Delete this?",
+        cancel_text: "No",
+        inner_block: %{inner_block: fn _, _ -> "Delete" end}
+      })
+
+    assert result =~ "No"
+  end
+
+  test "renders confirm dialog with custom confirm_text and cancel_text" do
+    result =
+      render_component(&dm_btn/1, %{
+        confirm: "Really?",
+        confirm_text: "Do it",
+        cancel_text: "Nope",
+        inner_block: %{inner_block: fn _, _ -> "Action" end}
+      })
+
+    assert result =~ "Do it"
+    assert result =~ "Nope"
+    refute result =~ ">Yes<"
+    refute result =~ ">Cancel<"
+  end
 end

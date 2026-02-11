@@ -2460,6 +2460,38 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[role="group"]
       assert result =~ ~s[aria-label="Keywords tags"]
     end
+
+    test "checkbox_group container has role=group and aria-labelledby" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "checkbox_group",
+          name: "colors",
+          id: "colors-group",
+          label: "Favorite Colors",
+          options: [{"Red", "red"}, {"Blue", "blue"}],
+          value: []
+        })
+
+      assert result =~ ~s[role="group"]
+      assert result =~ ~s[aria-labelledby="colors-group-label"]
+      assert result =~ ~s[id="colors-group-label"]
+    end
+
+    test "radio_group container has role=group and aria-labelledby" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "radio_group",
+          name: "size",
+          id: "size-group",
+          label: "Size",
+          options: [{"Small", "sm"}, {"Large", "lg"}],
+          value: nil
+        })
+
+      assert result =~ ~s[role="group"]
+      assert result =~ ~s[aria-labelledby="size-group-label"]
+      assert result =~ ~s[id="size-group-label"]
+    end
   end
 
   describe "aria-invalid across input types" do

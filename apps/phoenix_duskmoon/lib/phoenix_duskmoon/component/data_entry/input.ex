@@ -209,9 +209,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   def dm_input(%{type: "checkbox_group"} = assigns) do
     ~H"""
     <div class={["dm-form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id}><%= @label %></.dm_label>
+      <.dm_label for={@id} id={@id && "#{@id}-label"}><%= @label %></.dm_label>
       <div class="flex flex-col gap-2">
-        <div class="flex flex-wrap gap-6">
+        <div class="flex flex-wrap gap-6" role="group" aria-labelledby={@id && "#{@id}-label"}>
           <label
             class="inline-flex items-center gap-2 min-w-max"
             :for={{opt_label, opt_value} <- @options}
@@ -243,9 +243,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   def dm_input(%{type: "radio_group"} = assigns) do
     ~H"""
     <div class={["dm-form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id}><%= @label %></.dm_label>
+      <.dm_label for={@id} id={@id && "#{@id}-label"}><%= @label %></.dm_label>
       <div class="flex flex-col gap-2">
-        <div class="flex flex-wrap gap-6">
+        <div class="flex flex-wrap gap-6" role="group" aria-labelledby={@id && "#{@id}-label"}>
           <label class="inline-flex items-center gap-2 min-w-max" :for={{opt_label, opt_value} <- @options}>
             <input
               type="radio"
