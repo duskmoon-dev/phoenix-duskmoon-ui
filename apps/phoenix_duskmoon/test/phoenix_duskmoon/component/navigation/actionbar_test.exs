@@ -115,4 +115,66 @@ defmodule PhoenixDuskmoon.Component.Navigation.ActionbarTest do
     assert result =~ "data-testid=\"action-toolbar\""
     assert result =~ "aria-label=\"Page actions\""
   end
+
+  test "renders actionbar with multiple left slots" do
+    result =
+      render_component(&dm_actionbar/1, %{
+        left: [
+          %{inner_block: fn _, _ -> "Title" end},
+          %{inner_block: fn _, _ -> "Subtitle" end}
+        ]
+      })
+
+    assert result =~ "Title"
+    assert result =~ "Subtitle"
+  end
+
+  test "renders actionbar with all attributes combined" do
+    result =
+      render_component(&dm_actionbar/1, %{
+        id: "full-bar",
+        class: "shadow-lg border",
+        left_class: "font-bold",
+        right_class: "gap-2",
+        left: [%{inner_block: fn _, _ -> "Title" end}],
+        right: [%{inner_block: fn _, _ -> "Action" end}],
+        "data-testid": "toolbar"
+      })
+
+    assert result =~ ~s[id="full-bar"]
+    assert result =~ "shadow-lg border"
+    assert result =~ "font-bold"
+    assert result =~ "gap-2"
+    assert result =~ "Title"
+    assert result =~ "Action"
+    assert result =~ "data-testid=\"toolbar\""
+  end
+
+  test "renders actionbar with no slots as empty sections" do
+    result = render_component(&dm_actionbar/1, %{})
+
+    # Both sections render but with no inner divs
+    assert result =~ "dm-actionbar__left"
+    assert result =~ "dm-actionbar__right"
+  end
+
+  test "renders actionbar left slot with class but no id" do
+    result =
+      render_component(&dm_actionbar/1, %{
+        left: [%{class: "text-lg", inner_block: fn _, _ -> "Heading" end}]
+      })
+
+    assert result =~ "text-lg"
+    assert result =~ "Heading"
+  end
+
+  test "renders actionbar right slot with id but no class" do
+    result =
+      render_component(&dm_actionbar/1, %{
+        right: [%{id: "action-btn", inner_block: fn _, _ -> "Save" end}]
+      })
+
+    assert result =~ ~s[id="action-btn"]
+    assert result =~ "Save"
+  end
 end

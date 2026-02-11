@@ -145,4 +145,64 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
 
     assert result =~ ~s[variant="ghost"]
   end
+
+  test "renders badge with outline false explicitly" do
+    result =
+      render_component(&dm_badge/1, %{
+        outline: false,
+        inner_block: inner_block("No outline")
+      })
+
+    assert result =~ "<el-dm-badge"
+    assert result =~ "No outline"
+  end
+
+  test "renders badge with outline and each variant" do
+    for variant <- ~w(primary error success warning info) do
+      result =
+        render_component(&dm_badge/1, %{
+          variant: variant,
+          outline: true,
+          inner_block: inner_block("Outlined")
+        })
+
+      assert result =~ ~s[variant="#{variant}"]
+      assert result =~ "outline"
+    end
+  end
+
+  test "renders badge with xs size and error variant" do
+    result =
+      render_component(&dm_badge/1, %{
+        variant: "error",
+        size: "xs",
+        inner_block: inner_block("Tiny Error")
+      })
+
+    assert result =~ ~s[variant="error"]
+    assert result =~ ~s[size="xs"]
+    assert result =~ "Tiny Error"
+  end
+
+  test "renders badge with lg size and success variant" do
+    result =
+      render_component(&dm_badge/1, %{
+        variant: "success",
+        size: "lg",
+        inner_block: inner_block("Big Success")
+      })
+
+    assert result =~ ~s[variant="success"]
+    assert result =~ ~s[size="lg"]
+  end
+
+  test "renders badge with accent variant" do
+    result =
+      render_component(&dm_badge/1, %{
+        variant: "accent",
+        inner_block: inner_block("Accent")
+      })
+
+    assert result =~ ~s[variant="accent"]
+  end
 end

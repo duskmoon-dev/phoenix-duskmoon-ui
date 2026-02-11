@@ -139,4 +139,67 @@ defmodule PhoenixDuskmoon.Component.Fun.ButtonNoiseTest do
     assert result =~ "data-testid=\"noise-button\""
     assert result =~ "aria-label=\"Noise effect\""
   end
+
+  test "renders exactly 72 light bars" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{id: "noise-exact", content: "Test"})
+
+    count = length(String.split(result, "<i></i>")) - 1
+    assert count == 72
+  end
+
+  test "renders with phx_target attribute" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{
+        id: "noise-target",
+        content: "Target",
+        phx_target: "#component"
+      })
+
+    assert result =~ "phx-target"
+  end
+
+  test "renders with all style customizations combined" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{
+        id: "noise-combined",
+        content: "Styled",
+        font_size: "36px",
+        font_family: "Arial, sans-serif",
+        color_scheme: "electric"
+      })
+
+    assert result =~ "font-size: 36px"
+    assert result =~ "font-family: Arial, sans-serif"
+    assert result =~ "--primary-hue: 180"
+    assert result =~ "--secondary-hue: 280"
+  end
+
+  test "renders all three color schemes correctly" do
+    for {scheme, has_vars} <-
+          [{"default", false}, {"electric", true}, {"neon", true}] do
+      result =
+        render_component(&dm_fun_button_noise/1, %{
+          id: "noise-#{scheme}",
+          content: "Test",
+          color_scheme: scheme
+        })
+
+      if has_vars do
+        assert result =~ "--primary-hue"
+      else
+        refute result =~ "--primary-hue"
+      end
+    end
+  end
+
+  test "renders data-content with special characters" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{
+        id: "noise-special",
+        content: "Submit →"
+      })
+
+    assert result =~ "Submit →"
+  end
 end

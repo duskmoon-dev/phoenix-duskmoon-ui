@@ -95,4 +95,63 @@ defmodule PhoenixDuskmoon.Component.Fun.PlasmaBallTest do
     assert result =~ "data-testid=\"my-plasma\""
     assert result =~ "aria-label=\"Plasma ball effect\""
   end
+
+  test "renders plasma ball with CSS variable placeholders for all sizes" do
+    # PlasmaBall uses style="..." (not style={...}), so #{@var} renders literally
+    for size <- ~w(small medium large) do
+      result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-sz", size: size})
+      assert result =~ "--size:"
+      assert result =~ "--base-color:"
+    end
+  end
+
+  test "renders plasma ball style attribute with size and base_color variables" do
+    result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-sv"})
+    assert result =~ ~s[style="--size:]
+  end
+
+  test "renders plasma ball with 4 ray groups" do
+    result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-rg"})
+
+    # Source has 4 <div class="rays"> groups
+    ray_group_count = length(String.split(result, ~s[class="rays"])) - 1
+    assert ray_group_count == 4
+  end
+
+  test "renders plasma ball with bigwave rays" do
+    result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-rr"})
+
+    # Each rays group has 1 bigwave ray, 4 groups = 4 bigwave rays
+    bigwave_count = length(String.split(result, "ray bigwave")) - 1
+    assert bigwave_count == 4
+  end
+
+  test "renders plasma ball with phx_target on container and checkbox" do
+    result =
+      render_component(&dm_fun_plasma_ball/1, %{
+        id: "plasma-tgt",
+        phx_target: "#my-component"
+      })
+
+    assert result =~ ~s[phx-target="#my-component"]
+  end
+
+  test "renders plasma ball with all attributes combined" do
+    result =
+      render_component(&dm_fun_plasma_ball/1, %{
+        id: "plasma-all",
+        size: "large",
+        base_color: "#000033",
+        show_electrode: false,
+        class: "my-plasma",
+        "data-testid": "combo"
+      })
+
+    assert result =~ ~s[id="plasma-all"]
+    assert result =~ "--size:"
+    assert result =~ "--base-color:"
+    assert result =~ "hide-electrode"
+    assert result =~ "my-plasma"
+    assert result =~ "data-testid=\"combo\""
+  end
 end

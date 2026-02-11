@@ -90,4 +90,53 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.MarkdownTest do
     assert result =~ ~s[class="prose dark"]
     assert result =~ "# Doc"
   end
+
+  test "renders markdown with HTML entities in content" do
+    # HTML entities in content get double-escaped (& becomes &amp;) by Phoenix
+    result = render_component(&dm_markdown/1, %{content: "1 < 2 & 3 > 0"})
+
+    # Phoenix escapes < and > and &
+    assert result =~ "1 &lt; 2"
+    assert result =~ "&amp; 3"
+    assert result =~ "&gt; 0"
+  end
+
+  test "renders markdown with code fences in content" do
+    content = "```elixir\nIO.puts(\"hello\")\n```"
+    result = render_component(&dm_markdown/1, %{content: content})
+
+    assert result =~ "```elixir"
+    assert result =~ "IO.puts"
+  end
+
+  test "renders markdown with long content without truncation" do
+    content = String.duplicate("A paragraph of text. ", 100)
+    result = render_component(&dm_markdown/1, %{content: content})
+
+    assert result =~ "A paragraph of text."
+  end
+
+  test "renders markdown with all attributes set" do
+    result =
+      render_component(&dm_markdown/1, %{
+        id: "full-md",
+        class: "prose lg:prose-xl",
+        debug: true,
+        content: "# Full Example"
+      })
+
+    assert result =~ ~s[id="full-md"]
+    assert result =~ "prose lg:prose-xl"
+    assert result =~ "debug"
+    assert result =~ "# Full Example"
+  end
+
+  test "renders markdown preserving newlines in content" do
+    content = "Line 1\nLine 2\nLine 3"
+    result = render_component(&dm_markdown/1, %{content: content})
+
+    assert result =~ "Line 1"
+    assert result =~ "Line 2"
+    assert result =~ "Line 3"
+  end
 end

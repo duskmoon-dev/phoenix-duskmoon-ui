@@ -127,4 +127,66 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
     assert result =~ "data-testid=\"nav-bar\""
     assert result =~ "aria-label=\"Main navigation\""
   end
+
+  test "renders navbar with multiple elements in start_part" do
+    result =
+      render_component(&dm_navbar/1, %{
+        start_part: [
+          %{inner_block: fn _, _ -> "Logo" end},
+          %{inner_block: fn _, _ -> "Brand Name" end}
+        ]
+      })
+
+    assert result =~ "Logo"
+    assert result =~ "Brand Name"
+  end
+
+  test "renders navbar with combined class and section classes" do
+    result =
+      render_component(&dm_navbar/1, %{
+        class: "bg-base-200",
+        start_class: "gap-4",
+        center_class: "flex-1",
+        end_class: "gap-2"
+      })
+
+    assert result =~ "bg-base-200"
+    assert result =~ "dm-navbar"
+    assert result =~ "gap-4"
+    assert result =~ "flex-1"
+    assert result =~ "gap-2"
+  end
+
+  test "renders navbar with text content in slots" do
+    result =
+      render_component(&dm_navbar/1, %{
+        start_part: [%{inner_block: fn _, _ -> "Logo Text" end}],
+        end_part: [%{inner_block: fn _, _ -> "Login Link" end}]
+      })
+
+    assert result =~ "Logo Text"
+    assert result =~ "Login Link"
+  end
+
+  test "renders navbar with all attributes combined" do
+    result =
+      render_component(&dm_navbar/1, %{
+        id: "full-nav",
+        class: "bg-primary",
+        start_class: "gap-4",
+        center_class: "mx-auto",
+        end_class: "gap-2",
+        start_part: [%{inner_block: fn _, _ -> "Brand" end}],
+        center_part: [%{inner_block: fn _, _ -> "Links" end}],
+        end_part: [%{inner_block: fn _, _ -> "Profile" end}],
+        "aria-label": "Main"
+      })
+
+    assert result =~ ~s[id="full-nav"]
+    assert result =~ "bg-primary"
+    assert result =~ "Brand"
+    assert result =~ "Links"
+    assert result =~ "Profile"
+    assert result =~ "aria-label=\"Main\""
+  end
 end

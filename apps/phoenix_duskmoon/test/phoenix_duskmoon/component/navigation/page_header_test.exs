@@ -165,4 +165,93 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeaderTest do
 
     assert result =~ ~s[data-nav-id="my-nav"]
   end
+
+  test "renders page header with empty menu and user_profile" do
+    result =
+      render_component(&dm_page_header/1, %{
+        menu: [],
+        user_profile: [],
+        inner_block: inner_block()
+      })
+
+    assert result =~ "<header"
+    assert result =~ "<nav"
+    assert result =~ "flex-1 flex flex-col"
+  end
+
+  test "renders menu items with base styling classes" do
+    result =
+      render_component(&dm_page_header/1, %{
+        menu: [%{to: "/test", inner_block: fn _, _ -> "Test" end}],
+        inner_block: inner_block()
+      })
+
+    assert result =~ "py-2 px-6"
+    assert result =~ "hover:opacity-50"
+  end
+
+  test "renders mobile menu items with full width" do
+    result =
+      render_component(&dm_page_header/1, %{
+        menu: [%{to: "/mobile", inner_block: fn _, _ -> "Mobile" end}],
+        inner_block: inner_block()
+      })
+
+    assert result =~ "px-12 w-full"
+  end
+
+  test "renders hr element between menu and user_profile in mobile" do
+    result =
+      render_component(&dm_page_header/1, %{
+        menu: [%{to: "/", inner_block: fn _, _ -> "Menu" end}],
+        user_profile: [%{inner_block: fn _, _ -> "Profile" end}],
+        inner_block: inner_block()
+      })
+
+    assert result =~ "<hr"
+  end
+
+  test "renders inner_block with centering wrapper" do
+    result =
+      render_component(&dm_page_header/1, %{
+        inner_block: inner_block("Centered")
+      })
+
+    assert result =~ "flex-1"
+    assert result =~ "justify-center items-center"
+    assert result =~ "Centered"
+  end
+
+  test "renders both mobile menu checkboxes" do
+    result = render_component(&dm_page_header/1, %{inner_block: inner_block()})
+
+    assert result =~ ~s[id="mobile-menu"]
+    assert result =~ ~s[id="dm-mobile-menu-control"]
+  end
+
+  test "renders fixed hidden navigation" do
+    result = render_component(&dm_page_header/1, %{inner_block: inner_block()})
+
+    assert result =~ "fixed hidden"
+    assert result =~ "w-full h-12"
+  end
+
+  test "renders multiple menu items in desktop and mobile" do
+    result =
+      render_component(&dm_page_header/1, %{
+        menu: [
+          %{to: "/a", inner_block: fn _, _ -> "A" end},
+          %{to: "/b", inner_block: fn _, _ -> "B" end},
+          %{to: "/c", inner_block: fn _, _ -> "C" end}
+        ],
+        inner_block: inner_block()
+      })
+
+    assert result =~ ~s[href="/a"]
+    assert result =~ ~s[href="/b"]
+    assert result =~ ~s[href="/c"]
+    assert result =~ "A"
+    assert result =~ "B"
+    assert result =~ "C"
+  end
 end

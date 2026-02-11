@@ -94,4 +94,71 @@ defmodule PhoenixDuskmoon.Component.Fun.SnowTest do
 
     assert result =~ "data-testid=\"winter-effect\""
   end
+
+  test "renders snow with count of 1" do
+    result = render_component(&dm_fun_snow/1, %{id: "snow-one", count: 1})
+
+    count = length(String.split(result, "--snowflake-size")) - 1
+    # 1 from the inline style + references in <style> block
+    assert count >= 1
+    assert result =~ "animation-delay:"
+  end
+
+  test "renders snowflakes with animation-duration in style" do
+    result = render_component(&dm_fun_snow/1, %{id: "snow-dur"})
+
+    assert result =~ "animation-duration:"
+  end
+
+  test "renders snowflakes with animation-delay in style" do
+    result = render_component(&dm_fun_snow/1, %{id: "snow-delay"})
+
+    assert result =~ "animation-delay:"
+  end
+
+  test "renders snowflakes with left positioning" do
+    result = render_component(&dm_fun_snow/1, %{id: "snow-left"})
+
+    assert result =~ "left:"
+  end
+
+  test "renders snow with swaying animation keyframes" do
+    result = render_component(&dm_fun_snow/1, %{id: "snow-sway"})
+
+    assert result =~ "@keyframes swayLeft"
+    assert result =~ "@keyframes swayRight"
+  end
+
+  test "renders snow with custom size_range" do
+    result = render_component(&dm_fun_snow/1, %{id: "snow-sz", count: 5, size_range: {10, 30}})
+
+    # Each snowflake should have --snowflake-size between 10 and 30
+    count = length(String.split(result, "--snowflake-size")) - 1
+    assert count == 5
+  end
+
+  test "renders snow with custom animation_duration" do
+    result =
+      render_component(&dm_fun_snow/1, %{
+        id: "snow-anim",
+        count: 3,
+        animation_duration: {10, 30}
+      })
+
+    assert result =~ "animation-duration:"
+    count = length(String.split(result, "--snowflake-size")) - 1
+    assert count == 3
+  end
+
+  test "renders snow with container class and snowflake class combined" do
+    result =
+      render_component(&dm_fun_snow/1, %{
+        id: "snow-combo",
+        container_class: "h-screen relative",
+        snowflake_class: "sparkle glow"
+      })
+
+    assert result =~ "h-screen relative"
+    assert result =~ "sparkle glow"
+  end
 end

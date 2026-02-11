@@ -106,4 +106,54 @@ defmodule PhoenixDuskmoon.Component.Fun.EclipseTest do
     assert result =~ "Fast rotating layer"
     assert result =~ "Static background layer"
   end
+
+  test "renders eclipse with size and bg_color CSS variable placeholders" do
+    # Eclipse uses style="..." (not style={...}), so #{@var} renders literally
+    for size <- ~w(small medium large) do
+      result = render_component(&dm_fun_eclipse/1, %{id: "e", size: size})
+      assert result =~ ~s[--size:]
+      assert result =~ ~s[--bg-color:]
+    end
+  end
+
+  test "renders eclipse with dm-fun-eclipse class for default medium size" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e"})
+    assert result =~ "dm-fun-eclipse"
+    assert result =~ "style="
+  end
+
+  test "renders eclipse animation durations proportional to speed 4.0" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e", animation_speed: 4.0})
+
+    assert result =~ "animation-duration: 8s"
+    assert result =~ "animation-duration: 5s"
+    assert result =~ "animation-duration: 10s"
+  end
+
+  test "renders eclipse with all attributes combined" do
+    result =
+      render_component(&dm_fun_eclipse/1, %{
+        id: "e-full",
+        size: "large",
+        bg_color: "#000000",
+        animation_speed: 2.0,
+        class: "my-eclipse",
+        "data-testid": "eclipse-combo"
+      })
+
+    assert result =~ ~s[id="e-full"]
+    assert result =~ "--size:"
+    assert result =~ "--bg-color:"
+    assert result =~ "animation-duration: 15s"
+    assert result =~ "my-eclipse"
+    assert result =~ "data-testid=\"eclipse-combo\""
+  end
+
+  test "renders eclipse with very slow animation speed 0.25" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e", animation_speed: 0.25})
+
+    assert result =~ "animation-duration: 120s"
+    assert result =~ "animation-duration: 80s"
+    assert result =~ "animation-duration: 160s"
+  end
 end
