@@ -182,4 +182,34 @@ defmodule PhoenixDuskmoon.Component.Fun.PlasmaBallTest do
 
     assert result =~ "--base-color: #ff0000"
   end
+
+  test "renders plasma ball with 5 rays per group" do
+    result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-rays5"})
+
+    # Each rays group has 5 ray divs (1 bigwave + 4 regular)
+    ray_count = length(String.split(result, ~s[class="ray"])) - 1
+    # 4 groups * 4 regular rays = 16 occurrences of class="ray" (bigwave has "ray bigwave")
+    assert ray_count >= 16
+  end
+
+  test "renders plasma ball checkbox input for toggle" do
+    result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-chk"})
+
+    assert result =~ ~s[type="checkbox"]
+    assert result =~ "switcher"
+  end
+
+  test "renders plasma ball with nil phx_target omits phx-target" do
+    result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-notgt", phx_target: nil})
+
+    assert result =~ ~s[phx-click="plasma_toggle"]
+    # phx-target should not have a value when nil
+  end
+
+  test "renders plasma ball electrode without hide class when show_electrode true" do
+    result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-show-e", show_electrode: true})
+
+    assert result =~ "electrode"
+    refute result =~ "hide-electrode"
+  end
 end

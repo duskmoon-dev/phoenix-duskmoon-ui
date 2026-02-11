@@ -261,4 +261,66 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
 
     assert result =~ ~s[aria-label="Breadcrumb"]
   end
+
+  test "renders breadcrumb using el-dm-breadcrumbs custom element" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        crumb: crumbs(["Home"])
+      })
+
+    assert result =~ "<el-dm-breadcrumbs"
+    assert result =~ "</el-dm-breadcrumbs>"
+  end
+
+  test "renders breadcrumb items with slot attribute" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        crumb: crumbs(["Home", "Products"])
+      })
+
+    assert result =~ ~s[slot="item"]
+  end
+
+  test "renders breadcrumb with data-href on linked items" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        crumb: crumbs([{"Home", %{to: "/"}}, "Current"])
+      })
+
+    assert result =~ ~s[data-href="/"]
+  end
+
+  test "renders only last crumb with aria-current page" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        crumb: crumbs(["Home", "Products", "Details"])
+      })
+
+    # Only last item should have aria-current="page"
+    page_count = length(String.split(result, ~s[aria-current="page"])) - 1
+    assert page_count == 1
+    assert result =~ "Details"
+  end
+
+  test "renders linked crumb as anchor tag" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        crumb: crumbs([{"Home", %{to: "/"}}])
+      })
+
+    assert result =~ "<a"
+    assert result =~ ~s[href="/"]
+    assert result =~ "Home"
+  end
+
+  test "renders non-linked crumb without anchor tag wrapping" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        crumb: crumbs(["Plain Text"])
+      })
+
+    assert result =~ "Plain Text"
+    # The text should be rendered without an anchor wrapper
+    assert result =~ ~s[slot="item"]
+  end
 end

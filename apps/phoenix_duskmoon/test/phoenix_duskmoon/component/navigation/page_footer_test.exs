@@ -307,4 +307,58 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooterTest do
     assert result =~ "2024 Company"
     assert result =~ "opacity-75"
   end
+
+  test "renders footer with inner_block content before grid" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: [%{inner_block: fn _, _ -> "Pre-grid content" end}]
+      })
+
+    assert result =~ "Pre-grid content"
+    assert result =~ "<footer"
+  end
+
+  test "renders footer with py-20 vertical padding" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: []
+      })
+
+    assert result =~ "py-20"
+  end
+
+  test "renders footer container with mx-auto centering" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: []
+      })
+
+    assert result =~ "container mx-auto"
+  end
+
+  test "renders footer section body in flex column" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: [],
+        section: [
+          %{inner_block: fn _, _ -> "Body content" end}
+        ]
+      })
+
+    assert result =~ "Body content"
+    assert result =~ "flex flex-col"
+  end
+
+  test "renders footer copyright with self-center alignment" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: [],
+        copyright: [
+          %{inner_block: fn _, _ -> "Copyright text" end}
+        ]
+      })
+
+    assert result =~ "self-center"
+    assert result =~ "Copyright text"
+  end
 end
