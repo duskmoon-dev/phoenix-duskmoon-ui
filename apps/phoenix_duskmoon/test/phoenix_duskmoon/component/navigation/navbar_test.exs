@@ -10,9 +10,10 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
 
     assert result =~ "<nav"
     assert result =~ "dm-navbar"
+    assert result =~ "</nav>"
   end
 
-  test "renders navbar with three sections" do
+  test "renders navbar with three section containers" do
     result = render_component(&dm_navbar/1, %{})
 
     assert result =~ "dm-navbar__start"
@@ -50,7 +51,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
     assert result =~ "dm-navbar__end"
   end
 
-  test "renders navbar with all three parts" do
+  test "renders navbar with all three parts populated" do
     result =
       render_component(&dm_navbar/1, %{
         start_part: [%{inner_block: fn _, _ -> "Brand" end}],
@@ -92,6 +93,28 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
     result = render_component(&dm_navbar/1, %{end_class: "gap-2"})
 
     assert result =~ "gap-2"
+  end
+
+  test "renders navbar with all section classes" do
+    result =
+      render_component(&dm_navbar/1, %{
+        start_class: "start-custom",
+        center_class: "center-custom",
+        end_class: "end-custom"
+      })
+
+    assert result =~ "start-custom"
+    assert result =~ "center-custom"
+    assert result =~ "end-custom"
+  end
+
+  test "renders navbar with empty slots by default" do
+    result = render_component(&dm_navbar/1, %{})
+
+    # All three section divs rendered even without content
+    assert result =~ "dm-navbar__start"
+    assert result =~ "dm-navbar__center"
+    assert result =~ "dm-navbar__end"
   end
 
   test "renders navbar with rest attributes" do

@@ -64,6 +64,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
   test "renders badge without outline by default" do
     result = render_component(&dm_badge/1, %{inner_block: inner_block("Tag")})
 
+    # outline=false should not render the attribute value
     assert result =~ "<el-dm-badge"
   end
 
@@ -75,6 +76,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
       })
 
     assert result =~ "my-badge-class"
+  end
+
+  test "renders badge content from inner_block" do
+    result = render_component(&dm_badge/1, %{inner_block: inner_block("Status Active")})
+
+    assert result =~ "Status Active"
   end
 
   test "renders badge with rest attributes" do
@@ -116,5 +123,26 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
     assert result =~ "outline"
     assert result =~ "extra"
     assert result =~ "Full"
+  end
+
+  test "renders badge with neutral variant" do
+    result =
+      render_component(&dm_badge/1, %{
+        variant: "neutral",
+        inner_block: inner_block("Neutral")
+      })
+
+    assert result =~ ~s[variant="neutral"]
+    assert result =~ "Neutral"
+  end
+
+  test "renders badge with ghost variant" do
+    result =
+      render_component(&dm_badge/1, %{
+        variant: "ghost",
+        inner_block: inner_block("Ghost")
+      })
+
+    assert result =~ ~s[variant="ghost"]
   end
 end

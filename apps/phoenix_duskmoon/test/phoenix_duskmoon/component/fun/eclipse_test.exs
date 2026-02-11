@@ -23,26 +23,24 @@ defmodule PhoenixDuskmoon.Component.Fun.EclipseTest do
     assert result =~ "layer-6"
   end
 
-  test "renders eclipse with small size" do
-    result = render_component(&dm_fun_eclipse/1, %{id: "eclipse-3", size: "small"})
-
-    assert result =~ "dm-fun-eclipse"
+  test "renders eclipse with dm-fun-eclipse class for all sizes" do
+    for size <- ~w(small medium large) do
+      result = render_component(&dm_fun_eclipse/1, %{id: "e", size: size})
+      assert result =~ "dm-fun-eclipse"
+    end
   end
 
-  test "renders eclipse with large size" do
-    result = render_component(&dm_fun_eclipse/1, %{id: "eclipse-4", size: "large"})
+  test "renders eclipse with style attribute containing CSS variables" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e"})
 
-    assert result =~ "dm-fun-eclipse"
-  end
-
-  test "renders eclipse with custom bg_color" do
-    result = render_component(&dm_fun_eclipse/1, %{id: "eclipse-5", bg_color: "#000000"})
-
-    assert result =~ "dm-fun-eclipse"
+    # CSS #{} interpolation doesn't work in render_component, but the style attr is present
+    assert result =~ "style="
+    assert result =~ "--size:"
+    assert result =~ "--bg-color:"
   end
 
   test "renders eclipse with default animation speed durations" do
-    result = render_component(&dm_fun_eclipse/1, %{id: "eclipse-6"})
+    result = render_component(&dm_fun_eclipse/1, %{id: "e"})
 
     # Default speed 1.0: layer 1 = 30s, layer 2/3 = 20s, layer 4/5 = 40s
     assert result =~ "animation-duration: 30s"
@@ -51,7 +49,7 @@ defmodule PhoenixDuskmoon.Component.Fun.EclipseTest do
   end
 
   test "renders eclipse with faster animation speed" do
-    result = render_component(&dm_fun_eclipse/1, %{id: "eclipse-7", animation_speed: 2.0})
+    result = render_component(&dm_fun_eclipse/1, %{id: "e", animation_speed: 2.0})
 
     # Speed 2.0: layer 1 = 15s, layer 2/3 = 10s, layer 4/5 = 20s
     assert result =~ "animation-duration: 15s"
@@ -59,8 +57,24 @@ defmodule PhoenixDuskmoon.Component.Fun.EclipseTest do
     assert result =~ "animation-duration: 20s"
   end
 
+  test "renders eclipse with slower animation speed" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e", animation_speed: 0.5})
+
+    # Speed 0.5: layer 1 = 60s, layer 2/3 = 40s, layer 4/5 = 80s
+    assert result =~ "animation-duration: 60s"
+    assert result =~ "animation-duration: 40s"
+    assert result =~ "animation-duration: 80s"
+  end
+
+  test "renders eclipse layer-6 as static layer without inline animation-duration" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e"})
+
+    # layer-6 is the static layer — rendered as a plain div without inline style
+    assert result =~ ~s[class="layer layer-6"]
+  end
+
   test "renders eclipse with custom class" do
-    result = render_component(&dm_fun_eclipse/1, %{id: "eclipse-8", class: "mx-auto"})
+    result = render_component(&dm_fun_eclipse/1, %{id: "e", class: "mx-auto"})
 
     assert result =~ "mx-auto"
     assert result =~ "dm-fun-eclipse"
@@ -69,7 +83,7 @@ defmodule PhoenixDuskmoon.Component.Fun.EclipseTest do
   test "renders eclipse with rest attributes" do
     result =
       render_component(&dm_fun_eclipse/1, %{
-        id: "eclipse-9",
+        id: "e",
         "data-testid": "my-eclipse",
         "aria-hidden": "true"
       })
@@ -78,10 +92,18 @@ defmodule PhoenixDuskmoon.Component.Fun.EclipseTest do
     assert result =~ "aria-hidden=\"true\""
   end
 
-  test "renders eclipse layer-6 as static layer" do
-    result = render_component(&dm_fun_eclipse/1, %{id: "eclipse-10"})
+  test "renders all 5 animated layers with animation-duration" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e"})
 
-    # layer-6 is the static background layer
-    assert result =~ "layer layer-6"
+    # Count layers with animation-duration (5 animated layers, layer-6 is static)
+    count = length(String.split(result, "animation-duration:")) - 1
+    assert count == 5
+  end
+
+  test "renders eclipse layer HTML comments" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e"})
+
+    assert result =~ "Fast rotating layer"
+    assert result =~ "Static background layer"
   end
 end
