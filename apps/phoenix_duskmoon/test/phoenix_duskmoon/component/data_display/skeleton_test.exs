@@ -380,6 +380,178 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     end
   end
 
+  describe "dm_skeleton_card/1 edge cases" do
+    test "renders card skeleton with avatar and action combined" do
+      result =
+        render_component(&dm_skeleton_card/1, %{
+          show_avatar: true,
+          show_action: true,
+          lines: 2,
+          animation: "pulse"
+        })
+
+      assert result =~ "dm-avatar dm-avatar--placeholder"
+      assert result =~ "dm-card__actions"
+      assert result =~ "dm-skeleton h-10 w-20"
+      assert result =~ "animate-pulse"
+    end
+
+    test "renders card skeleton with custom avatar size" do
+      result = render_component(&dm_skeleton_card/1, %{show_avatar: true, avatar_size: "lg"})
+
+      assert result =~ "w-lg h-lg"
+    end
+
+    test "renders card skeleton with id" do
+      result = render_component(&dm_skeleton_card/1, %{id: "card-skel"})
+
+      assert result =~ ~s[id="card-skel"]
+    end
+
+    test "renders card skeleton with custom class" do
+      result = render_component(&dm_skeleton_card/1, %{class: "my-card-skel"})
+
+      assert result =~ "my-card-skel"
+    end
+  end
+
+  describe "dm_skeleton_table/1 edge cases" do
+    test "renders table skeleton with id" do
+      result = render_component(&dm_skeleton_table/1, %{id: "tbl-skel"})
+
+      assert result =~ ~s[id="tbl-skel"]
+    end
+
+    test "renders table skeleton with custom class" do
+      result = render_component(&dm_skeleton_table/1, %{class: "my-table-skel"})
+
+      assert result =~ "my-table-skel"
+    end
+
+    test "renders table skeleton with all options combined" do
+      result =
+        render_component(&dm_skeleton_table/1, %{
+          id: "full-tbl",
+          class: "w-full",
+          rows: 2,
+          columns: 3,
+          show_header: true,
+          animation: "wave"
+        })
+
+      assert result =~ ~s[id="full-tbl"]
+      assert result =~ "w-full"
+      assert result =~ "animate-wave"
+      assert result =~ "<thead>"
+      # 2 header cells + 6 data cells = 8 total (3 th + 6 td)
+      assert result |> String.split("<th>") |> length() == 4
+      assert result |> String.split("<td>") |> length() == 7
+    end
+  end
+
+  describe "dm_skeleton_list/1 edge cases" do
+    test "renders list skeleton with id" do
+      result = render_component(&dm_skeleton_list/1, %{id: "list-skel"})
+
+      assert result =~ ~s[id="list-skel"]
+    end
+
+    test "renders list skeleton with custom class" do
+      result = render_component(&dm_skeleton_list/1, %{class: "my-list-skel"})
+
+      assert result =~ "my-list-skel"
+    end
+
+    test "renders list skeleton with custom avatar size" do
+      result =
+        render_component(&dm_skeleton_list/1, %{
+          show_avatar: true,
+          avatar_size: "lg"
+        })
+
+      assert result =~ "w-lg h-lg"
+    end
+
+    test "renders list skeleton with all options combined" do
+      result =
+        render_component(&dm_skeleton_list/1, %{
+          id: "full-list",
+          class: "border rounded",
+          items: 3,
+          show_avatar: true,
+          avatar_size: "sm",
+          lines_per_item: 2,
+          animation: "pulse"
+        })
+
+      assert result =~ ~s[id="full-list"]
+      assert result =~ "border rounded"
+      assert result =~ "animate-pulse"
+      assert result =~ "dm-avatar"
+      assert result |> String.split("flex items-start gap-3") |> length() == 4
+    end
+  end
+
+  describe "dm_skeleton_comment/1 combined" do
+    test "renders comment skeleton with animation and replies" do
+      result =
+        render_component(&dm_skeleton_comment/1, %{
+          show_replies: 3,
+          animation: "wave"
+        })
+
+      assert result =~ "animate-wave"
+      assert result =~ "ml-12 space-y-4"
+      assert result |> String.split("flex gap-3") |> length() == 4
+    end
+
+    test "renders comment skeleton with all options" do
+      result =
+        render_component(&dm_skeleton_comment/1, %{
+          id: "comment-full",
+          class: "border-l",
+          show_replies: 1,
+          animation: "bounce"
+        })
+
+      assert result =~ ~s[id="comment-full"]
+      assert result =~ "border-l"
+      assert result =~ "animate-bounce"
+      assert result =~ "ml-12"
+    end
+  end
+
+  describe "dm_skeleton/1 edge cases" do
+    test "renders skeleton with width and height" do
+      result = render_component(&dm_skeleton/1, %{width: "w-48", height: "h-12"})
+
+      assert result =~ "w-48"
+      assert result =~ "h-12"
+    end
+
+    test "renders skeleton with variant and size combined" do
+      result = render_component(&dm_skeleton/1, %{variant: "square", size: "xl"})
+
+      assert result =~ "dm-skeleton--square"
+      assert result =~ "dm-skeleton--xl"
+    end
+  end
+
+  describe "dm_skeleton_avatar/1 edge cases" do
+    test "renders avatar skeleton with id" do
+      result = render_component(&dm_skeleton_avatar/1, %{id: "avatar-skel"})
+
+      assert result =~ ~s[id="avatar-skel"]
+    end
+
+    test "renders avatar skeleton with all sizes" do
+      for size <- ~w(xs sm md lg xl) do
+        result = render_component(&dm_skeleton_avatar/1, %{size: size})
+        assert result =~ "w-#{size} h-#{size}"
+      end
+    end
+  end
+
   describe "dm_skeleton_comment/1" do
     test "renders basic comment skeleton" do
       result = render_component(&dm_skeleton_comment/1, %{})

@@ -274,4 +274,88 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeaderTest do
 
     assert toggle_count == 2
   end
+
+  test "renders menu item without to attribute uses false href" do
+    result =
+      render_component(&dm_page_header/1, %{
+        menu: [%{inner_block: fn _, _ -> "No Link" end}],
+        inner_block: inner_block()
+      })
+
+    assert result =~ "No Link"
+    assert result =~ "<a"
+  end
+
+  test "renders menu item without class uses empty string fallback" do
+    result =
+      render_component(&dm_page_header/1, %{
+        menu: [%{to: "/test", inner_block: fn _, _ -> "Test" end}],
+        inner_block: inner_block()
+      })
+
+    assert result =~ "Test"
+    assert result =~ ~s[href="/test"]
+  end
+
+  test "renders user_profile without class uses empty string fallback" do
+    result =
+      render_component(&dm_page_header/1, %{
+        user_profile: [%{inner_block: fn _, _ -> "Profile" end}],
+        inner_block: inner_block()
+      })
+
+    assert result =~ "Profile"
+  end
+
+  test "renders data-nav-id matching custom nav_id" do
+    result =
+      render_component(&dm_page_header/1, %{
+        nav_id: "special-nav",
+        inner_block: inner_block()
+      })
+
+    assert result =~ ~s[id="special-nav"]
+    assert result =~ ~s[data-nav-id="special-nav"]
+  end
+
+  test "renders header with all options combined" do
+    result =
+      render_component(&dm_page_header/1, %{
+        id: "my-header",
+        nav_id: "my-nav",
+        class: "bg-gradient",
+        nav_class: "bg-base-100",
+        menu: [
+          %{to: "/a", class: "menu-a", inner_block: fn _, _ -> "A" end},
+          %{to: "/b", class: "menu-b", inner_block: fn _, _ -> "B" end}
+        ],
+        user_profile: [%{class: "profile-cls", inner_block: fn _, _ -> "User" end}],
+        inner_block: inner_block("Hero")
+      })
+
+    assert result =~ ~s[id="my-header"]
+    assert result =~ ~s[id="my-nav"]
+    assert result =~ "bg-gradient"
+    assert result =~ "bg-base-100"
+    assert result =~ "menu-a"
+    assert result =~ "menu-b"
+    assert result =~ ~s[href="/a"]
+    assert result =~ ~s[href="/b"]
+    assert result =~ "profile-cls"
+    assert result =~ "User"
+    assert result =~ "Hero"
+  end
+
+  test "renders nav_class in both fixed nav and mobile dropdown" do
+    result =
+      render_component(&dm_page_header/1, %{
+        nav_class: "bg-base-300",
+        menu: [%{to: "/x", inner_block: fn _, _ -> "X" end}],
+        inner_block: inner_block()
+      })
+
+    # nav_class appears in fixed nav and mobile dropdown
+    parts = String.split(result, "bg-base-300")
+    assert length(parts) >= 3
+  end
 end

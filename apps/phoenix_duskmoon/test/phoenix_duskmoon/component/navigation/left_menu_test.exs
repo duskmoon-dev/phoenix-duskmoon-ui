@@ -429,5 +429,154 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
 
       assert result =~ ~s[aria-current="page"]
     end
+
+    test "renders collapsible group with title class" do
+      result =
+        render_component(&dm_left_menu_group/1, %{
+          collapsible: true,
+          title: [%{class: "uppercase font-bold", inner_block: fn _, _ -> "Title" end}],
+          menu: [%{inner_block: fn _, _ -> "Item" end, to: "/item"}]
+        })
+
+      assert result =~ "uppercase font-bold"
+      assert result =~ "<summary"
+    end
+
+    test "renders collapsible group with active and disabled items combined" do
+      result =
+        render_component(&dm_left_menu_group/1, %{
+          collapsible: true,
+          active: "a",
+          title: [%{inner_block: fn _, _ -> "Group" end}],
+          menu: [
+            %{inner_block: fn _, _ -> "Active" end, id: "a", to: "/a"},
+            %{inner_block: fn _, _ -> "Disabled" end, id: "b", to: "/b", disabled: true}
+          ]
+        })
+
+      assert result =~ "dm-menu__item--active"
+      assert result =~ "dm-menu__item--disabled"
+      assert result =~ ~s[aria-current="page"]
+      assert result =~ ~s[aria-disabled="true"]
+    end
+
+    test "renders group with all options combined" do
+      result =
+        render_component(&dm_left_menu_group/1, %{
+          id: "full-group",
+          class: "border-l",
+          size: "sm",
+          collapsible: true,
+          open: true,
+          active: "item1",
+          title: [%{class: "text-lg", inner_block: fn _, _ -> "Full" end}],
+          menu: [
+            %{inner_block: fn _, _ -> "Item 1" end, id: "item1", to: "/1", class: "custom-cls"},
+            %{inner_block: fn _, _ -> "Item 2" end, id: "item2", to: "/2", disabled: true}
+          ]
+        })
+
+      assert result =~ ~s[id="full-group"]
+      assert result =~ "border-l"
+      assert result =~ "dm-menu--sm"
+      assert result =~ ~s(<details open>)
+      assert result =~ "text-lg"
+      assert result =~ "Full"
+      assert result =~ "dm-menu__item--active"
+      assert result =~ "custom-cls"
+      assert result =~ "dm-menu__item--disabled"
+    end
+  end
+
+  describe "dm_left_menu/1 edge cases" do
+    test "renders menu with item class attribute" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          menu: [
+            %{inner_block: fn _, _ -> "Styled" end, class: "text-primary font-bold"}
+          ]
+        })
+
+      assert result =~ "text-primary font-bold"
+    end
+
+    test "renders menu with title class attribute" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          title: [%{inner_block: fn _, _ -> "Title" end, class: "uppercase tracking-wide"}]
+        })
+
+      assert result =~ "uppercase tracking-wide"
+    end
+
+    test "renders menu with multiple titles" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          title: [
+            %{inner_block: fn _, _ -> "Title 1" end},
+            %{inner_block: fn _, _ -> "Title 2" end}
+          ]
+        })
+
+      assert result =~ "Title 1"
+      assert result =~ "Title 2"
+    end
+
+    test "renders menu with no active match does not add active class" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          active: "nonexistent",
+          menu: [
+            %{inner_block: fn _, _ -> "A" end, id: "a"},
+            %{inner_block: fn _, _ -> "B" end, id: "b"}
+          ]
+        })
+
+      refute result =~ "dm-menu__item--active"
+    end
+
+    test "renders menu with empty active string does not set aria-current" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          active: "",
+          menu: [
+            %{inner_block: fn _, _ -> "Item" end, id: ""}
+          ]
+        })
+
+      # active: "" and id: "" match, but the guard @active != "" prevents aria-current
+      refute result =~ ~s[aria-current="page"]
+    end
+
+    test "renders menu with all options combined" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          id: "full-menu",
+          class: "bg-base-200 rounded-box",
+          size: "lg",
+          horizontal: true,
+          active: "item2",
+          title: [%{class: "text-sm", inner_block: fn _, _ -> "Nav" end}],
+          menu: [
+            %{inner_block: fn _, _ -> "Item 1" end, id: "item1", class: "cls-1"},
+            %{inner_block: fn _, _ -> "Item 2" end, id: "item2"},
+            %{inner_block: fn _, _ -> "Item 3" end, id: "item3", disabled: true}
+          ],
+          "data-testid": "nav"
+        })
+
+      assert result =~ ~s[id="full-menu"]
+      assert result =~ "bg-base-200 rounded-box"
+      assert result =~ "dm-menu--lg"
+      assert result =~ "dm-menu--horizontal"
+      assert result =~ "text-sm"
+      assert result =~ "Nav"
+      assert result =~ "cls-1"
+      assert result =~ "dm-menu__item--active"
+      assert result =~ "dm-menu__item--disabled"
+      assert result =~ ~s[aria-current="page"]
+      assert result =~ ~s[aria-disabled="true"]
+      assert result =~ ~s[data-testid="nav"]
+    end
   end
 end
