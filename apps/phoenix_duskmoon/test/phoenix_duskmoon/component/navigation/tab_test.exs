@@ -544,4 +544,21 @@ defmodule PhoenixDuskmoon.Component.Navigation.TabTest do
       assert btn =~ ~s[type="button"], "Tab button missing type=button: #{btn}"
     end
   end
+
+  test "tabs without id omit aria-controls and aria-labelledby" do
+    result =
+      render_component(&dm_tab/1, %{
+        tab: [
+          %{inner_block: fn _, _ -> "Tab 1" end},
+          %{inner_block: fn _, _ -> "Tab 2" end}
+        ],
+        tab_content: [
+          %{inner_block: fn _, _ -> "Content 1" end},
+          %{inner_block: fn _, _ -> "Content 2" end}
+        ]
+      })
+
+    refute result =~ ~s[aria-controls="]
+    refute result =~ ~s[aria-labelledby="]
+  end
 end

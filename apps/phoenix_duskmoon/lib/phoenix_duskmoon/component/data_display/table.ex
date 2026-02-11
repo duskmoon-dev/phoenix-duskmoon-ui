@@ -170,6 +170,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
           <th
             :for={col <- @col}
             role="columnheader"
+            scope="col"
             class={[
               "font-bold",
               if(@border, do: "border"),

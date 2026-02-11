@@ -559,4 +559,27 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
       assert result =~ ~s[data-label="Age"]
     end
   end
+
+  describe "table header scope attribute" do
+    test "column headers have scope=col for screen reader navigation" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data,
+          num_cols: 1
+        })
+
+      assert result =~ ~s[scope="col"]
+    end
+
+    test "all column headers have scope=col" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data,
+          num_cols: 3
+        })
+
+      scope_count = length(String.split(result, ~s[scope="col"])) - 1
+      assert scope_count == 3
+    end
+  end
 end
