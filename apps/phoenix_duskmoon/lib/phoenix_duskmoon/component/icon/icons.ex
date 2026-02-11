@@ -68,6 +68,8 @@ defmodule PhoenixDuskmoon.Component.Icon.Icons do
     """
   )
 
+  attr(:rest, :global, doc: "additional HTML attributes for the SVG element")
+
   def dm_mdi(assigns) do
     name = assigns.name
     icon_path = Application.app_dir(:phoenix_duskmoon, "priv/mdi/svg/#{name}.svg")
@@ -87,7 +89,7 @@ defmodule PhoenixDuskmoon.Component.Icon.Icons do
     assigns = assigns |> assign(:inner_svg, inner_svg)
 
     ~H"""
-    <svg xmlns="http://www.w3.org/2000/svg" id={@id} class={@class} fill={@color} viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" id={@id} class={@class} fill={@color} viewBox="0 0 24 24" aria-hidden="true" {@rest}>
       <%= raw(@inner_svg) %>
     </svg>
     """
@@ -155,6 +157,8 @@ defmodule PhoenixDuskmoon.Component.Icon.Icons do
     """
   )
 
+  attr(:rest, :global, doc: "additional HTML attributes for the SVG element")
+
   def dm_bsi(assigns) do
     name = assigns.name
     icon_path = Application.app_dir(:phoenix_duskmoon, "priv/bsi/svg/#{name}.svg")
@@ -174,7 +178,7 @@ defmodule PhoenixDuskmoon.Component.Icon.Icons do
     assigns = assigns |> assign(:inner_svg, inner_svg)
 
     ~H"""
-    <svg xmlns="http://www.w3.org/2000/svg" id={@id} class={@class} fill={@color} viewBox="0 0 16 16">
+    <svg xmlns="http://www.w3.org/2000/svg" id={@id} class={@class} fill={@color} viewBox="0 0 16 16" aria-hidden="true" {@rest}>
       <%= raw(@inner_svg) %>
     </svg>
     """

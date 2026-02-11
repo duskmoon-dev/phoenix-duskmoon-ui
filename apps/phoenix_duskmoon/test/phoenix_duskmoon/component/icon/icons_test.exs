@@ -292,4 +292,24 @@ defmodule PhoenixDuskmoon.Component.Icon.IconsTest do
     result = render_component(&dm_bsi/1, %{name: "0-circle"})
     assert result =~ ~s[fill="currentcolor"]
   end
+
+  test "MDI renders with aria-hidden true by default" do
+    result = render_component(&dm_mdi/1, %{name: "account"})
+    assert result =~ ~s[aria-hidden="true"]
+  end
+
+  test "BSI renders with aria-hidden true by default" do
+    result = render_component(&dm_bsi/1, %{name: "0-circle"})
+    assert result =~ ~s[aria-hidden="true"]
+  end
+
+  test "MDI accepts rest global attributes" do
+    result = render_component(&dm_mdi/1, %{name: "account", "data-testid": "icon-test"})
+    assert result =~ ~s[data-testid="icon-test"]
+  end
+
+  test "BSI accepts rest global attributes" do
+    result = render_component(&dm_bsi/1, %{name: "0-circle", "data-testid": "bsi-test"})
+    assert result =~ ~s[data-testid="bsi-test"]
+  end
 end
