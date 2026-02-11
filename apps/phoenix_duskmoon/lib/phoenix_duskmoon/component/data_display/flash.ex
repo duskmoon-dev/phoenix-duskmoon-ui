@@ -19,6 +19,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
       <.dm_flash kind={:info} flash={@flash} />
       <.dm_flash kind={:info} phx-mounted={show("#flash")}>Welcome Back!</.dm_flash>
   """
+  @doc type: :component
   attr(:id, :string, default: "flash", doc: "the optional id of flash container")
   attr(:flash, :map, default: %{}, doc: "the map of flash messages to display")
   attr(:title, :string, default: nil)
@@ -67,6 +68,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
 
       <.dm_flash_group flash={@flash} />
   """
+  @doc type: :component
   attr(:flash, :map, required: true, doc: "the map of flash messages")
 
   def dm_flash_group(assigns) do
