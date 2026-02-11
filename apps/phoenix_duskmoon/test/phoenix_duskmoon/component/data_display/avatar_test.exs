@@ -193,4 +193,23 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
     assert result =~ "bg-error"
     assert result =~ "J"
   end
+
+  test "renders online indicator with aria-label" do
+    result = render_component(&dm_avatar/1, %{name: "T", online: true})
+
+    assert result =~ ~s[aria-label="Online"]
+  end
+
+  test "renders offline indicator with aria-label" do
+    result = render_component(&dm_avatar/1, %{name: "T", offline: true})
+
+    assert result =~ ~s[aria-label="Offline"]
+  end
+
+  test "renders default svg icon with role img and aria-label" do
+    result = render_component(&dm_avatar/1, %{})
+
+    assert result =~ ~s[role="img"]
+    assert result =~ ~s[aria-label="User"]
+  end
 end

@@ -75,11 +75,12 @@ defmodule PhoenixDuskmoon.Component.Fun.ButtonNoise do
       ]}
       style={"font-family: #{@font_family}; font-size: #{@font_size}; #{@color_variables}"}
       data-content={@content}
+      aria-label={@content}
       phx-target={@phx_target}
       {@rest}
     >
       <!-- 72 animated light bars -->
-      <i :for={index <- 1..72}></i>
+      <span aria-hidden="true"><i :for={index <- 1..72}></i></span>
     </button>
     """
   end

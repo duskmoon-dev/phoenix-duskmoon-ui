@@ -170,4 +170,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
 
     assert result =~ "ml-2"
   end
+
+  test "renders switch with role=switch on checkbox" do
+    result = render_component(&dm_switch/1, %{name: "opt"})
+
+    assert result =~ ~s[role="switch"]
+  end
 end

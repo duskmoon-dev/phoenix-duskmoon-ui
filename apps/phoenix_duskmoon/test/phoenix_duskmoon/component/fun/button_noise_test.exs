@@ -255,4 +255,24 @@ defmodule PhoenixDuskmoon.Component.Fun.ButtonNoiseTest do
     assert result =~ "--primary-hue: 300"
     assert result =~ "--secondary-hue: 60"
   end
+
+  test "renders button with aria-label from content" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{
+        id: "noise-a11y",
+        content: "Accessible Button"
+      })
+
+    assert result =~ ~s[aria-label="Accessible Button"]
+  end
+
+  test "renders decorative elements with aria-hidden" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{
+        id: "noise-hidden",
+        content: "Test"
+      })
+
+    assert result =~ ~s[aria-hidden="true"]
+  end
 end

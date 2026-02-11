@@ -184,4 +184,20 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
 
     assert result =~ "aria-label=\"Upload progress\""
   end
+
+  test "renders progress with aria-valuenow, aria-valuemin, aria-valuemax" do
+    result = render_component(&dm_progress/1, %{value: 42, max: 200})
+
+    assert result =~ ~s[aria-valuenow="42"]
+    assert result =~ ~s[aria-valuemin="0"]
+    assert result =~ ~s[aria-valuemax="200"]
+  end
+
+  test "renders indeterminate progress without aria-valuenow" do
+    result = render_component(&dm_progress/1, %{indeterminate: true})
+
+    refute result =~ "aria-valuenow"
+    assert result =~ ~s[aria-valuemin="0"]
+    assert result =~ ~s[aria-valuemax="100"]
+  end
 end
