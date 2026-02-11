@@ -162,7 +162,6 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
     >
       <caption
         :for={caption <- @caption}
-        role="caption"
         id={Map.get(caption, :id, false)}
         class={Map.get(caption, :class, "")}
       ><%= render_slot(caption) %></caption>

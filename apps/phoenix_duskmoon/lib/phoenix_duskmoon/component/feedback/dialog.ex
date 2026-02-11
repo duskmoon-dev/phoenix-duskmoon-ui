@@ -94,6 +94,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
       id={@id}
       role="dialog"
       aria-modal="true"
+      aria-labelledby={length(@title) > 0 && "#{@id}-title"}
       position={@position}
       size={@size}
       backdrop={@backdrop && "blur"}
@@ -103,6 +104,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
     >
       <span
         :for={title <- @title}
+        id={"#{@id}-title"}
         slot="header"
         class={Map.get(title, :class)}
       >

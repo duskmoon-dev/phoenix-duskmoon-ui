@@ -29,6 +29,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Actionbar do
   attr(:class, :any, default: nil, doc: "Additional CSS classes")
   attr(:left_class, :any, default: nil, doc: "Left part CSS class")
   attr(:right_class, :any, default: nil, doc: "Right part CSS class")
+  attr(:toolbar_label, :string, default: "Actions", doc: "Accessible label for the toolbar")
   attr(:rest, :global)
 
   slot(:left, required: false, doc: "Left part of action bar") do
@@ -43,7 +44,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Actionbar do
 
   def dm_actionbar(assigns) do
     ~H"""
-    <div id={@id} role="toolbar" class={["dm-actionbar", @class]} {@rest}>
+    <div id={@id} role="toolbar" aria-label={@toolbar_label} class={["dm-actionbar", @class]} {@rest}>
       <div class={["dm-actionbar__left", @left_class]}>
         <div
           :for={left <- @left}

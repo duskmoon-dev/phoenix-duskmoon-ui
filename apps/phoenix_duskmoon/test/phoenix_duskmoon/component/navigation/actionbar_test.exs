@@ -296,4 +296,19 @@ defmodule PhoenixDuskmoon.Component.Navigation.ActionbarTest do
 
     assert result =~ ~s[phx-click="toolbar-action"]
   end
+
+  test "renders actionbar with default aria-label Actions" do
+    result = render_component(&dm_actionbar/1, %{})
+
+    assert result =~ ~s[aria-label="Actions"]
+  end
+
+  test "renders actionbar with custom toolbar_label" do
+    result =
+      render_component(&dm_actionbar/1, %{
+        toolbar_label: "Document tools"
+      })
+
+    assert result =~ ~s[aria-label="Document tools"]
+  end
 end

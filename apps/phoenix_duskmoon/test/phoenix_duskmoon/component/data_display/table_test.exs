@@ -175,7 +175,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
           with_caption: true
         })
 
-      assert result =~ ~s[role="caption"]
+      assert result =~ "<caption"
       assert result =~ "Test Caption"
     end
 
@@ -540,7 +540,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
         })
 
       assert result =~ ~s[phx-update="stream"]
-      assert result =~ ~s[role="caption"]
+      assert result =~ "<caption"
       assert result =~ "Test Caption"
       assert result =~ ~s[id="stream-cap"]
       assert result =~ "stream-caption-cls"

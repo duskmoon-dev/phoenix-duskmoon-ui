@@ -335,4 +335,26 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
 
     refute result =~ ~s[slot="footer"]
   end
+
+  test "renders modal with aria-labelledby pointing to title" do
+    result =
+      render_component(&dm_modal/1, %{
+        id: "titled-dialog",
+        title: [%{inner_block: fn _, _ -> "My Title" end}],
+        body: body()
+      })
+
+    assert result =~ ~s[aria-labelledby="titled-dialog-title"]
+    assert result =~ ~s[id="titled-dialog-title"]
+  end
+
+  test "renders modal without aria-labelledby when no title" do
+    result =
+      render_component(&dm_modal/1, %{
+        id: "untitled-dialog",
+        body: body()
+      })
+
+    refute result =~ "aria-labelledby"
+  end
 end
