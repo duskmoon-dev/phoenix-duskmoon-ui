@@ -23,7 +23,6 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
   * `color` - Tooltip color: primary, secondary, accent, info, success, warning, error (default: primary)
   * `open` - Force tooltip to be open
   * `class` - Additional CSS classes
-  * `tooltip_class` - Additional CSS classes for tooltip element
 
   ## Slots
 
@@ -51,7 +50,6 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
 
   attr(:open, :boolean, default: false)
   attr(:class, :string, default: nil)
-  attr(:tooltip_class, :string, default: nil)
   attr(:rest, :global)
 
   slot(:inner_block, required: true)

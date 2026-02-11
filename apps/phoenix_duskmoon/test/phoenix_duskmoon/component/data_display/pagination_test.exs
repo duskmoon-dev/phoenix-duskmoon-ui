@@ -209,6 +209,18 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
       assert result =~ ~s[current-page="1"]
     end
 
+    test "renders prev and next buttons with aria-labels" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 2,
+          page_size: 10,
+          total: 50
+        })
+
+      assert result =~ ~s[aria-label="Previous page"]
+      assert result =~ ~s[aria-label="Next page"]
+    end
+
     test "shows ellipsis when on page 3" do
       result =
         render_component(&dm_pagination/1, %{
@@ -383,6 +395,18 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
 
       assert result =~ ~s[dm-pagination--thin]
       assert result =~ ~s[aria-current="page"]
+    end
+
+    test "renders prev and next buttons with aria-labels" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 3,
+          page_size: 10,
+          total: 100
+        })
+
+      assert result =~ ~s[aria-label="Previous page"]
+      assert result =~ ~s[aria-label="Next page"]
     end
 
     test "handles edge case with 1 total page" do
