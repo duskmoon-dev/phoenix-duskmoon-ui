@@ -71,6 +71,7 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearch do
       open={@open}
       role="dialog"
       aria-label={@dialog_label}
+      phx-hook="Spotlight"
       class={[
         "dm-fun-spotlight-search dm-modal",
         @class

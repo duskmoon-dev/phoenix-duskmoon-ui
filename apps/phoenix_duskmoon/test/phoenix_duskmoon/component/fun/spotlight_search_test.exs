@@ -455,4 +455,10 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearchTest do
     assert result =~ ~s[role="option"]
     assert result =~ ~s[tabindex="0"]
   end
+
+  test "renders dialog with phx-hook Spotlight for keyboard shortcut" do
+    result = render_component(&dm_fun_spotlight_search/1, base_attrs())
+
+    assert result =~ ~s[phx-hook="Spotlight"]
+  end
 end
