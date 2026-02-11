@@ -95,6 +95,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
     doc: "Accessible label for the default user icon"
   )
 
+  attr(:placeholder_alt, :string,
+    default: "Placeholder",
+    doc: "Alt text for the placeholder image"
+  )
+
   attr(:rest, :global)
 
   slot(:placeholder, doc: "Custom placeholder content")
@@ -170,7 +175,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
     ~H"""
     <img
       src={@img_src}
-      alt="Placeholder"
+      alt={@placeholder_alt}
       class="w-full h-full object-cover"
     />
     """

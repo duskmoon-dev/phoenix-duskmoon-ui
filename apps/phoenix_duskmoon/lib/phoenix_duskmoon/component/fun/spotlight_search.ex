@@ -80,7 +80,7 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearch do
     >
       <div class="dm-modal__box p-0">
         <div class="dm-fun-spotlight-input">
-          <svg class="text-base-content/50 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="text-base-content/50 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
@@ -102,7 +102,7 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearch do
             class="text-base-content/50 hover:text-base-content"
             aria-label={@close_label}
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -121,7 +121,7 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearch do
           >
             <div class="flex items-center gap-3">
               <div class="text-base-content/70">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>

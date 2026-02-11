@@ -410,4 +410,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
 
     assert result =~ ~s[aria-label="Utilisateur"]
   end
+
+  test "renders custom placeholder_alt on placeholder image" do
+    result =
+      render_component(&dm_avatar/1, %{
+        placeholder_img: "/img/default.png",
+        placeholder_alt: "Image par défaut"
+      })
+
+    assert result =~ ~s[alt="Image par défaut"]
+  end
 end

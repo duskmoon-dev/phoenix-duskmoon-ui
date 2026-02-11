@@ -220,4 +220,28 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcherTest do
     radio_count = length(String.split(result, ~s[type="radio"])) - 1
     assert radio_count == 3
   end
+
+  test "renders theme switcher with custom select_theme_label" do
+    result = render_component(&dm_theme_switcher/1, %{select_theme_label: "Choisir le thème"})
+
+    assert result =~ ~s[aria-label="Choisir le thème"]
+  end
+
+  test "renders theme switcher with custom auto_label" do
+    result = render_component(&dm_theme_switcher/1, %{auto_label: "Automatique"})
+
+    assert result =~ ~s[aria-label="Automatique"]
+  end
+
+  test "renders theme switcher with custom light_label" do
+    result = render_component(&dm_theme_switcher/1, %{light_label: "Clair"})
+
+    assert result =~ ~s[aria-label="Clair"]
+  end
+
+  test "renders theme switcher with custom dark_label" do
+    result = render_component(&dm_theme_switcher/1, %{dark_label: "Sombre"})
+
+    assert result =~ ~s[aria-label="Sombre"]
+  end
 end

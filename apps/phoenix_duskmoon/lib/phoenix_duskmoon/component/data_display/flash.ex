@@ -26,6 +26,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
   attr(:kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup")
   attr(:autoshow, :boolean, default: true, doc: "whether to auto show the flash on mount")
   attr(:close, :boolean, default: true, doc: "whether the flash can be closed")
+  attr(:close_label, :string, default: "Close", doc: "accessible label for the close button")
   attr(:rest, :global, doc: "the arbitrary HTML attributes to add to the flash container")
 
   slot(:inner_block, doc: "the optional inner block that renders the flash message")
@@ -52,7 +53,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
           :if={@close}
           type="button"
           class="absolute top-2 right-2 dm-btn dm-btn--ghost dm-btn--xs"
-          aria-label={"close"}
+          aria-label={@close_label}
         >
           <.dm_bsi name="x" class="w-5 h-5 " />
         </button>

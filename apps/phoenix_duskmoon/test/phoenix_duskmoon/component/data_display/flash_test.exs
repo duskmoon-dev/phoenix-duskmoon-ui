@@ -146,7 +146,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
           flash: %{"info" => "Closeable"}
         })
 
-      assert result =~ ~s[aria-label="close"]
+      assert result =~ ~s[aria-label="Close"]
       assert result =~ "dm-btn dm-btn--ghost dm-btn--xs"
     end
 
@@ -158,7 +158,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
           flash: %{"error" => "Permanent"}
         })
 
-      refute result =~ ~s[aria-label="close"]
+      refute result =~ ~s[aria-label="Close"]
     end
 
     test "renders flash with toast positioning classes" do
@@ -270,7 +270,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
           flash: %{"info" => "Close me"}
         })
 
-      assert result =~ ~s[aria-label="close"]
+      assert result =~ ~s[aria-label="Close"]
       assert result =~ ~s[type="button"]
     end
 
@@ -301,6 +301,27 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
 
       assert info_result =~ "dm-alert--info"
       assert error_result =~ "dm-alert--error"
+    end
+
+    test "renders flash with default Close aria-label on close button" do
+      result =
+        render_component(&dm_flash/1, %{
+          kind: :info,
+          flash: %{"info" => "Test"}
+        })
+
+      assert result =~ ~s[aria-label="Close"]
+    end
+
+    test "renders flash with custom close_label" do
+      result =
+        render_component(&dm_flash/1, %{
+          kind: :info,
+          close_label: "Fermer",
+          flash: %{"info" => "Test"}
+        })
+
+      assert result =~ ~s[aria-label="Fermer"]
     end
   end
 
