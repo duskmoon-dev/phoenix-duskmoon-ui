@@ -223,4 +223,84 @@ defmodule PhoenixDuskmoon.Component.Action.LinkTest do
     assert result =~ ~s[rel="noopener noreferrer"]
     assert result =~ ~s[>Safe External Link</a>]
   end
+
+  test "renders link with put method" do
+    result =
+      render_component(&dm_link/1, %{
+        href: "/update",
+        method: "put",
+        inner_block: %{inner_block: fn _, _ -> "Update" end}
+      })
+
+    assert result =~ ~s[data-method="put"]
+    assert result =~ ~s[data-csrf="]
+    assert result =~ ~s[data-to="/update"]
+  end
+
+  test "renders link with dm-link base class always" do
+    result =
+      render_component(&dm_link/1, %{
+        href: "/test",
+        inner_block: %{inner_block: fn _, _ -> "Test" end}
+      })
+
+    assert result =~ "dm-link"
+    assert result =~ "dm-link--hover"
+  end
+
+  test "renders navigate link as anchor tag" do
+    result =
+      render_component(&dm_link/1, %{
+        navigate: "/dashboard",
+        inner_block: %{inner_block: fn _, _ -> "Dashboard" end}
+      })
+
+    assert result =~ "<a"
+    assert result =~ "</a>"
+  end
+
+  test "renders patch link as anchor tag" do
+    result =
+      render_component(&dm_link/1, %{
+        patch: "/settings",
+        inner_block: %{inner_block: fn _, _ -> "Settings" end}
+      })
+
+    assert result =~ "<a"
+    assert result =~ "</a>"
+  end
+
+  test "renders link with target and rel combined" do
+    result =
+      render_component(&dm_link/1, %{
+        href: "https://example.com",
+        target: "_blank",
+        rel: "noopener",
+        inner_block: %{inner_block: fn _, _ -> "External" end}
+      })
+
+    assert result =~ ~s[target="_blank"]
+    assert result =~ ~s[rel="noopener"]
+    assert result =~ ~s[href="https://example.com"]
+  end
+
+  test "renders link with class nil (no extra class)" do
+    result =
+      render_component(&dm_link/1, %{
+        href: "/test",
+        inner_block: %{inner_block: fn _, _ -> "Test" end}
+      })
+
+    assert result =~ "dm-link dm-link--hover"
+  end
+
+  test "renders fallback link has anchor tag" do
+    result =
+      render_component(&dm_link/1, %{
+        inner_block: %{inner_block: fn _, _ -> "Fallback" end}
+      })
+
+    assert result =~ "<a"
+    assert result =~ ~s[href="#"]
+  end
 end

@@ -130,4 +130,58 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
 
     assert result =~ "15.0%"
   end
+
+  test "renders 100% when value equals max" do
+    result = render_component(&dm_progress/1, %{value: 100, max: 100, show_label: true})
+
+    assert result =~ "100.0%"
+  end
+
+  test "renders 0% when value is 0" do
+    result = render_component(&dm_progress/1, %{value: 0, max: 100, show_label: true})
+
+    assert result =~ "0.0%"
+  end
+
+  test "renders indeterminate progress without value attribute" do
+    result = render_component(&dm_progress/1, %{indeterminate: true})
+
+    assert result =~ "dm-progress--indeterminate"
+    assert result =~ "<progress"
+  end
+
+  test "renders animated and indeterminate combined" do
+    result =
+      render_component(&dm_progress/1, %{
+        value: 50,
+        animated: true,
+        indeterminate: true
+      })
+
+    assert result =~ "dm-progress--animated"
+    assert result =~ "dm-progress--indeterminate"
+  end
+
+  test "renders progress wrapper div always present" do
+    result = render_component(&dm_progress/1, %{value: 50})
+
+    assert result =~ "<div"
+  end
+
+  test "renders progress with default value 0" do
+    result = render_component(&dm_progress/1, %{})
+
+    assert result =~ ~s[value="0"]
+    assert result =~ ~s[max="100"]
+  end
+
+  test "renders aria-compatible progress element" do
+    result =
+      render_component(&dm_progress/1, %{
+        value: 75,
+        "aria-label": "Upload progress"
+      })
+
+    assert result =~ "aria-label=\"Upload progress\""
+  end
 end

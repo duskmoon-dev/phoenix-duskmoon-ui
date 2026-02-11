@@ -158,4 +158,39 @@ defmodule PhoenixDuskmoon.Component.Fun.EclipseTest do
     assert result =~ "animation-duration: 80s"
     assert result =~ "animation-duration: 160s"
   end
+
+  test "renders eclipse with small size" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e", size: "small"})
+
+    assert result =~ "--size: 400px"
+  end
+
+  test "renders eclipse layers each have layer class" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e"})
+
+    for i <- 1..6 do
+      assert result =~ ~s[class="layer layer-#{i}"]
+    end
+  end
+
+  test "renders eclipse with nil class (default)" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e"})
+
+    assert result =~ "dm-fun-eclipse"
+  end
+
+  test "renders eclipse with fractional animation speed rounding" do
+    # Speed 3.0: 30/3 = 10, 20/3 = 7 (rounded), 40/3 = 13 (rounded)
+    result = render_component(&dm_fun_eclipse/1, %{id: "e", animation_speed: 3.0})
+
+    assert result =~ "animation-duration: 10s"
+    assert result =~ "animation-duration: 7s"
+    assert result =~ "animation-duration: 13s"
+  end
+
+  test "renders eclipse medium size by default" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e"})
+
+    assert result =~ "--size: 600px"
+  end
 end

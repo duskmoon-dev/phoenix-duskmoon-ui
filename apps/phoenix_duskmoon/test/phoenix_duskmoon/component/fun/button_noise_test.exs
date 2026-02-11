@@ -202,4 +202,57 @@ defmodule PhoenixDuskmoon.Component.Fun.ButtonNoiseTest do
 
     assert result =~ "Submit →"
   end
+
+  test "renders button with content text visible" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{
+        id: "noise-visible",
+        content: "Visible Text"
+      })
+
+    assert result =~ "Visible Text"
+  end
+
+  test "renders button without hue variables by default" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{
+        id: "noise-no-hue",
+        content: "Test"
+      })
+
+    refute result =~ "--secondary-hue"
+  end
+
+  test "renders button with both id and data-content" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{
+        id: "noise-both",
+        content: "Both"
+      })
+
+    assert result =~ ~s[id="noise-both"]
+    assert result =~ ~s[data-content="Both"]
+  end
+
+  test "renders button with nil class (no extra class)" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{
+        id: "noise-nil-class",
+        content: "Test"
+      })
+
+    assert result =~ "btn-noise"
+  end
+
+  test "renders neon scheme with correct hue values" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{
+        id: "noise-neon-check",
+        content: "Neon",
+        color_scheme: "neon"
+      })
+
+    assert result =~ "--primary-hue: 300"
+    assert result =~ "--secondary-hue: 60"
+  end
 end

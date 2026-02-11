@@ -108,6 +108,61 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       assert result =~ "<nav"
       assert result =~ "dm-menu"
     end
+
+    test "renders rest attributes" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          "data-testid": "nav-menu",
+          "aria-label": "Navigation",
+          menu: [%{inner_block: fn _, _ -> "Item" end}]
+        })
+
+      assert result =~ "data-testid=\"nav-menu\""
+      assert result =~ "aria-label=\"Navigation\""
+    end
+
+    test "renders non-horizontal menu by default" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          menu: [%{inner_block: fn _, _ -> "Item" end}]
+        })
+
+      refute result =~ "dm-menu--horizontal"
+    end
+
+    test "renders title with dm-menu__title class" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          title: [%{inner_block: fn _, _ -> "Title" end}]
+        })
+
+      assert result =~ "dm-menu__title"
+      assert result =~ "Title"
+    end
+
+    test "renders menu item with dm-menu__item class" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          menu: [%{inner_block: fn _, _ -> "Item" end}]
+        })
+
+      assert result =~ "dm-menu__item"
+    end
+
+    test "renders only active item with active class" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          active: "b",
+          menu: [
+            %{inner_block: fn _, _ -> "A" end, id: "a"},
+            %{inner_block: fn _, _ -> "B" end, id: "b"}
+          ]
+        })
+
+      # Only one active
+      parts = String.split(result, "dm-menu__item--active")
+      assert length(parts) == 2
+    end
   end
 
   describe "dm_left_menu_group/1" do
@@ -249,6 +304,58 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
 
       assert result =~ ~s(href="#")
       assert result =~ "Item without link"
+    end
+
+    test "renders non-collapsible group as li with title" do
+      result =
+        render_component(&dm_left_menu_group/1, %{
+          collapsible: false,
+          title: [%{inner_block: fn _, _ -> "Section" end}]
+        })
+
+      refute result =~ "<details"
+      refute result =~ "<summary"
+      assert result =~ "dm-menu__title"
+      assert result =~ "Section"
+    end
+
+    test "renders menu group with rest attributes" do
+      result =
+        render_component(&dm_left_menu_group/1, %{
+          "data-testid": "menu-group",
+          title: [%{inner_block: fn _, _ -> "Test" end}],
+          menu: [%{inner_block: fn _, _ -> "Item" end}]
+        })
+
+      assert result =~ "data-testid=\"menu-group\""
+    end
+
+    test "renders menu group with menu item links" do
+      result =
+        render_component(&dm_left_menu_group/1, %{
+          title: [%{inner_block: fn _, _ -> "Nav" end}],
+          menu: [
+            %{inner_block: fn _, _ -> "Page A" end, to: "/page-a"},
+            %{inner_block: fn _, _ -> "Page B" end, to: "/page-b"}
+          ]
+        })
+
+      assert result =~ ~s(href="/page-a")
+      assert result =~ ~s(href="/page-b")
+      assert result =~ "Page A"
+      assert result =~ "Page B"
+    end
+
+    test "renders collapsible group with summary element" do
+      result =
+        render_component(&dm_left_menu_group/1, %{
+          collapsible: true,
+          title: [%{inner_block: fn _, _ -> "Collapsible" end}]
+        })
+
+      assert result =~ "<details"
+      assert result =~ "<summary"
+      assert result =~ "Collapsible"
     end
   end
 end
