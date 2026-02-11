@@ -1818,4 +1818,85 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ "invalid range"
     end
   end
+
+  describe "aria-invalid on error state" do
+    test "renders aria-invalid on text input with errors" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "email",
+          label: "Email",
+          errors: ["is required"],
+          value: nil
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+    end
+
+    test "does not render aria-invalid on text input without errors" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "email",
+          label: "Email",
+          errors: [],
+          value: nil
+        })
+
+      refute result =~ "aria-invalid"
+    end
+
+    test "renders aria-invalid on select input with errors" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "select",
+          name: "country",
+          label: "Country",
+          options: [{"USA", "us"}],
+          errors: ["must be selected"],
+          value: nil
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+    end
+
+    test "renders aria-invalid on textarea input with errors" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "textarea",
+          name: "notes",
+          label: "Notes",
+          errors: ["too short"],
+          value: nil
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+    end
+
+    test "renders aria-invalid on checkbox input with errors" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "checkbox",
+          name: "agree",
+          label: "I agree",
+          errors: ["must accept"],
+          value: nil
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+    end
+
+    test "renders aria-invalid on file input with errors" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "file",
+          name: "avatar",
+          label: "Avatar",
+          errors: ["file too large"],
+          value: nil
+        })
+
+      assert result =~ ~s[aria-invalid="true"]
+    end
+  end
 end

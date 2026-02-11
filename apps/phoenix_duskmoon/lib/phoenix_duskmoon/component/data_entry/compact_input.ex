@@ -75,6 +75,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
         name={@name}
         class="dm-compact-input__select"
         multiple={@multiple}
+        aria-invalid={@errors != [] && "true"}
         {@rest}
       >
         <option :if={@prompt} value="">{@prompt}</option>
@@ -100,6 +101,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class="dm-compact-input__field"
+        aria-invalid={@errors != [] && "true"}
         {@rest}
       />
       {render_slot(@inner_block)}

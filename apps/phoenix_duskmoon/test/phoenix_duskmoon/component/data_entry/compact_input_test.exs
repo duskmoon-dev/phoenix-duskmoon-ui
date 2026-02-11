@@ -303,4 +303,42 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
 
     assert result =~ "dm-compact-input"
   end
+
+  test "renders aria-invalid when errors present" do
+    result =
+      render_component(&dm_compact_input/1, %{
+        name: "email",
+        label: "Email",
+        value: nil,
+        errors: ["is required"]
+      })
+
+    assert result =~ ~s[aria-invalid="true"]
+  end
+
+  test "does not render aria-invalid when no errors" do
+    result =
+      render_component(&dm_compact_input/1, %{
+        name: "email",
+        label: "Email",
+        value: nil,
+        errors: []
+      })
+
+    refute result =~ "aria-invalid"
+  end
+
+  test "renders aria-invalid on select type with errors" do
+    result =
+      render_component(&dm_compact_input/1, %{
+        type: "select",
+        name: "country",
+        label: "Country",
+        value: nil,
+        options: [{"USA", "us"}],
+        errors: ["must be selected"]
+      })
+
+    assert result =~ ~s[aria-invalid="true"]
+  end
 end

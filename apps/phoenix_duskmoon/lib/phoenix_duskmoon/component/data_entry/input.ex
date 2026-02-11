@@ -119,6 +119,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           name={@name}
           value="true"
           checked={@checked}
+          aria-invalid={@errors != [] && "true"}
           class={[if(!@classic, do: "dm-checkbox"), @class]}
           {@rest}
         />
@@ -168,6 +169,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         <select
           id={@id}
           name={@name}
+          aria-invalid={@errors != [] && "true"}
           class={[
             if(!@classic, do: "dm-select"),
             @color && "dm-select--#{@color}",
@@ -254,6 +256,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         <textarea
           id={@id}
           name={@name}
+          aria-invalid={@errors != [] && "true"}
           class={[
             if(!@classic, do: "dm-textarea"),
             @color && "dm-textarea--#{@color}",
@@ -279,6 +282,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           type="file"
           name={@name}
           value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+          aria-invalid={@errors != [] && "true"}
           class={[
             @class,
             if(!@classic, do: "dm-input dm-input--file"),
@@ -832,6 +836,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           name={@name}
           id={@id}
           value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+          aria-invalid={@errors != [] && "true"}
           class={[
             @class,
             if(!@classic, do: "dm-input"),
