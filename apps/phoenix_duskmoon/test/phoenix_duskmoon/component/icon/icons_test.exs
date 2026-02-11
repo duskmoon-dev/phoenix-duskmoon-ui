@@ -170,4 +170,34 @@ defmodule PhoenixDuskmoon.Component.Icon.IconsTest do
     # Should still render the error icon
     assert result =~ ~s[M8 15A7 7 0]
   end
+
+  test "renders Material Design Icon with default empty class" do
+    result = render_component(&dm_mdi/1, %{name: "account"})
+
+    assert result =~ ~s[class=""]
+  end
+
+  test "renders Bootstrap Icon with default empty class" do
+    result = render_component(&dm_bsi/1, %{name: "0-circle"})
+
+    assert result =~ ~s[class=""]
+  end
+
+  test "mdi_icons returns non-empty strings" do
+    icons = mdi_icons()
+
+    Enum.each(icons, fn icon ->
+      assert is_binary(icon)
+      assert String.length(icon) > 0
+    end)
+  end
+
+  test "bsi_icons returns non-empty strings" do
+    icons = bsi_icons()
+
+    Enum.each(icons, fn icon ->
+      assert is_binary(icon)
+      assert String.length(icon) > 0
+    end)
+  end
 end

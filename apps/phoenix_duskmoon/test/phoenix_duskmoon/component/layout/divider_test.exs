@@ -183,4 +183,26 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
     assert result =~ ~s[role="separator"]
     assert result =~ ~s[aria-orientation="vertical"]
   end
+
+  test "renders divider with default horizontal aria-orientation" do
+    result = render_component(&dm_divider/1, %{})
+
+    assert result =~ ~s[aria-orientation="horizontal"]
+  end
+
+  test "does not render content span when no inner_block" do
+    result = render_component(&dm_divider/1, %{})
+
+    refute result =~ "dm-divider__content"
+  end
+
+  test "renders divider with content span when inner_block is provided" do
+    result =
+      render_component(&dm_divider/1, %{
+        inner_block: [%{inner_block: fn _, _ -> "OR" end}]
+      })
+
+    assert result =~ "dm-divider__content"
+    assert result =~ "OR"
+  end
 end

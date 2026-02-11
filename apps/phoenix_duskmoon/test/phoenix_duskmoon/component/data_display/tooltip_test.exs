@@ -257,4 +257,36 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
     # The base "tooltip" class should always be in the class list
     assert result =~ "tooltip "
   end
+
+  test "renders tooltip with empty string content" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: "",
+        inner_block: inner_block()
+      })
+
+    assert result =~ ~s[data-tip=""]
+  end
+
+  test "renders tooltip without custom class by default" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: "Tip",
+        inner_block: inner_block()
+      })
+
+    # Should have base tooltip classes but not an extra custom class
+    assert result =~ "tooltip"
+    refute result =~ "my-custom"
+  end
+
+  test "renders tooltip without open class by default" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: "Tip",
+        inner_block: inner_block()
+      })
+
+    refute result =~ "tooltip-open"
+  end
 end

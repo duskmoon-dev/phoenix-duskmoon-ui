@@ -188,4 +188,36 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
     assert result =~ "checked"
     assert result =~ "data-testid=\"theme-radio\""
   end
+
+  test "renders radio with disabled state and cursor-not-allowed" do
+    result =
+      render_component(&dm_radio/1, %{
+        name: "opt",
+        value: "a",
+        disabled: true
+      })
+
+    assert result =~ "disabled"
+    assert result =~ "cursor-not-allowed"
+  end
+
+  test "renders radio without label when not provided" do
+    result =
+      render_component(&dm_radio/1, %{
+        name: "opt",
+        value: "a"
+      })
+
+    refute result =~ "dm-label__text"
+  end
+
+  test "renders radio without id when not provided" do
+    result =
+      render_component(&dm_radio/1, %{
+        name: "opt",
+        value: "a"
+      })
+
+    refute result =~ ~s[id="]
+  end
 end

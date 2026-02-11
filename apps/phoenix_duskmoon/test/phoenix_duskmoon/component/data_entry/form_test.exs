@@ -231,4 +231,73 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
       assert normalize_checkbox_value("0") == false
     end
   end
+
+  describe "dm_alert variants" do
+    test "renders alert with success variant" do
+      result =
+        render_component(&dm_alert/1, %{
+          variant: "success",
+          inner_block: inner_block("Success message")
+        })
+
+      assert result =~ "dm-alert--success"
+      assert result =~ "Success message"
+    end
+
+    test "renders alert with warning variant" do
+      result =
+        render_component(&dm_alert/1, %{
+          variant: "warning",
+          inner_block: inner_block("Warning message")
+        })
+
+      assert result =~ "dm-alert--warning"
+    end
+
+    test "renders alert with error variant" do
+      result =
+        render_component(&dm_alert/1, %{
+          variant: "error",
+          inner_block: inner_block("Error message")
+        })
+
+      assert result =~ "dm-alert--error"
+    end
+
+    test "renders alert with title" do
+      result =
+        render_component(&dm_alert/1, %{
+          title: "Important",
+          inner_block: inner_block("Alert body")
+        })
+
+      assert result =~ "Important"
+      assert result =~ "font-bold"
+    end
+  end
+
+  describe "dm_label extras" do
+    test "renders label with id" do
+      result =
+        render_component(&dm_label/1, %{
+          id: "lbl-1",
+          inner_block: inner_block("Name")
+        })
+
+      assert result =~ ~s[id="lbl-1"]
+    end
+
+    test "renders label with for and class combined" do
+      result =
+        render_component(&dm_label/1, %{
+          for: "input-1",
+          class: "text-error",
+          inner_block: inner_block("Email")
+        })
+
+      assert result =~ ~s[for="input-1"]
+      assert result =~ "text-error"
+      assert result =~ "dm-label"
+    end
+  end
 end

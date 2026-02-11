@@ -170,4 +170,22 @@ defmodule PhoenixDuskmoon.Component.Fun.SnowTest do
     count = length(String.split(result, "--snowflake-size")) - 1
     assert count == 0
   end
+
+  test "renders snow with data-testid and aria-hidden rest attributes" do
+    result =
+      render_component(&dm_fun_snow/1, %{
+        id: "snow-rest",
+        "data-testid": "snow-effect",
+        "aria-hidden": "true"
+      })
+
+    assert result =~ "data-testid=\"snow-effect\""
+    assert result =~ "aria-hidden=\"true\""
+  end
+
+  test "renders snow container with overflow-hidden" do
+    result = render_component(&dm_fun_snow/1, %{id: "snow-overflow"})
+
+    assert result =~ "overflow-hidden"
+  end
 end

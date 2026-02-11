@@ -157,4 +157,26 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcherTest do
     assert result =~ ~s[value="sunshine"]
     assert result =~ ~s[value="moonlight"]
   end
+
+  test "renders theme switcher with all three theme radio values" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    assert result =~ ~s[value="default"]
+    assert result =~ ~s[value="sunshine"]
+    assert result =~ ~s[value="moonlight"]
+  end
+
+  test "renders theme switcher with aria-labels on radio inputs" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    assert result =~ ~s[aria-label="Auto"]
+    assert result =~ ~s[aria-label="Sunshine"]
+    assert result =~ ~s[aria-label="Moonlight"]
+  end
+
+  test "renders theme switcher with button role on toggle" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    assert result =~ ~s[role="button"]
+  end
 end
