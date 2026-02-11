@@ -153,4 +153,33 @@ defmodule PhoenixDuskmoon.Component.Fun.PlasmaBallTest do
     assert result =~ "my-plasma"
     assert result =~ "data-testid=\"combo\""
   end
+
+  test "renders plasma ball with default medium size" do
+    result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-def"})
+
+    assert result =~ "--size: 350px"
+  end
+
+  test "renders plasma ball with style attribute" do
+    result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-style"})
+
+    assert result =~ "style="
+    assert result =~ "--size:"
+    assert result =~ "--base-color:"
+  end
+
+  test "renders plasma ball show_electrode true by default" do
+    result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-elec"})
+
+    # electrode visible, no hide-electrode class
+    assert result =~ "electrode"
+    refute result =~ "hide-electrode"
+  end
+
+  test "renders plasma ball with custom base_color" do
+    result =
+      render_component(&dm_fun_plasma_ball/1, %{id: "plasma-bc", base_color: "#ff0000"})
+
+    assert result =~ "--base-color: #ff0000"
+  end
 end

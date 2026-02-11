@@ -148,5 +148,48 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
 
       assert result =~ "bg-primary"
     end
+
+    test "renders simple appbar with rest attributes" do
+      result =
+        render_component(&dm_simple_appbar/1, %{
+          title: "App",
+          "data-testid": "simple-header"
+        })
+
+      assert result =~ "data-testid=\"simple-header\""
+    end
+
+    test "renders simple appbar always sticky" do
+      result = render_component(&dm_simple_appbar/1, %{title: "App"})
+
+      assert result =~ "appbar-sticky"
+    end
+  end
+
+  test "renders appbar with default empty menu" do
+    result = render_component(&dm_appbar/1, %{title: "App"})
+
+    assert result =~ "appbar"
+    assert result =~ "App"
+  end
+
+  test "renders appbar title in appbar-title div" do
+    result = render_component(&dm_appbar/1, %{title: "My Dashboard"})
+
+    assert result =~ "appbar-title"
+    assert result =~ "My Dashboard"
+  end
+
+  test "renders appbar with menu item links" do
+    result =
+      render_component(&dm_appbar/1, %{
+        title: "App",
+        menu: [
+          %{to: "/home", inner_block: fn _, _ -> "Home" end}
+        ]
+      })
+
+    assert result =~ "Home"
+    assert result =~ ~s[href="/home"]
   end
 end

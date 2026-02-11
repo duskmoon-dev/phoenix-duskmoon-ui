@@ -146,4 +146,51 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
 
     assert result =~ "data-testid=\"user-avatar\""
   end
+
+  test "renders avatar with three word name initials" do
+    result = render_component(&dm_avatar/1, %{name: "Alice Bob Charlie"})
+
+    # Should show first+last initials
+    assert result =~ "A"
+  end
+
+  test "renders avatar img element with src" do
+    result =
+      render_component(&dm_avatar/1, %{
+        src: "https://example.com/photo.png"
+      })
+
+    assert result =~ "<img"
+    assert result =~ ~s[src="https://example.com/photo.png"]
+  end
+
+  test "renders avatar with both online and border" do
+    result =
+      render_component(&dm_avatar/1, %{
+        name: "T",
+        online: true,
+        border: true
+      })
+
+    assert result =~ "avatar-border"
+    assert result =~ "bg-success"
+  end
+
+  test "renders avatar wrapper div" do
+    result = render_component(&dm_avatar/1, %{name: "T"})
+
+    assert result =~ "<div"
+    assert result =~ "avatar"
+  end
+
+  test "renders avatar with name and color combined" do
+    result =
+      render_component(&dm_avatar/1, %{
+        name: "JD",
+        color: "error"
+      })
+
+    assert result =~ "bg-error"
+    assert result =~ "J"
+  end
 end

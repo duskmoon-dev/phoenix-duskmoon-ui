@@ -291,5 +291,54 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
       assert result =~ "Alice"
       assert result =~ "Bob"
     end
+
+    test "renders table without caption by default" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data
+        })
+
+      refute result =~ ~s[role="caption"]
+    end
+
+    test "renders table without expand row by default" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data
+        })
+
+      refute result =~ "dm-table__row--expand"
+    end
+
+    test "renders table with dm-table class" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data
+        })
+
+      assert result =~ "dm-table"
+    end
+
+    test "renders without zebra by default" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data
+        })
+
+      # Check the table element itself, not any CSS style blocks
+      refute result =~ "dm-table--zebra"
+    end
+
+    test "renders with three columns" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data,
+          num_cols: 3
+        })
+
+      assert result =~ "Name"
+      assert result =~ "Age"
+      assert result =~ "City"
+    end
   end
 end

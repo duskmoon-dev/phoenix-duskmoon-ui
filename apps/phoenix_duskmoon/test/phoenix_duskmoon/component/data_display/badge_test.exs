@@ -205,4 +205,43 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
 
     assert result =~ ~s[variant="accent"]
   end
+
+  test "renders badge with secondary variant" do
+    result =
+      render_component(&dm_badge/1, %{
+        variant: "secondary",
+        inner_block: inner_block("Secondary")
+      })
+
+    assert result =~ ~s[variant="secondary"]
+    assert result =~ "Secondary"
+  end
+
+  test "renders badge with sm size" do
+    result =
+      render_component(&dm_badge/1, %{
+        size: "sm",
+        inner_block: inner_block("Small")
+      })
+
+    assert result =~ ~s[size="sm"]
+  end
+
+  test "renders badge as el-dm-badge custom element" do
+    result = render_component(&dm_badge/1, %{inner_block: inner_block("Tag")})
+
+    assert result =~ "<el-dm-badge"
+    assert result =~ "</el-dm-badge>"
+  end
+
+  test "renders badge with class on el-dm-badge element" do
+    result =
+      render_component(&dm_badge/1, %{
+        class: "badge-extra",
+        inner_block: inner_block("Styled")
+      })
+
+    assert result =~ "badge-extra"
+    assert result =~ "<el-dm-badge"
+  end
 end

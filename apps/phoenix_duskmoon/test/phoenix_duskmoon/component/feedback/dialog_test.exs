@@ -157,4 +157,47 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
 
     assert result =~ "Open test-modal"
   end
+
+  test "renders modal without title header when no title" do
+    result = render_component(&dm_modal/1, %{body: body()})
+
+    refute result =~ ~s[slot="header"]
+  end
+
+  test "renders modal without footer when no footer slot" do
+    result = render_component(&dm_modal/1, %{body: body()})
+
+    refute result =~ ~s[slot="footer"]
+  end
+
+  test "renders modal with title, body, and footer combined" do
+    result =
+      render_component(&dm_modal/1, %{
+        title: [%{inner_block: fn _, _ -> "Confirm" end}],
+        body: body("Are you sure?"),
+        footer: [%{inner_block: fn _, _ -> "OK Cancel" end}]
+      })
+
+    assert result =~ "Confirm"
+    assert result =~ "Are you sure?"
+    assert result =~ "OK Cancel"
+  end
+
+  test "renders modal with backdrop and position combined" do
+    result =
+      render_component(&dm_modal/1, %{
+        backdrop: true,
+        position: "bottom",
+        body: body()
+      })
+
+    assert result =~ ~s[backdrop="blur"]
+    assert result =~ ~s[position="bottom"]
+  end
+
+  test "renders modal without position by default" do
+    result = render_component(&dm_modal/1, %{body: body()})
+
+    refute result =~ ~s[position="]
+  end
 end
