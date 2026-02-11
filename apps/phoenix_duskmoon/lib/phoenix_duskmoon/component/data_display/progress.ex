@@ -78,6 +78,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
         ]}
         value={@indeterminate && nil || @value}
         max={@max}
+        aria-valuenow={if(!@indeterminate, do: @value)}
+        aria-valuemin={0}
+        aria-valuemax={@max}
         {@rest}
       ></progress>
 

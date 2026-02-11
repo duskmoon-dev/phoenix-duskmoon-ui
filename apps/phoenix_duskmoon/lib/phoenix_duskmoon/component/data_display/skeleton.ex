@@ -42,6 +42,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     ~H"""
     <div
       id={@id}
+      aria-busy="true"
       class={build_skeleton_classes(@variant, @size, @animation, @width, @height, @class)}
     />
     """
@@ -79,7 +80,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   def dm_skeleton_text(assigns) do
     ~H"""
-    <div id={@id} class={build_container_classes(@class)}>
+    <div id={@id} aria-busy="true" class={build_container_classes(@class)}>
       <%= if @lines > 1 do %>
         <%= for i <- 1..(@lines - 1) do %>
         <div class={build_line_classes(@line_height, "w-full", @animation)}></div>
@@ -169,7 +170,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   def dm_skeleton_card(assigns) do
     ~H"""
-    <div id={@id} class={build_card_classes(@class)}>
+    <div id={@id} aria-busy="true" class={build_card_classes(@class)}>
       <div class="dm-card__body">
         <div class="flex items-start gap-4">
           <%= if @show_avatar do %>
@@ -236,7 +237,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   def dm_skeleton_table(assigns) do
     ~H"""
-    <div id={@id} class={["overflow-x-auto", @class]}>
+    <div id={@id} aria-busy="true" class={["overflow-x-auto", @class]}>
       <table class="dm-table">
         <%= if @show_header do %>
           <thead>
@@ -283,7 +284,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   def dm_skeleton_list(assigns) do
     ~H"""
-    <div id={@id} class={build_list_container_classes(@class)}>
+    <div id={@id} aria-busy="true" class={build_list_container_classes(@class)}>
       <%= for _i <- 1..@items do %>
         <div class="flex items-start gap-3">
           <%= if @show_avatar do %>
@@ -351,7 +352,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     assigns = assign(assigns, :field_types, field_types)
 
     ~H"""
-    <form id={@id} class={build_form_classes(@class)}>
+    <form id={@id} aria-busy="true" class={build_form_classes(@class)}>
       <%= for {field_type, index} <- Enum.with_index(@field_types) do %>
         <div class="dm-form-group">
           <div class="dm-label">
@@ -384,7 +385,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   def dm_skeleton_comment(assigns) do
     ~H"""
-    <div id={@id} class={build_comment_container_classes(@class)}>
+    <div id={@id} aria-busy="true" class={build_comment_container_classes(@class)}>
       <!-- Main comment -->
       <div class="flex gap-4">
         <.dm_skeleton_avatar size="sm" animation={@animation} />

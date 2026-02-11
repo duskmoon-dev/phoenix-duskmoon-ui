@@ -108,6 +108,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
           <!-- Online/Offline indicator -->
           <div
             :if={@online || @offline}
+            aria-label={if @online, do: "Online", else: "Offline"}
             class={[
               "absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-base-100",
               @online && "bg-success",
@@ -172,6 +173,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
       fill="currentColor"
       viewBox="0 0 20 20"
       xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label="User"
     >
       <path
         fill-rule="evenodd"

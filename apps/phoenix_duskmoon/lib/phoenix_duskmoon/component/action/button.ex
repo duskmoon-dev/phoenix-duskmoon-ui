@@ -149,10 +149,11 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       id={@id}
       class={["btn-noise", @class]}
       data-content={@content}
+      aria-label={@content}
       style="--aps: running"
       {@rest}
     >
-      <i :for={_ <- 0..72} />
+      <span aria-hidden="true"><i :for={_ <- 0..72} /></span>
     </button>
     """
   end

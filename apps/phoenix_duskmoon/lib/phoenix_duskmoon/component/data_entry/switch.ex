@@ -59,6 +59,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
       <label class={["dm-switch", "dm-switch--#{@size}", "dm-switch--#{@color}"]}>
         <input
           type="checkbox"
+          role="switch"
           name={@name}
           id={@id}
           value="true"
