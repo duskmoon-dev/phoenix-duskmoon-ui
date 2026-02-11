@@ -373,4 +373,25 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
 
     assert result =~ ~s[aria-label="Dismiss"]
   end
+
+  test "only first title slot gets the id for aria-labelledby" do
+    result =
+      render_component(&dm_modal/1, %{
+        id: "multi-title",
+        title: [
+          %{inner_block: fn _, _ -> "Primary Title" end},
+          %{inner_block: fn _, _ -> "Subtitle" end}
+        ],
+        body: body()
+      })
+
+    # aria-labelledby points to the first title's id
+    assert result =~ ~s[aria-labelledby="multi-title-title"]
+    # Only one element should have the id (no duplicate IDs)
+    id_count = length(String.split(result, ~s[id="multi-title-title"])) - 1
+    assert id_count == 1
+    # Both titles still render
+    assert result =~ "Primary Title"
+    assert result =~ "Subtitle"
+  end
 end

@@ -953,6 +953,30 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
     end
   end
 
+  describe "page_url nil handling" do
+    test "dm_pagination without page_url renders no href attributes" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 2,
+          page_size: 10,
+          total: 50
+        })
+
+      refute result =~ ~s[href="]
+    end
+
+    test "dm_pagination_thin without page_url renders no href attributes" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 2,
+          page_size: 10,
+          total: 50
+        })
+
+      refute result =~ ~s[href="]
+    end
+  end
+
   describe "button type=button" do
     test "dm_pagination prev button has type=button" do
       result =
