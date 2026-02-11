@@ -5,91 +5,145 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
   import Phoenix.LiveViewTest
   import PhoenixDuskmoon.Component.DataDisplay.Avatar
 
-  test "renders avatar with image" do
+  test "renders avatar with image src and alt" do
     result =
       render_component(&dm_avatar/1, %{
         src: "https://example.com/avatar.jpg",
         alt: "User Avatar"
       })
 
-    assert result =~ ~s[<div class="avatar ]
-    assert result =~ ~s[w-md rounded-circle]
-
-    assert result =~
-             ~s[<img src="https://example.com/avatar.jpg" alt="User Avatar" class="w-full h-full object-cover ]
+    assert result =~ "avatar"
+    assert result =~ ~s[src="https://example.com/avatar.jpg"]
+    assert result =~ ~s[alt="User Avatar"]
+    assert result =~ "object-cover"
   end
 
-  test "renders avatar with name placeholder" do
-    result =
-      render_component(&dm_avatar/1, %{
-        name: "John Doe",
-        size: "lg"
-      })
+  test "renders avatar with default circle shape" do
+    result = render_component(&dm_avatar/1, %{src: "https://example.com/a.jpg"})
 
-    assert result =~ ~s[w-lg]
-    assert result =~ ~s[JD]
-  end
-
-  test "renders avatar with online status" do
-    result =
-      render_component(&dm_avatar/1, %{
-        src: "https://example.com/avatar.jpg",
-        alt: "User Avatar",
-        online: true
-      })
-
-    assert result =~ ~s[bg-success]
-    assert result =~ ~s[border-2 border-base-100]
-  end
-
-  test "renders avatar with border" do
-    result =
-      render_component(&dm_avatar/1, %{
-        src: "https://example.com/avatar.jpg",
-        alt: "User Avatar",
-        border: true
-      })
-
-    assert result =~ ~s[avatar-border]
+    assert result =~ "rounded-circle"
   end
 
   test "renders avatar with square shape" do
-    result =
-      render_component(&dm_avatar/1, %{
-        name: "Test",
-        shape: "square"
-      })
+    result = render_component(&dm_avatar/1, %{name: "Test", shape: "square"})
 
-    assert result =~ ~s[rounded-square]
+    assert result =~ "rounded-square"
   end
 
-  test "renders avatar with custom color" do
-    result =
-      render_component(&dm_avatar/1, %{
-        name: "Test",
-        color: "success"
-      })
+  test "renders avatar with default size md" do
+    result = render_component(&dm_avatar/1, %{src: "https://example.com/a.jpg"})
 
-    assert result =~ ~s[bg-success]
-    assert result =~ ~s[text-success-content]
+    assert result =~ "w-md"
+  end
+
+  test "renders avatar with all size options" do
+    for size <- ~w(xs sm md lg xl) do
+      result = render_component(&dm_avatar/1, %{name: "T", size: size})
+      assert result =~ "w-#{size}"
+    end
+  end
+
+  test "renders avatar with name showing initials" do
+    result = render_component(&dm_avatar/1, %{name: "John Doe"})
+
+    assert result =~ "JD"
+  end
+
+  test "renders avatar with single name initial" do
+    result = render_component(&dm_avatar/1, %{name: "Alice"})
+
+    assert result =~ "A"
+  end
+
+  test "renders avatar with default color primary" do
+    result = render_component(&dm_avatar/1, %{name: "Test"})
+
+    assert result =~ "bg-primary"
+  end
+
+  test "renders avatar with all color options" do
+    for color <- ~w(primary secondary accent info success warning error) do
+      result = render_component(&dm_avatar/1, %{name: "T", color: color})
+      assert result =~ "bg-#{color}"
+    end
+  end
+
+  test "renders avatar with border" do
+    result = render_component(&dm_avatar/1, %{name: "T", border: true})
+
+    assert result =~ "avatar-border"
+  end
+
+  test "renders avatar without border by default" do
+    result = render_component(&dm_avatar/1, %{name: "T"})
+
+    refute result =~ "avatar-border"
+  end
+
+  test "renders avatar with online indicator" do
+    result = render_component(&dm_avatar/1, %{name: "T", online: true})
+
+    assert result =~ "bg-success"
+    assert result =~ "border-2 border-base-100"
+  end
+
+  test "renders avatar with offline indicator" do
+    result = render_component(&dm_avatar/1, %{name: "T", offline: true})
+
+    assert result =~ "bg-base-300"
   end
 
   test "renders avatar with placeholder image" do
     result =
       render_component(&dm_avatar/1, %{
-        placeholder_img: "/path/to/placeholder.jpg",
-        alt: "Placeholder"
+        placeholder_img: "/path/to/placeholder.jpg"
       })
 
-    assert result =~
-             ~s[<img src="/path/to/placeholder.jpg" alt="Placeholder" class="w-full h-full object-cover">]
+    assert result =~ ~s[src="/path/to/placeholder.jpg"]
+    assert result =~ ~s[alt="Placeholder"]
   end
 
-  test "renders avatar with default user icon when no name" do
+  test "renders default user icon svg when no name or src" do
     result = render_component(&dm_avatar/1, %{})
 
-    assert result =~ ~s[<svg]
+    assert result =~ "<svg"
     assert result =~ ~s[fill-rule="evenodd"]
-    assert result =~ ~s[clip-rule="evenodd"]
+    assert result =~ ~s[viewBox="0 0 20 20"]
+  end
+
+  test "renders avatar with custom class" do
+    result = render_component(&dm_avatar/1, %{name: "T", class: "my-avatar"})
+
+    assert result =~ "my-avatar"
+  end
+
+  test "renders avatar with img_class" do
+    result =
+      render_component(&dm_avatar/1, %{
+        src: "https://example.com/a.jpg",
+        img_class: "custom-img"
+      })
+
+    assert result =~ "custom-img"
+  end
+
+  test "renders avatar with placeholder_class" do
+    result =
+      render_component(&dm_avatar/1, %{
+        name: "T",
+        placeholder_class: "custom-placeholder"
+      })
+
+    assert result =~ "custom-placeholder"
+  end
+
+  test "renders avatar with rest attributes on img" do
+    result =
+      render_component(&dm_avatar/1, %{
+        src: "https://example.com/a.jpg",
+        "data-testid": "user-avatar"
+      })
+
+    assert result =~ "data-testid=\"user-avatar\""
   end
 end
