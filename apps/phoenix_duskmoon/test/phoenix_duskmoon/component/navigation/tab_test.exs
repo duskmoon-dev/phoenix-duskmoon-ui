@@ -372,4 +372,87 @@ defmodule PhoenixDuskmoon.Component.Navigation.TabTest do
 
     assert result =~ ~s[role="tabpanel"]
   end
+
+  test "renders tablist role on tabs container" do
+    result =
+      render_component(&dm_tab/1, %{
+        id: "my-tabs",
+        tab: [%{inner_block: fn _, _ -> "Tab 1" end}],
+        tab_content: [%{inner_block: fn _, _ -> "Content" end}]
+      })
+
+    assert result =~ ~s[role="tablist"]
+  end
+
+  test "renders aria-controls on tab buttons linking to panels" do
+    result =
+      render_component(&dm_tab/1, %{
+        id: "my-tabs",
+        tab: [
+          %{inner_block: fn _, _ -> "Tab 1" end},
+          %{inner_block: fn _, _ -> "Tab 2" end}
+        ],
+        tab_content: [
+          %{inner_block: fn _, _ -> "Content 1" end},
+          %{inner_block: fn _, _ -> "Content 2" end}
+        ]
+      })
+
+    assert result =~ ~s[aria-controls="my-tabs-panel-0"]
+    assert result =~ ~s[aria-controls="my-tabs-panel-1"]
+  end
+
+  test "renders aria-labelledby on panel linking back to tab" do
+    result =
+      render_component(&dm_tab/1, %{
+        id: "my-tabs",
+        tab: [%{inner_block: fn _, _ -> "Tab 1" end}],
+        tab_content: [%{inner_block: fn _, _ -> "Content 1" end}]
+      })
+
+    assert result =~ ~s[aria-labelledby="my-tabs-tab-0"]
+    assert result =~ ~s[id="my-tabs-panel-0"]
+  end
+
+  test "generates tab button ids from component id" do
+    result =
+      render_component(&dm_tab/1, %{
+        id: "nav-tabs",
+        tab: [
+          %{inner_block: fn _, _ -> "First" end},
+          %{inner_block: fn _, _ -> "Second" end}
+        ],
+        tab_content: [
+          %{inner_block: fn _, _ -> "Content 1" end},
+          %{inner_block: fn _, _ -> "Content 2" end}
+        ]
+      })
+
+    assert result =~ ~s[id="nav-tabs-tab-0"]
+    assert result =~ ~s[id="nav-tabs-tab-1"]
+  end
+
+  test "user-provided tab id overrides generated id" do
+    result =
+      render_component(&dm_tab/1, %{
+        id: "my-tabs",
+        tab: [%{id: "custom-tab-id", inner_block: fn _, _ -> "Tab" end}],
+        tab_content: [%{inner_block: fn _, _ -> "Content" end}]
+      })
+
+    assert result =~ ~s[id="custom-tab-id"]
+    refute result =~ ~s[id="my-tabs-tab-0"]
+  end
+
+  test "user-provided panel id overrides generated id" do
+    result =
+      render_component(&dm_tab/1, %{
+        id: "my-tabs",
+        tab: [%{inner_block: fn _, _ -> "Tab" end}],
+        tab_content: [%{id: "custom-panel-id", inner_block: fn _, _ -> "Content" end}]
+      })
+
+    assert result =~ ~s[id="custom-panel-id"]
+    refute result =~ ~s[id="my-tabs-panel-0"]
+  end
 end
