@@ -237,4 +237,10 @@ defmodule PhoenixDuskmoon.Component.Navigation.ActionbarTest do
     assert result =~ "First"
     assert result =~ "Second"
   end
+
+  test "renders actionbar with role=toolbar" do
+    result = render_component(&dm_actionbar/1, %{})
+
+    assert result =~ ~s[role="toolbar"]
+  end
 end

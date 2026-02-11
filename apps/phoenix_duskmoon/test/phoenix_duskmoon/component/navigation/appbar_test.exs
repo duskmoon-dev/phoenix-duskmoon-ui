@@ -392,4 +392,11 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
 
     assert result =~ "hidden md:flex"
   end
+
+  test "renders simple appbar mobile menu button with aria-expanded=false" do
+    result = render_component(&dm_simple_appbar/1, %{title: "App"})
+
+    assert result =~ ~s[aria-expanded="false"]
+    assert result =~ ~s[aria-controls="header-md-menu"]
+  end
 end

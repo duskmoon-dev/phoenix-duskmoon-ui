@@ -43,7 +43,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Actionbar do
 
   def dm_actionbar(assigns) do
     ~H"""
-    <div id={@id} class={["dm-actionbar", @class]} {@rest}>
+    <div id={@id} role="toolbar" class={["dm-actionbar", @class]} {@rest}>
       <div class={["dm-actionbar__left", @left_class]}>
         <div
           :for={left <- @left}
