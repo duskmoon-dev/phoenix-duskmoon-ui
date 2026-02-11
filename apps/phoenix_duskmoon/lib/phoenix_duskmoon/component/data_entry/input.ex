@@ -296,6 +296,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               checked={Enum.member?(if(is_list(@value), do: @value, else: []), opt_value)}
               value={opt_value}
               aria-invalid={@errors != [] && "true"}
+              aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             />
             <%= opt_label %>
           </label>
@@ -327,6 +328,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               checked={to_string(@value) == to_string(opt_value)}
               value={opt_value}
               aria-invalid={@errors != [] && "true"}
+              aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             />
             <%= opt_label %>
           </label>

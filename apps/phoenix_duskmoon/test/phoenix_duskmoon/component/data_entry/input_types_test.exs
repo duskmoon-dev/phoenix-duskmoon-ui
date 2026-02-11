@@ -2835,6 +2835,68 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
         refute result =~ "aria-invalid", "#{type} should NOT have aria-invalid without errors"
       end
     end
+
+    test "checkbox_group has aria-describedby pointing to errors container" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "checkbox_group",
+          name: "colors",
+          id: "colors-grp",
+          label: "Colors",
+          options: [{"Red", "red"}, {"Blue", "blue"}],
+          value: [],
+          errors: ["must select at least one"]
+        })
+
+      assert result =~ ~s[aria-describedby="colors-grp-errors"]
+      assert result =~ ~s[id="colors-grp-errors"]
+      assert result =~ "must select at least one"
+    end
+
+    test "checkbox_group without errors has no aria-describedby" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "checkbox_group",
+          name: "colors",
+          id: "colors-grp",
+          label: "Colors",
+          options: [{"Red", "red"}, {"Blue", "blue"}],
+          value: []
+        })
+
+      refute result =~ "aria-describedby"
+    end
+
+    test "radio_group has aria-describedby pointing to errors container" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "radio_group",
+          name: "size",
+          id: "size-grp",
+          label: "Size",
+          options: [{"Small", "sm"}, {"Large", "lg"}],
+          value: nil,
+          errors: ["is required"]
+        })
+
+      assert result =~ ~s[aria-describedby="size-grp-errors"]
+      assert result =~ ~s[id="size-grp-errors"]
+      assert result =~ "is required"
+    end
+
+    test "radio_group without errors has no aria-describedby" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "radio_group",
+          name: "size",
+          id: "size-grp",
+          label: "Size",
+          options: [{"Small", "sm"}, {"Large", "lg"}],
+          value: nil
+        })
+
+      refute result =~ "aria-describedby"
+    end
   end
 
   describe "configurable rich_text and file_upload labels" do
