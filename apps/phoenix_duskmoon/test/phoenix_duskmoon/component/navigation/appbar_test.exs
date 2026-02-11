@@ -399,4 +399,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
     assert result =~ ~s[aria-expanded="false"]
     assert result =~ ~s[aria-controls="header-md-menu"]
   end
+
+  test "renders simple appbar with custom toggle_menu_label" do
+    result =
+      render_component(&dm_simple_appbar/1, %{
+        title: "App",
+        toggle_menu_label: "Basculer le menu"
+      })
+
+    assert result =~ ~s[aria-label="Basculer le menu"]
+  end
 end

@@ -578,5 +578,15 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       assert result =~ ~s[aria-disabled="true"]
       assert result =~ ~s[data-testid="nav"]
     end
+
+    test "renders menu with custom nav_label" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          nav_label: "Menu lateral",
+          menu: [%{inner_block: fn _, _ -> "Item" end}]
+        })
+
+      assert result =~ ~s[aria-label="Menu lateral"]
+    end
   end
 end

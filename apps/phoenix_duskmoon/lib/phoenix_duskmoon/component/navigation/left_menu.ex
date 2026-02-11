@@ -43,6 +43,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
 
   attr(:horizontal, :boolean, default: false, doc: "Render menu horizontally")
   attr(:active, :string, default: "", doc: "Active menu id")
+  attr(:nav_label, :string, default: "Navigation menu", doc: "Accessible label for the menu nav")
   attr(:rest, :global)
 
   slot(:title, required: false, doc: "Menu title") do
@@ -62,7 +63,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
       |> assign_new(:menu, fn -> [] end)
 
     ~H"""
-    <nav id={@id} class={@class} aria-label="Navigation menu" {@rest}>
+    <nav id={@id} class={@class} aria-label={@nav_label} {@rest}>
       <ul class={[
         "dm-menu",
         "dm-menu--#{@size}",

@@ -46,6 +46,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
   )
 
   attr(:text, :string, default: nil, doc: "Optional loading text")
+  attr(:loading_label, :string, default: "Loading", doc: "Accessible label for the loading state")
   attr(:rest, :global)
 
   def dm_loading_spinner(assigns) do
@@ -57,7 +58,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
         @class
       ]}
       role="status"
-      aria-label={@text || "Loading"}
+      aria-label={@text || @loading_label}
       aria-busy="true"
       {@rest}
     >
@@ -110,6 +111,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
     doc: "Size of the loader in em units"
   )
 
+  attr(:loading_label, :string, default: "Loading", doc: "Accessible label for the loading state")
   attr(:rest, :global)
 
   def dm_loading_ex(assigns) do
@@ -166,7 +168,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
       id={@id}
       class={["loader-#{@random_inner}", @class]}
       role="status"
-      aria-label="Loading"
+      aria-label={@loading_label}
       aria-busy="true"
       {@rest}
     >

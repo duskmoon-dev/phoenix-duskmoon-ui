@@ -48,6 +48,16 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
     """
   )
 
+  attr(:nav_label, :string,
+    default: "Site navigation",
+    doc: "Accessible label for the nav element"
+  )
+
+  attr(:toggle_menu_label, :string,
+    default: "Toggle mobile menu",
+    doc: "Accessible label for the mobile menu toggle button"
+  )
+
   slot(:menu,
     required: false,
     doc: """
@@ -71,7 +81,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
     ~H"""
     <nav
       id={@nav_id}
-      aria-label="Site navigation"
+      aria-label={@nav_label}
       class={[
         "w-full h-12",
         "flex items-center flex-none",
@@ -113,7 +123,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
           "flex lg:hidden flex-col justify-center items-center"
         ]}
       >
-        <label for="mobile-menu" aria-label="Toggle mobile menu">
+        <label for="mobile-menu" aria-label={@toggle_menu_label}>
           <PhoenixDuskmoon.Component.Icon.Icons.dm_mdi name="menu" class="w-8 h-8 cursor-pointer" />
         </label>
         <input class="hidden peer" id="mobile-menu" type="checkbox" aria-hidden="true" />
@@ -161,7 +171,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
       phx-hook="PageHeader"
       data-nav-id={@nav_id}
     >
-      <nav aria-label="Site navigation" class={["w-full h-12", "flex items-center flex-none"]}>
+      <nav aria-label={@nav_label} class={["w-full h-12", "flex items-center flex-none"]}>
         <div
           class={[
             "container mx-auto",
@@ -195,7 +205,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
             "flex lg:hidden flex-row justify-between items-center"
           ]}
         >
-          <label for="dm-mobile-menu-control" aria-label="Toggle mobile menu">
+          <label for="dm-mobile-menu-control" aria-label={@toggle_menu_label}>
             <PhoenixDuskmoon.Component.Icon.Icons.dm_mdi name="menu" class="w-8 h-8" />
           </label>
           <input class="hidden peer" id="dm-mobile-menu-control" type="checkbox" aria-hidden="true" />

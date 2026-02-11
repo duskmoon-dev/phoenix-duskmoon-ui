@@ -99,6 +99,12 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
   attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:class, :any, default: nil, doc: "Additional CSS classes")
   attr(:title, :string, default: "", doc: "Appbar title")
+
+  attr(:toggle_menu_label, :string,
+    default: "Toggle mobile menu",
+    doc: "Accessible label for the mobile menu toggle button"
+  )
+
   attr(:rest, :global)
 
   slot(:menu, required: false, doc: "Appbar menus") do
@@ -148,7 +154,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
           <button
             class="appbar-nav md:hidden"
             onclick="document.getElementById('header-md-menu').classList.toggle('hidden'); this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true')"
-            aria-label="Toggle mobile menu"
+            aria-label={@toggle_menu_label}
             aria-expanded="false"
             aria-controls="header-md-menu"
           >

@@ -40,6 +40,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Breadcrumb do
     doc: "Custom separator character"
   )
 
+  attr(:nav_label, :string, default: "Breadcrumb", doc: "Accessible label for the breadcrumb nav")
   attr(:rest, :global)
 
   slot(:crumb,
@@ -57,7 +58,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Breadcrumb do
       id={@id}
       separator={@separator}
       class={@class}
-      aria-label="Breadcrumb"
+      aria-label={@nav_label}
       {@rest}
     >
       <span

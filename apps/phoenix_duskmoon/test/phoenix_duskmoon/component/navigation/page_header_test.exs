@@ -367,4 +367,27 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeaderTest do
 
     assert result =~ ~s[aria-label="Site navigation"]
   end
+
+  test "renders page header with custom nav_label" do
+    result =
+      render_component(&dm_page_header/1, %{
+        nav_label: "Navigation du site",
+        inner_block: inner_block()
+      })
+
+    assert result =~ ~s[aria-label="Navigation du site"]
+  end
+
+  test "renders page header with custom toggle_menu_label" do
+    result =
+      render_component(&dm_page_header/1, %{
+        toggle_menu_label: "Menu mobile",
+        inner_block: inner_block()
+      })
+
+    toggle_count =
+      length(String.split(result, ~s[aria-label="Menu mobile"])) - 1
+
+    assert toggle_count == 2
+  end
 end

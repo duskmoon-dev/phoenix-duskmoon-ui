@@ -2902,4 +2902,20 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[aria-label="Insérer un lien"]
     end
   end
+
+  describe "configurable password_strength labels" do
+    test "password_strength renders custom toggle_password_label" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          id: "pw-toggle",
+          label: "Password",
+          value: "",
+          toggle_password_label: "Mostrar contrasena"
+        })
+
+      assert result =~ ~s[aria-label="Mostrar contrasena"]
+    end
+  end
 end

@@ -333,4 +333,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
     assert result =~ "<el-dm-breadcrumbs"
     assert result =~ "</el-dm-breadcrumbs>"
   end
+
+  test "renders breadcrumb with custom nav_label" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        nav_label: "Migas de pan",
+        crumb: crumbs(["Inicio"])
+      })
+
+    assert result =~ ~s[aria-label="Migas de pan"]
+  end
 end

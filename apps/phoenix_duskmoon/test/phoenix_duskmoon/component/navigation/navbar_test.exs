@@ -293,4 +293,10 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
 
     assert result =~ "</nav>"
   end
+
+  test "renders navbar with custom nav_label" do
+    result = render_component(&dm_navbar/1, %{nav_label: "Navegacion principal"})
+
+    assert result =~ ~s[aria-label="Navegacion principal"]
+  end
 end

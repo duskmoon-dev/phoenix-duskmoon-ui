@@ -31,6 +31,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Navbar do
   attr(:start_class, :any, default: nil, doc: "Navbar left part container class")
   attr(:center_class, :any, default: nil, doc: "Navbar center part container class")
   attr(:end_class, :any, default: nil, doc: "Navbar right part container class")
+  attr(:nav_label, :string, default: "Main navigation", doc: "Accessible label for the navbar")
   attr(:rest, :global)
 
   slot(:start_part, required: false, doc: "Navbar left part")
@@ -39,7 +40,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Navbar do
 
   def dm_navbar(assigns) do
     ~H"""
-    <nav id={@id} class={["dm-navbar", @class]} aria-label="Main navigation" {@rest}>
+    <nav id={@id} class={["dm-navbar", @class]} aria-label={@nav_label} {@rest}>
       <div class={["dm-navbar__start", @start_class]}>
         {render_slot(@start_part)}
       </div>

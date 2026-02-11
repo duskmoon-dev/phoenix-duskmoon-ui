@@ -162,6 +162,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     doc: "accessible label for the insert link button"
   )
 
+  attr(:toggle_password_label, :string,
+    default: "Toggle password visibility",
+    doc: "accessible label for the password visibility toggle"
+  )
+
   slot(:inner_block)
 
   def dm_input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -911,7 +916,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <button
             type="button"
             class="absolute right-3 top-1/2 -translate-y-1/2"
-            aria-label="Toggle password visibility"
+            aria-label={@toggle_password_label}
           >
             <.dm_mdi name="eye" class="w-4 h-4 text-base-content/50" />
           </button>

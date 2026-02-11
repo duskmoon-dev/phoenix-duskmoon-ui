@@ -50,6 +50,22 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
   )
 
   attr(:next_label, :string, default: "Next", doc: "Screen reader label for the next button")
+
+  attr(:pagination_label, :string,
+    default: "Pagination",
+    doc: "Accessible label for the pagination nav element"
+  )
+
+  attr(:prev_page_label, :string,
+    default: "Previous page",
+    doc: "Accessible label for the previous page button"
+  )
+
+  attr(:next_page_label, :string,
+    default: "Next page",
+    doc: "Accessible label for the next page button"
+  )
+
   attr(:rest, :global)
 
   slot(:inner_block, required: false)
@@ -66,7 +82,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
     <nav
       id={@id}
       class={["dm-pagination", @class]}
-      aria-label="Pagination"
+      aria-label={@pagination_label}
       {@rest}
     >
       <div :if={@show_total} class="dm-pagination__total">
@@ -79,7 +95,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
       >
         <button
           slot="prev"
-          aria-label="Previous page"
+          aria-label={@prev_page_label}
           phx-click={if(@page_num == 1, do: nil, else: @update_event)}
           phx-value-current={if(@page_num == 1, do: nil, else: @page_num - 1)}
           disabled={@page_num == 1}
@@ -112,7 +128,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
 
         <button
           slot="next"
-          aria-label="Next page"
+          aria-label={@next_page_label}
           phx-click={if(@page_num == @max_page, do: nil, else: @update_event)}
           phx-value-current={if(@page_num == @max_page, do: nil, else: @page_num + 1)}
           disabled={@page_num == @max_page}
@@ -156,6 +172,27 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
   )
 
   attr(:next_label, :string, default: "Next", doc: "Screen reader label for the next button")
+
+  attr(:pagination_label, :string,
+    default: "Pagination",
+    doc: "Accessible label for the pagination nav element"
+  )
+
+  attr(:prev_page_label, :string,
+    default: "Previous page",
+    doc: "Accessible label for the previous page button"
+  )
+
+  attr(:next_page_label, :string,
+    default: "Next page",
+    doc: "Accessible label for the next page button"
+  )
+
+  attr(:jump_to_page_label, :string,
+    default: "Jump to page",
+    doc: "Accessible label for the page jumper input"
+  )
+
   attr(:rest, :global)
 
   def dm_pagination_thin(assigns) do
@@ -167,7 +204,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
     <nav
       id={@id}
       class={["dm-pagination dm-pagination--thin", @class]}
-      aria-label="Pagination"
+      aria-label={@pagination_label}
       {@rest}
     >
       <div :if={@show_total} class="dm-pagination__total">
@@ -176,7 +213,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
       </div>
       <div class="dm-pagination__controls">
         <button
-          aria-label="Previous page"
+          aria-label={@prev_page_label}
           phx-click={if(@page_num == 1 || @loading, do: nil, else: @update_event)}
           phx-value-current={if(@page_num == 1, do: nil, else: @page_num - 1)}
           disabled={@page_num == 1}
@@ -197,7 +234,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
         </button>
 
         <button
-          aria-label="Next page"
+          aria-label={@next_page_label}
           phx-click={if(@page_num == @max_page || @loading, do: nil, else: @update_event)}
           phx-value-current={if(@page_num == @max_page, do: nil, else: @page_num + 1)}
           disabled={@page_num == @max_page}
@@ -214,7 +251,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
           <input
             type="number"
             name="current"
-            aria-label="Jump to page"
+            aria-label={@jump_to_page_label}
             class="dm-pagination__input"
             min={1}
             max={@max_page}

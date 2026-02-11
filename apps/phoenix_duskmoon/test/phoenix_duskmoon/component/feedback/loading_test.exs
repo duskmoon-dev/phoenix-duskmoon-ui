@@ -318,5 +318,29 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
 
       assert result =~ ~s[aria-hidden="true"]
     end
+
+    test "renders spinner with custom loading_label" do
+      result = render_component(&dm_loading_spinner/1, %{loading_label: "Chargement"})
+
+      assert result =~ ~s[aria-label="Chargement"]
+    end
+
+    test "renders spinner text overrides loading_label in aria-label" do
+      result =
+        render_component(&dm_loading_spinner/1, %{
+          text: "Saving...",
+          loading_label: "Chargement"
+        })
+
+      assert result =~ ~s[aria-label="Saving..."]
+    end
+  end
+
+  describe "dm_loading_ex/1 configurable labels" do
+    test "renders dm_loading_ex with custom loading_label" do
+      result = render_component(&dm_loading_ex/1, %{loading_label: "Cargando"})
+
+      assert result =~ ~s[aria-label="Cargando"]
+    end
   end
 end

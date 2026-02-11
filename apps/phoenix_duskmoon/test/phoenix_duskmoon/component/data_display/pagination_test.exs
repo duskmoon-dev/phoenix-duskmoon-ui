@@ -800,4 +800,71 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
       assert result =~ ">Nxt</span>"
     end
   end
+
+  describe "configurable aria-labels" do
+    test "dm_pagination renders custom pagination_label" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 50,
+          pagination_label: "Paginacion"
+        })
+
+      assert result =~ ~s[aria-label="Paginacion"]
+    end
+
+    test "dm_pagination renders custom prev_page_label and next_page_label" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 2,
+          page_size: 10,
+          total: 50,
+          prev_page_label: "Pagina anterior",
+          next_page_label: "Pagina siguiente"
+        })
+
+      assert result =~ ~s[aria-label="Pagina anterior"]
+      assert result =~ ~s[aria-label="Pagina siguiente"]
+    end
+
+    test "dm_pagination_thin renders custom pagination_label" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 50,
+          pagination_label: "Paginacion"
+        })
+
+      assert result =~ ~s[aria-label="Paginacion"]
+    end
+
+    test "dm_pagination_thin renders custom prev/next page labels" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 2,
+          page_size: 10,
+          total: 50,
+          prev_page_label: "Pagina anterior",
+          next_page_label: "Pagina siguiente"
+        })
+
+      assert result =~ ~s[aria-label="Pagina anterior"]
+      assert result =~ ~s[aria-label="Pagina siguiente"]
+    end
+
+    test "dm_pagination_thin renders custom jump_to_page_label" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 50,
+          show_page_jumper: true,
+          jump_to_page_label: "Ir a la pagina"
+        })
+
+      assert result =~ ~s[aria-label="Ir a la pagina"]
+    end
+  end
 end
