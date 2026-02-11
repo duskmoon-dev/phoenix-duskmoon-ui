@@ -322,4 +322,24 @@ defmodule PhoenixDuskmoon.Component.Fun.ButtonNoiseTest do
     # Style should contain color variables alongside font styles
     assert result =~ "--primary-hue: 180; --secondary-hue: 280;"
   end
+
+  test "renders button noise with default content visible" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{
+        id: "noise-content",
+        content: "Click Me"
+      })
+
+    assert result =~ "Click Me"
+  end
+
+  test "renders button noise wrapper with id attribute" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{
+        id: "my-noise-btn",
+        content: "Test"
+      })
+
+    assert result =~ ~s[id="my-noise-btn"]
+  end
 end

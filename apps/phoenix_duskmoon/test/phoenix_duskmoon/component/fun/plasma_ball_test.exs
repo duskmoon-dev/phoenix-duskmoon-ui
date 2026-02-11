@@ -218,4 +218,16 @@ defmodule PhoenixDuskmoon.Component.Fun.PlasmaBallTest do
 
     assert result =~ ~s[aria-label="Toggle plasma effect"]
   end
+
+  test "renders plasma ball wrapper div with id" do
+    result = render_component(&dm_fun_plasma_ball/1, %{id: "my-plasma"})
+
+    assert result =~ ~s[id="my-plasma"]
+  end
+
+  test "renders plasma ball with dm-fun-plasma-ball class" do
+    result = render_component(&dm_fun_plasma_ball/1, %{id: "plasma-cls"})
+
+    assert result =~ "dm-fun-plasma-ball"
+  end
 end

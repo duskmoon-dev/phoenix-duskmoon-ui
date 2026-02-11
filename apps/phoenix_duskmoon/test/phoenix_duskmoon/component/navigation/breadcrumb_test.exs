@@ -323,4 +323,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
     # The text should be rendered without an anchor wrapper
     assert result =~ ~s[slot="item"]
   end
+
+  test "renders breadcrumb with closing custom element tag" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        crumb: crumbs(["Home"])
+      })
+
+    assert result =~ "<el-dm-breadcrumbs"
+    assert result =~ "</el-dm-breadcrumbs>"
+  end
 end

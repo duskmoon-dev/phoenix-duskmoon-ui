@@ -246,4 +246,11 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
 
     assert result =~ "dm-divider--info"
   end
+
+  test "renders divider as div element with separator role" do
+    result = render_component(&dm_divider/1, %{})
+
+    assert result =~ "<div"
+    assert result =~ ~s[role="separator"]
+  end
 end

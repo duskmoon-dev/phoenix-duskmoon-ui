@@ -287,4 +287,10 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
 
     assert result =~ ~s[data-testid="main-nav"]
   end
+
+  test "renders navbar closes with nav tag" do
+    result = render_component(&dm_navbar/1, %{})
+
+    assert result =~ "</nav>"
+  end
 end

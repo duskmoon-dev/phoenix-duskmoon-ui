@@ -230,4 +230,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.MarkdownTest do
     assert String.starts_with?(String.trim(result), "<el-dm-markdown")
     assert String.ends_with?(String.trim(result), "</el-dm-markdown>")
   end
+
+  test "renders markdown with task list syntax" do
+    content = "- [x] Done\n- [ ] Pending"
+    result = render_component(&dm_markdown/1, %{content: content})
+
+    assert result =~ "Done"
+    assert result =~ "Pending"
+  end
 end

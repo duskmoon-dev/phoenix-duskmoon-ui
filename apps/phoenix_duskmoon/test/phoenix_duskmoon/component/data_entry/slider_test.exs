@@ -234,4 +234,24 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
     refute result =~ "aria-invalid"
     refute result =~ "aria-describedby"
   end
+
+  test "renders slider with range input type" do
+    result =
+      render_component(&dm_slider/1, %{
+        name: "volume",
+        value: 50
+      })
+
+    assert result =~ ~s[type="range"]
+  end
+
+  test "renders slider with dm-range class on input" do
+    result =
+      render_component(&dm_slider/1, %{
+        name: "range",
+        value: 0
+      })
+
+    assert result =~ "dm-range"
+  end
 end

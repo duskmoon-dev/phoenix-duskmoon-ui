@@ -361,4 +361,22 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooterTest do
     assert result =~ "self-center"
     assert result =~ "Copyright text"
   end
+
+  test "renders footer as footer HTML element" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: []
+      })
+
+    assert result =~ "</footer>"
+  end
+
+  test "renders footer with min-h-fit height" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: []
+      })
+
+    assert result =~ "min-h-fit"
+  end
 end

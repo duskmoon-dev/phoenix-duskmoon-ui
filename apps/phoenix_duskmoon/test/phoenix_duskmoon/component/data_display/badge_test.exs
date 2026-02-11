@@ -300,4 +300,17 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
     assert result =~ ~s[size="lg"]
     assert result =~ "Alert"
   end
+
+  test "renders badge closing tag" do
+    result = render_component(&dm_badge/1, %{inner_block: inner_block("Close")})
+
+    assert result =~ "</el-dm-badge>"
+  end
+
+  test "renders badge without variant when not provided" do
+    result = render_component(&dm_badge/1, %{inner_block: inner_block("Default")})
+
+    assert result =~ "<el-dm-badge"
+    assert result =~ "Default"
+  end
 end

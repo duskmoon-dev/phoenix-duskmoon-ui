@@ -239,4 +239,10 @@ defmodule PhoenixDuskmoon.Component.Fun.EclipseTest do
     assert result =~ "Slow forward rotating layer"
     assert result =~ "Static background layer"
   end
+
+  test "renders eclipse with id attribute on outer div" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "eclipse-id-test"})
+
+    assert result =~ ~s[id="eclipse-id-test"]
+  end
 end
