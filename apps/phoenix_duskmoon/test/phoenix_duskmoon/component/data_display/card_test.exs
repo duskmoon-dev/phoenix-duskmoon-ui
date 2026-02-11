@@ -173,17 +173,143 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CardTest do
     assert result =~ ~s[Action 2]
   end
 
-  # TODO: Fix async card tests - they require proper AsyncResult struct setup
-  # test "renders async card with loading state" do
-  # end
-  # test "renders async card with failed state" do
-  # end
-  # test "renders async card with success state" do
-  # end
-  # test "renders async card with custom skeleton class" do
-  # end
-  # test "renders async card with title in loading state" do
-  # end
-  # test "renders async card with action in success state" do
-  # end
+  describe "dm_async_card/1" do
+    test "renders async card in loading state" do
+      result =
+        render_component(&dm_async_card/1, %{
+          assign: %Phoenix.LiveView.AsyncResult{loading: true},
+          inner_block: fn _, _ -> "Success content" end
+        })
+
+      assert result =~ ~s[<el-dm-card]
+      assert result =~ "dm-skeleton"
+      refute result =~ "Success content"
+    end
+
+    test "renders async card in loading state with skeleton" do
+      result =
+        render_component(&dm_async_card/1, %{
+          assign: %Phoenix.LiveView.AsyncResult{loading: true},
+          inner_block: fn _, _ -> "Content" end
+        })
+
+      assert result =~ "dm-skeleton"
+    end
+
+    test "renders async card in loading state with custom skeleton class" do
+      result =
+        render_component(&dm_async_card/1, %{
+          assign: %Phoenix.LiveView.AsyncResult{loading: true},
+          skeleton_class: "h-32",
+          inner_block: fn _, _ -> "Content" end
+        })
+
+      assert result =~ "dm-skeleton"
+      assert result =~ "h-32"
+    end
+
+    test "renders async card in failed state" do
+      result =
+        render_component(&dm_async_card/1, %{
+          assign: %Phoenix.LiveView.AsyncResult{failed: {:error, "Network error"}},
+          inner_block: fn _, _ -> "Success content" end
+        })
+
+      assert result =~ ~s[<el-dm-card]
+      assert result =~ "dm-alert"
+      assert result =~ "Network error"
+      refute result =~ "dm-skeleton"
+    end
+
+    test "renders async card in success state" do
+      result =
+        render_component(&dm_async_card/1, %{
+          assign: %Phoenix.LiveView.AsyncResult{ok?: true, result: "Data loaded"},
+          inner_block: %{inner_block: fn _, _ -> "Success content" end}
+        })
+
+      assert result =~ ~s[<el-dm-card]
+      assert result =~ "Success content"
+      refute result =~ "dm-skeleton"
+      refute result =~ "dm-alert"
+    end
+
+    test "renders async card with title in loading state" do
+      result =
+        render_component(&dm_async_card/1, %{
+          assign: %Phoenix.LiveView.AsyncResult{loading: true},
+          title: [%{inner_block: fn _, _ -> "Card Title" end}],
+          inner_block: fn _, _ -> "Content" end
+        })
+
+      assert result =~ ~s[slot="header"]
+      assert result =~ "Card Title"
+      assert result =~ "dm-skeleton"
+    end
+
+    test "renders async card with title in failed state" do
+      result =
+        render_component(&dm_async_card/1, %{
+          assign: %Phoenix.LiveView.AsyncResult{failed: {:error, "Failed"}},
+          title: [%{inner_block: fn _, _ -> "Title" end}],
+          inner_block: fn _, _ -> "Content" end
+        })
+
+      assert result =~ ~s[slot="header"]
+      assert result =~ "Title"
+      assert result =~ "dm-alert"
+    end
+
+    test "renders async card with action in success state" do
+      result =
+        render_component(&dm_async_card/1, %{
+          assign: %Phoenix.LiveView.AsyncResult{ok?: true, result: "data"},
+          action: [%{inner_block: fn _, _ -> "Action Button" end}],
+          inner_block: %{inner_block: fn _, _ -> "Content" end}
+        })
+
+      assert result =~ ~s[slot="footer"]
+      assert result =~ "Action Button"
+    end
+
+    test "renders async card with variant and shadow" do
+      result =
+        render_component(&dm_async_card/1, %{
+          assign: %Phoenix.LiveView.AsyncResult{ok?: true, result: nil},
+          variant: "bordered",
+          shadow: "lg",
+          inner_block: %{inner_block: fn _, _ -> "Content" end}
+        })
+
+      assert result =~ ~s[variant="bordered"]
+      assert result =~ ~s[shadow="lg"]
+    end
+
+    test "renders async card with image in loading state shows skeleton" do
+      result =
+        render_component(&dm_async_card/1, %{
+          assign: %Phoenix.LiveView.AsyncResult{loading: true},
+          image: "/test.jpg",
+          inner_block: fn _, _ -> "Content" end
+        })
+
+      # Loading state shows skeleton instead of actual image
+      assert result =~ ~s[slot="image"]
+      assert result =~ "dm-skeleton"
+      refute result =~ ~s[src="/test.jpg"]
+    end
+
+    test "renders async card with image in success state" do
+      result =
+        render_component(&dm_async_card/1, %{
+          assign: %Phoenix.LiveView.AsyncResult{ok?: true, result: nil},
+          image: "/test.jpg",
+          image_alt: "Test",
+          inner_block: %{inner_block: fn _, _ -> "Content" end}
+        })
+
+      assert result =~ ~s[src="/test.jpg"]
+      assert result =~ ~s[alt="Test"]
+    end
+  end
 end

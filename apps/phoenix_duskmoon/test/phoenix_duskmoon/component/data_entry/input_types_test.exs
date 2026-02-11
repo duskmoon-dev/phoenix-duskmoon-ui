@@ -978,4 +978,844 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ "is invalid format"
     end
   end
+
+  describe "checkbox_group input type" do
+    test "renders checkbox group with basic attributes" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "checkbox_group",
+          name: "colors",
+          options: [{"Red", "red"}, {"Blue", "blue"}, {"Green", "green"}],
+          value: nil
+        })
+
+      assert result =~ ~s[type="checkbox"]
+      assert result =~ "name=\"colors[]\""
+      assert result =~ "Red"
+      assert result =~ "Blue"
+      assert result =~ "Green"
+    end
+
+    test "renders checkbox group with checked values" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "checkbox_group",
+          name: "colors",
+          options: [{"Red", "red"}, {"Blue", "blue"}],
+          value: ["red"]
+        })
+
+      assert result =~ ~s[value="red"]
+      assert result =~ ~s[checked]
+    end
+
+    test "renders checkbox group with color variant" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "checkbox_group",
+          name: "items",
+          options: [{"A", "a"}],
+          color: "primary",
+          value: nil
+        })
+
+      assert result =~ ~s[dm-checkbox--primary]
+    end
+
+    test "renders checkbox group with size" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "checkbox_group",
+          name: "items",
+          options: [{"A", "a"}],
+          size: "lg",
+          value: nil
+        })
+
+      assert result =~ ~s[dm-checkbox--lg]
+    end
+
+    test "renders checkbox group with label" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "checkbox_group",
+          name: "items",
+          label: "Select Items",
+          options: [{"A", "a"}],
+          value: nil
+        })
+
+      assert result =~ "Select Items"
+    end
+
+    test "renders checkbox group with errors" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "checkbox_group",
+          name: "items",
+          options: [{"A", "a"}],
+          errors: ["select at least one"],
+          value: nil
+        })
+
+      assert result =~ "select at least one"
+    end
+  end
+
+  describe "datepicker input type" do
+    test "renders datepicker with basic attributes" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "datepicker",
+          name: "birthday",
+          id: "birthday-picker",
+          label: "Birthday",
+          value: "2000-01-01"
+        })
+
+      assert result =~ ~s[type="date"]
+      assert result =~ ~s[id="birthday-picker"]
+      assert result =~ ~s[name="birthday"]
+      assert result =~ ~s[value="2000-01-01"]
+      assert result =~ "Birthday"
+    end
+
+    test "renders datepicker with color variant" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "datepicker",
+          name: "date",
+          label: "Date",
+          color: "primary",
+          value: nil
+        })
+
+      assert result =~ ~s[dm-input--primary]
+    end
+
+    test "renders datepicker with size" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "datepicker",
+          name: "date",
+          label: "Date",
+          size: "lg",
+          value: nil
+        })
+
+      assert result =~ ~s[dm-input--lg]
+    end
+
+    test "renders datepicker with calendar icon" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "datepicker",
+          name: "date",
+          label: "Date",
+          value: nil
+        })
+
+      # Calendar icon renders as SVG
+      assert result =~ "<svg"
+    end
+
+    test "renders datepicker with error state" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "datepicker",
+          name: "date",
+          label: "Date",
+          errors: ["is required"],
+          value: nil
+        })
+
+      assert result =~ ~s[dm-input--error]
+      assert result =~ "is required"
+    end
+  end
+
+  describe "timepicker input type" do
+    test "renders timepicker with basic attributes" do
+      time_val = "09:00"
+
+      result =
+        render_component(&dm_input/1, %{
+          type: "timepicker",
+          name: "start_time",
+          id: "start-time",
+          label: "Start Time",
+          value: time_val
+        })
+
+      assert result =~ ~s[type="time"]
+      assert result =~ ~s[id="start-time"]
+      assert result =~ ~s[name="start_time"]
+      assert result =~ time_val
+      assert result =~ "Start Time"
+    end
+
+    test "renders timepicker with color variant" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "timepicker",
+          name: "time",
+          label: "Time",
+          color: "primary",
+          value: nil
+        })
+
+      assert result =~ ~s[dm-input--primary]
+    end
+
+    test "renders timepicker with error state" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "timepicker",
+          name: "time",
+          label: "Time",
+          errors: ["invalid time"],
+          value: nil
+        })
+
+      assert result =~ ~s[dm-input--error]
+      assert result =~ "invalid time"
+    end
+  end
+
+  describe "color_picker input type" do
+    test "renders color picker with basic attributes" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "color_picker",
+          name: "theme_color",
+          id: "color-pick",
+          label: "Theme Color",
+          value: "#ff0000"
+        })
+
+      assert result =~ ~s[type="color"]
+      assert result =~ ~s[id="color-pick"]
+      assert result =~ ~s[name="theme_color"]
+      assert result =~ ~s[value="#ff0000"]
+      assert result =~ "Theme Color"
+    end
+
+    test "renders color picker with default value when nil" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "color_picker",
+          name: "color",
+          label: "Color",
+          value: nil
+        })
+
+      assert result =~ ~s[value="#000000"]
+    end
+
+    test "renders color picker with text input showing hex value" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "color_picker",
+          name: "color",
+          label: "Color",
+          value: "#abcdef"
+        })
+
+      # Should have a readonly text input showing the hex value
+      assert result =~ ~s[readonly]
+      assert result =~ "#abcdef"
+    end
+
+    test "renders color picker with error state" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "color_picker",
+          name: "color",
+          label: "Color",
+          errors: ["invalid color"],
+          value: nil
+        })
+
+      assert result =~ ~s[dm-input--error]
+      assert result =~ "invalid color"
+    end
+  end
+
+  describe "switch input type" do
+    test "renders switch with basic attributes" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "switch",
+          name: "dark_mode",
+          id: "dark-mode-switch",
+          label: "Dark Mode",
+          value: nil
+        })
+
+      assert result =~ ~s[type="checkbox"]
+      assert result =~ ~s[id="dark-mode-switch"]
+      assert result =~ ~s[name="dark_mode"]
+      assert result =~ "dm-switch"
+      assert result =~ "Dark Mode"
+    end
+
+    test "renders switch with checked value" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "switch",
+          name: "enabled",
+          label: "Enabled",
+          value: true
+        })
+
+      assert result =~ ~s[checked]
+    end
+
+    test "renders switch with unchecked value" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "switch",
+          name: "disabled",
+          label: "Disabled",
+          value: false
+        })
+
+      refute result =~ ~s[checked="checked"]
+    end
+
+    test "renders switch with color variant" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "switch",
+          name: "switch",
+          label: "Switch",
+          color: "primary",
+          value: nil
+        })
+
+      assert result =~ ~s[dm-switch--primary]
+    end
+
+    test "renders switch with hidden false value" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "switch",
+          name: "test-switch",
+          label: "Test",
+          value: nil
+        })
+
+      assert result =~ ~s[type="hidden"]
+      assert result =~ ~s[value="false"]
+    end
+
+    test "renders switch with errors" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "switch",
+          name: "switch",
+          label: "Switch",
+          errors: ["must be enabled"],
+          value: nil
+        })
+
+      assert result =~ "must be enabled"
+    end
+  end
+
+  describe "search_with_suggestions input type" do
+    test "renders search input with basic attributes" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "search_with_suggestions",
+          name: "search",
+          id: "search-input",
+          label: "Search",
+          value: ""
+        })
+
+      assert result =~ ~s[type="text"]
+      assert result =~ ~s[id="search-input"]
+      assert result =~ ~s[name="search"]
+      assert result =~ "Search"
+    end
+
+    test "renders search with magnify icon" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "search_with_suggestions",
+          name: "search",
+          label: "Search",
+          value: ""
+        })
+
+      # Magnify icon renders as SVG
+      assert result =~ "<svg"
+    end
+
+    test "renders search with color variant" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "search_with_suggestions",
+          name: "search",
+          label: "Search",
+          color: "primary",
+          value: ""
+        })
+
+      assert result =~ ~s[dm-input--primary]
+    end
+
+    test "renders search with error state" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "search_with_suggestions",
+          name: "search",
+          label: "Search",
+          errors: ["no results"],
+          value: ""
+        })
+
+      assert result =~ ~s[dm-input--error]
+      assert result =~ "no results"
+    end
+  end
+
+  describe "file_upload input type" do
+    test "renders file upload with basic attributes" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "file_upload",
+          name: "document",
+          id: "doc-upload",
+          label: "Upload Document",
+          value: nil
+        })
+
+      assert result =~ ~s[type="file"]
+      assert result =~ ~s[id="doc-upload"]
+      assert result =~ ~s[name="document"]
+      assert result =~ "Upload Document"
+      assert result =~ "Drop files here or click to browse"
+      assert result =~ "Choose Files"
+    end
+
+    test "renders file upload with color variant on button" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "file_upload",
+          name: "upload",
+          label: "Upload",
+          color: "primary",
+          value: nil
+        })
+
+      assert result =~ ~s[dm-btn--primary]
+    end
+
+    test "renders file upload with existing value" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "file_upload",
+          name: "upload",
+          label: "Upload",
+          value: "document.pdf"
+        })
+
+      assert result =~ "document.pdf"
+    end
+
+    test "renders file upload with errors" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "file_upload",
+          name: "upload",
+          label: "Upload",
+          errors: ["file too large"],
+          value: nil
+        })
+
+      assert result =~ "file too large"
+    end
+  end
+
+  describe "rich_text input type" do
+    test "renders rich text editor with basic attributes" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rich_text",
+          name: "content",
+          id: "content-editor",
+          label: "Content",
+          value: nil
+        })
+
+      assert result =~ ~s[contenteditable="true"]
+      assert result =~ ~s[id="content-editor"]
+      assert result =~ ~s[data-name="content"]
+      assert result =~ "Content"
+    end
+
+    test "renders rich text with toolbar buttons" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rich_text",
+          name: "content",
+          label: "Content",
+          value: nil
+        })
+
+      assert result =~ "toolbar"
+      # Toolbar has formatting buttons (rendered as SVG icons)
+      assert result =~ "dm-btn dm-btn--ghost dm-btn--xs"
+    end
+
+    test "renders rich text with existing value" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rich_text",
+          name: "content",
+          label: "Content",
+          value: "<p>Hello World</p>"
+        })
+
+      assert result =~ "<p>Hello World</p>"
+    end
+
+    test "renders rich text with hidden input for form submission" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rich_text",
+          name: "content",
+          id: "editor",
+          label: "Content",
+          value: "test"
+        })
+
+      assert result =~ ~s[type="hidden"]
+      assert result =~ ~s[name="content"]
+      assert result =~ ~s[id="editor_hidden"]
+    end
+
+    test "renders rich text with error state" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rich_text",
+          name: "content",
+          label: "Content",
+          errors: ["cannot be blank"],
+          value: nil
+        })
+
+      assert result =~ "border-error"
+      assert result =~ "cannot be blank"
+    end
+  end
+
+  describe "tags input type" do
+    test "renders tags input with basic attributes" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "tags",
+          name: "tags",
+          id: "tags-input",
+          label: "Tags",
+          value: nil
+        })
+
+      assert result =~ ~s[type="text"]
+      assert result =~ "Add tag..."
+      assert result =~ "Tags"
+    end
+
+    test "renders tags with existing values" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "tags",
+          name: "tags",
+          label: "Tags",
+          value: ["elixir", "phoenix"]
+        })
+
+      assert result =~ "elixir"
+      assert result =~ "phoenix"
+      assert result =~ "dm-badge"
+    end
+
+    test "renders tags with color variant" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "tags",
+          name: "tags",
+          label: "Tags",
+          color: "primary",
+          value: ["test"]
+        })
+
+      assert result =~ ~s[dm-badge--primary]
+    end
+
+    test "renders tags with errors" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "tags",
+          name: "tags",
+          label: "Tags",
+          errors: ["too many tags"],
+          value: nil
+        })
+
+      assert result =~ "too many tags"
+    end
+  end
+
+  describe "rating input type" do
+    test "renders rating with basic attributes" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rating",
+          name: "rating",
+          id: "product-rating",
+          label: "Rating",
+          value: 3
+        })
+
+      assert result =~ ~s[name="rating"]
+      assert result =~ ~s[id="product-rating"]
+      assert result =~ "Rating"
+      assert result =~ "(3/5)"
+    end
+
+    test "renders rating with default max of 5" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rating",
+          name: "rating",
+          label: "Score",
+          value: 3
+        })
+
+      # Default max is 5
+      assert result =~ "(3/5)"
+    end
+
+    test "renders rating with nil value showing 0" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rating",
+          name: "rating",
+          label: "Rating",
+          value: nil
+        })
+
+      assert result =~ "(0/5)"
+    end
+
+    test "renders rating stars as SVG icons" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rating",
+          name: "rating",
+          label: "Rating",
+          value: 2
+        })
+
+      # Stars render as SVG icons (mdi star)
+      assert result =~ "<svg"
+      assert result =~ "dm-btn"
+    end
+
+    test "renders rating with errors" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rating",
+          name: "rating",
+          label: "Rating",
+          errors: ["must rate"],
+          value: nil
+        })
+
+      assert result =~ "must rate"
+    end
+  end
+
+  describe "password_strength input type" do
+    test "renders password strength with basic attributes" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          id: "pw-input",
+          label: "Password",
+          value: ""
+        })
+
+      assert result =~ ~s[type="password"]
+      assert result =~ ~s[id="pw-input"]
+      assert result =~ ~s[name="password"]
+      assert result =~ "Password"
+    end
+
+    test "renders weak strength for short password" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          label: "Password",
+          value: "abc"
+        })
+
+      assert result =~ "Weak"
+      assert result =~ "bg-error"
+    end
+
+    test "renders medium strength for moderate password" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          label: "Password",
+          value: "Password1"
+        })
+
+      assert result =~ "Medium"
+      assert result =~ "bg-warning"
+    end
+
+    test "renders strong strength for complex password" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          label: "Password",
+          value: "MyStr0ng!Pass#"
+        })
+
+      assert result =~ "Strong"
+      assert result =~ "bg-success"
+    end
+
+    test "renders eye toggle button" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          label: "Password",
+          value: ""
+        })
+
+      # Eye icon for show/hide password
+      assert result =~ "<svg"
+    end
+
+    test "renders password strength with error state" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          label: "Password",
+          errors: ["is too common"],
+          value: ""
+        })
+
+      assert result =~ ~s[dm-input--error]
+      assert result =~ "is too common"
+    end
+
+    test "renders password strength with color variant" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          label: "Password",
+          color: "primary",
+          value: ""
+        })
+
+      assert result =~ ~s[dm-input--primary]
+    end
+  end
+
+  describe "slider_range input type" do
+    test "renders slider range with basic attributes" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "slider_range",
+          name: "price_range",
+          id: "price-range",
+          label: "Price Range",
+          value: [20, 80]
+        })
+
+      assert result =~ ~s[type="range"]
+      assert result =~ "Price Range"
+      assert result =~ "(20 - 80)"
+    end
+
+    test "renders slider range with default values when nil" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "slider_range",
+          name: "range",
+          label: "Range",
+          value: nil
+        })
+
+      assert result =~ "(0 - 100)"
+    end
+
+    test "renders slider range with default min/max/step" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "slider_range",
+          name: "range",
+          label: "Range",
+          value: [10, 50]
+        })
+
+      # Default min=0, max=100, step=1
+      assert result =~ ~s[min="0"]
+      assert result =~ ~s[max="100"]
+      assert result =~ ~s[step="1"]
+    end
+
+    test "renders slider range with color variant" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "slider_range",
+          name: "range",
+          label: "Range",
+          color: "primary",
+          value: nil
+        })
+
+      assert result =~ ~s[dm-range--primary]
+    end
+
+    test "renders slider range with hidden input for form" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "slider_range",
+          name: "range",
+          label: "Range",
+          value: [25, 75]
+        })
+
+      assert result =~ ~s[type="hidden"]
+      assert result =~ ~s[name="range"]
+    end
+
+    test "renders slider range with errors" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "slider_range",
+          name: "range",
+          label: "Range",
+          errors: ["invalid range"],
+          value: nil
+        })
+
+      assert result =~ "invalid range"
+    end
+  end
 end
