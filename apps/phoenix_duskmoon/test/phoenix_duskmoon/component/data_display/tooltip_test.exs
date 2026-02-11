@@ -289,4 +289,62 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
 
     refute result =~ "tooltip-open"
   end
+
+  test "renders tooltip with secondary color variant" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: "Secondary tip",
+        color: "secondary",
+        inner_block: inner_block()
+      })
+
+    assert result =~ "tooltip-secondary"
+    assert result =~ ~s[data-tip="Secondary tip"]
+  end
+
+  test "renders tooltip with accent color variant" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: "Accent tip",
+        color: "accent",
+        inner_block: inner_block()
+      })
+
+    assert result =~ "tooltip-accent"
+  end
+
+  test "renders tooltip with success color variant" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: "Saved!",
+        color: "success",
+        inner_block: inner_block()
+      })
+
+    assert result =~ "tooltip-success"
+  end
+
+  test "renders tooltip with info color variant" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: "Info here",
+        color: "info",
+        inner_block: inner_block()
+      })
+
+    assert result =~ "tooltip-info"
+  end
+
+  test "renders tooltip with error color and open combined" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: "Error!",
+        color: "error",
+        open: true,
+        inner_block: inner_block()
+      })
+
+    assert result =~ "tooltip-error"
+    assert result =~ "tooltip-open"
+  end
 end

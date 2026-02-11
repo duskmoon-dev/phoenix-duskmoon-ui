@@ -205,4 +205,45 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
     assert result =~ "dm-divider__content"
     assert result =~ "OR"
   end
+
+  test "renders divider with xs size" do
+    result = render_component(&dm_divider/1, %{size: "xs"})
+
+    assert result =~ "dm-divider--xs"
+  end
+
+  test "renders divider with sm size" do
+    result = render_component(&dm_divider/1, %{size: "sm"})
+
+    assert result =~ "dm-divider--sm"
+  end
+
+  test "renders divider vertical with content" do
+    result =
+      render_component(&dm_divider/1, %{
+        orientation: "vertical",
+        inner_block: [%{inner_block: fn _, _ -> "VS" end}]
+      })
+
+    assert result =~ "dm-divider--vertical"
+    assert result =~ "dm-divider__content"
+    assert result =~ "VS"
+  end
+
+  test "renders divider with primary variant and dashed style" do
+    result =
+      render_component(&dm_divider/1, %{
+        variant: "primary",
+        style: "dashed"
+      })
+
+    assert result =~ "dm-divider--primary"
+    assert result =~ "dm-divider--dashed"
+  end
+
+  test "renders divider with info variant" do
+    result = render_component(&dm_divider/1, %{variant: "info"})
+
+    assert result =~ "dm-divider--info"
+  end
 end

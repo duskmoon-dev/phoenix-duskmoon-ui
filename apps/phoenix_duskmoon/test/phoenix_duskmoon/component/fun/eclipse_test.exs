@@ -200,4 +200,43 @@ defmodule PhoenixDuskmoon.Component.Fun.EclipseTest do
     assert result =~ "dm-fun-eclipse"
     assert result =~ "animation-duration:"
   end
+
+  test "renders eclipse with animation_speed 0.0 clamped to 0.01" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e-clamp", animation_speed: 0.0})
+
+    # max(0.0, 0.01) = 0.01, so layer 1 = round(30/0.01) = 3000s
+    assert result =~ "animation-duration: 3000s"
+  end
+
+  test "renders eclipse with animation_speed 1.0 is the default" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e-default"})
+
+    # Default speed 1.0
+    assert result =~ "animation-duration: 30s"
+  end
+
+  test "renders eclipse outer div with dm-fun-eclipse class" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e-outer"})
+
+    # The outermost div should have the dm-fun-eclipse class
+    assert result =~ ~s[class="dm-fun-eclipse]
+  end
+
+  test "renders eclipse with negative animation_speed clamped to 0.01" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e-neg", animation_speed: -1.0})
+
+    # max(-1.0, 0.01) = 0.01, produces very large durations
+    assert result =~ "animation-duration: 3000s"
+  end
+
+  test "renders eclipse with each layer having distinct animation HTML comments" do
+    result = render_component(&dm_fun_eclipse/1, %{id: "e-comments"})
+
+    assert result =~ "Fast rotating layer"
+    assert result =~ "Medium reverse rotating layer"
+    assert result =~ "Medium forward rotating layer"
+    assert result =~ "Slow reverse rotating layer"
+    assert result =~ "Slow forward rotating layer"
+    assert result =~ "Static background layer"
+  end
 end

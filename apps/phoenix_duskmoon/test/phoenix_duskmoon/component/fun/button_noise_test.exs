@@ -275,4 +275,51 @@ defmodule PhoenixDuskmoon.Component.Fun.ButtonNoiseTest do
 
     assert result =~ ~s[aria-hidden="true"]
   end
+
+  test "renders without phx-target when phx_target is nil" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{
+        id: "noise-no-target",
+        content: "Test"
+      })
+
+    refute result =~ "phx-target"
+  end
+
+  test "renders light bars inside a span wrapper" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{
+        id: "noise-span",
+        content: "Test"
+      })
+
+    assert result =~ "<span"
+    assert result =~ "<i></i>"
+    assert result =~ "</span>"
+  end
+
+  test "renders style attribute with font-family and font-size together" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{
+        id: "noise-style",
+        content: "Test",
+        font_size: "32px",
+        font_family: "Courier, monospace"
+      })
+
+    assert result =~ "font-family: Courier, monospace"
+    assert result =~ "font-size: 32px"
+  end
+
+  test "renders electric scheme with both hue variables in style" do
+    result =
+      render_component(&dm_fun_button_noise/1, %{
+        id: "noise-elec-style",
+        content: "Zap",
+        color_scheme: "electric"
+      })
+
+    # Style should contain color variables alongside font styles
+    assert result =~ "--primary-hue: 180; --secondary-hue: 280;"
+  end
 end
