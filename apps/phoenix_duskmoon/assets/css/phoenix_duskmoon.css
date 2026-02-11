@@ -6,3 +6,6 @@
 
 /* Design system and component styles from upstream */
 @import "@duskmoon-dev/core";
+
+/* Phoenix-specific component overrides */
+@import "./components.css";
