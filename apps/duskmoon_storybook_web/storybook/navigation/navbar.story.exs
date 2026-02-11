@@ -14,12 +14,12 @@ defmodule Storybook.Navigation.Navbar do
         },
         slots: [
           """
-          <:left>
+          <:start_part>
             Star Wars
-          </:left>
-          <:right>
-            <button>action</button>
-          </:right>
+          </:start_part>
+          <:end_part>
+            <button type="button">action</button>
+          </:end_part>
           """
         ]
       }
