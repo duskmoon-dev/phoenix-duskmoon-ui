@@ -213,13 +213,21 @@ export const FormElementHook = {
     }
   },
 
+  destroyed() {
+    WebComponentHook.destroyed.call(this);
+    if (this._feedbackObserver) {
+      this._feedbackObserver.disconnect();
+      this._feedbackObserver = null;
+    }
+  },
+
   _setupFeedbackObserver(feedbackFor) {
     // Find the form wrapper that Phoenix LiveView manages
     const form = this.el.closest("form");
     if (!form) return;
 
     // Observe class changes on form for feedback state
-    const observer = new MutationObserver((mutations) => {
+    this._feedbackObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === "class") {
           const hasNoFeedback = form.classList.contains("phx-no-feedback");
@@ -233,7 +241,7 @@ export const FormElementHook = {
       });
     });
 
-    observer.observe(form, { attributes: true, attributeFilter: ["class"] });
+    this._feedbackObserver.observe(form, { attributes: true, attributeFilter: ["class"] });
   },
 };
 
