@@ -227,4 +227,20 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
     assert result =~ "Notifications"
     assert result =~ "Profile"
   end
+
+  test "renders navbar as nav HTML element" do
+    result = render_component(&dm_navbar/1, %{})
+
+    assert result =~ "<nav"
+    assert result =~ "</nav>"
+  end
+
+  test "renders navbar with custom aria-label overriding default" do
+    result =
+      render_component(&dm_navbar/1, %{
+        "aria-label": "Site navigation"
+      })
+
+    assert result =~ ~s[aria-label="Site navigation"]
+  end
 end

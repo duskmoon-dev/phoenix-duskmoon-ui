@@ -215,4 +215,26 @@ defmodule PhoenixDuskmoon.Component.Navigation.ActionbarTest do
 
     refute result =~ ~s[id="]
   end
+
+  test "renders actionbar base class always present" do
+    result = render_component(&dm_actionbar/1, %{class: "extra"})
+
+    assert result =~ "dm-actionbar"
+    assert result =~ "extra"
+  end
+
+  test "renders actionbar left slot items as separate divs" do
+    result =
+      render_component(&dm_actionbar/1, %{
+        left: [
+          %{id: "a", inner_block: fn _, _ -> "First" end},
+          %{id: "b", inner_block: fn _, _ -> "Second" end}
+        ]
+      })
+
+    assert result =~ ~s[id="a"]
+    assert result =~ ~s[id="b"]
+    assert result =~ "First"
+    assert result =~ "Second"
+  end
 end

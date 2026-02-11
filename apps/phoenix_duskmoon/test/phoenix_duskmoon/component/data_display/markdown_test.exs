@@ -179,4 +179,17 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.MarkdownTest do
     assert result =~ "**bold**"
     assert result =~ "*italic*"
   end
+
+  test "renders markdown with closing el-dm-markdown tag" do
+    result = render_component(&dm_markdown/1, %{content: "test"})
+
+    assert result =~ "</el-dm-markdown>"
+  end
+
+  test "renders markdown with debug false not adding debug attribute" do
+    result = render_component(&dm_markdown/1, %{content: "test", debug: false})
+
+    refute result =~ ~s[debug="true"]
+    refute result =~ ~s[debug=""]
+  end
 end

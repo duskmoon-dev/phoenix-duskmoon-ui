@@ -163,4 +163,28 @@ defmodule PhoenixDuskmoon.Component.Fun.SignatureTest do
       assert result =~ "--opacity: #{opacity}"
     end
   end
+
+  test "renders signature with data-content attribute" do
+    result = render_component(&dm_fun_signature/1, %{id: "sig-dc", content: "OK"})
+
+    assert result =~ ~s[data-content="OK"]
+  end
+
+  test "renders signature with dm-fun-signature class" do
+    result = render_component(&dm_fun_signature/1, %{id: "sig-cls"})
+
+    assert result =~ "dm-fun-signature"
+  end
+
+  test "renders signature with absolute position by default" do
+    result = render_component(&dm_fun_signature/1, %{id: "sig-pos"})
+
+    assert result =~ "position: absolute"
+  end
+
+  test "renders signature with relative position override" do
+    result = render_component(&dm_fun_signature/1, %{id: "sig-pos2", position: "relative"})
+
+    assert result =~ "position: relative"
+  end
 end
