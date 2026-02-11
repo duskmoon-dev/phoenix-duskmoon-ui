@@ -163,6 +163,37 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       parts = String.split(result, "dm-menu__item--active")
       assert length(parts) == 2
     end
+
+    test "renders nav with default aria-label" do
+      result = render_component(&dm_left_menu/1, %{})
+
+      assert result =~ ~s[aria-label="Navigation menu"]
+    end
+
+    test "renders active menu item with aria-current page" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          active: "item1",
+          menu: [
+            %{inner_block: fn _, _ -> "Item 1" end, id: "item1"},
+            %{inner_block: fn _, _ -> "Item 2" end, id: "item2"}
+          ]
+        })
+
+      assert result =~ ~s[aria-current="page"]
+    end
+
+    test "renders disabled menu item with aria-disabled" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          menu: [
+            %{inner_block: fn _, _ -> "Disabled" end, disabled: true},
+            %{inner_block: fn _, _ -> "Normal" end}
+          ]
+        })
+
+      assert result =~ ~s[aria-disabled="true"]
+    end
   end
 
   describe "dm_left_menu_group/1" do
@@ -356,6 +387,47 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       assert result =~ "<details"
       assert result =~ "<summary"
       assert result =~ "Collapsible"
+    end
+
+    test "renders active menu item with aria-current page in group" do
+      result =
+        render_component(&dm_left_menu_group/1, %{
+          active: "profile",
+          title: [%{inner_block: fn _, _ -> "Settings" end}],
+          menu: [
+            %{inner_block: fn _, _ -> "Profile" end, id: "profile", to: "/profile"},
+            %{inner_block: fn _, _ -> "Security" end, id: "security", to: "/security"}
+          ]
+        })
+
+      assert result =~ ~s[aria-current="page"]
+    end
+
+    test "renders disabled menu item with aria-disabled in group" do
+      result =
+        render_component(&dm_left_menu_group/1, %{
+          title: [%{inner_block: fn _, _ -> "Settings" end}],
+          menu: [
+            %{inner_block: fn _, _ -> "Disabled" end, disabled: true, to: "/disabled"}
+          ]
+        })
+
+      assert result =~ ~s[aria-disabled="true"]
+    end
+
+    test "renders active item with aria-current in collapsible group" do
+      result =
+        render_component(&dm_left_menu_group/1, %{
+          collapsible: true,
+          active: "mdi",
+          title: [%{inner_block: fn _, _ -> "Icons" end}],
+          menu: [
+            %{inner_block: fn _, _ -> "MDI" end, id: "mdi", to: "/icons/mdi"},
+            %{inner_block: fn _, _ -> "BSI" end, id: "bsi", to: "/icons/bsi"}
+          ]
+        })
+
+      assert result =~ ~s[aria-current="page"]
     end
   end
 end

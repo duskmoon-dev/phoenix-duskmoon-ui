@@ -200,4 +200,10 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
 
     refute result =~ ~s[position="]
   end
+
+  test "renders close button with aria-label Close" do
+    result = render_component(&dm_modal/1, %{body: body()})
+
+    assert result =~ ~s[aria-label="Close"]
+  end
 end

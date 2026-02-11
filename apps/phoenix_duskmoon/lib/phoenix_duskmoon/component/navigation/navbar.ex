@@ -39,7 +39,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Navbar do
 
   def dm_navbar(assigns) do
     ~H"""
-    <nav id={@id} class={["dm-navbar", @class]} {@rest}>
+    <nav id={@id} class={["dm-navbar", @class]} aria-label="Main navigation" {@rest}>
       <div class={["dm-navbar__start", @start_class]}>
         {render_slot(@start_part)}
       </div>

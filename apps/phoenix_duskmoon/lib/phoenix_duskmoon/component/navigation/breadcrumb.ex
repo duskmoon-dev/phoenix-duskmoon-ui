@@ -57,6 +57,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Breadcrumb do
       id={@id}
       separator={@separator}
       class={@class}
+      aria-label="Breadcrumb"
       {@rest}
     >
       <span

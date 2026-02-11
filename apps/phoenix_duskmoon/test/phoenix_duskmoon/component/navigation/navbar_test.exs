@@ -189,4 +189,10 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
     assert result =~ "Profile"
     assert result =~ "aria-label=\"Main\""
   end
+
+  test "renders navbar with default aria-label" do
+    result = render_component(&dm_navbar/1, %{})
+
+    assert result =~ ~s[aria-label="Main navigation"]
+  end
 end

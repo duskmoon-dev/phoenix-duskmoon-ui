@@ -62,7 +62,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
       |> assign_new(:menu, fn -> [] end)
 
     ~H"""
-    <nav id={@id} class={@class} {@rest}>
+    <nav id={@id} class={@class} aria-label="Navigation menu" {@rest}>
       <ul class={[
         "dm-menu",
         "dm-menu--#{@size}",
@@ -82,6 +82,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
             Map.get(m, :disabled) && "dm-menu__item--disabled",
             Map.get(m, :id) == @active && "dm-menu__item--active"
           ]}
+          aria-current={if Map.get(m, :id) == @active && @active != "", do: "page", else: nil}
+          aria-disabled={if Map.get(m, :disabled), do: "true", else: nil}
         >
           {render_slot(m)}
         </li>
@@ -157,6 +159,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
                     Map.get(m, :disabled) && "dm-menu__item--disabled",
                     Map.get(m, :id) == @active && "dm-menu__item--active"
                   ]}
+                  aria-current={if Map.get(m, :id) == @active && @active != "", do: "page", else: nil}
+                  aria-disabled={if Map.get(m, :disabled), do: "true", else: nil}
                 >
                   <.link navigate={Map.get(m, :to, "#")}>
                     {render_slot(m)}
@@ -177,6 +181,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
               Map.get(m, :disabled) && "dm-menu__item--disabled",
               Map.get(m, :id) == @active && "dm-menu__item--active"
             ]}
+            aria-current={if Map.get(m, :id) == @active && @active != "", do: "page", else: nil}
+            aria-disabled={if Map.get(m, :disabled), do: "true", else: nil}
           >
             <.link navigate={Map.get(m, :to, "#")}>
               {render_slot(m)}

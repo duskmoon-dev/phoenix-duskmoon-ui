@@ -352,4 +352,24 @@ defmodule PhoenixDuskmoon.Component.Navigation.TabTest do
     refute result =~ "Content A"
     assert result =~ "data-testid=\"full-tab\""
   end
+
+  test "renders tab buttons with role tab" do
+    result =
+      render_component(&dm_tab/1, %{
+        tab: [%{id: "t1", inner_block: fn _, _ -> "Tab 1" end}],
+        tab_content: [%{id: "c1", inner_block: fn _, _ -> "Content" end}]
+      })
+
+    assert result =~ ~s[role="tab"]
+  end
+
+  test "renders tab content panel with role tabpanel" do
+    result =
+      render_component(&dm_tab/1, %{
+        tab: [%{id: "t1", inner_block: fn _, _ -> "Tab 1" end}],
+        tab_content: [%{id: "c1", inner_block: fn _, _ -> "Content" end}]
+      })
+
+    assert result =~ ~s[role="tabpanel"]
+  end
 end

@@ -82,6 +82,7 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
         class={["dm-dropdown__toggle", trigger[:class]]}
         tabindex="0"
         role="button"
+        aria-haspopup="true"
       >
         {render_slot(trigger)}
       </div>
@@ -95,6 +96,7 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
           @dropdown_class
         ]}
         tabindex="0"
+        role="menu"
       >
         {render_slot(content)}
       </ul>

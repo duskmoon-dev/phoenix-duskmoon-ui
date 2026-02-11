@@ -107,7 +107,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
         {render_slot(title)}
       </span>
       <form :if={!@hide_close} method="dialog" slot="close">
-        <el-dm-button variant="ghost" size="sm" shape="circle">
+        <el-dm-button variant="ghost" size="sm" shape="circle" aria-label="Close">
           <.dm_mdi name="close" class="w-4 h-4" />
         </el-dm-button>
       </form>

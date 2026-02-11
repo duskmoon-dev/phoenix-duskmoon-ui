@@ -108,6 +108,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Tab do
             slot="tab"
             id={Map.get(tab, :id)}
             class={Map.get(tab, :class)}
+            role="tab"
             data-tab-name={Map.get(tab, :name)}
             data-tab-index={i}
             aria-selected={tab_active?(@active_tab_name, @active_tab_index, tab, i)}
@@ -121,6 +122,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Tab do
         <div
           :if={content_active?(@active_tab_name, @active_tab_index, tab_content, i)}
           slot="panel"
+          role="tabpanel"
           id={Map.get(tab_content, :id)}
           class={[@content_class, Map.get(tab_content, :class)]}
           data-panel-name={Map.get(tab_content, :name)}

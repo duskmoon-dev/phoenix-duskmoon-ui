@@ -265,4 +265,24 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
 
     assert result =~ "w-52"
   end
+
+  test "renders trigger with aria-haspopup attribute" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ ~s[aria-haspopup="true"]
+  end
+
+  test "renders content ul with role menu" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ ~s[role="menu"]
+  end
 end

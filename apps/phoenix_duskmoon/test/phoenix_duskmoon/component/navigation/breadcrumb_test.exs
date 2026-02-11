@@ -252,4 +252,13 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
     assert result =~ "Current Item"
     assert result =~ ~s[aria-current="page"]
   end
+
+  test "renders breadcrumb with default aria-label" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        crumb: crumbs(["Home"])
+      })
+
+    assert result =~ ~s[aria-label="Breadcrumb"]
+  end
 end
