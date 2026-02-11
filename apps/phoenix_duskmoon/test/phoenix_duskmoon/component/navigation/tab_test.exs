@@ -521,4 +521,27 @@ defmodule PhoenixDuskmoon.Component.Navigation.TabTest do
     refute result =~ ~s[aria-controls="]
     refute result =~ ~s[aria-labelledby="]
   end
+
+  test "tab buttons have type=button to prevent form submission" do
+    result =
+      render_component(&dm_tab/1, %{
+        tab: [
+          %{id: "t1", inner_block: fn _, _ -> "Tab 1" end},
+          %{id: "t2", inner_block: fn _, _ -> "Tab 2" end}
+        ],
+        tab_content: [
+          %{id: "c1", inner_block: fn _, _ -> "C1" end},
+          %{id: "c2", inner_block: fn _, _ -> "C2" end}
+        ]
+      })
+
+    # All tab buttons should have type="button"
+    buttons = Regex.scan(~r/<button[^>]*>/, result)
+    assert length(buttons) >= 2
+
+    for button <- buttons do
+      [btn] = button
+      assert btn =~ ~s[type="button"], "Tab button missing type=button: #{btn}"
+    end
+  end
 end

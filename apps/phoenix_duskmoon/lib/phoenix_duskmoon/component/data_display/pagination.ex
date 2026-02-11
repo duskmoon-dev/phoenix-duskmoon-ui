@@ -94,6 +94,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
         total-pages={@max_page}
       >
         <button
+          type="button"
           slot="prev"
           aria-label={@prev_page_label}
           phx-click={if(@page_num == 1, do: nil, else: @update_event)}
@@ -112,6 +113,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
             <span slot="page" class="dm-pagination__ellipsis">{p}</span>
           <% else %>
             <button
+              type="button"
               slot="page"
               phx-click={@update_event}
               phx-value-current={p}
@@ -127,6 +129,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
         <% end %>
 
         <button
+          type="button"
           slot="next"
           aria-label={@next_page_label}
           phx-click={if(@page_num == @max_page, do: nil, else: @update_event)}
@@ -213,6 +216,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
       </div>
       <div class="dm-pagination__controls">
         <button
+          type="button"
           aria-label={@prev_page_label}
           phx-click={if(@page_num == 1 || @loading, do: nil, else: @update_event)}
           phx-value-current={if(@page_num == 1, do: nil, else: @page_num - 1)}
@@ -224,6 +228,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
         </button>
 
         <button
+          type="button"
           phx-click={if(@loading, do: nil, else: @update_event)}
           phx-value-current={@page_num}
           aria-current="page"
@@ -234,6 +239,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
         </button>
 
         <button
+          type="button"
           aria-label={@next_page_label}
           phx-click={if(@page_num == @max_page || @loading, do: nil, else: @update_event)}
           phx-value-current={if(@page_num == @max_page, do: nil, else: @page_num + 1)}

@@ -405,4 +405,27 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
       assert result =~ "dm-label"
     end
   end
+
+  describe "dm_alert accessibility" do
+    test "renders alert with role=alert for screen readers" do
+      result =
+        render_component(&dm_alert/1, %{
+          inner_block: inner_block("Important message")
+        })
+
+      assert result =~ ~s[role="alert"]
+    end
+
+    test "renders alert with role=alert across all variants" do
+      for variant <- ~w(info success warning error) do
+        result =
+          render_component(&dm_alert/1, %{
+            variant: variant,
+            inner_block: inner_block("msg")
+          })
+
+        assert result =~ ~s[role="alert"]
+      end
+    end
+  end
 end

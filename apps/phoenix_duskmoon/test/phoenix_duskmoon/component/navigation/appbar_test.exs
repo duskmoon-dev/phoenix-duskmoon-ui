@@ -409,4 +409,11 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
 
     assert result =~ ~s[aria-label="Basculer le menu"]
   end
+
+  test "mobile menu toggle button has type=button" do
+    result = render_component(&dm_simple_appbar/1, %{title: "App"})
+
+    # The mobile menu toggle should have type="button"
+    assert result =~ ~s[type="button"]
+  end
 end

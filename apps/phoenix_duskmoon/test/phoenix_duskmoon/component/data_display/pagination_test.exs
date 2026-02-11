@@ -867,4 +867,53 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
       assert result =~ ~s[aria-label="Ir a la pagina"]
     end
   end
+
+  describe "button type=button" do
+    test "dm_pagination prev button has type=button" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 2,
+          page_size: 10,
+          total: 50,
+          update_event: "page"
+        })
+
+      assert result =~ ~s[type="button"]
+    end
+
+    test "dm_pagination page buttons have type=button" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 30,
+          update_event: "page"
+        })
+
+      # All buttons should have type="button"
+      buttons = Regex.scan(~r/<button[^>]*>/, result)
+
+      for button <- buttons do
+        [btn] = button
+        assert btn =~ ~s[type="button"], "Button missing type=button: #{btn}"
+      end
+    end
+
+    test "dm_pagination_thin all buttons have type=button" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 2,
+          page_size: 10,
+          total: 50
+        })
+
+      buttons = Regex.scan(~r/<button[^>]*>/, result)
+      assert length(buttons) >= 3
+
+      for button <- buttons do
+        [btn] = button
+        assert btn =~ ~s[type="button"], "Button missing type=button: #{btn}"
+      end
+    end
+  end
 end

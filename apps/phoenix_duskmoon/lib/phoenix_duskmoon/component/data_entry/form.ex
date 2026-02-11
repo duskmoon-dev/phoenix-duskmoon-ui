@@ -156,7 +156,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
       end)
 
     ~H"""
-    <div id={@id} class={["dm-alert", "dm-alert--#{@variant}", @class]}>
+    <div id={@id} role="alert" class={["dm-alert", "dm-alert--#{@variant}", @class]}>
       <.dm_mdi name={@icon} class="h-5 w-5 flex-none" />
       <div>
         <h3 :if={@title} class="font-bold">{@title}</h3>

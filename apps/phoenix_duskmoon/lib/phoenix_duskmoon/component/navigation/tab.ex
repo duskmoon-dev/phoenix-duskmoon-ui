@@ -105,6 +105,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Tab do
       <div slot="tabs" class={@header_class} role="tablist">
         <%= for {tab, i} <- Enum.with_index(@tab) do %>
           <button
+            type="button"
             slot="tab"
             id={Map.get(tab, :id) || (@id && "#{@id}-tab-#{i}")}
             class={Map.get(tab, :class)}

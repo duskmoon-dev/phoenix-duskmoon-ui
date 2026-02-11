@@ -152,6 +152,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
             {render_slot(@user_profile)}
           </div>
           <button
+            type="button"
             class="appbar-nav md:hidden"
             onclick="document.getElementById('header-md-menu').classList.toggle('hidden'); this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true')"
             aria-label={@toggle_menu_label}
