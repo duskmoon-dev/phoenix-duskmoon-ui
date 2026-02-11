@@ -64,6 +64,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
         @open && "tooltip-open",
         @class
       ]}
+      role="tooltip"
       data-tip={@content}
       {@rest}
     >

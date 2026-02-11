@@ -347,4 +347,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
     assert result =~ "tooltip-error"
     assert result =~ "tooltip-open"
   end
+
+  test "renders tooltip with role=tooltip for accessibility" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: "Helpful text",
+        inner_block: inner_block()
+      })
+
+    assert result =~ ~s[role="tooltip"]
+  end
 end

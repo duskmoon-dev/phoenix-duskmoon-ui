@@ -373,7 +373,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         <%= @label %> <span class="text-sm font-normal text-base-content/70">(<%= @value || 0 %>/<%= @max %>)</span>
       </.dm_label>
       <div class="flex flex-col gap-2">
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-1" role="group" aria-label={"#{@label} rating"}>
           <input type="hidden" name={@name} id={@id} value={@value || 0} />
           <%= for i <- 1..@max do %>
             <button
@@ -669,6 +669,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         </div>
         <div
           contenteditable="true"
+          role="textbox"
+          aria-multiline="true"
+          aria-label={@label}
           id={@id}
           aria-describedby={@errors != [] && @id && "#{@id}-errors"}
           class={[
@@ -696,7 +699,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     <div class={["dm-form-group", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@errors != [] && "text-error"}><%= @label %></.dm_label>
       <div class="flex flex-col gap-2">
-        <div class="flex flex-wrap gap-2 p-2 border border-base-300 rounded-lg">
+        <div class="flex flex-wrap gap-2 p-2 border border-base-300 rounded-lg" role="group" aria-label={"#{@label} tags"}>
           <%= for tag <- @tags do %>
             <span class={[
               "dm-badge dm-badge--lg gap-1",

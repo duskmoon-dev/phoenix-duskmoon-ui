@@ -2247,4 +2247,49 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       refute result =~ "checked"
     end
   end
+
+  describe "a11y improvements" do
+    test "rating star buttons wrapped in role=group" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rating",
+          name: "rating",
+          id: "rating-field",
+          label: "Quality",
+          value: 3
+        })
+
+      assert result =~ ~s[role="group"]
+      assert result =~ ~s[aria-label="Quality rating"]
+    end
+
+    test "rich_text contenteditable has role=textbox and aria-multiline" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rich_text",
+          name: "content",
+          id: "rich-text-field",
+          label: "Description",
+          value: "Hello"
+        })
+
+      assert result =~ ~s[role="textbox"]
+      assert result =~ ~s[aria-multiline="true"]
+      assert result =~ ~s[aria-label="Description"]
+    end
+
+    test "tags container has role=group" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "tags",
+          name: "tags",
+          id: "tags-field",
+          label: "Keywords",
+          value: ["elixir", "phoenix"]
+        })
+
+      assert result =~ ~s[role="group"]
+      assert result =~ ~s[aria-label="Keywords tags"]
+    end
+  end
 end
