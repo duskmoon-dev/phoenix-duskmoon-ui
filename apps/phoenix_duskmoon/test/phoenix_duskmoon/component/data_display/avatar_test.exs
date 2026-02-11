@@ -285,4 +285,98 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
     assert result =~ "text-lg"
     assert result =~ "TU"
   end
+
+  test "renders avatar with all options combined" do
+    result =
+      render_component(&dm_avatar/1, %{
+        src: "https://example.com/photo.jpg",
+        alt: "Full Avatar",
+        size: "xl",
+        shape: "square",
+        color: "accent",
+        border: true,
+        online: true,
+        class: "my-avatar",
+        img_class: "my-img"
+      })
+
+    assert result =~ ~s[src="https://example.com/photo.jpg"]
+    assert result =~ ~s[alt="Full Avatar"]
+    assert result =~ "w-xl"
+    assert result =~ "rounded-square"
+    assert result =~ "bg-accent"
+    assert result =~ "avatar-border"
+    assert result =~ "bg-success"
+    assert result =~ "my-avatar"
+    assert result =~ "my-img"
+  end
+
+  test "renders avatar with src overrides placeholder_img true" do
+    result =
+      render_component(&dm_avatar/1, %{
+        src: "https://example.com/a.jpg",
+        placeholder_img: true
+      })
+
+    # When src is set and placeholder_img is true, both conditions fire:
+    # :if={@src && !@placeholder_img} is false (because placeholder_img is truthy)
+    # :if={!@src || @placeholder_img} is true
+    # So it shows placeholder content
+    refute result =~ ~s[src="https://example.com/a.jpg"]
+  end
+
+  test "renders avatar with src and placeholder_img string shows placeholder" do
+    result =
+      render_component(&dm_avatar/1, %{
+        src: "https://example.com/a.jpg",
+        placeholder_img: "/fallback.png"
+      })
+
+    # placeholder_img string is truthy, so src img is hidden
+    assert result =~ ~s[src="/fallback.png"]
+  end
+
+  test "renders avatar with offline and border combined" do
+    result =
+      render_component(&dm_avatar/1, %{
+        name: "Jane",
+        offline: true,
+        border: true,
+        color: "warning"
+      })
+
+    assert result =~ "avatar-border"
+    assert result =~ "bg-base-300"
+    assert result =~ "bg-warning"
+    assert result =~ "J"
+  end
+
+  test "renders avatar indicator dot with border-2 styling" do
+    result = render_component(&dm_avatar/1, %{name: "T", online: true})
+
+    assert result =~ "w-3 h-3 rounded-full border-2"
+  end
+
+  test "renders avatar with xs size" do
+    result = render_component(&dm_avatar/1, %{name: "T", size: "xs"})
+
+    assert result =~ "w-xs"
+  end
+
+  test "renders avatar with xl size" do
+    result = render_component(&dm_avatar/1, %{name: "T", size: "xl"})
+
+    assert result =~ "w-xl"
+  end
+
+  test "renders avatar with placeholder_class on name-based avatar" do
+    result =
+      render_component(&dm_avatar/1, %{
+        name: "Test",
+        placeholder_class: "bg-gradient"
+      })
+
+    assert result =~ "bg-gradient"
+    assert result =~ "T"
+  end
 end

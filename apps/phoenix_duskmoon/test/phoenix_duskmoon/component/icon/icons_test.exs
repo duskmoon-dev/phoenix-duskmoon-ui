@@ -200,4 +200,96 @@ defmodule PhoenixDuskmoon.Component.Icon.IconsTest do
       assert String.length(icon) > 0
     end)
   end
+
+  test "mdi_icons do not include .svg extension" do
+    icons = mdi_icons()
+
+    Enum.each(icons, fn icon ->
+      refute String.ends_with?(icon, ".svg")
+    end)
+  end
+
+  test "bsi_icons do not include .svg extension" do
+    icons = bsi_icons()
+
+    Enum.each(icons, fn icon ->
+      refute String.ends_with?(icon, ".svg")
+    end)
+  end
+
+  test "renders Material Design Icon with id false suppresses id attribute" do
+    result = render_component(&dm_mdi/1, %{name: "account", id: false})
+
+    assert result =~ "<svg"
+    refute result =~ ~s[id="]
+  end
+
+  test "renders Bootstrap Icon with id false suppresses id attribute" do
+    result = render_component(&dm_bsi/1, %{name: "0-circle", id: false})
+
+    assert result =~ "<svg"
+    refute result =~ ~s[id="]
+  end
+
+  test "renders Material Design Icon with different valid icon names" do
+    for name <- ["home", "account-circle", "menu"] do
+      result = render_component(&dm_mdi/1, %{name: name})
+      assert result =~ "<svg"
+      assert result =~ "<path"
+    end
+  end
+
+  test "renders Bootstrap Icon with different valid icon names" do
+    for name <- ["house", "person-circle", "list"] do
+      result = render_component(&dm_bsi/1, %{name: name})
+      assert result =~ "<svg"
+      assert result =~ "<path"
+    end
+  end
+
+  test "error icon for MDI respects custom id and class" do
+    result =
+      render_component(&dm_mdi/1, %{
+        name: "nonexistent-xyz",
+        id: "err-icon",
+        class: "w-10 h-10"
+      })
+
+    assert result =~ ~s[id="err-icon"]
+    assert result =~ ~s[class="w-10 h-10"]
+    assert result =~ "M13,13H11V7H13"
+  end
+
+  test "error icon for BSI respects custom id and class" do
+    result =
+      render_component(&dm_bsi/1, %{
+        name: "nonexistent-xyz",
+        id: "err-bsi",
+        class: "w-10 h-10"
+      })
+
+    assert result =~ ~s[id="err-bsi"]
+    assert result =~ ~s[class="w-10 h-10"]
+    assert result =~ "M8 15A7 7 0"
+  end
+
+  test "MDI viewBox is always 0 0 24 24" do
+    result = render_component(&dm_mdi/1, %{name: "account"})
+    assert result =~ ~s[viewBox="0 0 24 24"]
+  end
+
+  test "BSI viewBox is always 0 0 16 16" do
+    result = render_component(&dm_bsi/1, %{name: "0-circle"})
+    assert result =~ ~s[viewBox="0 0 16 16"]
+  end
+
+  test "MDI default fill is currentcolor" do
+    result = render_component(&dm_mdi/1, %{name: "account"})
+    assert result =~ ~s[fill="currentcolor"]
+  end
+
+  test "BSI default fill is currentcolor" do
+    result = render_component(&dm_bsi/1, %{name: "0-circle"})
+    assert result =~ ~s[fill="currentcolor"]
+  end
 end

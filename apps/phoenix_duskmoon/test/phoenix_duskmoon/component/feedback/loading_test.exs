@@ -232,5 +232,85 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
       assert result =~ "nth-child(3)"
       refute result =~ "nth-child(4)"
     end
+
+    test "renders with all options combined" do
+      result =
+        render_component(&dm_loading_ex/1, %{
+          id: "fancy",
+          class: "my-loader",
+          item_count: 5,
+          speed: "1s",
+          size: 10,
+          "data-testid": "loader"
+        })
+
+      assert result =~ ~s[id="fancy"]
+      assert result =~ "my-loader"
+      assert result =~ "--duration: 1s"
+      assert result =~ "--size: 10em"
+      assert result =~ "nth-child(5)"
+      refute result =~ "nth-child(6)"
+      assert result =~ "data-testid=\"loader\""
+    end
+
+    test "renders negative item_count clamped to 1" do
+      result = render_component(&dm_loading_ex/1, %{item_count: -5})
+
+      assert result =~ "nth-child(1)"
+      refute result =~ "nth-child(2)"
+    end
+
+    test "renders style data-id attribute" do
+      result = render_component(&dm_loading_ex/1, %{})
+
+      assert result =~ "<style data-id="
+    end
+
+    test "renders unique random_inner in class and style" do
+      result = render_component(&dm_loading_ex/1, %{})
+
+      # The loader class includes the random number
+      assert result =~ "loader-"
+      # Style block references same random number
+      assert result =~ "@keyframes loaderSpin-"
+      assert result =~ "@keyframes item-move-"
+    end
+  end
+
+  describe "dm_loading_spinner/1 edge cases" do
+    test "renders with all options combined" do
+      result =
+        render_component(&dm_loading_spinner/1, %{
+          id: "my-spinner",
+          class: "extra-class",
+          size: "lg",
+          variant: "success",
+          text: "Please wait...",
+          "data-testid": "spinner"
+        })
+
+      assert result =~ ~s[id="my-spinner"]
+      assert result =~ "extra-class"
+      assert result =~ "dm-loading-spinner--lg"
+      assert result =~ "dm-loading-spinner--success"
+      assert result =~ "Please wait..."
+      assert result =~ "dm-loading-spinner__text"
+      assert result =~ ~s[aria-label="Please wait..."]
+      assert result =~ "data-testid=\"spinner\""
+    end
+
+    test "renders without id when not provided" do
+      result = render_component(&dm_loading_spinner/1, %{})
+
+      refute result =~ ~s[id="]
+    end
+
+    test "renders size and variant classes on inner span" do
+      result = render_component(&dm_loading_spinner/1, %{size: "xs", variant: "warning"})
+
+      assert result =~ "dm-loading-spinner--xs"
+      assert result =~ "dm-loading-spinner--warning"
+      assert result =~ "dm-loading-spinner__icon"
+    end
   end
 end

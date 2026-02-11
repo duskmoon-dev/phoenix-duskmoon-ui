@@ -264,4 +264,132 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
 
     assert result =~ "dm-divider"
   end
+
+  test "renders appbar with all options combined" do
+    result =
+      render_component(&dm_appbar/1, %{
+        id: "main-appbar",
+        title: "Dashboard",
+        class: "appbar-primary appbar-elevated",
+        sticky: true,
+        logo: [%{inner_block: fn _, _ -> "Logo" end}],
+        menu: [
+          %{to: "/home", class: "font-bold", inner_block: fn _, _ -> "Home" end},
+          %{to: "/about", inner_block: fn _, _ -> "About" end}
+        ],
+        user_profile: [%{inner_block: fn _, _ -> "Avatar" end}],
+        "data-testid": "main-bar"
+      })
+
+    assert result =~ ~s[id="main-appbar"]
+    assert result =~ "Dashboard"
+    assert result =~ "appbar-primary"
+    assert result =~ "appbar-elevated"
+    assert result =~ "appbar-sticky"
+    assert result =~ "Logo"
+    assert result =~ "Home"
+    assert result =~ "About"
+    assert result =~ ~s[href="/home"]
+    assert result =~ ~s[href="/about"]
+    assert result =~ "font-bold"
+    assert result =~ "Avatar"
+    assert result =~ "data-testid=\"main-bar\""
+  end
+
+  test "renders appbar menu item without to uses empty string" do
+    result =
+      render_component(&dm_appbar/1, %{
+        title: "App",
+        menu: [%{inner_block: fn _, _ -> "NoLink" end}]
+      })
+
+    assert result =~ "NoLink"
+    assert result =~ "appbar-action"
+  end
+
+  test "renders appbar menu item without class uses empty fallback" do
+    result =
+      render_component(&dm_appbar/1, %{
+        title: "App",
+        menu: [%{to: "/x", inner_block: fn _, _ -> "X" end}]
+      })
+
+    assert result =~ "X"
+    assert result =~ "appbar-action"
+  end
+
+  test "renders appbar with multiple menu items" do
+    result =
+      render_component(&dm_appbar/1, %{
+        title: "App",
+        menu: [
+          %{to: "/a", inner_block: fn _, _ -> "A" end},
+          %{to: "/b", inner_block: fn _, _ -> "B" end},
+          %{to: "/c", inner_block: fn _, _ -> "C" end}
+        ]
+      })
+
+    assert result =~ ~s[href="/a"]
+    assert result =~ ~s[href="/b"]
+    assert result =~ ~s[href="/c"]
+  end
+
+  test "renders simple appbar with all options combined" do
+    result =
+      render_component(&dm_simple_appbar/1, %{
+        id: "simple-full",
+        title: "FullApp",
+        class: "bg-base-200",
+        logo: [%{inner_block: fn _, _ -> "SimpleLogo" end}],
+        menu: [
+          %{to: "/dash", class: "text-primary", inner_block: fn _, _ -> "Dash" end},
+          %{to: "/settings", inner_block: fn _, _ -> "Settings" end}
+        ],
+        user_profile: [%{inner_block: fn _, _ -> "Profile" end}],
+        "data-testid": "simple-bar"
+      })
+
+    assert result =~ ~s[id="simple-full"]
+    assert result =~ "FullApp"
+    assert result =~ "bg-base-200"
+    assert result =~ "SimpleLogo"
+    assert result =~ "Dash"
+    assert result =~ "Settings"
+    assert result =~ ~s[href="/dash"]
+    assert result =~ ~s[href="/settings"]
+    assert result =~ "text-primary"
+    assert result =~ "Profile"
+    assert result =~ "data-testid=\"simple-bar\""
+  end
+
+  test "renders simple appbar menu items in both desktop and mobile" do
+    result =
+      render_component(&dm_simple_appbar/1, %{
+        title: "App",
+        menu: [%{to: "/test", inner_block: fn _, _ -> "Test" end}]
+      })
+
+    # Menu item appears in desktop nav and mobile dropdown
+    parts = String.split(result, "Test")
+    assert length(parts) >= 3
+  end
+
+  test "renders simple appbar mobile menu with onclick toggle" do
+    result = render_component(&dm_simple_appbar/1, %{title: "App"})
+
+    assert result =~ "header-md-menu"
+    assert result =~ "classList.toggle"
+  end
+
+  test "renders simple appbar title hidden on small screens" do
+    result = render_component(&dm_simple_appbar/1, %{title: "App"})
+
+    assert result =~ "hidden lg:inline-flex"
+  end
+
+  test "renders simple appbar desktop nav hidden on mobile" do
+    result = render_component(&dm_simple_appbar/1, %{title: "App"})
+
+    assert result =~ "hidden md:flex"
+  end
 end

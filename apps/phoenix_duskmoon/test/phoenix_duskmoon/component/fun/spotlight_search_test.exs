@@ -287,4 +287,123 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearchTest do
 
     assert result =~ ~s[aria-label="Close search"]
   end
+
+  test "renders open and loading combined state" do
+    result =
+      render_component(
+        &dm_fun_spotlight_search/1,
+        base_attrs(%{open: true, loading: true})
+      )
+
+    assert result =~ ~s[<dialog id="spotlight" open]
+    assert result =~ "dm-fun-spotlight-loading"
+    refute result =~ "spotlight_close"
+  end
+
+  test "phx_target propagated to input and close button" do
+    result =
+      render_component(
+        &dm_fun_spotlight_search/1,
+        base_attrs(%{phx_target: "#live-comp"})
+      )
+
+    # Count phx-target occurrences - should be on dialog, input, and close button
+    parts = String.split(result, ~s[phx-target="#live-comp"])
+    assert length(parts) >= 4
+  end
+
+  test "phx_target propagated to suggestion items" do
+    result =
+      render_component(
+        &dm_fun_spotlight_search/1,
+        base_attrs(%{
+          phx_target: "#comp",
+          suggestion: [
+            %{icon: "x", label: "Item1", description: nil, action: nil},
+            %{icon: "y", label: "Item2", description: nil, action: nil}
+          ]
+        })
+      )
+
+    # phx-target on dialog + input + close + 2 suggestion items = 5
+    parts = String.split(result, ~s[phx-target="#comp"])
+    assert length(parts) >= 6
+  end
+
+  test "renders mixed suggestions with and without description and action" do
+    result =
+      render_component(
+        &dm_fun_spotlight_search/1,
+        base_attrs(%{
+          suggestion: [
+            %{icon: "a", label: "Full", description: "Has desc", action: "has_action"},
+            %{icon: "b", label: "Minimal", description: nil, action: nil}
+          ]
+        })
+      )
+
+    assert result =~ "Full"
+    assert result =~ "Has desc"
+    assert result =~ "has_action"
+    assert result =~ "Minimal"
+  end
+
+  test "renders all options combined" do
+    result =
+      render_component(
+        &dm_fun_spotlight_search/1,
+        base_attrs(%{
+          open: true,
+          placeholder: "Type to search...",
+          shortcut: "ctrl+/",
+          class: "custom-search",
+          phx_target: "#my-lv",
+          suggestion: [
+            %{
+              icon: "search",
+              label: "Users",
+              description: "Find users",
+              action: "search_users"
+            }
+          ],
+          "data-testid": "search"
+        })
+      )
+
+    assert result =~ ~s[<dialog id="spotlight" open]
+    assert result =~ ~s[placeholder="Type to search..."]
+    assert result =~ "ctrl+/"
+    assert result =~ "custom-search"
+    assert result =~ ~s[phx-target="#my-lv"]
+    assert result =~ "Users"
+    assert result =~ "Find users"
+    assert result =~ "search_users"
+    assert result =~ "data-testid=\"search\""
+  end
+
+  test "renders kbd shortcut in hidden div" do
+    result = render_component(&dm_fun_spotlight_search/1, base_attrs())
+
+    assert result =~ "dm-kbd"
+    assert result =~ "dm-kbd--xs"
+    assert result =~ "hidden"
+  end
+
+  test "renders input with bg-transparent styling" do
+    result = render_component(&dm_fun_spotlight_search/1, base_attrs())
+
+    assert result =~ "bg-transparent border-none outline-none w-full"
+  end
+
+  test "renders loading indicator in both input area and content area" do
+    result =
+      render_component(
+        &dm_fun_spotlight_search/1,
+        base_attrs(%{loading: true})
+      )
+
+    # Loading indicator appears twice: once in input area and once below
+    parts = String.split(result, "dm-fun-spotlight-loading")
+    assert length(parts) >= 3
+  end
 end
