@@ -455,4 +455,70 @@ defmodule PhoenixDuskmoon.Component.Navigation.TabTest do
     assert result =~ ~s[id="custom-panel-id"]
     refute result =~ ~s[id="my-tabs-panel-0"]
   end
+
+  test "active_tab_name takes precedence over active_tab_index" do
+    result =
+      render_component(&dm_tab/1, %{
+        active_tab_index: 0,
+        active_tab_name: "second",
+        tab: [
+          %{id: "t1", name: "first", inner_block: fn _, _ -> "Tab 1" end},
+          %{id: "t2", name: "second", inner_block: fn _, _ -> "Tab 2" end}
+        ],
+        tab_content: [
+          %{id: "c1", name: "first", inner_block: fn _, _ -> "First Content" end},
+          %{id: "c2", name: "second", inner_block: fn _, _ -> "Second Content" end}
+        ]
+      })
+
+    # active_tab_name should win over active_tab_index
+    assert result =~ "Second Content"
+    refute result =~ "First Content"
+    assert result =~ ~s[active-name="second"]
+    refute result =~ ~s[active-index=]
+  end
+
+  test "renders tabs without variant or size when nil" do
+    result =
+      render_component(&dm_tab/1, %{
+        tab: [%{id: "t1", inner_block: fn _, _ -> "Tab" end}],
+        tab_content: [%{id: "c1", inner_block: fn _, _ -> "Content" end}]
+      })
+
+    refute result =~ ~s[variant="]
+    refute result =~ ~s[size="]
+  end
+
+  test "renders multiple tabs with correct aria-selected states" do
+    result =
+      render_component(&dm_tab/1, %{
+        active_tab_index: 1,
+        tab: [
+          %{id: "t1", inner_block: fn _, _ -> "Tab 1" end},
+          %{id: "t2", inner_block: fn _, _ -> "Tab 2" end},
+          %{id: "t3", inner_block: fn _, _ -> "Tab 3" end}
+        ],
+        tab_content: [
+          %{id: "c1", inner_block: fn _, _ -> "C1" end},
+          %{id: "c2", inner_block: fn _, _ -> "C2" end},
+          %{id: "c3", inner_block: fn _, _ -> "C3" end}
+        ]
+      })
+
+    # Tab 2 (index 1) should be aria-selected, others should be false
+    assert result =~ ~s[id="t2"]
+    assert result =~ "C2"
+  end
+
+  test "renders tab without id does not generate panel/tab ids" do
+    result =
+      render_component(&dm_tab/1, %{
+        tab: [%{inner_block: fn _, _ -> "Tab" end}],
+        tab_content: [%{inner_block: fn _, _ -> "Content" end}]
+      })
+
+    # Without a component id, no aria-controls or aria-labelledby
+    refute result =~ ~s[aria-controls="]
+    refute result =~ ~s[aria-labelledby="]
+  end
 end

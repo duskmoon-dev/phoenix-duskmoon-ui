@@ -415,4 +415,94 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CardTest do
     refute result =~ ~s[variant="]
     refute result =~ ~s[shadow="]
   end
+
+  test "renders card image with empty alt text by default" do
+    result =
+      render_component(&dm_card/1, %{
+        image: "/photo.jpg",
+        inner_block: %{inner_block: fn _, _ -> "Content" end}
+      })
+
+    assert result =~ ~s[alt=""]
+  end
+
+  test "renders card with variant and shadow combined" do
+    result =
+      render_component(&dm_card/1, %{
+        variant: "glass",
+        shadow: "xl",
+        inner_block: %{inner_block: fn _, _ -> "Content" end}
+      })
+
+    assert result =~ ~s[variant="glass"]
+    assert result =~ ~s[shadow="xl"]
+  end
+
+  test "renders card with all options combined" do
+    result =
+      render_component(&dm_card/1, %{
+        id: "full-card",
+        class: "w-96",
+        body_class: "p-6",
+        variant: "bordered",
+        shadow: "lg",
+        image: "/img.jpg",
+        image_alt: "Photo",
+        title: [%{id: "t1", class: "text-xl", inner_block: fn _, _ -> "Title" end}],
+        action: [%{id: "a1", class: "mt-4", inner_block: fn _, _ -> "Save" end}],
+        inner_block: %{inner_block: fn _, _ -> "Body" end},
+        "data-testid": "card-full"
+      })
+
+    assert result =~ ~s[id="full-card"]
+    assert result =~ "w-96"
+    assert result =~ ~s[class="p-6"]
+    assert result =~ ~s[variant="bordered"]
+    assert result =~ ~s[shadow="lg"]
+    assert result =~ ~s[src="/img.jpg"]
+    assert result =~ ~s[alt="Photo"]
+    assert result =~ "Title"
+    assert result =~ "Save"
+    assert result =~ "Body"
+    assert result =~ ~s[data-testid="card-full"]
+  end
+
+  describe "dm_async_card/1 edge cases" do
+    test "renders async card action slot with id and class" do
+      result =
+        render_component(&dm_async_card/1, %{
+          assign: %Phoenix.LiveView.AsyncResult{ok?: true, result: nil},
+          action: [%{id: "act-1", class: "btn-group", inner_block: fn _, _ -> "Actions" end}],
+          inner_block: %{inner_block: fn _, _ -> "Content" end}
+        })
+
+      assert result =~ ~s[id="act-1"]
+      assert result =~ "btn-group"
+      assert result =~ "Actions"
+    end
+
+    test "renders async card title slot with id and class in success state" do
+      result =
+        render_component(&dm_async_card/1, %{
+          assign: %Phoenix.LiveView.AsyncResult{ok?: true, result: nil},
+          title: [%{id: "ttl-1", class: "font-bold", inner_block: fn _, _ -> "Heading" end}],
+          inner_block: %{inner_block: fn _, _ -> "Content" end}
+        })
+
+      assert result =~ ~s[id="ttl-1"]
+      assert result =~ "font-bold"
+      assert result =~ "Heading"
+    end
+
+    test "renders async card without body_class uses template" do
+      result =
+        render_component(&dm_async_card/1, %{
+          assign: %Phoenix.LiveView.AsyncResult{ok?: true, result: nil},
+          inner_block: %{inner_block: fn _, _ -> "Unwrapped" end}
+        })
+
+      assert result =~ "<template>"
+      assert result =~ "Unwrapped"
+    end
+  end
 end
