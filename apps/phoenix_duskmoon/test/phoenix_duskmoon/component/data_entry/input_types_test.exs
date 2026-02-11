@@ -1436,6 +1436,37 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[dm-input--error]
       assert result =~ "no results"
     end
+
+    test "renders search with populated suggestions dropdown" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "search_with_suggestions",
+          name: "search",
+          id: "search-field",
+          label: "Search",
+          value: "el",
+          suggestions: ["elixir", "elm", "electron"]
+        })
+
+      assert result =~ "dm-dropdown dm-dropdown--open"
+      assert result =~ "elixir"
+      assert result =~ "elm"
+      assert result =~ "electron"
+    end
+
+    test "renders search without dropdown when suggestions empty" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "search_with_suggestions",
+          name: "search",
+          id: "search-field",
+          label: "Search",
+          value: "",
+          suggestions: []
+        })
+
+      refute result =~ "dm-dropdown--open"
+    end
   end
 
   describe "file_upload input type" do
@@ -1493,6 +1524,34 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
         })
 
       assert result =~ "file too large"
+    end
+
+    test "renders file upload with accept attribute" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "file_upload",
+          name: "upload",
+          id: "img-upload",
+          label: "Upload Image",
+          value: nil,
+          accept: "image/*"
+        })
+
+      assert result =~ ~s[accept="image/*"]
+    end
+
+    test "renders file upload with multiple attribute" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "file_upload",
+          name: "uploads",
+          id: "multi-upload",
+          label: "Upload Files",
+          value: nil,
+          multiple: true
+        })
+
+      assert result =~ "multiple"
     end
   end
 

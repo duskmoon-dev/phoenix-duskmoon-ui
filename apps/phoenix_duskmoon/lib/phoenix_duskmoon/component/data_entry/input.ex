@@ -89,6 +89,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
   attr(:swatches, :list, default: nil, doc: "list of color swatches for color_picker type")
 
+  attr(:suggestions, :list,
+    default: [],
+    doc: "list of suggestion strings for search_with_suggestions type"
+  )
+
   attr(:phx_target, :any,
     default: nil,
     doc: "the phx-target for events (for use in LiveComponents)"
@@ -466,8 +471,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   end
 
   def dm_input(%{type: "color_picker"} = assigns) do
-    assigns = assign_new(assigns, :swatches, fn -> nil end)
-
     ~H"""
     <div class={["dm-form-group", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@errors != [] && "text-error"}><%= @label %></.dm_label>
@@ -555,8 +558,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   end
 
   def dm_input(%{type: "search_with_suggestions"} = assigns) do
-    assigns = assign_new(assigns, :suggestions, fn -> [] end)
-
     ~H"""
     <div class={["dm-form-group", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@errors != [] && "text-error"}><%= @label %></.dm_label>
@@ -597,8 +598,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   end
 
   def dm_input(%{type: "file_upload"} = assigns) do
-    assigns = assign_new(assigns, :accept, fn -> nil end)
-
     ~H"""
     <div class={["dm-form-group", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@errors != [] && "text-error"}><%= @label %></.dm_label>
@@ -612,7 +611,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             name={@name}
             class="hidden"
             multiple={@multiple}
-            accept={@accept}
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             {@rest}
           />

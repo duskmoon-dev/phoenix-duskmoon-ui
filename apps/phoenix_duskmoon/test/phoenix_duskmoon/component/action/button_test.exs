@@ -413,4 +413,17 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ ~s[name="action"]
     assert result =~ ~s[value="save"]
   end
+
+  test "renders confirm dialog with empty confirm_action shows default Yes button" do
+    result =
+      render_component(&dm_btn/1, %{
+        confirm: "Are you sure?",
+        confirm_action: [],
+        inner_block: %{inner_block: fn _, _ -> "Delete" end}
+      })
+
+    assert result =~ "Are you sure?"
+    assert result =~ "Yes"
+    assert result =~ "Cancel"
+  end
 end
