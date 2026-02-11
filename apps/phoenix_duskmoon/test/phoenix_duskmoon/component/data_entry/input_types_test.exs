@@ -3191,6 +3191,45 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ "dm-input--lg"
     end
 
+    test "11-char password with all char types is medium (under 12 threshold)" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          label: "Password",
+          value: "AbcDef12!@#"
+        })
+
+      # 11 chars < 12, so even with all 4 char types => medium
+      assert result =~ "Medium"
+    end
+
+    test "12-char password with only 3 char types is medium (missing special)" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          label: "Password",
+          value: "AbcDef123456"
+        })
+
+      # 12 chars but only uppercase + lowercase + digits, no special => medium
+      assert result =~ "Medium"
+    end
+
+    test "12-char password with only lowercase and digits is medium" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "password",
+          label: "Password",
+          value: "abcdef123456"
+        })
+
+      # 12 chars but only lowercase + digits, no uppercase or special => medium
+      assert result =~ "Medium"
+    end
+
     test "classic mode with field_class applies both" do
       result =
         render_component(&dm_input/1, %{

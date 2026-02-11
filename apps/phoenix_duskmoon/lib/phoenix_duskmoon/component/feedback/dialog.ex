@@ -27,7 +27,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
 
       <.dm_modal>
         <:trigger :let={dialog_id}>
-          <button onclick={"\#{dialog_id}.showModal()"}>Open</button>
+          <button type="button" onclick={"\#{dialog_id}.showModal()"}>Open</button>
         </:trigger>
         <:title>Modal Title</:title>
         <:body>Modal body content</:body>

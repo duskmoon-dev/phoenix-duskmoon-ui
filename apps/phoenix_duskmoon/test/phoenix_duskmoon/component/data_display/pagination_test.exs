@@ -740,6 +740,91 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
       assert result =~ "..."
     end
 
+    test "renders exactly 2 pages without ellipsis" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 20
+        })
+
+      assert result =~ ~s[total-pages="2"]
+      assert result =~ ~s[phx-value-current="1"]
+      assert result =~ ~s[phx-value-current="2"]
+      refute result =~ "..."
+    end
+
+    test "renders exactly 7 pages with ellipsis (first case above < 7 boundary)" do
+      # max_page=7, page_num=1 => page_num < 3 => [1, 2, 3, "...", 5, 6, 7]
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 70
+        })
+
+      assert result =~ ~s[total-pages="7"]
+      assert result =~ ~s[phx-value-current="1"]
+      assert result =~ ~s[phx-value-current="2"]
+      assert result =~ ~s[phx-value-current="3"]
+      assert result =~ "..."
+      assert result =~ ~s[phx-value-current="5"]
+      assert result =~ ~s[phx-value-current="6"]
+      assert result =~ ~s[phx-value-current="7"]
+    end
+
+    test "renders 7 pages at middle position with double ellipsis" do
+      # max_page=7, page_num=4 => 3 < 4 < 7-2=5 => [1, "...", 3, 4, 5, "...", 7]
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 4,
+          page_size: 10,
+          total: 70
+        })
+
+      assert result =~ ~s[phx-value-current="1"]
+      assert result =~ ~s[phx-value-current="3"]
+      assert result =~ ~s[phx-value-current="4"]
+      assert result =~ ~s[phx-value-current="5"]
+      assert result =~ ~s[phx-value-current="7"]
+      # Should have double ellipsis
+      parts = String.split(result, "...")
+      assert length(parts) >= 3
+    end
+
+    test "renders 7 pages at near-end (page_num == max_page - 2 == 5)" do
+      # max_page=7, page_num=5 => page_num == max_page-2 => [1,2,3,...,4,5,6,7]
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 5,
+          page_size: 10,
+          total: 70
+        })
+
+      assert result =~ ~s[phx-value-current="1"]
+      assert result =~ ~s[phx-value-current="4"]
+      assert result =~ ~s[phx-value-current="5"]
+      assert result =~ ~s[phx-value-current="6"]
+      assert result =~ ~s[phx-value-current="7"]
+      assert result =~ "..."
+    end
+
+    test "renders 7 pages at last page" do
+      # max_page=7, page_num=7 => page_num > max_page-2=5 => [1,2,3,...,5,6,7]
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 7,
+          page_size: 10,
+          total: 70
+        })
+
+      assert result =~ ~s[phx-value-current="1"]
+      assert result =~ ~s[phx-value-current="5"]
+      assert result =~ ~s[phx-value-current="6"]
+      assert result =~ ~s[phx-value-current="7"]
+      assert result =~ "..."
+    end
+
     test "renders large total with middle page ellipsis on both sides" do
       # total=10000, page_size=10 => max_page=1000, page_num=500
       result =

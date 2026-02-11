@@ -267,6 +267,32 @@ defmodule PhoenixDuskmoon.Component.Fun.SnowTest do
     assert result =~ "top: -100px"
   end
 
+  test "renders snow with equal min/max size_range" do
+    result =
+      render_component(&dm_fun_snow/1, %{
+        id: "snow-equal-sz",
+        count: 3,
+        size_range: {15, 15}
+      })
+
+    # All snowflakes should have --snowflake-size: 15px
+    count = length(String.split(result, "--snowflake-size: 15px")) - 1
+    assert count == 3
+  end
+
+  test "renders snow with equal min/max animation_duration" do
+    result =
+      render_component(&dm_fun_snow/1, %{
+        id: "snow-equal-dur",
+        count: 3,
+        animation_duration: {8, 8}
+      })
+
+    # All snowflakes should have animation-duration: 8s
+    count = length(String.split(result, "animation-duration: 8s")) - 1
+    assert count == 3
+  end
+
   test "renders snow container with aria-hidden for decorative content" do
     result = render_component(&dm_fun_snow/1, %{id: "snow-a11y"})
 
