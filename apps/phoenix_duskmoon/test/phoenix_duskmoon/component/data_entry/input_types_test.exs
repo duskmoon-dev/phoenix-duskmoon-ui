@@ -2033,4 +2033,92 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[id="pass-field-errors"]
     end
   end
+
+  describe "icon-only button aria-labels" do
+    test "rating stars have aria-label with rating value" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rating",
+          name: "rating",
+          id: "rating-field",
+          label: "Rating",
+          value: nil
+        })
+
+      assert result =~ ~s[aria-label="Rate 1 out of 5"]
+      assert result =~ ~s[aria-label="Rate 5 out of 5"]
+    end
+
+    test "file upload remove button has aria-label" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "file_upload",
+          name: "avatar",
+          id: "avatar",
+          label: "Avatar",
+          value: "photo.jpg"
+        })
+
+      assert result =~ ~s[aria-label="Remove file"]
+    end
+
+    test "rich text toolbar buttons have aria-labels" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rich_text",
+          name: "content",
+          id: "content",
+          label: "Content",
+          value: nil
+        })
+
+      assert result =~ ~s[aria-label="Bold"]
+      assert result =~ ~s[aria-label="Italic"]
+      assert result =~ ~s[aria-label="Underline"]
+      assert result =~ ~s[aria-label="Bulleted list"]
+      assert result =~ ~s[aria-label="Numbered list"]
+      assert result =~ ~s[aria-label="Insert link"]
+    end
+
+    test "rich text toolbar has role toolbar" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rich_text",
+          name: "content",
+          id: "content",
+          label: "Content",
+          value: nil
+        })
+
+      assert result =~ ~s[role="toolbar"]
+      assert result =~ ~s[aria-label="Text formatting"]
+    end
+
+    test "tags remove button has aria-label with tag name" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "tags",
+          name: "tags",
+          id: "tags",
+          label: "Tags",
+          value: ["elixir", "phoenix"]
+        })
+
+      assert result =~ ~s[aria-label="Remove tag elixir"]
+      assert result =~ ~s[aria-label="Remove tag phoenix"]
+    end
+
+    test "password strength toggle has aria-label" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "pass",
+          id: "pass",
+          label: "Password",
+          value: nil
+        })
+
+      assert result =~ ~s[aria-label="Toggle password visibility"]
+    end
+  end
 end

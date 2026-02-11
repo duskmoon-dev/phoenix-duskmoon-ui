@@ -378,6 +378,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <%= for i <- 1..@max do %>
             <button
               type="button"
+              aria-label={"Rate #{i} out of #{@max}"}
               class={[
                 "dm-btn dm-btn--ghost dm-btn--sm p-1",
                 i <= (@value || 0) && "text-warning",
@@ -626,7 +627,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         <div :if={@value} class="flex items-center gap-2 p-2 bg-base-200 rounded">
           <.dm_mdi name="file" class="w-4 h-4" />
           <span class="text-sm flex-1"><%= @value %></span>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs">
+          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label="Remove file">
             <.dm_mdi name="close" class="w-3 h-3" />
           </button>
         </div>
@@ -643,25 +644,25 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     <div class={["dm-form-group", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@errors != [] && "text-error"}><%= @label %></.dm_label>
       <div class="flex flex-col gap-2">
-        <div class="toolbar flex items-center gap-1 p-2 bg-base-200 rounded-t-lg">
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs">
+        <div class="toolbar flex items-center gap-1 p-2 bg-base-200 rounded-t-lg" role="toolbar" aria-label="Text formatting">
+          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label="Bold">
             <.dm_mdi name="format-bold" class="w-4 h-4" />
           </button>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs">
+          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label="Italic">
             <.dm_mdi name="format-italic" class="w-4 h-4" />
           </button>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs">
+          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label="Underline">
             <.dm_mdi name="format-underline" class="w-4 h-4" />
           </button>
           <div class="dm-divider dm-divider--horizontal"></div>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs">
+          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label="Bulleted list">
             <.dm_mdi name="format-list-bulleted" class="w-4 h-4" />
           </button>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs">
+          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label="Numbered list">
             <.dm_mdi name="format-list-numbered" class="w-4 h-4" />
           </button>
           <div class="dm-divider dm-divider--horizontal"></div>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs">
+          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label="Insert link">
             <.dm_mdi name="link" class="w-4 h-4" />
           </button>
         </div>
@@ -704,6 +705,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               <button
                 type="button"
                 class="dm-btn dm-btn--ghost dm-btn--xs p-0"
+                aria-label={"Remove tag #{tag}"}
               >
                 <.dm_mdi name="close" class="w-3 h-3" />
               </button>
@@ -839,6 +841,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <button
             type="button"
             class="absolute right-3 top-1/2 -translate-y-1/2"
+            aria-label="Toggle password visibility"
           >
             <.dm_mdi name="eye" class="w-4 h-4 text-base-content/50" />
           </button>

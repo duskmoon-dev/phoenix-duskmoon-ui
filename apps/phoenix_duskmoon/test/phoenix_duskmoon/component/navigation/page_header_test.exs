@@ -260,4 +260,18 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeaderTest do
     assert result =~ "B"
     assert result =~ "C"
   end
+
+  test "both mobile menu labels have aria-label" do
+    result =
+      render_component(&dm_page_header/1, %{
+        menu: [%{to: "/a", inner_block: fn _, _ -> "A" end}],
+        inner_block: inner_block()
+      })
+
+    # Count occurrences of aria-label="Toggle mobile menu"
+    toggle_count =
+      length(String.split(result, ~s[aria-label="Toggle mobile menu"])) - 1
+
+    assert toggle_count == 2
+  end
 end

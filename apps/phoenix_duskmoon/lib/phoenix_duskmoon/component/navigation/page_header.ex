@@ -194,10 +194,10 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
             "flex lg:hidden flex-row justify-between items-center"
           ]}
         >
-          <label for="dm-mobile-menu-control">
+          <label for="dm-mobile-menu-control" aria-label="Toggle mobile menu">
             <PhoenixDuskmoon.Component.Icon.Icons.dm_mdi name="menu" class="w-8 h-8" />
           </label>
-          <input class="hidden peer" id="dm-mobile-menu-control" type="checkbox" />
+          <input class="hidden peer" id="dm-mobile-menu-control" type="checkbox" aria-hidden="true" />
           <div
             class={[
               "hidden peer-checked:flex flex-col items-start",
