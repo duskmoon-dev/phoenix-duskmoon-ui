@@ -93,6 +93,7 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
         tabindex="0"
         role="button"
         aria-haspopup="true"
+        aria-expanded={to_string(@open)}
       >
         {render_slot(trigger)}
       </div>

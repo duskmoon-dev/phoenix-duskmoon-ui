@@ -285,4 +285,25 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
 
     assert result =~ ~s[role="menu"]
   end
+
+  test "renders trigger with aria-expanded false when closed" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ ~s[aria-expanded="false"]
+  end
+
+  test "renders trigger with aria-expanded true when open" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        open: true,
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ ~s[aria-expanded="true"]
+  end
 end
