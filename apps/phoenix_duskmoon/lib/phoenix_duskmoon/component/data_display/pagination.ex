@@ -44,7 +44,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
     doc: "Phoenix link type"
   )
 
-  attr(:prev_label, :string, default: "Previous", doc: "Screen reader label for the previous button")
+  attr(:prev_label, :string,
+    default: "Previous",
+    doc: "Screen reader label for the previous button"
+  )
+
   attr(:next_label, :string, default: "Next", doc: "Screen reader label for the next button")
   attr(:rest, :global)
 
@@ -145,7 +149,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
   attr(:total, :integer, default: 0)
   attr(:show_total, :boolean, default: false)
   attr(:update_event, :string, default: "update_current_page")
-  attr(:prev_label, :string, default: "Previous", doc: "Screen reader label for the previous button")
+
+  attr(:prev_label, :string,
+    default: "Previous",
+    doc: "Screen reader label for the previous button"
+  )
+
   attr(:next_label, :string, default: "Next", doc: "Screen reader label for the next button")
   attr(:rest, :global)
 

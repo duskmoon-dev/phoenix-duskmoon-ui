@@ -2,7 +2,7 @@ defmodule PhoenixDuskmoon.Component do
   @moduledoc """
   Provides `Duskmoon UI` component for phoenix.
 
-  This library add a list of phoneix component.
+  This library adds a list of Phoenix components.
 
   """
 
