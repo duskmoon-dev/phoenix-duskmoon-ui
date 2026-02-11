@@ -361,6 +361,29 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
     end
   end
 
+  describe "dm_flash autoshow attribute" do
+    test "dm_flash with autoshow false does not set phx-mounted" do
+      result =
+        render_component(&dm_flash/1, %{
+          kind: :info,
+          flash: %{"info" => "Test"},
+          autoshow: false
+        })
+
+      refute result =~ "phx-mounted"
+    end
+
+    test "dm_flash with default autoshow sets phx-mounted" do
+      result =
+        render_component(&dm_flash/1, %{
+          kind: :info,
+          flash: %{"info" => "Test"}
+        })
+
+      assert result =~ "phx-mounted"
+    end
+  end
+
   describe "dm_flash_group customizable disconnected messages" do
     test "renders flash group with custom disconnected_title" do
       result =

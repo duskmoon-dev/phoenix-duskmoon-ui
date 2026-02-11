@@ -2918,4 +2918,293 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[aria-label="Mostrar contrasena"]
     end
   end
+
+  describe "field_class attribute" do
+    test "default text input renders field_class on wrapper" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "user",
+          id: "user-field",
+          label: "User",
+          value: "",
+          field_class: "w-full max-w-md"
+        })
+
+      assert result =~ "dm-form-group"
+      assert result =~ "w-full max-w-md"
+    end
+
+    test "select input renders field_class on wrapper" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "select",
+          name: "country",
+          id: "country-sel",
+          options: [{"US", "us"}],
+          value: nil,
+          field_class: "col-span-2"
+        })
+
+      assert result =~ "col-span-2"
+    end
+
+    test "textarea renders field_class on wrapper" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "textarea",
+          name: "bio",
+          id: "bio-field",
+          value: nil,
+          field_class: "mt-4"
+        })
+
+      assert result =~ "mt-4"
+    end
+
+    test "checkbox renders field_class on wrapper" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "checkbox",
+          name: "agree",
+          id: "agree-cb",
+          label: "Agree",
+          value: "true",
+          field_class: "border-b"
+        })
+
+      assert result =~ "border-b"
+    end
+
+    test "range_slider renders field_class on wrapper" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "range_slider",
+          name: "volume",
+          id: "vol-slider",
+          label: "Volume",
+          value: "50",
+          field_class: "px-4"
+        })
+
+      assert result =~ "px-4"
+    end
+
+    test "field_class nil does not add extra class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "name",
+          id: "name-field",
+          label: "Name",
+          value: ""
+        })
+
+      assert result =~ "dm-form-group"
+    end
+  end
+
+  describe "classic mode" do
+    test "classic text input omits dm-input class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "user",
+          id: "user-classic",
+          label: "User",
+          value: "",
+          classic: true
+        })
+
+      # Extract input element to verify no dm-input class on it
+      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-input/, result)
+    end
+
+    test "non-classic text input includes dm-input class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "user",
+          id: "user-styled",
+          label: "User",
+          value: ""
+        })
+
+      assert result =~ "dm-input"
+    end
+
+    test "classic select omits dm-select class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "select",
+          name: "country",
+          id: "country-classic",
+          options: [{"US", "us"}],
+          value: nil,
+          classic: true
+        })
+
+      refute Regex.match?(~r/<select[^>]*class="[^"]*dm-select/, result)
+    end
+
+    test "classic textarea omits dm-textarea class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "textarea",
+          name: "bio",
+          id: "bio-classic",
+          value: nil,
+          classic: true
+        })
+
+      refute Regex.match?(~r/<textarea[^>]*class="[^"]*dm-textarea/, result)
+    end
+
+    test "classic checkbox omits dm-checkbox class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "checkbox",
+          name: "agree",
+          id: "agree-classic",
+          label: "Agree",
+          value: "true",
+          classic: true
+        })
+
+      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-checkbox/, result)
+    end
+
+    test "classic radio_group omits dm-radio class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "radio_group",
+          name: "color",
+          id: "color-classic",
+          label: "Color",
+          options: [{"Red", "red"}, {"Blue", "blue"}],
+          value: "red",
+          classic: true
+        })
+
+      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-radio/, result)
+    end
+
+    test "classic range_slider omits dm-range class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "range_slider",
+          name: "vol",
+          id: "vol-classic",
+          label: "Volume",
+          value: "50",
+          classic: true
+        })
+
+      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-range/, result)
+    end
+
+    test "classic file input omits dm-input class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "file",
+          name: "doc",
+          id: "doc-classic",
+          label: "Document",
+          value: nil,
+          classic: true
+        })
+
+      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-input/, result)
+    end
+
+    test "classic datepicker omits dm-input class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "datepicker",
+          name: "bday",
+          id: "bday-classic",
+          label: "Birthday",
+          value: "",
+          classic: true
+        })
+
+      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-input/, result)
+    end
+
+    test "classic password_strength omits dm-input class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "pwd",
+          id: "pwd-classic",
+          label: "Password",
+          value: "",
+          classic: true
+        })
+
+      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-input/, result)
+    end
+
+    test "classic search_with_suggestions omits dm-input class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "search_with_suggestions",
+          name: "search",
+          id: "search-classic",
+          label: "Search",
+          value: "",
+          classic: true
+        })
+
+      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-input/, result)
+    end
+
+    test "classic timepicker omits dm-input class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "timepicker",
+          name: "alarm",
+          id: "alarm-classic",
+          label: "Alarm",
+          value: "",
+          classic: true
+        })
+
+      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-input/, result)
+    end
+
+    test "classic mode preserves color and size variant classes" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "styled",
+          id: "styled-classic",
+          label: "Input",
+          value: "",
+          classic: true,
+          color: "primary",
+          size: "lg"
+        })
+
+      # Color and size classes still apply even in classic mode
+      assert result =~ "dm-input--primary"
+      assert result =~ "dm-input--lg"
+    end
+
+    test "classic mode with field_class applies both" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "combo",
+          id: "combo-field",
+          label: "Combo",
+          value: "",
+          classic: true,
+          field_class: "my-wrapper"
+        })
+
+      assert result =~ "my-wrapper"
+      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-input[^-]/, result)
+    end
+  end
 end
