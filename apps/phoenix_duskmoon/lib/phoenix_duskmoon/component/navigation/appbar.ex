@@ -72,7 +72,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
         <%= for menu <- @menu do %>
           <.dm_link
             navigate={Map.get(menu, :to, "")}
-            class={["appbar-action", Map.get(menu, :class, "")]}
+            class={["appbar-action w-auto px-3 rounded-md whitespace-nowrap", Map.get(menu, :class, "")]}
           >
             {render_slot(menu)}
           </.dm_link>

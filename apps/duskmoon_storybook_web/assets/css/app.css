@@ -11,6 +11,9 @@
 /* Design system and component styles from upstream */
 @import "@duskmoon-dev/core";
 
+/* Phoenix Duskmoon UI component-specific styles */
+@import "phoenix_duskmoon/components";
+
 @layer components {
   .rainbow {
     z-index: -1;

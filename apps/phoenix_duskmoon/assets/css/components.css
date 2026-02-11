@@ -33,6 +33,16 @@
   box-shadow: var(--dm-shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.1));
 }
 
+/* Theme controller - styles radio inputs as theme-selection buttons */
+.theme-controller {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.theme-controller::after {
+  content: attr(aria-label);
+}
+
 /* Spotlight search overlay */
 .dm-spotlight-backdrop {
   position: fixed;
