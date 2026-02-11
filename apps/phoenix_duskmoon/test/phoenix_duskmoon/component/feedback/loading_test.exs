@@ -30,6 +30,12 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
       assert result =~ ~s[aria-label="Loading"]
     end
 
+    test "renders with aria-busy true for loading state" do
+      result = render_component(&dm_loading_spinner/1, %{})
+
+      assert result =~ ~s[aria-busy="true"]
+    end
+
     test "renders with default size md" do
       result = render_component(&dm_loading_spinner/1, %{})
 
@@ -100,6 +106,12 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
 
       assert result =~ ~s[role="status"]
       assert result =~ ~s[aria-label="Loading"]
+    end
+
+    test "renders dm_loading_ex with aria-busy true" do
+      result = render_component(&dm_loading_ex/1, %{})
+
+      assert result =~ ~s[aria-busy="true"]
     end
 
     test "renders loader with style block" do

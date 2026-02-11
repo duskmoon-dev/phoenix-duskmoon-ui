@@ -148,6 +148,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
           <button
             class="appbar-nav md:hidden"
             onclick="document.getElementById('header-md-menu').classList.toggle('hidden')"
+            aria-label="Toggle mobile menu"
           >
             <.dm_mdi name="menu" class="w-8 h-8" />
           </button>

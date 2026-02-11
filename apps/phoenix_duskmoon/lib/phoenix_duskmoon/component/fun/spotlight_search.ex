@@ -58,6 +58,8 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearch do
     <dialog
       id={@id}
       open={@open}
+      role="dialog"
+      aria-label="Spotlight search"
       class={[
         "dm-fun-spotlight-search dm-modal",
         @class
@@ -73,6 +75,7 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearch do
           <input
             type="text"
             placeholder={@placeholder}
+            aria-label={@placeholder}
             phx-target={@phx_target}
             phx-keydown="spotlight_keydown"
             phx-change="spotlight_change"

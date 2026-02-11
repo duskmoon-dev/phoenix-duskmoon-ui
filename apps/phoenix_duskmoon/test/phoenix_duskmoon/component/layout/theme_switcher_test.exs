@@ -34,6 +34,12 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcherTest do
     assert result =~ ~s[aria-label="Moonlight"]
   end
 
+  test "renders trigger button with aria-label for theme selection" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    assert result =~ ~s[aria-label="Select theme"]
+  end
+
   test "renders theme switcher with radio inputs" do
     result = render_component(&dm_theme_switcher/1, %{})
 

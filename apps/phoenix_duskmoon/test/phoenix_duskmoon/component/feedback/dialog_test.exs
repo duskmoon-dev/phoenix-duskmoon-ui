@@ -17,6 +17,13 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
     assert result =~ "</el-dm-dialog>"
   end
 
+  test "renders dialog with role and aria-modal attributes" do
+    result = render_component(&dm_modal/1, %{body: body()})
+
+    assert result =~ ~s[role="dialog"]
+    assert result =~ ~s[aria-modal="true"]
+  end
+
   test "renders modal with custom id" do
     result = render_component(&dm_modal/1, %{id: "my-dialog", body: body()})
 

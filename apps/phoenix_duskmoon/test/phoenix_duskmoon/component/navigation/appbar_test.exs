@@ -164,6 +164,12 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
 
       assert result =~ "appbar-sticky"
     end
+
+    test "renders mobile menu toggle with aria-label" do
+      result = render_component(&dm_simple_appbar/1, %{title: "App"})
+
+      assert result =~ ~s[aria-label="Toggle mobile menu"]
+    end
   end
 
   test "renders appbar with default empty menu" do

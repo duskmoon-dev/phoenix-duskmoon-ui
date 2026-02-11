@@ -128,6 +128,12 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeaderTest do
     assert result =~ "mobile-menu"
   end
 
+  test "renders mobile menu label with aria-label" do
+    result = render_component(&dm_page_header/1, %{inner_block: inner_block()})
+
+    assert result =~ ~s[aria-label="Toggle mobile menu"]
+  end
+
   test "renders inner_block content in center area" do
     result =
       render_component(&dm_page_header/1, %{

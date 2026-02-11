@@ -126,6 +126,17 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ ~s[Cancel]
   end
 
+  test "renders confirm dialog with role and aria-modal attributes" do
+    result =
+      render_component(&dm_btn/1, %{
+        confirm: "Are you sure?",
+        inner_block: %{inner_block: fn _, _ -> "Delete" end}
+      })
+
+    assert result =~ ~s[role="dialog"]
+    assert result =~ ~s[aria-modal="true"]
+  end
+
   test "renders button with confirmation dialog and custom title" do
     result =
       render_component(&dm_btn/1, %{

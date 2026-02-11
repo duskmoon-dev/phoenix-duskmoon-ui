@@ -114,7 +114,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
     >
       {render_slot(@inner_block)}
     </el-dm-button>
-    <el-dm-dialog id={"confirm-dialog-#{@id}"}>
+    <el-dm-dialog id={"confirm-dialog-#{@id}"} role="dialog" aria-modal="true">
       <span slot="header" :if={String.length(@confirm_title) > 0}>
         {@confirm_title}
       </span>

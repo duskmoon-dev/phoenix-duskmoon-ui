@@ -39,7 +39,7 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
       phx-hook="ThemeSwitcher"
       data-theme={@theme}
     >
-      <div tabindex="0" role="button" class="btn btn-ghost btn-sm">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-sm" aria-label="Select theme">
         Theme
         <svg
           width="12px"

@@ -92,6 +92,8 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
     {render_slot(@trigger, @id)}
     <el-dm-dialog
       id={@id}
+      role="dialog"
+      aria-modal="true"
       position={@position}
       size={@size}
       backdrop={@backdrop && "blur"}

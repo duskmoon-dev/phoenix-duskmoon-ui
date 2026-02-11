@@ -58,6 +58,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
       ]}
       role="status"
       aria-label={@text || "Loading"}
+      aria-busy="true"
       {@rest}
     >
       <span class={[
@@ -166,6 +167,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
       class={["loader-#{@random_inner}", @class]}
       role="status"
       aria-label="Loading"
+      aria-busy="true"
       {@rest}
     >
       <i :for={_ <- 1..@item_count} />

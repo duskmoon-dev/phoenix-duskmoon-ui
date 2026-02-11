@@ -35,6 +35,23 @@ defmodule PhoenixDuskmoon.Component.Fun.SpotlightSearchTest do
     assert result =~ ~s[placeholder="Quick search..."]
   end
 
+  test "renders dialog with role and aria-label for accessibility" do
+    result = render_component(&dm_fun_spotlight_search/1, base_attrs())
+
+    assert result =~ ~s[role="dialog"]
+    assert result =~ ~s[aria-label="Spotlight search"]
+  end
+
+  test "renders search input with aria-label matching placeholder" do
+    result =
+      render_component(
+        &dm_fun_spotlight_search/1,
+        base_attrs(%{placeholder: "Find anything..."})
+      )
+
+    assert result =~ ~s[aria-label="Find anything..."]
+  end
+
   test "renders spotlight input container" do
     result = render_component(&dm_fun_spotlight_search/1, base_attrs())
 
