@@ -99,13 +99,13 @@ defmodule PhoenixDuskmoon.Component do
       # Icon components
       import PhoenixDuskmoon.Component.Icon.Icons
 
-      # Fun components
-      import PhoenixDuskmoon.Component.Fun.ButtonNoise
-      import PhoenixDuskmoon.Component.Fun.Eclipse
-      import PhoenixDuskmoon.Component.Fun.PlasmaBall
-      import PhoenixDuskmoon.Component.Fun.Signature
-      import PhoenixDuskmoon.Component.Fun.Snow
-      import PhoenixDuskmoon.Component.Fun.SpotlightSearch
+      # CSS Art components
+      import PhoenixDuskmoon.CssArt.ButtonNoise
+      import PhoenixDuskmoon.CssArt.Eclipse
+      import PhoenixDuskmoon.CssArt.PlasmaBall
+      import PhoenixDuskmoon.CssArt.Signature
+      import PhoenixDuskmoon.CssArt.Snow
+      import PhoenixDuskmoon.CssArt.SpotlightSearch
     end
   end
 

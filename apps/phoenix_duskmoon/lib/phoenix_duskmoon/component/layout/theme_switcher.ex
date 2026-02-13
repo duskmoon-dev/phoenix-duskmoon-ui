@@ -67,7 +67,7 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
           <input
             type="radio"
             name="theme-dropdown"
-            class="theme-controller w-full btn btn-sm btn-secondary btn-block justify-center"
+            class="appearance-none after:content-[attr(aria-label)] w-full btn btn-sm btn-secondary btn-block justify-center"
             aria-label={@auto_label}
             value="default"
             checked={@theme == "default"}
@@ -77,7 +77,7 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
           <input
             type="radio"
             name="theme-dropdown"
-            class="theme-controller w-full btn btn-sm btn-secondary btn-block justify-center"
+            class="appearance-none after:content-[attr(aria-label)] w-full btn btn-sm btn-secondary btn-block justify-center"
             aria-label={@light_label}
             value="sunshine"
             checked={@theme == "sunshine"}
@@ -87,7 +87,7 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
           <input
             type="radio"
             name="theme-dropdown"
-            class="theme-controller w-full btn btn-sm btn-secondary btn-block justify-center"
+            class="appearance-none after:content-[attr(aria-label)] w-full btn btn-sm btn-secondary btn-block justify-center"
             aria-label={@dark_label}
             value="moonlight"
             checked={@theme == "moonlight"}

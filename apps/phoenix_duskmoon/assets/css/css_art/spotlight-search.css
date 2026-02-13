@@ -1,0 +1,112 @@
+@layer components {
+  .dm-art-spotlight-search {
+    padding: 0;
+    background-color: transparent;
+    box-shadow: 0 0 2rem 0.5rem var(--color-primary);
+    display: none;
+    flex-direction: column;
+    margin: auto;
+
+    &[open] {
+      display: flex;
+
+      &:focus-within {
+        box-shadow: 0 0 2rem 1rem var(--color-primary);
+      }
+
+      .modal-box {
+        display: flex;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        translate: 0 0 !important;
+        scale: 1 !important;
+        opacity: 1 !important;
+
+        @starting-style {
+          translate: 0 0 !important;
+          scale: 2 !important;
+          opacity: 1 !important;
+        }
+      }
+    }
+
+    &::backdrop {
+      opacity: 0.5;
+      background-color: var(--color-surface-container);
+    }
+
+    .modal-box {
+      display: none;
+      width: 80vw !important;
+      max-width: 42rem !important;
+      background: transparent !important;
+      box-shadow: none !important;
+
+      .dm-art-spotlight-input {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-width: 100%;
+        padding: 0.75rem 1rem;
+        background-color: var(--color-surface);
+        color: var(--color-on-surface);
+        border: 2px solid var(--color-primary) !important;
+        border-radius: 0 !important;
+        outline: none !important;
+
+        &:focus-within {
+          outline-width: 0 !important;
+          outline-offset: 0 !important;
+        }
+
+        input {
+          width: 100%;
+          color: var(--color-on-surface);
+          background: transparent;
+          border: none;
+          outline: none;
+
+          &:focus {
+            outline-width: 0;
+          }
+        }
+      }
+
+      .dm-art-spotlight-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 1.5rem;
+        margin: 0 auto;
+      }
+
+      .dm-art-spotlight-suggestion-list {
+        max-height: 14rem;
+        background-color: var(--color-surface);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+        border-radius: 0.25rem;
+
+        .dm-art-spotlight-suggestion-list-item {
+          height: 2rem;
+          display: flex;
+          align-items: center;
+          color: var(--color-on-surface);
+          background-color: var(--color-surface-container-high);
+          padding-inline: 1rem;
+          flex: 0 0 2rem;
+
+          &.autocomplete-active {
+            background-color: var(--color-primary);
+            color: var(--color-on-primary);
+          }
+        }
+
+        &:empty {
+          display: none;
+        }
+      }
+    }
+  }
+}

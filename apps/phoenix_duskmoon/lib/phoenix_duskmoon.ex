@@ -25,8 +25,8 @@ defmodule PhoenixDuskmoon do
         quote do
           # import all duskmoon ui component
           use PhoenixDuskmoon.Component
-          # import all duskmoon ui fun component
-          use PhoenixDuskmoon.Fun
+          # import all duskmoon ui css art component
+          use PhoenixDuskmoon.CssArt
           ...
         end
       end
@@ -40,8 +40,7 @@ defmodule PhoenixDuskmoon do
       @source '../../lib/**/*.ex';
 
       @import "tailwindcss";
-      @import "@duskmoon-dev/core";
-      @import "phoenix_duskmoon/components";
+      @plugin "@duskmoon-dev/core/plugin";
   ```
 
   """

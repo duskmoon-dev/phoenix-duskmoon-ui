@@ -47,10 +47,10 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcherTest do
     assert result =~ ~s[name="theme-dropdown"]
   end
 
-  test "renders theme switcher with theme-controller class on inputs" do
+  test "renders theme switcher with appearance-none on inputs" do
     result = render_component(&dm_theme_switcher/1, %{})
 
-    assert result =~ "theme-controller"
+    assert result =~ "appearance-none"
   end
 
   test "renders theme switcher with Theme button text" do
