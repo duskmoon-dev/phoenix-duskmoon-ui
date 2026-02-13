@@ -6,7 +6,7 @@
 <.dm_card class="w-full h-full overflow-auto" body_class="p-4">
   <:title class="flex flex-row justify-center items-center gap-3">
     <span class="text-4xl text-primary">Spotlight Search</span>
-    <span class="text-sm opacity-60">dm_fun_spotlight_search</span>
+    <span class="text-sm opacity-60">dm_art_spotlight_search</span>
   </:title>
 
   <.dm_markdown content={"""
@@ -15,10 +15,10 @@
 
   ## Usage
   ```elixir
-  <.dm_fun_spotlight_search id="my-search" placeholder="Search..." shortcut="cmd+k">
+  <.dm_art_spotlight_search id="my-search" placeholder="Search..." shortcut="cmd+k">
     <:suggestion label="Dashboard" description="Go to dashboard" icon="home" />
     <:suggestion label="Settings" description="App settings" icon="cog" />
-  </.dm_fun_spotlight_search>
+  </.dm_art_spotlight_search>
   ```
 
   > **Note:** Requires `Spotlight` LiveView hook for keyboard shortcut handling.

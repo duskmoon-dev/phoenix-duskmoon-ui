@@ -1,7 +1,7 @@
 defmodule Storybook.Fun.Snow do
   use PhoenixStorybook.Story, :component
 
-  def function, do: &PhoenixDuskmoon.Component.Fun.Snow.dm_fun_snow/1
+  def function, do: &PhoenixDuskmoon.CssArt.Snow.dm_art_snow/1
 
   def variations do
     [
@@ -21,7 +21,7 @@ defmodule Storybook.Fun.Snow do
         template: """
         <div class="bg-gradient-to-b from-slate-200 to-slate-100 h-96 rounded-lg">
           <div class="relative h-full">
-            <.dm_fun_snow id="snow-light" count="15" />
+            <.dm_art_snow id="snow-light" count="15" />
             <div class="absolute bottom-0 left-0 right-0 p-4 text-center">
               <p class="text-slate-600 text-sm">Light Snowfall</p>
             </div>
@@ -38,7 +38,7 @@ defmodule Storybook.Fun.Snow do
         template: """
         <div class="bg-gradient-to-b from-slate-300 to-white h-96 rounded-lg">
           <div class="relative h-full">
-            <.dm_fun_snow id="snow-heavy" count="100" />
+            <.dm_art_snow id="snow-heavy" count="100" />
             <div class="absolute bottom-0 left-0 right-0 p-4 text-center">
               <p class="text-slate-700 text-sm font-medium">Heavy Snowstorm</p>
             </div>
@@ -56,7 +56,7 @@ defmodule Storybook.Fun.Snow do
         template: """
         <div class="bg-gradient-to-b from-indigo-100 to-white h-96 rounded-lg">
           <div class="relative h-full">
-            <.dm_fun_snow id="snow-unicode" count="25" use_unicode={true} />
+            <.dm_art_snow id="snow-unicode" count="25" use_unicode={true} />
             <div class="absolute bottom-0 left-0 right-0 p-4 text-center">
               <p class="text-indigo-600 text-sm">Unicode Snowflakes ❄️</p>
             </div>
@@ -74,7 +74,7 @@ defmodule Storybook.Fun.Snow do
         template: """
         <div class="bg-gradient-to-b from-slate-800 to-slate-900 h-96 rounded-lg">
           <div class="relative h-full">
-            <.dm_fun_snow id="snow-blue" count="40" color="#60a5fa" />
+            <.dm_art_snow id="snow-blue" count="40" color="#60a5fa" />
             <div class="absolute bottom-0 left-0 right-0 p-4 text-center">
               <p class="text-blue-400 text-sm">Blue Snow on Dark Background</p>
             </div>
@@ -92,7 +92,7 @@ defmodule Storybook.Fun.Snow do
         template: """
         <div class="bg-gradient-to-b from-purple-900 to-indigo-900 h-96 rounded-lg">
           <div class="relative h-full">
-            <.dm_fun_snow id="snow-gold" count="35" color="#fbbf24" />
+            <.dm_art_snow id="snow-gold" count="35" color="#fbbf24" />
             <div class="absolute bottom-0 left-0 right-0 p-4 text-center">
               <p class="text-yellow-400 text-sm">Golden Snowfall</p>
             </div>
@@ -110,7 +110,7 @@ defmodule Storybook.Fun.Snow do
         template: """
         <div class="bg-gradient-to-b from-gray-100 to-white h-96 rounded-lg">
           <div class="relative h-full">
-            <.dm_fun_snow id="snow-small" count="50" size_range={2, 8} />
+            <.dm_art_snow id="snow-small" count="50" size_range={{2, 8}} />
             <div class="absolute bottom-0 left-0 right-0 p-4 text-center">
               <p class="text-gray-600 text-sm">Small Snowflakes</p>
             </div>
@@ -128,7 +128,7 @@ defmodule Storybook.Fun.Snow do
         template: """
         <div class="bg-gradient-to-b from-blue-50 to-white h-96 rounded-lg">
           <div class="relative h-full">
-            <.dm_fun_snow id="snow-large" count="20" size_range={15, 30} />
+            <.dm_art_snow id="snow-large" count="20" size_range={{15, 30}} />
             <div class="absolute bottom-0 left-0 right-0 p-4 text-center">
               <p class="text-blue-600 text-sm">Large Snowflakes</p>
             </div>
@@ -146,7 +146,7 @@ defmodule Storybook.Fun.Snow do
         template: """
         <div class="bg-gradient-to-b from-gray-200 to-white h-96 rounded-lg">
           <div class="relative h-full">
-            <.dm_fun_snow id="snow-fast" count="40" animation_duration={2, 5} />
+            <.dm_art_snow id="snow-fast" count="40" animation_duration={{2, 5}} />
             <div class="absolute bottom-0 left-0 right-0 p-4 text-center">
               <p class="text-gray-700 text-sm">Fast Falling Snow</p>
             </div>
@@ -164,7 +164,7 @@ defmodule Storybook.Fun.Snow do
         template: """
         <div class="bg-gradient-to-b from-slate-300 to-white h-96 rounded-lg">
           <div class="relative h-full">
-            <.dm_fun_snow id="snow-slow" count="30" animation_duration={15, 30} />
+            <.dm_art_snow id="snow-slow" count="30" animation_duration={{15, 30}} />
             <div class="absolute bottom-0 left-0 right-0 p-4 text-center">
               <p class="text-slate-600 text-sm">Slow Drifting Snow</p>
             </div>
@@ -189,7 +189,7 @@ defmodule Storybook.Fun.Snow do
 
           <!-- Snow effect -->
           <div class="relative h-full">
-            <.dm_fun_snow id="snow-winter" count="60" size_range={3, 12} color="#ffffff" />
+            <.dm_art_snow id="snow-winter" count="60" size_range={{3, 12}} color="#ffffff" />
           </div>
 
           <!-- Ground snow -->
@@ -218,7 +218,7 @@ defmodule Storybook.Fun.Snow do
 
           <!-- Snow effect -->
           <div class="relative h-full">
-            <.dm_fun_snow id="snow-night" count="45" size_range={2, 10} color="#e0e7ff" />
+            <.dm_art_snow id="snow-night" count="45" size_range={{2, 10}} color="#e0e7ff" />
           </div>
 
           <div class="absolute bottom-4 left-0 right-0 text-center">

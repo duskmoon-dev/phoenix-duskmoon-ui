@@ -1,7 +1,7 @@
 defmodule Storybook.Fun.Eclipse do
   use PhoenixStorybook.Story, :component
 
-  def function, do: &PhoenixDuskmoon.Component.Fun.Eclipse.dm_fun_eclipse/1
+  def function, do: &PhoenixDuskmoon.CssArt.Eclipse.dm_art_eclipse/1
 
   def variations do
     [
@@ -35,7 +35,7 @@ defmodule Storybook.Fun.Eclipse do
         },
         template: """
         <div class="bg-black p-8 rounded-lg overflow-hidden">
-          <.dm_fun_eclipse id="eclipse-dark" size="medium" bg_color="#000000" />
+          <.dm_art_eclipse id="eclipse-dark" size="medium" bg_color="#000000" />
         </div>
         """
       },
@@ -48,7 +48,7 @@ defmodule Storybook.Fun.Eclipse do
         },
         template: """
         <div class="bg-gray-950 p-8 rounded-lg overflow-hidden">
-          <.dm_fun_eclipse id="eclipse-deep" size="medium" bg_color="#030712" />
+          <.dm_art_eclipse id="eclipse-deep" size="medium" bg_color="#030712" />
         </div>
         """
       },
@@ -61,7 +61,7 @@ defmodule Storybook.Fun.Eclipse do
         },
         template: """
         <div class="bg-indigo-950 p-8 rounded-lg overflow-hidden">
-          <.dm_fun_eclipse id="eclipse-purple" size="medium" bg_color="#1e1b4b" />
+          <.dm_art_eclipse id="eclipse-purple" size="medium" bg_color="#1e1b4b" />
         </div>
         """
       },
@@ -90,7 +90,7 @@ defmodule Storybook.Fun.Eclipse do
             <p class="text-purple-200 text-sm">Multiple rotating layers create a mesmerizing cosmic effect</p>
           </div>
           <div class="flex justify-center">
-            <.dm_fun_eclipse id="eclipse-cosmic" size="large" bg_color="#0a0a0f" animation_speed="1.0" />
+            <.dm_art_eclipse id="eclipse-cosmic" size="large" bg_color="#0a0a0f" animation_speed="1.0" />
           </div>
         </div>
         """
@@ -103,19 +103,19 @@ defmodule Storybook.Fun.Eclipse do
             <div class="text-center">
               <h3 class="text-white text-sm mb-4">Small Eclipse</h3>
               <div class="flex justify-center">
-                <.dm_fun_eclipse id="eclipse-comp-small" size="small" bg_color="#0f0f23" />
+                <.dm_art_eclipse id="eclipse-comp-small" size="small" bg_color="#0f0f23" />
               </div>
             </div>
             <div class="text-center">
               <h3 class="text-white text-sm mb-4">Medium Eclipse</h3>
               <div class="flex justify-center">
-                <.dm_fun_eclipse id="eclipse-comp-medium" size="medium" bg_color="#0f0f23" />
+                <.dm_art_eclipse id="eclipse-comp-medium" size="medium" bg_color="#0f0f23" />
               </div>
             </div>
             <div class="text-center">
               <h3 class="text-white text-sm mb-4">Large Eclipse</h3>
               <div class="flex justify-center">
-                <.dm_fun_eclipse id="eclipse-comp-large" size="large" bg_color="#0f0f23" />
+                <.dm_art_eclipse id="eclipse-comp-large" size="large" bg_color="#0f0f23" />
               </div>
             </div>
           </div>
@@ -133,19 +133,19 @@ defmodule Storybook.Fun.Eclipse do
             <div class="text-center">
               <h4 class="text-cyan-400 text-xs mb-3">Slow Motion</h4>
               <div class="flex justify-center">
-                <.dm_fun_eclipse id="eclipse-slow-demo" size="small" bg_color="#0c1426" animation_speed="0.3" />
+                <.dm_art_eclipse id="eclipse-slow-demo" size="small" bg_color="#0c1426" animation_speed="0.3" />
               </div>
             </div>
             <div class="text-center">
               <h4 class="text-green-400 text-xs mb-3">Normal Speed</h4>
               <div class="flex justify-center">
-                <.dm_fun_eclipse id="eclipse-normal-demo" size="small" bg_color="#0c1426" animation_speed="1.0" />
+                <.dm_art_eclipse id="eclipse-normal-demo" size="small" bg_color="#0c1426" animation_speed="1.0" />
               </div>
             </div>
             <div class="text-center">
               <h4 class="text-orange-400 text-xs mb-3">Fast Motion</h4>
               <div class="flex justify-center">
-                <.dm_fun_eclipse id="eclipse-fast-demo" size="small" bg_color="#0c1426" animation_speed="3.0" />
+                <.dm_art_eclipse id="eclipse-fast-demo" size="small" bg_color="#0c1426" animation_speed="3.0" />
               </div>
             </div>
           </div>

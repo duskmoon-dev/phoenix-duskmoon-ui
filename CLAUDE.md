@@ -10,6 +10,14 @@ Phoenix Duskmoon UI is an umbrella project providing Duskmoon UI components for 
 2. **duskmoon_storybook** - Storybook backend/context
 3. **duskmoon_storybook_web** - Live Storybook web application for component showcase
 
+## Color Policy
+
+**All colors MUST come from theme CSS variables.** Never use hardcoded color values (hex, rgb, hsl, named colors) in components or styles. Instead:
+
+- Use existing `@duskmoon-dev/core` theme variables: `var(--color-primary)`, `var(--color-surface)`, `var(--color-on-surface)`, etc.
+- If a needed color doesn't exist in the theme, **define a new CSS custom property** in the theme's variable system and reference it via `var(--color-your-name)`.
+- This ensures all components adapt correctly when themes change (e.g., sunshine/moonlight/auto).
+
 ## Upstream Dependencies Policy
 
 **This project ONLY uses `@duskmoon-dev/core` and `@duskmoon-dev/elements` for styling and custom elements.** Do NOT use `@gsmlg/lit` or other UI libraries.
@@ -22,6 +30,10 @@ Phoenix Duskmoon UI is an umbrella project providing Duskmoon UI components for 
 
 - **CSS/Theme issues**: https://github.com/duskmoon-dev/duskmoonui
 - **Custom Element issues**: https://github.com/duskmoon-dev/duskmoon-elements
+
+## @duskmoon-dev/core (upstream dependency)
+
+`@duskmoon-dev/core` lives in `duskmoon-dev/duskmoonui` — it is our own package. If core has bugs or missing features, file a GitHub issue on `duskmoon-dev/duskmoonui` with the label `internal request`. Never use `bun patch` or other local workarounds.
 
 ## Architecture
 
@@ -74,12 +86,12 @@ Components are organized into three main categories:
 2. **Form Components** (`PhoenixDuskmoon.Component.Form.*`): Specialized form inputs
    - Separated into individual modules: Input, CompactInput, Checkbox, Radio, Select, Slider, Switch, Textarea
    - The main Form module provides form container, labels, and error handling
-   - **Important**: Never use `<.variation />` in storybook templates - it's undefined. Use actual component calls like `<.dm_fun_snow id="..." />`
+   - **Important**: Never use `<.variation />` in storybook templates - it's undefined. Use actual component calls like `<.dm_art_snow id="..." />`
 
-3. **Fun Components** (`PhoenixDuskmoon.Component.Fun.*`): Interactive/animated components
+3. **CSS Art Components** (`PhoenixDuskmoon.CssArt.*`): Decorative/animated visual effects
    - ButtonNoise, Eclipse, PlasmaBall, Signature, Snow, SpotlightSearch
-   - Imported via `use PhoenixDuskmoon.Fun` in view helpers
-   - Use `dm_fun_` prefix (e.g., `dm_fun_snow`, `dm_fun_plasma_ball`)
+   - Imported via `use PhoenixDuskmoon.CssArt` in view helpers
+   - Use `dm_art_` prefix (e.g., `dm_art_snow`, `dm_art_plasma_ball`)
 
 ### Storybook Architecture
 
@@ -190,8 +202,7 @@ Each `el-*` element must be explicitly imported for its custom element tag to be
 - Import structure:
   ```css
   @import "tailwindcss";
-  @import "@duskmoon-dev/core";
-  @import "phoenix_duskmoon/components";
+  @plugin "@duskmoon-dev/core/plugin";
   ```
 - For CSS-only layouts (e.g., appbar, footer), prefer `@duskmoon-dev/core` CSS classes over custom elements when appropriate
 
@@ -231,7 +242,7 @@ When working on Phoenix projects that use the Phoenix Duskmoon UI library:
 
 ### Component Usage Pattern
 - All components are prefixed with `dm_` (e.g., `<.dm_btn>`, `<.dm_card>`, `<.dm_mdi>`)
-- Components require `use PhoenixDuskmoon.Component` and `use PhoenixDuskmoon.Fun` in view helpers
+- Components require `use PhoenixDuskmoon.Component` and `use PhoenixDuskmoon.CssArt` in view helpers
 - **v9 Note**: Components render as HTML Custom Elements (e.g., `<el-dm-button>`, `<el-dm-card>`)
 - Common component patterns:
   ```elixir
@@ -277,11 +288,10 @@ When working on Phoenix projects that use the Phoenix Duskmoon UI library:
 Projects need these CSS imports:
 ```css
 @import "tailwindcss";
-@import "@duskmoon-dev/core";
-@import "phoenix_duskmoon/components";
+@plugin "@duskmoon-dev/core/plugin";
 ```
 
-**Note**: v9 uses `@duskmoon-dev/core` which includes all theme variables (no separate theme import needed).
+**Note**: v9 uses `@plugin` (Tailwind v4 plugin directive) for `@duskmoon-dev/core` which includes all theme variables, design tokens, and component styles.
 
 ### JavaScript Hooks Setup (Required)
 

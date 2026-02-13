@@ -1,7 +1,7 @@
 defmodule Storybook.Fun.SpotlightSearch do
   use PhoenixStorybook.Story, :component
 
-  def function, do: &PhoenixDuskmoon.Component.Fun.SpotlightSearch.dm_fun_spotlight_search/1
+  def function, do: &PhoenixDuskmoon.CssArt.SpotlightSearch.dm_art_spotlight_search/1
 
   def imports do
     [{PhoenixDuskmoon.Modal, dm_show_modal: 0}]

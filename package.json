@@ -18,6 +18,7 @@
     },
     "workspaces": ["apps/duskmoon_storybook_web", "apps/phoenix_duskmoon"],
     "dependencies": {
+        "@duskmoon-dev/core": "^1.9.0",
         "cytoscape": "^3.33.1",
         "mermaid": "^11.12.2"
     }
