@@ -1,24 +1,34 @@
 import "phoenix_html";
 
 // Register custom elements individually
+import "@duskmoon-dev/el-accordion/register";
+import "@duskmoon-dev/el-alert/register";
+import "@duskmoon-dev/el-autocomplete/register";
+import "@duskmoon-dev/el-badge/register";
+import "@duskmoon-dev/el-bottom-navigation/register";
+import "@duskmoon-dev/el-bottom-sheet/register";
+import "@duskmoon-dev/el-breadcrumbs/register";
 import "@duskmoon-dev/el-button/register";
 import "@duskmoon-dev/el-card/register";
-import "@duskmoon-dev/el-input/register";
-import "@duskmoon-dev/el-switch/register";
-import "@duskmoon-dev/el-alert/register";
+import "@duskmoon-dev/el-chip/register";
+import "@duskmoon-dev/el-datepicker/register";
 import "@duskmoon-dev/el-dialog/register";
-import "@duskmoon-dev/el-badge/register";
-import "@duskmoon-dev/el-tooltip/register";
-import "@duskmoon-dev/el-progress/register";
+import "@duskmoon-dev/el-drawer/register";
+import "@duskmoon-dev/el-file-upload/register";
 import "@duskmoon-dev/el-form/register";
-import "@duskmoon-dev/el-slider/register";
-import "@duskmoon-dev/el-breadcrumbs/register";
+import "@duskmoon-dev/el-input/register";
+import "@duskmoon-dev/el-markdown/register";
 import "@duskmoon-dev/el-menu/register";
 import "@duskmoon-dev/el-navbar/register";
 import "@duskmoon-dev/el-pagination/register";
-import "@duskmoon-dev/el-tabs/register";
+import "@duskmoon-dev/el-popover/register";
+import "@duskmoon-dev/el-progress/register";
+import "@duskmoon-dev/el-slider/register";
+import "@duskmoon-dev/el-stepper/register";
+import "@duskmoon-dev/el-switch/register";
 import "@duskmoon-dev/el-table/register";
-import "@duskmoon-dev/el-markdown/register";
+import "@duskmoon-dev/el-tabs/register";
+import "@duskmoon-dev/el-tooltip/register";
 
 // Clipboard functionality
 function fallbackCopyTextToClipboard(text) {

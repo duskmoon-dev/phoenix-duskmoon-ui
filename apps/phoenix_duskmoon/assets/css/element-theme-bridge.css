@@ -11,24 +11,34 @@
  * shadow DOM defaults.
  */
 
+el-dm-accordion,
+el-dm-alert,
+el-dm-autocomplete,
+el-dm-badge,
+el-dm-bottom-navigation,
+el-dm-bottom-sheet,
+el-dm-breadcrumbs,
 el-dm-button,
 el-dm-card,
-el-dm-input,
-el-dm-switch,
-el-dm-alert,
+el-dm-chip,
+el-dm-datepicker,
 el-dm-dialog,
-el-dm-badge,
-el-dm-tooltip,
-el-dm-progress,
+el-dm-drawer,
+el-dm-file-upload,
 el-dm-form,
-el-dm-slider,
-el-dm-breadcrumbs,
+el-dm-input,
+el-dm-markdown,
 el-dm-menu,
 el-dm-navbar,
 el-dm-pagination,
-el-dm-tabs,
+el-dm-popover,
+el-dm-progress,
+el-dm-slider,
+el-dm-stepper,
+el-dm-switch,
 el-dm-table,
-el-dm-markdown {
+el-dm-tabs,
+el-dm-tooltip {
   /* Brand colors */
   --color-primary: inherit;
   --color-primary-content: inherit;
