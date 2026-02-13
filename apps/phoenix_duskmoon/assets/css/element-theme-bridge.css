@@ -1,0 +1,99 @@
+/**
+ * Element Theme Bridge
+ *
+ * Custom elements (@duskmoon-dev/el-*) set default color values in their
+ * shadow DOM via :host { --color-primary: ...; }. These defaults override
+ * inherited theme values from :root / [data-theme].
+ *
+ * Light DOM author styles beat shadow DOM :host styles in the cascade,
+ * so setting these properties to `inherit` forces custom elements to
+ * pick up the theme values from the document instead of using hardcoded
+ * shadow DOM defaults.
+ */
+
+el-dm-button,
+el-dm-card,
+el-dm-input,
+el-dm-switch,
+el-dm-alert,
+el-dm-dialog,
+el-dm-badge,
+el-dm-tooltip,
+el-dm-progress,
+el-dm-form,
+el-dm-slider,
+el-dm-breadcrumbs,
+el-dm-menu,
+el-dm-navbar,
+el-dm-pagination,
+el-dm-tabs,
+el-dm-table,
+el-dm-markdown {
+  /* Brand colors */
+  --color-primary: inherit;
+  --color-primary-content: inherit;
+  --color-on-primary: inherit;
+  --color-secondary: inherit;
+  --color-secondary-content: inherit;
+  --color-on-secondary: inherit;
+  --color-tertiary: inherit;
+  --color-tertiary-content: inherit;
+  --color-on-tertiary: inherit;
+
+  /* Surface colors */
+  --color-surface: inherit;
+  --color-surface-container: inherit;
+  --color-surface-container-low: inherit;
+  --color-on-surface: inherit;
+  --color-on-surface-variant: inherit;
+
+  /* Semantic colors */
+  --color-info: inherit;
+  --color-success: inherit;
+  --color-warning: inherit;
+  --color-error: inherit;
+
+  /* Outline */
+  --color-outline: inherit;
+  --color-outline-variant: inherit;
+
+  /* Typography */
+  --font-family: inherit;
+  --font-size-xs: inherit;
+  --font-size-sm: inherit;
+  --font-size-md: inherit;
+  --font-size-lg: inherit;
+  --font-size-xl: inherit;
+  --font-weight-normal: inherit;
+  --font-weight-medium: inherit;
+  --font-weight-semibold: inherit;
+  --font-weight-bold: inherit;
+
+  /* Shape */
+  --radius-sm: inherit;
+  --radius-md: inherit;
+  --radius-lg: inherit;
+  --radius-xl: inherit;
+  --radius-full: inherit;
+
+  /* Elevation */
+  --shadow-sm: inherit;
+  --shadow-md: inherit;
+  --shadow-lg: inherit;
+
+  /* Spacing */
+  --spacing-xs: inherit;
+  --spacing-sm: inherit;
+  --spacing-md: inherit;
+  --spacing-lg: inherit;
+  --spacing-xl: inherit;
+
+  /* Motion */
+  --transition-fast: inherit;
+  --transition-normal: inherit;
+  --transition-slow: inherit;
+
+  /* Focus */
+  --focus-ring: inherit;
+  --focus-ring-offset: inherit;
+}

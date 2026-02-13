@@ -8,11 +8,12 @@
 
 @import "tailwindcss";
 
-/* Design system and component styles from upstream */
-@import "@duskmoon-dev/core";
-
-/* Phoenix Duskmoon UI component-specific styles */
-@import "phoenix_duskmoon/components";
+/* DuskMoon UI design system */
+@plugin "@duskmoon-dev/core/plugin";
+@import "@duskmoon-dev/core/themes/sunshine";
+@import "@duskmoon-dev/core/themes/moonlight";
+@import "@duskmoon-dev/core/components";
+@import "../../../phoenix_duskmoon/assets/css/element-theme-bridge.css";
 
 @layer components {
   .rainbow {

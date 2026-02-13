@@ -20,6 +20,26 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   """
   use Phoenix.Component
 
+  # The el-dm-button custom element only supports: primary, secondary, tertiary,
+  # ghost, outline. For other variants (info, success, warning, error, accent, link)
+  # we map to a supported variant and override colors via inline CSS custom properties.
+  @variant_map %{
+    "accent" => "tertiary",
+    "link" => "ghost"
+  }
+  @color_override_variants ~w(info success warning error)
+
+  defp map_variant(nil), do: nil
+  defp map_variant(v) when is_map_key(@variant_map, v), do: @variant_map[v]
+  defp map_variant(v) when v in @color_override_variants, do: "primary"
+  defp map_variant(v), do: v
+
+  defp variant_style(v) when v in @color_override_variants do
+    "--color-primary: var(--color-#{v}); --color-primary-content: var(--color-#{v}-content);"
+  end
+
+  defp variant_style(_), do: nil
+
   @doc """
   Generates a button.
 
@@ -102,16 +122,19 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
     assigns =
       assigns
       |> assign_new(:id, fn -> "btn-#{Enum.random(0..999_999)}" end)
+      |> assign(:el_variant, map_variant(assigns.variant))
+      |> assign(:el_style, variant_style(assigns.variant))
 
     ~H"""
     <el-dm-button
       id={@id}
-      variant={@variant}
+      variant={@el_variant}
       size={@size}
       shape={@shape}
       loading={@loading}
       disabled={@disabled}
       class={@class}
+      style={@el_style}
       onclick={"document.getElementById('confirm-dialog-#{@id}').showModal()"}
     >
       {render_slot(@inner_block)}
@@ -165,16 +188,19 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
     assigns =
       assigns
       |> assign_new(:id, fn -> nil end)
+      |> assign(:el_variant, map_variant(assigns.variant))
+      |> assign(:el_style, variant_style(assigns.variant))
 
     ~H"""
     <el-dm-button
       id={@id}
-      variant={@variant}
+      variant={@el_variant}
       size={@size}
       shape={@shape}
       loading={@loading}
       disabled={@disabled}
       class={@class}
+      style={@el_style}
       phx-hook={if @rest["phx-click"], do: "WebComponentHook"}
       {@rest}
     >

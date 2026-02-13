@@ -201,7 +201,8 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
   end
 
   test "renders button with all variant options" do
-    for variant <- ~w(primary secondary accent info success warning error ghost link outline) do
+    # Variants that map directly to the custom element
+    for variant <- ~w(primary secondary ghost outline) do
       result =
         render_component(&dm_btn/1, %{
           variant: variant,
@@ -209,6 +210,36 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
         })
 
       assert result =~ ~s[variant="#{variant}"]
+    end
+
+    # accent maps to tertiary
+    result =
+      render_component(&dm_btn/1, %{
+        variant: "accent",
+        inner_block: %{inner_block: fn _, _ -> "Btn" end}
+      })
+
+    assert result =~ ~s[variant="tertiary"]
+
+    # link maps to ghost
+    result =
+      render_component(&dm_btn/1, %{
+        variant: "link",
+        inner_block: %{inner_block: fn _, _ -> "Btn" end}
+      })
+
+    assert result =~ ~s[variant="ghost"]
+
+    # Semantic variants map to primary with color overrides
+    for variant <- ~w(info success warning error) do
+      result =
+        render_component(&dm_btn/1, %{
+          variant: variant,
+          inner_block: %{inner_block: fn _, _ -> "Btn" end}
+        })
+
+      assert result =~ ~s[variant="primary"]
+      assert result =~ "--color-primary: var(--color-#{variant})"
     end
   end
 
@@ -320,7 +351,8 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
       })
 
     assert result =~ ~s[id="combo-btn"]
-    assert result =~ ~s[variant="error"]
+    assert result =~ ~s[variant="primary"]
+    assert result =~ "--color-primary: var(--color-error)"
     assert result =~ ~s[size="lg"]
     assert result =~ ~s[shape="circle"]
     assert result =~ "loading"
@@ -372,7 +404,9 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
         inner_block: %{inner_block: fn _, _ -> "Delete" end}
       })
 
-    assert result =~ ~s[variant="error"]
+    # error maps to primary with color override
+    assert result =~ ~s[variant="primary"]
+    assert result =~ "--color-primary: var(--color-error)"
     assert result =~ ~s[size="sm"]
   end
 

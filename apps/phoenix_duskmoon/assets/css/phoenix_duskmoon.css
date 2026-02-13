@@ -4,8 +4,18 @@
 
 @import "tailwindcss";
 
-/* Design system and component styles from upstream */
-@import "@duskmoon-dev/core";
+/* DuskMoon UI design system — syntactic sugar for @duskmoon-dev/core */
+@plugin "@duskmoon-dev/core/plugin";
+@import "@duskmoon-dev/core/themes/sunshine";
+@import "@duskmoon-dev/core/themes/moonlight";
+@import "@duskmoon-dev/core/components";
+@import "./element-theme-bridge.css";
 
-/* Phoenix-specific component overrides */
-@import "./components.css";
+/* CSS Art — decorative/animated visual effects */
+@import "./css_art/atom.css";
+@import "./css_art/button-noise.css";
+@import "./css_art/eclipse.css";
+@import "./css_art/plasma-ball.css";
+@import "./css_art/signature.css";
+@import "./css_art/snow.css";
+@import "./css_art/spotlight-search.css";
