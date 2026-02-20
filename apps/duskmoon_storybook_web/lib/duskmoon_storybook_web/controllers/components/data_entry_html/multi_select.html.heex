@@ -1,0 +1,187 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/multi-select"}>Data Entry</:crumb>
+  <:crumb>Multi Select</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Multi Select</span>
+    <span class="text-sm opacity-60">dm_multi_select</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Multi-select component using `@duskmoon-dev/core` CSS classes.
+  Renders a multi-select input with tags, dropdown, search, option
+  checkboxes, grouping, and action buttons. State management is
+  handled by the parent LiveView.
+
+  ## Usage
+  ```elixir
+  <.dm_multi_select
+    options={[
+      %{value: "elixir", label: "Elixir"},
+      %{value: "phoenix", label: "Phoenix"}
+    ]}
+    selected={["elixir"]}
+    placeholder="Select languages..."
+  />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Multi Select</h3>
+  <div class="mb-4">
+    <.dm_multi_select
+      options={[
+        %{value: "elixir", label: "Elixir"},
+        %{value: "phoenix", label: "Phoenix"},
+        %{value: "liveview", label: "LiveView"},
+        %{value: "ecto", label: "Ecto"}
+      ]}
+      placeholder="Select technologies..."
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Selected Tags</h3>
+  <div class="mb-4">
+    <.dm_multi_select
+      options={[
+        %{value: "elixir", label: "Elixir"},
+        %{value: "phoenix", label: "Phoenix"},
+        %{value: "liveview", label: "LiveView"},
+        %{value: "ecto", label: "Ecto"}
+      ]}
+      selected={["elixir", "phoenix"]}
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Open Dropdown</h3>
+  <div class="mb-4" style="min-height: 300px">
+    <.dm_multi_select
+      options={[
+        %{value: "a", label: "Apple"},
+        %{value: "b", label: "Banana"},
+        %{value: "c", label: "Cherry"},
+        %{value: "d", label: "Date"}
+      ]}
+      selected={["a", "c"]}
+      open
+      searchable
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Size Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_multi_select
+      options={[%{value: "a", label: "Small Tag"}]}
+      selected={["a"]}
+      size="sm"
+    />
+    <.dm_multi_select
+      options={[%{value: "a", label: "Default Tag"}]}
+      selected={["a"]}
+    />
+    <.dm_multi_select
+      options={[%{value: "a", label: "Large Tag"}]}
+      selected={["a"]}
+      size="lg"
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Variant Styles</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_multi_select
+      options={[%{value: "a", label: "Outlined"}]}
+      selected={["a"]}
+      variant="outlined"
+      placeholder="Outlined style"
+    />
+    <.dm_multi_select
+      options={[%{value: "a", label: "Filled"}]}
+      selected={["a"]}
+      variant="filled"
+      placeholder="Filled style"
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Tag Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_multi_select
+      options={[%{value: "a", label: "Default"}, %{value: "b", label: "Tags"}]}
+      selected={["a", "b"]}
+    />
+    <.dm_multi_select
+      options={[%{value: "a", label: "Primary"}, %{value: "b", label: "Tags"}]}
+      selected={["a", "b"]}
+      tag_variant="primary"
+    />
+    <.dm_multi_select
+      options={[%{value: "a", label: "Outlined"}, %{value: "b", label: "Tags"}]}
+      selected={["a", "b"]}
+      tag_variant="outlined"
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Grouped Options (Open)</h3>
+  <div class="mb-4" style="min-height: 350px">
+    <.dm_multi_select
+      options={[
+        %{value: "us", label: "United States", group: "Americas"},
+        %{value: "ca", label: "Canada", group: "Americas"},
+        %{value: "br", label: "Brazil", group: "Americas"},
+        %{value: "uk", label: "United Kingdom", group: "Europe"},
+        %{value: "de", label: "Germany", group: "Europe"},
+        %{value: "fr", label: "France", group: "Europe"}
+      ]}
+      selected={["us", "uk"]}
+      open
+      show_actions
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">States</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_multi_select
+      options={[%{value: "a", label: "Error"}]}
+      selected={["a"]}
+      error
+    />
+    <.dm_multi_select
+      options={[%{value: "a", label: "Disabled"}]}
+      selected={["a"]}
+      disabled
+    />
+    <.dm_multi_select
+      options={[%{value: "a", label: "Loading"}]}
+      loading
+      placeholder="Loading..."
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Features</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_multi_select
+      options={[
+        %{value: "a", label: "Tag 1"},
+        %{value: "b", label: "Tag 2"},
+        %{value: "c", label: "Tag 3"},
+        %{value: "d", label: "Tag 4"},
+        %{value: "e", label: "Tag 5"}
+      ]}
+      selected={["a", "b", "c", "d", "e"]}
+      max_tags={2}
+      show_counter
+      clearable
+    />
+    <.dm_multi_select
+      options={[
+        %{value: "a", label: "With Description", description: "This option has a description"},
+        %{value: "b", label: "Disabled Option", disabled: true},
+        %{value: "c", label: "Normal Option"}
+      ]}
+      selected={["a"]}
+      open
+    />
+  </div>
+</.dm_card>

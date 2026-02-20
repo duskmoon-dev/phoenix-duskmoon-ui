@@ -64,4 +64,8 @@ defmodule DuskmoonStorybookWeb.Components.DataEntryController do
   def pin_input(conn, _params) do
     render(conn, :pin_input, active_menu: "data-entry-pin-input")
   end
+
+  def multi_select(conn, _params) do
+    render(conn, :multi_select, active_menu: "data-entry-multi-select")
+  end
 end
