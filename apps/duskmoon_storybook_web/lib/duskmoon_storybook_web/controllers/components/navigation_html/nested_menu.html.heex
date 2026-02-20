@@ -1,0 +1,109 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/navigation/nested-menu"}>Navigation</:crumb>
+  <:crumb>Nested Menu</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Nested Menu</span>
+    <span class="text-sm opacity-60">dm_nested_menu</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Nested menu component using `@duskmoon-dev/core` CSS classes.
+  Vertical navigation menu with collapsible sub-menus using native
+  HTML `<details>/<summary>` elements. No JavaScript required.
+
+  ## Usage
+  ```elixir
+  <.dm_nested_menu bordered>
+    <:title>Navigation</:title>
+    <:item to="/dashboard" active>Dashboard</:item>
+    <:item to="/settings">Settings</:item>
+    <:group title="Reports" open>
+      <.dm_nested_menu_item to="/reports/sales">Sales</.dm_nested_menu_item>
+      <.dm_nested_menu_item to="/reports/users">Users</.dm_nested_menu_item>
+    </:group>
+  </.dm_nested_menu>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Menu</h3>
+  <div class="mb-4 max-w-xs">
+    <.dm_nested_menu>
+      <:item to="#">Home</:item>
+      <:item to="#" active>Dashboard</:item>
+      <:item to="#">Settings</:item>
+      <:item to="#">Profile</:item>
+    </.dm_nested_menu>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Title and Groups</h3>
+  <div class="mb-4 max-w-xs">
+    <.dm_nested_menu bordered>
+      <:title>Admin Panel</:title>
+      <:item to="#" active>Dashboard</:item>
+      <:group title="Users" open>
+        <.dm_nested_menu_item to="#">All Users</.dm_nested_menu_item>
+        <.dm_nested_menu_item to="#" active>Active</.dm_nested_menu_item>
+        <.dm_nested_menu_item to="#">Inactive</.dm_nested_menu_item>
+      </:group>
+      <:group title="Reports">
+        <.dm_nested_menu_item to="#">Sales</.dm_nested_menu_item>
+        <.dm_nested_menu_item to="#">Analytics</.dm_nested_menu_item>
+      </:group>
+      <:item to="#">Settings</:item>
+    </.dm_nested_menu>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Size Variants</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_nested_menu bordered size="xs" class="w-48">
+      <:title>XS Menu</:title>
+      <:item to="#">Item 1</:item>
+      <:item to="#">Item 2</:item>
+      <:item to="#">Item 3</:item>
+    </.dm_nested_menu>
+    <.dm_nested_menu bordered size="sm" class="w-48">
+      <:title>SM Menu</:title>
+      <:item to="#">Item 1</:item>
+      <:item to="#">Item 2</:item>
+      <:item to="#">Item 3</:item>
+    </.dm_nested_menu>
+    <.dm_nested_menu bordered class="w-48">
+      <:title>Default</:title>
+      <:item to="#">Item 1</:item>
+      <:item to="#">Item 2</:item>
+      <:item to="#">Item 3</:item>
+    </.dm_nested_menu>
+    <.dm_nested_menu bordered size="lg" class="w-48">
+      <:title>LG Menu</:title>
+      <:item to="#">Item 1</:item>
+      <:item to="#">Item 2</:item>
+      <:item to="#">Item 3</:item>
+    </.dm_nested_menu>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Compact</h3>
+  <div class="mb-4 max-w-xs">
+    <.dm_nested_menu bordered compact>
+      <:title>Compact Nav</:title>
+      <:item to="#">Home</:item>
+      <:item to="#" active>Dashboard</:item>
+      <:item to="#">Reports</:item>
+      <:item to="#">Settings</:item>
+    </.dm_nested_menu>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Disabled Items</h3>
+  <div class="mb-4 max-w-xs">
+    <.dm_nested_menu bordered>
+      <:item to="#">Home</:item>
+      <:item to="#" active>Dashboard</:item>
+      <:item to="#" disabled>Admin (Locked)</:item>
+      <:item to="#">Settings</:item>
+    </.dm_nested_menu>
+  </div>
+</.dm_card>

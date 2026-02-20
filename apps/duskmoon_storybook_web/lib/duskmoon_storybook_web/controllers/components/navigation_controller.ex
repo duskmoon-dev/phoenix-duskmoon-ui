@@ -44,4 +44,8 @@ defmodule DuskmoonStorybookWeb.Components.NavigationController do
   def stepper(conn, _params) do
     render(conn, :stepper, active_menu: "navigation-stepper")
   end
+
+  def nested_menu(conn, _params) do
+    render(conn, :nested_menu, active_menu: "navigation-nested-menu")
+  end
 end

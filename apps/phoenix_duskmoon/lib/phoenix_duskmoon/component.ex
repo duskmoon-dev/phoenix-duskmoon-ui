@@ -106,6 +106,7 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.Navigation.Breadcrumb
       import PhoenixDuskmoon.Component.Navigation.LeftMenu
       import PhoenixDuskmoon.Component.Navigation.Navbar
+      import PhoenixDuskmoon.Component.Navigation.NestedMenu
       import PhoenixDuskmoon.Component.Navigation.PageFooter
       import PhoenixDuskmoon.Component.Navigation.PageHeader
       import PhoenixDuskmoon.Component.Navigation.Steps
