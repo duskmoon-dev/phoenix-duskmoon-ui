@@ -144,6 +144,12 @@ defmodule PhoenixDuskmoon.Component.Action.ToggleTest do
       result = render_component(&dm_toggle_group/1, %{color: "tertiary", item: basic_items()})
       assert result =~ "toggle-btn-tertiary"
     end
+
+    test "maps accent color to tertiary" do
+      result = render_component(&dm_toggle_group/1, %{color: "accent", item: basic_items()})
+      assert result =~ "toggle-btn-tertiary"
+      refute result =~ "toggle-btn-accent"
+    end
   end
 
   describe "dm_toggle_group sizes" do

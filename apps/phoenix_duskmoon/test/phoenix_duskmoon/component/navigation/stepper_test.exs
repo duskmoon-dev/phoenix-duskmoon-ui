@@ -175,6 +175,12 @@ defmodule PhoenixDuskmoon.Component.Navigation.StepperTest do
       result = render_component(&dm_stepper/1, %{color: "tertiary", step: basic_steps()})
       assert result =~ "stepper-tertiary"
     end
+
+    test "maps accent color to tertiary" do
+      result = render_component(&dm_stepper/1, %{color: "accent", step: basic_steps()})
+      assert result =~ "stepper-tertiary"
+      refute result =~ "stepper-accent"
+    end
   end
 
   describe "dm_stepper sizes" do

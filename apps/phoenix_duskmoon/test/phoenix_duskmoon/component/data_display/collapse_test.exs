@@ -212,6 +212,18 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CollapseTest do
 
       assert result =~ "collapse-tertiary"
     end
+
+    test "maps accent color to tertiary" do
+      result =
+        render_component(&dm_collapse/1, %{
+          color: "accent",
+          trigger: basic_trigger(),
+          content: basic_content()
+        })
+
+      assert result =~ "collapse-tertiary"
+      refute result =~ "collapse-accent"
+    end
   end
 
   describe "dm_collapse sizes" do

@@ -49,7 +49,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Stepper do
 
   attr(:color, :string,
     default: nil,
-    values: [nil, "secondary", "tertiary"],
+    values: [nil, "secondary", "tertiary", "accent"],
     doc: "Color variant"
   )
 
@@ -73,6 +73,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.Stepper do
   end
 
   def dm_stepper(assigns) do
+    assigns = assign(assigns, :color, css_color(assigns.color))
+
     ~H"""
     <div
       id={@id}
@@ -110,4 +112,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Stepper do
     </div>
     """
   end
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end

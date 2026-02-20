@@ -49,7 +49,7 @@ defmodule PhoenixDuskmoon.Component.Action.Toggle do
 
   attr(:color, :string,
     default: nil,
-    values: [nil, "secondary", "tertiary"],
+    values: [nil, "secondary", "tertiary", "accent"],
     doc: "Color variant"
   )
 
@@ -74,6 +74,8 @@ defmodule PhoenixDuskmoon.Component.Action.Toggle do
   end
 
   def dm_toggle_group(assigns) do
+    assigns = assign(assigns, :color, css_color(assigns.color))
+
     ~H"""
     <div
       id={@id}
@@ -110,4 +112,7 @@ defmodule PhoenixDuskmoon.Component.Action.Toggle do
     </div>
     """
   end
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end
