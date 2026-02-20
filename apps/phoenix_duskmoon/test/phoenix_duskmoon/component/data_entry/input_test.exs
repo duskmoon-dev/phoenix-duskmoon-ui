@@ -1,4 +1,4 @@
-defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
+defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
   use ExUnit.Case, async: true
 
   require Phoenix.LiveViewTest
