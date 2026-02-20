@@ -114,6 +114,10 @@
     <:menu>
       <.dm_left_menu_group active={assigns[:active_menu]}>
         <:title>Data Entry</:title>
+        <:menu id="data-entry-autocomplete" to={~p"/components/data-entry/autocomplete"}>
+          <.dm_mdi name={"text-search"} class="w-4 h-4" />
+          Autocomplete
+        </:menu>
         <:menu id="data-entry-checkbox" to={~p"/components/data-entry/checkbox"}>
           <.dm_mdi name={"checkbox-marked"} class="w-4 h-4" />
           Checkbox

@@ -54,6 +54,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/data-display/popover", DataDisplayController, :popover
 
     # Data Entry
+    get "/data-entry/autocomplete", DataEntryController, :autocomplete
     get "/data-entry/checkbox", DataEntryController, :checkbox
     get "/data-entry/compact-input", DataEntryController, :compact_input
     get "/data-entry/form", DataEntryController, :form

@@ -1,0 +1,201 @@
+defmodule PhoenixDuskmoon.Component.DataEntry.AutocompleteTest do
+  use ExUnit.Case, async: true
+  import Phoenix.LiveViewTest
+
+  import PhoenixDuskmoon.Component.DataEntry.Autocomplete
+
+  @sample_options [
+    %{value: "us", label: "United States"},
+    %{value: "ca", label: "Canada"},
+    %{value: "uk", label: "United Kingdom"}
+  ]
+
+  describe "dm_autocomplete basic rendering" do
+    test "renders el-dm-autocomplete element" do
+      result = render_component(&dm_autocomplete/1, %{})
+      assert result =~ "<el-dm-autocomplete"
+      assert result =~ "</el-dm-autocomplete>"
+    end
+
+    test "renders with custom id" do
+      result = render_component(&dm_autocomplete/1, %{id: "my-ac"})
+      assert result =~ ~s(id="my-ac")
+    end
+
+    test "renders with custom class" do
+      result = render_component(&dm_autocomplete/1, %{class: "w-full"})
+      assert result =~ "w-full"
+    end
+  end
+
+  describe "dm_autocomplete options" do
+    test "renders empty options by default" do
+      result = render_component(&dm_autocomplete/1, %{})
+      assert result =~ ~s(options="[]")
+    end
+
+    test "renders options as JSON" do
+      result = render_component(&dm_autocomplete/1, %{options: @sample_options})
+      assert result =~ "United States"
+      assert result =~ "Canada"
+      assert result =~ "United Kingdom"
+    end
+
+    test "renders options with groups" do
+      options = [
+        %{value: "us", label: "United States", group: "Americas"},
+        %{value: "uk", label: "United Kingdom", group: "Europe"}
+      ]
+
+      result = render_component(&dm_autocomplete/1, %{options: options})
+      assert result =~ "Americas"
+      assert result =~ "Europe"
+    end
+
+    test "renders options with descriptions" do
+      options = [
+        %{value: "ex", label: "Elixir", description: "Functional language"}
+      ]
+
+      result = render_component(&dm_autocomplete/1, %{options: options})
+      assert result =~ "Functional language"
+    end
+
+    test "renders options with disabled flag" do
+      options = [
+        %{value: "a", label: "Alpha", disabled: true}
+      ]
+
+      result = render_component(&dm_autocomplete/1, %{options: options})
+      # JSON in HTML attribute is entity-escaped: " becomes &quot;
+      assert result =~ "&quot;disabled&quot;:true"
+    end
+  end
+
+  describe "dm_autocomplete value" do
+    test "no value by default" do
+      result = render_component(&dm_autocomplete/1, %{})
+      refute result =~ ~s(value=")
+    end
+
+    test "renders value when provided" do
+      result = render_component(&dm_autocomplete/1, %{value: "us"})
+      assert result =~ ~s(value="us")
+    end
+  end
+
+  describe "dm_autocomplete placeholder" do
+    test "no placeholder by default" do
+      result = render_component(&dm_autocomplete/1, %{})
+      refute result =~ ~s(placeholder=")
+    end
+
+    test "renders placeholder" do
+      result = render_component(&dm_autocomplete/1, %{placeholder: "Search..."})
+      assert result =~ ~s(placeholder="Search...")
+    end
+  end
+
+  describe "dm_autocomplete multiple" do
+    test "not multiple by default" do
+      result = render_component(&dm_autocomplete/1, %{})
+      refute result =~ ~s( multiple)
+    end
+
+    test "renders multiple when true" do
+      result = render_component(&dm_autocomplete/1, %{multiple: true})
+      assert result =~ "multiple"
+    end
+  end
+
+  describe "dm_autocomplete disabled" do
+    test "not disabled by default" do
+      result = render_component(&dm_autocomplete/1, %{})
+      refute result =~ ~s( disabled)
+    end
+
+    test "renders disabled when true" do
+      result = render_component(&dm_autocomplete/1, %{disabled: true})
+      assert result =~ "disabled"
+    end
+  end
+
+  describe "dm_autocomplete clearable" do
+    test "not clearable by default" do
+      result = render_component(&dm_autocomplete/1, %{})
+      refute result =~ "clearable"
+    end
+
+    test "renders clearable when true" do
+      result = render_component(&dm_autocomplete/1, %{clearable: true})
+      assert result =~ "clearable"
+    end
+  end
+
+  describe "dm_autocomplete loading" do
+    test "not loading by default" do
+      result = render_component(&dm_autocomplete/1, %{})
+      refute result =~ ~s( loading)
+    end
+
+    test "renders loading when true" do
+      result = render_component(&dm_autocomplete/1, %{loading: true})
+      assert result =~ "loading"
+    end
+  end
+
+  describe "dm_autocomplete size" do
+    test "defaults to md" do
+      result = render_component(&dm_autocomplete/1, %{})
+      assert result =~ ~s(size="md")
+    end
+
+    test "renders sm size" do
+      result = render_component(&dm_autocomplete/1, %{size: "sm"})
+      assert result =~ ~s(size="sm")
+    end
+
+    test "renders lg size" do
+      result = render_component(&dm_autocomplete/1, %{size: "lg"})
+      assert result =~ ~s(size="lg")
+    end
+  end
+
+  describe "dm_autocomplete no_results_text" do
+    test "defaults to No results found" do
+      result = render_component(&dm_autocomplete/1, %{})
+      assert result =~ "No results found"
+    end
+
+    test "renders custom no results text" do
+      result = render_component(&dm_autocomplete/1, %{no_results_text: "Nothing here"})
+      assert result =~ "Nothing here"
+    end
+  end
+
+  describe "dm_autocomplete combined attrs" do
+    test "renders with all attrs" do
+      result =
+        render_component(&dm_autocomplete/1, %{
+          id: "country-select",
+          class: "w-80",
+          value: "us",
+          options: @sample_options,
+          multiple: false,
+          clearable: true,
+          placeholder: "Pick a country",
+          size: "lg",
+          no_results_text: "No countries found"
+        })
+
+      assert result =~ ~s(id="country-select")
+      assert result =~ "w-80"
+      assert result =~ ~s(value="us")
+      assert result =~ "United States"
+      assert result =~ "clearable"
+      assert result =~ ~s(placeholder="Pick a country")
+      assert result =~ ~s(size="lg")
+      assert result =~ "No countries found"
+    end
+  end
+end

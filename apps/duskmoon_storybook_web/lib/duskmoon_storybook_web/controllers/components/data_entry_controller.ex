@@ -1,6 +1,10 @@
 defmodule DuskmoonStorybookWeb.Components.DataEntryController do
   use DuskmoonStorybookWeb, :controller
 
+  def autocomplete(conn, _params) do
+    render(conn, :autocomplete, active_menu: "data-entry-autocomplete")
+  end
+
   def checkbox(conn, _params) do
     render(conn, :checkbox, active_menu: "data-entry-checkbox")
   end

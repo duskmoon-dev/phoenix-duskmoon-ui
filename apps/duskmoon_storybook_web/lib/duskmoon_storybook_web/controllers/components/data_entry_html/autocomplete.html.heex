@@ -1,0 +1,139 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/autocomplete"}>Data Entry</:crumb>
+  <:crumb>Autocomplete</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Autocomplete</span>
+    <span class="text-sm opacity-60">dm_autocomplete</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Autocomplete component wrapping the `el-dm-autocomplete` custom element.
+  Renders a searchable select input with filtering, keyboard navigation,
+  optional grouping, descriptions, and multi-select support.
+
+  ## Usage
+  ```elixir
+  <.dm_autocomplete
+    placeholder="Search countries..."
+    options={[
+      %{value: "us", label: "United States"},
+      %{value: "ca", label: "Canada"}
+    ]}
+  />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Autocomplete</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_autocomplete
+      placeholder="Search a fruit..."
+      options={[
+        %{value: "apple", label: "Apple"},
+        %{value: "banana", label: "Banana"},
+        %{value: "cherry", label: "Cherry"},
+        %{value: "date", label: "Date"},
+        %{value: "elderberry", label: "Elderberry"},
+        %{value: "fig", label: "Fig"},
+        %{value: "grape", label: "Grape"}
+      ]}
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Groups</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_autocomplete
+      placeholder="Search countries..."
+      clearable
+      options={[
+        %{value: "us", label: "United States", group: "Americas"},
+        %{value: "ca", label: "Canada", group: "Americas"},
+        %{value: "br", label: "Brazil", group: "Americas"},
+        %{value: "uk", label: "United Kingdom", group: "Europe"},
+        %{value: "de", label: "Germany", group: "Europe"},
+        %{value: "fr", label: "France", group: "Europe"},
+        %{value: "jp", label: "Japan", group: "Asia"},
+        %{value: "kr", label: "South Korea", group: "Asia"}
+      ]}
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Descriptions</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_autocomplete
+      placeholder="Choose a language..."
+      options={[
+        %{value: "elixir", label: "Elixir", description: "Functional, concurrent, general-purpose"},
+        %{value: "rust", label: "Rust", description: "Systems programming, memory safe"},
+        %{value: "python", label: "Python", description: "General-purpose, high-level"},
+        %{value: "typescript", label: "TypeScript", description: "Typed JavaScript superset"}
+      ]}
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Multiple Selection</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_autocomplete
+      multiple
+      clearable
+      placeholder="Select tags..."
+      options={[
+        %{value: "elixir", label: "Elixir"},
+        %{value: "phoenix", label: "Phoenix"},
+        %{value: "liveview", label: "LiveView"},
+        %{value: "tailwind", label: "Tailwind CSS"},
+        %{value: "ecto", label: "Ecto"}
+      ]}
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Size Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_autocomplete
+      size="sm"
+      placeholder="Small"
+      options={[%{value: "a", label: "Alpha"}, %{value: "b", label: "Beta"}]}
+    />
+    <.dm_autocomplete
+      size="md"
+      placeholder="Medium (default)"
+      options={[%{value: "a", label: "Alpha"}, %{value: "b", label: "Beta"}]}
+    />
+    <.dm_autocomplete
+      size="lg"
+      placeholder="Large"
+      options={[%{value: "a", label: "Alpha"}, %{value: "b", label: "Beta"}]}
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Disabled & Loading States</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_autocomplete
+      disabled
+      placeholder="Disabled"
+      options={[%{value: "a", label: "Alpha"}]}
+    />
+    <.dm_autocomplete
+      loading
+      placeholder="Loading..."
+      options={[]}
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Disabled Options</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_autocomplete
+      placeholder="Some options disabled..."
+      options={[
+        %{value: "active", label: "Active Option"},
+        %{value: "disabled1", label: "Disabled Option", disabled: true},
+        %{value: "another", label: "Another Active"},
+        %{value: "disabled2", label: "Also Disabled", disabled: true}
+      ]}
+    />
+  </div>
+</.dm_card>

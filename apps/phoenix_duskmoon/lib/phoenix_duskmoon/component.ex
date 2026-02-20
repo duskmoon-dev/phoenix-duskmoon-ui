@@ -74,6 +74,7 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.DataDisplay.Tooltip
 
       # Data Entry components
+      import PhoenixDuskmoon.Component.DataEntry.Autocomplete
       import PhoenixDuskmoon.Component.DataEntry.Form
       import PhoenixDuskmoon.Component.DataEntry.Checkbox
       import PhoenixDuskmoon.Component.DataEntry.CompactInput
