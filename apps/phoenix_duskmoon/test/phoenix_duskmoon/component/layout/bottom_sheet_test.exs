@@ -102,6 +102,107 @@ defmodule PhoenixDuskmoon.Component.Layout.BottomSheetTest do
     end
   end
 
+  describe "dm_bottom_sheet rest attributes" do
+    test "passes data attributes through" do
+      result =
+        render_component(&dm_bottom_sheet/1, %{
+          "data-testid": "my-sheet",
+          "data-action": "open"
+        })
+
+      assert result =~ ~s(data-testid="my-sheet")
+      assert result =~ ~s(data-action="open")
+    end
+
+    test "passes aria attributes through" do
+      result =
+        render_component(&dm_bottom_sheet/1, %{
+          "aria-label": "Action sheet"
+        })
+
+      assert result =~ ~s(aria-label="Action sheet")
+    end
+  end
+
+  describe "dm_bottom_sheet attribute combinations" do
+    test "open and modal together" do
+      result = render_component(&dm_bottom_sheet/1, %{open: true, modal: true})
+      assert result =~ "open"
+      assert result =~ "modal"
+    end
+
+    test "modal and persistent together" do
+      result = render_component(&dm_bottom_sheet/1, %{modal: true, persistent: true})
+      assert result =~ "modal"
+      assert result =~ "persistent"
+    end
+
+    test "open with snap_points" do
+      result = render_component(&dm_bottom_sheet/1, %{open: true, snap_points: "50,100"})
+      assert result =~ "open"
+      assert result =~ ~s(snap-points="50,100")
+    end
+
+    test "single snap point" do
+      result = render_component(&dm_bottom_sheet/1, %{snap_points: "100"})
+      assert result =~ ~s(snap-points="100")
+    end
+
+    test "all boolean attrs false by default" do
+      result = render_component(&dm_bottom_sheet/1, %{})
+      refute result =~ "modal"
+      refute result =~ "persistent"
+    end
+  end
+
+  describe "dm_bottom_sheet header and content" do
+    test "renders header with complex HTML content" do
+      result =
+        render_component(&dm_bottom_sheet/1, %{
+          header: [
+            %{__slot__: :header, inner_block: fn _, _ -> "<h3>Sheet Title</h3>" end}
+          ]
+        })
+
+      assert result =~ ~s(slot="header")
+      assert result =~ "Sheet Title"
+    end
+
+    test "renders header and inner_block together" do
+      result =
+        render_component(&dm_bottom_sheet/1, %{
+          header: [
+            %{__slot__: :header, inner_block: fn _, _ -> "Header" end}
+          ],
+          inner_block: [
+            %{__slot__: :inner_block, inner_block: fn _, _ -> "Body" end}
+          ]
+        })
+
+      assert result =~ "Header"
+      assert result =~ "Body"
+    end
+
+    test "renders inner_block without header" do
+      result =
+        render_component(&dm_bottom_sheet/1, %{
+          inner_block: [
+            %{__slot__: :inner_block, inner_block: fn _, _ -> "Only body" end}
+          ]
+        })
+
+      assert result =~ "Only body"
+      refute result =~ ~s(slot="header")
+    end
+
+    test "renders without any slots" do
+      result = render_component(&dm_bottom_sheet/1, %{id: "empty-sheet"})
+      assert result =~ "<el-dm-bottom-sheet"
+      assert result =~ ~s(id="empty-sheet")
+      refute result =~ ~s(slot="header")
+    end
+  end
+
   describe "dm_bottom_sheet combined attrs" do
     test "renders with all attrs" do
       result =
@@ -125,6 +226,25 @@ defmodule PhoenixDuskmoon.Component.Layout.BottomSheetTest do
       assert result =~ ~s(snap-points="30,60,100")
       assert result =~ "Actions"
       assert result =~ "Choose action"
+    end
+
+    test "renders minimal configuration" do
+      result = render_component(&dm_bottom_sheet/1, %{})
+      assert result =~ "<el-dm-bottom-sheet"
+      assert result =~ "</el-dm-bottom-sheet>"
+    end
+
+    test "renders with id, class, and rest attrs" do
+      result =
+        render_component(&dm_bottom_sheet/1, %{
+          id: "sheet-1",
+          class: "rounded-t-xl",
+          "data-controller": "sheet"
+        })
+
+      assert result =~ ~s(id="sheet-1")
+      assert result =~ "rounded-t-xl"
+      assert result =~ ~s(data-controller="sheet")
     end
   end
 end

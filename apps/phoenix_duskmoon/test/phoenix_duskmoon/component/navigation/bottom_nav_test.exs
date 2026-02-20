@@ -143,6 +143,105 @@ defmodule PhoenixDuskmoon.Component.Navigation.BottomNavTest do
     end
   end
 
+  describe "dm_bottom_nav rest attributes" do
+    test "passes data attributes through" do
+      result =
+        render_component(&dm_bottom_nav/1, %{
+          items: @basic_items,
+          "data-testid": "nav-bar",
+          "data-action": "navigate"
+        })
+
+      assert result =~ ~s(data-testid="nav-bar")
+      assert result =~ ~s(data-action="navigate")
+    end
+
+    test "passes aria attributes through" do
+      result =
+        render_component(&dm_bottom_nav/1, %{
+          items: @basic_items,
+          "aria-label": "Main navigation"
+        })
+
+      assert result =~ ~s(aria-label="Main navigation")
+    end
+  end
+
+  describe "dm_bottom_nav items edge cases" do
+    test "renders single item" do
+      items = [%{value: "home", label: "Home"}]
+      result = render_component(&dm_bottom_nav/1, %{items: items})
+      assert result =~ "<el-dm-bottom-navigation"
+      assert result =~ "Home"
+    end
+
+    test "renders many items" do
+      items =
+        Enum.map(1..6, fn i ->
+          %{value: "item-#{i}", label: "Item #{i}"}
+        end)
+
+      result = render_component(&dm_bottom_nav/1, %{items: items})
+      assert result =~ "item-1"
+      assert result =~ "item-6"
+    end
+
+    test "renders item with all fields" do
+      items = [
+        %{value: "settings", label: "Settings", icon: "cog", disabled: true, href: "/settings"}
+      ]
+
+      result = render_component(&dm_bottom_nav/1, %{items: items})
+      assert result =~ "settings"
+      assert result =~ "Settings"
+      assert result =~ "disabled"
+      assert result =~ "/settings"
+    end
+
+    test "handles non-existent icon gracefully" do
+      items = [%{value: "x", label: "X", icon: "this-icon-definitely-does-not-exist-xyz"}]
+      result = render_component(&dm_bottom_nav/1, %{items: items})
+      # Should render without crashing — icon_svg returns ""
+      assert result =~ "<el-dm-bottom-navigation"
+    end
+
+    test "renders items with mixed icons and no icons" do
+      items = [
+        %{value: "home", label: "Home", icon: "home"},
+        %{value: "custom", label: "Custom"}
+      ]
+
+      result = render_component(&dm_bottom_nav/1, %{items: items})
+      assert result =~ "Home"
+      assert result =~ "Custom"
+    end
+
+    test "JSON encodes items attribute" do
+      items = [%{value: "a", label: "A"}]
+      result = render_component(&dm_bottom_nav/1, %{items: items})
+      # Items attr contains JSON with value/label
+      assert result =~ ~s(items=")
+    end
+  end
+
+  describe "dm_bottom_nav value matching" do
+    test "value not matching any item still renders" do
+      result =
+        render_component(&dm_bottom_nav/1, %{
+          items: @basic_items,
+          value: "nonexistent"
+        })
+
+      assert result =~ ~s(value="nonexistent")
+    end
+
+    test "nil value renders no value attribute" do
+      result = render_component(&dm_bottom_nav/1, %{items: @basic_items, value: nil})
+      refute result =~ ~s(value="home")
+      refute result =~ ~s(value="search")
+    end
+  end
+
   describe "dm_bottom_nav combined attrs" do
     test "renders with all attrs" do
       result =
@@ -160,6 +259,28 @@ defmodule PhoenixDuskmoon.Component.Navigation.BottomNavTest do
       assert result =~ ~s(value="search")
       assert result =~ ~s(color="success")
       assert result =~ ~s(position="sticky")
+    end
+
+    test "renders minimal configuration" do
+      items = [%{value: "home", label: "Home"}]
+      result = render_component(&dm_bottom_nav/1, %{items: items})
+      assert result =~ "<el-dm-bottom-navigation"
+      assert result =~ ~s(color="primary")
+      assert result =~ ~s(position="fixed")
+    end
+
+    test "renders with custom id, class, and rest attrs" do
+      result =
+        render_component(&dm_bottom_nav/1, %{
+          id: "nav-1",
+          class: "shadow-lg",
+          items: @basic_items,
+          "data-controller": "nav"
+        })
+
+      assert result =~ ~s(id="nav-1")
+      assert result =~ "shadow-lg"
+      assert result =~ ~s(data-controller="nav")
     end
   end
 end
