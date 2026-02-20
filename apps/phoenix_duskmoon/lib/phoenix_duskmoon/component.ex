@@ -93,6 +93,7 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.DataEntry.Slider
       import PhoenixDuskmoon.Component.DataEntry.Switch
       import PhoenixDuskmoon.Component.DataEntry.Textarea
+      import PhoenixDuskmoon.Component.DataEntry.TreeSelect
       import PhoenixDuskmoon.Component.DataEntry.TimeInput
 
       # Feedback components

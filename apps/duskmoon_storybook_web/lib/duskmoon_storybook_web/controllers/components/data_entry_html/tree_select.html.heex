@@ -1,0 +1,150 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/tree-select"}>Data Entry</:crumb>
+  <:crumb>Tree Select</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Tree Select</span>
+    <span class="text-sm opacity-60">dm_tree_select</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Hierarchical tree select using `@duskmoon-dev/core` CSS classes.
+  Renders a dropdown with expandable tree nodes, checkboxes for
+  multi-select mode, search, and path display.
+
+  ## Usage
+  ```elixir
+  <.dm_tree_select
+    options={[
+      %{value: "fruits", label: "Fruits", children: [
+        %{value: "apple", label: "Apple"},
+        %{value: "banana", label: "Banana"}
+      ]}
+    ]}
+    selected={["apple"]}
+    expanded={["fruits"]}
+    placeholder="Select item..."
+  />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <% tree_options = [
+    %{value: "fruits", label: "Fruits", children: [
+      %{value: "apple", label: "Apple"},
+      %{value: "banana", label: "Banana"},
+      %{value: "cherry", label: "Cherry"}
+    ]},
+    %{value: "vegs", label: "Vegetables", children: [
+      %{value: "carrot", label: "Carrot"},
+      %{value: "broccoli", label: "Broccoli"}
+    ]},
+    %{value: "grains", label: "Grains"}
+  ] %>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Tree Select</h3>
+  <div class="mb-4">
+    <.dm_tree_select
+      options={tree_options}
+      placeholder="Select food..."
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Selected Value</h3>
+  <div class="mb-4">
+    <.dm_tree_select
+      options={tree_options}
+      selected={["apple"]}
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Expanded Tree (Open)</h3>
+  <div class="mb-4" style="min-height: 300px">
+    <.dm_tree_select
+      options={tree_options}
+      selected={["apple", "carrot"]}
+      expanded={["fruits", "vegs"]}
+      open
+      searchable
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Size Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_tree_select
+      options={tree_options}
+      selected={["apple"]}
+      size="sm"
+    />
+    <.dm_tree_select
+      options={tree_options}
+      selected={["apple"]}
+    />
+    <.dm_tree_select
+      options={tree_options}
+      selected={["apple"]}
+      size="lg"
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Multi-Select with Checkboxes (Open)</h3>
+  <div class="mb-4" style="min-height: 300px">
+    <.dm_tree_select
+      options={tree_options}
+      selected={["apple", "banana"]}
+      expanded={["fruits"]}
+      multiple
+      open
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Path Display</h3>
+  <div class="mb-4">
+    <.dm_tree_select
+      options={tree_options}
+      selected={["apple"]}
+      show_path
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Variant Styles</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_tree_select
+      options={tree_options}
+      selected={["apple"]}
+      variant="outlined"
+    />
+    <.dm_tree_select
+      options={tree_options}
+      selected={["apple"]}
+      variant="filled"
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">States</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_tree_select
+      options={tree_options}
+      selected={["apple"]}
+      error
+    />
+    <.dm_tree_select
+      options={tree_options}
+      disabled
+      placeholder="Disabled"
+    />
+    <.dm_tree_select
+      options={tree_options}
+      loading
+      placeholder="Loading..."
+    />
+    <.dm_tree_select
+      options={tree_options}
+      selected={["apple"]}
+      clearable
+    />
+  </div>
+</.dm_card>

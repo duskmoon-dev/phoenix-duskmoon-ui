@@ -74,6 +74,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/data-entry/time-input", DataEntryController, :time_input
     get "/data-entry/pin-input", DataEntryController, :pin_input
     get "/data-entry/multi-select", DataEntryController, :multi_select
+    get "/data-entry/tree-select", DataEntryController, :tree_select
 
     # Feedback
     get "/feedback/dialog", FeedbackController, :dialog

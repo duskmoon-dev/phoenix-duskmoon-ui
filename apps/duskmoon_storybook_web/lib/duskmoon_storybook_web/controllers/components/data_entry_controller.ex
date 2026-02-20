@@ -68,4 +68,8 @@ defmodule DuskmoonStorybookWeb.Components.DataEntryController do
   def multi_select(conn, _params) do
     render(conn, :multi_select, active_menu: "data-entry-multi-select")
   end
+
+  def tree_select(conn, _params) do
+    render(conn, :tree_select, active_menu: "data-entry-tree-select")
+  end
 end
