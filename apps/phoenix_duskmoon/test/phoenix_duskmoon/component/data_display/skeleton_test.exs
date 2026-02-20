@@ -8,27 +8,27 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
   describe "dm_skeleton/1" do
     test "renders basic skeleton" do
       assert render_component(&dm_skeleton/1, %{}) ==
-               ~s[<div aria-busy="true" aria-label="Loading" class="dm-skeleton"></div>]
+               ~s[<div aria-busy="true" aria-label="Loading" class="skeleton"></div>]
     end
 
     test "renders skeleton with custom class" do
       assert render_component(&dm_skeleton/1, %{class: "w-32 h-4"}) ==
-               ~s[<div aria-busy="true" aria-label="Loading" class="dm-skeleton w-32 h-4"></div>]
+               ~s[<div aria-busy="true" aria-label="Loading" class="skeleton w-32 h-4"></div>]
     end
 
     test "renders skeleton with variant" do
       assert render_component(&dm_skeleton/1, %{variant: "circle"}) ==
-               ~s[<div aria-busy="true" aria-label="Loading" class="dm-skeleton dm-skeleton--circle"></div>]
+               ~s[<div aria-busy="true" aria-label="Loading" class="skeleton skeleton-circle"></div>]
     end
 
     test "renders skeleton with size" do
       assert render_component(&dm_skeleton/1, %{size: "md"}) ==
-               ~s[<div aria-busy="true" aria-label="Loading" class="dm-skeleton dm-skeleton--md"></div>]
+               ~s[<div aria-busy="true" aria-label="Loading" class="skeleton skeleton-md"></div>]
     end
 
     test "renders skeleton with animation" do
       assert render_component(&dm_skeleton/1, %{animation: "pulse"}) ==
-               ~s[<div aria-busy="true" aria-label="Loading" class="dm-skeleton animate-pulse"></div>]
+               ~s[<div aria-busy="true" aria-label="Loading" class="skeleton animate-pulse"></div>]
     end
 
     test "renders skeleton with all options" do
@@ -40,12 +40,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
                height: "h-16",
                class: "rounded-full"
              }) ==
-               ~s[<div aria-busy="true" aria-label="Loading" class="dm-skeleton dm-skeleton--avatar dm-skeleton--lg animate-wave w-16 h-16 rounded-full"></div>]
+               ~s[<div aria-busy="true" aria-label="Loading" class="skeleton skeleton-avatar skeleton-lg animate-wave w-16 h-16 rounded-full"></div>]
     end
 
     test "renders skeleton with id" do
       assert render_component(&dm_skeleton/1, %{id: "skeleton-1"}) ==
-               ~s[<div id="skeleton-1" aria-busy="true" aria-label="Loading" class="dm-skeleton"></div>]
+               ~s[<div id="skeleton-1" aria-busy="true" aria-label="Loading" class="skeleton"></div>]
     end
   end
 
@@ -53,24 +53,24 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     test "renders text skeleton with default lines" do
       result = render_component(&dm_skeleton_text/1, %{})
       assert result =~ ~s[class="space-y-2"]
-      assert result =~ ~s[<div class="dm-skeleton h-4 w-full"></div>]
+      assert result =~ ~s[<div class="skeleton h-4 w-full"></div>]
       # Should have 3 lines total (2 full width + 1 last line)
       assert result
-             |> String.split("<div class=\"dm-skeleton h-4 w-full")
+             |> String.split("<div class=\"skeleton h-4 w-full")
              |> length()
              |> Kernel.-(1) ==
                3
 
-      assert result =~ ~s[<div class="dm-skeleton h-4 w-full"></div>]
+      assert result =~ ~s[<div class="skeleton h-4 w-full"></div>]
     end
 
     test "renders text skeleton with custom lines" do
       result = render_component(&dm_skeleton_text/1, %{lines: 5})
       assert result =~ ~s[class="space-y-2"]
-      assert result =~ ~s[<div class="dm-skeleton h-4 w-full"></div>]
+      assert result =~ ~s[<div class="skeleton h-4 w-full"></div>]
       # Should have 5 lines total (4 full width + 1 last line)
       assert result
-             |> String.split("<div class=\"dm-skeleton h-4 w-full")
+             |> String.split("<div class=\"skeleton h-4 w-full")
              |> length()
              |> Kernel.-(1) ==
                5
@@ -86,8 +86,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
         })
 
       assert result =~ ~s[class="space-y-2"]
-      assert result =~ ~s[<div class="dm-skeleton h-6 w-full"></div>]
-      assert result =~ ~s[<div class="dm-skeleton h-6 w-3/4"></div>]
+      assert result =~ ~s[<div class="skeleton h-6 w-full"></div>]
+      assert result =~ ~s[<div class="skeleton h-6 w-3/4"></div>]
     end
 
     test "renders text skeleton with animation" do
@@ -98,18 +98,36 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
   end
 
   describe "dm_skeleton_avatar/1" do
-    test "renders avatar skeleton with default size" do
+    test "renders avatar skeleton with default size (md)" do
       result = render_component(&dm_skeleton_avatar/1, %{})
 
-      assert result =~ ~s[<div class="dm-avatar dm-avatar--placeholder">]
-      assert result =~ ~s[<div class="bg-neutral text-neutral-content rounded-full w-md h-md">]
-      assert result =~ ~s[<span class="text-xs"></span>]
+      assert result =~ ~s[class="skeleton skeleton-avatar"]
+      refute result =~ "skeleton-avatar-sm"
+      refute result =~ "skeleton-avatar-lg"
     end
 
-    test "renders avatar skeleton with custom size" do
+    test "renders avatar skeleton with sm size" do
+      result = render_component(&dm_skeleton_avatar/1, %{size: "sm"})
+
+      assert result =~ ~s[skeleton-avatar-sm]
+    end
+
+    test "renders avatar skeleton with lg size" do
       result = render_component(&dm_skeleton_avatar/1, %{size: "lg"})
 
-      assert result =~ ~s[w-lg h-lg]
+      assert result =~ ~s[skeleton-avatar-lg]
+    end
+
+    test "renders avatar skeleton with xs size" do
+      result = render_component(&dm_skeleton_avatar/1, %{size: "xs"})
+
+      assert result =~ ~s[w-6 h-6]
+    end
+
+    test "renders avatar skeleton with xl size" do
+      result = render_component(&dm_skeleton_avatar/1, %{size: "xl"})
+
+      assert result =~ ~s[w-20 h-20]
     end
 
     test "renders avatar skeleton with animation" do
@@ -129,16 +147,16 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     test "renders basic card skeleton" do
       result = render_component(&dm_skeleton_card/1, %{})
 
-      assert result =~ ~s[class="dm-card bg-base-100 shadow-xl"]
-      assert result =~ ~s[<div class="dm-card__body">]
-      assert result =~ ~s[<div class="dm-skeleton h-6 w-3/4 mb-4">]
+      assert result =~ ~s[class="card shadow-xl"]
+      assert result =~ ~s[<div class="card-body">]
+      assert result =~ ~s[<div class="skeleton h-6 w-3/4 mb-4">]
       assert result =~ ~s[class="space-y-2"]
     end
 
     test "renders card skeleton with avatar" do
       result = render_component(&dm_skeleton_card/1, %{show_avatar: true})
 
-      assert result =~ ~s[<div class="dm-avatar dm-avatar--placeholder">]
+      assert result =~ ~s[skeleton skeleton-avatar]
       assert result =~ ~s[flex items-start gap-4]
     end
 
@@ -147,14 +165,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
 
       # Should have 5 skeleton lines
       # 5 lines + 1 title
-      assert result |> String.split("dm-skeleton h-4") |> length() == 6
+      assert result |> String.split("skeleton h-4") |> length() == 6
     end
 
     test "renders card skeleton with action button" do
       result = render_component(&dm_skeleton_card/1, %{show_action: true})
 
-      assert result =~ ~s[<div class="dm-card__actions justify-end mt-4">]
-      assert result =~ ~s[<div class="dm-skeleton h-10 w-20">]
+      assert result =~ ~s[<div class="card-actions justify-end mt-4">]
+      assert result =~ ~s[<div class="skeleton h-10 w-20">]
     end
 
     test "renders card skeleton with animation" do
@@ -168,7 +186,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     test "renders table skeleton with header" do
       result = render_component(&dm_skeleton_table/1, %{rows: 3, columns: 2})
 
-      assert result =~ ~s[<table class="dm-table">]
+      assert result =~ ~s[<table class="table">]
       assert result =~ ~s[<thead>]
       assert result =~ ~s[<th>]
       assert result =~ ~s[<tbody>]
@@ -215,8 +233,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     test "renders list skeleton with avatars" do
       result = render_component(&dm_skeleton_list/1, %{items: 2, show_avatar: true})
 
-      # 2 avatars + 1 split
-      assert result |> String.split("dm-avatar dm-avatar--placeholder") |> length() == 3
+      # 2 avatars + 1 split (sm is default for list avatars)
+      assert result |> String.split("skeleton skeleton-avatar skeleton-avatar-sm") |> length() ==
+               3
     end
 
     test "renders list skeleton with multiple lines per item" do
@@ -239,21 +258,21 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
       result = render_component(&dm_skeleton_form/1, %{fields: 3})
 
       assert result =~ ~s[class="space-y-6"]
-      assert result =~ ~s[<div class="dm-form-group">]
-      assert result =~ ~s[<div class="dm-label">]
-      assert result =~ ~s[<div class="dm-skeleton h-4 w-24">]
+      assert result =~ ~s[<div class="form-group">]
+      assert result =~ ~s[<div class="form-label">]
+      assert result =~ ~s[<div class="skeleton h-4 w-24">]
 
-      # Should have 3 fields + 1 submit button = 4 dm-form-group divs
+      # Should have 3 fields + 1 submit button = 4 form-group divs
       # 4 controls + 1 split
-      assert result |> String.split("dm-form-group") |> length() == 5
+      assert result |> String.split("form-group") |> length() == 5
     end
 
     test "renders form skeleton without submit button" do
       result = render_component(&dm_skeleton_form/1, %{fields: 2, show_submit: false})
 
-      # Should have exactly 2 dm-form-group divs
+      # Should have exactly 2 form-group divs
       # 2 controls + 1 split
-      assert result |> String.split("dm-form-group") |> length() == 3
+      assert result |> String.split("form-group") |> length() == 3
     end
 
     test "renders form skeleton with custom field types" do
@@ -264,11 +283,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
         })
 
       # text field
-      assert result =~ ~s[dm-skeleton h-10 w-full]
+      assert result =~ ~s[skeleton h-10 w-full]
       # textarea
-      assert result =~ ~s[dm-skeleton h-24 w-full]
+      assert result =~ ~s[skeleton h-24 w-full]
       # checkbox
-      assert result =~ ~s[dm-skeleton h-4 w-4]
+      assert result =~ ~s[skeleton h-4 w-4]
     end
 
     test "renders form skeleton with animation" do
@@ -284,29 +303,29 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
 
       # Auto-gen: ["text", "select", "textarea", "checkbox"] + 1 padded "text"
       # text => h-10, textarea => h-24, checkbox => h-4 w-4
-      assert result =~ "dm-skeleton h-10 w-full"
-      assert result =~ "dm-skeleton h-24 w-full"
-      assert result =~ "dm-skeleton h-4 w-4"
+      assert result =~ "skeleton h-10 w-full"
+      assert result =~ "skeleton h-24 w-full"
+      assert result =~ "skeleton h-4 w-4"
     end
 
     test "renders form skeleton with fields 0 shows no field groups" do
       result = render_component(&dm_skeleton_form/1, %{fields: 0, show_submit: false})
 
-      refute result =~ "dm-form-group"
+      refute result =~ "form-group"
     end
 
     test "renders form skeleton with fields 0 and submit shows only submit" do
       result = render_component(&dm_skeleton_form/1, %{fields: 0, show_submit: true})
 
-      # Only 1 dm-form-group for the submit button
-      assert result |> String.split("dm-form-group") |> length() == 2
+      # Only 1 form-group for the submit button
+      assert result |> String.split("form-group") |> length() == 2
     end
 
     test "renders form skeleton with 1 field auto-generates text type" do
       result = render_component(&dm_skeleton_form/1, %{fields: 1, show_submit: false})
 
-      assert result =~ "dm-skeleton h-10 w-full"
-      assert result |> String.split("dm-form-group") |> length() == 2
+      assert result =~ "skeleton h-10 w-full"
+      assert result |> String.split("form-group") |> length() == 2
     end
 
     test "renders form skeleton with select field type" do
@@ -318,7 +337,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
         })
 
       # select renders same as text: h-10 w-full
-      assert result =~ "dm-skeleton h-10 w-full"
+      assert result =~ "skeleton h-10 w-full"
     end
 
     test "renders form skeleton with unknown field type defaults to text size" do
@@ -330,7 +349,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
         })
 
       # Unknown type falls through to default: h-10 w-full
-      assert result =~ "dm-skeleton h-10 w-full"
+      assert result =~ "skeleton h-10 w-full"
     end
   end
 
@@ -341,7 +360,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
       assert result =~ "space-y-2"
       # Only the last line rendered (no loop for lines > 1)
       assert result
-             |> String.split("<div class=\"dm-skeleton h-4")
+             |> String.split("<div class=\"skeleton h-4")
              |> length()
              |> Kernel.-(1) == 1
     end
@@ -390,16 +409,16 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
           animation: "pulse"
         })
 
-      assert result =~ "dm-avatar dm-avatar--placeholder"
-      assert result =~ "dm-card__actions"
-      assert result =~ "dm-skeleton h-10 w-20"
+      assert result =~ "skeleton skeleton-avatar"
+      assert result =~ "card-actions"
+      assert result =~ "skeleton h-10 w-20"
       assert result =~ "animate-pulse"
     end
 
     test "renders card skeleton with custom avatar size" do
       result = render_component(&dm_skeleton_card/1, %{show_avatar: true, avatar_size: "lg"})
 
-      assert result =~ "w-lg h-lg"
+      assert result =~ "skeleton-avatar-lg"
     end
 
     test "renders card skeleton with id" do
@@ -443,8 +462,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
       assert result =~ "w-full"
       assert result =~ "animate-wave"
       assert result =~ "<thead>"
-      # 2 header cells + 6 data cells = 8 total (3 th + 6 td)
+      # 3 header cells + 1 split
       assert result |> String.split("<th>") |> length() == 4
+      # 6 data cells + 1 split
       assert result |> String.split("<td>") |> length() == 7
     end
   end
@@ -469,7 +489,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
           avatar_size: "lg"
         })
 
-      assert result =~ "w-lg h-lg"
+      assert result =~ "skeleton-avatar-lg"
     end
 
     test "renders list skeleton with all options combined" do
@@ -487,7 +507,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
       assert result =~ ~s[id="full-list"]
       assert result =~ "border rounded"
       assert result =~ "animate-pulse"
-      assert result =~ "dm-avatar"
+      assert result =~ "skeleton skeleton-avatar"
       assert result |> String.split("flex items-start gap-3") |> length() == 4
     end
   end
@@ -619,8 +639,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     test "renders skeleton with variant and size combined" do
       result = render_component(&dm_skeleton/1, %{variant: "square", size: "xl"})
 
-      assert result =~ "dm-skeleton--square"
-      assert result =~ "dm-skeleton--xl"
+      assert result =~ "skeleton-square"
+      assert result =~ "skeleton-xl"
     end
   end
 
@@ -632,10 +652,20 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     end
 
     test "renders avatar skeleton with all sizes" do
-      for size <- ~w(xs sm md lg xl) do
-        result = render_component(&dm_skeleton_avatar/1, %{size: size})
-        assert result =~ "w-#{size} h-#{size}"
-      end
+      result_xs = render_component(&dm_skeleton_avatar/1, %{size: "xs"})
+      assert result_xs =~ "w-6 h-6"
+
+      result_sm = render_component(&dm_skeleton_avatar/1, %{size: "sm"})
+      assert result_sm =~ "skeleton-avatar-sm"
+
+      result_md = render_component(&dm_skeleton_avatar/1, %{size: "md"})
+      assert result_md =~ "skeleton skeleton-avatar"
+
+      result_lg = render_component(&dm_skeleton_avatar/1, %{size: "lg"})
+      assert result_lg =~ "skeleton-avatar-lg"
+
+      result_xl = render_component(&dm_skeleton_avatar/1, %{size: "xl"})
+      assert result_xl =~ "w-20 h-20"
     end
   end
 
@@ -645,12 +675,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
 
       assert result =~ ~s[class="space-y-4"]
       assert result =~ ~s[flex gap-4]
-      assert result =~ ~s[dm-avatar dm-avatar--placeholder]
+      assert result =~ ~s[skeleton skeleton-avatar skeleton-avatar-sm]
       assert result =~ ~s[flex items-center gap-2]
       # name
-      assert result =~ ~s[dm-skeleton h-4 w-20]
+      assert result =~ ~s[skeleton h-4 w-20]
       # timestamp
-      assert result =~ ~s[dm-skeleton h-3 w-16]
+      assert result =~ ~s[skeleton h-3 w-16]
     end
 
     test "renders comment skeleton with replies" do

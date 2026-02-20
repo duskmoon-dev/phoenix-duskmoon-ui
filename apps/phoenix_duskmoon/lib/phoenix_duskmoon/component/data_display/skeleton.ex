@@ -23,7 +23,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   attr(:variant, :string,
     default: nil,
-    doc: "Skeleton variant (default, circle, square, text, avatar)"
+    doc: "Skeleton variant (circle, square, text, avatar)"
   )
 
   attr(:size, :string,
@@ -33,7 +33,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   attr(:animation, :string,
     default: nil,
-    doc: "Animation type (pulse, wave, bounce)"
+    doc: "Animation type (wave, bounce)"
   )
 
   attr(:width, :string, default: nil, doc: "Custom width (e.g., 'w-32', 'w-full')")
@@ -53,9 +53,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   defp build_skeleton_classes(variant, size, animation, width, height, class) do
     [
-      "dm-skeleton",
-      if(variant, do: "dm-skeleton--#{variant}", else: nil),
-      if(size, do: "dm-skeleton--#{size}", else: nil),
+      "skeleton",
+      if(variant, do: "skeleton-#{variant}", else: nil),
+      if(size, do: "skeleton-#{size}", else: nil),
       if(animation, do: "animate-#{animation}", else: nil),
       width,
       height,
@@ -108,7 +108,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   defp build_line_classes(height, width, animation) do
     [
-      "dm-skeleton",
+      "skeleton",
       height,
       width,
       if(animation, do: "animate-#{animation}", else: nil)
@@ -133,18 +133,15 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   def dm_skeleton_avatar(assigns) do
     ~H"""
-    <div id={@id} class={build_avatar_classes(@animation, @class)}>
-      <div class={build_avatar_inner_classes(@size)}>
-        <span class="text-xs"></span>
-      </div>
-    </div>
+    <div id={@id} class={build_avatar_classes(@size, @animation, @class)} />
     """
   end
 
-  defp build_avatar_classes(animation, class) do
+  defp build_avatar_classes(size, animation, class) do
     [
-      "dm-avatar",
-      "dm-avatar--placeholder",
+      "skeleton",
+      "skeleton-avatar",
+      skeleton_avatar_size(size),
       if(animation, do: "animate-#{animation}", else: nil),
       class
     ]
@@ -152,15 +149,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     |> Enum.join(" ")
   end
 
-  defp build_avatar_inner_classes(size) do
-    [
-      "bg-neutral text-neutral-content rounded-full",
-      "w-#{size}",
-      "h-#{size}"
-    ]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
-  end
+  defp skeleton_avatar_size("xs"), do: "w-6 h-6"
+  defp skeleton_avatar_size("sm"), do: "skeleton-avatar-sm"
+  defp skeleton_avatar_size("md"), do: nil
+  defp skeleton_avatar_size("lg"), do: "skeleton-avatar-lg"
+  defp skeleton_avatar_size("xl"), do: "w-20 h-20"
+  defp skeleton_avatar_size(_), do: nil
 
   @doc """
   Generates a card skeleton placeholder.
@@ -187,7 +181,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   def dm_skeleton_card(assigns) do
     ~H"""
     <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_card_classes(@class)}>
-      <div class="dm-card__body">
+      <div class="card-body">
         <div class="flex items-start gap-4">
           <%= if @show_avatar do %>
             <.dm_skeleton_avatar size={@avatar_size} animation={@animation} />
@@ -198,7 +192,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
           </div>
         </div>
         <%= if @show_action do %>
-          <div class="dm-card__actions justify-end mt-4">
+          <div class="card-actions justify-end mt-4">
             <div class={build_action_classes(@animation)}></div>
           </div>
         <% end %>
@@ -208,14 +202,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   end
 
   defp build_card_classes(class) do
-    ["dm-card", "bg-base-100", "shadow-xl", class]
+    ["card", "shadow-xl", class]
     |> Enum.reject(&is_nil/1)
     |> Enum.join(" ")
   end
 
   defp build_title_classes(animation) do
     [
-      "dm-skeleton",
+      "skeleton",
       "h-6",
       "w-3/4",
       "mb-4",
@@ -227,7 +221,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   defp build_action_classes(animation) do
     [
-      "dm-skeleton",
+      "skeleton",
       "h-10",
       "w-20",
       if(animation, do: "animate-#{animation}", else: nil)
@@ -260,13 +254,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   def dm_skeleton_table(assigns) do
     ~H"""
     <div id={@id} aria-busy="true" aria-label={@loading_label} class={["overflow-x-auto", @class]}>
-      <table class="dm-table">
+      <table class="table">
         <%= if @show_header do %>
           <thead>
             <tr>
               <%= for _i <- 1..@columns do %>
                 <th>
-                  <div class={["dm-skeleton", "h-4", "w-full", @animation && "animate-#{@animation}"]}></div>
+                  <div class={["skeleton", "h-4", "w-full", @animation && "animate-#{@animation}"]}></div>
                 </th>
               <% end %>
             </tr>
@@ -277,7 +271,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
             <tr>
               <%= for _col <- 1..@columns do %>
                 <td>
-                  <div class={["dm-skeleton", "h-4", "w-full", @animation && "animate-#{@animation}"]}></div>
+                  <div class={["skeleton", "h-4", "w-full", @animation && "animate-#{@animation}"]}></div>
                 </td>
               <% end %>
             </tr>
@@ -388,15 +382,15 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     ~H"""
     <form id={@id} aria-busy="true" aria-label={@loading_label} class={build_form_classes(@class)}>
       <%= for field_type <- @field_types do %>
-        <div class="dm-form-group">
-          <div class="dm-label">
+        <div class="form-group">
+          <div class="form-label">
             <div class={build_label_classes(@animation)}></div>
           </div>
           <div class={build_field_classes(field_type, @animation)}></div>
         </div>
       <% end %>
       <%= if @show_submit do %>
-        <div class="dm-form-group">
+        <div class="form-group">
           <div class={build_submit_classes(@animation)}></div>
         </div>
       <% end %>
@@ -437,7 +431,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
           <.dm_skeleton_text lines={3} last_line_width="w-4/5" animation={@animation} />
         </div>
       </div>
-      
+
       <!-- Replies -->
       <%= if @show_replies > 0 do %>
         <div class="ml-12 space-y-4">
@@ -467,7 +461,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   defp build_comment_name_classes(animation) do
     [
-      "dm-skeleton",
+      "skeleton",
       "h-4",
       "w-20",
       if(animation, do: "animate-#{animation}", else: nil)
@@ -478,7 +472,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   defp build_comment_meta_classes(animation) do
     [
-      "dm-skeleton",
+      "skeleton",
       "h-3",
       "w-16",
       if(animation, do: "animate-#{animation}", else: nil)
@@ -489,7 +483,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   defp build_reply_name_classes(animation) do
     [
-      "dm-skeleton",
+      "skeleton",
       "h-3",
       "w-16",
       if(animation, do: "animate-#{animation}", else: nil)
@@ -500,7 +494,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   defp build_reply_meta_classes(animation) do
     [
-      "dm-skeleton",
+      "skeleton",
       "h-3",
       "w-12",
       if(animation, do: "animate-#{animation}", else: nil)
@@ -517,7 +511,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   defp build_label_classes(animation) do
     [
-      "dm-skeleton",
+      "skeleton",
       "h-4",
       "w-24",
       if(animation, do: "animate-#{animation}", else: nil)
@@ -529,11 +523,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   defp build_field_classes(field_type, animation) do
     base_classes =
       case field_type do
-        "text" -> "dm-skeleton h-10 w-full"
-        "select" -> "dm-skeleton h-10 w-full"
-        "textarea" -> "dm-skeleton h-24 w-full"
-        "checkbox" -> "dm-skeleton h-4 w-4"
-        _ -> "dm-skeleton h-10 w-full"
+        "text" -> "skeleton h-10 w-full"
+        "select" -> "skeleton h-10 w-full"
+        "textarea" -> "skeleton h-24 w-full"
+        "checkbox" -> "skeleton h-4 w-4"
+        _ -> "skeleton h-10 w-full"
       end
 
     animation_class = if(animation, do: "animate-#{animation}", else: nil)
@@ -545,7 +539,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   defp build_submit_classes(animation) do
     [
-      "dm-skeleton",
+      "skeleton",
       "h-10",
       "w-24",
       if(animation, do: "animate-#{animation}", else: nil)
