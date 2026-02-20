@@ -64,8 +64,7 @@ defmodule PhoenixDuskmoon.CssArt.Snow do
 
     assigns
     |> assign(
-      snowflakes:
-        generate_snowflakes(count, assigns.size_range, assigns.animation_duration)
+      snowflakes: generate_snowflakes(count, assigns.size_range, assigns.animation_duration)
     )
     |> render_snow()
   end
@@ -155,6 +154,7 @@ defmodule PhoenixDuskmoon.CssArt.Snow do
   end
 
   defp to_integer(v) when is_integer(v), do: v
+
   defp to_integer(v) when is_binary(v) do
     case Integer.parse(v) do
       {i, _} -> i
