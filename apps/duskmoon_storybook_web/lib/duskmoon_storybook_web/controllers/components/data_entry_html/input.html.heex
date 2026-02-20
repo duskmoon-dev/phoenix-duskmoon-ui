@@ -45,6 +45,14 @@
     <.dm_input name="inp-lg" label="Large" value="" size="lg" />
   </div>
 
+  <h3 class="text-xl font-semibold mt-8 mb-4">Style Variants</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_input name="inp-ghost" label="Ghost" value="" variant="ghost" placeholder="Ghost input" />
+    <.dm_input name="inp-filled" label="Filled" value="" variant="filled" placeholder="Filled input" />
+    <.dm_input name="inp-bordered" label="Bordered" value="" variant="bordered" placeholder="Bordered input" />
+    <.dm_input name="inp-default" label="Default (no variant)" value="" placeholder="Default input" />
+  </div>
+
   <h3 class="text-xl font-semibold mt-8 mb-4">Select</h3>
   <div class="flex flex-col gap-4 max-w-md">
     <.dm_input name="inp-select" label="Role" type="select" value="" options={[{"admin", "Admin"}, {"editor", "Editor"}, {"viewer", "Viewer"}]} prompt="Choose a role" />

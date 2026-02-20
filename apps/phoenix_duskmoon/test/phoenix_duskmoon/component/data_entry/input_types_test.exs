@@ -3308,4 +3308,206 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       refute Regex.match?(~r/<input[^>]*class="[^"]*input[^-]/, result)
     end
   end
+
+  describe "input style variants (ghost, filled, bordered)" do
+    test "renders text input with ghost variant" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "ghost-text",
+          label: "Ghost",
+          variant: "ghost",
+          value: ""
+        })
+
+      assert result =~ "input-ghost"
+      assert result =~ "class=\"input "
+    end
+
+    test "renders text input with filled variant" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "filled-text",
+          label: "Filled",
+          variant: "filled",
+          value: ""
+        })
+
+      assert result =~ "input-filled"
+    end
+
+    test "renders text input with bordered variant" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "bordered-text",
+          label: "Bordered",
+          variant: "bordered",
+          value: ""
+        })
+
+      assert result =~ "input-bordered"
+    end
+
+    test "renders text input without variant class by default" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "default-text",
+          label: "Default",
+          value: ""
+        })
+
+      refute result =~ "input-ghost"
+      refute result =~ "input-filled"
+      refute result =~ "input-bordered"
+    end
+
+    test "renders ghost variant with color" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "ghost-color",
+          label: "Ghost Primary",
+          variant: "ghost",
+          color: "primary",
+          value: ""
+        })
+
+      assert result =~ "input-ghost"
+      assert result =~ "input-primary"
+    end
+
+    test "renders filled variant with size" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "filled-size",
+          label: "Filled LG",
+          variant: "filled",
+          size: "lg",
+          value: ""
+        })
+
+      assert result =~ "input-filled"
+      assert result =~ "input-lg"
+    end
+
+    test "renders ghost variant on email input type" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "email",
+          name: "ghost-email",
+          label: "Email",
+          variant: "ghost",
+          value: ""
+        })
+
+      assert result =~ "input-ghost"
+      assert result =~ ~s[type="email"]
+    end
+
+    test "renders filled variant on password input type" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password",
+          name: "filled-pass",
+          label: "Password",
+          variant: "filled",
+          value: ""
+        })
+
+      assert result =~ "input-filled"
+      assert result =~ ~s[type="password"]
+    end
+
+    test "renders ghost variant on search input type" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "search",
+          name: "ghost-search",
+          label: "Search",
+          variant: "ghost",
+          value: ""
+        })
+
+      assert result =~ "input-ghost"
+      assert result =~ ~s[type="search"]
+    end
+
+    test "renders filled variant on datepicker type" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "datepicker",
+          name: "filled-date",
+          label: "Date",
+          variant: "filled",
+          value: ""
+        })
+
+      assert result =~ "input-filled"
+    end
+
+    test "renders ghost variant on timepicker type" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "timepicker",
+          name: "ghost-time",
+          label: "Time",
+          variant: "ghost",
+          value: ""
+        })
+
+      assert result =~ "input-ghost"
+    end
+
+    test "renders filled variant on password_strength type" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "password_strength",
+          name: "filled-pw",
+          label: "Password",
+          variant: "filled",
+          value: ""
+        })
+
+      assert result =~ "input-filled"
+    end
+
+    test "renders ghost variant with error state" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "ghost-error",
+          label: "Input",
+          variant: "ghost",
+          errors: ["is invalid"],
+          value: ""
+        })
+
+      assert result =~ "input-ghost"
+      assert result =~ "input-error"
+      assert result =~ "is invalid"
+    end
+
+    test "renders filled variant with all options combined" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "filled-all",
+          id: "filled-all",
+          label: "Full",
+          variant: "filled",
+          color: "success",
+          size: "lg",
+          value: "test"
+        })
+
+      assert result =~ "input-filled"
+      assert result =~ "input-success"
+      assert result =~ "input-lg"
+      assert result =~ ~s[value="test"]
+    end
+  end
 end

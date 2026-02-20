@@ -64,6 +64,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     doc: "the size of the input (xs, sm, lg)"
   )
 
+  attr(:variant, :string,
+    default: nil,
+    values: ["ghost", "filled", "bordered", nil],
+    doc: "the input style variant (ghost, filled, bordered)"
+  )
+
   attr(:type, :string,
     default: "text",
     values: ~w(checkbox color date datetime-local email file hidden month number password
@@ -379,6 +385,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           class={[
             @class,
             if(!@classic, do: "input file-upload"),
+            @variant && "input-#{@variant}",
             @color && "input-#{@color}",
             @size && "input-#{@size}",
             @errors != [] && "input-error"
@@ -494,6 +501,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             class={[
               @class,
               if(!@classic, do: "input"),
+              @variant && "input-#{@variant}",
               @color && "input-#{@color}",
               @size && "input-#{@size}",
               @errors != [] && "input-error"
@@ -526,6 +534,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             class={[
               @class,
               if(!@classic, do: "input"),
+              @variant && "input-#{@variant}",
               @color && "input-#{@color}",
               @size && "input-#{@size}",
               @errors != [] && "input-error"
@@ -649,6 +658,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             class={[
               @class,
               if(!@classic, do: "input"),
+              @variant && "input-#{@variant}",
               @color && "input-#{@color}",
               @size && "input-#{@size}",
               @errors != [] && "input-error"
@@ -906,6 +916,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             class={[
               @class,
               if(!@classic, do: "input"),
+              @variant && "input-#{@variant}",
               @color && "input-#{@color}",
               @size && "input-#{@size}",
               @errors != [] && "input-error"
@@ -977,6 +988,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           class={[
             @class,
             if(!@classic, do: "input"),
+            @variant && "input-#{@variant}",
             @color && "input-#{@color}",
             @size && "input-#{@size}",
             @errors != [] && "input-error"

@@ -131,6 +131,36 @@ defmodule Storybook.DataEntry.Input do
         }
       },
       %Variation{
+        id: :ghost,
+        attributes: %{
+          type: "text",
+          label: "Ghost Input",
+          name: "ghost_input",
+          value: nil,
+          variant: "ghost"
+        }
+      },
+      %Variation{
+        id: :filled,
+        attributes: %{
+          type: "text",
+          label: "Filled Input",
+          name: "filled_input",
+          value: nil,
+          variant: "filled"
+        }
+      },
+      %Variation{
+        id: :bordered,
+        attributes: %{
+          type: "text",
+          label: "Bordered Input",
+          name: "bordered_input",
+          value: nil,
+          variant: "bordered"
+        }
+      },
+      %Variation{
         id: :textarea,
         attributes: %{
           type: "textarea",
