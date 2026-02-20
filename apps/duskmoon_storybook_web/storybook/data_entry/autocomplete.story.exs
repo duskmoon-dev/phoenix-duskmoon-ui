@@ -1,0 +1,53 @@
+defmodule Storybook.DataEntry.Autocomplete do
+  use PhoenixStorybook.Story, :component
+
+  def function, do: &PhoenixDuskmoon.Component.DataEntry.Autocomplete.dm_autocomplete/1
+  def description, do: "Searchable autocomplete input with dropdown suggestions."
+
+  def variations do
+    [
+      %Variation{
+        id: :default,
+        attributes: %{
+          id: "auto-default",
+          placeholder: "Search countries...",
+          options: [
+            %{value: "us", label: "United States"},
+            %{value: "uk", label: "United Kingdom"},
+            %{value: "ca", label: "Canada"},
+            %{value: "de", label: "Germany"},
+            %{value: "fr", label: "France"}
+          ]
+        }
+      },
+      %Variation{
+        id: :with_groups,
+        attributes: %{
+          id: "auto-groups",
+          placeholder: "Select language...",
+          options: [
+            %{value: "js", label: "JavaScript", group: "Frontend"},
+            %{value: "ts", label: "TypeScript", group: "Frontend"},
+            %{value: "py", label: "Python", group: "Backend"},
+            %{value: "ex", label: "Elixir", group: "Backend"},
+            %{value: "go", label: "Go", group: "Backend"}
+          ]
+        }
+      },
+      %Variation{
+        id: :multiple,
+        attributes: %{
+          id: "auto-multiple",
+          placeholder: "Select tags...",
+          multiple: true,
+          clearable: true,
+          options: [
+            %{value: "elixir", label: "Elixir"},
+            %{value: "phoenix", label: "Phoenix"},
+            %{value: "liveview", label: "LiveView"}
+          ]
+        }
+      }
+    ]
+  end
+end

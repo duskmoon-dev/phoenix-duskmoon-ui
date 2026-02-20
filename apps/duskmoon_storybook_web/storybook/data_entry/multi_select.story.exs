@@ -1,0 +1,71 @@
+defmodule Storybook.DataEntry.MultiSelect do
+  use PhoenixStorybook.Story, :component
+
+  def function, do: &PhoenixDuskmoon.Component.DataEntry.MultiSelect.dm_multi_select/1
+  def description, do: "Multi-select input with tags, dropdown, and search."
+
+  def variations do
+    [
+      %Variation{
+        id: :default,
+        attributes: %{
+          id: "ms-default",
+          placeholder: "Select items...",
+          options: [
+            %{value: "elixir", label: "Elixir"},
+            %{value: "phoenix", label: "Phoenix"},
+            %{value: "liveview", label: "LiveView"},
+            %{value: "ecto", label: "Ecto"}
+          ]
+        }
+      },
+      %Variation{
+        id: :with_selected,
+        attributes: %{
+          id: "ms-selected",
+          options: [
+            %{value: "elixir", label: "Elixir"},
+            %{value: "phoenix", label: "Phoenix"},
+            %{value: "liveview", label: "LiveView"}
+          ],
+          selected: ["elixir", "phoenix"],
+          clearable: true,
+          show_counter: true
+        }
+      },
+      %Variation{
+        id: :open_dropdown,
+        attributes: %{
+          id: "ms-open",
+          options: [
+            %{value: "a", label: "Apple", group: "Fruits"},
+            %{value: "b", label: "Banana", group: "Fruits"},
+            %{value: "c", label: "Carrot", group: "Vegetables"}
+          ],
+          selected: ["a"],
+          open: true,
+          searchable: true,
+          show_actions: true
+        }
+      },
+      %Variation{
+        id: :states,
+        attributes: %{},
+        slots: [
+          """
+          <div class="space-y-4">
+            <.dm_multi_select id="ms-error"
+              options={[%{value: "a", label: "Error"}]}
+              selected={["a"]} error={true} />
+            <.dm_multi_select id="ms-disabled"
+              options={[%{value: "a", label: "Disabled"}]}
+              selected={["a"]} disabled={true} />
+            <.dm_multi_select id="ms-loading"
+              options={[]} loading={true} placeholder="Loading..." />
+          </div>
+          """
+        ]
+      }
+    ]
+  end
+end

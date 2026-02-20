@@ -1,0 +1,37 @@
+defmodule Storybook.Layout.BottomSheet do
+  use PhoenixStorybook.Story, :component
+
+  def function, do: &PhoenixDuskmoon.Component.Layout.BottomSheet.dm_bottom_sheet/1
+  def description, do: "Bottom sheet overlay with snap points and modal options."
+
+  def variations do
+    [
+      %Variation{
+        id: :default,
+        attributes: %{
+          id: "bs-default"
+        },
+        slots: [
+          """
+          <:header>Bottom Sheet Title</:header>
+          <p>This is the content of the bottom sheet.</p>
+          """
+        ]
+      },
+      %Variation{
+        id: :open,
+        attributes: %{
+          id: "bs-open",
+          open: true,
+          modal: true
+        },
+        slots: [
+          """
+          <:header>Open Sheet</:header>
+          <p>This sheet is open by default with modal backdrop.</p>
+          """
+        ]
+      }
+    ]
+  end
+end
