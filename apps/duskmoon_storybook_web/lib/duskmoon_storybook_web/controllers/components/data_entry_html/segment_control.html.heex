@@ -1,0 +1,116 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/segment-control"}>Data Entry</:crumb>
+  <:crumb>Segment Control</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Segment Control</span>
+    <span class="text-sm opacity-60">dm_segment_control</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Segment control component using `@duskmoon-dev/core` CSS classes.
+  Renders a group of mutually exclusive toggle buttons for switching
+  between views, filters, or modes.
+
+  ## Usage
+  ```elixir
+  <.dm_segment_control>
+    <:item active>Day</:item>
+    <:item>Week</:item>
+    <:item>Month</:item>
+  </.dm_segment_control>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Segment Control</h3>
+  <div class="mb-4">
+    <.dm_segment_control>
+      <:item active>Day</:item>
+      <:item>Week</:item>
+      <:item>Month</:item>
+      <:item>Year</:item>
+    </.dm_segment_control>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Color Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_segment_control color="primary">
+      <:item active>Primary</:item>
+      <:item>Other</:item>
+    </.dm_segment_control>
+    <.dm_segment_control color="secondary">
+      <:item active>Secondary</:item>
+      <:item>Other</:item>
+    </.dm_segment_control>
+    <.dm_segment_control color="tertiary">
+      <:item active>Tertiary</:item>
+      <:item>Other</:item>
+    </.dm_segment_control>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Size Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_segment_control size="sm">
+      <:item active>Small</:item>
+      <:item>Option B</:item>
+    </.dm_segment_control>
+    <.dm_segment_control>
+      <:item active>Default</:item>
+      <:item>Option B</:item>
+    </.dm_segment_control>
+    <.dm_segment_control size="lg">
+      <:item active>Large</:item>
+      <:item>Option B</:item>
+    </.dm_segment_control>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Style Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_segment_control variant="outlined">
+      <:item active>Outlined</:item>
+      <:item>Option B</:item>
+      <:item>Option C</:item>
+    </.dm_segment_control>
+    <.dm_segment_control variant="ghost">
+      <:item active>Ghost</:item>
+      <:item>Option B</:item>
+      <:item>Option C</:item>
+    </.dm_segment_control>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Full Width</h3>
+  <div class="mb-4">
+    <.dm_segment_control full color="primary">
+      <:item active>List</:item>
+      <:item>Grid</:item>
+      <:item>Table</:item>
+    </.dm_segment_control>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Icons</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_segment_control>
+      <:item active icon="view-list">List</:item>
+      <:item icon="view-grid">Grid</:item>
+      <:item icon="table">Table</:item>
+    </.dm_segment_control>
+    <.dm_segment_control icon_only>
+      <:item active icon="view-list"></:item>
+      <:item icon="view-grid"></:item>
+      <:item icon="table"></:item>
+    </.dm_segment_control>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Disabled Items</h3>
+  <div class="mb-4">
+    <.dm_segment_control>
+      <:item active>Active</:item>
+      <:item>Normal</:item>
+      <:item disabled>Disabled</:item>
+    </.dm_segment_control>
+  </div>
+</.dm_card>

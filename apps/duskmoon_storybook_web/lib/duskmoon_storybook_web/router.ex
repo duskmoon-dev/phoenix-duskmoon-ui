@@ -62,6 +62,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/data-entry/input", DataEntryController, :input
     get "/data-entry/rating", DataEntryController, :rating
     get "/data-entry/radio", DataEntryController, :radio
+    get "/data-entry/segment-control", DataEntryController, :segment_control
     get "/data-entry/select", DataEntryController, :select
     get "/data-entry/slider", DataEntryController, :slider
     get "/data-entry/switch", DataEntryController, :switch

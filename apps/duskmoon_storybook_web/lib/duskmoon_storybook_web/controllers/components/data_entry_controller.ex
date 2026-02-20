@@ -33,6 +33,10 @@ defmodule DuskmoonStorybookWeb.Components.DataEntryController do
     render(conn, :radio, active_menu: "data-entry-radio")
   end
 
+  def segment_control(conn, _params) do
+    render(conn, :segment_control, active_menu: "data-entry-segment-control")
+  end
+
   def select(conn, _params) do
     render(conn, :select, active_menu: "data-entry-select")
   end

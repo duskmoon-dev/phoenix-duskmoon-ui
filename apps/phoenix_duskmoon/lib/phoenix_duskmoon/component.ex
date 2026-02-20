@@ -82,6 +82,7 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.DataEntry.Input
       import PhoenixDuskmoon.Component.DataEntry.Rating
       import PhoenixDuskmoon.Component.DataEntry.Radio
+      import PhoenixDuskmoon.Component.DataEntry.SegmentControl
       import PhoenixDuskmoon.Component.DataEntry.Select
       import PhoenixDuskmoon.Component.DataEntry.Slider
       import PhoenixDuskmoon.Component.DataEntry.Switch
