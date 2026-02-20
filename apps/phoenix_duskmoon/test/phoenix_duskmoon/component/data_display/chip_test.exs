@@ -193,6 +193,40 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ChipTest do
     refute result =~ ~s[slot="icon"]
   end
 
+  test "renders without selected by default" do
+    result =
+      render_component(&dm_chip/1, %{
+        inner_block: inner_block()
+      })
+
+    [_, chip_tag] = String.split(result, "<el-dm-chip", parts: 2)
+    [chip_attrs, _] = String.split(chip_tag, ">", parts: 2)
+    refute chip_attrs =~ "selected"
+  end
+
+  test "renders without disabled by default" do
+    result =
+      render_component(&dm_chip/1, %{
+        inner_block: inner_block()
+      })
+
+    [_, chip_tag] = String.split(result, "<el-dm-chip", parts: 2)
+    [chip_attrs, _] = String.split(chip_tag, ">", parts: 2)
+    refute chip_attrs =~ "disabled"
+  end
+
+  test "renders icon slot with inner content" do
+    result =
+      render_component(&dm_chip/1, %{
+        inner_block: inner_block("Label"),
+        icon: %{inner_block: fn _, _ -> "ic" end}
+      })
+
+    assert result =~ "Label"
+    assert result =~ "ic"
+    assert result =~ ~s[slot="icon"]
+  end
+
   test "renders all options combined" do
     result =
       render_component(&dm_chip/1, %{

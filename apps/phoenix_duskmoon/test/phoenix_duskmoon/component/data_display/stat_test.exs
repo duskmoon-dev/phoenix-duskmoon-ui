@@ -177,4 +177,54 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
 
     assert result =~ "text-success"
   end
+
+  test "description does not get color for primary/secondary/accent/info" do
+    for color <- ~w(primary secondary accent info) do
+      result =
+        render_component(&dm_stat/1, %{
+          title: "Test",
+          value: "0",
+          color: color,
+          description: "desc-text"
+        })
+
+      # The value <dd> gets text-{color}, but the description <p> should not
+      assert result =~ "text-#{color}"
+      assert result =~ "desc-text"
+      # Extract the <p> tag containing desc-text
+      [p_tag] = Regex.scan(~r/<p[^>]*>/, result) |> List.flatten()
+      refute p_tag =~ "text-#{color}"
+    end
+  end
+
+  test "renders all attributes combined" do
+    result =
+      render_component(&dm_stat/1, %{
+        id: "full-stat",
+        class: "rounded-lg shadow",
+        title: "Revenue",
+        value: "$1.2M",
+        description: "+15%",
+        color: "success",
+        size: "lg",
+        icon: %{inner_block: fn _, _ -> "icon-svg" end},
+        "data-testid": "stat-revenue"
+      })
+
+    assert result =~ ~s[id="full-stat"]
+    assert result =~ "rounded-lg"
+    assert result =~ "Revenue"
+    assert result =~ "$1.2M"
+    assert result =~ "+15%"
+    assert result =~ "text-success"
+    assert result =~ "text-4xl"
+    assert result =~ "icon-svg"
+    assert result =~ ~s[data-testid="stat-revenue"]
+  end
+
+  test "renders value with special characters" do
+    result = render_component(&dm_stat/1, %{title: "Ratio", value: "3 < 5"})
+
+    assert result =~ "&lt;"
+  end
 end
