@@ -520,4 +520,213 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
     assert result =~ "is required"
     assert result =~ ~s[aria-invalid="true"]
   end
+
+  describe "color variants" do
+    test "renders compact input with default color primary" do
+      result =
+        render_component(&dm_compact_input/1, %{name: "user", label: "User", value: nil})
+
+      assert result =~ "input-primary"
+    end
+
+    test "renders compact input with all color options" do
+      for color <- ~w(primary secondary accent info success warning error) do
+        result =
+          render_component(&dm_compact_input/1, %{
+            name: "user",
+            label: "User",
+            value: nil,
+            color: color
+          })
+
+        css_class = if color == "accent", do: "tertiary", else: color
+        assert result =~ "input-#{css_class}"
+      end
+    end
+
+    test "renders compact select with color" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "opt",
+          label: "Opt",
+          type: "select",
+          value: nil,
+          color: "warning",
+          options: [{"1", "One"}]
+        })
+
+      assert result =~ "select-warning"
+    end
+
+    test "renders compact select with accent color mapped to tertiary" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "opt",
+          label: "Opt",
+          type: "select",
+          value: nil,
+          color: "accent",
+          options: [{"1", "One"}]
+        })
+
+      assert result =~ "select-tertiary"
+    end
+  end
+
+  describe "size variants" do
+    test "renders compact input with default size md" do
+      result =
+        render_component(&dm_compact_input/1, %{name: "user", label: "User", value: nil})
+
+      assert result =~ "input-md"
+    end
+
+    test "renders compact input with all size options" do
+      for size <- ~w(xs sm md lg) do
+        result =
+          render_component(&dm_compact_input/1, %{
+            name: "user",
+            label: "User",
+            value: nil,
+            size: size
+          })
+
+        assert result =~ "input-#{size}"
+      end
+    end
+
+    test "renders compact select with size" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "opt",
+          label: "Opt",
+          type: "select",
+          value: nil,
+          size: "lg",
+          options: [{"1", "One"}]
+        })
+
+      assert result =~ "select-lg"
+    end
+
+    test "renders compact select with all size options" do
+      for size <- ~w(xs sm md lg) do
+        result =
+          render_component(&dm_compact_input/1, %{
+            name: "opt",
+            label: "Opt",
+            type: "select",
+            value: nil,
+            size: size,
+            options: [{"1", "One"}]
+          })
+
+        assert result =~ "select-#{size}"
+      end
+    end
+  end
+
+  describe "style variants (ghost, filled, bordered)" do
+    test "renders compact input with ghost variant" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "user",
+          label: "User",
+          value: nil,
+          variant: "ghost"
+        })
+
+      assert result =~ "input-ghost"
+    end
+
+    test "renders compact input with filled variant" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "user",
+          label: "User",
+          value: nil,
+          variant: "filled"
+        })
+
+      assert result =~ "input-filled"
+    end
+
+    test "renders compact input with bordered variant" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "user",
+          label: "User",
+          value: nil,
+          variant: "bordered"
+        })
+
+      assert result =~ "input-bordered"
+    end
+
+    test "renders compact input without variant class by default" do
+      result =
+        render_component(&dm_compact_input/1, %{name: "user", label: "User", value: nil})
+
+      refute result =~ "input-ghost"
+      refute result =~ "input-filled"
+      refute result =~ "input-bordered"
+    end
+
+    test "renders compact select with ghost variant" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "opt",
+          label: "Opt",
+          type: "select",
+          value: nil,
+          variant: "ghost",
+          options: [{"1", "One"}]
+        })
+
+      assert result =~ "select-ghost"
+    end
+
+    test "renders compact select with filled variant" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "opt",
+          label: "Opt",
+          type: "select",
+          value: nil,
+          variant: "filled",
+          options: [{"1", "One"}]
+        })
+
+      assert result =~ "select-filled"
+    end
+
+    test "renders compact select without variant class by default" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "opt",
+          label: "Opt",
+          type: "select",
+          value: nil,
+          options: [{"1", "One"}]
+        })
+
+      refute result =~ "select-ghost"
+      refute result =~ "select-filled"
+      refute result =~ "select-bordered"
+    end
+
+    test "renders compact input with variant and color combined" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "user",
+          label: "User",
+          value: nil,
+          variant: "filled",
+          color: "success"
+        })
+
+      assert result =~ "input-filled"
+      assert result =~ "input-success"
+    end
+  end
 end

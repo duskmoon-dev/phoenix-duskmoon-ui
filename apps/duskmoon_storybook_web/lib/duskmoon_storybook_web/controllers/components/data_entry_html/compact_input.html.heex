@@ -33,4 +33,34 @@
   <div class="flex flex-col gap-4 max-w-md">
     <.dm_compact_input name="ci-select" label="Country" type="select" value="" options={[{"us", "United States"}, {"uk", "United Kingdom"}, {"jp", "Japan"}]} />
   </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Colors</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_compact_input name="ci-primary" label="Primary" value="" color="primary" />
+    <.dm_compact_input name="ci-secondary" label="Secondary" value="" color="secondary" />
+    <.dm_compact_input name="ci-accent" label="Accent" value="" color="accent" />
+    <.dm_compact_input name="ci-success" label="Success" value="" color="success" />
+    <.dm_compact_input name="ci-error" label="Error" value="" color="error" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_compact_input name="ci-xs" label="XS" value="" size="xs" />
+    <.dm_compact_input name="ci-sm" label="SM" value="" size="sm" />
+    <.dm_compact_input name="ci-md" label="MD" value="" size="md" />
+    <.dm_compact_input name="ci-lg" label="LG" value="" size="lg" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Style Variants</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_compact_input name="ci-ghost" label="Ghost" value="" variant="ghost" />
+    <.dm_compact_input name="ci-filled" label="Filled" value="" variant="filled" />
+    <.dm_compact_input name="ci-bordered" label="Bordered" value="" variant="bordered" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Select with Color &amp; Size</h3>
+  <div class="flex flex-col gap-4 max-w-md">
+    <.dm_compact_input name="ci-sel-warn" label="Warning LG" type="select" value="" color="warning" size="lg" options={[{"a", "Alpha"}, {"b", "Beta"}]} />
+    <.dm_compact_input name="ci-sel-ghost" label="Ghost Select" type="select" value="" variant="ghost" options={[{"a", "Alpha"}, {"b", "Beta"}]} />
+  </div>
 </.dm_card>

@@ -44,6 +44,20 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
     doc: "a form field struct retrieved from the form, for example: @form[:email]"
   )
 
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "input size")
+
+  attr(:color, :string,
+    default: "primary",
+    values: ["primary", "secondary", "tertiary", "accent", "info", "success", "warning", "error"],
+    doc: "color variant"
+  )
+
+  attr(:variant, :string,
+    default: nil,
+    values: ["ghost", "filled", "bordered", nil],
+    doc: "the input style variant (ghost, filled, bordered)"
+  )
+
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:checked, :boolean, doc: "the checked flag for checkbox inputs")
   attr(:prompt, :string, default: nil, doc: "the prompt for select inputs")
@@ -66,6 +80,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
   end
 
   def dm_compact_input(%{type: "select"} = assigns) do
+    assigns = assign(assigns, :color, css_color(assigns.color))
+
     ~H"""
     <div class={["form-group", @class]}>
       <label for={@id} class={["form-label", @errors != [] && "text-error"]}>
@@ -74,7 +90,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
       <select
         id={@id}
         name={@name}
-        class="select"
+        class={[
+          "select",
+          @variant && "select-#{@variant}",
+          "select-#{@size}",
+          "select-#{@color}"
+        ]}
         multiple={@multiple}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={@errors != [] && @id && "#{@id}-errors"}
@@ -91,6 +112,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
   end
 
   def dm_compact_input(assigns) do
+    assigns = assign(assigns, :color, css_color(assigns.color))
+
     ~H"""
     <div
       class={["form-group", @class]}
@@ -104,7 +127,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
         name={@name}
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
-        class="input"
+        class={[
+          "input",
+          @variant && "input-#{@variant}",
+          "input-#{@size}",
+          "input-#{@color}"
+        ]}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={@errors != [] && @id && "#{@id}-errors"}
         {@rest}
@@ -116,4 +144,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
     </div>
     """
   end
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end
