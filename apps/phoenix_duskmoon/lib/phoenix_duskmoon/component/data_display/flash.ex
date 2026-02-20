@@ -54,7 +54,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
         <button
           :if={@close}
           type="button"
-          class="absolute top-2 right-2 dm-btn dm-btn--ghost dm-btn--xs"
+          class="absolute top-2 right-2 btn btn-ghost btn-xs"
           aria-label={@close_label}
         >
           <.dm_bsi name="x" class="w-5 h-5 " />

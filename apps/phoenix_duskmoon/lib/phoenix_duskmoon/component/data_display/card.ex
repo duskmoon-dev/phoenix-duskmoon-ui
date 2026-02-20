@@ -177,11 +177,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
           class={@class}
           {@rest}
         >
-          <div :if={@image} slot="image" class={["dm-skeleton", @skeleton_class]} style="width: 100%; height: 200px;"></div>
+          <div :if={@image} slot="image" class={["skeleton", @skeleton_class]} style="width: 100%; height: 200px;"></div>
           <span :for={title <- @title} slot="header" id={Map.get(title, :id)} class={Map.get(title, :class)}>
             {render_slot(title)}
           </span>
-          <div class={["dm-skeleton", @skeleton_class]} style="width: 100%; height: 4rem;"></div>
+          <div class={["skeleton", @skeleton_class]} style="width: 100%; height: 4rem;"></div>
         </el-dm-card>
       </:loading>
       <:failed :let={reason}>

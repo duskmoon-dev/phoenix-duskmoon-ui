@@ -182,7 +182,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CardTest do
         })
 
       assert result =~ ~s[<el-dm-card]
-      assert result =~ "dm-skeleton"
+      assert result =~ "skeleton"
       refute result =~ "Success content"
     end
 
@@ -193,7 +193,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CardTest do
           inner_block: fn _, _ -> "Content" end
         })
 
-      assert result =~ "dm-skeleton"
+      assert result =~ "skeleton"
     end
 
     test "renders async card in loading state with custom skeleton class" do
@@ -204,7 +204,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CardTest do
           inner_block: fn _, _ -> "Content" end
         })
 
-      assert result =~ "dm-skeleton"
+      assert result =~ "skeleton"
       assert result =~ "h-32"
     end
 
@@ -218,7 +218,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CardTest do
       assert result =~ ~s[<el-dm-card]
       assert result =~ "dm-alert"
       assert result =~ "Network error"
-      refute result =~ "dm-skeleton"
+      refute result =~ "skeleton"
     end
 
     test "renders async card in success state" do
@@ -230,7 +230,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CardTest do
 
       assert result =~ ~s[<el-dm-card]
       assert result =~ "Success content"
-      refute result =~ "dm-skeleton"
+      refute result =~ "skeleton"
       refute result =~ "dm-alert"
     end
 
@@ -244,7 +244,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CardTest do
 
       assert result =~ ~s[slot="header"]
       assert result =~ "Card Title"
-      assert result =~ "dm-skeleton"
+      assert result =~ "skeleton"
     end
 
     test "renders async card with title in failed state" do
@@ -295,7 +295,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CardTest do
 
       # Loading state shows skeleton instead of actual image
       assert result =~ ~s[slot="image"]
-      assert result =~ "dm-skeleton"
+      assert result =~ "skeleton"
       refute result =~ ~s[src="/test.jpg"]
     end
 

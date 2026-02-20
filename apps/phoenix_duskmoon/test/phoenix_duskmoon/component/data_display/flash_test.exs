@@ -64,7 +64,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
       result = render_component(&dm_flash_group/1, %{flash: %{}})
 
       # The disconnected flash should NOT have a close button
-      # Info and error flashes have close buttons (dm-btn--ghost dm-btn--xs)
+      # Info and error flashes have close buttons (btn-ghost btn-xs)
       # but the disconnected one should not since close={false}
       assert result =~ "We can&#39;t find the internet"
       assert result =~ "Attempting to reconnect"
@@ -147,7 +147,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
         })
 
       assert result =~ ~s[aria-label="Close"]
-      assert result =~ "dm-btn dm-btn--ghost dm-btn--xs"
+      assert result =~ "btn btn-ghost btn-xs"
     end
 
     test "renders flash without close button when close=false" do
