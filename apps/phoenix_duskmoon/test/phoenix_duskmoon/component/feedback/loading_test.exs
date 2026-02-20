@@ -9,13 +9,14 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
     test "renders loading container" do
       result = render_component(&dm_loading_spinner/1, %{})
 
-      assert result =~ "dm-loading-container"
+      assert result =~ "inline-flex flex-col items-center gap-2"
     end
 
     test "renders spinner icon element" do
       result = render_component(&dm_loading_spinner/1, %{})
 
-      assert result =~ "dm-loading-spinner__icon"
+      assert result =~ "animate-spin"
+      assert result =~ "rounded-full"
     end
 
     test "renders with role status" do
@@ -39,26 +40,26 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
     test "renders with default size md" do
       result = render_component(&dm_loading_spinner/1, %{})
 
-      assert result =~ "dm-loading-spinner--md"
+      assert result =~ "w-6 h-6"
     end
 
     test "renders with all size options" do
-      for size <- ~w(xs sm md lg) do
-        result = render_component(&dm_loading_spinner/1, %{size: size})
-        assert result =~ "dm-loading-spinner--#{size}"
-      end
+      assert render_component(&dm_loading_spinner/1, %{size: "xs"}) =~ "w-4 h-4"
+      assert render_component(&dm_loading_spinner/1, %{size: "sm"}) =~ "w-5 h-5"
+      assert render_component(&dm_loading_spinner/1, %{size: "md"}) =~ "w-6 h-6"
+      assert render_component(&dm_loading_spinner/1, %{size: "lg"}) =~ "w-8 h-8"
     end
 
     test "renders with default variant primary" do
       result = render_component(&dm_loading_spinner/1, %{})
 
-      assert result =~ "dm-loading-spinner--primary"
+      assert result =~ "var(--color-primary)"
     end
 
     test "renders with all variant options" do
       for variant <- ~w(primary secondary accent info success warning error) do
         result = render_component(&dm_loading_spinner/1, %{variant: variant})
-        assert result =~ "dm-loading-spinner--#{variant}"
+        assert result =~ "var(--color-#{variant})"
       end
     end
 
@@ -66,13 +67,13 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
       result = render_component(&dm_loading_spinner/1, %{text: "Loading..."})
 
       assert result =~ "Loading..."
-      assert result =~ "dm-loading-spinner__text"
+      assert result =~ "text-sm"
     end
 
     test "renders without text span by default" do
       result = render_component(&dm_loading_spinner/1, %{})
 
-      refute result =~ "dm-loading-spinner__text"
+      refute result =~ "text-on-surface-variant"
     end
 
     test "renders with text as aria-label" do
@@ -291,10 +292,10 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
 
       assert result =~ ~s[id="my-spinner"]
       assert result =~ "extra-class"
-      assert result =~ "dm-loading-spinner--lg"
-      assert result =~ "dm-loading-spinner--success"
+      assert result =~ "w-8 h-8"
+      assert result =~ "var(--color-success)"
       assert result =~ "Please wait..."
-      assert result =~ "dm-loading-spinner__text"
+      assert result =~ "text-sm"
       assert result =~ ~s[aria-label="Please wait..."]
       assert result =~ "data-testid=\"spinner\""
     end
@@ -308,9 +309,9 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
     test "renders size and variant classes on inner span" do
       result = render_component(&dm_loading_spinner/1, %{size: "xs", variant: "warning"})
 
-      assert result =~ "dm-loading-spinner--xs"
-      assert result =~ "dm-loading-spinner--warning"
-      assert result =~ "dm-loading-spinner__icon"
+      assert result =~ "w-4 h-4"
+      assert result =~ "var(--color-warning)"
+      assert result =~ "animate-spin"
     end
 
     test "renders spinner icon with aria-hidden for screen readers" do

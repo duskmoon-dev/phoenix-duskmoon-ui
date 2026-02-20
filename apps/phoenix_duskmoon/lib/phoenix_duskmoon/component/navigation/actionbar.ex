@@ -44,8 +44,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.Actionbar do
 
   def dm_actionbar(assigns) do
     ~H"""
-    <div id={@id} role="toolbar" aria-label={@toolbar_label} class={["dm-actionbar", @class]} {@rest}>
-      <div class={["dm-actionbar__left", @left_class]}>
+    <div
+      id={@id}
+      role="toolbar"
+      aria-label={@toolbar_label}
+      class={["flex items-center justify-between w-full", @class]}
+      {@rest}
+    >
+      <div class={["flex items-center gap-2", @left_class]}>
         <div
           :for={left <- @left}
           id={Map.get(left, :id)}
@@ -54,7 +60,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Actionbar do
           {render_slot(left)}
         </div>
       </div>
-      <div class={["dm-actionbar__right", @right_class]}>
+      <div class={["flex items-center gap-2", @right_class]}>
         <div
           :for={right <- @right}
           id={Map.get(right, :id)}

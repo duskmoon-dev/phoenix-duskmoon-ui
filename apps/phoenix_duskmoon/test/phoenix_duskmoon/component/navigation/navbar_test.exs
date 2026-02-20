@@ -9,16 +9,16 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
     result = render_component(&dm_navbar/1, %{})
 
     assert result =~ "<nav"
-    assert result =~ "dm-navbar"
+    assert result =~ "navbar"
     assert result =~ "</nav>"
   end
 
   test "renders navbar with three section containers" do
     result = render_component(&dm_navbar/1, %{})
 
-    assert result =~ "dm-navbar__start"
-    assert result =~ "dm-navbar__center"
-    assert result =~ "dm-navbar__end"
+    assert result =~ "navbar-start"
+    assert result =~ "navbar-center"
+    assert result =~ "navbar-end"
   end
 
   test "renders navbar with start_part slot" do
@@ -28,7 +28,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
       })
 
     assert result =~ "Logo"
-    assert result =~ "dm-navbar__start"
+    assert result =~ "navbar-start"
   end
 
   test "renders navbar with center_part slot" do
@@ -38,7 +38,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
       })
 
     assert result =~ "Nav Links"
-    assert result =~ "dm-navbar__center"
+    assert result =~ "navbar-center"
   end
 
   test "renders navbar with end_part slot" do
@@ -48,7 +48,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
       })
 
     assert result =~ "User Menu"
-    assert result =~ "dm-navbar__end"
+    assert result =~ "navbar-end"
   end
 
   test "renders navbar with all three parts populated" do
@@ -74,7 +74,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
     result = render_component(&dm_navbar/1, %{class: "bg-primary text-white"})
 
     assert result =~ "bg-primary text-white"
-    assert result =~ "dm-navbar"
+    assert result =~ "navbar"
   end
 
   test "renders navbar with start_class" do
@@ -112,9 +112,9 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
     result = render_component(&dm_navbar/1, %{})
 
     # All three section divs rendered even without content
-    assert result =~ "dm-navbar__start"
-    assert result =~ "dm-navbar__center"
-    assert result =~ "dm-navbar__end"
+    assert result =~ "navbar-start"
+    assert result =~ "navbar-center"
+    assert result =~ "navbar-end"
   end
 
   test "renders navbar with rest attributes" do
@@ -151,7 +151,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
       })
 
     assert result =~ "bg-base-200"
-    assert result =~ "dm-navbar"
+    assert result =~ "navbar"
     assert result =~ "gap-4"
     assert result =~ "flex-1"
     assert result =~ "gap-2"
@@ -247,7 +247,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
   test "renders navbar without class when nil" do
     result = render_component(&dm_navbar/1, %{class: nil})
 
-    assert result =~ "dm-navbar"
+    assert result =~ "navbar"
   end
 
   test "renders navbar with empty start_part slot" do
@@ -256,7 +256,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
         start_part: []
       })
 
-    assert result =~ "dm-navbar__start"
+    assert result =~ "navbar-start"
   end
 
   test "renders navbar with only end_part populated" do
@@ -266,8 +266,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.NavbarTest do
       })
 
     assert result =~ "Logout"
-    assert result =~ "dm-navbar__start"
-    assert result =~ "dm-navbar__end"
+    assert result =~ "navbar-start"
+    assert result =~ "navbar-end"
   end
 
   test "renders navbar sections as div elements" do

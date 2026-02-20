@@ -53,27 +53,38 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
     ~H"""
     <div
       id={@id}
-      class={[
-        "dm-loading-container",
-        @class
-      ]}
+      class={["inline-flex flex-col items-center gap-2", @class]}
       role="status"
       aria-live="polite"
       aria-label={@text || @loading_label}
       aria-busy="true"
       {@rest}
     >
-      <span class={[
-        "dm-loading-spinner",
-        "dm-loading-spinner--#{@size}",
-        "dm-loading-spinner--#{@variant}"
-      ]}>
-        <span class="dm-loading-spinner__icon" aria-hidden="true"></span>
-      </span>
-      <span :if={@text} class="dm-loading-spinner__text">{@text}</span>
+      <span
+        class={[
+          "block rounded-full animate-spin border-2 border-current border-t-transparent",
+          spinner_size(@size),
+          spinner_color(@variant)
+        ]}
+        aria-hidden="true"
+      ></span>
+      <span :if={@text} class="text-sm text-on-surface-variant">{@text}</span>
     </div>
     """
   end
+
+  defp spinner_size("xs"), do: "w-4 h-4"
+  defp spinner_size("sm"), do: "w-5 h-5"
+  defp spinner_size("md"), do: "w-6 h-6"
+  defp spinner_size("lg"), do: "w-8 h-8"
+
+  defp spinner_color("primary"), do: "text-[var(--color-primary)]"
+  defp spinner_color("secondary"), do: "text-[var(--color-secondary)]"
+  defp spinner_color("accent"), do: "text-[var(--color-accent)]"
+  defp spinner_color("info"), do: "text-[var(--color-info)]"
+  defp spinner_color("success"), do: "text-[var(--color-success)]"
+  defp spinner_color("warning"), do: "text-[var(--color-warning)]"
+  defp spinner_color("error"), do: "text-[var(--color-error)]"
 
   @doc """
   Generates an advanced animated particle loading effect.

@@ -73,19 +73,24 @@ defmodule PhoenixDuskmoon.Component.Layout.Divider do
       role="separator"
       aria-orientation={@orientation}
       class={[
-        "dm-divider",
-        "dm-divider--#{@orientation}",
-        "dm-divider--#{@variant}",
-        "dm-divider--#{@style}",
-        "dm-divider--#{@size}",
+        "divider",
+        @orientation == "vertical" && "divider-vertical",
+        divider_variant(@variant),
+        @style != "solid" && "divider-#{@style}",
+        @size != "md" && "divider-#{@size}",
+        @inner_block != [] && "divider-text",
         @class
       ]}
       {@rest}
     >
-      <span :if={@inner_block != []} class="dm-divider__content">
+      <span :if={@inner_block != []} class="divider-text-content">
         {render_slot(@inner_block)}
       </span>
     </div>
     """
   end
+
+  defp divider_variant("primary"), do: "divider-primary"
+  defp divider_variant("secondary"), do: "divider-secondary"
+  defp divider_variant(_), do: nil
 end

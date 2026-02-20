@@ -262,7 +262,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
         user_profile: [%{inner_block: fn _, _ -> "U" end}]
       })
 
-    assert result =~ "dm-divider"
+    assert result =~ "divider"
   end
 
   test "renders appbar with all options combined" do

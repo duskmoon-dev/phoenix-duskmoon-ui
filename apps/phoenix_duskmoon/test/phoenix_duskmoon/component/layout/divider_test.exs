@@ -5,10 +5,10 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
   import Phoenix.LiveViewTest
   import PhoenixDuskmoon.Component.Layout.Divider
 
-  test "renders basic divider with dm-divider class" do
+  test "renders basic divider with divider class" do
     result = render_component(&dm_divider/1, %{})
 
-    assert result =~ "dm-divider"
+    assert result =~ "divider"
   end
 
   test "renders divider with role separator" do
@@ -20,54 +20,85 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
   test "renders divider with default horizontal orientation" do
     result = render_component(&dm_divider/1, %{})
 
-    assert result =~ "dm-divider--horizontal"
+    refute result =~ "divider-vertical"
     assert result =~ ~s[aria-orientation="horizontal"]
   end
 
   test "renders vertical divider" do
     result = render_component(&dm_divider/1, %{orientation: "vertical"})
 
-    assert result =~ "dm-divider--vertical"
+    assert result =~ "divider-vertical"
     assert result =~ ~s[aria-orientation="vertical"]
   end
 
-  test "renders divider with default variant base" do
+  test "renders divider with default variant base (no variant class)" do
     result = render_component(&dm_divider/1, %{})
 
-    assert result =~ "dm-divider--base"
+    refute result =~ "divider-base"
+    refute result =~ "divider-primary"
   end
 
-  test "renders divider with all variant options" do
-    for variant <- ~w(base primary secondary accent info success warning error) do
+  test "renders divider with primary variant" do
+    result = render_component(&dm_divider/1, %{variant: "primary"})
+
+    assert result =~ "divider-primary"
+  end
+
+  test "renders divider with secondary variant" do
+    result = render_component(&dm_divider/1, %{variant: "secondary"})
+
+    assert result =~ "divider-secondary"
+  end
+
+  test "renders divider with unsupported variants without CSS class" do
+    for variant <- ~w(base accent info success warning error) do
       result = render_component(&dm_divider/1, %{variant: variant})
-      assert result =~ "dm-divider--#{variant}"
+      # Base variants without upstream CSS just render the base divider
+      assert result =~ "divider"
+      refute result =~ "divider-#{variant}"
     end
   end
 
-  test "renders divider with default style solid" do
+  test "renders divider with default style solid (no style class)" do
     result = render_component(&dm_divider/1, %{})
 
-    assert result =~ "dm-divider--solid"
+    refute result =~ "divider-solid"
   end
 
-  test "renders divider with all style options" do
-    for style <- ~w(solid dashed dotted) do
-      result = render_component(&dm_divider/1, %{style: style})
-      assert result =~ "dm-divider--#{style}"
-    end
+  test "renders divider with dashed style" do
+    result = render_component(&dm_divider/1, %{style: "dashed"})
+
+    assert result =~ "divider-dashed"
   end
 
-  test "renders divider with default size md" do
+  test "renders divider with dotted style" do
+    result = render_component(&dm_divider/1, %{style: "dotted"})
+
+    assert result =~ "divider-dotted"
+  end
+
+  test "renders divider with default size md (no size class)" do
     result = render_component(&dm_divider/1, %{})
 
-    assert result =~ "dm-divider--md"
+    refute result =~ "divider-md"
   end
 
-  test "renders divider with all size options" do
-    for size <- ~w(xs sm md lg) do
-      result = render_component(&dm_divider/1, %{size: size})
-      assert result =~ "dm-divider--#{size}"
-    end
+  test "renders divider with xs size" do
+    result = render_component(&dm_divider/1, %{size: "xs"})
+
+    assert result =~ "divider-xs"
+  end
+
+  test "renders divider with sm size" do
+    result = render_component(&dm_divider/1, %{size: "sm"})
+
+    assert result =~ "divider-sm"
+  end
+
+  test "renders divider with lg size" do
+    result = render_component(&dm_divider/1, %{size: "lg"})
+
+    assert result =~ "divider-lg"
   end
 
   test "renders divider with text content" do
@@ -77,13 +108,15 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
       })
 
     assert result =~ "OR"
-    assert result =~ "dm-divider__content"
+    assert result =~ "divider-text-content"
+    assert result =~ "divider-text"
   end
 
   test "renders divider without content span when no inner_block" do
     result = render_component(&dm_divider/1, %{})
 
-    refute result =~ "dm-divider__content"
+    refute result =~ "divider-text-content"
+    refute result =~ "divider-text"
   end
 
   test "renders divider with custom class" do
@@ -96,15 +129,15 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
     result =
       render_component(&dm_divider/1, %{
         orientation: "vertical",
-        variant: "accent",
+        variant: "primary",
         style: "dashed",
         size: "lg"
       })
 
-    assert result =~ "dm-divider--vertical"
-    assert result =~ "dm-divider--accent"
-    assert result =~ "dm-divider--dashed"
-    assert result =~ "dm-divider--lg"
+    assert result =~ "divider-vertical"
+    assert result =~ "divider-primary"
+    assert result =~ "divider-dashed"
+    assert result =~ "divider-lg"
   end
 
   test "renders divider with rest attributes" do
@@ -119,7 +152,7 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
   test "renders divider with empty inner_block list does not show content span" do
     result = render_component(&dm_divider/1, %{inner_block: []})
 
-    refute result =~ "dm-divider__content"
+    refute result =~ "divider-text-content"
   end
 
   test "renders divider content span wraps text correctly" do
@@ -128,7 +161,7 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
         inner_block: [%{inner_block: fn _, _ -> "Section Break" end}]
       })
 
-    assert result =~ "dm-divider__content"
+    assert result =~ "divider-text-content"
     assert result =~ "Section Break"
   end
 
@@ -142,11 +175,11 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
   test "renders divider with all defaults in class list" do
     result = render_component(&dm_divider/1, %{})
 
-    assert result =~ "dm-divider"
-    assert result =~ "dm-divider--horizontal"
-    assert result =~ "dm-divider--base"
-    assert result =~ "dm-divider--solid"
-    assert result =~ "dm-divider--md"
+    assert result =~ "divider"
+    refute result =~ "divider-vertical"
+    refute result =~ "divider-md"
+    refute result =~ "divider-solid"
+    refute result =~ "divider-base"
   end
 
   test "renders divider with multiple rest attributes" do
@@ -164,7 +197,7 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
     result =
       render_component(&dm_divider/1, %{
         orientation: "vertical",
-        variant: "error",
+        variant: "primary",
         style: "dotted",
         size: "lg",
         class: "my-custom-divider",
@@ -172,13 +205,13 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
         inner_block: [%{inner_block: fn _, _ -> "OR" end}]
       })
 
-    assert result =~ "dm-divider--vertical"
-    assert result =~ "dm-divider--error"
-    assert result =~ "dm-divider--dotted"
-    assert result =~ "dm-divider--lg"
+    assert result =~ "divider-vertical"
+    assert result =~ "divider-primary"
+    assert result =~ "divider-dotted"
+    assert result =~ "divider-lg"
     assert result =~ "my-custom-divider"
     assert result =~ "data-testid=\"full-divider\""
-    assert result =~ "dm-divider__content"
+    assert result =~ "divider-text-content"
     assert result =~ "OR"
     assert result =~ ~s[role="separator"]
     assert result =~ ~s[aria-orientation="vertical"]
@@ -193,7 +226,7 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
   test "does not render content span when no inner_block" do
     result = render_component(&dm_divider/1, %{})
 
-    refute result =~ "dm-divider__content"
+    refute result =~ "divider-text-content"
   end
 
   test "renders divider with content span when inner_block is provided" do
@@ -202,20 +235,8 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
         inner_block: [%{inner_block: fn _, _ -> "OR" end}]
       })
 
-    assert result =~ "dm-divider__content"
+    assert result =~ "divider-text-content"
     assert result =~ "OR"
-  end
-
-  test "renders divider with xs size" do
-    result = render_component(&dm_divider/1, %{size: "xs"})
-
-    assert result =~ "dm-divider--xs"
-  end
-
-  test "renders divider with sm size" do
-    result = render_component(&dm_divider/1, %{size: "sm"})
-
-    assert result =~ "dm-divider--sm"
   end
 
   test "renders divider vertical with content" do
@@ -225,8 +246,8 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
         inner_block: [%{inner_block: fn _, _ -> "VS" end}]
       })
 
-    assert result =~ "dm-divider--vertical"
-    assert result =~ "dm-divider__content"
+    assert result =~ "divider-vertical"
+    assert result =~ "divider-text-content"
     assert result =~ "VS"
   end
 
@@ -237,14 +258,8 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
         style: "dashed"
       })
 
-    assert result =~ "dm-divider--primary"
-    assert result =~ "dm-divider--dashed"
-  end
-
-  test "renders divider with info variant" do
-    result = render_component(&dm_divider/1, %{variant: "info"})
-
-    assert result =~ "dm-divider--info"
+    assert result =~ "divider-primary"
+    assert result =~ "divider-dashed"
   end
 
   test "renders divider as div element with separator role" do

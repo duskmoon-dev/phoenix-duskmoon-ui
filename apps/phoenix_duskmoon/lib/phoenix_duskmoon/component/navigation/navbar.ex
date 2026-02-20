@@ -40,14 +40,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.Navbar do
 
   def dm_navbar(assigns) do
     ~H"""
-    <nav id={@id} class={["dm-navbar", @class]} aria-label={@nav_label} {@rest}>
-      <div class={["dm-navbar__start", @start_class]}>
+    <nav id={@id} class={["navbar", @class]} aria-label={@nav_label} {@rest}>
+      <div class={["navbar-start", @start_class]}>
         {render_slot(@start_part)}
       </div>
-      <div class={["dm-navbar__center", @center_class]}>
+      <div class={["navbar-center", @center_class]}>
         {render_slot(@center_part)}
       </div>
-      <div class={["dm-navbar__end", @end_class]}>
+      <div class={["navbar-end", @end_class]}>
         {render_slot(@end_part)}
       </div>
     </nav>
