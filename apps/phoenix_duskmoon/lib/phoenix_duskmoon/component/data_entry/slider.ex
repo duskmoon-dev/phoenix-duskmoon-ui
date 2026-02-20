@@ -7,6 +7,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
       <.dm_form for={@form} phx-submit="save">
         <.dm_slider field={@form[:volume]} label="Volume" min={0} max={100} />
         <.dm_slider field={@form[:brightness]} label="Brightness" min={0} max={100} color="success" />
+        <.dm_slider field={@form[:volume]} label="Volume" vertical />
       </.dm_form>
 
   """
@@ -42,6 +43,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "slider size")
   attr(:disabled, :boolean, default: false, doc: "disables the slider")
+  attr(:vertical, :boolean, default: false, doc: "render as a vertical slider")
   attr(:show_value, :boolean, default: true, doc: "show the current value and min/max labels")
   attr(:class, :string, default: nil, doc: "additional CSS classes for the wrapper")
   attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
@@ -85,6 +87,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
             "slider",
             "slider-#{@size}",
             "slider-#{@color}",
+            @vertical && "slider-vertical",
             @disabled && "opacity-50 cursor-not-allowed",
             @slider_class
           ]}

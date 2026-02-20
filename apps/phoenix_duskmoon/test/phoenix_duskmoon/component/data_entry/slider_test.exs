@@ -371,4 +371,40 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
     assert result =~ "is too low"
     assert result =~ "must be a multiple of 5"
   end
+
+  test "renders vertical slider" do
+    result =
+      render_component(&dm_slider/1, %{
+        name: "vol",
+        value: 50,
+        vertical: true
+      })
+
+    assert result =~ "slider-vertical"
+  end
+
+  test "renders horizontal slider by default (no vertical class)" do
+    result =
+      render_component(&dm_slider/1, %{
+        name: "vol",
+        value: 50
+      })
+
+    refute result =~ "slider-vertical"
+  end
+
+  test "renders vertical slider with color and size" do
+    result =
+      render_component(&dm_slider/1, %{
+        name: "vol",
+        value: 30,
+        vertical: true,
+        color: "success",
+        size: "lg"
+      })
+
+    assert result =~ "slider-vertical"
+    assert result =~ "slider-success"
+    assert result =~ "slider-lg"
+  end
 end

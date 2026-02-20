@@ -72,6 +72,18 @@ defmodule Storybook.DataEntry.Slider do
         ]
       },
       %Variation{
+        id: :vertical,
+        attributes: %{
+          id: "slider-vertical",
+          name: "vertical",
+          label: "Vertical",
+          min: 0,
+          max: 100,
+          value: 60,
+          vertical: true
+        }
+      },
+      %Variation{
         id: :no_value_label,
         attributes: %{
           id: "slider-no-label",

@@ -42,6 +42,13 @@
     <.dm_slider name="sl-custom" label="Temperature" value={22} min={10} max={40} step={1} color="warning" />
   </div>
 
+  <h3 class="text-xl font-semibold mt-8 mb-4">Vertical</h3>
+  <div class="flex gap-8 items-start">
+    <.dm_slider name="sl-vert-primary" label="Primary" value={60} vertical={true} color="primary" />
+    <.dm_slider name="sl-vert-success" label="Success" value={80} vertical={true} color="success" />
+    <.dm_slider name="sl-vert-error" label="Error" value={30} vertical={true} color="error" />
+  </div>
+
   <h3 class="text-xl font-semibold mt-8 mb-4">Disabled</h3>
   <div class="flex flex-col gap-6 max-w-md">
     <.dm_slider name="sl-disabled" label="Disabled" value={50} disabled={true} />
