@@ -6,110 +6,203 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
   import PhoenixDuskmoon.Component.Action.Dropdown
 
   defp trigger, do: [%{inner_block: fn _, _ -> "Menu" end}]
-  defp content, do: [%{inner_block: fn _, _ -> "<li><a>Item</a></li>" end}]
+  defp content, do: [%{inner_block: fn _, _ -> "Item content" end}]
 
-  test "renders basic dropdown with dm-dropdown class" do
+  test "renders wrapper as div element" do
     result =
       render_component(&dm_dropdown/1, %{
         trigger: trigger(),
         content: content()
       })
 
-    assert result =~ "dm-dropdown"
-    assert result =~ "dm-dropdown__toggle"
-    assert result =~ "dm-dropdown__content"
+    assert String.starts_with?(String.trim(result), "<div")
   end
 
-  test "renders trigger and content slots" do
+  test "renders trigger and content slot text" do
     result =
       render_component(&dm_dropdown/1, %{
         trigger: [%{inner_block: fn _, _ -> "Open Menu" end}],
-        content: [%{inner_block: fn _, _ -> "<li><a>Profile</a></li>" end}]
+        content: [%{inner_block: fn _, _ -> "Profile" end}]
       })
 
     assert result =~ "Open Menu"
     assert result =~ "Profile"
   end
 
-  test "renders default position left" do
+  test "renders trigger as button with popovertarget" do
     result =
       render_component(&dm_dropdown/1, %{
         trigger: trigger(),
         content: content()
       })
 
-    assert result =~ "dm-dropdown--left"
+    assert result =~ "<button"
+    assert result =~ "popovertarget="
   end
 
-  test "renders dropdown with position right" do
+  test "renders trigger with aria-haspopup" do
     result =
       render_component(&dm_dropdown/1, %{
-        position: "right",
         trigger: trigger(),
         content: content()
       })
 
-    assert result =~ "dm-dropdown--right"
+    assert result =~ ~s[aria-haspopup="true"]
   end
 
-  test "renders dropdown with position top" do
+  test "renders trigger with anchor-name in style" do
     result =
       render_component(&dm_dropdown/1, %{
-        position: "top",
         trigger: trigger(),
         content: content()
       })
 
-    assert result =~ "dm-dropdown--top"
+    assert result =~ "anchor-name:"
   end
 
-  test "renders dropdown with position bottom" do
+  test "renders trigger with reset button styles" do
     result =
       render_component(&dm_dropdown/1, %{
-        position: "bottom",
         trigger: trigger(),
         content: content()
       })
 
-    assert result =~ "dm-dropdown--bottom"
+    assert result =~ "appearance: none"
+    assert result =~ "border: none"
+    assert result =~ "cursor: pointer"
   end
 
-  test "renders dropdown with all color variants" do
-    for color <- ~w(primary secondary accent info success warning error) do
+  test "renders content with popover-menu class" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ "popover-menu"
+  end
+
+  test "renders content with popover class and popover attribute" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    # Native popover: the content div has both the .popover class and [popover] attribute
+    assert result =~ ~s[class="popover popover-menu]
+  end
+
+  test "renders content with role menu" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ ~s[role="menu"]
+  end
+
+  test "renders content with position-anchor in style" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ "position-anchor:"
+  end
+
+  test "renders content with generated id" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ ~s[id="dropdown-]
+  end
+
+  test "renders content with popover attribute" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    # The native popover attribute should be present
+    assert result =~ "popover"
+  end
+
+  test "renders default position bottom" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ "popover-bottom"
+  end
+
+  test "renders all position variants" do
+    for pos <- ~w(left right top bottom) do
       result =
         render_component(&dm_dropdown/1, %{
-          color: color,
+          position: pos,
           trigger: trigger(),
           content: content()
         })
 
-      assert result =~ "dm-dropdown__content--#{color}"
+      assert result =~ "popover-#{pos}"
     end
   end
 
-  test "renders dropdown with open state" do
+  test "renders color primary" do
     result =
       render_component(&dm_dropdown/1, %{
-        open: true,
+        color: "primary",
         trigger: trigger(),
         content: content()
       })
 
-    assert result =~ "dm-dropdown--open"
+    assert result =~ "popover-primary"
   end
 
-  test "renders dropdown without open class when open is false" do
+  test "renders color secondary" do
     result =
       render_component(&dm_dropdown/1, %{
-        open: false,
+        color: "secondary",
         trigger: trigger(),
         content: content()
       })
 
-    refute result =~ "dm-dropdown--open"
+    assert result =~ "popover-secondary"
   end
 
-  test "renders dropdown with custom class" do
+  test "renders color tertiary" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        color: "tertiary",
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ "popover-tertiary"
+  end
+
+  test "renders with nil color (no color class)" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    refute result =~ "popover-primary"
+    refute result =~ "popover-secondary"
+    refute result =~ "popover-tertiary"
+  end
+
+  test "renders with custom class on wrapper" do
     result =
       render_component(&dm_dropdown/1, %{
         class: "my-custom-dropdown",
@@ -120,7 +213,7 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
     assert result =~ "my-custom-dropdown"
   end
 
-  test "renders dropdown with dropdown_class" do
+  test "renders with dropdown_class on content" do
     result =
       render_component(&dm_dropdown/1, %{
         dropdown_class: "w-96",
@@ -129,28 +222,6 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
       })
 
     assert result =~ "w-96"
-  end
-
-  test "renders trigger with tabindex and role button" do
-    result =
-      render_component(&dm_dropdown/1, %{
-        trigger: trigger(),
-        content: content()
-      })
-
-    assert result =~ ~s[tabindex="0"]
-    assert result =~ ~s[role="button"]
-  end
-
-  test "renders content as ul with menu classes" do
-    result =
-      render_component(&dm_dropdown/1, %{
-        trigger: trigger(),
-        content: content()
-      })
-
-    assert result =~ "<ul"
-    assert result =~ "dm-menu"
   end
 
   test "renders trigger slot with custom class" do
@@ -167,13 +238,13 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
     result =
       render_component(&dm_dropdown/1, %{
         trigger: trigger(),
-        content: [%{class: "content-custom", inner_block: fn _, _ -> "<li>Item</li>" end}]
+        content: [%{class: "content-custom", inner_block: fn _, _ -> "Item" end}]
       })
 
     assert result =~ "content-custom"
   end
 
-  test "renders dropdown with rest attributes" do
+  test "renders with rest attributes" do
     result =
       render_component(&dm_dropdown/1, %{
         "data-testid": "my-dropdown",
@@ -182,58 +253,46 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
         content: content()
       })
 
-    assert result =~ "data-testid=\"my-dropdown\""
-    assert result =~ "aria-label=\"Navigation menu\""
+    assert result =~ ~s[data-testid="my-dropdown"]
+    assert result =~ ~s[aria-label="Navigation menu"]
   end
 
-  test "renders default color primary" do
+  test "renders with custom id in popover target" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        id: "my-dropdown",
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ ~s[id="my-dropdown-popover"]
+    assert result =~ ~s[popovertarget="my-dropdown-popover"]
+  end
+
+  test "renders matching popovertarget and content id" do
     result =
       render_component(&dm_dropdown/1, %{
         trigger: trigger(),
         content: content()
       })
 
-    assert result =~ "dm-dropdown__content--primary"
+    # Extract the popover id from the content div
+    [_, popover_id] = Regex.run(~r/id="(dropdown-\d+)"/, result)
+    assert result =~ ~s[popovertarget="#{popover_id}"]
   end
 
-  test "renders content ul with tabindex 0" do
+  test "renders matching anchor-name and position-anchor" do
     result =
       render_component(&dm_dropdown/1, %{
         trigger: trigger(),
         content: content()
       })
 
-    # The <ul> content element should have tabindex for keyboard access
-    assert result =~ "<ul"
-    assert result =~ ~s[tabindex="0"]
+    [_, anchor] = Regex.run(~r/anchor-name: (--anchor-dropdown-\d+)/, result)
+    assert result =~ "position-anchor: #{anchor}"
   end
 
-  test "renders content with shadow and background classes" do
-    result =
-      render_component(&dm_dropdown/1, %{
-        trigger: trigger(),
-        content: content()
-      })
-
-    assert result =~ "shadow"
-    assert result =~ "bg-base-100"
-    assert result =~ "rounded-box"
-  end
-
-  test "renders dropdown with position and open combined" do
-    result =
-      render_component(&dm_dropdown/1, %{
-        position: "right",
-        open: true,
-        trigger: trigger(),
-        content: content()
-      })
-
-    assert result =~ "dm-dropdown--right"
-    assert result =~ "dm-dropdown--open"
-  end
-
-  test "renders dropdown with custom class and dropdown_class combined" do
+  test "renders with custom class and dropdown_class combined" do
     result =
       render_component(&dm_dropdown/1, %{
         class: "outer-custom",
@@ -246,83 +305,22 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
     assert result =~ "inner-custom"
   end
 
-  test "renders content with p-2 padding" do
+  test "renders with all options combined" do
     result =
       render_component(&dm_dropdown/1, %{
-        trigger: trigger(),
-        content: content()
-      })
-
-    assert result =~ "p-2"
-  end
-
-  test "renders content with w-52 default width" do
-    result =
-      render_component(&dm_dropdown/1, %{
-        trigger: trigger(),
-        content: content()
-      })
-
-    assert result =~ "w-52"
-  end
-
-  test "renders trigger with aria-haspopup attribute" do
-    result =
-      render_component(&dm_dropdown/1, %{
-        trigger: trigger(),
-        content: content()
-      })
-
-    assert result =~ ~s[aria-haspopup="true"]
-  end
-
-  test "renders content ul with role menu" do
-    result =
-      render_component(&dm_dropdown/1, %{
-        trigger: trigger(),
-        content: content()
-      })
-
-    assert result =~ ~s[role="menu"]
-  end
-
-  test "renders trigger with aria-expanded false when closed" do
-    result =
-      render_component(&dm_dropdown/1, %{
-        trigger: trigger(),
-        content: content()
-      })
-
-    assert result =~ ~s[aria-expanded="false"]
-  end
-
-  test "renders trigger with aria-expanded true when open" do
-    result =
-      render_component(&dm_dropdown/1, %{
-        open: true,
-        trigger: trigger(),
-        content: content()
-      })
-
-    assert result =~ ~s[aria-expanded="true"]
-  end
-
-  test "renders dropdown with all options combined" do
-    result =
-      render_component(&dm_dropdown/1, %{
-        position: "bottom",
-        color: "error",
-        open: true,
+        id: "full-dropdown",
+        position: "right",
+        color: "primary",
         class: "outer",
         dropdown_class: "inner",
         trigger: [%{class: "trig-cls", inner_block: fn _, _ -> "Open" end}],
-        content: [%{class: "cont-cls", inner_block: fn _, _ -> "<li>Delete</li>" end}],
+        content: [%{class: "cont-cls", inner_block: fn _, _ -> "Delete" end}],
         "data-testid": "full-dropdown"
       })
 
-    assert result =~ "dm-dropdown--bottom"
-    assert result =~ "dm-dropdown--open"
-    assert result =~ "dm-dropdown__content--error"
+    assert result =~ "popover-right"
+    assert result =~ "popover-primary"
+    assert result =~ "popover-menu"
     assert result =~ "outer"
     assert result =~ "inner"
     assert result =~ "trig-cls"
@@ -330,28 +328,9 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
     assert result =~ "Open"
     assert result =~ "Delete"
     assert result =~ ~s[data-testid="full-dropdown"]
-  end
-
-  test "renders dropdown wrapper as div element" do
-    result =
-      render_component(&dm_dropdown/1, %{
-        trigger: trigger(),
-        content: content()
-      })
-
-    assert String.starts_with?(String.trim(result), "<div")
-  end
-
-  test "renders dropdown with all position variants in loop" do
-    for pos <- ~w(left right top bottom) do
-      result =
-        render_component(&dm_dropdown/1, %{
-          position: pos,
-          trigger: trigger(),
-          content: content()
-        })
-
-      assert result =~ "dm-dropdown--#{pos}"
-    end
+    assert result =~ ~s[id="full-dropdown-popover"]
+    assert result =~ ~s[popovertarget="full-dropdown-popover"]
+    assert result =~ ~s[aria-haspopup="true"]
+    assert result =~ ~s[role="menu"]
   end
 end

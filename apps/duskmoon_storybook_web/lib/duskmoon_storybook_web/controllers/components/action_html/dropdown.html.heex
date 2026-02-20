@@ -11,78 +11,93 @@
 
   <.dm_markdown content={"""
   ## Overview
-  Dropdown menu component with customizable position and color.
+  Dropdown menu component using the native HTML Popover API with
+  `@duskmoon-dev/core` popover CSS. Click-to-toggle and click-outside-to-dismiss
+  behavior is handled by the browser — no JavaScript required.
 
   ## Usage
   ```elixir
   <.dm_dropdown>
     <:trigger>Click me</:trigger>
     <:content>
-      <li><a>Item 1</a></li>
-      <li><a>Item 2</a></li>
+      <button class="popover-menu-item">Item 1</button>
+      <button class="popover-menu-item">Item 2</button>
     </:content>
   </.dm_dropdown>
   ```
   """} />
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Positions</h3>
-  <div class="flex flex-wrap gap-8 items-start">
-    <.dm_dropdown position="left">
-      <:trigger>Left</:trigger>
+  <div class="flex flex-wrap gap-8 items-start p-8">
+    <.dm_dropdown position="bottom">
+      <:trigger>Bottom</:trigger>
       <:content>
-        <li><a>Item 1</a></li>
-        <li><a>Item 2</a></li>
-      </:content>
-    </.dm_dropdown>
-
-    <.dm_dropdown position="right">
-      <:trigger>Right</:trigger>
-      <:content>
-        <li><a>Item 1</a></li>
-        <li><a>Item 2</a></li>
+        <button class="popover-menu-item">Item 1</button>
+        <button class="popover-menu-item">Item 2</button>
       </:content>
     </.dm_dropdown>
 
     <.dm_dropdown position="top">
       <:trigger>Top</:trigger>
       <:content>
-        <li><a>Item 1</a></li>
-        <li><a>Item 2</a></li>
+        <button class="popover-menu-item">Item 1</button>
+        <button class="popover-menu-item">Item 2</button>
       </:content>
     </.dm_dropdown>
 
-    <.dm_dropdown position="bottom">
-      <:trigger>Bottom</:trigger>
+    <.dm_dropdown position="left">
+      <:trigger>Left</:trigger>
       <:content>
-        <li><a>Item 1</a></li>
-        <li><a>Item 2</a></li>
+        <button class="popover-menu-item">Item 1</button>
+        <button class="popover-menu-item">Item 2</button>
+      </:content>
+    </.dm_dropdown>
+
+    <.dm_dropdown position="right">
+      <:trigger>Right</:trigger>
+      <:content>
+        <button class="popover-menu-item">Item 1</button>
+        <button class="popover-menu-item">Item 2</button>
       </:content>
     </.dm_dropdown>
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Colors</h3>
-  <div class="flex flex-wrap gap-8 items-start">
+  <div class="flex flex-wrap gap-8 items-start p-8">
     <.dm_dropdown color="primary">
       <:trigger>Primary</:trigger>
       <:content>
-        <li><a>Item 1</a></li>
-        <li><a>Item 2</a></li>
+        <button class="popover-menu-item">Item 1</button>
+        <button class="popover-menu-item">Item 2</button>
       </:content>
     </.dm_dropdown>
 
     <.dm_dropdown color="secondary">
       <:trigger>Secondary</:trigger>
       <:content>
-        <li><a>Item 1</a></li>
-        <li><a>Item 2</a></li>
+        <button class="popover-menu-item">Item 1</button>
+        <button class="popover-menu-item">Item 2</button>
       </:content>
     </.dm_dropdown>
 
-    <.dm_dropdown color="accent">
-      <:trigger>Accent</:trigger>
+    <.dm_dropdown color="tertiary">
+      <:trigger>Tertiary</:trigger>
       <:content>
-        <li><a>Item 1</a></li>
-        <li><a>Item 2</a></li>
+        <button class="popover-menu-item">Item 1</button>
+        <button class="popover-menu-item">Item 2</button>
+      </:content>
+    </.dm_dropdown>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Divider</h3>
+  <div class="flex flex-wrap gap-8 items-start p-8">
+    <.dm_dropdown>
+      <:trigger>Actions</:trigger>
+      <:content>
+        <button class="popover-menu-item">Edit</button>
+        <button class="popover-menu-item">Duplicate</button>
+        <div class="popover-menu-divider"></div>
+        <button class="popover-menu-item">Delete</button>
       </:content>
     </.dm_dropdown>
   </div>
