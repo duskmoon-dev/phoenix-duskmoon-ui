@@ -167,7 +167,7 @@
 | Registered el-* packages | 28 (all) |
 | Demo routes | 42 |
 | Storybook stories | 44 |
-| Tests | 1800 (all passing) |
+| Tests | 1841 (all passing) |
 | Compilation warnings | 0 |
 
 ---
@@ -380,7 +380,7 @@ These components have fundamental variant/color mapping mismatches between the P
 
 ### Tests Added
 
-28 new tests covering all new attrs/slots across 6 test files. Total: **1800 tests, 0 failures**.
+28 new tests covering all new attrs/slots across 6 test files. Total: **1841 tests, 0 failures**.
 
 ---
 
@@ -390,6 +390,14 @@ See `.loki/logs/screenshots/` and `.loki/audit/screenshots/` for baseline screen
 
 ---
 
-## 8. Final Regression Results
+## 9. Final Regression Results
 
-_To be updated after component migrations._
+### Iteration 2 Progress
+
+- **Test coverage expansion**: Accordion 8→22, Steps 10→25, Drawer 11→23 tests (+41 total)
+- **Storybook stories expanded**: Steps (5→11 variations, all 7 colors), Chip (8→16 variations, all colors/sizes)
+- **Demo page improved**: Added modal drawer example with backdrop
+- **Accessibility fixes**: Flash aria-live/atomic, Loading aria-live, Dropdown aria-expanded/controls, Rating aria-pressed, Password strength role=progressbar
+- **Total tests**: 1841, 0 failures
+- **Compilation warnings**: 0
+- **Formatting**: Clean
