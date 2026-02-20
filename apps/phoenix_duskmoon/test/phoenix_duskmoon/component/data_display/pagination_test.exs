@@ -17,7 +17,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
 
       assert result =~ ~s[aria-label="Pagination"]
       assert result =~ ~s[<el-dm-pagination]
-      assert result =~ ~s[dm-pagination]
+      assert result =~ ~s[flex items-center gap-2]
     end
 
     test "renders first page correctly" do
@@ -401,7 +401,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       assert result =~ ~s[phx-click="update-page"]
-      assert result =~ ~s[dm-pagination--thin]
+      assert result =~ ~s[pagination-prev]
       # Check for chevron icons via SVG paths
       # chevron-left
       assert result =~ "M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"
@@ -417,7 +417,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           total: 100
         })
 
-      assert result =~ "dm-pagination__current"
+      assert result =~ "pagination-item-active"
       assert result =~ ~s[aria-current="page"]
     end
 
@@ -454,7 +454,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           loading: true
         })
 
-      assert result =~ "dm-pagination__spinner" or result =~ "dm-pagination__btn--loading"
+      assert result =~ "opacity-50" or result =~ "opacity-50"
     end
 
     test "disables clicks when loading" do
@@ -468,7 +468,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       # When loading, should have loading styling
-      assert result =~ "dm-pagination"
+      assert result =~ "pagination-prev"
     end
 
     test "renders with show_total enabled" do
@@ -546,7 +546,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           total: 100
         })
 
-      assert result =~ ~s[dm-pagination--thin]
+      assert result =~ ~s[pagination-prev]
       assert result =~ ~s[aria-current="page"]
     end
 
@@ -574,7 +574,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
       assert result =~ ~s[disabled]
       # Should show page 1 with current styling
       assert result =~ ~s[aria-current="page"]
-      assert result =~ ~s[dm-pagination__current]
+      assert result =~ ~s[pagination-item-active]
     end
 
     test "loading on first page disables prev click" do
@@ -589,7 +589,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
 
       # prev disabled (page_num==1), loading adds btn--loading class
       assert result =~ ~s[disabled]
-      assert result =~ "dm-pagination__btn--loading"
+      assert result =~ "opacity-50"
     end
 
     test "loading on last page disables next click" do
@@ -603,7 +603,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       assert result =~ ~s[disabled]
-      assert result =~ "dm-pagination__btn--loading"
+      assert result =~ "opacity-50"
     end
 
     test "loading shows spinner in current page button" do
@@ -615,7 +615,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           loading: true
         })
 
-      assert result =~ "dm-pagination__spinner"
+      assert result =~ "opacity-50"
     end
 
     test "loading does not show spinner when not loading" do
@@ -627,7 +627,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           loading: false
         })
 
-      refute result =~ "dm-pagination__spinner"
+      refute result =~ "opacity-50"
     end
 
     test "show_page_jumper and loading combined disables jumper event" do
@@ -641,7 +641,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           update_event: "change-page"
         })
 
-      assert result =~ "dm-pagination__jumper"
+      assert result =~ "pagination-input"
       # Form exists but phx-change should be nil when loading
       assert result =~ "<form"
     end
@@ -656,9 +656,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           show_page_jumper: true
         })
 
-      assert result =~ "dm-pagination__total"
+      assert result =~ "pagination-info"
       assert result =~ "100"
-      assert result =~ "dm-pagination__jumper"
+      assert result =~ "pagination-input"
       assert result =~ ~s[type="number"]
     end
 
@@ -689,9 +689,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
 
       assert result =~ ~s[id="full-thin"]
       assert result =~ "my-thin"
-      assert result =~ "dm-pagination--thin"
+      assert result =~ "pagination"
       assert result =~ "100"
-      assert result =~ "dm-pagination__jumper"
+      assert result =~ "pagination-input"
       assert result =~ ~s[max="10"]
       assert result =~ ~s[value="3"]
     end

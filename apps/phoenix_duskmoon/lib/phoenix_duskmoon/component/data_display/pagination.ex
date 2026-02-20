@@ -98,11 +98,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
     ~H"""
     <nav
       id={@id}
-      class={["dm-pagination", @class]}
+      class={["flex items-center gap-2", @class]}
       aria-label={@pagination_label}
       {@rest}
     >
-      <div :if={@show_total} class="dm-pagination__total">
+      <div :if={@show_total} class="flex items-center gap-1 text-sm text-[var(--color-on-surface-variant)]">
         <.dm_mdi name="view-dashboard" class="w-5 h-5" />
         <code>{@total}</code>
       </div>
@@ -129,7 +129,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
 
         <%= for p <- @pages do %>
           <%= if is_binary(p) do %>
-            <span slot="page" class="dm-pagination__ellipsis" aria-label={@ellipsis_label}>{p}</span>
+            <span slot="page" class="pagination-ellipsis" aria-label={@ellipsis_label}>{p}</span>
           <% else %>
             <button
               type="button"
@@ -229,59 +229,55 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
     ~H"""
     <nav
       id={@id}
-      class={["dm-pagination dm-pagination--thin", @class]}
+      class={["pagination", @class]}
       aria-label={@pagination_label}
       {@rest}
     >
-      <div :if={@show_total} class="dm-pagination__total">
+      <div :if={@show_total} class="pagination-info">
         <.dm_mdi name="view-dashboard" class="w-5 h-5" />
         <code>{@total}</code>
       </div>
-      <div class="dm-pagination__controls">
-        <button
-          type="button"
-          aria-label={@prev_page_label}
-          phx-click={if(@page_num == 1 || @loading, do: nil, else: @update_event)}
-          phx-value-current={if(@page_num == 1, do: nil, else: @page_num - 1)}
-          disabled={@page_num == 1}
-          class={["dm-pagination__btn", @loading && "dm-pagination__btn--loading"]}
-        >
-          <span class="sr-only">{@prev_label}</span>
-          <.dm_mdi name="chevron-left" class="w-5 h-5" />
-        </button>
+      <button
+        type="button"
+        aria-label={@prev_page_label}
+        phx-click={if(@page_num == 1 || @loading, do: nil, else: @update_event)}
+        phx-value-current={if(@page_num == 1, do: nil, else: @page_num - 1)}
+        disabled={@page_num == 1}
+        class={["pagination-prev", @loading && "opacity-50"]}
+      >
+        <span class="sr-only">{@prev_label}</span>
+        <.dm_mdi name="chevron-left" class="w-5 h-5" />
+      </button>
 
-        <button
-          type="button"
-          phx-click={if(@loading, do: nil, else: @update_event)}
-          phx-value-current={@page_num}
-          aria-current="page"
-          class="dm-pagination__current"
-        >
-          <span :if={@loading} class="dm-pagination__spinner" aria-hidden="true"></span>
-          {@page_num}
-        </button>
+      <button
+        type="button"
+        phx-click={if(@loading, do: nil, else: @update_event)}
+        phx-value-current={@page_num}
+        aria-current="page"
+        class="pagination-item pagination-item-active"
+      >
+        {@page_num}
+      </button>
 
-        <button
-          type="button"
-          aria-label={@next_page_label}
-          phx-click={if(@page_num == @max_page || @loading, do: nil, else: @update_event)}
-          phx-value-current={if(@page_num == @max_page, do: nil, else: @page_num + 1)}
-          disabled={@page_num == @max_page}
-          class={["dm-pagination__btn", @loading && "dm-pagination__btn--loading"]}
-        >
-          <span class="sr-only">{@next_label}</span>
-          <.dm_mdi name="chevron-right" class="w-5 h-5" />
-        </button>
-      </div>
+      <button
+        type="button"
+        aria-label={@next_page_label}
+        phx-click={if(@page_num == @max_page || @loading, do: nil, else: @update_event)}
+        phx-value-current={if(@page_num == @max_page, do: nil, else: @page_num + 1)}
+        disabled={@page_num == @max_page}
+        class={["pagination-next", @loading && "opacity-50"]}
+      >
+        <span class="sr-only">{@next_label}</span>
+        <.dm_mdi name="chevron-right" class="w-5 h-5" />
+      </button>
 
-      <div :if={@show_page_jumper} class="dm-pagination__jumper">
+      <div :if={@show_page_jumper} class="pagination-input">
         <.dm_mdi name="arrow-right-top" class="w-4 h-4" />
         <form phx-change={if(@loading, do: nil, else: @update_event)}>
           <input
             type="number"
             name="current"
             aria-label={@jump_to_page_label}
-            class="dm-pagination__input"
             min={1}
             max={@max_page}
             phx-debounce={300}
