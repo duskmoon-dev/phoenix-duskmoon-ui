@@ -81,6 +81,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/navigation/tab", NavigationController, :tab
 
     # Layout
+    get "/layout/bottom-sheet", LayoutController, :bottom_sheet
     get "/layout/divider", LayoutController, :divider
     get "/layout/drawer", LayoutController, :drawer
     get "/layout/theme-switcher", LayoutController, :theme_switcher

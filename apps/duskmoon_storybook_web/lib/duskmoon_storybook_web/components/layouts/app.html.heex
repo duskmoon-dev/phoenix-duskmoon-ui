@@ -213,6 +213,10 @@
     <:menu>
       <.dm_left_menu_group active={assigns[:active_menu]}>
         <:title>Layout</:title>
+        <:menu id="layout-bottom-sheet" to={~p"/components/layout/bottom-sheet"}>
+          <.dm_mdi name={"dock-bottom"} class="w-4 h-4" />
+          Bottom Sheet
+        </:menu>
         <:menu id="layout-divider" to={~p"/components/layout/divider"}>
           <.dm_mdi name={"minus"} class="w-4 h-4" />
           Divider

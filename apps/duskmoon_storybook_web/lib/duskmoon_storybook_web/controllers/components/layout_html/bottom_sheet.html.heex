@@ -1,0 +1,98 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/layout/bottom-sheet"}>Layout</:crumb>
+  <:crumb>Bottom Sheet</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Bottom Sheet</span>
+    <span class="text-sm opacity-60">dm_bottom_sheet</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Bottom sheet component wrapping the `el-dm-bottom-sheet` custom element.
+  Renders a sliding panel from the bottom of the screen, commonly used for
+  mobile-style action sheets, menus, or expandable content.
+
+  ## Usage
+  ```elixir
+  <.dm_bottom_sheet id="my-sheet" modal>
+    <:header>Sheet Title</:header>
+    <p>Content here.</p>
+  </.dm_bottom_sheet>
+  ```
+
+  Open/close via JavaScript:
+  ```javascript
+  document.getElementById('my-sheet').show();
+  document.getElementById('my-sheet').hide();
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Bottom Sheet</h3>
+  <div class="flex gap-4 mb-4">
+    <button type="button" class="btn btn-primary" onclick="document.getElementById('basic-sheet').show()">
+      Open Basic Sheet
+    </button>
+  </div>
+  <.dm_bottom_sheet id="basic-sheet">
+    <:header>Basic Sheet</:header>
+    <div class="p-4">
+      <p>This is a basic bottom sheet with a header.</p>
+      <p class="mt-2 opacity-60">Swipe down or click outside to close.</p>
+    </div>
+  </.dm_bottom_sheet>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Modal Bottom Sheet</h3>
+  <div class="flex gap-4 mb-4">
+    <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal-sheet').show()">
+      Open Modal Sheet
+    </button>
+  </div>
+  <.dm_bottom_sheet id="modal-sheet" modal>
+    <:header>Modal Sheet</:header>
+    <div class="p-4">
+      <p>This sheet has a backdrop overlay and traps keyboard focus.</p>
+      <p class="mt-2 opacity-60">Click the backdrop or press Escape to close.</p>
+    </div>
+  </.dm_bottom_sheet>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Persistent Sheet</h3>
+  <div class="flex gap-4 mb-4">
+    <button type="button" class="btn btn-warning" onclick="document.getElementById('persistent-sheet').show()">
+      Open Persistent Sheet
+    </button>
+    <button type="button" class="btn btn-ghost" onclick="document.getElementById('persistent-sheet').hide()">
+      Close Persistent Sheet
+    </button>
+  </div>
+  <.dm_bottom_sheet id="persistent-sheet" modal persistent>
+    <:header>Persistent Sheet</:header>
+    <div class="p-4">
+      <p>This sheet cannot be dismissed by clicking outside or swiping.</p>
+      <p class="mt-2 opacity-60">Use the close button above to dismiss.</p>
+    </div>
+  </.dm_bottom_sheet>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Snap Points</h3>
+  <div class="flex gap-4 mb-4">
+    <button type="button" class="btn btn-primary" onclick="document.getElementById('snap-sheet').show()">
+      Open Sheet with Snap Points
+    </button>
+  </div>
+  <.dm_bottom_sheet id="snap-sheet" snap_points="25,50,100">
+    <:header>Snap Points: 25%, 50%, 100%</:header>
+    <div class="p-4">
+      <p>Drag the handle to snap between 25%, 50%, and 100% heights.</p>
+      <div class="mt-4 space-y-2">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse.</p>
+        <p>Excepteur sint occaecat cupidatat non proident.</p>
+      </div>
+    </div>
+  </.dm_bottom_sheet>
+</.dm_card>

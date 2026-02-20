@@ -101,6 +101,7 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.Navigation.Tab
 
       # Layout components
+      import PhoenixDuskmoon.Component.Layout.BottomSheet
       import PhoenixDuskmoon.Component.Layout.Divider
       import PhoenixDuskmoon.Component.Layout.Drawer
       import PhoenixDuskmoon.Component.Layout.ThemeSwitcher
