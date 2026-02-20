@@ -83,7 +83,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div class={["form-group", @class]}>
+    <div class={["form-group", @class]} phx-feedback-for={@name}>
       <label for={@id} class={["form-label", @errors != [] && "text-error"]}>
         {@label}
       </label>

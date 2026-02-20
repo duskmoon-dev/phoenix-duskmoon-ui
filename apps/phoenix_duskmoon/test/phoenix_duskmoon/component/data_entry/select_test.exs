@@ -480,4 +480,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
       assert result =~ "select-success"
     end
   end
+
+  describe "phx-feedback-for" do
+    test "renders phx-feedback-for with name" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "country",
+          value: nil,
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ ~s(phx-feedback-for="country")
+    end
+  end
 end

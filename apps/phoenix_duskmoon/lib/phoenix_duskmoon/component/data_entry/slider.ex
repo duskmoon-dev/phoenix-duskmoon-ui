@@ -62,7 +62,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div class={["form-group", @class]}>
+    <div class={["form-group", @class]} phx-feedback-for={@name}>
       <div :if={@label} class="flex items-center justify-between mb-2">
         <label for={@id} class={["form-label", @label_class]}>
           {@label}
