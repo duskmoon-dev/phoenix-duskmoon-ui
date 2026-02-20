@@ -62,15 +62,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Accordion do
       class={@class}
       {@rest}
     >
-      <%= for item <- @item do %>
-        <el-dm-accordion-item
-          value={item[:value]}
-          disabled={item[:disabled]}
-        >
-          <span slot="header">{item[:header]}</span>
-          {render_slot(item)}
-        </el-dm-accordion-item>
-      <% end %>
+      <el-dm-accordion-item
+        :for={item <- @item}
+        value={item[:value]}
+        disabled={item[:disabled]}
+      >
+        <span slot="header">{item[:header]}</span>
+        {render_slot(item)}
+      </el-dm-accordion-item>
     </el-dm-accordion>
     """
   end

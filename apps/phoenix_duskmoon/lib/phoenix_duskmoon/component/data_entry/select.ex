@@ -113,11 +113,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
   defp render_options(%{options: options} = assigns) when is_list(options) do
     ~H"""
     <option :if={@prompt} value="">{@prompt}</option>
-    <%= for {value, label} <- @options do %>
-      <option value={value} selected={@value == value}>
-        {label}
-      </option>
-    <% end %>
+    <option :for={{value, label} <- @options} value={value} selected={@value == value}>
+      {label}
+    </option>
     """
   end
 
