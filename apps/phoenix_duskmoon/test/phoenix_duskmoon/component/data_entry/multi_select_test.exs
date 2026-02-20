@@ -308,4 +308,46 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       assert result =~ "Apple"
     end
   end
+
+  describe "FormField integration" do
+    test "renders multi select with form field extracting id and name" do
+      field = Phoenix.Component.to_form(%{"tags" => ["a"]}, as: "post")[:tags]
+
+      result =
+        render_component(&dm_multi_select/1, %{
+          field: field,
+          options: [%{value: "a", label: "Alpha"}, %{value: "b", label: "Beta"}]
+        })
+
+      assert result =~ ~s(id="post_tags")
+      assert result =~ ~s(name="post[tags][]")
+    end
+
+    test "renders multi select with form field value as selected" do
+      field = Phoenix.Component.to_form(%{"tags" => ["a", "b"]}, as: "post")[:tags]
+
+      result =
+        render_component(&dm_multi_select/1, %{
+          field: field,
+          options: [%{value: "a", label: "Alpha"}, %{value: "b", label: "Beta"}]
+        })
+
+      assert result =~ "multi-select-tag"
+      assert result =~ "Alpha"
+      assert result =~ "Beta"
+    end
+
+    test "renders multi select with custom id overriding field id" do
+      field = Phoenix.Component.to_form(%{"tags" => []}, as: "post")[:tags]
+
+      result =
+        render_component(&dm_multi_select/1, %{
+          field: field,
+          id: "custom-ms",
+          options: []
+        })
+
+      assert result =~ ~s(id="custom-ms")
+    end
+  end
 end

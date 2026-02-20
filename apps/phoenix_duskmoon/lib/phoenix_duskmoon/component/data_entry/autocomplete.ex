@@ -47,7 +47,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Autocomplete do
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:class, :string, default: nil, doc: "additional CSS classes")
+  attr(:name, :string, default: nil, doc: "form field name")
   attr(:value, :string, default: nil, doc: "selected value (string or JSON array for multiple)")
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
   attr(:options, :list, default: [], doc: "list of option maps with :value, :label keys")
   attr(:multiple, :boolean, default: false, doc: "enable multi-select mode")
   attr(:disabled, :boolean, default: false, doc: "disable the autocomplete")
@@ -68,6 +70,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Autocomplete do
 
   attr(:rest, :global)
 
+  def dm_autocomplete(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+    assigns
+    |> assign(field: nil, id: assigns.id || field.id)
+    |> assign(:name, field.name)
+    |> assign(:value, field.value)
+    |> dm_autocomplete()
+  end
+
   def dm_autocomplete(assigns) do
     options_json = Jason.encode!(assigns.options)
     assigns = assign(assigns, :options_json, options_json)
@@ -75,6 +85,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Autocomplete do
     ~H"""
     <el-dm-autocomplete
       id={@id}
+      name={@name}
       value={@value}
       options={@options_json}
       multiple={@multiple}

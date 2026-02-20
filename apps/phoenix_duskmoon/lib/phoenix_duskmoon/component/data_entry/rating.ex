@@ -32,6 +32,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
   attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:name, :string, default: nil, doc: "form field name for hidden input")
   attr(:value, :integer, default: 0, doc: "current rating value (0 to max)")
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
   attr(:max, :integer, default: 5, doc: "maximum number of stars")
 
   attr(:size, :string,
@@ -53,6 +54,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
   attr(:icon, :string, default: "star", doc: "MDI icon name for rating items")
   attr(:class, :string, default: nil, doc: "additional CSS classes")
   attr(:rest, :global)
+
+  def dm_rating(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+    assigns
+    |> assign(field: nil, id: assigns.id || field.id)
+    |> assign(:name, field.name)
+    |> assign(:value, field.value || 0)
+    |> dm_rating()
+  end
 
   def dm_rating(assigns) do
     value = assigns.value || 0

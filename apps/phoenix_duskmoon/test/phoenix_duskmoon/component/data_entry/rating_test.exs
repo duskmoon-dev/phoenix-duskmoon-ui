@@ -227,4 +227,31 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RatingTest do
       assert result =~ "Rating: 4 out of 5"
     end
   end
+
+  describe "FormField integration" do
+    test "renders rating with form field extracting id and name" do
+      field = Phoenix.Component.to_form(%{"score" => "3"}, as: "review")[:score]
+
+      result = render_component(&dm_rating/1, %{field: field})
+
+      assert result =~ ~s(id="review_score")
+      assert result =~ ~s(name="review[score]")
+    end
+
+    test "renders rating with form field value" do
+      field = Phoenix.Component.to_form(%{"score" => 4}, as: "review")[:score]
+
+      result = render_component(&dm_rating/1, %{field: field})
+
+      assert result =~ "Rating: 4 out of 5"
+    end
+
+    test "renders rating with custom id overriding field id" do
+      field = Phoenix.Component.to_form(%{"score" => "3"}, as: "review")[:score]
+
+      result = render_component(&dm_rating/1, %{field: field, id: "custom-rating"})
+
+      assert result =~ ~s(id="custom-rating")
+    end
+  end
 end

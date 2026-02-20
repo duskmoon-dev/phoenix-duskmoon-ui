@@ -51,6 +51,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
   attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:class, :string, default: nil, doc: "additional CSS classes")
   attr(:name, :string, default: nil, doc: "form field name")
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
   attr(:options, :list, default: [], doc: "list of option maps with :value, :label keys")
   attr(:selected, :list, default: [], doc: "list of currently selected values")
   attr(:placeholder, :string, default: nil, doc: "placeholder text when nothing selected")
@@ -85,6 +86,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
   attr(:max_tags, :integer, default: nil, doc: "max tags to show before overflow indicator")
   attr(:empty_text, :string, default: "No options available", doc: "text when no options")
   attr(:rest, :global)
+
+  def dm_multi_select(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+    assigns
+    |> assign(field: nil, id: assigns.id || field.id)
+    |> assign(:name, field.name)
+    |> assign(:selected, List.wrap(field.value || []))
+    |> dm_multi_select()
+  end
 
   def dm_multi_select(assigns) do
     selected_set = MapSet.new(assigns.selected)

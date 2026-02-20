@@ -35,6 +35,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
   attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:class, :string, default: nil, doc: "additional CSS classes")
   attr(:name, :string, default: nil, doc: "form field name")
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
   attr(:length, :integer, default: 4, doc: "number of input fields")
 
   attr(:size, :string,
@@ -71,6 +72,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
   attr(:helper, :string, default: nil, doc: "helper text below the input")
   attr(:error_message, :string, default: nil, doc: "error message below the input")
   attr(:rest, :global)
+
+  def dm_pin_input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+    assigns
+    |> assign(field: nil, id: assigns.id || field.id)
+    |> assign(:name, field.name)
+    |> dm_pin_input()
+  end
 
   def dm_pin_input(assigns) do
     ~H"""

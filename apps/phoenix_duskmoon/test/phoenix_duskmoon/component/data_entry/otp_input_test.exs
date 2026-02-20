@@ -231,4 +231,23 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInputTest do
       assert result =~ "Sent to your phone"
     end
   end
+
+  describe "FormField integration" do
+    test "renders otp input with form field extracting id and name" do
+      field = Phoenix.Component.to_form(%{"code" => ""}, as: "verify")[:code]
+
+      result = render_component(&dm_otp_input/1, %{field: field})
+
+      assert result =~ ~s(id="verify_code")
+      assert result =~ ~s(name="verify[code])
+    end
+
+    test "renders otp input with custom id overriding field id" do
+      field = Phoenix.Component.to_form(%{"code" => ""}, as: "verify")[:code]
+
+      result = render_component(&dm_otp_input/1, %{field: field, id: "custom-otp"})
+
+      assert result =~ ~s(id="custom-otp")
+    end
+  end
 end

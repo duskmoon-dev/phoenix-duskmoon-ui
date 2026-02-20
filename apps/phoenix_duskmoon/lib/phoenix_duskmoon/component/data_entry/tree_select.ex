@@ -40,6 +40,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
   attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:class, :string, default: nil, doc: "additional CSS classes")
   attr(:name, :string, default: nil, doc: "form field name")
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
 
   attr(:options, :list,
     default: [],
@@ -72,6 +73,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
   attr(:show_path, :boolean, default: false, doc: "show selected item path in trigger")
   attr(:empty_text, :string, default: "No options available", doc: "text when no options")
   attr(:rest, :global)
+
+  def dm_tree_select(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+    assigns
+    |> assign(field: nil, id: assigns.id || field.id)
+    |> assign(:name, field.name)
+    |> assign(:selected, List.wrap(field.value || []))
+    |> dm_tree_select()
+  end
 
   def dm_tree_select(assigns) do
     selected_set = MapSet.new(assigns.selected)

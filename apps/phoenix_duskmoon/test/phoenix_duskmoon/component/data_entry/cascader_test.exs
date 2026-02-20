@@ -245,4 +245,38 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CascaderTest do
       assert result =~ "cascader-error"
     end
   end
+
+  describe "FormField integration" do
+    test "renders cascader with form field extracting id and name" do
+      field = Phoenix.Component.to_form(%{"region" => ["asia", "cn"]}, as: "location")[:region]
+
+      result =
+        render_component(&dm_cascader/1, %{
+          field: field,
+          options: [
+            %{
+              value: "asia",
+              label: "Asia",
+              children: [%{value: "cn", label: "China"}]
+            }
+          ]
+        })
+
+      assert result =~ ~s(id="location_region")
+      assert result =~ ~s(name="location[region]")
+    end
+
+    test "renders cascader with custom id overriding field id" do
+      field = Phoenix.Component.to_form(%{"region" => []}, as: "location")[:region]
+
+      result =
+        render_component(&dm_cascader/1, %{
+          field: field,
+          id: "custom-cascader",
+          options: []
+        })
+
+      assert result =~ ~s(id="custom-cascader")
+    end
+  end
 end

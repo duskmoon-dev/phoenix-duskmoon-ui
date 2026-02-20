@@ -172,4 +172,23 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
       refute result =~ "pin-error-message"
     end
   end
+
+  describe "FormField integration" do
+    test "renders pin input with form field extracting id and name" do
+      field = Phoenix.Component.to_form(%{"pin" => ""}, as: "auth")[:pin]
+
+      result = render_component(&dm_pin_input/1, %{field: field})
+
+      assert result =~ ~s(id="auth_pin")
+      assert result =~ ~s(name="auth[pin])
+    end
+
+    test "renders pin input with custom id overriding field id" do
+      field = Phoenix.Component.to_form(%{"pin" => ""}, as: "auth")[:pin]
+
+      result = render_component(&dm_pin_input/1, %{field: field, id: "custom-pin"})
+
+      assert result =~ ~s(id="custom-pin")
+    end
+  end
 end

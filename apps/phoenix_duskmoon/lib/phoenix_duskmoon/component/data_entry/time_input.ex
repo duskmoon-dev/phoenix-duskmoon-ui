@@ -33,6 +33,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
   attr(:class, :string, default: nil, doc: "Additional CSS classes")
   attr(:name, :string, default: nil, doc: "Form name attribute")
   attr(:value, :string, default: nil, doc: "Time value (HH:MM or HH:MM:SS)")
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
   attr(:disabled, :boolean, default: false, doc: "Whether the input is disabled")
 
   attr(:size, :string,
@@ -57,6 +58,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
   attr(:show_seconds, :boolean, default: false, doc: "Show seconds segment")
   attr(:show_period, :boolean, default: false, doc: "Show AM/PM toggle")
   attr(:rest, :global)
+
+  def dm_time_input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+    assigns
+    |> assign(field: nil, id: assigns.id || field.id)
+    |> assign(:name, field.name)
+    |> assign(:value, field.value)
+    |> dm_time_input()
+  end
 
   def dm_time_input(assigns) do
     ~H"""

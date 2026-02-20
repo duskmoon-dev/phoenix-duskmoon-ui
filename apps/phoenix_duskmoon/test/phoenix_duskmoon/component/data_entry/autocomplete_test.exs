@@ -198,4 +198,33 @@ defmodule PhoenixDuskmoon.Component.DataEntry.AutocompleteTest do
       assert result =~ "No countries found"
     end
   end
+
+  describe "FormField integration" do
+    test "renders autocomplete with form field extracting id, name, and value" do
+      field = Phoenix.Component.to_form(%{"country" => "us"}, as: "user")[:country]
+
+      result =
+        render_component(&dm_autocomplete/1, %{
+          field: field,
+          options: [%{value: "us", label: "USA"}]
+        })
+
+      assert result =~ ~s(id="user_country")
+      assert result =~ ~s(name="user[country]")
+      assert result =~ ~s(value="us")
+    end
+
+    test "renders autocomplete with custom id overriding field id" do
+      field = Phoenix.Component.to_form(%{"country" => ""}, as: "user")[:country]
+
+      result =
+        render_component(&dm_autocomplete/1, %{
+          field: field,
+          id: "custom-auto",
+          options: []
+        })
+
+      assert result =~ ~s(id="custom-auto")
+    end
+  end
 end

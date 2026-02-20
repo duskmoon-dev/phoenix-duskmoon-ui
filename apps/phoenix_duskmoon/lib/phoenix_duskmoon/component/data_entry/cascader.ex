@@ -42,6 +42,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
   attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:class, :string, default: nil, doc: "additional CSS classes")
   attr(:name, :string, default: nil, doc: "form field name (submits last value in path)")
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
 
   attr(:options, :list,
     default: [],
@@ -76,6 +77,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
   attr(:separator, :string, default: " / ", doc: "path separator in display")
   attr(:empty_text, :string, default: "No options available", doc: "text when no options")
   attr(:rest, :global)
+
+  def dm_cascader(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+    assigns
+    |> assign(field: nil, id: assigns.id || field.id)
+    |> assign(:name, field.name)
+    |> assign(:selected_path, List.wrap(field.value || []))
+    |> dm_cascader()
+  end
 
   def dm_cascader(assigns) do
     selected_set = MapSet.new(assigns.selected_path)

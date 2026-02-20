@@ -194,4 +194,23 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInputTest do
       assert result =~ ~s(name="start[hour]")
     end
   end
+
+  describe "FormField integration" do
+    test "renders time input with form field extracting id and name" do
+      field = Phoenix.Component.to_form(%{"start_time" => ""}, as: "event")[:start_time]
+
+      result = render_component(&dm_time_input/1, %{field: field})
+
+      assert result =~ ~s(id="event_start_time")
+      assert result =~ ~s(name="event[start_time])
+    end
+
+    test "renders time input with custom id overriding field id" do
+      field = Phoenix.Component.to_form(%{"start_time" => ""}, as: "event")[:start_time]
+
+      result = render_component(&dm_time_input/1, %{field: field, id: "custom-time"})
+
+      assert result =~ ~s(id="custom-time")
+    end
+  end
 end

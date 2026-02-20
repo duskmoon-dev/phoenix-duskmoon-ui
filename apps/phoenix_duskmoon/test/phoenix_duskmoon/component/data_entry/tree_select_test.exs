@@ -323,4 +323,32 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
       assert result =~ "Level 1 / Level 2 / Level 3"
     end
   end
+
+  describe "FormField integration" do
+    test "renders tree select with form field extracting id and name" do
+      field = Phoenix.Component.to_form(%{"category" => ["a"]}, as: "product")[:category]
+
+      result =
+        render_component(&dm_tree_select/1, %{
+          field: field,
+          options: [%{value: "a", label: "Alpha"}]
+        })
+
+      assert result =~ ~s(id="product_category")
+      assert result =~ ~s(name="product[category])
+    end
+
+    test "renders tree select with custom id overriding field id" do
+      field = Phoenix.Component.to_form(%{"category" => []}, as: "product")[:category]
+
+      result =
+        render_component(&dm_tree_select/1, %{
+          field: field,
+          id: "custom-tree",
+          options: []
+        })
+
+      assert result =~ ~s(id="custom-tree")
+    end
+  end
 end
