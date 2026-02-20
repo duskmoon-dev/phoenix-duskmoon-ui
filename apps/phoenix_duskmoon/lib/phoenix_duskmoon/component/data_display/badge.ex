@@ -14,11 +14,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Badge do
 
       <.dm_badge variant="warning" outline>Warning</.dm_badge>
 
+      <.dm_badge variant="success" soft>Success</.dm_badge>
+
   ## Attributes
 
-  * `variant` - Badge variant: primary, secondary, accent, info, success, warning, error, ghost, neutral (default: primary)
+  * `variant` - Badge color: primary, secondary, accent, info, success, warning, error, ghost, neutral (default: primary)
   * `size` - Badge size: xs, sm, md, lg (default: md)
   * `outline` - Show outline style (default: false)
+  * `soft` - Show soft style with muted background (default: false)
   * `class` - Additional CSS classes
 
   ## Slots
@@ -48,6 +51,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Badge do
 
   attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "badge size")
   attr(:outline, :boolean, default: false, doc: "show outline style")
+  attr(:soft, :boolean, default: false, doc: "show soft style with muted background")
   attr(:pill, :boolean, default: false, doc: "use pill (rounded) shape")
   attr(:dot, :boolean, default: false, doc: "show as a dot indicator only")
   attr(:class, :string, default: nil, doc: "additional CSS classes")
@@ -56,11 +60,23 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Badge do
   slot(:inner_block, required: true)
 
   def dm_badge(assigns) do
+    element_variant =
+      cond do
+        assigns.soft -> "soft"
+        assigns.outline -> "outlined"
+        true -> nil
+      end
+
+    assigns =
+      assigns
+      |> assign(:element_color, css_color(assigns.variant))
+      |> assign(:element_variant, element_variant)
+
     ~H"""
     <el-dm-badge
-      variant={@variant}
+      color={@element_color}
+      variant={@element_variant}
       size={@size}
-      outline={@outline}
       pill={@pill}
       dot={@dot}
       class={@class}
@@ -70,4 +86,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Badge do
     </el-dm-badge>
     """
   end
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end

@@ -125,6 +125,36 @@ defmodule Storybook.DataDisplay.Badge do
         ]
       },
       %Variation{
+        id: :soft_style,
+        attributes: %{
+          variant: "primary",
+          soft: true
+        },
+        slots: [
+          "Soft"
+        ]
+      },
+      %Variation{
+        id: :soft_success,
+        attributes: %{
+          variant: "success",
+          soft: true
+        },
+        slots: [
+          "Soft Success"
+        ]
+      },
+      %Variation{
+        id: :soft_error,
+        attributes: %{
+          variant: "error",
+          soft: true
+        },
+        slots: [
+          "Soft Error"
+        ]
+      },
+      %Variation{
         id: :outline_success,
         attributes: %{
           variant: "success",

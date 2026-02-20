@@ -31,7 +31,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
   attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
   attr(:checked, :boolean, default: false, doc: "whether this radio option is selected")
   attr(:label, :string, default: nil, doc: "text label displayed next to the radio button")
-  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg", "xl"], doc: "radio button size")
+
+  attr(:size, :string,
+    default: "md",
+    values: ["xs", "sm", "md", "lg", "xl"],
+    doc: "radio button size"
+  )
 
   attr(:color, :string,
     default: "primary",
