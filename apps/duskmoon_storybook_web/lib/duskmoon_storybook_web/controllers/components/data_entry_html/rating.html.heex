@@ -1,0 +1,149 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/rating"}>Data Entry</:crumb>
+  <:crumb>Rating</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Rating</span>
+    <span class="text-sm opacity-60">dm_rating</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Standalone rating component using CSS classes from `@duskmoon-dev/core`. Renders interactive star-based
+  ratings with proper `.rating` CSS classes.
+
+  ## Usage
+  ```elixir
+  <.dm_rating value={3} max={5} />
+  <.dm_rating value={4} max={5} color="primary" size="lg" animated />
+  <.dm_rating value={5} max={5} readonly />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Rating</h3>
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">0 stars</span>
+      <.dm_rating value={0} max={5} />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">3 stars</span>
+      <.dm_rating value={3} max={5} />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">5 stars</span>
+      <.dm_rating value={5} max={5} />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">10-star max</span>
+      <.dm_rating value={7} max={10} />
+    </div>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Color Variants</h3>
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">Default</span>
+      <.dm_rating value={4} max={5} />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">Primary</span>
+      <.dm_rating value={4} max={5} color="primary" />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">Secondary</span>
+      <.dm_rating value={4} max={5} color="secondary" />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">Success</span>
+      <.dm_rating value={4} max={5} color="success" />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">Error</span>
+      <.dm_rating value={4} max={5} color="error" />
+    </div>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Size Variants</h3>
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">XS</span>
+      <.dm_rating value={3} max={5} size="xs" />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">SM</span>
+      <.dm_rating value={3} max={5} size="sm" />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">Default</span>
+      <.dm_rating value={3} max={5} />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">LG</span>
+      <.dm_rating value={3} max={5} size="lg" />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">XL</span>
+      <.dm_rating value={3} max={5} size="xl" />
+    </div>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">States</h3>
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">Interactive</span>
+      <.dm_rating value={3} max={5} />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">Read Only</span>
+      <.dm_rating value={4} max={5} readonly />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">Disabled</span>
+      <.dm_rating value={2} max={5} disabled />
+    </div>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Style Options</h3>
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">Animated</span>
+      <.dm_rating value={4} max={5} animated color="primary" />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">Compact</span>
+      <.dm_rating value={3} max={5} compact />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">Both</span>
+      <.dm_rating value={5} max={5} animated compact color="success" />
+    </div>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Custom Icons</h3>
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">Heart</span>
+      <.dm_rating value={3} max={5} icon="heart" color="error" />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">Thumb Up</span>
+      <.dm_rating value={4} max={5} icon="thumb-up" color="primary" size="lg" />
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">Fire</span>
+      <.dm_rating value={5} max={5} icon="fire" color="error" animated />
+    </div>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Form Integration</h3>
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center gap-4">
+      <span class="text-sm w-24">With name</span>
+      <.dm_rating name="review[rating]" value={4} max={5} color="primary" />
+    </div>
+  </div>
+</.dm_card>

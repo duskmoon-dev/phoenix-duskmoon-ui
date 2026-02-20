@@ -17,6 +17,10 @@ defmodule DuskmoonStorybookWeb.Components.DataEntryController do
     render(conn, :input, active_menu: "data-entry-input")
   end
 
+  def rating(conn, _params) do
+    render(conn, :rating, active_menu: "data-entry-rating")
+  end
+
   def radio(conn, _params) do
     render(conn, :radio, active_menu: "data-entry-radio")
   end
