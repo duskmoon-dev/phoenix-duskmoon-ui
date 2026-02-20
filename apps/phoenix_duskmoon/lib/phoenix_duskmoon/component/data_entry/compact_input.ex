@@ -104,9 +104,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
         <option :if={@prompt} value="">{@prompt}</option>
         {Phoenix.HTML.Form.options_for_select(@options, @value)}
       </select>
-    </div>
-    <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-      <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+      <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+      </div>
     </div>
     """
   end
@@ -138,9 +138,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
         {@rest}
       />
       {render_slot(@inner_block)}
-    </div>
-    <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-      <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+      <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+      </div>
     </div>
     """
   end
