@@ -1,0 +1,71 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/file-upload"}>Data Entry</:crumb>
+  <:crumb>File Upload</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">File Upload</span>
+    <span class="text-sm opacity-60">dm_file_upload</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  File upload component wrapping the `el-dm-file-upload` custom element.
+  Renders a drag-and-drop file upload zone with optional image previews,
+  file type restrictions, size limits, and multiple file support.
+
+  ## Usage
+  ```elixir
+  <.dm_file_upload accept="image/*" multiple show_preview />
+  ```
+
+  Access files via JavaScript:
+  ```javascript
+  const upload = document.getElementById('my-upload');
+  upload.addEventListener('change', () => {
+    console.log('Files:', upload.files);
+  });
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic File Upload</h3>
+  <div class="mb-4">
+    <.dm_file_upload />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Image Upload with Preview</h3>
+  <div class="mb-4">
+    <.dm_file_upload accept="image/*" multiple show_preview />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Document Upload with Limits</h3>
+  <div class="mb-4">
+    <.dm_file_upload
+      accept=".pdf,.doc,.docx"
+      multiple
+      max_size={5_242_880}
+      max_files={3}
+    >
+      Drop PDF or Word documents here (max 5MB, up to 3 files)
+    </.dm_file_upload>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Size Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_file_upload size="sm" accept="image/*">Small upload zone</.dm_file_upload>
+    <.dm_file_upload size="md" accept="image/*">Medium upload zone (default)</.dm_file_upload>
+    <.dm_file_upload size="lg" accept="image/*">Large upload zone</.dm_file_upload>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Compact Layout</h3>
+  <div class="mb-4">
+    <.dm_file_upload compact accept="image/*" multiple />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Disabled State</h3>
+  <div class="mb-4">
+    <.dm_file_upload disabled>Upload is disabled</.dm_file_upload>
+  </div>
+</.dm_card>

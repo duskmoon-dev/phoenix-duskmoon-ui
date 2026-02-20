@@ -13,6 +13,10 @@ defmodule DuskmoonStorybookWeb.Components.DataEntryController do
     render(conn, :compact_input, active_menu: "data-entry-compact-input")
   end
 
+  def file_upload(conn, _params) do
+    render(conn, :file_upload, active_menu: "data-entry-file-upload")
+  end
+
   def form(conn, _params) do
     render(conn, :form, active_menu: "data-entry-form")
   end

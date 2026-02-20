@@ -75,6 +75,7 @@ defmodule PhoenixDuskmoon.Component do
 
       # Data Entry components
       import PhoenixDuskmoon.Component.DataEntry.Autocomplete
+      import PhoenixDuskmoon.Component.DataEntry.FileUpload
       import PhoenixDuskmoon.Component.DataEntry.Form
       import PhoenixDuskmoon.Component.DataEntry.Checkbox
       import PhoenixDuskmoon.Component.DataEntry.CompactInput

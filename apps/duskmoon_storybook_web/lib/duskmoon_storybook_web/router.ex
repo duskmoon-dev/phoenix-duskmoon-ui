@@ -57,6 +57,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/data-entry/autocomplete", DataEntryController, :autocomplete
     get "/data-entry/checkbox", DataEntryController, :checkbox
     get "/data-entry/compact-input", DataEntryController, :compact_input
+    get "/data-entry/file-upload", DataEntryController, :file_upload
     get "/data-entry/form", DataEntryController, :form
     get "/data-entry/input", DataEntryController, :input
     get "/data-entry/rating", DataEntryController, :rating
