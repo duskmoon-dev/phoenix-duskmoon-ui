@@ -77,16 +77,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
           aria-invalid={@errors != [] && "true"}
           aria-describedby={@errors != [] && @id && "#{@id}-errors"}
           class={[
-            "dm-checkbox",
-            "dm-checkbox--#{@size}",
-            "dm-checkbox--#{@color}",
+            "checkbox",
+            "checkbox-#{@size}",
+            "checkbox-#{@color}",
             @disabled && "opacity-50 cursor-not-allowed",
             @checkbox_class
           ]}
           phx-indeterminate={@indeterminate}
           {@rest}
         />
-        <span :if={@label} class={["dm-label__text", @label_class]}>
+        <span :if={@label} class={@label_class}>
           {@label}
         </span>
       </label>

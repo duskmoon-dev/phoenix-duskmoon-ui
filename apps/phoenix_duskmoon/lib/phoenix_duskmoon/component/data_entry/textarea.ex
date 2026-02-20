@@ -74,7 +74,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
     ~H"""
     <div class={["form-group", @class]}>
       <label :if={@label} for={@id} class={["form-label", @label_class]}>
-        <span class="dm-label__text">{@label}</span>
+        <span>{@label}</span>
       </label>
       <textarea
         id={@id}
@@ -89,9 +89,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
         aria-invalid={@errors != [] && "true"}
         aria-describedby={@errors != [] && @id && "#{@id}-errors"}
         class={[
-          "dm-textarea",
-          "dm-textarea--#{@size}",
-          "dm-textarea--#{@color}",
+          "textarea",
+          "textarea-#{@size}",
+          "textarea-#{@color}",
           resize_class(@resize),
           @disabled && "opacity-50 cursor-not-allowed",
           @textarea_class
@@ -105,8 +105,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
     """
   end
 
-  defp resize_class("none"), do: "dm-textarea--resize-none"
-  defp resize_class("vertical"), do: "dm-textarea--resize-y"
-  defp resize_class("horizontal"), do: "dm-textarea--resize-x"
-  defp resize_class("both"), do: "dm-textarea--resize-both"
+  defp resize_class("none"), do: "textarea-resize-none"
+  defp resize_class("vertical"), do: "textarea-resize-vertical"
+  defp resize_class("horizontal"), do: "resize-x"
+  defp resize_class("both"), do: "resize"
 end

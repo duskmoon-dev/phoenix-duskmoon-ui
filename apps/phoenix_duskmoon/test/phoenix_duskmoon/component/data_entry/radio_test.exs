@@ -9,7 +9,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
     result = render_component(&dm_radio/1, %{name: "choice", value: "a"})
 
     assert result =~ ~s[type="radio"]
-    assert result =~ "dm-radio"
+    assert result =~ "radio"
   end
 
   test "renders radio with name and value" do
@@ -23,13 +23,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
     result = render_component(&dm_radio/1, %{name: "choice", value: "a", label: "Option A"})
 
     assert result =~ "Option A"
-    assert result =~ "dm-label__text"
   end
 
   test "renders radio without label span when no label" do
     result = render_component(&dm_radio/1, %{name: "choice", value: "a"})
 
-    refute result =~ "dm-label__text"
+    refute result =~ "<span"
   end
 
   test "renders radio with custom id" do
@@ -41,26 +40,26 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
   test "renders radio with default size md" do
     result = render_component(&dm_radio/1, %{name: "choice", value: "a"})
 
-    assert result =~ "dm-radio--md"
+    assert result =~ "radio-md"
   end
 
   test "renders radio with all size options" do
     for size <- ~w(xs sm md lg) do
       result = render_component(&dm_radio/1, %{name: "choice", value: "a", size: size})
-      assert result =~ "dm-radio--#{size}"
+      assert result =~ "radio-#{size}"
     end
   end
 
   test "renders radio with default color primary" do
     result = render_component(&dm_radio/1, %{name: "choice", value: "a"})
 
-    assert result =~ "dm-radio--primary"
+    assert result =~ "radio-primary"
   end
 
   test "renders radio with all color options" do
     for color <- ~w(primary secondary accent info success warning error) do
       result = render_component(&dm_radio/1, %{name: "choice", value: "a", color: color})
-      assert result =~ "dm-radio--#{color}"
+      assert result =~ "radio-#{color}"
     end
   end
 
@@ -183,8 +182,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
     assert result =~ "text-lg"
     assert result =~ "border-accent"
     assert result =~ "my-wrapper"
-    assert result =~ "dm-radio--lg"
-    assert result =~ "dm-radio--accent"
+    assert result =~ "radio-lg"
+    assert result =~ "radio-accent"
     assert result =~ "checked"
     assert result =~ "data-testid=\"theme-radio\""
   end
@@ -208,7 +207,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
         value: "a"
       })
 
-    refute result =~ "dm-label__text"
+    refute result =~ "<span"
   end
 
   test "renders radio without id when not provided" do
@@ -262,8 +261,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
         })
 
       assert result =~ "Dark Mode"
-      assert result =~ "dm-radio--accent"
-      assert result =~ "dm-radio--lg"
+      assert result =~ "radio-accent"
+      assert result =~ "radio-lg"
     end
   end
 

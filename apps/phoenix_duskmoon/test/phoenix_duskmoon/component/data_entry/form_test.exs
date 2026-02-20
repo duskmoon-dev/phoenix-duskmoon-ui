@@ -10,7 +10,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
   end
 
   describe "dm_form/1" do
-    test "renders basic form with dm-form class" do
+    test "renders basic form" do
       result =
         render_component(&dm_form/1, %{
           for: %{},
@@ -18,7 +18,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
         })
 
       assert result =~ "<form"
-      assert result =~ "dm-form"
       assert result =~ "form content"
     end
 
@@ -63,7 +62,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
         })
 
       assert result =~ "<form"
-      assert result =~ "dm-form"
     end
   end
 
@@ -111,13 +109,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
   end
 
   describe "dm_error/1" do
-    test "renders error with dm-error-text class" do
+    test "renders error with helper-text text-error class" do
       result =
         render_component(&dm_error/1, %{
           inner_block: inner_block("is required")
         })
 
-      assert result =~ "dm-error-text"
+      assert result =~ "helper-text text-error"
       assert result =~ "is required"
     end
 

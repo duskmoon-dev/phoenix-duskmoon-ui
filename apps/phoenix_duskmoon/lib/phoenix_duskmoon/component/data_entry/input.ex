@@ -197,7 +197,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           checked={@checked}
           aria-invalid={@errors != [] && "true"}
           aria-describedby={@errors != [] && @id && "#{@id}-errors"}
-          class={[if(!@classic, do: "dm-checkbox"), @class]}
+          class={[if(!@classic, do: "checkbox"), @class]}
           {@rest}
         />
         <%= @label %>
@@ -250,11 +250,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           aria-invalid={@errors != [] && "true"}
           aria-describedby={@errors != [] && @id && "#{@id}-errors"}
           class={[
-            if(!@classic, do: "dm-select"),
-            @color && "dm-select--#{@color}",
-            @size && "dm-select--#{@size}",
+            if(!@classic, do: "select"),
+            @color && "select-#{@color}",
+            @size && "select-#{@size}",
             @class,
-            @errors != [] && "dm-select--error"
+            @errors != [] && "select-error"
           ]}
           multiple={@multiple}
           {@rest}
@@ -283,9 +283,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             <input
               type="checkbox"
           class={[
-            if(!@classic, do: "dm-checkbox"),
-            @color && "dm-checkbox--#{@color}",
-            @size && "dm-checkbox--#{@size}",
+            if(!@classic, do: "checkbox"),
+            @color && "checkbox-#{@color}",
+            @size && "checkbox-#{@size}",
             @class
           ]}
               name={"#{@name}[]"}
@@ -315,9 +315,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             <input
               type="radio"
               class={[
-                if(!@classic, do: "dm-radio"),
-                @color && "dm-radio--#{@color}",
-                @size && "dm-radio--#{@size}",
+                if(!@classic, do: "radio"),
+                @color && "radio-#{@color}",
+                @size && "radio-#{@size}",
                 @class
               ]}
               name={@name}
@@ -348,11 +348,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           aria-invalid={@errors != [] && "true"}
           aria-describedby={@errors != [] && @id && "#{@id}-errors"}
           class={[
-            if(!@classic, do: "dm-textarea"),
-            @color && "dm-textarea--#{@color}",
-            @size && "dm-textarea--#{@size}",
+            if(!@classic, do: "textarea"),
+            @color && "textarea-#{@color}",
+            @size && "textarea-#{@size}",
             @class,
-            @errors != [] && "dm-textarea--error"
+            @errors != [] && "textarea-error"
           ]}
           {@rest}
         ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
@@ -378,10 +378,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           aria-describedby={@errors != [] && @id && "#{@id}-errors"}
           class={[
             @class,
-            if(!@classic, do: "dm-input dm-input--file"),
-            @color && "dm-input--#{@color}",
-            @size && "dm-input--#{@size}",
-            @errors != [] && "dm-input--error"
+            if(!@classic, do: "input file-upload"),
+            @color && "input-#{@color}",
+            @size && "input-#{@size}",
+            @errors != [] && "input-error"
           ]}
           {@rest}
         />
@@ -419,9 +419,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             class={[
               @class,
-              if(!@classic, do: "dm-range"),
-              @color && "dm-range--#{@color}",
-              @size && "dm-range--#{@size}"
+              if(!@classic, do: "slider"),
+              @color && "slider-#{@color}",
+              @size && "slider-#{@size}"
             ]}
             {@rest}
           />
@@ -493,10 +493,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             value={@value}
             class={[
               @class,
-              if(!@classic, do: "dm-input"),
-              @color && "dm-input--#{@color}",
-              @size && "dm-input--#{@size}",
-              @errors != [] && "dm-input--error"
+              if(!@classic, do: "input"),
+              @color && "input-#{@color}",
+              @size && "input-#{@size}",
+              @errors != [] && "input-error"
             ]}
             aria-invalid={@errors != [] && "true"}
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
@@ -525,10 +525,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             value={@value}
             class={[
               @class,
-              if(!@classic, do: "dm-input"),
-              @color && "dm-input--#{@color}",
-              @size && "dm-input--#{@size}",
-              @errors != [] && "dm-input--error"
+              if(!@classic, do: "input"),
+              @color && "input-#{@color}",
+              @size && "input-#{@size}",
+              @errors != [] && "input-error"
             ]}
             aria-invalid={@errors != [] && "true"}
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
@@ -571,10 +571,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             type="text"
             value={@value || "#000000"}
             class={[
-              "dm-input flex-1",
-              @color && "dm-input--#{@color}",
-              @size && "dm-input--#{@size}",
-              @errors != [] && "dm-input--error"
+              "input flex-1",
+              @color && "input-#{@color}",
+              @size && "input-#{@size}",
+              @errors != [] && "input-error"
             ]}
             readonly
           />
@@ -648,10 +648,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             class={[
               @class,
-              if(!@classic, do: "dm-input"),
-              @color && "dm-input--#{@color}",
-              @size && "dm-input--#{@size}",
-              @errors != [] && "dm-input--error"
+              if(!@classic, do: "input"),
+              @color && "input-#{@color}",
+              @size && "input-#{@size}",
+              @errors != [] && "input-error"
             ]}
             {@rest}
           />
@@ -733,14 +733,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <button type="button" class="btn btn-ghost btn-xs" aria-label={@underline_label}>
             <.dm_mdi name="format-underline" class="w-4 h-4" />
           </button>
-          <div class="dm-divider dm-divider--horizontal"></div>
+          <div class="divider"></div>
           <button type="button" class="btn btn-ghost btn-xs" aria-label={@bulleted_list_label}>
             <.dm_mdi name="format-list-bulleted" class="w-4 h-4" />
           </button>
           <button type="button" class="btn btn-ghost btn-xs" aria-label={@numbered_list_label}>
             <.dm_mdi name="format-list-numbered" class="w-4 h-4" />
           </button>
-          <div class="dm-divider dm-divider--horizontal"></div>
+          <div class="divider"></div>
           <button type="button" class="btn btn-ghost btn-xs" aria-label={@insert_link_label}>
             <.dm_mdi name="link" class="w-4 h-4" />
           </button>
@@ -781,8 +781,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         <div class="flex flex-wrap gap-2 p-2 border border-[var(--color-surface-container-high)] rounded-lg" role="group" aria-label={"#{@label} tags"} aria-invalid={@errors != [] && "true"} aria-describedby={@errors != [] && @id && "#{@id}-errors"}>
           <%= for tag <- @tags do %>
             <span class={[
-              "dm-badge dm-badge--lg gap-1",
-              @color && "dm-badge--#{@color}"
+              "badge badge-lg gap-1",
+              @color && "badge-#{@color}"
             ]}>
               <%= tag %>
               <button
@@ -797,7 +797,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <input
             type="text"
             id={@id}
-            class="dm-input dm-input--sm flex-1 min-w-[100px] border-none focus:outline-none"
+            class="input input-sm flex-1 min-w-[100px] border-none focus:outline-none"
             placeholder={@add_tag_placeholder}
           />
         </div>
@@ -850,8 +850,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               aria-invalid={@errors != [] && "true"}
               aria-describedby={@errors != [] && @id && "#{@id}-errors"}
               class={[
-                "dm-range dm-range--sm",
-                @color && "dm-range--#{@color}"
+                "slider slider-sm",
+                @color && "slider-#{@color}"
               ]}
             />
             <input
@@ -865,8 +865,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               aria-invalid={@errors != [] && "true"}
               aria-describedby={@errors != [] && @id && "#{@id}-errors"}
               class={[
-                "dm-range dm-range--sm",
-                @color && "dm-range--#{@color}"
+                "slider slider-sm",
+                @color && "slider-#{@color}"
               ]}
               phx-target={@phx_target}
               phx-change="range_max_change"
@@ -905,10 +905,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             class={[
               @class,
-              if(!@classic, do: "dm-input"),
-              @color && "dm-input--#{@color}",
-              @size && "dm-input--#{@size}",
-              @errors != [] && "dm-input--error"
+              if(!@classic, do: "input"),
+              @color && "input-#{@color}",
+              @size && "input-#{@size}",
+              @errors != [] && "input-error"
             ]}
 
             {@rest}
@@ -976,10 +976,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           aria-describedby={@errors != [] && @id && "#{@id}-errors"}
           class={[
             @class,
-            if(!@classic, do: "dm-input"),
-            @color && "dm-input--#{@color}",
-            @size && "dm-input--#{@size}",
-            @errors != [] && "dm-input--error"
+            if(!@classic, do: "input"),
+            @color && "input-#{@color}",
+            @size && "input-#{@size}",
+            @errors != [] && "input-error"
           ]}
           {@rest}
         />

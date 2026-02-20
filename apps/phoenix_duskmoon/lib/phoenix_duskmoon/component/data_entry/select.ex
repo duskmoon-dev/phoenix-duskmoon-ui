@@ -74,7 +74,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
     ~H"""
     <div class={["form-group", @class]}>
       <label :if={@label} for={@id} class={["form-label", @label_class]}>
-        <span class="dm-label__text">{@label}</span>
+        <span>{@label}</span>
       </label>
       <select
         id={@id}
@@ -84,9 +84,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
         aria-invalid={@errors != [] && "true"}
         aria-describedby={@errors != [] && @id && "#{@id}-errors"}
         class={[
-          "dm-select",
-          "dm-select--#{@size}",
-          "dm-select--#{@color}",
+          "select",
+          "select-#{@size}",
+          "select-#{@color}",
           @disabled && "opacity-50 cursor-not-allowed",
           @select_class
         ]}

@@ -21,7 +21,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[name="country"]
       assert result =~ ~s[class="]
       # Should use select classes, not textarea classes (bug fix verification)
-      assert result =~ ~s[dm-select"]
+      assert result =~ ~s[select"]
       refute result =~ ~s[textarea]
     end
 
@@ -35,7 +35,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-select--primary]
+      assert result =~ ~s[select-primary]
     end
 
     test "renders select with size" do
@@ -48,7 +48,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-select--lg]
+      assert result =~ ~s[select-lg]
     end
 
     test "renders select with error state" do
@@ -61,7 +61,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-select--error]
+      assert result =~ ~s[select-error]
       assert result =~ "is required"
     end
 
@@ -133,7 +133,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[id="desc-textarea"]
       assert result =~ ~s[name="description"]
       # Should use textarea classes, not radio classes (bug fix verification)
-      assert result =~ ~s[dm-textarea"]
+      assert result =~ ~s[textarea"]
       refute result =~ ~s[radio]
       assert result =~ "Some text content"
     end
@@ -147,7 +147,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-textarea--success]
+      assert result =~ ~s[textarea-success]
     end
 
     test "renders textarea with size" do
@@ -159,7 +159,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-textarea--lg]
+      assert result =~ ~s[textarea-lg]
     end
 
     test "renders textarea with error state" do
@@ -171,7 +171,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-textarea--error]
+      assert result =~ ~s[textarea-error]
       assert result =~ "cannot be blank"
       assert result =~ "is too short"
     end
@@ -256,7 +256,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-radio--primary]
+      assert result =~ ~s[radio-primary]
     end
 
     test "renders radio group with size" do
@@ -269,7 +269,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-radio--lg]
+      assert result =~ ~s[radio-lg]
     end
 
     test "renders radio group with label" do
@@ -313,7 +313,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[type="checkbox"]
       assert result =~ ~s[id="agree-checkbox"]
       assert result =~ ~s[name="agree"]
-      assert result =~ ~s[class="dm-checkbox"]
+      assert result =~ ~s[class="checkbox"]
       assert result =~ "I agree to the terms"
     end
 
@@ -478,7 +478,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[type="range"]
       assert result =~ ~s[id="volume-slider"]
       assert result =~ ~s[name="volume"]
-      assert result =~ ~s[class="dm-range"]
+      assert result =~ ~s[class="slider"]
       assert result =~ "Volume"
     end
 
@@ -523,7 +523,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: 50
         })
 
-      assert result =~ ~s[dm-range--primary]
+      assert result =~ ~s[slider-primary]
     end
 
     test "renders range slider with size" do
@@ -536,7 +536,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: 50
         })
 
-      assert result =~ ~s[dm-range--lg]
+      assert result =~ ~s[slider-lg]
     end
 
     test "renders range slider displaying current value" do
@@ -609,7 +609,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[type="file"]
       assert result =~ ~s[id="file-upload"]
       assert result =~ ~s[name="upload"]
-      assert result =~ ~s[dm-input dm-input--file]
+      assert result =~ ~s[input file-upload]
       assert result =~ "Upload file"
     end
 
@@ -623,7 +623,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-input--primary]
+      assert result =~ ~s[input-primary]
     end
 
     test "renders file input with size" do
@@ -636,7 +636,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-input--lg]
+      assert result =~ ~s[input-lg]
     end
 
     test "renders file input with error state" do
@@ -649,7 +649,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-input--error]
+      assert result =~ ~s[input-error]
       assert result =~ "file too large"
       assert result =~ "invalid format"
     end
@@ -682,7 +682,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[type="text"]
       assert result =~ ~s[id="username-input"]
       assert result =~ ~s[name="username"]
-      assert result =~ ~s[dm-input"]
+      assert result =~ ~s[input"]
       assert result =~ "Username"
     end
 
@@ -708,7 +708,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[dm-input--primary]
+      assert result =~ ~s[input-primary]
     end
 
     test "renders text input with size" do
@@ -721,7 +721,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[dm-input--lg]
+      assert result =~ ~s[input-lg]
     end
 
     test "renders text input with error state" do
@@ -734,7 +734,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[dm-input--error]
+      assert result =~ ~s[input-error]
       assert result =~ "is required"
     end
 
@@ -766,7 +766,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[type="email"]
       assert result =~ ~s[id="email-input"]
       assert result =~ ~s[name="email"]
-      assert result =~ ~s[dm-input"]
+      assert result =~ ~s[input"]
       assert result =~ "Email"
     end
 
@@ -792,7 +792,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[dm-input--error]
+      assert result =~ ~s[input-error]
       assert result =~ "is invalid"
     end
   end
@@ -811,7 +811,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[type="password"]
       assert result =~ ~s[id="password-input"]
       assert result =~ ~s[name="password"]
-      assert result =~ ~s[dm-input"]
+      assert result =~ ~s[input"]
       assert result =~ "Password"
     end
 
@@ -825,7 +825,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[dm-input--primary]
+      assert result =~ ~s[input-primary]
     end
 
     test "renders password input with error state" do
@@ -838,7 +838,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[dm-input--error]
+      assert result =~ ~s[input-error]
       assert result =~ "is too weak"
     end
   end
@@ -857,7 +857,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[type="number"]
       assert result =~ ~s[id="age-input"]
       assert result =~ ~s[name="age"]
-      assert result =~ ~s[dm-input"]
+      assert result =~ ~s[input"]
       assert result =~ "Age"
     end
 
@@ -900,7 +900,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-input--error]
+      assert result =~ ~s[input-error]
       assert result =~ "must be positive"
     end
   end
@@ -919,7 +919,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[type="url"]
       assert result =~ ~s[id="website-input"]
       assert result =~ ~s[name="website"]
-      assert result =~ ~s[dm-input"]
+      assert result =~ ~s[input"]
       assert result =~ "Website"
     end
 
@@ -945,7 +945,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[dm-input--error]
+      assert result =~ ~s[input-error]
       assert result =~ "is invalid"
     end
   end
@@ -964,7 +964,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[type="tel"]
       assert result =~ ~s[id="phone-input"]
       assert result =~ ~s[name="phone"]
-      assert result =~ ~s[dm-input"]
+      assert result =~ ~s[input"]
       assert result =~ "Phone"
     end
 
@@ -990,7 +990,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[dm-input--error]
+      assert result =~ ~s[input-error]
       assert result =~ "is invalid format"
     end
   end
@@ -1035,7 +1035,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-checkbox--primary]
+      assert result =~ ~s[checkbox-primary]
     end
 
     test "renders checkbox group with size" do
@@ -1048,7 +1048,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-checkbox--lg]
+      assert result =~ ~s[checkbox-lg]
     end
 
     test "renders checkbox group with label" do
@@ -1106,7 +1106,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-input--primary]
+      assert result =~ ~s[input-primary]
     end
 
     test "renders datepicker with size" do
@@ -1119,7 +1119,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-input--lg]
+      assert result =~ ~s[input-lg]
     end
 
     test "renders datepicker with calendar icon" do
@@ -1145,7 +1145,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-input--error]
+      assert result =~ ~s[input-error]
       assert result =~ "is required"
     end
   end
@@ -1180,7 +1180,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-input--primary]
+      assert result =~ ~s[input-primary]
     end
 
     test "renders timepicker with error state" do
@@ -1193,7 +1193,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-input--error]
+      assert result =~ ~s[input-error]
       assert result =~ "invalid time"
     end
   end
@@ -1252,7 +1252,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-input--error]
+      assert result =~ ~s[input-error]
       assert result =~ "invalid color"
     end
 
@@ -1436,7 +1436,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[dm-input--primary]
+      assert result =~ ~s[input-primary]
     end
 
     test "renders search with error state" do
@@ -1449,7 +1449,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[dm-input--error]
+      assert result =~ ~s[input-error]
       assert result =~ "no results"
     end
 
@@ -1699,7 +1699,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
 
       assert result =~ "elixir"
       assert result =~ "phoenix"
-      assert result =~ "dm-badge"
+      assert result =~ "badge"
     end
 
     test "renders tags with color variant" do
@@ -1712,7 +1712,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: ["test"]
         })
 
-      assert result =~ ~s[dm-badge--primary]
+      assert result =~ ~s[badge-primary]
     end
 
     test "renders tags with errors" do
@@ -1892,7 +1892,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[dm-input--error]
+      assert result =~ ~s[input-error]
       assert result =~ "is too common"
     end
 
@@ -1906,7 +1906,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: ""
         })
 
-      assert result =~ ~s[dm-input--primary]
+      assert result =~ ~s[input-primary]
     end
 
     test "renders empty password as weak" do
@@ -2052,7 +2052,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-range--primary]
+      assert result =~ ~s[slider-primary]
     end
 
     test "renders slider range with hidden input for form" do
@@ -3067,7 +3067,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
   end
 
   describe "classic mode" do
-    test "classic text input omits dm-input class" do
+    test "classic text input omits input class" do
       result =
         render_component(&dm_input/1, %{
           type: "text",
@@ -3078,11 +3078,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           classic: true
         })
 
-      # Extract input element to verify no dm-input class on it
-      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-input/, result)
+      # Extract input element to verify no input class on it
+      refute Regex.match?(~r/<input[^>]*class="[^"]*input/, result)
     end
 
-    test "non-classic text input includes dm-input class" do
+    test "non-classic text input includes input class" do
       result =
         render_component(&dm_input/1, %{
           type: "text",
@@ -3092,10 +3092,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: ""
         })
 
-      assert result =~ "dm-input"
+      assert result =~ "input"
     end
 
-    test "classic select omits dm-select class" do
+    test "classic select omits select class" do
       result =
         render_component(&dm_input/1, %{
           type: "select",
@@ -3106,10 +3106,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           classic: true
         })
 
-      refute Regex.match?(~r/<select[^>]*class="[^"]*dm-select/, result)
+      refute Regex.match?(~r/<select[^>]*class="[^"]*select/, result)
     end
 
-    test "classic textarea omits dm-textarea class" do
+    test "classic textarea omits textarea class" do
       result =
         render_component(&dm_input/1, %{
           type: "textarea",
@@ -3119,10 +3119,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           classic: true
         })
 
-      refute Regex.match?(~r/<textarea[^>]*class="[^"]*dm-textarea/, result)
+      refute Regex.match?(~r/<textarea[^>]*class="[^"]*textarea/, result)
     end
 
-    test "classic checkbox omits dm-checkbox class" do
+    test "classic checkbox omits checkbox class" do
       result =
         render_component(&dm_input/1, %{
           type: "checkbox",
@@ -3133,10 +3133,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           classic: true
         })
 
-      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-checkbox/, result)
+      refute Regex.match?(~r/<input[^>]*class="[^"]*checkbox/, result)
     end
 
-    test "classic radio_group omits dm-radio class" do
+    test "classic radio_group omits radio class" do
       result =
         render_component(&dm_input/1, %{
           type: "radio_group",
@@ -3148,10 +3148,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           classic: true
         })
 
-      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-radio/, result)
+      refute Regex.match?(~r/<input[^>]*class="[^"]*radio/, result)
     end
 
-    test "classic range_slider omits dm-range class" do
+    test "classic range_slider omits slider class" do
       result =
         render_component(&dm_input/1, %{
           type: "range_slider",
@@ -3162,10 +3162,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           classic: true
         })
 
-      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-range/, result)
+      refute Regex.match?(~r/<input[^>]*class="[^"]*slider/, result)
     end
 
-    test "classic file input omits dm-input class" do
+    test "classic file input omits input class" do
       result =
         render_component(&dm_input/1, %{
           type: "file",
@@ -3176,10 +3176,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           classic: true
         })
 
-      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-input/, result)
+      refute Regex.match?(~r/<input[^>]*class="[^"]*input/, result)
     end
 
-    test "classic datepicker omits dm-input class" do
+    test "classic datepicker omits input class" do
       result =
         render_component(&dm_input/1, %{
           type: "datepicker",
@@ -3190,10 +3190,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           classic: true
         })
 
-      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-input/, result)
+      refute Regex.match?(~r/<input[^>]*class="[^"]*input/, result)
     end
 
-    test "classic password_strength omits dm-input class" do
+    test "classic password_strength omits input class" do
       result =
         render_component(&dm_input/1, %{
           type: "password_strength",
@@ -3204,10 +3204,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           classic: true
         })
 
-      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-input/, result)
+      refute Regex.match?(~r/<input[^>]*class="[^"]*input/, result)
     end
 
-    test "classic search_with_suggestions omits dm-input class" do
+    test "classic search_with_suggestions omits input class" do
       result =
         render_component(&dm_input/1, %{
           type: "search_with_suggestions",
@@ -3218,10 +3218,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           classic: true
         })
 
-      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-input/, result)
+      refute Regex.match?(~r/<input[^>]*class="[^"]*input/, result)
     end
 
-    test "classic timepicker omits dm-input class" do
+    test "classic timepicker omits input class" do
       result =
         render_component(&dm_input/1, %{
           type: "timepicker",
@@ -3232,7 +3232,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           classic: true
         })
 
-      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-input/, result)
+      refute Regex.match?(~r/<input[^>]*class="[^"]*input/, result)
     end
 
     test "classic mode preserves color and size variant classes" do
@@ -3249,8 +3249,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
         })
 
       # Color and size classes still apply even in classic mode
-      assert result =~ "dm-input--primary"
-      assert result =~ "dm-input--lg"
+      assert result =~ "input-primary"
+      assert result =~ "input-lg"
     end
 
     test "11-char password with all char types is medium (under 12 threshold)" do
@@ -3305,7 +3305,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
         })
 
       assert result =~ "my-wrapper"
-      refute Regex.match?(~r/<input[^>]*class="[^"]*dm-input[^-]/, result)
+      refute Regex.match?(~r/<input[^>]*class="[^"]*input[^-]/, result)
     end
   end
 end

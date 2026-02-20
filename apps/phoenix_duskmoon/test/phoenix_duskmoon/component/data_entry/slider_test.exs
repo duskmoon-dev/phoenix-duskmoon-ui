@@ -9,7 +9,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
     result = render_component(&dm_slider/1, %{name: "vol", value: nil})
 
     assert result =~ ~s[type="range"]
-    assert result =~ "dm-range"
+    assert result =~ "slider"
   end
 
   test "renders slider with name" do
@@ -50,38 +50,38 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
     result = render_component(&dm_slider/1, %{name: "vol", value: nil, label: "Volume"})
 
     assert result =~ "Volume"
-    assert result =~ "dm-label__text"
+    assert result =~ "form-label"
   end
 
   test "renders slider without label when not provided" do
     result = render_component(&dm_slider/1, %{name: "vol", value: nil})
 
-    refute result =~ "dm-label__text"
+    refute result =~ "form-label"
   end
 
   test "renders slider with default color primary" do
     result = render_component(&dm_slider/1, %{name: "vol", value: nil})
 
-    assert result =~ "dm-range--primary"
+    assert result =~ "slider-primary"
   end
 
   test "renders slider with all color options" do
     for color <- ~w(primary secondary accent info success warning error) do
       result = render_component(&dm_slider/1, %{name: "vol", value: nil, color: color})
-      assert result =~ "dm-range--#{color}"
+      assert result =~ "slider-#{color}"
     end
   end
 
   test "renders slider with default size md" do
     result = render_component(&dm_slider/1, %{name: "vol", value: nil})
 
-    assert result =~ "dm-range--md"
+    assert result =~ "slider-md"
   end
 
   test "renders slider with all size options" do
     for size <- ~w(xs sm md lg) do
       result = render_component(&dm_slider/1, %{name: "vol", value: nil, size: size})
-      assert result =~ "dm-range--#{size}"
+      assert result =~ "slider-#{size}"
     end
   end
 
@@ -245,14 +245,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
     assert result =~ ~s[type="range"]
   end
 
-  test "renders slider with dm-range class on input" do
+  test "renders slider with slider class on input" do
     result =
       render_component(&dm_slider/1, %{
         name: "range",
         value: 0
       })
 
-    assert result =~ "dm-range"
+    assert result =~ "slider"
   end
 
   describe "FormField integration" do
@@ -313,8 +313,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
         })
 
       assert result =~ "Brightness"
-      assert result =~ "dm-range--warning"
-      assert result =~ "dm-range--lg"
+      assert result =~ "slider-warning"
+      assert result =~ "slider-lg"
       assert result =~ ~s[step="5"]
     end
   end
@@ -350,8 +350,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
     assert result =~ ~s[min="10"]
     assert result =~ ~s[max="200"]
     assert result =~ ~s[step="5"]
-    assert result =~ "dm-range--lg"
-    assert result =~ "dm-range--error"
+    assert result =~ "slider-lg"
+    assert result =~ "slider-error"
     assert result =~ "disabled"
     assert result =~ "out of range"
     assert result =~ ~s[aria-invalid="true"]

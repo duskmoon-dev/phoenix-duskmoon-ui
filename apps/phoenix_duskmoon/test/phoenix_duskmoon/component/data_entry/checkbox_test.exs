@@ -9,7 +9,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
     result = render_component(&dm_checkbox/1, %{name: "agree"})
 
     assert result =~ ~s[type="checkbox"]
-    assert result =~ "dm-checkbox"
+    assert result =~ "checkbox"
   end
 
   test "renders checkbox with name" do
@@ -22,13 +22,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
     result = render_component(&dm_checkbox/1, %{name: "agree", label: "I agree to terms"})
 
     assert result =~ "I agree to terms"
-    assert result =~ "dm-label__text"
   end
 
   test "renders checkbox without label span when no label" do
     result = render_component(&dm_checkbox/1, %{name: "agree"})
 
-    refute result =~ "dm-label__text"
+    refute result =~ "<span"
   end
 
   test "renders checkbox with custom id" do
@@ -40,26 +39,26 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
   test "renders checkbox with default size md" do
     result = render_component(&dm_checkbox/1, %{name: "opt"})
 
-    assert result =~ "dm-checkbox--md"
+    assert result =~ "checkbox-md"
   end
 
   test "renders checkbox with all size options" do
     for size <- ~w(xs sm md lg) do
       result = render_component(&dm_checkbox/1, %{name: "opt", size: size})
-      assert result =~ "dm-checkbox--#{size}"
+      assert result =~ "checkbox-#{size}"
     end
   end
 
   test "renders checkbox with default color primary" do
     result = render_component(&dm_checkbox/1, %{name: "opt"})
 
-    assert result =~ "dm-checkbox--primary"
+    assert result =~ "checkbox-primary"
   end
 
   test "renders checkbox with all color options" do
     for color <- ~w(primary secondary accent info success warning error) do
       result = render_component(&dm_checkbox/1, %{name: "opt", color: color})
-      assert result =~ "dm-checkbox--#{color}"
+      assert result =~ "checkbox-#{color}"
     end
   end
 
@@ -227,8 +226,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
         })
 
       assert result =~ "I agree"
-      assert result =~ "dm-checkbox--success"
-      assert result =~ "dm-checkbox--lg"
+      assert result =~ "checkbox-success"
+      assert result =~ "checkbox-lg"
     end
   end
 

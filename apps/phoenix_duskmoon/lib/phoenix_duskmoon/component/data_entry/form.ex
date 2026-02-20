@@ -57,7 +57,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
     ~H"""
     <.form
       id={@id}
-      class={["dm-form", @class]}
+      class={@class}
       :let={f}
       for={@for}
       as={@as}
@@ -108,7 +108,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
 
   def dm_error(assigns) do
     ~H"""
-    <span id={@id} class={["dm-error-text flex items-center gap-1", @class]}>
+    <span id={@id} class={["helper-text text-error flex items-center gap-1", @class]}>
       <.dm_bsi name="exclamation-circle" class="h-3 w-3 flex-none" />
       {render_slot(@inner_block)}
     </span>

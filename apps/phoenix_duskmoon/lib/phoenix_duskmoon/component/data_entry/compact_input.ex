@@ -67,14 +67,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
 
   def dm_compact_input(%{type: "select"} = assigns) do
     ~H"""
-    <div class={["dm-compact-input", @errors != [] && "dm-compact-input--error", @class]}>
-      <label for={@id} class={["dm-compact-input__label", @errors != [] && "dm-compact-input__label--error"]}>
+    <div class={["form-group", @class]}>
+      <label for={@id} class={["form-label", @errors != [] && "text-error"]}>
         {@label}
       </label>
       <select
         id={@id}
         name={@name}
-        class="dm-compact-input__select"
+        class="select"
         multiple={@multiple}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={@errors != [] && @id && "#{@id}-errors"}
@@ -93,10 +93,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
   def dm_compact_input(assigns) do
     ~H"""
     <div
-      class={["dm-compact-input", @errors != [] && "dm-compact-input--error", @class]}
+      class={["form-group", @class]}
       phx-feedback-for={@name}
     >
-      <label for={@id} class={["dm-compact-input__label", @errors != [] && "dm-compact-input__label--error"]}>
+      <label for={@id} class={["form-label", @errors != [] && "text-error"]}>
         {@label}
       </label>
       <input
@@ -104,7 +104,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
         name={@name}
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
-        class="dm-compact-input__field"
+        class="input"
         aria-invalid={@errors != [] && "true"}
         aria-describedby={@errors != [] && @id && "#{@id}-errors"}
         {@rest}

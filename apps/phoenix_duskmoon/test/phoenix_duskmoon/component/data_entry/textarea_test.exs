@@ -9,7 +9,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
     result = render_component(&dm_textarea/1, %{name: "bio", value: nil})
 
     assert result =~ "<textarea"
-    assert result =~ "dm-textarea"
+    assert result =~ "textarea"
   end
 
   test "renders textarea with name" do
@@ -53,54 +53,53 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
     result = render_component(&dm_textarea/1, %{name: "bio", value: nil, label: "Biography"})
 
     assert result =~ "Biography"
-    assert result =~ "dm-label__text"
     assert result =~ "form-label"
   end
 
   test "renders textarea without label when not provided" do
     result = render_component(&dm_textarea/1, %{name: "bio", value: nil})
 
-    refute result =~ "dm-label__text"
+    refute result =~ "form-label"
   end
 
   test "renders textarea with default color primary" do
     result = render_component(&dm_textarea/1, %{name: "bio", value: nil})
 
-    assert result =~ "dm-textarea--primary"
+    assert result =~ "textarea-primary"
   end
 
   test "renders textarea with all color options" do
     for color <- ~w(primary secondary accent info success warning error) do
       result = render_component(&dm_textarea/1, %{name: "bio", value: nil, color: color})
-      assert result =~ "dm-textarea--#{color}"
+      assert result =~ "textarea-#{color}"
     end
   end
 
   test "renders textarea with default size md" do
     result = render_component(&dm_textarea/1, %{name: "bio", value: nil})
 
-    assert result =~ "dm-textarea--md"
+    assert result =~ "textarea-md"
   end
 
   test "renders textarea with all size options" do
     for size <- ~w(xs sm md lg) do
       result = render_component(&dm_textarea/1, %{name: "bio", value: nil, size: size})
-      assert result =~ "dm-textarea--#{size}"
+      assert result =~ "textarea-#{size}"
     end
   end
 
   test "renders textarea with default resize vertical" do
     result = render_component(&dm_textarea/1, %{name: "bio", value: nil})
 
-    assert result =~ "dm-textarea--resize-y"
+    assert result =~ "textarea-resize-vertical"
   end
 
   test "renders textarea with all resize options" do
     resize_map = %{
-      "none" => "dm-textarea--resize-none",
-      "vertical" => "dm-textarea--resize-y",
-      "horizontal" => "dm-textarea--resize-x",
-      "both" => "dm-textarea--resize-both"
+      "none" => "textarea-resize-none",
+      "vertical" => "textarea-resize-vertical",
+      "horizontal" => "resize-x",
+      "both" => "resize"
     }
 
     for {resize, class} <- resize_map do
@@ -232,9 +231,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
     assert result =~ ~s[placeholder="Enter notes..."]
     assert result =~ ~s[rows="8"]
     assert result =~ ~s[cols="60"]
-    assert result =~ "dm-textarea--lg"
-    assert result =~ "dm-textarea--success"
-    assert result =~ "dm-textarea--resize-both"
+    assert result =~ "textarea-lg"
+    assert result =~ "textarea-success"
+    assert result =~ "resize"
     assert result =~ "disabled"
     assert result =~ "readonly"
     assert result =~ "required"
@@ -283,10 +282,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
         })
 
       assert result =~ "Biography"
-      assert result =~ "dm-textarea--warning"
-      assert result =~ "dm-textarea--lg"
+      assert result =~ "textarea-warning"
+      assert result =~ "textarea-lg"
       assert result =~ ~s[rows="10"]
-      assert result =~ "dm-textarea--resize-none"
+      assert result =~ "textarea-resize-none"
     end
   end
 

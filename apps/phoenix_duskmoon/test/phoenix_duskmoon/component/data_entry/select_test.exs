@@ -14,7 +14,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
       })
 
     assert result =~ "<select"
-    assert result =~ "dm-select"
+    assert result =~ "select"
     assert result =~ "USA"
     assert result =~ "Canada"
   end
@@ -77,7 +77,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
         options: [{"1", "One"}]
       })
 
-    assert result =~ "dm-select--md"
+    assert result =~ "select-md"
   end
 
   test "renders select with all size options" do
@@ -90,7 +90,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
           options: [{"1", "One"}]
         })
 
-      assert result =~ "dm-select--#{size}"
+      assert result =~ "select-#{size}"
     end
   end
 
@@ -102,7 +102,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
         options: [{"1", "One"}]
       })
 
-    assert result =~ "dm-select--primary"
+    assert result =~ "select-primary"
   end
 
   test "renders select with all color options" do
@@ -115,7 +115,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
           options: [{"1", "One"}]
         })
 
-      assert result =~ "dm-select--#{color}"
+      assert result =~ "select-#{color}"
     end
   end
 
@@ -306,8 +306,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
     assert result =~ "text-sm"
     assert result =~ "border-2"
     assert result =~ "wrapper-class"
-    assert result =~ "dm-select--lg"
-    assert result =~ "dm-select--error"
+    assert result =~ "select-lg"
+    assert result =~ "select-error"
     assert result =~ "Pick one"
     assert result =~ "selected"
     assert result =~ "data-testid=\"combo-select\""
@@ -380,8 +380,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
         })
 
       assert result =~ "Priority"
-      assert result =~ "dm-select--warning"
-      assert result =~ "dm-select--lg"
+      assert result =~ "select-warning"
+      assert result =~ "select-lg"
       assert result =~ "Select priority"
     end
   end

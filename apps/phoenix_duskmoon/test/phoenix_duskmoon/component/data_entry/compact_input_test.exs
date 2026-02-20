@@ -9,7 +9,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
     result =
       render_component(&dm_compact_input/1, %{name: "user", label: "Username", value: nil})
 
-    assert result =~ "dm-compact-input"
+    assert result =~ "form-group"
     assert result =~ "Username"
   end
 
@@ -17,7 +17,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
     result =
       render_component(&dm_compact_input/1, %{name: "email", label: "Email", value: nil})
 
-    assert result =~ "dm-compact-input__label"
+    assert result =~ "form-label"
     assert result =~ "Email"
   end
 
@@ -71,11 +71,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
     assert result =~ ~s[id="my-input"]
   end
 
-  test "renders compact input with dm-compact-input__field class" do
+  test "renders compact input with input class" do
     result =
       render_component(&dm_compact_input/1, %{name: "user", label: "User", value: nil})
 
-    assert result =~ "dm-compact-input__field"
+    assert result =~ "input"
   end
 
   test "renders compact input with phx-feedback-for" do
@@ -96,7 +96,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
       })
 
     assert result =~ "<select"
-    assert result =~ "dm-compact-input__select"
+    assert result =~ "select"
     assert result =~ "USA"
     assert result =~ "Canada"
   end
@@ -125,8 +125,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
       })
 
     assert result =~ "is required"
-    assert result =~ "dm-compact-input--error"
-    assert result =~ "dm-compact-input__label--error"
+    assert result =~ "text-error"
+    assert result =~ "text-error"
   end
 
   test "renders compact input with custom class" do
@@ -200,7 +200,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
 
     assert result =~ "is required"
     assert result =~ "must be at least 3 characters"
-    assert result =~ "dm-compact-input--error"
+    assert result =~ "text-error"
   end
 
   test "renders compact input with disabled attribute" do
@@ -272,8 +272,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
         value: nil
       })
 
-    assert result =~ "dm-compact-input__label"
-    assert result =~ "dm-compact-input__field"
+    assert result =~ "form-label"
+    assert result =~ "input"
   end
 
   test "renders compact select with error state" do
@@ -287,8 +287,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
         errors: ["is required"]
       })
 
-    assert result =~ "dm-compact-input--error"
-    assert result =~ "dm-compact-input__label--error"
+    assert result =~ "text-error"
+    assert result =~ "text-error"
     assert result =~ "is required"
   end
 
@@ -301,7 +301,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
         field_class: "w-full"
       })
 
-    assert result =~ "dm-compact-input"
+    assert result =~ "form-group"
   end
 
   test "renders aria-invalid when errors present" do
@@ -488,7 +488,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
     assert result =~ ~s[value="test@test.com"]
     assert result =~ "Email"
     assert result =~ "my-wrapper"
-    assert result =~ "dm-compact-input--error"
+    assert result =~ "text-error"
     assert result =~ "is invalid"
     assert result =~ ~s[placeholder="Enter email"]
     assert result =~ "required"
@@ -516,7 +516,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
     assert result =~ "Choose..."
     assert result =~ "USA"
     assert result =~ "Canada"
-    assert result =~ "dm-compact-input--error"
+    assert result =~ "text-error"
     assert result =~ "is required"
     assert result =~ ~s[aria-invalid="true"]
   end

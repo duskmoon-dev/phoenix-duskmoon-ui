@@ -68,15 +68,15 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
           aria-invalid={@errors != [] && "true"}
           aria-describedby={@errors != [] && @id && "#{@id}-errors"}
           class={[
-            "dm-radio",
-            "dm-radio--#{@size}",
-            "dm-radio--#{@color}",
+            "radio",
+            "radio-#{@size}",
+            "radio-#{@color}",
             @disabled && "opacity-50 cursor-not-allowed",
             @radio_class
           ]}
           {@rest}
         />
-        <span :if={@label} class={["dm-label__text", @label_class]}>
+        <span :if={@label} class={@label_class}>
           {@label}
         </span>
       </label>

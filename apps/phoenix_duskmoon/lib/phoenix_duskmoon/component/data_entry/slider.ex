@@ -60,7 +60,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
     ~H"""
     <div class={["form-group", @class]}>
       <div :if={@label} class="flex items-center justify-between mb-2">
-        <label for={@id} class={["dm-label__text", @label_class]}>
+        <label for={@id} class={["form-label", @label_class]}>
           {@label}
         </label>
         <span :if={@show_value} class="text-sm font-medium opacity-70">
@@ -80,9 +80,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
           aria-invalid={@errors != [] && "true"}
           aria-describedby={@errors != [] && @id && "#{@id}-errors"}
           class={[
-            "dm-range",
-            "dm-range--#{@size}",
-            "dm-range--#{@color}",
+            "slider",
+            "slider-#{@size}",
+            "slider-#{@color}",
             @disabled && "opacity-50 cursor-not-allowed",
             @slider_class
           ]}
