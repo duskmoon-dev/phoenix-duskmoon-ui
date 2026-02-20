@@ -229,8 +229,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
   defp color_classes("primary"), do: "bg-primary"
   defp color_classes("secondary"), do: "bg-secondary"
   defp color_classes("accent"), do: "bg-accent"
-  defp color_classes("info"), do: "bg-info"
-  defp color_classes("success"), do: "bg-success"
-  defp color_classes("warning"), do: "bg-warning"
+  defp color_classes("info"), do: "bg-[var(--color-info)]"
+  defp color_classes("success"), do: "bg-[var(--color-success)]"
+  defp color_classes("warning"), do: "bg-[var(--color-warning)]"
   defp color_classes("error"), do: "bg-error"
 end

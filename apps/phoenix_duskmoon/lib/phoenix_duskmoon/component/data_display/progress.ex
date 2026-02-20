@@ -88,7 +88,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
         {@rest}
       ></progress>
 
-      <div :if={@show_label} class="text-sm text-base-content/70 mt-1">
+      <div :if={@show_label} class="text-sm text-[var(--color-on-surface-variant)] mt-1">
         {@percentage}% {@complete_text}
       </div>
     </div>

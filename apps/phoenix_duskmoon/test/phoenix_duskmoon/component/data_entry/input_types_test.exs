@@ -1464,7 +1464,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           suggestions: ["elixir", "elm", "electron"]
         })
 
-      assert result =~ "dm-dropdown dm-dropdown--open"
+      assert result =~ "dropdown dropdown-open"
       assert result =~ "elixir"
       assert result =~ "elm"
       assert result =~ "electron"
@@ -1481,7 +1481,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           suggestions: []
         })
 
-      refute result =~ "dm-dropdown--open"
+      refute result =~ "dropdown-open"
     end
   end
 
@@ -2993,7 +2993,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           field_class: "w-full max-w-md"
         })
 
-      assert result =~ "dm-form-group"
+      assert result =~ "form-group"
       assert result =~ "w-full max-w-md"
     end
 
@@ -3062,7 +3062,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: ""
         })
 
-      assert result =~ "dm-form-group"
+      assert result =~ "form-group"
     end
   end
 

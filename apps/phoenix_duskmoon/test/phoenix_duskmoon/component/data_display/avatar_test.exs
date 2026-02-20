@@ -62,9 +62,19 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
   end
 
   test "renders avatar with all color options" do
-    for color <- ~w(primary secondary accent info success warning error) do
+    color_class_map = %{
+      "primary" => "bg-primary",
+      "secondary" => "bg-secondary",
+      "accent" => "bg-accent",
+      "info" => "bg-[var(--color-info)]",
+      "success" => "bg-[var(--color-success)]",
+      "warning" => "bg-[var(--color-warning)]",
+      "error" => "bg-error"
+    }
+
+    for {color, expected_class} <- color_class_map do
       result = render_component(&dm_avatar/1, %{name: "T", color: color})
-      assert result =~ "bg-#{color}"
+      assert result =~ expected_class, "Expected #{expected_class} for color #{color}"
     end
   end
 
@@ -347,7 +357,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
 
     assert result =~ "avatar-border"
     assert result =~ "bg-[var(--color-surface-variant)]"
-    assert result =~ "bg-warning"
+    assert result =~ "bg-[var(--color-warning)]"
     assert result =~ "J"
   end
 

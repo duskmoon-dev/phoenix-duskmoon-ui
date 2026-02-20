@@ -81,7 +81,7 @@ defmodule PhoenixDuskmoon.CssArt.SpotlightSearch do
     >
       <div class="dm-modal__box p-0">
         <div class="dm-art-spotlight-input">
-          <svg class="text-base-content/50 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <svg class="text-[var(--color-on-surface-variant)] w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
@@ -100,7 +100,7 @@ defmodule PhoenixDuskmoon.CssArt.SpotlightSearch do
             type="button"
             phx-click="spotlight_close"
             phx-target={@phx_target}
-            class="text-base-content/50 hover:text-base-content"
+            class="text-[var(--color-on-surface-variant)] hover:text-[var(--color-on-surface)]"
             aria-label={@close_label}
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -123,18 +123,18 @@ defmodule PhoenixDuskmoon.CssArt.SpotlightSearch do
             phx-target={@phx_target}
           >
             <div class="flex items-center gap-3">
-              <div class="text-base-content/70">
+              <div class="text-[var(--color-on-surface-variant)]">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div class="flex-1">
                 <div class="font-medium">{suggestion.label}</div>
-                <div :if={suggestion.description} class="text-sm text-base-content/50">
+                <div :if={suggestion.description} class="text-sm text-[var(--color-on-surface-variant)]">
                   {suggestion.description}
                 </div>
               </div>
-              <div :if={suggestion.action} class="text-base-content/50 text-xs">
+              <div :if={suggestion.action} class="text-[var(--color-on-surface-variant)] text-xs">
                 {suggestion.action}
               </div>
             </div>
