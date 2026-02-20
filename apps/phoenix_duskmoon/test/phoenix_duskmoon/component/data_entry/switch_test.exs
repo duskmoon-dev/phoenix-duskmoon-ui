@@ -9,8 +9,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
     result = render_component(&dm_switch/1, %{name: "notifications"})
 
     assert result =~ ~s[type="checkbox"]
-    assert result =~ "dm-switch"
-    assert result =~ "dm-switch__input"
+    assert result =~ "switch"
   end
 
   test "renders switch with name" do
@@ -24,13 +23,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
       render_component(&dm_switch/1, %{name: "notifications", label: "Enable notifications"})
 
     assert result =~ "Enable notifications"
-    assert result =~ "dm-label__text"
+    assert result =~ "<span"
   end
 
   test "renders switch without label span when no label" do
     result = render_component(&dm_switch/1, %{name: "opt"})
 
-    refute result =~ "dm-label__text"
+    refute result =~ "<span"
   end
 
   test "renders switch with custom id" do
@@ -39,35 +38,35 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
     assert result =~ ~s[id="my-switch"]
   end
 
-  test "renders switch with track element" do
+  test "renders switch with switch-label wrapper" do
     result = render_component(&dm_switch/1, %{name: "opt"})
 
-    assert result =~ "dm-switch__track"
+    assert result =~ "switch-label"
   end
 
   test "renders switch with default size md" do
     result = render_component(&dm_switch/1, %{name: "opt"})
 
-    assert result =~ "dm-switch--md"
+    assert result =~ "switch-md"
   end
 
   test "renders switch with all size options" do
     for size <- ~w(xs sm md lg) do
       result = render_component(&dm_switch/1, %{name: "opt", size: size})
-      assert result =~ "dm-switch--#{size}"
+      assert result =~ "switch-#{size}"
     end
   end
 
   test "renders switch with default color primary" do
     result = render_component(&dm_switch/1, %{name: "opt"})
 
-    assert result =~ "dm-switch--primary"
+    assert result =~ "switch-primary"
   end
 
   test "renders switch with all color options" do
     for color <- ~w(primary secondary accent info success warning error) do
       result = render_component(&dm_switch/1, %{name: "opt", color: color})
-      assert result =~ "dm-switch--#{color}"
+      assert result =~ "switch-#{color}"
     end
   end
 
@@ -83,10 +82,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
     assert result =~ "disabled"
   end
 
-  test "renders switch with dm-form-group wrapper" do
+  test "renders switch with form-group wrapper" do
     result = render_component(&dm_switch/1, %{name: "opt"})
 
-    assert result =~ "dm-form-group"
+    assert result =~ "form-group"
   end
 
   test "renders switch with custom class" do
@@ -153,7 +152,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
 
     assert result =~ "Enable"
     assert result =~ "text-sm text-gray-500"
-    assert result =~ "dm-label__text"
+    assert result =~ "<span"
   end
 
   test "renders switch label inside label element" do
@@ -162,13 +161,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
 
     assert result =~ "<label"
     assert result =~ "Notify"
-  end
-
-  test "renders switch with ml-2 spacing on label text" do
-    result =
-      render_component(&dm_switch/1, %{name: "opt", label: "Opt in"})
-
-    assert result =~ "ml-2"
   end
 
   test "renders switch with role=switch on checkbox" do
@@ -222,8 +214,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
     assert result =~ ~s[id="full-switch"]
     assert result =~ ~s[name="opt"]
     assert result =~ "All options"
-    assert result =~ "dm-switch--lg"
-    assert result =~ "dm-switch--accent"
+    assert result =~ "switch-lg"
+    assert result =~ "switch-accent"
     assert result =~ "checked"
     assert result =~ "disabled"
     assert result =~ "wrapper-cls"
@@ -268,7 +260,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
     refute result =~ "aria-describedby"
   end
 
-  test "renders disabled switch with opacity and cursor styling" do
+  test "renders disabled switch with native disabled attribute" do
     result =
       render_component(&dm_switch/1, %{
         name: "opt",
@@ -276,7 +268,5 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
       })
 
     assert result =~ "disabled"
-    assert result =~ "opacity-50"
-    assert result =~ "cursor-not-allowed"
   end
 end

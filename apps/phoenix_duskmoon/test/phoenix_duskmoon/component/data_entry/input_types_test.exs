@@ -383,7 +383,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[type="checkbox"]
       assert result =~ ~s[id="notifications-toggle"]
       assert result =~ ~s[name="notifications"]
-      assert result =~ "dm-switch"
+      assert result =~ "switch"
       assert result =~ "Enable notifications"
     end
 
@@ -421,7 +421,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-switch--primary]
+      assert result =~ ~s[switch-primary]
     end
 
     test "renders toggle with size" do
@@ -434,7 +434,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-switch--lg]
+      assert result =~ ~s[switch-lg]
     end
 
     test "renders toggle with hidden false value" do
@@ -1328,7 +1328,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
       assert result =~ ~s[type="checkbox"]
       assert result =~ ~s[id="dark-mode-switch"]
       assert result =~ ~s[name="dark_mode"]
-      assert result =~ "dm-switch"
+      assert result =~ "switch"
       assert result =~ "Dark Mode"
     end
 
@@ -1366,7 +1366,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-switch--primary]
+      assert result =~ ~s[switch-primary]
     end
 
     test "renders switch with hidden false value" do
@@ -1514,7 +1514,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
           value: nil
         })
 
-      assert result =~ ~s[dm-btn--primary]
+      assert result =~ ~s[btn-primary]
     end
 
     test "renders file upload with existing value" do
@@ -1627,7 +1627,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
 
       assert result =~ "toolbar"
       # Toolbar has formatting buttons (rendered as SVG icons)
-      assert result =~ "dm-btn dm-btn--ghost dm-btn--xs"
+      assert result =~ "btn btn-ghost btn-xs"
     end
 
     test "renders rich text with existing value" do
@@ -1796,7 +1796,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTypesTest do
 
       # Stars render as SVG icons (mdi star)
       assert result =~ "<svg"
-      assert result =~ "dm-btn"
+      assert result =~ "btn"
     end
 
     test "renders rating with errors" do

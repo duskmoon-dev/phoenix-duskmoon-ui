@@ -56,7 +56,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
 
   def dm_radio(assigns) do
     ~H"""
-    <div class={["dm-form-group", @class]}>
+    <div class={["form-group", @class]}>
       <label class={["flex items-center gap-2", !@disabled && "cursor-pointer", @disabled && "cursor-not-allowed"]}>
         <input
           type="radio"

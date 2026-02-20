@@ -58,7 +58,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
 
   def dm_slider(assigns) do
     ~H"""
-    <div class={["dm-form-group", @class]}>
+    <div class={["form-group", @class]}>
       <div :if={@label} class="flex items-center justify-between mb-2">
         <label for={@id} class={["dm-label__text", @label_class]}>
           {@label}

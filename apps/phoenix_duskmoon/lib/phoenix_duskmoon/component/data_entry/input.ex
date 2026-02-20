@@ -218,15 +218,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
       <.dm_label for={@id}><%= @label %></.dm_label>
       <div class="flex flex-col justify-center gap-2">
         <input type="hidden" name={@name} value="false" />
-        <label class={[
-          "dm-switch",
-          @color && "dm-switch--#{@color}",
-          @size && "dm-switch--#{@size}"
-        ]}>
+        <label class="switch-label">
           <input
             type="checkbox"
             id={@id}
-            class={["dm-switch__input", @class]}
+            class={["switch", @color && "switch-#{@color}", @size && "switch-#{@size}", @class]}
             name={@name}
             value="true"
             checked={@checked}
@@ -234,7 +230,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             {@rest}
           />
-          <span class="dm-switch__track"></span>
         </label>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
@@ -464,12 +459,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               aria-label={"Rate #{i} out of #{@max}"}
               aria-pressed={to_string(i <= (@value || 0))}
               class={[
-                "dm-btn dm-btn--ghost dm-btn--sm p-1",
+                "btn btn-ghost btn-sm p-1",
                 i <= (@value || 0) && "text-warning",
                 @color && i <= (@value || 0) && "text-#{@color}",
-                @size == "xs" && "dm-btn--xs",
-                @size == "sm" && "dm-btn--sm",
-                @size == "lg" && "dm-btn--lg"
+                @size == "xs" && "btn-xs",
+                @size == "sm" && "btn-sm",
+                @size == "lg" && "btn-lg"
               ]}
               disabled={@readonly}
             >
@@ -622,9 +617,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             aria-invalid={@errors != [] && "true"}
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             class={[
-              "dm-switch dm-switch--lg",
-              @color && "dm-switch--#{@color}",
-              @size && "dm-switch--#{@size}",
+              "switch switch-lg",
+              @color && "switch-#{@color}",
+              @size && "switch-#{@size}",
               @class
             ]}
             {@rest}
@@ -700,9 +695,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <button
             type="button"
             class={[
-              "dm-btn dm-btn--sm",
-              @color && "dm-btn--#{@color}",
-              @size && "dm-btn--#{@size}"
+              "btn btn-sm",
+              @color && "btn-#{@color}",
+              @size && "btn-#{@size}"
             ]}
           >
             {@choose_files_text}
@@ -711,7 +706,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         <div :if={@value} class="flex items-center gap-2 p-2 bg-[var(--color-surface-container-low)] rounded">
           <.dm_mdi name="file" class="w-4 h-4" />
           <span class="text-sm flex-1"><%= @value %></span>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label={@remove_file_label}>
+          <button type="button" class="btn btn-ghost btn-xs" aria-label={@remove_file_label}>
             <.dm_mdi name="close" class="w-3 h-3" />
           </button>
         </div>
@@ -729,24 +724,24 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
       <.dm_label for={@id} class={@errors != [] && "text-error"}><%= @label %></.dm_label>
       <div class="flex flex-col gap-2">
         <div class="toolbar flex items-center gap-1 p-2 bg-[var(--color-surface-container-low)] rounded-t-lg" role="toolbar" aria-label={@toolbar_label}>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label={@bold_label}>
+          <button type="button" class="btn btn-ghost btn-xs" aria-label={@bold_label}>
             <.dm_mdi name="format-bold" class="w-4 h-4" />
           </button>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label={@italic_label}>
+          <button type="button" class="btn btn-ghost btn-xs" aria-label={@italic_label}>
             <.dm_mdi name="format-italic" class="w-4 h-4" />
           </button>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label={@underline_label}>
+          <button type="button" class="btn btn-ghost btn-xs" aria-label={@underline_label}>
             <.dm_mdi name="format-underline" class="w-4 h-4" />
           </button>
           <div class="dm-divider dm-divider--horizontal"></div>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label={@bulleted_list_label}>
+          <button type="button" class="btn btn-ghost btn-xs" aria-label={@bulleted_list_label}>
             <.dm_mdi name="format-list-bulleted" class="w-4 h-4" />
           </button>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label={@numbered_list_label}>
+          <button type="button" class="btn btn-ghost btn-xs" aria-label={@numbered_list_label}>
             <.dm_mdi name="format-list-numbered" class="w-4 h-4" />
           </button>
           <div class="dm-divider dm-divider--horizontal"></div>
-          <button type="button" class="dm-btn dm-btn--ghost dm-btn--xs" aria-label={@insert_link_label}>
+          <button type="button" class="btn btn-ghost btn-xs" aria-label={@insert_link_label}>
             <.dm_mdi name="link" class="w-4 h-4" />
           </button>
         </div>
@@ -792,7 +787,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               <%= tag %>
               <button
                 type="button"
-                class="dm-btn dm-btn--ghost dm-btn--xs p-0"
+                class="btn btn-ghost btn-xs p-0"
                 aria-label={"Remove tag #{tag}"}
               >
                 <.dm_mdi name="close" class="w-3 h-3" />

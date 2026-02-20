@@ -77,10 +77,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
     assert result =~ "opacity-50"
   end
 
-  test "renders radio with dm-form-group wrapper" do
+  test "renders radio with form-group wrapper" do
     result = render_component(&dm_radio/1, %{name: "choice", value: "a"})
 
-    assert result =~ "dm-form-group"
+    assert result =~ "form-group"
   end
 
   test "renders radio with custom class" do

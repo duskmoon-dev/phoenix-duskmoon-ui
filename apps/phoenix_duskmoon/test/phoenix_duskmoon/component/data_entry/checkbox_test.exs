@@ -82,10 +82,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
     assert result =~ "phx-indeterminate"
   end
 
-  test "renders checkbox with dm-form-group wrapper" do
+  test "renders checkbox with form-group wrapper" do
     result = render_component(&dm_checkbox/1, %{name: "opt"})
 
-    assert result =~ "dm-form-group"
+    assert result =~ "form-group"
   end
 
   test "renders checkbox with custom class" do

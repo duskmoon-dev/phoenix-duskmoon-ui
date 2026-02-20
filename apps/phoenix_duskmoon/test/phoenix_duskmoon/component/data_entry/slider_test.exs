@@ -99,10 +99,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
     assert result =~ "75"
   end
 
-  test "renders slider with dm-form-group wrapper" do
+  test "renders slider with form-group wrapper" do
     result = render_component(&dm_slider/1, %{name: "vol", value: nil})
 
-    assert result =~ "dm-form-group"
+    assert result =~ "form-group"
   end
 
   test "renders slider with slider_class" do
@@ -132,7 +132,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
       render_component(&dm_slider/1, %{name: "vol", value: nil, class: "my-wrapper"})
 
     assert result =~ "my-wrapper"
-    assert result =~ "dm-form-group"
+    assert result =~ "form-group"
   end
 
   test "renders slider with label_class" do

@@ -140,10 +140,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
     assert result =~ ~s[id="my-textarea"]
   end
 
-  test "renders textarea with dm-form-group wrapper" do
+  test "renders textarea with form-group wrapper" do
     result = render_component(&dm_textarea/1, %{name: "bio", value: nil})
 
-    assert result =~ "dm-form-group"
+    assert result =~ "form-group"
   end
 
   test "renders textarea with custom class" do

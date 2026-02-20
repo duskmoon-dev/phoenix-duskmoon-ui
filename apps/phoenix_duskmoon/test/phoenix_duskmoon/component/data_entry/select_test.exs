@@ -132,7 +132,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
     assert result =~ "opacity-50"
   end
 
-  test "renders select with dm-form-group wrapper" do
+  test "renders select with form-group wrapper" do
     result =
       render_component(&dm_select/1, %{
         name: "opt",
@@ -140,7 +140,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
         options: [{"1", "One"}]
       })
 
-    assert result =~ "dm-form-group"
+    assert result =~ "form-group"
   end
 
   test "renders select with custom class" do

@@ -58,8 +58,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
 
   def dm_switch(assigns) do
     ~H"""
-    <div class={["dm-form-group", @class]}>
-      <label class={["dm-switch", "dm-switch--#{@size}", "dm-switch--#{@color}", @disabled && "opacity-50 cursor-not-allowed"]}>
+    <div class={["form-group", @class]}>
+      <label class="switch-label">
         <input
           type="checkbox"
           role="switch"
@@ -71,13 +71,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
           value="true"
           checked={@checked}
           disabled={@disabled}
-          class={["dm-switch__input", @switch_class]}
+          class={["switch", "switch-#{@size}", "switch-#{@color}", @switch_class]}
           {@rest}
         />
-        <span class="dm-switch__track"></span>
-        <span :if={@label} class={["dm-label__text ml-2", @label_class]}>
-          {@label}
-        </span>
+        <span :if={@label} class={@label_class}>{@label}</span>
       </label>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
