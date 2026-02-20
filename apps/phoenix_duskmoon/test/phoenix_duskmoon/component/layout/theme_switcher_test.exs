@@ -5,20 +5,28 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcherTest do
   import Phoenix.LiveViewTest
   import PhoenixDuskmoon.Component.Layout.ThemeSwitcher
 
-  test "renders theme switcher with dropdown class" do
+  test "renders as details element with theme-controller-dropdown class" do
     result = render_component(&dm_theme_switcher/1, %{})
 
-    assert result =~ "dropdown"
-    assert result =~ "dropdown-end"
+    assert result =~ "<details"
+    assert result =~ "theme-controller-dropdown"
+    assert result =~ "theme-controller-dropdown-end"
   end
 
-  test "renders theme switcher with ThemeSwitcher phx-hook" do
+  test "renders trigger as summary with theme-controller-trigger class" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    assert result =~ "<summary"
+    assert result =~ "theme-controller-trigger"
+  end
+
+  test "renders with ThemeSwitcher phx-hook" do
     result = render_component(&dm_theme_switcher/1, %{})
 
     assert result =~ ~s[phx-hook="ThemeSwitcher"]
   end
 
-  test "renders theme switcher with three theme options" do
+  test "renders three theme radio options" do
     result = render_component(&dm_theme_switcher/1, %{})
 
     assert result =~ ~s[value="default"]
@@ -26,127 +34,158 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcherTest do
     assert result =~ ~s[value="moonlight"]
   end
 
-  test "renders theme switcher with aria labels for each theme" do
-    result = render_component(&dm_theme_switcher/1, %{})
-
-    assert result =~ ~s[aria-label="Auto"]
-    assert result =~ ~s[aria-label="Sunshine"]
-    assert result =~ ~s[aria-label="Moonlight"]
-  end
-
-  test "renders trigger button with aria-label for theme selection" do
-    result = render_component(&dm_theme_switcher/1, %{})
-
-    assert result =~ ~s[aria-label="Select theme"]
-  end
-
-  test "renders theme switcher with radio inputs" do
+  test "renders radio inputs with theme-controller-item class" do
     result = render_component(&dm_theme_switcher/1, %{})
 
     assert result =~ ~s[type="radio"]
-    assert result =~ ~s[name="theme-dropdown"]
+    assert result =~ "theme-controller-item"
   end
 
-  test "renders theme switcher with appearance-none on inputs" do
+  test "renders labels with theme-controller-label class" do
     result = render_component(&dm_theme_switcher/1, %{})
 
-    assert result =~ "appearance-none"
+    assert result =~ "theme-controller-label"
   end
 
-  test "renders theme switcher with Theme button text" do
+  test "renders theme menu with theme-controller-menu class" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    assert result =~ "theme-controller-menu"
+  end
+
+  test "renders trigger with button text" do
     result = render_component(&dm_theme_switcher/1, %{})
 
     assert result =~ "Theme"
-    assert result =~ "btn btn-ghost btn-sm"
   end
 
-  test "renders theme switcher with dropdown chevron svg" do
+  test "renders label text for each theme option" do
     result = render_component(&dm_theme_switcher/1, %{})
 
-    assert result =~ "<svg"
-    assert result =~ "viewBox=\"0 0 2048 2048\""
+    assert result =~ "Auto"
+    assert result =~ "Sunshine"
+    assert result =~ "Moonlight"
   end
 
-  test "renders theme switcher with custom id" do
+  test "renders with custom id" do
     result = render_component(&dm_theme_switcher/1, %{id: "my-switcher"})
 
     assert result =~ ~s[id="my-switcher"]
   end
 
-  test "renders theme switcher with generated id when no id provided" do
+  test "renders with generated id when no id provided" do
     result = render_component(&dm_theme_switcher/1, %{})
 
     assert result =~ ~s[id="theme-switcher-]
   end
 
-  test "renders theme switcher with custom class" do
+  test "renders with custom class" do
     result = render_component(&dm_theme_switcher/1, %{class: "my-switcher-class"})
 
     assert result =~ "my-switcher-class"
-    assert result =~ "dropdown"
+    assert result =~ "theme-controller-dropdown"
   end
 
-  test "renders theme switcher with data-theme attribute" do
+  test "renders with data-theme attribute" do
     result = render_component(&dm_theme_switcher/1, %{theme: "moonlight"})
 
     assert result =~ ~s[data-theme="moonlight"]
   end
 
-  test "renders theme switcher with default theme checked" do
-    result = render_component(&dm_theme_switcher/1, %{theme: "default"})
-
-    # The "default" radio should be checked
-    assert result =~ ~s[value="default"]
-  end
-
-  test "renders theme switcher with sunshine theme checked" do
-    result = render_component(&dm_theme_switcher/1, %{theme: "sunshine"})
-
-    assert result =~ ~s[data-theme="sunshine"]
-  end
-
-  test "renders theme switcher with dropdown-content class for menu" do
-    result = render_component(&dm_theme_switcher/1, %{})
-
-    assert result =~ "dropdown-content"
-    assert result =~ "z-50"
-  end
-
-  test "renders theme switcher with three li elements" do
-    result = render_component(&dm_theme_switcher/1, %{})
-
-    li_count = length(String.split(result, "<li>")) - 1
-    assert li_count == 3
-  end
-
-  test "renders theme switcher with ul containing tabindex" do
-    result = render_component(&dm_theme_switcher/1, %{})
-
-    assert result =~ "<ul"
-    assert result =~ ~s[tabindex="0"]
-  end
-
-  test "renders theme switcher button with tabindex for keyboard access" do
-    result = render_component(&dm_theme_switcher/1, %{})
-
-    # Both the button div and ul have tabindex
-    assert result =~ ~s[role="button"]
-    assert result =~ ~s[tabindex="0"]
-  end
-
-  test "renders theme switcher with empty theme by default" do
+  test "renders with empty theme by default" do
     result = render_component(&dm_theme_switcher/1, %{})
 
     assert result =~ ~s[data-theme=""]
   end
 
-  test "renders theme switcher moonlight checked when theme is moonlight" do
-    result = render_component(&dm_theme_switcher/1, %{theme: "moonlight"})
+  test "renders radio inputs with unique name scoped to component id" do
+    result = render_component(&dm_theme_switcher/1, %{id: "my-theme"})
 
-    assert result =~ ~s[data-theme="moonlight"]
+    assert result =~ ~s[name="theme-my-theme"]
   end
 
-  test "renders theme switcher with all attributes combined" do
+  test "renders radio inputs with for/id pairs for label association" do
+    result = render_component(&dm_theme_switcher/1, %{id: "my-theme"})
+
+    assert result =~ ~s[id="my-theme-default"]
+    assert result =~ ~s[for="my-theme-default"]
+    assert result =~ ~s[id="my-theme-sunshine"]
+    assert result =~ ~s[for="my-theme-sunshine"]
+    assert result =~ ~s[id="my-theme-moonlight"]
+    assert result =~ ~s[for="my-theme-moonlight"]
+  end
+
+  test "renders three radio inputs" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    radio_count = length(String.split(result, ~s[type="radio"])) - 1
+    assert radio_count == 3
+  end
+
+  test "renders three labels" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    label_count = length(String.split(result, "theme-controller-label")) - 1
+    assert label_count == 3
+  end
+
+  test "renders trigger with aria-label" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    assert result =~ ~s[aria-label="Select theme"]
+  end
+
+  test "renders trigger with aria-haspopup" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    assert result =~ ~s[aria-haspopup="true"]
+  end
+
+  test "renders menu with radiogroup role" do
+    result = render_component(&dm_theme_switcher/1, %{})
+
+    assert result =~ ~s[role="radiogroup"]
+  end
+
+  test "renders with custom select_theme_label" do
+    result = render_component(&dm_theme_switcher/1, %{select_theme_label: "Choisir le thème"})
+
+    assert result =~ ~s[aria-label="Choisir le thème"]
+  end
+
+  test "renders with custom button_text" do
+    result = render_component(&dm_theme_switcher/1, %{button_text: "Thème"})
+
+    assert result =~ "Thème"
+  end
+
+  test "renders with custom auto_label" do
+    result = render_component(&dm_theme_switcher/1, %{auto_label: "Automatique"})
+
+    assert result =~ "Automatique"
+  end
+
+  test "renders with custom light_label" do
+    result = render_component(&dm_theme_switcher/1, %{light_label: "Clair"})
+
+    assert result =~ "Clair"
+  end
+
+  test "renders with custom dark_label" do
+    result = render_component(&dm_theme_switcher/1, %{dark_label: "Sombre"})
+
+    assert result =~ "Sombre"
+  end
+
+  test "renders unique random ids across renders" do
+    result1 = render_component(&dm_theme_switcher/1, %{})
+    result2 = render_component(&dm_theme_switcher/1, %{})
+
+    assert result1 =~ "theme-switcher-"
+    assert result2 =~ "theme-switcher-"
+  end
+
+  test "renders with all attributes combined" do
     result =
       render_component(&dm_theme_switcher/1, %{
         id: "my-theme",
@@ -156,110 +195,16 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcherTest do
 
     assert result =~ ~s[id="my-theme"]
     assert result =~ "custom-switcher"
-    assert result =~ "dropdown"
+    assert result =~ "theme-controller-dropdown"
+    assert result =~ "theme-controller-dropdown-end"
     assert result =~ ~s[data-theme="sunshine"]
     assert result =~ ~s[phx-hook="ThemeSwitcher"]
     assert result =~ ~s[value="default"]
     assert result =~ ~s[value="sunshine"]
     assert result =~ ~s[value="moonlight"]
-  end
-
-  test "renders theme switcher with all three theme radio values" do
-    result = render_component(&dm_theme_switcher/1, %{})
-
-    assert result =~ ~s[value="default"]
-    assert result =~ ~s[value="sunshine"]
-    assert result =~ ~s[value="moonlight"]
-  end
-
-  test "renders theme switcher with aria-labels on radio inputs" do
-    result = render_component(&dm_theme_switcher/1, %{})
-
-    assert result =~ ~s[aria-label="Auto"]
-    assert result =~ ~s[aria-label="Sunshine"]
-    assert result =~ ~s[aria-label="Moonlight"]
-  end
-
-  test "renders theme switcher with button role on toggle" do
-    result = render_component(&dm_theme_switcher/1, %{})
-
-    assert result =~ ~s[role="button"]
-  end
-
-  test "renders theme switcher with unique random ids across renders" do
-    result1 = render_component(&dm_theme_switcher/1, %{})
-    result2 = render_component(&dm_theme_switcher/1, %{})
-
-    # Both should have theme-switcher- prefix but may have different random IDs
-    assert result1 =~ "theme-switcher-"
-    assert result2 =~ "theme-switcher-"
-  end
-
-  test "renders theme switcher with btn-secondary class on radios" do
-    result = render_component(&dm_theme_switcher/1, %{})
-
-    assert result =~ "btn-secondary"
-    assert result =~ "btn-block"
-  end
-
-  test "renders theme switcher with btn-sm on toggle button" do
-    result = render_component(&dm_theme_switcher/1, %{})
-
-    assert result =~ "btn btn-ghost btn-sm"
-  end
-
-  test "renders theme switcher with justify-center on radio inputs" do
-    result = render_component(&dm_theme_switcher/1, %{})
-
-    assert result =~ "justify-center"
-  end
-
-  test "renders theme switcher generates three radio inputs" do
-    result = render_component(&dm_theme_switcher/1, %{})
-
-    radio_count = length(String.split(result, ~s[type="radio"])) - 1
-    assert radio_count == 3
-  end
-
-  test "renders theme switcher with custom select_theme_label" do
-    result = render_component(&dm_theme_switcher/1, %{select_theme_label: "Choisir le thème"})
-
-    assert result =~ ~s[aria-label="Choisir le thème"]
-  end
-
-  test "renders theme switcher with custom auto_label" do
-    result = render_component(&dm_theme_switcher/1, %{auto_label: "Automatique"})
-
-    assert result =~ ~s[aria-label="Automatique"]
-  end
-
-  test "renders theme switcher with custom light_label" do
-    result = render_component(&dm_theme_switcher/1, %{light_label: "Clair"})
-
-    assert result =~ ~s[aria-label="Clair"]
-  end
-
-  test "renders theme switcher with custom dark_label" do
-    result = render_component(&dm_theme_switcher/1, %{dark_label: "Sombre"})
-
-    assert result =~ ~s[aria-label="Sombre"]
-  end
-
-  test "renders theme switcher with custom button_text" do
-    result = render_component(&dm_theme_switcher/1, %{button_text: "Thème"})
-
-    assert result =~ "Thème"
-  end
-
-  test "renders theme switcher with aria-haspopup on button" do
-    result = render_component(&dm_theme_switcher/1, %{})
-
-    assert result =~ ~s[aria-haspopup="true"]
-  end
-
-  test "renders theme switcher with radiogroup role on dropdown list" do
-    result = render_component(&dm_theme_switcher/1, %{})
-
-    assert result =~ ~s[role="radiogroup"]
+    assert result =~ "theme-controller-trigger"
+    assert result =~ "theme-controller-item"
+    assert result =~ "theme-controller-label"
+    assert result =~ "theme-controller-menu"
   end
 end

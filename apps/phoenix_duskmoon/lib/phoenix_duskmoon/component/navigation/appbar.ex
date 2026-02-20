@@ -7,7 +7,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
 
   ## Examples
 
-      <.dm_appbar title="MyApp">
+      <.dm_appbar title="MyApp" title_to="/">
         <:menu to="/dashboard">Dashboard</:menu>
         <:logo><img src="/logo.svg" /></:logo>
         <:user_profile>User Menu</:user_profile>
@@ -41,6 +41,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
   )
 
   attr(:title, :string, default: "", doc: "Appbar title")
+  attr(:title_to, :string, default: nil, doc: "Navigation path for brand area (logo + title)")
   attr(:sticky, :boolean, default: true, doc: "Whether the appbar is sticky")
   attr(:rest, :global)
 
@@ -64,10 +65,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
       class={["appbar", @sticky && "appbar-sticky", @class]}
       {@rest}
     >
-      <div class="appbar-brand">
+      <.dm_link :if={@title_to} navigate={@title_to} class="appbar-brand no-underline">
         {render_slot(@logo)}
+        <span class="appbar-title">{@title}</span>
+      </.dm_link>
+      <div :if={!@title_to} class="appbar-brand">
+        {render_slot(@logo)}
+        <span class="appbar-title">{@title}</span>
       </div>
-      <span class="appbar-title">{@title}</span>
       <div class="appbar-trailing">
         <%= for menu <- @menu do %>
           <.dm_link
