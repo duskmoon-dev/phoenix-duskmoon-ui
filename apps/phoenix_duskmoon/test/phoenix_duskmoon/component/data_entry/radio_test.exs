@@ -44,7 +44,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
   end
 
   test "renders radio with all size options" do
-    for size <- ~w(xs sm md lg) do
+    for size <- ~w(xs sm md lg xl) do
       result = render_component(&dm_radio/1, %{name: "choice", value: "a", size: size})
       assert result =~ "radio-#{size}"
     end

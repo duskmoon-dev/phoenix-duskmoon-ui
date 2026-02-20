@@ -51,7 +51,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
   end
 
   test "renders switch with all size options" do
-    for size <- ~w(xs sm md lg) do
+    for size <- ~w(xs sm md lg xl) do
       result = render_component(&dm_switch/1, %{name: "opt", size: size})
       assert result =~ "switch-#{size}"
     end

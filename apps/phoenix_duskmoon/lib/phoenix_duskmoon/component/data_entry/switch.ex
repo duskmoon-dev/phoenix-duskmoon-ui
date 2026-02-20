@@ -31,7 +31,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
   attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
   attr(:checked, :boolean, default: false, doc: "whether the switch is toggled on")
   attr(:label, :string, default: nil, doc: "text label displayed next to the switch")
-  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "switch size")
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg", "xl"], doc: "switch size")
 
   attr(:color, :string,
     default: "primary",

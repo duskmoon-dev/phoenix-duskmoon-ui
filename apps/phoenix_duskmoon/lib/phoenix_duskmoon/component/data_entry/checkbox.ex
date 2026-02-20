@@ -32,7 +32,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
   attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
   attr(:checked, :boolean, default: false, doc: "whether the checkbox is checked")
   attr(:label, :string, default: nil, doc: "text label displayed next to the checkbox")
-  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "checkbox size")
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg", "xl"], doc: "checkbox size")
 
   attr(:color, :string,
     default: "primary",
