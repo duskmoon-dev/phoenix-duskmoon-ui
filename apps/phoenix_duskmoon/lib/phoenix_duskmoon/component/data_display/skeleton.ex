@@ -56,7 +56,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       "skeleton",
       if(variant, do: "skeleton-#{variant}", else: nil),
       if(size, do: "skeleton-#{size}", else: nil),
-      if(animation, do: "animate-#{animation}", else: nil),
+      animation_class(animation),
       width,
       height,
       class
@@ -111,7 +111,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       "skeleton",
       height,
       width,
-      if(animation, do: "animate-#{animation}", else: nil)
+      animation_class(animation)
     ]
     |> Enum.reject(&is_nil/1)
     |> Enum.join(" ")
@@ -142,7 +142,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       "skeleton",
       "skeleton-avatar",
       skeleton_avatar_size(size),
-      if(animation, do: "animate-#{animation}", else: nil),
+      animation_class(animation),
       class
     ]
     |> Enum.reject(&is_nil/1)
@@ -213,7 +213,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       "h-6",
       "w-3/4",
       "mb-4",
-      if(animation, do: "animate-#{animation}", else: nil)
+      animation_class(animation)
     ]
     |> Enum.reject(&is_nil/1)
     |> Enum.join(" ")
@@ -224,7 +224,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       "skeleton",
       "h-10",
       "w-20",
-      if(animation, do: "animate-#{animation}", else: nil)
+      animation_class(animation)
     ]
     |> Enum.reject(&is_nil/1)
     |> Enum.join(" ")
@@ -260,7 +260,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
             <tr>
               <%= for _i <- 1..@columns do %>
                 <th>
-                  <div class={["skeleton", "h-4", "w-full", @animation && "animate-#{@animation}"]}></div>
+                  <div class={["skeleton", "h-4", "w-full", animation_class(@animation)]}></div>
                 </th>
               <% end %>
             </tr>
@@ -271,7 +271,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
             <tr>
               <%= for _col <- 1..@columns do %>
                 <td>
-                  <div class={["skeleton", "h-4", "w-full", @animation && "animate-#{@animation}"]}></div>
+                  <div class={["skeleton", "h-4", "w-full", animation_class(@animation)]}></div>
                 </td>
               <% end %>
             </tr>
@@ -453,6 +453,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     """
   end
 
+  defp animation_class("wave"), do: "skeleton-wave"
+  defp animation_class("pulse"), do: "animate-pulse"
+  defp animation_class("bounce"), do: "animate-bounce"
+  defp animation_class(nil), do: nil
+  defp animation_class(_), do: nil
+
   defp build_comment_container_classes(class) do
     ["space-y-4", class]
     |> Enum.reject(&is_nil/1)
@@ -464,7 +470,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       "skeleton",
       "h-4",
       "w-20",
-      if(animation, do: "animate-#{animation}", else: nil)
+      animation_class(animation)
     ]
     |> Enum.reject(&is_nil/1)
     |> Enum.join(" ")
@@ -475,7 +481,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       "skeleton",
       "h-3",
       "w-16",
-      if(animation, do: "animate-#{animation}", else: nil)
+      animation_class(animation)
     ]
     |> Enum.reject(&is_nil/1)
     |> Enum.join(" ")
@@ -486,7 +492,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       "skeleton",
       "h-3",
       "w-16",
-      if(animation, do: "animate-#{animation}", else: nil)
+      animation_class(animation)
     ]
     |> Enum.reject(&is_nil/1)
     |> Enum.join(" ")
@@ -497,7 +503,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       "skeleton",
       "h-3",
       "w-12",
-      if(animation, do: "animate-#{animation}", else: nil)
+      animation_class(animation)
     ]
     |> Enum.reject(&is_nil/1)
     |> Enum.join(" ")
@@ -514,7 +520,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       "skeleton",
       "h-4",
       "w-24",
-      if(animation, do: "animate-#{animation}", else: nil)
+      animation_class(animation)
     ]
     |> Enum.reject(&is_nil/1)
     |> Enum.join(" ")
@@ -530,7 +536,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
         _ -> "skeleton h-10 w-full"
       end
 
-    animation_class = if(animation, do: "animate-#{animation}", else: nil)
+    animation_class = animation_class(animation)
 
     [base_classes, animation_class]
     |> Enum.reject(&is_nil/1)
@@ -542,7 +548,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       "skeleton",
       "h-10",
       "w-24",
-      if(animation, do: "animate-#{animation}", else: nil)
+      animation_class(animation)
     ]
     |> Enum.reject(&is_nil/1)
     |> Enum.join(" ")

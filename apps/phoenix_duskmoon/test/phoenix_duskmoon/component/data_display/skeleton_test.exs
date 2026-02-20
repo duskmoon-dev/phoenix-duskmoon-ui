@@ -40,7 +40,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
                height: "h-16",
                class: "rounded-full"
              }) ==
-               ~s[<div aria-busy="true" aria-label="Loading" class="skeleton skeleton-avatar skeleton-lg animate-wave w-16 h-16 rounded-full"></div>]
+               ~s[<div aria-busy="true" aria-label="Loading" class="skeleton skeleton-avatar skeleton-lg skeleton-wave w-16 h-16 rounded-full"></div>]
     end
 
     test "renders skeleton with id" do
@@ -213,7 +213,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     test "renders table skeleton with animation" do
       result = render_component(&dm_skeleton_table/1, %{animation: "wave"})
 
-      assert result =~ ~s[animate-wave]
+      assert result =~ ~s[skeleton-wave]
     end
   end
 
@@ -460,7 +460,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
 
       assert result =~ ~s[id="full-tbl"]
       assert result =~ "w-full"
-      assert result =~ "animate-wave"
+      assert result =~ "skeleton-wave"
       assert result =~ "<thead>"
       # 3 header cells + 1 split
       assert result |> String.split("<th>") |> length() == 4
@@ -520,7 +520,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
           animation: "wave"
         })
 
-      assert result =~ "animate-wave"
+      assert result =~ "skeleton-wave"
       assert result =~ "ml-12 space-y-4"
       assert result |> String.split("flex gap-3") |> length() == 4
     end
