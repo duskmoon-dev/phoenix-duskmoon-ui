@@ -12,4 +12,8 @@ defmodule DuskmoonStorybookWeb.Components.FeedbackController do
   def toast(conn, _params) do
     render(conn, :toast, active_menu: "feedback-toast")
   end
+
+  def snackbar(conn, _params) do
+    render(conn, :snackbar, active_menu: "feedback-snackbar")
+  end
 end

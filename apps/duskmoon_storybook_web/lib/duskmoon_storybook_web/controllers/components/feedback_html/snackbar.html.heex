@@ -1,0 +1,93 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/feedback/snackbar"}>Feedback</:crumb>
+  <:crumb>Snackbar</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Snackbar</span>
+    <span class="text-sm opacity-60">dm_snackbar / dm_snackbar_container</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Snackbar component using `@duskmoon-dev/core` CSS classes.
+  Brief notification messages with optional action buttons.
+  Similar to toasts but with actions and different positioning patterns.
+
+  ## Usage
+  ```elixir
+  <.dm_snackbar type="info" open>
+    <:message>File saved successfully</:message>
+    <:action>Undo</:action>
+    <:close />
+  </.dm_snackbar>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Snackbar</h3>
+  <div class="flex flex-col gap-4 mb-4 relative" style="min-height: 60px;">
+    <.dm_snackbar open>
+      <:message>File saved successfully</:message>
+    </.dm_snackbar>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Action and Close</h3>
+  <div class="flex flex-col gap-4 mb-4 relative" style="min-height: 60px;">
+    <.dm_snackbar open>
+      <:message>Message archived</:message>
+      <:action>Undo</:action>
+      <:close />
+    </.dm_snackbar>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Type Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_snackbar type="info" open>
+      <:message>Info: New update available</:message>
+      <:action>Update</:action>
+    </.dm_snackbar>
+    <.dm_snackbar type="success" open>
+      <:message>Success: Profile saved</:message>
+      <:close />
+    </.dm_snackbar>
+    <.dm_snackbar type="warning" open>
+      <:message>Warning: Disk space running low</:message>
+      <:action>Details</:action>
+    </.dm_snackbar>
+    <.dm_snackbar type="error" open>
+      <:message>Error: Upload failed</:message>
+      <:action>Retry</:action>
+      <:close />
+    </.dm_snackbar>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Brand Color Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_snackbar type="primary" open>
+      <:message>Primary notification</:message>
+    </.dm_snackbar>
+    <.dm_snackbar type="secondary" open>
+      <:message>Secondary notification</:message>
+    </.dm_snackbar>
+    <.dm_snackbar type="tertiary" open>
+      <:message>Tertiary notification</:message>
+    </.dm_snackbar>
+    <.dm_snackbar type="dark" open>
+      <:message>Dark variant</:message>
+      <:action>Action</:action>
+    </.dm_snackbar>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Multiline</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_snackbar type="info" multiline open>
+      <:message>
+        This is a longer message that might wrap to multiple lines.
+        The action button moves below the message in multiline mode.
+      </:message>
+      <:action>Learn More</:action>
+    </.dm_snackbar>
+  </div>
+</.dm_card>
