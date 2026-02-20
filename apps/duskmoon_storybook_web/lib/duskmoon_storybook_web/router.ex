@@ -52,6 +52,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/data-display/timeline", DataDisplayController, :timeline
     get "/data-display/tooltip", DataDisplayController, :tooltip
     get "/data-display/popover", DataDisplayController, :popover
+    get "/data-display/list", DataDisplayController, :list
 
     # Data Entry
     get "/data-entry/autocomplete", DataEntryController, :autocomplete

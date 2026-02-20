@@ -64,6 +64,7 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.DataDisplay.Badge
       import PhoenixDuskmoon.Component.DataDisplay.Card
       import PhoenixDuskmoon.Component.DataDisplay.Flash
+      import PhoenixDuskmoon.Component.DataDisplay.List
       import PhoenixDuskmoon.Component.DataDisplay.Markdown
       import PhoenixDuskmoon.Component.DataDisplay.Pagination
       import PhoenixDuskmoon.Component.DataDisplay.Popover

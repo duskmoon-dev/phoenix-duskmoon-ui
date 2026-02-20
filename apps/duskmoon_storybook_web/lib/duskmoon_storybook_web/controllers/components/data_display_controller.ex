@@ -60,4 +60,8 @@ defmodule DuskmoonStorybookWeb.Components.DataDisplayController do
   def popover(conn, _params) do
     render(conn, :popover, active_menu: "data-display-popover")
   end
+
+  def list(conn, _params) do
+    render(conn, :list, active_menu: "data-display-list")
+  end
 end

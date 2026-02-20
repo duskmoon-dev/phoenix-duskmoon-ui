@@ -1,0 +1,115 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/list"}>Data Display</:crumb>
+  <:crumb>List</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">List</span>
+    <span class="text-sm opacity-60">dm_list</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  List component using `@duskmoon-dev/core` CSS classes.
+  Renders a vertical list with item titles, subtitles, icons,
+  active/disabled states, and optional subheaders.
+
+  ## Usage
+  ```elixir
+  <.dm_list>
+    <:item title="Inbox" subtitle="3 new messages" icon="email" />
+    <:item title="Drafts" icon="file-document-edit-outline" />
+    <:item title="Trash" icon="delete" disabled />
+  </.dm_list>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic List</h3>
+  <div class="mb-4 max-w-md">
+    <.dm_list>
+      <:item title="Inbox" />
+      <:item title="Drafts" />
+      <:item title="Sent" />
+      <:item title="Trash" />
+    </.dm_list>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">List with Icons</h3>
+  <div class="mb-4 max-w-md">
+    <.dm_list>
+      <:item title="Inbox" subtitle="3 new messages" icon="email" />
+      <:item title="Drafts" icon="file-document-edit-outline" />
+      <:item title="Sent" icon="send" />
+      <:item title="Trash" icon="delete" />
+    </.dm_list>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Active and Disabled Items</h3>
+  <div class="mb-4 max-w-md">
+    <.dm_list>
+      <:item title="Home" icon="home" active />
+      <:item title="Profile" icon="account" />
+      <:item title="Settings" icon="cog" />
+      <:item title="Admin" icon="shield-lock" disabled />
+    </.dm_list>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Bordered and Hoverable</h3>
+  <div class="mb-4 max-w-md">
+    <.dm_list bordered hoverable>
+      <:item title="Apple" subtitle="A sweet fruit" icon="food-apple" />
+      <:item title="Banana" subtitle="A tropical fruit" icon="fruit-grapes" />
+      <:item title="Cherry" subtitle="A small stone fruit" icon="fruit-cherries" />
+    </.dm_list>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Compact List</h3>
+  <div class="mb-4 max-w-md">
+    <.dm_list compact>
+      <:item title="Item 1" />
+      <:item title="Item 2" />
+      <:item title="Item 3" />
+      <:item title="Item 4" />
+      <:item title="Item 5" />
+    </.dm_list>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Dense List</h3>
+  <div class="mb-4 max-w-md">
+    <.dm_list dense>
+      <:item title="Dense Item 1" />
+      <:item title="Dense Item 2" />
+      <:item title="Dense Item 3" />
+    </.dm_list>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Two-Line List with Subheader</h3>
+  <div class="mb-4 max-w-md">
+    <.dm_list two_line bordered>
+      <:subheader>Account</:subheader>
+      <:item title="Profile" subtitle="View and edit your profile" icon="account" />
+      <:item title="Security" subtitle="Manage passwords and 2FA" icon="lock" />
+      <:subheader>Preferences</:subheader>
+      <:item title="Notifications" subtitle="Configure alert settings" icon="bell" />
+      <:item title="Theme" subtitle="Light or dark mode" icon="theme-light-dark" />
+    </.dm_list>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Three-Line List</h3>
+  <div class="mb-4 max-w-md">
+    <.dm_list three_line bordered hoverable>
+      <:item
+        title="Meeting Notes"
+        subtitle="Discussed Q4 roadmap priorities and resource allocation for the upcoming sprint."
+        icon="note-text"
+      />
+      <:item
+        title="Design Review"
+        subtitle="Reviewed new component library designs. Feedback collected from team leads."
+        icon="palette"
+      />
+    </.dm_list>
+  </div>
+</.dm_card>
