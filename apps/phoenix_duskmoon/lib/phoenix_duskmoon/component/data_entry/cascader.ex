@@ -112,7 +112,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
       ]}
       {@rest}
     >
-      <button type="button" class="cascader-trigger" disabled={@disabled}>
+      <button
+        type="button"
+        class="cascader-trigger"
+        disabled={@disabled}
+        aria-expanded={to_string(@open)}
+        aria-haspopup="listbox"
+      >
         <span class="cascader-value">
           <%= if @path_labels != [] do %>
             <span class="cascader-path">

@@ -324,6 +324,34 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
     end
   end
 
+  describe "accessibility" do
+    test "trigger has aria-expanded false when closed" do
+      result = render_component(&dm_tree_select/1, %{})
+      assert result =~ ~s(aria-expanded="false")
+      assert result =~ ~s(aria-haspopup="tree")
+    end
+
+    test "trigger has aria-expanded true when open" do
+      result = render_component(&dm_tree_select/1, %{open: true})
+      assert result =~ ~s(aria-expanded="true")
+    end
+
+    test "options container has role tree" do
+      result = render_component(&dm_tree_select/1, %{options: @tree_options})
+      assert result =~ ~s(role="tree")
+    end
+
+    test "nodes have role treeitem" do
+      result = render_component(&dm_tree_select/1, %{options: @flat_options})
+      assert result =~ ~s(role="treeitem")
+    end
+
+    test "toggle button has aria-label" do
+      result = render_component(&dm_tree_select/1, %{options: @tree_options})
+      assert result =~ ~s(aria-label="Toggle Fruits")
+    end
+  end
+
   describe "FormField integration" do
     test "renders tree select with form field extracting id and name" do
       field = Phoenix.Component.to_form(%{"category" => ["a"]}, as: "product")[:category]

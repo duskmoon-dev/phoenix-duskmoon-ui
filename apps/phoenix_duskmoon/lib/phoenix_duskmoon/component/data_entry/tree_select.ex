@@ -113,7 +113,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
       ]}
       {@rest}
     >
-      <button type="button" class="tree-select-trigger" disabled={@disabled}>
+      <button
+        type="button"
+        class="tree-select-trigger"
+        disabled={@disabled}
+        aria-expanded={to_string(@open)}
+        aria-haspopup="tree"
+      >
         <span class="tree-select-value">
           <%= cond do %>
             <% @show_path && @selected_paths != [] -> %>
@@ -219,7 +225,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
       aria-expanded={@has_children && to_string(@expanded)}
       data-value={@node[:value]}
     >
-      <button :if={@has_children} type="button" class="tree-select-node-toggle">
+      <button :if={@has_children} type="button" class="tree-select-node-toggle" aria-label={"Toggle #{@node[:label]}"}>
         <span class="tree-select-node-icon"></span>
       </button>
       <span :if={@multiple} class="tree-select-checkbox">

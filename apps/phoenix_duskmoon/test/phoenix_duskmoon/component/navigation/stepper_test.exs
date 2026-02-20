@@ -207,6 +207,29 @@ defmodule PhoenixDuskmoon.Component.Navigation.StepperTest do
     end
   end
 
+  describe "dm_stepper accessibility" do
+    test "active step has aria-current=step" do
+      steps = [
+        %{__slot__: :step, label: "Done", completed: true, inner_block: fn _, _ -> "" end},
+        %{__slot__: :step, label: "Current", active: true, inner_block: fn _, _ -> "" end},
+        %{__slot__: :step, label: "Next", inner_block: fn _, _ -> "" end}
+      ]
+
+      result = render_component(&dm_stepper/1, %{step: steps})
+      assert result =~ ~s(aria-current="step")
+    end
+
+    test "non-active steps do not have aria-current" do
+      steps = [
+        %{__slot__: :step, label: "Step 1", inner_block: fn _, _ -> "" end},
+        %{__slot__: :step, label: "Step 2", inner_block: fn _, _ -> "" end}
+      ]
+
+      result = render_component(&dm_stepper/1, %{step: steps})
+      refute result =~ "aria-current"
+    end
+  end
+
   describe "dm_stepper combined" do
     test "renders with all options" do
       steps = [

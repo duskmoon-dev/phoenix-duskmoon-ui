@@ -88,14 +88,17 @@ defmodule PhoenixDuskmoon.Component.Navigation.Stepper do
       {@rest}
     >
       <%= for {step, idx} <- Enum.with_index(@step) do %>
-        <div class={[
-          "stepper-step",
-          step[:active] && "stepper-step-active",
-          step[:completed] && "stepper-step-completed",
-          step[:error] && "stepper-step-error",
-          step[:disabled] && "stepper-step-disabled",
-          step[:optional] && "stepper-step-optional"
-        ]}>
+        <div
+          class={[
+            "stepper-step",
+            step[:active] && "stepper-step-active",
+            step[:completed] && "stepper-step-completed",
+            step[:error] && "stepper-step-error",
+            step[:disabled] && "stepper-step-disabled",
+            step[:optional] && "stepper-step-optional"
+          ]}
+          aria-current={step[:active] && "step"}
+        >
           <div class="stepper-step-button">
             <span class="stepper-step-icon">{idx + 1}</span>
           </div>

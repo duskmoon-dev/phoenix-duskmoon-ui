@@ -309,6 +309,30 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
     end
   end
 
+  describe "accessibility" do
+    test "trigger has aria-expanded false when closed" do
+      result = render_component(&dm_multi_select/1, %{})
+      assert result =~ ~s(aria-expanded="false")
+      assert result =~ ~s(aria-haspopup="listbox")
+    end
+
+    test "trigger has aria-expanded true when open" do
+      result = render_component(&dm_multi_select/1, %{open: true})
+      assert result =~ ~s(aria-expanded="true")
+    end
+
+    test "options container has role listbox" do
+      result = render_component(&dm_multi_select/1, %{options: @options})
+      assert result =~ ~s(role="listbox")
+      assert result =~ ~s(aria-multiselectable="true")
+    end
+
+    test "individual options have role option" do
+      result = render_component(&dm_multi_select/1, %{options: @options})
+      assert result =~ ~s(role="option")
+    end
+  end
+
   describe "FormField integration" do
     test "renders multi select with form field extracting id and name" do
       field = Phoenix.Component.to_form(%{"tags" => ["a"]}, as: "post")[:tags]

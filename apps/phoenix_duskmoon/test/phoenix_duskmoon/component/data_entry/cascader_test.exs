@@ -246,6 +246,24 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CascaderTest do
     end
   end
 
+  describe "accessibility" do
+    test "trigger has aria-expanded false when closed" do
+      result = render_component(&dm_cascader/1, %{})
+      assert result =~ ~s(aria-expanded="false")
+      assert result =~ ~s(aria-haspopup="listbox")
+    end
+
+    test "trigger has aria-expanded true when open" do
+      result = render_component(&dm_cascader/1, %{open: true})
+      assert result =~ ~s(aria-expanded="true")
+    end
+
+    test "options have role option" do
+      result = render_component(&dm_cascader/1, %{options: @cascader_options})
+      assert result =~ ~s(role="option")
+    end
+  end
+
   describe "FormField integration" do
     test "renders cascader with form field extracting id and name" do
       field = Phoenix.Component.to_form(%{"region" => ["asia", "cn"]}, as: "location")[:region]

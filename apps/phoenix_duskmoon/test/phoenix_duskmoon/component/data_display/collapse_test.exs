@@ -359,6 +359,26 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CollapseTest do
     end
   end
 
+  describe "dm_collapse accessibility" do
+    test "trigger has aria-expanded false when closed" do
+      result =
+        render_component(&dm_collapse/1, %{trigger: basic_trigger(), content: basic_content()})
+
+      assert result =~ ~s(aria-expanded="false")
+    end
+
+    test "trigger has aria-expanded true when open" do
+      result =
+        render_component(&dm_collapse/1, %{
+          open: true,
+          trigger: basic_trigger(),
+          content: basic_content()
+        })
+
+      assert result =~ ~s(aria-expanded="true")
+    end
+  end
+
   describe "dm_collapse_group" do
     test "renders group container" do
       result =

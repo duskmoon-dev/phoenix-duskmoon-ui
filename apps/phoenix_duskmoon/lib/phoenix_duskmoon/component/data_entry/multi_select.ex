@@ -133,7 +133,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
       ]}
       {@rest}
     >
-      <button type="button" class="multi-select-trigger" disabled={@disabled}>
+      <button
+        type="button"
+        class="multi-select-trigger"
+        disabled={@disabled}
+        aria-expanded={to_string(@open)}
+        aria-haspopup="listbox"
+      >
         <%= if @selected_options == [] do %>
           <span :if={@placeholder} class="multi-select-placeholder">{@placeholder}</span>
         <% else %>
@@ -179,7 +185,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
           <button type="button" class="multi-select-action">Deselect All</button>
         </div>
 
-        <div class="multi-select-options">
+        <div class="multi-select-options" role="listbox" aria-multiselectable="true">
           <%= if @options == [] do %>
             <div class="multi-select-empty">{@empty_text}</div>
           <% else %>

@@ -94,7 +94,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Collapse do
       ]}
       {@rest}
     >
-      <button type="button" class="collapse-trigger" disabled={@disabled}>
+      <button
+        type="button"
+        class="collapse-trigger"
+        disabled={@disabled}
+        aria-expanded={to_string(@open)}
+      >
         {render_slot(@trigger)}
         <span class="collapse-icon"></span>
       </button>
