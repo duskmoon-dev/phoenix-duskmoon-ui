@@ -58,6 +58,7 @@ defmodule PhoenixDuskmoon.Component do
 
       # Data Display components
       import PhoenixDuskmoon.Component.DataDisplay.Accordion
+      import PhoenixDuskmoon.Component.DataDisplay.Collapse
       import PhoenixDuskmoon.Component.DataDisplay.Avatar
       import PhoenixDuskmoon.Component.DataDisplay.Chip
       import PhoenixDuskmoon.Component.DataDisplay.Stat

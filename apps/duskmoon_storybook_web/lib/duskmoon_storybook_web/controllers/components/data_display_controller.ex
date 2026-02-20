@@ -64,4 +64,8 @@ defmodule DuskmoonStorybookWeb.Components.DataDisplayController do
   def list(conn, _params) do
     render(conn, :list, active_menu: "data-display-list")
   end
+
+  def collapse(conn, _params) do
+    render(conn, :collapse, active_menu: "data-display-collapse")
+  end
 end

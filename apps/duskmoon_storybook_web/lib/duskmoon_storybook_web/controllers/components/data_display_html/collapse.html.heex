@@ -1,0 +1,150 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/collapse"}>Data Display</:crumb>
+  <:crumb>Collapse</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Collapse</span>
+    <span class="text-sm opacity-60">dm_collapse / dm_collapse_group</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Collapse component using `@duskmoon-dev/core` CSS classes.
+  A single collapsible panel with trigger and content areas.
+  Unlike `dm_accordion` (which manages multiple panels via custom element),
+  `dm_collapse` is a standalone CSS-only toggle.
+
+  ## Usage
+  ```elixir
+  <.dm_collapse>
+    <:trigger>Click to expand</:trigger>
+    <:content>Hidden content revealed on click.</:content>
+  </.dm_collapse>
+
+  <.dm_collapse variant="card" color="primary" open>
+    <:trigger>Details</:trigger>
+    <:content>Expanded by default.</:content>
+  </.dm_collapse>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Collapse</h3>
+  <div class="mb-4 max-w-lg">
+    <.dm_collapse>
+      <:trigger>What is Phoenix Duskmoon UI?</:trigger>
+      <:content>
+        A comprehensive UI component library for Phoenix LiveView applications,
+        built on @duskmoon-dev/core CSS design system and custom elements.
+      </:content>
+    </.dm_collapse>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Initially Open</h3>
+  <div class="mb-4 max-w-lg">
+    <.dm_collapse open>
+      <:trigger>Open by default</:trigger>
+      <:content>This content is visible when the page loads.</:content>
+    </.dm_collapse>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Style Variants</h3>
+  <div class="flex flex-col gap-4 mb-4 max-w-lg">
+    <.dm_collapse variant="card">
+      <:trigger>Card variant</:trigger>
+      <:content>Card style with border and shadow.</:content>
+    </.dm_collapse>
+    <.dm_collapse variant="bordered">
+      <:trigger>Bordered variant</:trigger>
+      <:content>Simple bordered style.</:content>
+    </.dm_collapse>
+    <.dm_collapse variant="ghost">
+      <:trigger>Ghost variant</:trigger>
+      <:content>Transparent background.</:content>
+    </.dm_collapse>
+    <.dm_collapse variant="divider">
+      <:trigger>Divider variant</:trigger>
+      <:content>Divider line under trigger.</:content>
+    </.dm_collapse>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Color Variants</h3>
+  <div class="flex flex-col gap-4 mb-4 max-w-lg">
+    <.dm_collapse variant="card" color="primary">
+      <:trigger>Primary</:trigger>
+      <:content>Primary colored trigger.</:content>
+    </.dm_collapse>
+    <.dm_collapse variant="card" color="secondary">
+      <:trigger>Secondary</:trigger>
+      <:content>Secondary colored trigger.</:content>
+    </.dm_collapse>
+    <.dm_collapse variant="card" color="tertiary">
+      <:trigger>Tertiary</:trigger>
+      <:content>Tertiary colored trigger.</:content>
+    </.dm_collapse>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Size Variants</h3>
+  <div class="flex flex-col gap-4 mb-4 max-w-lg">
+    <.dm_collapse variant="bordered" size="sm">
+      <:trigger>Small</:trigger>
+      <:content>Small collapse.</:content>
+    </.dm_collapse>
+    <.dm_collapse variant="bordered">
+      <:trigger>Default</:trigger>
+      <:content>Default size.</:content>
+    </.dm_collapse>
+    <.dm_collapse variant="bordered" size="lg">
+      <:trigger>Large</:trigger>
+      <:content>Large collapse.</:content>
+    </.dm_collapse>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Animation Variants</h3>
+  <div class="flex flex-col gap-4 mb-4 max-w-lg">
+    <.dm_collapse variant="card" animation="fade">
+      <:trigger>Fade animation</:trigger>
+      <:content>Content fades in and out.</:content>
+    </.dm_collapse>
+    <.dm_collapse variant="card" animation="slide">
+      <:trigger>Slide animation</:trigger>
+      <:content>Content slides in and out.</:content>
+    </.dm_collapse>
+    <.dm_collapse variant="card" animation="slide" speed="fast">
+      <:trigger>Fast slide</:trigger>
+      <:content>Faster transition speed.</:content>
+    </.dm_collapse>
+    <.dm_collapse variant="card" animation="slide" speed="slow">
+      <:trigger>Slow slide</:trigger>
+      <:content>Slower transition speed.</:content>
+    </.dm_collapse>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Disabled</h3>
+  <div class="mb-4 max-w-lg">
+    <.dm_collapse variant="card" disabled>
+      <:trigger>Cannot be toggled</:trigger>
+      <:content>This should not be visible.</:content>
+    </.dm_collapse>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Collapse Group</h3>
+  <div class="mb-4 max-w-lg">
+    <.dm_collapse_group>
+      <.dm_collapse variant="bordered">
+        <:trigger>Question 1: What frameworks do you support?</:trigger>
+        <:content>Phoenix LiveView with Elixir.</:content>
+      </.dm_collapse>
+      <.dm_collapse variant="bordered">
+        <:trigger>Question 2: How do I install?</:trigger>
+        <:content>Add phoenix_duskmoon to your mix.exs dependencies.</:content>
+      </.dm_collapse>
+      <.dm_collapse variant="bordered">
+        <:trigger>Question 3: Is it open source?</:trigger>
+        <:content>Yes, MIT licensed.</:content>
+      </.dm_collapse>
+    </.dm_collapse_group>
+  </div>
+</.dm_card>
