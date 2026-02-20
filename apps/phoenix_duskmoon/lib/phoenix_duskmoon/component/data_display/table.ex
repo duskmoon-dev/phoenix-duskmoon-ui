@@ -2,7 +2,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
   @moduledoc """
   Duskmoon UI Table Component
   """
-  use PhoenixDuskmoon.Component, :html
+  use Phoenix.Component
 
   @doc """
   Generates a table.

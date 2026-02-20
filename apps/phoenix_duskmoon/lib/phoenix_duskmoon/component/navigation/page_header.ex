@@ -2,7 +2,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
   @moduledoc """
   Duskmoon UI PageHeader Component
   """
-  use PhoenixDuskmoon.Component, :html
+  use Phoenix.Component
 
   @doc """
   Generates a Page header.

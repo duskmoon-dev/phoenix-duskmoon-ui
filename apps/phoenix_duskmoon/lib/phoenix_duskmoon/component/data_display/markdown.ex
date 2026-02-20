@@ -16,7 +16,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Markdown do
   ```
 
   """
-  use PhoenixDuskmoon.Component, :html
+  use Phoenix.Component
 
   @doc """
   Generates `<el-dm-markdown>` custom element to render markdown content.

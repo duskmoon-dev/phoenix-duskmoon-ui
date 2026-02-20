@@ -6,7 +6,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   Perfect for showing content placeholders while data is loading.
   """
 
-  use PhoenixDuskmoon.Component, :html
+  use Phoenix.Component
 
   @doc """
   Generates a basic skeleton element.

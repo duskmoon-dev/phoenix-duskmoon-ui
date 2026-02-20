@@ -3,7 +3,7 @@ defmodule PhoenixDuskmoon.Component.Action.Link do
   Duskmoon UI Link Component
 
   """
-  use PhoenixDuskmoon.Component, :html
+  use Phoenix.Component
 
   @doc """
   Generates a link for live and href navigation.

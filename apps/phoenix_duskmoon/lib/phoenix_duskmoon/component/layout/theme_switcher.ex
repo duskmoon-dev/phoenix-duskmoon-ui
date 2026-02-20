@@ -6,7 +6,7 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
   Renders as a `<details>/<summary>` dropdown with radio inputs for theme selection.
   Requires the `ThemeSwitcher` LiveView hook for localStorage persistence.
   """
-  use PhoenixDuskmoon.Component, :html
+  use Phoenix.Component
 
   @doc """
   A theme switcher dropdown component.
