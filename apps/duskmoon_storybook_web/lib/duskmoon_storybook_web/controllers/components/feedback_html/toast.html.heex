@@ -1,0 +1,84 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/feedback/toast"}>Feedback</:crumb>
+  <:crumb>Toast</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Toast</span>
+    <span class="text-sm opacity-60">dm_toast / dm_toast_container</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Toast notification component using CSS classes from `@duskmoon-dev/core`. Renders
+  individual toast notifications and positioned containers. No custom element.
+
+  ## Usage
+  ```elixir
+  <.dm_toast_container position="top-right">
+    <.dm_toast type="success" title="Saved" open>
+      Your changes have been saved.
+    </.dm_toast>
+  </.dm_toast_container>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Type Variants</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_toast type="info" title="Information" icon="information" open>
+      This is an informational message.
+    </.dm_toast>
+    <.dm_toast type="success" title="Success" icon="check-circle" open>
+      Operation completed successfully.
+    </.dm_toast>
+    <.dm_toast type="warning" title="Warning" icon="alert" open>
+      Please review before proceeding.
+    </.dm_toast>
+    <.dm_toast type="error" title="Error" icon="alert-circle" open>
+      Something went wrong.
+    </.dm_toast>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Filled Variants</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_toast type="info" title="Info" icon="information" filled open>
+      Filled info toast.
+    </.dm_toast>
+    <.dm_toast type="success" title="Success" icon="check-circle" filled open>
+      Filled success toast.
+    </.dm_toast>
+    <.dm_toast type="warning" title="Warning" icon="alert" filled open>
+      Filled warning toast.
+    </.dm_toast>
+    <.dm_toast type="error" title="Error" icon="alert-circle" filled open>
+      Filled error toast.
+    </.dm_toast>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Close Button</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_toast type="success" title="Dismissible" icon="check-circle" show_close open>
+      Click the close button to dismiss.
+    </.dm_toast>
+    <.dm_toast type="error" title="Error" icon="alert-circle" show_close filled open>
+      Filled toast with close button.
+    </.dm_toast>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Without Title</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_toast type="info" icon="information" open>
+      A simple info notification without a title.
+    </.dm_toast>
+    <.dm_toast type="success" open>
+      Simple success message, no icon or title.
+    </.dm_toast>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Default (No Type)</h3>
+  <.dm_toast title="Notification" open>
+    A neutral toast without any type styling.
+  </.dm_toast>
+</.dm_card>

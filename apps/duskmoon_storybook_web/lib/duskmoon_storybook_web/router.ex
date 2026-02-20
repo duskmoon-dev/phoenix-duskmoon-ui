@@ -66,6 +66,7 @@ defmodule DuskmoonStorybookWeb.Router do
     # Feedback
     get "/feedback/dialog", FeedbackController, :dialog
     get "/feedback/loading", FeedbackController, :loading
+    get "/feedback/toast", FeedbackController, :toast
 
     # Navigation
     get "/navigation/actionbar", NavigationController, :actionbar

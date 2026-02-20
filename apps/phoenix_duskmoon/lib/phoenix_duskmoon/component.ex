@@ -86,6 +86,7 @@ defmodule PhoenixDuskmoon.Component do
       # Feedback components
       import PhoenixDuskmoon.Component.Feedback.Dialog
       import PhoenixDuskmoon.Component.Feedback.Loading
+      import PhoenixDuskmoon.Component.Feedback.Toast
 
       # Navigation components
       import PhoenixDuskmoon.Component.Navigation.Actionbar

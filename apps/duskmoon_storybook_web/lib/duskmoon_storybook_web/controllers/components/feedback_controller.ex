@@ -8,4 +8,8 @@ defmodule DuskmoonStorybookWeb.Components.FeedbackController do
   def loading(conn, _params) do
     render(conn, :loading, active_menu: "feedback-loading")
   end
+
+  def toast(conn, _params) do
+    render(conn, :toast, active_menu: "feedback-toast")
+  end
 end
