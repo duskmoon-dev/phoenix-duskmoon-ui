@@ -71,6 +71,18 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
     doc: "Accessible label for ellipsis indicators"
   )
 
+  attr(:el_size, :string,
+    default: nil,
+    values: [nil, "xs", "sm", "md", "lg"],
+    doc: "Button size for the el-dm-pagination element"
+  )
+
+  attr(:el_color, :string,
+    default: nil,
+    values: [nil, "primary", "secondary", "neutral"],
+    doc: "Color variant for the el-dm-pagination element"
+  )
+
   attr(:rest, :global)
 
   slot(:inner_block, required: false)
@@ -97,6 +109,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
       <el-dm-pagination
         current-page={@page_num}
         total-pages={@max_page}
+        size={@el_size}
+        color={@el_color}
       >
         <button
           type="button"

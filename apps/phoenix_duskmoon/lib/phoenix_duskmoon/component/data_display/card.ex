@@ -50,6 +50,17 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
     doc: "Card shadow size"
   )
 
+  attr(:interactive, :boolean,
+    default: false,
+    doc: "Make card clickable/hoverable"
+  )
+
+  attr(:padding, :string,
+    default: nil,
+    values: [nil, "none", "sm", "md", "lg"],
+    doc: "Card padding size"
+  )
+
   attr(:image, :string, default: nil, doc: "Card image URL")
   attr(:image_alt, :string, default: "", doc: "Card image alt text")
 
@@ -79,6 +90,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
       id={@id}
       variant={@variant}
       shadow={@shadow}
+      interactive={@interactive}
+      padding={@padding}
       class={@class}
       {@rest}
     >
@@ -132,6 +145,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
 
   attr(:variant, :string, default: nil)
   attr(:shadow, :string, default: nil)
+  attr(:interactive, :boolean, default: false, doc: "Make card clickable/hoverable")
+  attr(:padding, :string, default: nil, doc: "Card padding size")
   attr(:image, :string, default: nil)
   attr(:image_alt, :string, default: "")
 
@@ -157,6 +172,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
           id={@id}
           variant={@variant}
           shadow={@shadow}
+          interactive={@interactive}
+          padding={@padding}
           class={@class}
           {@rest}
         >
@@ -172,6 +189,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
           id={@id}
           variant={@variant}
           shadow={@shadow}
+          interactive={@interactive}
+          padding={@padding}
           class={@class}
           {@rest}
         >
@@ -187,6 +206,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
         id={@id}
         variant={@variant}
         shadow={@shadow}
+        interactive={@interactive}
+        padding={@padding}
         class={@class}
         {@rest}
       >

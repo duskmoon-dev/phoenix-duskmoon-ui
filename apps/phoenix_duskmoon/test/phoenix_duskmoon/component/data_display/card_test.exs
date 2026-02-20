@@ -438,6 +438,46 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CardTest do
     assert result =~ ~s[shadow="xl"]
   end
 
+  test "renders card with interactive" do
+    result =
+      render_component(&dm_card/1, %{
+        interactive: true,
+        inner_block: %{inner_block: fn _, _ -> "Content" end}
+      })
+
+    assert result =~ "interactive"
+  end
+
+  test "renders card without interactive by default" do
+    result =
+      render_component(&dm_card/1, %{
+        inner_block: %{inner_block: fn _, _ -> "Content" end}
+      })
+
+    refute result =~ ~s[interactive]
+  end
+
+  test "renders card with padding" do
+    for padding <- ~w(none sm md lg) do
+      result =
+        render_component(&dm_card/1, %{
+          padding: padding,
+          inner_block: %{inner_block: fn _, _ -> "Content" end}
+        })
+
+      assert result =~ ~s[padding="#{padding}"]
+    end
+  end
+
+  test "renders card without padding by default" do
+    result =
+      render_component(&dm_card/1, %{
+        inner_block: %{inner_block: fn _, _ -> "Content" end}
+      })
+
+    refute result =~ ~s[padding="]
+  end
+
   test "renders card with all options combined" do
     result =
       render_component(&dm_card/1, %{

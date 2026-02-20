@@ -301,6 +301,54 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
     assert result =~ "Alert"
   end
 
+  test "renders badge with pill shape" do
+    result =
+      render_component(&dm_badge/1, %{
+        pill: true,
+        inner_block: inner_block("Pill")
+      })
+
+    assert result =~ "pill"
+    assert result =~ "Pill"
+  end
+
+  test "renders badge without pill by default" do
+    result = render_component(&dm_badge/1, %{inner_block: inner_block("Tag")})
+
+    # pill=false should not render the attribute
+    assert result =~ "<el-dm-badge"
+  end
+
+  test "renders badge with dot indicator" do
+    result =
+      render_component(&dm_badge/1, %{
+        dot: true,
+        inner_block: inner_block("Dot")
+      })
+
+    assert result =~ "dot"
+  end
+
+  test "renders badge without dot by default" do
+    result = render_component(&dm_badge/1, %{inner_block: inner_block("Tag")})
+
+    assert result =~ "<el-dm-badge"
+  end
+
+  test "renders badge with pill and dot combined" do
+    result =
+      render_component(&dm_badge/1, %{
+        pill: true,
+        dot: true,
+        variant: "error",
+        inner_block: inner_block("Alert")
+      })
+
+    assert result =~ "pill"
+    assert result =~ "dot"
+    assert result =~ ~s[variant="error"]
+  end
+
   test "renders badge closing tag" do
     result = render_component(&dm_badge/1, %{inner_block: inner_block("Close")})
 

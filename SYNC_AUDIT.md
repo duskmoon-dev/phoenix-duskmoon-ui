@@ -167,7 +167,7 @@
 | Registered el-* packages | 28 (all) |
 | Demo routes | 42 |
 | Storybook stories | 44 |
-| Tests | 1752 (all passing) |
+| Tests | 1800 (all passing) |
 | Compilation warnings | 0 |
 
 ---
@@ -342,7 +342,49 @@ These elements use non-standard variable names with hardcoded fallbacks. Added a
 
 ---
 
-## 7. Verification Screenshots
+## 7. Phase 4: Phoenix Component Sync — Attribute Gap Fixes
+
+### Attrs Added (Additive Only)
+
+| Component | New Attrs/Slots | Element Attr |
+|-----------|----------------|--------------|
+| `dm_markdown` | `src`, `theme`, `no_mermaid`, `rest` | `src`, `theme`, `no-mermaid` |
+| `dm_modal` | `no_backdrop` | `no-backdrop` |
+| `dm_badge` | `pill`, `dot` | `pill`, `dot` |
+| `dm_card` / `dm_async_card` | `interactive`, `padding` | `interactive`, `padding` |
+| `dm_btn` | `prefix` slot, `suffix` slot | `slot="prefix"`, `slot="suffix"` |
+| `dm_pagination` | `el_size`, `el_color` | `size`, `color` |
+
+### Variant Mismatches (Documented, NOT Fixed — Breaking Changes)
+
+These components have fundamental variant/color mapping mismatches between the Phoenix API and the custom element API. Fixing them would be a breaking API change for Phoenix users.
+
+#### `dm_badge` — variant vs color+variant split
+- **Phoenix API**: `variant` = "primary" | "secondary" | "accent" | "info" | "success" | "warning" | "error" | "ghost" | "neutral"
+- **Element API**: `color` = "primary" | "secondary" | "tertiary" | "success" | "warning" | "error" | "info"; `variant` = "filled" | "outlined" | "soft"
+- **Current behavior**: Phoenix sends color names (e.g., "primary") via `variant` attr — element may interpret or ignore these
+- **Phoenix `outline`** boolean maps conceptually to element `variant="outlined"` but is sent as a separate attr
+- **Fix approach** (future v10): Split Phoenix `variant` into `color` + `style`, deprecate old API
+
+#### `dm_card` — completely different variant vocabularies
+- **Phoenix API**: `variant` = "compact" | "side" | "bordered" | "glass"
+- **Element API**: `variant` = "elevated" | "outlined" | "filled"
+- **No overlap**: The two variant sets describe different things (Phoenix = layout, element = surface style)
+- **Fix approach** (future v10): Rename Phoenix `variant` to `layout`, add `style` for element's variant values
+
+#### `dm_modal` — `dismissible` attr unusable from server-side
+- **Element API**: `dismissible` is a boolean property defaulting to `true`
+- **Lit boolean behavior**: Absent attribute = use property default (true). Cannot set to false via HTML attribute alone.
+- **Workaround**: Users must use JavaScript to set `element.dismissible = false`
+- **Action needed**: File upstream issue requesting a `no-dismiss` boolean attr (inverted pattern) or `dismiss-mode` string attr
+
+### Tests Added
+
+28 new tests covering all new attrs/slots across 6 test files. Total: **1800 tests, 0 failures**.
+
+---
+
+## 8. Verification Screenshots
 
 See `.loki/logs/screenshots/` and `.loki/audit/screenshots/` for baseline screenshots.
 

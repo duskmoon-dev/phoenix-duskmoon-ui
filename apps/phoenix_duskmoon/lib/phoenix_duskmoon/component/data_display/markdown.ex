@@ -55,13 +55,39 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Markdown do
   attr(:content, :string,
     default: "",
     doc: """
-    markdown content
+    markdown content (inline)
     """
   )
 
+  attr(:src, :string,
+    default: nil,
+    doc: "URL to fetch markdown content from"
+  )
+
+  attr(:theme, :string,
+    default: nil,
+    values: [nil, "github", "atom-one-dark", "atom-one-light", "auto"],
+    doc: "Code syntax highlighting theme"
+  )
+
+  attr(:no_mermaid, :boolean,
+    default: false,
+    doc: "Disable mermaid diagram rendering"
+  )
+
+  attr(:rest, :global)
+
   def dm_markdown(assigns) do
     ~H"""
-    <el-dm-markdown id={@id} debug={@debug} class={@class}><%= @content %></el-dm-markdown>
+    <el-dm-markdown
+      id={@id}
+      debug={@debug}
+      src={@src}
+      theme={@theme}
+      no-mermaid={@no_mermaid}
+      class={@class}
+      {@rest}
+    ><%= @content %></el-dm-markdown>
     """
   end
 end

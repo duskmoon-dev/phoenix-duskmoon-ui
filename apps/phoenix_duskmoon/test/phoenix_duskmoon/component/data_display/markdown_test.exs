@@ -238,4 +238,72 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.MarkdownTest do
     assert result =~ "Done"
     assert result =~ "Pending"
   end
+
+  test "renders markdown with src attribute" do
+    result = render_component(&dm_markdown/1, %{src: "/docs/readme.md"})
+
+    assert result =~ ~s[src="/docs/readme.md"]
+  end
+
+  test "renders markdown without src when nil" do
+    result = render_component(&dm_markdown/1, %{content: "test"})
+
+    refute result =~ ~s[src="]
+  end
+
+  test "renders markdown with theme attribute" do
+    result = render_component(&dm_markdown/1, %{theme: "github", content: "test"})
+
+    assert result =~ ~s[theme="github"]
+  end
+
+  test "renders markdown with all theme options" do
+    for theme <- ~w(github atom-one-dark atom-one-light auto) do
+      result = render_component(&dm_markdown/1, %{theme: theme, content: "test"})
+      assert result =~ ~s[theme="#{theme}"]
+    end
+  end
+
+  test "renders markdown without theme when nil" do
+    result = render_component(&dm_markdown/1, %{content: "test"})
+
+    refute result =~ ~s[theme="]
+  end
+
+  test "renders markdown with no-mermaid attribute" do
+    result = render_component(&dm_markdown/1, %{no_mermaid: true, content: "test"})
+
+    assert result =~ "no-mermaid"
+  end
+
+  test "renders markdown without no-mermaid by default" do
+    result = render_component(&dm_markdown/1, %{content: "test"})
+
+    refute result =~ "no-mermaid"
+  end
+
+  test "renders markdown with rest attributes" do
+    result =
+      render_component(&dm_markdown/1, %{
+        content: "test",
+        "data-testid": "md-viewer"
+      })
+
+    assert result =~ ~s[data-testid="md-viewer"]
+  end
+
+  test "renders markdown with src, theme, and no_mermaid combined" do
+    result =
+      render_component(&dm_markdown/1, %{
+        src: "/api/docs",
+        theme: "atom-one-dark",
+        no_mermaid: true,
+        class: "prose"
+      })
+
+    assert result =~ ~s[src="/api/docs"]
+    assert result =~ ~s[theme="atom-one-dark"]
+    assert result =~ "no-mermaid"
+    assert result =~ "prose"
+  end
 end

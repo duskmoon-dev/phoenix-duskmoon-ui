@@ -46,6 +46,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Badge do
 
   attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
   attr(:outline, :boolean, default: false)
+  attr(:pill, :boolean, default: false, doc: "Use pill (rounded) shape")
+  attr(:dot, :boolean, default: false, doc: "Show as a dot indicator only")
   attr(:class, :string, default: nil)
   attr(:rest, :global)
 
@@ -57,6 +59,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Badge do
       variant={@variant}
       size={@size}
       outline={@outline}
+      pill={@pill}
+      dot={@dot}
       class={@class}
       {@rest}
     >

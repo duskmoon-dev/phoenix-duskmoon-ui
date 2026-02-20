@@ -112,6 +112,16 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
     doc: "Button content"
   )
 
+  slot(:prefix,
+    required: false,
+    doc: "Content before button text (e.g., icon)"
+  )
+
+  slot(:suffix,
+    required: false,
+    doc: "Content after button text (e.g., icon)"
+  )
+
   slot(:confirm_action,
     required: false,
     doc: "Custom confirm action button content"
@@ -137,7 +147,9 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       style={@el_style}
       onclick={"document.getElementById('confirm-dialog-#{@id}').showModal()"}
     >
+      <span :for={prefix <- @prefix} slot="prefix">{render_slot(prefix)}</span>
       {render_slot(@inner_block)}
+      <span :for={suffix <- @suffix} slot="suffix">{render_slot(suffix)}</span>
     </el-dm-button>
     <el-dm-dialog id={"confirm-dialog-#{@id}"} role="dialog" aria-modal="true">
       <span slot="header" :if={String.length(@confirm_title) > 0}>
@@ -204,7 +216,9 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       phx-hook={if @rest["phx-click"], do: "WebComponentHook"}
       {@rest}
     >
+      <span :for={prefix <- @prefix} slot="prefix">{render_slot(prefix)}</span>
       {render_slot(@inner_block)}
+      <span :for={suffix <- @suffix} slot="suffix">{render_slot(suffix)}</span>
     </el-dm-button>
     """
   end

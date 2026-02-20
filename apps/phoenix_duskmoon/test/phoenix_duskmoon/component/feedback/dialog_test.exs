@@ -374,6 +374,30 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
     assert result =~ ~s[aria-label="Dismiss"]
   end
 
+  test "renders modal with no-backdrop" do
+    result = render_component(&dm_modal/1, %{no_backdrop: true, body: body()})
+
+    assert result =~ "no-backdrop"
+  end
+
+  test "renders modal without no-backdrop by default" do
+    result = render_component(&dm_modal/1, %{body: body()})
+
+    refute result =~ "no-backdrop"
+  end
+
+  test "renders modal with no_backdrop and backdrop combined" do
+    result =
+      render_component(&dm_modal/1, %{
+        no_backdrop: true,
+        backdrop: true,
+        body: body()
+      })
+
+    assert result =~ "no-backdrop"
+    assert result =~ ~s[backdrop="blur"]
+  end
+
   test "only first title slot gets the id for aria-labelledby" do
     result =
       render_component(&dm_modal/1, %{

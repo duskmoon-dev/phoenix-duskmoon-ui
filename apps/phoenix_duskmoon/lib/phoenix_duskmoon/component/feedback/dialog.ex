@@ -65,6 +65,11 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
     doc: "Make modal responsive"
   )
 
+  attr(:no_backdrop, :boolean,
+    default: false,
+    doc: "Hide the backdrop overlay"
+  )
+
   attr(:close_label, :string, default: "Close", doc: "Accessible label for the close button")
   attr(:rest, :global)
 
@@ -100,6 +105,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
       size={@size}
       backdrop={@backdrop && "blur"}
       responsive={@responsive}
+      no-backdrop={@no_backdrop}
       class={@class}
       {@rest}
     >

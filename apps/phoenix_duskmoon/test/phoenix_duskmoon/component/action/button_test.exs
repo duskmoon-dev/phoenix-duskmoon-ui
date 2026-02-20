@@ -499,6 +499,68 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     refute result =~ ">Cancel<"
   end
 
+  test "renders button with prefix slot" do
+    result =
+      render_component(&dm_btn/1, %{
+        prefix: [%{inner_block: fn _, _ -> "ICON" end}],
+        inner_block: %{inner_block: fn _, _ -> "Save" end}
+      })
+
+    assert result =~ ~s[slot="prefix"]
+    assert result =~ "ICON"
+    assert result =~ "Save"
+  end
+
+  test "renders button with suffix slot" do
+    result =
+      render_component(&dm_btn/1, %{
+        suffix: [%{inner_block: fn _, _ -> "ARROW" end}],
+        inner_block: %{inner_block: fn _, _ -> "Next" end}
+      })
+
+    assert result =~ ~s[slot="suffix"]
+    assert result =~ "ARROW"
+    assert result =~ "Next"
+  end
+
+  test "renders button with both prefix and suffix slots" do
+    result =
+      render_component(&dm_btn/1, %{
+        prefix: [%{inner_block: fn _, _ -> "LEFT" end}],
+        suffix: [%{inner_block: fn _, _ -> "RIGHT" end}],
+        inner_block: %{inner_block: fn _, _ -> "Center" end}
+      })
+
+    assert result =~ ~s[slot="prefix"]
+    assert result =~ ~s[slot="suffix"]
+    assert result =~ "LEFT"
+    assert result =~ "RIGHT"
+    assert result =~ "Center"
+  end
+
+  test "renders button without prefix/suffix when not provided" do
+    result =
+      render_component(&dm_btn/1, %{
+        inner_block: %{inner_block: fn _, _ -> "Simple" end}
+      })
+
+    refute result =~ ~s[slot="prefix"]
+    refute result =~ ~s[slot="suffix"]
+  end
+
+  test "renders confirm button with prefix and suffix slots" do
+    result =
+      render_component(&dm_btn/1, %{
+        confirm: "Are you sure?",
+        prefix: [%{inner_block: fn _, _ -> "WARN" end}],
+        inner_block: %{inner_block: fn _, _ -> "Delete" end}
+      })
+
+    assert result =~ ~s[slot="prefix"]
+    assert result =~ "WARN"
+    assert result =~ "Delete"
+  end
+
   test "noise button has type=button to prevent form submission" do
     result =
       render_component(&dm_btn/1, %{

@@ -1038,5 +1038,68 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         assert btn =~ ~s[type="button"], "Button missing type=button: #{btn}"
       end
     end
+
+    test "renders pagination with el_size attribute" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 50,
+          el_size: "sm"
+        })
+
+      assert result =~ ~s[size="sm"]
+    end
+
+    test "renders pagination with el_color attribute" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 50,
+          el_color: "primary"
+        })
+
+      assert result =~ ~s[color="primary"]
+    end
+
+    test "renders pagination without el_size by default" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 50
+        })
+
+      # Extract el-dm-pagination element to check it doesn't have size attr
+      [el_tag] = Regex.run(~r/<el-dm-pagination[^>]*>/, result)
+      refute el_tag =~ ~s[size="]
+    end
+
+    test "renders pagination without el_color by default" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 50
+        })
+
+      [el_tag] = Regex.run(~r/<el-dm-pagination[^>]*>/, result)
+      refute el_tag =~ ~s[color="]
+    end
+
+    test "renders pagination with el_size and el_color combined" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 3,
+          page_size: 10,
+          total: 100,
+          el_size: "lg",
+          el_color: "secondary"
+        })
+
+      assert result =~ ~s[size="lg"]
+      assert result =~ ~s[color="secondary"]
+    end
   end
 end
