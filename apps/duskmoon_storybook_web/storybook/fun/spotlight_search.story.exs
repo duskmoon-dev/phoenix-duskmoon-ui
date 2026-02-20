@@ -3,10 +3,6 @@ defmodule Storybook.Fun.SpotlightSearch do
 
   def function, do: &PhoenixDuskmoon.CssArt.SpotlightSearch.dm_art_spotlight_search/1
 
-  def imports do
-    [{PhoenixDuskmoon.Modal, dm_show_modal: 0}]
-  end
-
   def variations do
     [
       %Variation{
