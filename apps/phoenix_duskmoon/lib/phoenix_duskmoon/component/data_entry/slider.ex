@@ -83,7 +83,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
           step={@step}
           disabled={@disabled}
           aria-invalid={@errors != [] && "true"}
-          aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+          aria-describedby={
+            (@errors != [] && @id && "#{@id}-errors") ||
+              (@helper && @errors == [] && @id && "#{@id}-helper")
+          }
           class={[
             "slider",
             "slider-#{@size}",
@@ -99,7 +102,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
         <span>{@min}</span>
         <span>{@max}</span>
       </div>
-      <span :if={@helper && @errors == []} class="helper-text">{@helper}</span>
+      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>

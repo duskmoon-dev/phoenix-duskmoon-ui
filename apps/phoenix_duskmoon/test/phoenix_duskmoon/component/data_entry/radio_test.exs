@@ -307,6 +307,46 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
     refute result =~ "cursor-pointer"
   end
 
+  describe "aria-describedby helper linking" do
+    test "aria-describedby references helper id when helper present" do
+      result =
+        render_component(&dm_radio/1, %{
+          name: "theme",
+          id: "theme-dark",
+          value: "dark",
+          helper: "Choose your preferred theme"
+        })
+
+      assert result =~ ~s[aria-describedby="theme-dark-helper"]
+      assert result =~ ~s[id="theme-dark-helper"]
+    end
+
+    test "aria-describedby references errors instead of helper when errors present" do
+      result =
+        render_component(&dm_radio/1, %{
+          name: "theme",
+          id: "theme-dark",
+          value: "dark",
+          helper: "Choose your preferred theme",
+          errors: ["must select one"]
+        })
+
+      assert result =~ ~s[aria-describedby="theme-dark-errors"]
+      refute result =~ "theme-dark-helper"
+    end
+
+    test "no aria-describedby when neither helper nor errors present" do
+      result =
+        render_component(&dm_radio/1, %{
+          name: "theme",
+          id: "theme-dark",
+          value: "dark"
+        })
+
+      refute result =~ "aria-describedby"
+    end
+  end
+
   describe "helper text" do
     test "renders helper text when provided" do
       result =

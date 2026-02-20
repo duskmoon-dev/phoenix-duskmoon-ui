@@ -282,6 +282,43 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
     assert result =~ ~s(<input type="hidden" name="terms" value="false")
   end
 
+  describe "aria-describedby helper linking" do
+    test "aria-describedby references helper id when helper present" do
+      result =
+        render_component(&dm_checkbox/1, %{
+          name: "agree",
+          id: "agree-cb",
+          helper: "You must accept to continue"
+        })
+
+      assert result =~ ~s[aria-describedby="agree-cb-helper"]
+      assert result =~ ~s[id="agree-cb-helper"]
+    end
+
+    test "aria-describedby references errors instead of helper when errors present" do
+      result =
+        render_component(&dm_checkbox/1, %{
+          name: "agree",
+          id: "agree-cb",
+          helper: "You must accept to continue",
+          errors: ["must be accepted"]
+        })
+
+      assert result =~ ~s[aria-describedby="agree-cb-errors"]
+      refute result =~ "agree-cb-helper"
+    end
+
+    test "no aria-describedby when neither helper nor errors present" do
+      result =
+        render_component(&dm_checkbox/1, %{
+          name: "agree",
+          id: "agree-cb"
+        })
+
+      refute result =~ "aria-describedby"
+    end
+  end
+
   describe "helper text" do
     test "renders helper text when provided" do
       result =

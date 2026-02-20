@@ -284,6 +284,43 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
     assert result =~ ~s(<input type="hidden" name="dark_mode" value="false")
   end
 
+  describe "aria-describedby helper linking" do
+    test "aria-describedby references helper id when helper present" do
+      result =
+        render_component(&dm_switch/1, %{
+          name: "notifications",
+          id: "notif-switch",
+          helper: "Enable to receive push notifications"
+        })
+
+      assert result =~ ~s[aria-describedby="notif-switch-helper"]
+      assert result =~ ~s[id="notif-switch-helper"]
+    end
+
+    test "aria-describedby references errors instead of helper when errors present" do
+      result =
+        render_component(&dm_switch/1, %{
+          name: "notifications",
+          id: "notif-switch",
+          helper: "Enable to receive push notifications",
+          errors: ["must be enabled"]
+        })
+
+      assert result =~ ~s[aria-describedby="notif-switch-errors"]
+      refute result =~ "notif-switch-helper"
+    end
+
+    test "no aria-describedby when neither helper nor errors present" do
+      result =
+        render_component(&dm_switch/1, %{
+          name: "notifications",
+          id: "notif-switch"
+        })
+
+      refute result =~ "aria-describedby"
+    end
+  end
+
   describe "helper text" do
     test "renders helper text when provided" do
       result =

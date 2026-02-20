@@ -69,7 +69,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
           role="switch"
           aria-checked={to_string(@checked)}
           aria-invalid={@errors != [] && "true"}
-          aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+          aria-describedby={
+            (@errors != [] && @id && "#{@id}-errors") ||
+              (@helper && @errors == [] && @id && "#{@id}-helper")
+          }
           name={@name}
           id={@id}
           value="true"
@@ -80,7 +83,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
         />
         <span :if={@label} class={@label_class}>{@label}</span>
       </label>
-      <span :if={@helper && @errors == []} class="helper-text">{@helper}</span>
+      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>

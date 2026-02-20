@@ -494,6 +494,49 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
     end
   end
 
+  describe "aria-describedby helper linking" do
+    test "aria-describedby references helper id when helper present" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "country",
+          id: "country-select",
+          value: nil,
+          helper: "Choose your country",
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ ~s[aria-describedby="country-select-helper"]
+      assert result =~ ~s[id="country-select-helper"]
+    end
+
+    test "aria-describedby references errors instead of helper when errors present" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "country",
+          id: "country-select",
+          value: nil,
+          helper: "Choose your country",
+          errors: ["is required"],
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ ~s[aria-describedby="country-select-errors"]
+      refute result =~ "country-select-helper"
+    end
+
+    test "no aria-describedby when neither helper nor errors present" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "country",
+          id: "country-select",
+          value: nil,
+          options: [{"us", "USA"}]
+        })
+
+      refute result =~ "aria-describedby"
+    end
+  end
+
   describe "helper text" do
     test "renders helper text when provided" do
       result =

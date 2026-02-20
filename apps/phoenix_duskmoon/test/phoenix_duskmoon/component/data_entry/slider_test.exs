@@ -408,6 +408,46 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
     assert result =~ "slider-lg"
   end
 
+  describe "aria-describedby helper linking" do
+    test "aria-describedby references helper id when helper present" do
+      result =
+        render_component(&dm_slider/1, %{
+          name: "vol",
+          id: "vol-slider",
+          value: 50,
+          helper: "Adjust the volume level"
+        })
+
+      assert result =~ ~s[aria-describedby="vol-slider-helper"]
+      assert result =~ ~s[id="vol-slider-helper"]
+    end
+
+    test "aria-describedby references errors instead of helper when errors present" do
+      result =
+        render_component(&dm_slider/1, %{
+          name: "vol",
+          id: "vol-slider",
+          value: 50,
+          helper: "Adjust the volume level",
+          errors: ["is out of range"]
+        })
+
+      assert result =~ ~s[aria-describedby="vol-slider-errors"]
+      refute result =~ "vol-slider-helper"
+    end
+
+    test "no aria-describedby when neither helper nor errors present" do
+      result =
+        render_component(&dm_slider/1, %{
+          name: "vol",
+          id: "vol-slider",
+          value: 50
+        })
+
+      refute result =~ "aria-describedby"
+    end
+  end
+
   describe "helper text" do
     test "renders helper text when provided" do
       result =

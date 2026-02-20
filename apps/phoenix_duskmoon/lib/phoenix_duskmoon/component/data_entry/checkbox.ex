@@ -84,7 +84,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
           checked={@checked}
           disabled={@disabled}
           aria-invalid={@errors != [] && "true"}
-          aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+          aria-describedby={
+            (@errors != [] && @id && "#{@id}-errors") ||
+              (@helper && @errors == [] && @id && "#{@id}-helper")
+          }
           class={[
             "checkbox",
             "checkbox-#{@size}",
@@ -99,7 +102,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
           {@label}
         </span>
       </label>
-      <span :if={@helper && @errors == []} class="helper-text">{@helper}</span>
+      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>

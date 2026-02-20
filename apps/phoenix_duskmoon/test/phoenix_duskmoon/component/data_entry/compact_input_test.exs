@@ -730,6 +730,82 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
     end
   end
 
+  describe "aria-describedby helper linking" do
+    test "aria-describedby references helper id when helper present" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "email",
+          id: "email-field",
+          label: "Email",
+          value: nil,
+          helper: "We will never share your email"
+        })
+
+      assert result =~ ~s[aria-describedby="email-field-helper"]
+      assert result =~ ~s[id="email-field-helper"]
+    end
+
+    test "aria-describedby references errors instead of helper when errors present" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "email",
+          id: "email-field",
+          label: "Email",
+          value: nil,
+          helper: "We will never share your email",
+          errors: ["is invalid"]
+        })
+
+      assert result =~ ~s[aria-describedby="email-field-errors"]
+      refute result =~ "email-field-helper"
+    end
+
+    test "no aria-describedby when neither helper nor errors present" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "email",
+          id: "email-field",
+          label: "Email",
+          value: nil
+        })
+
+      refute result =~ "aria-describedby"
+    end
+
+    test "compact select aria-describedby references helper id" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "country",
+          id: "country-field",
+          label: "Country",
+          type: "select",
+          value: nil,
+          helper: "Select your country",
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ ~s[aria-describedby="country-field-helper"]
+      assert result =~ ~s[id="country-field-helper"]
+    end
+
+    test "compact select aria-describedby references errors instead of helper" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "country",
+          id: "country-field",
+          label: "Country",
+          type: "select",
+          value: nil,
+          helper: "Select your country",
+          errors: ["is required"],
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ ~s[aria-describedby="country-field-errors"]
+      refute result =~ "country-field-helper"
+    end
+  end
+
   describe "helper text" do
     test "renders helper text when provided" do
       result =

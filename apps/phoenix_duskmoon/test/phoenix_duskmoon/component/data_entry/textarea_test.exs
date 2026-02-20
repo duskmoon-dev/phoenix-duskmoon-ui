@@ -377,6 +377,46 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
     end
   end
 
+  describe "aria-describedby helper linking" do
+    test "aria-describedby references helper id when helper present" do
+      result =
+        render_component(&dm_textarea/1, %{
+          name: "bio",
+          id: "bio-textarea",
+          value: nil,
+          helper: "Maximum 500 characters"
+        })
+
+      assert result =~ ~s[aria-describedby="bio-textarea-helper"]
+      assert result =~ ~s[id="bio-textarea-helper"]
+    end
+
+    test "aria-describedby references errors instead of helper when errors present" do
+      result =
+        render_component(&dm_textarea/1, %{
+          name: "bio",
+          id: "bio-textarea",
+          value: nil,
+          helper: "Maximum 500 characters",
+          errors: ["is too short"]
+        })
+
+      assert result =~ ~s[aria-describedby="bio-textarea-errors"]
+      refute result =~ "bio-textarea-helper"
+    end
+
+    test "no aria-describedby when neither helper nor errors present" do
+      result =
+        render_component(&dm_textarea/1, %{
+          name: "bio",
+          id: "bio-textarea",
+          value: nil
+        })
+
+      refute result =~ "aria-describedby"
+    end
+  end
+
   describe "helper text" do
     test "renders helper text when provided" do
       result =
