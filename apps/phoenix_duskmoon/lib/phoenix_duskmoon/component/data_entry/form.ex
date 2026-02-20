@@ -149,14 +149,26 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
   attr(:title, :string, default: nil, doc: "alert title")
   attr(:dismissible, :boolean, default: false, doc: "whether the alert can be dismissed")
   attr(:compact, :boolean, default: false, doc: "use compact styling")
+  attr(:filled, :boolean, default: false, doc: "use filled style (solid background)")
+  attr(:outlined, :boolean, default: false, doc: "use outlined style (border emphasis)")
   attr(:rest, :global)
   slot(:inner_block, required: true)
 
   def dm_alert(assigns) do
+    element_variant =
+      cond do
+        assigns.filled -> "filled"
+        assigns.outlined -> "outlined"
+        true -> nil
+      end
+
+    assigns = assign(assigns, :element_variant, element_variant)
+
     ~H"""
     <el-dm-alert
       id={@id}
       type={@variant}
+      variant={@element_variant}
       title={@title}
       dismissible={@dismissible}
       compact={@compact}

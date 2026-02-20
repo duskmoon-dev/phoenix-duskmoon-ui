@@ -431,4 +431,81 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
       assert result =~ ~s[data-testid="alert-1"]
     end
   end
+
+  describe "dm_alert style variants (filled, outlined)" do
+    test "renders alert with filled style" do
+      result =
+        render_component(&dm_alert/1, %{
+          variant: "info",
+          filled: true,
+          inner_block: inner_block("Filled alert")
+        })
+
+      assert result =~ ~s[variant="filled"]
+      assert result =~ "Filled alert"
+    end
+
+    test "renders alert with outlined style" do
+      result =
+        render_component(&dm_alert/1, %{
+          variant: "warning",
+          outlined: true,
+          inner_block: inner_block("Outlined alert")
+        })
+
+      assert result =~ ~s[variant="outlined"]
+      assert result =~ "Outlined alert"
+    end
+
+    test "renders alert without variant attr by default" do
+      result =
+        render_component(&dm_alert/1, %{
+          inner_block: inner_block("Default alert")
+        })
+
+      refute result =~ ~s[variant="filled"]
+      refute result =~ ~s[variant="outlined"]
+    end
+
+    test "renders filled alert with all types" do
+      for type <- ~w(info success warning error) do
+        result =
+          render_component(&dm_alert/1, %{
+            variant: type,
+            filled: true,
+            inner_block: inner_block("msg")
+          })
+
+        assert result =~ ~s[type="#{type}"]
+        assert result =~ ~s[variant="filled"]
+      end
+    end
+
+    test "renders outlined alert with title and compact" do
+      result =
+        render_component(&dm_alert/1, %{
+          variant: "error",
+          outlined: true,
+          title: "Error",
+          compact: true,
+          inner_block: inner_block("Something failed")
+        })
+
+      assert result =~ ~s[variant="outlined"]
+      assert result =~ ~s[type="error"]
+      assert result =~ ~s[title="Error"]
+      assert result =~ "compact"
+    end
+
+    test "filled takes precedence over outlined when both set" do
+      result =
+        render_component(&dm_alert/1, %{
+          filled: true,
+          outlined: true,
+          inner_block: inner_block("msg")
+        })
+
+      assert result =~ ~s[variant="filled"]
+    end
+  end
 end

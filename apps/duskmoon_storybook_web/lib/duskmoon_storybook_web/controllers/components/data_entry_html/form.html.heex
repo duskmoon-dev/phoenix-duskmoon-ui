@@ -44,6 +44,30 @@
     <.dm_alert variant="error" title="Error">An error occurred while saving.</.dm_alert>
   </div>
 
+  <h3 class="text-xl font-semibold mt-8 mb-4">Alerts — Filled</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_alert variant="info" filled title="Info">Filled info alert with solid background.</.dm_alert>
+    <.dm_alert variant="success" filled title="Success">Filled success alert.</.dm_alert>
+    <.dm_alert variant="warning" filled title="Warning">Filled warning alert.</.dm_alert>
+    <.dm_alert variant="error" filled title="Error">Filled error alert.</.dm_alert>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Alerts — Outlined</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_alert variant="info" outlined title="Info">Outlined info alert with border emphasis.</.dm_alert>
+    <.dm_alert variant="success" outlined title="Success">Outlined success alert.</.dm_alert>
+    <.dm_alert variant="warning" outlined title="Warning">Outlined warning alert.</.dm_alert>
+    <.dm_alert variant="error" outlined title="Error">Outlined error alert.</.dm_alert>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Alerts — Compact &amp; Dismissible</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_alert variant="info" compact>Compact info alert without title.</.dm_alert>
+    <.dm_alert variant="success" filled compact>Compact filled success alert.</.dm_alert>
+    <.dm_alert variant="warning" dismissible title="Dismissible">Click the close button to dismiss.</.dm_alert>
+    <.dm_alert variant="error" outlined dismissible compact>Compact outlined dismissible error.</.dm_alert>
+  </div>
+
   <h3 class="text-xl font-semibold mt-8 mb-4">Complete Form Example</h3>
   <div class="max-w-md">
     <.dm_form for={@conn} action={~p"/"} method="get" class="flex flex-col gap-4">
