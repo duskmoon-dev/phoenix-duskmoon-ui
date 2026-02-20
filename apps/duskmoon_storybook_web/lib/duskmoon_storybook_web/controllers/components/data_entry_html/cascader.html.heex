@@ -1,0 +1,164 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/cascader"}>Data Entry</:crumb>
+  <:crumb>Cascader</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Cascader</span>
+    <span class="text-sm opacity-60">dm_cascader</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Cascader component using `@duskmoon-dev/core` CSS classes.
+  Renders a cascading multi-panel select where each panel shows
+  one level of hierarchy. Selecting a parent reveals its children
+  in the next panel.
+
+  ## Usage
+  ```elixir
+  <.dm_cascader
+    options={[
+      %{value: "asia", label: "Asia", children: [
+        %{value: "cn", label: "China", children: [
+          %{value: "bj", label: "Beijing"}
+        ]}
+      ]}
+    ]}
+    selected_path={["asia", "cn", "bj"]}
+  />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <% cascader_options = [
+    %{value: "asia", label: "Asia", children: [
+      %{value: "cn", label: "China", children: [
+        %{value: "bj", label: "Beijing"},
+        %{value: "sh", label: "Shanghai"},
+        %{value: "gz", label: "Guangzhou"}
+      ]},
+      %{value: "jp", label: "Japan", children: [
+        %{value: "tk", label: "Tokyo"},
+        %{value: "os", label: "Osaka"}
+      ]},
+      %{value: "kr", label: "South Korea"}
+    ]},
+    %{value: "eu", label: "Europe", children: [
+      %{value: "uk", label: "United Kingdom", children: [
+        %{value: "ldn", label: "London"},
+        %{value: "mnc", label: "Manchester"}
+      ]},
+      %{value: "de", label: "Germany", children: [
+        %{value: "ber", label: "Berlin"},
+        %{value: "mun", label: "Munich"}
+      ]},
+      %{value: "fr", label: "France"}
+    ]},
+    %{value: "na", label: "North America", children: [
+      %{value: "us", label: "United States"},
+      %{value: "ca", label: "Canada"}
+    ]}
+  ] %>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Cascader</h3>
+  <div class="mb-4">
+    <.dm_cascader
+      options={cascader_options}
+      placeholder="Select location..."
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Selected Path</h3>
+  <div class="mb-4">
+    <.dm_cascader
+      options={cascader_options}
+      selected_path={["asia", "cn", "bj"]}
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Open with Panels</h3>
+  <div class="mb-4" style="min-height: 250px">
+    <.dm_cascader
+      options={cascader_options}
+      selected_path={["eu", "uk"]}
+      open
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Size Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_cascader
+      options={cascader_options}
+      selected_path={["asia", "cn", "bj"]}
+      size="sm"
+    />
+    <.dm_cascader
+      options={cascader_options}
+      selected_path={["asia", "cn", "bj"]}
+    />
+    <.dm_cascader
+      options={cascader_options}
+      selected_path={["asia", "cn", "bj"]}
+      size="lg"
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Variant Styles</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_cascader
+      options={cascader_options}
+      selected_path={["asia"]}
+      variant="outlined"
+    />
+    <.dm_cascader
+      options={cascader_options}
+      selected_path={["asia"]}
+      variant="filled"
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Custom Separator</h3>
+  <div class="mb-4">
+    <.dm_cascader
+      options={cascader_options}
+      selected_path={["eu", "de", "ber"]}
+      separator=" > "
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">States</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_cascader
+      options={cascader_options}
+      selected_path={["asia"]}
+      error
+    />
+    <.dm_cascader
+      options={cascader_options}
+      disabled
+      placeholder="Disabled"
+    />
+    <.dm_cascader
+      options={cascader_options}
+      loading
+      placeholder="Loading..."
+    />
+    <.dm_cascader
+      options={cascader_options}
+      selected_path={["asia", "cn"]}
+      clearable
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Deep Panels (Open)</h3>
+  <div class="mb-4" style="min-height: 250px">
+    <.dm_cascader
+      options={cascader_options}
+      selected_path={["asia", "cn", "bj"]}
+      open
+      searchable
+    />
+  </div>
+</.dm_card>

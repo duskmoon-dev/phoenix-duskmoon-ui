@@ -72,4 +72,8 @@ defmodule DuskmoonStorybookWeb.Components.DataEntryController do
   def tree_select(conn, _params) do
     render(conn, :tree_select, active_menu: "data-entry-tree-select")
   end
+
+  def cascader(conn, _params) do
+    render(conn, :cascader, active_menu: "data-entry-cascader")
+  end
 end
