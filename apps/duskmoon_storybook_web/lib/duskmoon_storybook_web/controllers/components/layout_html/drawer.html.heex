@@ -43,4 +43,17 @@
     <:header>Wide Drawer</:header>
     <p>This drawer is 400px wide.</p>
   </.dm_drawer>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Modal Drawer</h3>
+  <p class="text-sm opacity-60 mb-4">
+    Modal drawers display a backdrop overlay and trap focus within the panel.
+  </p>
+  <.dm_drawer id="demo-modal" open modal position="right" width="360px">
+    <:header>Modal Drawer</:header>
+    <p>This drawer uses the <code>modal</code> attribute to show a backdrop overlay.</p>
+    <p class="mt-2">Focus is trapped within the drawer panel when modal is active.</p>
+    <:footer>
+      <span class="text-sm opacity-60">Modal footer actions</span>
+    </:footer>
+  </.dm_drawer>
 </.dm_card>

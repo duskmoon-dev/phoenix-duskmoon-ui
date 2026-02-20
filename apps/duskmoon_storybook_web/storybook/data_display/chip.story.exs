@@ -7,26 +7,80 @@ defmodule Storybook.DataDisplay.Chip do
     [
       %Variation{
         id: :default,
-        description: "Default chip",
+        description: "Default chip (no color)",
         slots: ["Default"]
       },
       %Variation{
-        id: :colors,
-        description: "Color variants",
+        id: :primary,
+        description: "Primary color",
         attributes: %{color: "primary"},
         slots: ["Primary"]
       },
       %Variation{
+        id: :secondary,
+        description: "Secondary color",
+        attributes: %{color: "secondary"},
+        slots: ["Secondary"]
+      },
+      %Variation{
+        id: :tertiary,
+        description: "Tertiary color",
+        attributes: %{color: "tertiary"},
+        slots: ["Tertiary"]
+      },
+      %Variation{
+        id: :success,
+        description: "Success color",
+        attributes: %{color: "success"},
+        slots: ["Success"]
+      },
+      %Variation{
+        id: :warning,
+        description: "Warning color",
+        attributes: %{color: "warning"},
+        slots: ["Warning"]
+      },
+      %Variation{
+        id: :error,
+        description: "Error color",
+        attributes: %{color: "error"},
+        slots: ["Error"]
+      },
+      %Variation{
+        id: :info,
+        description: "Info color",
+        attributes: %{color: "info"},
+        slots: ["Info"]
+      },
+      %Variation{
         id: :outlined,
         description: "Outlined variant",
-        attributes: %{variant: "outlined", color: "secondary"},
+        attributes: %{variant: "outlined", color: "primary"},
         slots: ["Outlined"]
       },
       %Variation{
         id: :soft,
         description: "Soft variant",
-        attributes: %{variant: "soft", color: "tertiary"},
+        attributes: %{variant: "soft", color: "secondary"},
         slots: ["Soft"]
+      },
+      %Variation{
+        id: :small,
+        description: "Small size",
+        attributes: %{size: "sm", color: "primary"},
+        slots: ["Small"]
+      },
+      %Variation{
+        id: :medium,
+        description: "Medium size (default)",
+        attributes: %{size: "md", color: "primary"},
+        slots: ["Medium"]
+      },
+      %Variation{
+        id: :large,
+        description: "Large size",
+        attributes: %{size: "lg", color: "primary"},
+        slots: ["Large"]
       },
       %Variation{
         id: :deletable,
@@ -45,12 +99,6 @@ defmodule Storybook.DataDisplay.Chip do
         description: "Disabled chip",
         attributes: %{color: "info", disabled: true},
         slots: ["Disabled"]
-      },
-      %Variation{
-        id: :sizes,
-        description: "Small size",
-        attributes: %{size: "sm", color: "warning"},
-        slots: ["Small"]
       }
     ]
   end

@@ -43,6 +43,45 @@ defmodule Storybook.Navigation.Steps do
         }
       },
       %Variation{
+        id: :primary_color,
+        description: "Primary color (default)",
+        attributes: %{
+          current: 1,
+          color: "primary",
+          steps: [
+            %{label: "Plan"},
+            %{label: "Build"},
+            %{label: "Deploy"}
+          ]
+        }
+      },
+      %Variation{
+        id: :secondary_color,
+        description: "Secondary color",
+        attributes: %{
+          current: 1,
+          color: "secondary",
+          steps: [
+            %{label: "Draft"},
+            %{label: "Review"},
+            %{label: "Publish"}
+          ]
+        }
+      },
+      %Variation{
+        id: :tertiary_color,
+        description: "Tertiary color",
+        attributes: %{
+          current: 2,
+          color: "tertiary",
+          steps: [
+            %{label: "Input"},
+            %{label: "Process"},
+            %{label: "Output"}
+          ]
+        }
+      },
+      %Variation{
         id: :success_color,
         attributes: %{
           current: 2,
@@ -52,6 +91,45 @@ defmodule Storybook.Navigation.Steps do
             %{label: "Processing"},
             %{label: "Shipped"},
             %{label: "Delivered"}
+          ]
+        }
+      },
+      %Variation{
+        id: :warning_color,
+        description: "Warning color",
+        attributes: %{
+          current: 1,
+          color: "warning",
+          steps: [
+            %{label: "Check"},
+            %{label: "Review"},
+            %{label: "Approve"}
+          ]
+        }
+      },
+      %Variation{
+        id: :error_color,
+        description: "Error color",
+        attributes: %{
+          current: 0,
+          color: "error",
+          steps: [
+            %{label: "Detect"},
+            %{label: "Diagnose"},
+            %{label: "Fix"}
+          ]
+        }
+      },
+      %Variation{
+        id: :info_color,
+        description: "Info color",
+        attributes: %{
+          current: 2,
+          color: "info",
+          steps: [
+            %{label: "Welcome"},
+            %{label: "Tutorial"},
+            %{label: "Complete"}
           ]
         }
       },
