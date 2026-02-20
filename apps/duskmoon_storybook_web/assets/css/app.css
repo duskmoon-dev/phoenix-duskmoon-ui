@@ -40,11 +40,6 @@
     animation: 10s ease-in-out 1s infinite reverse bg-animation;
   }
 
-  .aniamite-bg {
-    background-size: 400%;
-    animation: 20s linear 1s infinite alternate bg-animation;
-  }
-
   @keyframes bg-animation {
     0% {
       background-position: 0% 50%;
@@ -57,29 +52,6 @@
     }
   }
 
-  .darkmoon-hero-text {
-    text-shadow: #fc0 1px 0 10px;
-    transition: all 1s;
-    background-image: linear-gradient(to top left,  #fac2b0, #b4e3da);
-    background-size: 400%;
-    animation: 4s linear 1s infinite alternate bg-animation;
-    font-size: clamp(3rem, 6vw, 6rem);
-  }
-  .darkmoon-hero-p-text {
-    text-shadow: 1px -2px 2px #222a30;
-    font-size: clamp(1rem, 3vw, 3rem);
-  }
-
-  app-bar {
-    --btn-link: rgb(238, 249, 238);
-  }
-
-  .invalid-feedback {
-    color: #a94442;
-    display: block;
-    margin: -1rem 0 2rem;
-  }
-
   .phx-click-loading {
     opacity: 0.5;
     transition: opacity 1s ease-out;
@@ -88,26 +60,5 @@
   .lsb-sandbox {
     width: 100%;
     height: fit-content;
-  }
-
-  .page-section-group {
-    @apply flex flex-col gap-1 py-1;
-
-    .page-section {
-      @apply w-full py-16 flex flex-col;
-      background-color: var(--color-base-300, #e5e7eb);
-      color: var(--color-base-content, currentColor);
-    }
-  }
-
-  .fun-page-section-group {
-    @apply flex flex-col gap-1 py-1;
-
-    .fun-page-section {
-      @apply w-full py-16 flex flex-col;
-      background-color: var(--color-base-300, #e5e7eb);
-      color: var(--color-base-content, currentColor);
-    }
-
   }
 }
