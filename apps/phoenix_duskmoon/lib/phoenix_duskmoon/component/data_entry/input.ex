@@ -45,13 +45,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
       <.dm_input name="my-input" errors={["oh no!"]} />
   """
   @doc type: :component
-  attr(:field_class, :any, default: nil)
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
-  attr(:classic, :boolean, default: false)
-  attr(:name, :any)
-  attr(:label, :string, default: nil)
-  attr(:value, :any)
+  attr(:field_class, :any, default: nil, doc: "additional CSS classes for the field wrapper")
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes for the outer wrapper")
+  attr(:classic, :boolean, default: false, doc: "use classic input styling instead of modern")
+  attr(:name, :any, doc: "HTML name attribute for form submission")
+  attr(:label, :string, default: nil, doc: "text label displayed above the input")
+  attr(:value, :any, doc: "the input value")
 
   attr(:color, :string,
     default: nil,
@@ -69,14 +69,15 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     values: ~w(checkbox color date datetime-local email file hidden month number password
                range radio search select tel text textarea time url week checkbox_group
                radio_group toggle range_slider rating datepicker timepicker color_picker switch
-               search_with_suggestions file_upload rich_text tags slider_range password_strength)
+               search_with_suggestions file_upload rich_text tags slider_range password_strength),
+    doc: "the input type"
   )
 
   attr(:field, Phoenix.HTML.FormField,
     doc: "a form field struct retrieved from the form, for example: @form[:email]"
   )
 
-  attr(:errors, :list, default: [])
+  attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:checked, :boolean, doc: "the checked flag for checkbox inputs")
   attr(:prompt, :string, default: nil, doc: "the prompt for select inputs")
   attr(:options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2")

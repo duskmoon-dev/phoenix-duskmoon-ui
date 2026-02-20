@@ -137,18 +137,18 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
 
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
-  attr(:body_class, :any, default: nil)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes for the card")
+  attr(:body_class, :any, default: nil, doc: "additional CSS classes for the card body")
   attr(:skeleton_class, :any, default: nil, doc: "CSS classes for skeleton loader")
   attr(:assign, :any, default: nil, doc: "Phoenix.LiveView.AsyncResult assign")
 
-  attr(:variant, :string, default: nil)
-  attr(:shadow, :string, default: nil)
-  attr(:interactive, :boolean, default: false, doc: "Make card clickable/hoverable")
-  attr(:padding, :string, default: nil, doc: "Card padding size")
-  attr(:image, :string, default: nil)
-  attr(:image_alt, :string, default: "")
+  attr(:variant, :string, default: nil, doc: "card style variant")
+  attr(:shadow, :string, default: nil, doc: "card shadow depth")
+  attr(:interactive, :boolean, default: false, doc: "make card clickable/hoverable")
+  attr(:padding, :string, default: nil, doc: "card padding size")
+  attr(:image, :string, default: nil, doc: "card image URL")
+  attr(:image_alt, :string, default: "", doc: "alt text for the card image")
 
   attr(:rest, :global)
 

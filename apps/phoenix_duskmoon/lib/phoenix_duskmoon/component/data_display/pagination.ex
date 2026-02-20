@@ -178,15 +178,19 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
 
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
-  attr(:loading, :boolean, default: false, doc: "Show loading state")
-  attr(:show_page_jumper, :boolean, default: false, doc: "Show page number input")
-  attr(:page_size, :integer, default: 10)
-  attr(:page_num, :integer, default: 1)
-  attr(:total, :integer, default: 0)
-  attr(:show_total, :boolean, default: false)
-  attr(:update_event, :string, default: "update_current_page")
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
+  attr(:loading, :boolean, default: false, doc: "show loading state")
+  attr(:show_page_jumper, :boolean, default: false, doc: "show page number input")
+  attr(:page_size, :integer, default: 10, doc: "items per page")
+  attr(:page_num, :integer, default: 1, doc: "current page number")
+  attr(:total, :integer, default: 0, doc: "total number of items")
+  attr(:show_total, :boolean, default: false, doc: "show total count")
+
+  attr(:update_event, :string,
+    default: "update_current_page",
+    doc: "LiveView event name for page changes"
+  )
 
   attr(:prev_label, :string,
     default: "Previous",
