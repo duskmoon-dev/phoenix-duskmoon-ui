@@ -1,0 +1,76 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/time-input"}>Data Entry</:crumb>
+  <:crumb>Time Input</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Time Input</span>
+    <span class="text-sm opacity-60">dm_time_input</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Time input component using `@duskmoon-dev/core` CSS classes.
+  Renders segmented input fields for hours, minutes, and optionally
+  seconds with AM/PM period toggle.
+
+  ## Usage
+  ```elixir
+  <.dm_time_input name="start_time" />
+
+  <.dm_time_input
+    show_seconds
+    show_period
+    color="primary"
+    size="lg"
+  />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Time Input</h3>
+  <div class="mb-4">
+    <.dm_time_input />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Seconds</h3>
+  <div class="mb-4">
+    <.dm_time_input show_seconds />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With AM/PM Period</h3>
+  <div class="mb-4">
+    <.dm_time_input show_period />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Full (Seconds + Period)</h3>
+  <div class="mb-4">
+    <.dm_time_input show_seconds show_period />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Size Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_time_input size="sm" />
+    <.dm_time_input />
+    <.dm_time_input size="lg" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Color Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_time_input color="primary" />
+    <.dm_time_input color="secondary" />
+    <.dm_time_input color="tertiary" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Filled Variant</h3>
+  <div class="mb-4">
+    <.dm_time_input variant="filled" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">States</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_time_input error />
+    <.dm_time_input disabled />
+  </div>
+</.dm_card>

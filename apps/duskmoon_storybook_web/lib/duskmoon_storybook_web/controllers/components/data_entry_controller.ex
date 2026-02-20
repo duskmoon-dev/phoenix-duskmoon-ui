@@ -56,4 +56,8 @@ defmodule DuskmoonStorybookWeb.Components.DataEntryController do
   def textarea(conn, _params) do
     render(conn, :textarea, active_menu: "data-entry-textarea")
   end
+
+  def time_input(conn, _params) do
+    render(conn, :time_input, active_menu: "data-entry-time-input")
+  end
 end

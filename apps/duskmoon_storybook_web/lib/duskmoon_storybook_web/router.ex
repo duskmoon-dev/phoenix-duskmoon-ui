@@ -71,6 +71,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/data-entry/slider", DataEntryController, :slider
     get "/data-entry/switch", DataEntryController, :switch
     get "/data-entry/textarea", DataEntryController, :textarea
+    get "/data-entry/time-input", DataEntryController, :time_input
 
     # Feedback
     get "/feedback/dialog", FeedbackController, :dialog
