@@ -58,6 +58,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
         @class
       ]}
       role="status"
+      aria-live="polite"
       aria-label={@text || @loading_label}
       aria-busy="true"
       {@rest}
@@ -168,6 +169,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
       id={@id}
       class={["loader-#{@random_inner}", @class]}
       role="status"
+      aria-live="polite"
       aria-label={@loading_label}
       aria-busy="true"
       {@rest}

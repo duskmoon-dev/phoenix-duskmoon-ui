@@ -94,7 +94,9 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
         popovertarget={@popover_id}
         style={"anchor-name: #{@anchor_name}; appearance: none; background: none; border: none; padding: 0; margin: 0; cursor: pointer; display: inline-flex; font: inherit; color: inherit;"}
         class={trigger[:class]}
-        aria-haspopup="true"
+        aria-haspopup="menu"
+        aria-expanded="false"
+        aria-controls={@popover_id}
       >
         {render_slot(trigger)}
       </button>
@@ -102,7 +104,7 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
         :for={content <- @content}
         id={@popover_id}
         popover
-        ontoggle="this.classList.toggle('popover-show', this.matches(':popover-open'))"
+        ontoggle="this.classList.toggle('popover-show', this.matches(':popover-open')); var b=this.previousElementSibling; if(b) b.setAttribute('aria-expanded', this.matches(':popover-open'))"
         class={[
           "popover popover-menu",
           popover_position(@position),

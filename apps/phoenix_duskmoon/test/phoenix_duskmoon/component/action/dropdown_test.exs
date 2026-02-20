@@ -47,7 +47,7 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
         content: content()
       })
 
-    assert result =~ ~s[aria-haspopup="true"]
+    assert result =~ ~s[aria-haspopup="menu"]
   end
 
   test "renders trigger with anchor-name in style" do
@@ -330,7 +330,7 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
     assert result =~ ~s[data-testid="full-dropdown"]
     assert result =~ ~s[id="full-dropdown-popover"]
     assert result =~ ~s[popovertarget="full-dropdown-popover"]
-    assert result =~ ~s[aria-haspopup="true"]
+    assert result =~ ~s[aria-haspopup="menu"]
     assert result =~ ~s[role="menu"]
   end
 end

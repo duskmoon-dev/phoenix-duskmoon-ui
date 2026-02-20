@@ -461,6 +461,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             <button
               type="button"
               aria-label={"Rate #{i} out of #{@max}"}
+              aria-pressed={to_string(i <= (@value || 0))}
               class={[
                 "dm-btn dm-btn--ghost dm-btn--sm p-1",
                 i <= (@value || 0) && "text-warning",
@@ -924,7 +925,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           </button>
         </div>
         <div class="flex items-center gap-2">
-          <div class="flex-1 h-2 bg-base-200 rounded-full overflow-hidden">
+          <div
+            class="flex-1 h-2 bg-base-200 rounded-full overflow-hidden"
+            role="progressbar"
+            aria-valuenow={strength_value(@strength)}
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-label="Password strength"
+          >
             <div
               class={[
                 "h-full transition-all duration-300",
@@ -985,6 +993,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     </div>
     """
   end
+
+  defp strength_value("weak"), do: 33
+  defp strength_value("medium"), do: 66
+  defp strength_value("strong"), do: 100
+  defp strength_value(_), do: 0
 
   defp calculate_password_strength(password) do
     cond do

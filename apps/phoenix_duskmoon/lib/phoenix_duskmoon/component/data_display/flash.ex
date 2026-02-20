@@ -39,6 +39,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
       phx-mounted={@autoshow && JS.show(to: "##{@id}")}
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> JS.hide(to: "##{@id}")}
       role="alert"
+      aria-live={if(@kind == :error, do: "assertive", else: "polite")}
+      aria-atomic="true"
       class={"hidden w-80 sm:w-96 dm-toast dm-toast--top dm-toast--end z-[1000]"}
       {@rest}
     >
