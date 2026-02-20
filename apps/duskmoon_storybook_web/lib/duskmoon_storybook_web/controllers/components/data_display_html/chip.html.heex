@@ -1,0 +1,55 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/chip"}>Data Display</:crumb>
+  <:crumb>Chip</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Chip</span>
+    <span class="text-sm opacity-60">dm_chip</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Chip component for displaying tags, filters, or selections. Wraps `<el-dm-chip>` custom element.
+
+  ## Usage
+  ```elixir
+  <.dm_chip color="primary">Tag</.dm_chip>
+  <.dm_chip color="error" deletable>Remove</.dm_chip>
+  <.dm_chip color="success" selected>Active</.dm_chip>
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Color Variants</h3>
+  <div class="flex flex-wrap gap-2">
+    <.dm_chip color="primary">Primary</.dm_chip>
+    <.dm_chip color="secondary">Secondary</.dm_chip>
+    <.dm_chip color="tertiary">Tertiary</.dm_chip>
+    <.dm_chip color="success">Success</.dm_chip>
+    <.dm_chip color="warning">Warning</.dm_chip>
+    <.dm_chip color="error">Error</.dm_chip>
+    <.dm_chip color="info">Info</.dm_chip>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Style Variants</h3>
+  <div class="flex flex-wrap gap-2">
+    <.dm_chip variant="filled" color="primary">Filled</.dm_chip>
+    <.dm_chip variant="outlined" color="primary">Outlined</.dm_chip>
+    <.dm_chip variant="soft" color="primary">Soft</.dm_chip>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
+  <div class="flex flex-wrap items-center gap-2">
+    <.dm_chip size="sm" color="info">Small</.dm_chip>
+    <.dm_chip size="md" color="info">Medium</.dm_chip>
+    <.dm_chip size="lg" color="info">Large</.dm_chip>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Interactive States</h3>
+  <div class="flex flex-wrap gap-2">
+    <.dm_chip color="error" deletable>Deletable</.dm_chip>
+    <.dm_chip color="success" selected>Selected</.dm_chip>
+    <.dm_chip color="info" disabled>Disabled</.dm_chip>
+  </div>
+</.dm_card>

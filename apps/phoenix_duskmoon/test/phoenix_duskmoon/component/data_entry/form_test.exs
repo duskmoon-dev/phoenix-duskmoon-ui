@@ -152,18 +152,27 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
   end
 
   describe "dm_alert/1" do
-    test "renders alert with default info variant" do
+    test "renders el-dm-alert custom element" do
       result =
         render_component(&dm_alert/1, %{
           inner_block: inner_block("Info message")
         })
 
-      assert result =~ "dm-alert"
-      assert result =~ "dm-alert--info"
+      assert result =~ "<el-dm-alert"
+      assert result =~ "</el-dm-alert>"
       assert result =~ "Info message"
     end
 
-    test "renders alert with all variant options" do
+    test "renders alert with default info type" do
+      result =
+        render_component(&dm_alert/1, %{
+          inner_block: inner_block("Info message")
+        })
+
+      assert result =~ ~s[type="info"]
+    end
+
+    test "renders alert with all variant options mapped to type" do
       for variant <- ~w(info success warning error) do
         result =
           render_component(&dm_alert/1, %{
@@ -171,11 +180,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
             inner_block: inner_block("msg")
           })
 
-        assert result =~ "dm-alert--#{variant}"
+        assert result =~ ~s[type="#{variant}"]
       end
     end
 
-    test "renders alert with title" do
+    test "renders alert with title attribute" do
       result =
         render_component(&dm_alert/1, %{
           variant: "info",
@@ -183,8 +192,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
           inner_block: inner_block("Info text")
         })
 
-      assert result =~ "Note"
-      assert result =~ "font-bold"
+      assert result =~ ~s[title="Note"]
     end
 
     test "renders alert without title by default" do
@@ -193,7 +201,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
           inner_block: inner_block("text")
         })
 
-      refute result =~ "font-bold"
+      [_, alert_tag] = String.split(result, "<el-dm-alert", parts: 2)
+      [alert_attrs, _] = String.split(alert_tag, ">", parts: 2)
+      refute alert_attrs =~ ~s[title="]
     end
 
     test "renders alert with custom id" do
@@ -214,6 +224,26 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
         })
 
       assert result =~ "my-alert"
+    end
+
+    test "renders alert with dismissible attribute" do
+      result =
+        render_component(&dm_alert/1, %{
+          dismissible: true,
+          inner_block: inner_block("text")
+        })
+
+      assert result =~ "dismissible"
+    end
+
+    test "renders alert with compact attribute" do
+      result =
+        render_component(&dm_alert/1, %{
+          compact: true,
+          inner_block: inner_block("text")
+        })
+
+      assert result =~ "compact"
     end
   end
 
@@ -240,7 +270,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
           inner_block: inner_block("Success message")
         })
 
-      assert result =~ "dm-alert--success"
+      assert result =~ ~s[type="success"]
       assert result =~ "Success message"
     end
 
@@ -251,7 +281,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
           inner_block: inner_block("Warning message")
         })
 
-      assert result =~ "dm-alert--warning"
+      assert result =~ ~s[type="warning"]
     end
 
     test "renders alert with error variant" do
@@ -261,18 +291,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
           inner_block: inner_block("Error message")
         })
 
-      assert result =~ "dm-alert--error"
+      assert result =~ ~s[type="error"]
     end
 
-    test "renders alert with title" do
+    test "renders alert with title attribute" do
       result =
         render_component(&dm_alert/1, %{
           title: "Important",
           inner_block: inner_block("Alert body")
         })
 
-      assert result =~ "Important"
-      assert result =~ "font-bold"
+      assert result =~ ~s[title="Important"]
     end
   end
 
@@ -329,54 +358,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
     end
   end
 
-  describe "dm_alert icon default selection" do
-    test "renders alert with different default icon per variant" do
-      # Each variant should produce a different SVG path (not the error fallback)
-      results =
-        for variant <- ~w(info success warning error) do
-          {variant,
-           render_component(&dm_alert/1, %{
-             variant: variant,
-             inner_block: inner_block("msg")
-           })}
-        end
-
-      # All should have SVGs
-      for {variant, result} <- results do
-        assert result =~ "<svg", "variant #{variant} should render an SVG icon"
-        assert result =~ "dm-alert--#{variant}"
-      end
-
-      # Icons should differ between info and success (proving variant selection works)
-      {_, info_result} = Enum.find(results, fn {v, _} -> v == "info" end)
-      {_, success_result} = Enum.find(results, fn {v, _} -> v == "success" end)
-      refute info_result == success_result
-    end
-
-    test "renders alert with nil icon uses variant default not error fallback" do
-      # When icon is nil (default), the variant-specific icon should be used
-      info_result =
-        render_component(&dm_alert/1, %{
-          variant: "info",
-          inner_block: inner_block("msg")
-        })
-
-      success_result =
-        render_component(&dm_alert/1, %{
-          variant: "success",
-          inner_block: inner_block("msg")
-        })
-
-      # The SVG content should differ because info uses information-circle
-      # and success uses check-circle
-      assert info_result =~ "<svg"
-      assert success_result =~ "<svg"
-      refute info_result == success_result
-    end
-  end
-
   describe "dm_alert icon" do
-    test "renders alert with custom icon override renders SVG" do
+    test "renders alert without icon slot when icon is nil" do
+      result =
+        render_component(&dm_alert/1, %{
+          inner_block: inner_block("msg")
+        })
+
+      refute result =~ ~s[slot="icon"]
+    end
+
+    test "renders alert with custom icon in icon slot" do
       result =
         render_component(&dm_alert/1, %{
           variant: "info",
@@ -384,30 +376,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
           inner_block: inner_block("Custom icon")
         })
 
-      # Custom icon "star" renders as SVG path (different from default info icon)
+      assert result =~ ~s[slot="icon"]
       assert result =~ "<svg"
       assert result =~ "Custom icon"
-      assert result =~ "dm-alert--info"
-    end
-
-    test "renders alert with different icon per variant renders different SVGs" do
-      # Each variant gets a unique default icon, producing different SVG paths
-      results =
-        for variant <- ~w(info success warning error) do
-          render_component(&dm_alert/1, %{
-            variant: variant,
-            inner_block: inner_block("msg")
-          })
-        end
-
-      # Each result should have an SVG
-      for result <- results do
-        assert result =~ "<svg"
-      end
-
-      # The SVG paths should differ between variants (different icons)
-      [info, success, _warning, _error] = results
-      refute info == success
     end
 
     test "renders alert with title and custom class combined" do
@@ -419,10 +390,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
           inner_block: inner_block("Be careful")
         })
 
-      assert result =~ "Caution"
-      assert result =~ "font-bold"
+      assert result =~ ~s[title="Caution"]
       assert result =~ "border-l-4"
-      assert result =~ "dm-alert--warning"
+      assert result =~ ~s[type="warning"]
       assert result =~ "Be careful"
     end
   end
@@ -452,26 +422,15 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
     end
   end
 
-  describe "dm_alert accessibility" do
-    test "renders alert with role=alert for screen readers" do
+  describe "dm_alert rest attributes" do
+    test "renders alert with rest attributes" do
       result =
         render_component(&dm_alert/1, %{
+          "data-testid": "alert-1",
           inner_block: inner_block("Important message")
         })
 
-      assert result =~ ~s[role="alert"]
-    end
-
-    test "renders alert with role=alert across all variants" do
-      for variant <- ~w(info success warning error) do
-        result =
-          render_component(&dm_alert/1, %{
-            variant: variant,
-            inner_block: inner_block("msg")
-          })
-
-        assert result =~ ~s[role="alert"]
-      end
+      assert result =~ ~s[data-testid="alert-1"]
     end
   end
 end

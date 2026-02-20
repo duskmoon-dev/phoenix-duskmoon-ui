@@ -55,6 +55,12 @@
       },
       %{
         kind: :story,
+        name: "Chip",
+        path: "/data_display/chip",
+        module: Storybook.DataDisplay.Chip
+      },
+      %{
+        kind: :story,
         name: "Flash",
         path: "/data_display/flash",
         module: Storybook.DataDisplay.Flash

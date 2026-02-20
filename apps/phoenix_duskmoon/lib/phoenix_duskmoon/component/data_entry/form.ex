@@ -118,6 +118,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
   @doc """
   Generates an alert component.
 
+  Wraps the `<el-dm-alert>` custom element.
+
   ## Examples
 
       <.dm_alert variant="info">
@@ -128,6 +130,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
         Something went wrong!
       </.dm_alert>
 
+      <.dm_alert variant="success" dismissible>
+        Settings saved successfully.
+      </.dm_alert>
+
   """
   @doc type: :component
   attr(:id, :any, default: nil)
@@ -136,38 +142,30 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
   attr(:variant, :string,
     default: "info",
     values: ~w(info success warning error),
-    doc: "the alert variant"
+    doc: "the alert variant (maps to element type)"
   )
 
-  attr(:icon, :string, default: nil, doc: "override default icon")
+  attr(:icon, :string, default: nil, doc: "override default icon (MDI name)")
   attr(:title, :string, default: nil, doc: "alert title")
+  attr(:dismissible, :boolean, default: false, doc: "whether the alert can be dismissed")
+  attr(:compact, :boolean, default: false, doc: "use compact styling")
+  attr(:rest, :global)
   slot(:inner_block, required: true)
 
   def dm_alert(assigns) do
-    assigns =
-      if assigns.icon do
-        assigns
-      else
-        icon =
-          case assigns.variant do
-            "info" -> "information-circle"
-            "success" -> "check-circle"
-            "warning" -> "exclamation-triangle"
-            "error" -> "exclamation-circle"
-            _ -> "information-circle"
-          end
-
-        assign(assigns, :icon, icon)
-      end
-
     ~H"""
-    <div id={@id} role="alert" class={["dm-alert", "dm-alert--#{@variant}", @class]}>
-      <.dm_mdi name={@icon} class="h-5 w-5 flex-none" />
-      <div>
-        <h3 :if={@title} class="font-bold">{@title}</h3>
-        <div class="text-sm">{render_slot(@inner_block)}</div>
-      </div>
-    </div>
+    <el-dm-alert
+      id={@id}
+      type={@variant}
+      title={@title}
+      dismissible={@dismissible}
+      compact={@compact}
+      class={@class}
+      {@rest}
+    >
+      <span :if={@icon} slot="icon"><.dm_mdi name={@icon} class="h-5 w-5" /></span>
+      {render_slot(@inner_block)}
+    </el-dm-alert>
     """
   end
 
