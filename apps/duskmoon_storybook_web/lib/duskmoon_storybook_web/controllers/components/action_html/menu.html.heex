@@ -1,0 +1,122 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/action/menu"}>Action</:crumb>
+  <:crumb>Menu</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Menu</span>
+    <span class="text-sm opacity-60">dm_menu / dm_menu_item</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Menu component wrapping the `el-dm-menu` and `el-dm-menu-item` custom elements.
+  Provides a dropdown/context menu with full keyboard navigation,
+  proper ARIA roles (`menu`/`menuitem`), and click-outside dismissal.
+
+  ## Usage
+  ```elixir
+  <button id="trigger" type="button" class="btn btn-primary">Actions</button>
+  <.dm_menu anchor="#trigger">
+    <.dm_menu_item value="edit">Edit</.dm_menu_item>
+    <.dm_menu_item value="delete">Delete</.dm_menu_item>
+  </.dm_menu>
+  ```
+
+  Open/close via JavaScript:
+  ```javascript
+  document.querySelector('el-dm-menu').toggle();
+  document.querySelector('el-dm-menu').show();
+  document.querySelector('el-dm-menu').hide();
+  ```
+
+  Listen for selection:
+  ```javascript
+  menu.addEventListener('select', (e) => {
+    console.log('Selected:', e.detail.value);
+  });
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Menu</h3>
+  <div class="flex gap-4 mb-4">
+    <button id="basic-trigger" type="button" class="btn btn-primary"
+      onclick="this.nextElementSibling.toggle()">
+      Actions
+    </button>
+    <.dm_menu anchor="#basic-trigger">
+      <.dm_menu_item value="edit">Edit</.dm_menu_item>
+      <.dm_menu_item value="copy">Copy</.dm_menu_item>
+      <.dm_menu_item value="delete">Delete</.dm_menu_item>
+    </.dm_menu>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Menu with Icons</h3>
+  <div class="flex gap-4 mb-4">
+    <button id="icon-trigger" type="button" class="btn btn-secondary"
+      onclick="this.nextElementSibling.toggle()">
+      Options
+    </button>
+    <.dm_menu anchor="#icon-trigger">
+      <.dm_menu_item value="profile" icon="account">Profile</.dm_menu_item>
+      <.dm_menu_item value="settings" icon="cog">Settings</.dm_menu_item>
+      <.dm_menu_item value="help" icon="help-circle">Help</.dm_menu_item>
+    </.dm_menu>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Disabled Items</h3>
+  <div class="flex gap-4 mb-4">
+    <button id="disabled-trigger" type="button" class="btn btn-warning"
+      onclick="this.nextElementSibling.toggle()">
+      Menu with Disabled
+    </button>
+    <.dm_menu anchor="#disabled-trigger">
+      <.dm_menu_item value="cut" icon="content-cut">Cut</.dm_menu_item>
+      <.dm_menu_item value="copy" icon="content-copy">Copy</.dm_menu_item>
+      <.dm_menu_item value="paste" icon="content-paste" disabled>Paste</.dm_menu_item>
+    </.dm_menu>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Placement Variants</h3>
+  <div class="flex flex-wrap gap-4 mb-4">
+    <button id="pl-bottom" type="button" class="btn btn-outline"
+      onclick="document.getElementById('menu-bottom').toggle()">
+      Bottom Start
+    </button>
+    <.dm_menu id="menu-bottom" anchor="#pl-bottom" placement="bottom-start">
+      <.dm_menu_item value="a">Item A</.dm_menu_item>
+      <.dm_menu_item value="b">Item B</.dm_menu_item>
+    </.dm_menu>
+
+    <button id="pl-top" type="button" class="btn btn-outline"
+      onclick="document.getElementById('menu-top').toggle()">
+      Top
+    </button>
+    <.dm_menu id="menu-top" anchor="#pl-top" placement="top">
+      <.dm_menu_item value="a">Item A</.dm_menu_item>
+      <.dm_menu_item value="b">Item B</.dm_menu_item>
+    </.dm_menu>
+
+    <button id="pl-right" type="button" class="btn btn-outline"
+      onclick="document.getElementById('menu-right').toggle()">
+      Right
+    </button>
+    <.dm_menu id="menu-right" anchor="#pl-right" placement="right">
+      <.dm_menu_item value="a">Item A</.dm_menu_item>
+      <.dm_menu_item value="b">Item B</.dm_menu_item>
+    </.dm_menu>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Initially Open</h3>
+  <div class="flex gap-4 mb-4">
+    <button id="open-trigger" type="button" class="btn btn-info">
+      Already Open
+    </button>
+    <.dm_menu anchor="#open-trigger" open placement="right">
+      <.dm_menu_item value="item1">Item 1</.dm_menu_item>
+      <.dm_menu_item value="item2">Item 2</.dm_menu_item>
+    </.dm_menu>
+  </div>
+</.dm_card>

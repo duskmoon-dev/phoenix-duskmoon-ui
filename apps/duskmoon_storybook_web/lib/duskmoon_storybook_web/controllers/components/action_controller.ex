@@ -12,4 +12,8 @@ defmodule DuskmoonStorybookWeb.Components.ActionController do
   def dropdown(conn, _params) do
     render(conn, :dropdown, active_menu: "action-dropdown")
   end
+
+  def menu(conn, _params) do
+    render(conn, :menu, active_menu: "action-menu")
+  end
 end
