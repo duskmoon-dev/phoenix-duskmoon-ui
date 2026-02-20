@@ -90,6 +90,7 @@ defmodule PhoenixDuskmoon.Component do
       # Navigation components
       import PhoenixDuskmoon.Component.Navigation.Actionbar
       import PhoenixDuskmoon.Component.Navigation.Appbar
+      import PhoenixDuskmoon.Component.Navigation.BottomNav
       import PhoenixDuskmoon.Component.Navigation.Breadcrumb
       import PhoenixDuskmoon.Component.Navigation.LeftMenu
       import PhoenixDuskmoon.Component.Navigation.Navbar

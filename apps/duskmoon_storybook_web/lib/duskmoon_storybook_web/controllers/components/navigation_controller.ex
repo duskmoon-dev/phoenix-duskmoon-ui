@@ -9,6 +9,10 @@ defmodule DuskmoonStorybookWeb.Components.NavigationController do
     render(conn, :appbar, active_menu: "navigation-appbar")
   end
 
+  def bottom_nav(conn, _params) do
+    render(conn, :bottom_nav, active_menu: "navigation-bottom-nav")
+  end
+
   def breadcrumb(conn, _params) do
     render(conn, :breadcrumb, active_menu: "navigation-breadcrumb")
   end

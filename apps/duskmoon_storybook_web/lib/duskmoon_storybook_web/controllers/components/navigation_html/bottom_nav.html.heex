@@ -1,0 +1,141 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/navigation/bottom-nav"}>Navigation</:crumb>
+  <:crumb>Bottom Nav</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Bottom Nav</span>
+    <span class="text-sm opacity-60">dm_bottom_nav</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Bottom navigation component wrapping the `el-dm-bottom-navigation` custom element.
+  Typically used for mobile navigation at the bottom of the screen.
+
+  ## Usage
+  ```elixir
+  <.dm_bottom_nav
+    value="home"
+    items={[
+      %{value: "home", label: "Home", icon: "home"},
+      %{value: "search", label: "Search", icon: "magnify"},
+      %{value: "profile", label: "Profile", icon: "account"}
+    ]}
+  />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Static Position (for demo)</h3>
+  <p class="text-sm opacity-60 mb-4">
+    Using position="static" so it renders inline instead of fixed at the bottom.
+  </p>
+
+  <h4 class="font-semibold mb-2">Basic</h4>
+  <div class="border rounded p-0 mb-6">
+    <.dm_bottom_nav
+      position="static"
+      value="home"
+      items={[
+        %{value: "home", label: "Home", icon: "home"},
+        %{value: "search", label: "Search", icon: "magnify"},
+        %{value: "notifications", label: "Notifications", icon: "bell"},
+        %{value: "profile", label: "Profile", icon: "account"}
+      ]}
+    />
+  </div>
+
+  <h4 class="font-semibold mb-2">Color Variants</h4>
+  <div class="flex flex-col gap-4 mb-6">
+    <div class="border rounded p-0">
+      <.dm_bottom_nav
+        position="static"
+        value="home"
+        color="primary"
+        items={[
+          %{value: "home", label: "Home", icon: "home"},
+          %{value: "search", label: "Search", icon: "magnify"},
+          %{value: "profile", label: "Profile", icon: "account"}
+        ]}
+      />
+    </div>
+    <div class="border rounded p-0">
+      <.dm_bottom_nav
+        position="static"
+        value="home"
+        color="secondary"
+        items={[
+          %{value: "home", label: "Home", icon: "home"},
+          %{value: "search", label: "Search", icon: "magnify"},
+          %{value: "profile", label: "Profile", icon: "account"}
+        ]}
+      />
+    </div>
+    <div class="border rounded p-0">
+      <.dm_bottom_nav
+        position="static"
+        value="home"
+        color="success"
+        items={[
+          %{value: "home", label: "Home", icon: "home"},
+          %{value: "search", label: "Search", icon: "magnify"},
+          %{value: "profile", label: "Profile", icon: "account"}
+        ]}
+      />
+    </div>
+    <div class="border rounded p-0">
+      <.dm_bottom_nav
+        position="static"
+        value="home"
+        color="error"
+        items={[
+          %{value: "home", label: "Home", icon: "home"},
+          %{value: "search", label: "Search", icon: "magnify"},
+          %{value: "profile", label: "Profile", icon: "account"}
+        ]}
+      />
+    </div>
+  </div>
+
+  <h4 class="font-semibold mb-2">With Disabled Items</h4>
+  <div class="border rounded p-0 mb-6">
+    <.dm_bottom_nav
+      position="static"
+      value="home"
+      items={[
+        %{value: "home", label: "Home", icon: "home"},
+        %{value: "search", label: "Search", icon: "magnify"},
+        %{value: "settings", label: "Settings", icon: "cog", disabled: true},
+        %{value: "profile", label: "Profile", icon: "account"}
+      ]}
+    />
+  </div>
+
+  <h4 class="font-semibold mb-2">With Links</h4>
+  <div class="border rounded p-0 mb-6">
+    <.dm_bottom_nav
+      position="static"
+      value="home"
+      items={[
+        %{value: "home", label: "Home", icon: "home", href: "#"},
+        %{value: "docs", label: "Docs", icon: "book-open-variant", href: "#"},
+        %{value: "github", label: "GitHub", icon: "github", href: "https://github.com/duskmoon-dev"}
+      ]}
+    />
+  </div>
+
+  <h4 class="font-semibold mb-2">Without Icons</h4>
+  <div class="border rounded p-0 mb-6">
+    <.dm_bottom_nav
+      position="static"
+      value="home"
+      items={[
+        %{value: "home", label: "Home"},
+        %{value: "about", label: "About"},
+        %{value: "contact", label: "Contact"}
+      ]}
+    />
+  </div>
+</.dm_card>

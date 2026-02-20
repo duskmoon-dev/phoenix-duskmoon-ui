@@ -70,6 +70,7 @@ defmodule DuskmoonStorybookWeb.Router do
     # Navigation
     get "/navigation/actionbar", NavigationController, :actionbar
     get "/navigation/appbar", NavigationController, :appbar
+    get "/navigation/bottom-nav", NavigationController, :bottom_nav
     get "/navigation/breadcrumb", NavigationController, :breadcrumb
     get "/navigation/left-menu", NavigationController, :left_menu
     get "/navigation/navbar", NavigationController, :navbar
