@@ -6,86 +6,54 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
   import PhoenixDuskmoon.Component.Navigation.LeftMenu
 
   describe "dm_left_menu/1" do
-    test "renders basic menu" do
+    test "renders basic menu with nested-menu class" do
       result =
         render_component(&dm_left_menu/1, %{
           class: "bg-base-200 rounded-box w-56",
           title: [%{inner_block: fn _, _ -> "Phx WebComponents" end, class: "menu-title"}],
           menu: [
-            %{inner_block: fn _, _ -> "Actionbar" end, id: "actionbar"},
-            %{inner_block: fn _, _ -> "Appbar" end, id: "appbar"}
+            %{inner_block: fn _, _ -> "Group Content" end}
           ]
         })
 
       assert result =~ "<nav"
-      assert result =~ "dm-menu"
-      assert result =~ "dm-menu--md"
+      assert result =~ "nested-menu"
       assert result =~ "bg-base-200"
       assert result =~ "rounded-box"
       assert result =~ "w-56"
       assert result =~ "menu-title"
       assert result =~ "Phx WebComponents"
-      assert result =~ "Actionbar"
-      assert result =~ "Appbar"
+      assert result =~ "Group Content"
     end
 
     test "renders with different sizes" do
-      sizes = ["xs", "sm", "md", "lg", "xl"]
+      # xs → nested-menu-xs
+      result = render_component(&dm_left_menu/1, %{size: "xs", menu: []})
+      assert result =~ "nested-menu-xs"
 
-      for size <- sizes do
-        result =
-          render_component(&dm_left_menu/1, %{
-            size: size,
-            menu: [%{inner_block: fn _, _ -> "Item" end}]
-          })
+      # sm → nested-menu-sm
+      result = render_component(&dm_left_menu/1, %{size: "sm", menu: []})
+      assert result =~ "nested-menu-sm"
 
-        assert result =~ "dm-menu--#{size}"
-      end
-    end
+      # md → no size class (default)
+      result = render_component(&dm_left_menu/1, %{size: "md", menu: []})
+      assert result =~ "nested-menu"
+      refute result =~ "nested-menu-md"
 
-    test "renders horizontal menu" do
-      result =
-        render_component(&dm_left_menu/1, %{
-          horizontal: true,
-          menu: [
-            %{inner_block: fn _, _ -> "Item 1" end},
-            %{inner_block: fn _, _ -> "Item 2" end}
-          ]
-        })
+      # lg → nested-menu-lg
+      result = render_component(&dm_left_menu/1, %{size: "lg", menu: []})
+      assert result =~ "nested-menu-lg"
 
-      assert result =~ "dm-menu--horizontal"
-    end
-
-    test "renders active menu item" do
-      result =
-        render_component(&dm_left_menu/1, %{
-          active: "actionbar",
-          menu: [
-            %{inner_block: fn _, _ -> "Actionbar" end, id: "actionbar"},
-            %{inner_block: fn _, _ -> "Appbar" end, id: "appbar"}
-          ]
-        })
-
-      assert result =~ "dm-menu__item--active"
-    end
-
-    test "renders disabled menu item" do
-      result =
-        render_component(&dm_left_menu/1, %{
-          menu: [
-            %{inner_block: fn _, _ -> "Disabled Item" end, disabled: true},
-            %{inner_block: fn _, _ -> "Regular Item" end}
-          ]
-        })
-
-      assert result =~ "dm-menu__item--disabled"
+      # xl → nested-menu-lg (mapped)
+      result = render_component(&dm_left_menu/1, %{size: "xl", menu: []})
+      assert result =~ "nested-menu-lg"
     end
 
     test "renders with custom id" do
       result =
         render_component(&dm_left_menu/1, %{
           id: "my-menu",
-          menu: [%{inner_block: fn _, _ -> "Item" end}]
+          menu: []
         })
 
       assert result =~ ~s(id="my-menu")
@@ -95,7 +63,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       result =
         render_component(&dm_left_menu/1, %{
           class: "custom-class another-class",
-          menu: [%{inner_block: fn _, _ -> "Item" end}]
+          menu: []
         })
 
       assert result =~ "custom-class"
@@ -106,7 +74,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       result = render_component(&dm_left_menu/1, %{})
 
       assert result =~ "<nav"
-      assert result =~ "dm-menu"
+      assert result =~ "nested-menu"
     end
 
     test "renders rest attributes" do
@@ -114,54 +82,21 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
         render_component(&dm_left_menu/1, %{
           "data-testid": "nav-menu",
           "aria-label": "Navigation",
-          menu: [%{inner_block: fn _, _ -> "Item" end}]
+          menu: []
         })
 
       assert result =~ "data-testid=\"nav-menu\""
       assert result =~ "aria-label=\"Navigation\""
     end
 
-    test "renders non-horizontal menu by default" do
-      result =
-        render_component(&dm_left_menu/1, %{
-          menu: [%{inner_block: fn _, _ -> "Item" end}]
-        })
-
-      refute result =~ "dm-menu--horizontal"
-    end
-
-    test "renders title with dm-menu__title class" do
+    test "renders title with nested-menu-title class" do
       result =
         render_component(&dm_left_menu/1, %{
           title: [%{inner_block: fn _, _ -> "Title" end}]
         })
 
-      assert result =~ "dm-menu__title"
+      assert result =~ "nested-menu-title"
       assert result =~ "Title"
-    end
-
-    test "renders menu item with dm-menu__item class" do
-      result =
-        render_component(&dm_left_menu/1, %{
-          menu: [%{inner_block: fn _, _ -> "Item" end}]
-        })
-
-      assert result =~ "dm-menu__item"
-    end
-
-    test "renders only active item with active class" do
-      result =
-        render_component(&dm_left_menu/1, %{
-          active: "b",
-          menu: [
-            %{inner_block: fn _, _ -> "A" end, id: "a"},
-            %{inner_block: fn _, _ -> "B" end, id: "b"}
-          ]
-        })
-
-      # Only one active
-      parts = String.split(result, "dm-menu__item--active")
-      assert length(parts) == 2
     end
 
     test "renders nav with default aria-label" do
@@ -170,34 +105,77 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       assert result =~ ~s[aria-label="Navigation menu"]
     end
 
-    test "renders active menu item with aria-current page" do
+    test "renders menu slot content as pass-through" do
       result =
         render_component(&dm_left_menu/1, %{
-          active: "item1",
           menu: [
-            %{inner_block: fn _, _ -> "Item 1" end, id: "item1"},
-            %{inner_block: fn _, _ -> "Item 2" end, id: "item2"}
+            %{inner_block: fn _, _ -> "<details>Group A</details>" end},
+            %{inner_block: fn _, _ -> "<details>Group B</details>" end}
           ]
         })
 
-      assert result =~ ~s[aria-current="page"]
+      assert result =~ "Group A"
+      assert result =~ "Group B"
     end
 
-    test "renders disabled menu item with aria-disabled" do
+    test "renders with custom nav_label" do
       result =
         render_component(&dm_left_menu/1, %{
-          menu: [
-            %{inner_block: fn _, _ -> "Disabled" end, disabled: true},
-            %{inner_block: fn _, _ -> "Normal" end}
+          nav_label: "Menu lateral",
+          menu: []
+        })
+
+      assert result =~ ~s[aria-label="Menu lateral"]
+    end
+
+    test "renders title with custom class" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          title: [%{inner_block: fn _, _ -> "Title" end, class: "uppercase tracking-wide"}]
+        })
+
+      assert result =~ "uppercase tracking-wide"
+    end
+
+    test "renders multiple titles" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          title: [
+            %{inner_block: fn _, _ -> "Title 1" end},
+            %{inner_block: fn _, _ -> "Title 2" end}
           ]
         })
 
-      assert result =~ ~s[aria-disabled="true"]
+      assert result =~ "Title 1"
+      assert result =~ "Title 2"
+    end
+
+    test "renders all options combined" do
+      result =
+        render_component(&dm_left_menu/1, %{
+          id: "full-menu",
+          class: "bg-base-200 rounded-box",
+          size: "lg",
+          active: "item2",
+          title: [%{class: "text-sm", inner_block: fn _, _ -> "Nav" end}],
+          menu: [
+            %{inner_block: fn _, _ -> "Menu Content" end}
+          ],
+          "data-testid": "nav"
+        })
+
+      assert result =~ ~s[id="full-menu"]
+      assert result =~ "bg-base-200 rounded-box"
+      assert result =~ "nested-menu-lg"
+      assert result =~ "text-sm"
+      assert result =~ "Nav"
+      assert result =~ "Menu Content"
+      assert result =~ ~s[data-testid="nav"]
     end
   end
 
   describe "dm_left_menu_group/1" do
-    test "renders basic menu group" do
+    test "renders as details element with summary" do
       result =
         render_component(&dm_left_menu_group/1, %{
           active: "mdi",
@@ -208,9 +186,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
           ]
         })
 
-      assert result =~ "<div"
-      assert result =~ "dm-menu"
-      assert result =~ "dm-menu--md"
+      assert result =~ "<details"
+      assert result =~ "<summary"
       assert result =~ "Icons"
       assert result =~ "MD Icon"
       assert result =~ "BS Icon"
@@ -218,10 +195,20 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       assert result =~ ~s(href="/icons/bsi")
     end
 
-    test "renders collapsible menu group" do
+    test "renders open by default" do
       result =
         render_component(&dm_left_menu_group/1, %{
-          collapsible: true,
+          title: [%{inner_block: fn _, _ -> "Section" end}],
+          menu: [%{inner_block: fn _, _ -> "Item" end, to: "/item"}]
+        })
+
+      assert result =~ "<details"
+      assert result =~ " open>"
+    end
+
+    test "renders closed when open is false" do
+      result =
+        render_component(&dm_left_menu_group/1, %{
           open: false,
           title: [%{inner_block: fn _, _ -> "Settings" end}],
           menu: [
@@ -231,41 +218,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
         })
 
       assert result =~ "<details"
-      refute result =~ ~s(open="true")
+      refute result =~ ~s(open)
       assert result =~ "<summary"
       assert result =~ "Settings"
       assert result =~ "Profile"
       assert result =~ "Security"
     end
 
-    test "renders collapsible menu group with open state" do
-      result =
-        render_component(&dm_left_menu_group/1, %{
-          collapsible: true,
-          open: true,
-          title: [%{inner_block: fn _, _ -> "Settings" end}],
-          menu: [%{inner_block: fn _, _ -> "Profile" end, id: "profile", to: "/settings/profile"}]
-        })
-
-      assert result =~ ~s(<details open>)
-    end
-
-    test "renders menu group with different sizes" do
-      sizes = ["xs", "sm", "md", "lg", "xl"]
-
-      for size <- sizes do
-        result =
-          render_component(&dm_left_menu_group/1, %{
-            size: size,
-            title: [%{inner_block: fn _, _ -> "Test" end}],
-            menu: [%{inner_block: fn _, _ -> "Item" end}]
-          })
-
-        assert result =~ "dm-menu--#{size}"
-      end
-    end
-
-    test "renders active menu item in group" do
+    test "renders active menu item with active class on link" do
       result =
         render_component(&dm_left_menu_group/1, %{
           active: "profile",
@@ -276,10 +236,11 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
           ]
         })
 
-      assert result =~ "dm-menu__item--active"
+      assert result =~ ~s(class="active")
+      assert result =~ ~s[aria-current="page"]
     end
 
-    test "renders disabled menu item in group" do
+    test "renders disabled menu item with disabled class on li" do
       result =
         render_component(&dm_left_menu_group/1, %{
           title: [%{inner_block: fn _, _ -> "Settings" end}],
@@ -289,10 +250,11 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
           ]
         })
 
-      assert result =~ "dm-menu__item--disabled"
+      assert result =~ ~s(class="disabled")
+      assert result =~ ~s[aria-disabled="true"]
     end
 
-    test "renders menu group with custom id" do
+    test "renders with custom id" do
       result =
         render_component(&dm_left_menu_group/1, %{
           id: "my-menu-group",
@@ -303,7 +265,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       assert result =~ ~s(id="my-menu-group")
     end
 
-    test "renders menu group with custom classes" do
+    test "renders with custom classes" do
       result =
         render_component(&dm_left_menu_group/1, %{
           class: "custom-class another-class",
@@ -321,12 +283,12 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
           title: [%{inner_block: fn _, _ -> "Empty Group" end}]
         })
 
-      assert result =~ "<div"
-      assert result =~ "dm-menu"
+      assert result =~ "<details"
+      assert result =~ "<summary"
       assert result =~ "Empty Group"
     end
 
-    test "renders menu group without to attribute" do
+    test "renders menu item without to attribute as href=#" do
       result =
         render_component(&dm_left_menu_group/1, %{
           title: [%{inner_block: fn _, _ -> "Test" end}],
@@ -337,20 +299,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       assert result =~ "Item without link"
     end
 
-    test "renders non-collapsible group as li with title" do
-      result =
-        render_component(&dm_left_menu_group/1, %{
-          collapsible: false,
-          title: [%{inner_block: fn _, _ -> "Section" end}]
-        })
-
-      refute result =~ "<details"
-      refute result =~ "<summary"
-      assert result =~ "dm-menu__title"
-      assert result =~ "Section"
-    end
-
-    test "renders menu group with rest attributes" do
+    test "renders rest attributes" do
       result =
         render_component(&dm_left_menu_group/1, %{
           "data-testid": "menu-group",
@@ -361,7 +310,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       assert result =~ "data-testid=\"menu-group\""
     end
 
-    test "renders menu group with menu item links" do
+    test "renders menu item links" do
       result =
         render_component(&dm_left_menu_group/1, %{
           title: [%{inner_block: fn _, _ -> "Nav" end}],
@@ -377,19 +326,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       assert result =~ "Page B"
     end
 
-    test "renders collapsible group with summary element" do
-      result =
-        render_component(&dm_left_menu_group/1, %{
-          collapsible: true,
-          title: [%{inner_block: fn _, _ -> "Collapsible" end}]
-        })
-
-      assert result =~ "<details"
-      assert result =~ "<summary"
-      assert result =~ "Collapsible"
-    end
-
-    test "renders active menu item with aria-current page in group" do
+    test "renders active menu item with aria-current page" do
       result =
         render_component(&dm_left_menu_group/1, %{
           active: "profile",
@@ -403,7 +340,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       assert result =~ ~s[aria-current="page"]
     end
 
-    test "renders disabled menu item with aria-disabled in group" do
+    test "renders disabled menu item with aria-disabled" do
       result =
         render_component(&dm_left_menu_group/1, %{
           title: [%{inner_block: fn _, _ -> "Settings" end}],
@@ -415,25 +352,9 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       assert result =~ ~s[aria-disabled="true"]
     end
 
-    test "renders active item with aria-current in collapsible group" do
+    test "renders summary with title class" do
       result =
         render_component(&dm_left_menu_group/1, %{
-          collapsible: true,
-          active: "mdi",
-          title: [%{inner_block: fn _, _ -> "Icons" end}],
-          menu: [
-            %{inner_block: fn _, _ -> "MDI" end, id: "mdi", to: "/icons/mdi"},
-            %{inner_block: fn _, _ -> "BSI" end, id: "bsi", to: "/icons/bsi"}
-          ]
-        })
-
-      assert result =~ ~s[aria-current="page"]
-    end
-
-    test "renders collapsible group with title class" do
-      result =
-        render_component(&dm_left_menu_group/1, %{
-          collapsible: true,
           title: [%{class: "uppercase font-bold", inner_block: fn _, _ -> "Title" end}],
           menu: [%{inner_block: fn _, _ -> "Item" end, to: "/item"}]
         })
@@ -442,10 +363,9 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       assert result =~ "<summary"
     end
 
-    test "renders collapsible group with active and disabled items combined" do
+    test "renders active and disabled items combined" do
       result =
         render_component(&dm_left_menu_group/1, %{
-          collapsible: true,
           active: "a",
           title: [%{inner_block: fn _, _ -> "Group" end}],
           menu: [
@@ -454,8 +374,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
           ]
         })
 
-      assert result =~ "dm-menu__item--active"
-      assert result =~ "dm-menu__item--disabled"
+      assert result =~ ~s(class="active")
+      assert result =~ ~s(class="disabled")
       assert result =~ ~s[aria-current="page"]
       assert result =~ ~s[aria-disabled="true"]
     end
@@ -465,8 +385,6 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
         render_component(&dm_left_menu_group/1, %{
           id: "full-group",
           class: "border-l",
-          size: "sm",
-          collapsible: true,
           open: true,
           active: "item1",
           title: [%{class: "text-lg", inner_block: fn _, _ -> "Full" end}],
@@ -478,115 +396,57 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
 
       assert result =~ ~s[id="full-group"]
       assert result =~ "border-l"
-      assert result =~ "dm-menu--sm"
-      assert result =~ ~s(<details open>)
+      assert result =~ "<details"
+      assert result =~ " open>"
       assert result =~ "text-lg"
       assert result =~ "Full"
-      assert result =~ "dm-menu__item--active"
       assert result =~ "custom-cls"
-      assert result =~ "dm-menu__item--disabled"
-    end
-  end
-
-  describe "dm_left_menu/1 edge cases" do
-    test "renders menu with item class attribute" do
-      result =
-        render_component(&dm_left_menu/1, %{
-          menu: [
-            %{inner_block: fn _, _ -> "Styled" end, class: "text-primary font-bold"}
-          ]
-        })
-
-      assert result =~ "text-primary font-bold"
+      assert result =~ ~s(class="disabled")
     end
 
-    test "renders menu with title class attribute" do
+    test "does not set active class when active is empty" do
       result =
-        render_component(&dm_left_menu/1, %{
-          title: [%{inner_block: fn _, _ -> "Title" end, class: "uppercase tracking-wide"}]
-        })
-
-      assert result =~ "uppercase tracking-wide"
-    end
-
-    test "renders menu with multiple titles" do
-      result =
-        render_component(&dm_left_menu/1, %{
-          title: [
-            %{inner_block: fn _, _ -> "Title 1" end},
-            %{inner_block: fn _, _ -> "Title 2" end}
-          ]
-        })
-
-      assert result =~ "Title 1"
-      assert result =~ "Title 2"
-    end
-
-    test "renders menu with no active match does not add active class" do
-      result =
-        render_component(&dm_left_menu/1, %{
-          active: "nonexistent",
-          menu: [
-            %{inner_block: fn _, _ -> "A" end, id: "a"},
-            %{inner_block: fn _, _ -> "B" end, id: "b"}
-          ]
-        })
-
-      refute result =~ "dm-menu__item--active"
-    end
-
-    test "renders menu with empty active string does not set aria-current" do
-      result =
-        render_component(&dm_left_menu/1, %{
+        render_component(&dm_left_menu_group/1, %{
           active: "",
+          title: [%{inner_block: fn _, _ -> "Group" end}],
           menu: [
-            %{inner_block: fn _, _ -> "Item" end, id: ""}
+            %{inner_block: fn _, _ -> "Item" end, id: "", to: "/item"}
           ]
         })
 
-      # active: "" and id: "" match, but the guard @active != "" prevents aria-current
+      refute result =~ ~s(class="active")
       refute result =~ ~s[aria-current="page"]
     end
 
-    test "renders menu with all options combined" do
+    test "does not set active class when no id matches" do
       result =
-        render_component(&dm_left_menu/1, %{
-          id: "full-menu",
-          class: "bg-base-200 rounded-box",
-          size: "lg",
-          horizontal: true,
-          active: "item2",
-          title: [%{class: "text-sm", inner_block: fn _, _ -> "Nav" end}],
+        render_component(&dm_left_menu_group/1, %{
+          active: "nonexistent",
+          title: [%{inner_block: fn _, _ -> "Group" end}],
           menu: [
-            %{inner_block: fn _, _ -> "Item 1" end, id: "item1", class: "cls-1"},
-            %{inner_block: fn _, _ -> "Item 2" end, id: "item2"},
-            %{inner_block: fn _, _ -> "Item 3" end, id: "item3", disabled: true}
-          ],
-          "data-testid": "nav"
+            %{inner_block: fn _, _ -> "A" end, id: "a", to: "/a"},
+            %{inner_block: fn _, _ -> "B" end, id: "b", to: "/b"}
+          ]
         })
 
-      assert result =~ ~s[id="full-menu"]
-      assert result =~ "bg-base-200 rounded-box"
-      assert result =~ "dm-menu--lg"
-      assert result =~ "dm-menu--horizontal"
-      assert result =~ "text-sm"
-      assert result =~ "Nav"
-      assert result =~ "cls-1"
-      assert result =~ "dm-menu__item--active"
-      assert result =~ "dm-menu__item--disabled"
-      assert result =~ ~s[aria-current="page"]
-      assert result =~ ~s[aria-disabled="true"]
-      assert result =~ ~s[data-testid="nav"]
+      refute result =~ ~s(class="active")
     end
 
-    test "renders menu with custom nav_label" do
+    test "renders only one active item" do
       result =
-        render_component(&dm_left_menu/1, %{
-          nav_label: "Menu lateral",
-          menu: [%{inner_block: fn _, _ -> "Item" end}]
+        render_component(&dm_left_menu_group/1, %{
+          active: "b",
+          title: [%{inner_block: fn _, _ -> "Group" end}],
+          menu: [
+            %{inner_block: fn _, _ -> "A" end, id: "a", to: "/a"},
+            %{inner_block: fn _, _ -> "B" end, id: "b", to: "/b"},
+            %{inner_block: fn _, _ -> "C" end, id: "c", to: "/c"}
+          ]
         })
 
-      assert result =~ ~s[aria-label="Menu lateral"]
+      # Only one link should have the active class
+      parts = String.split(result, ~s(class="active"))
+      assert length(parts) == 2
     end
   end
 end
