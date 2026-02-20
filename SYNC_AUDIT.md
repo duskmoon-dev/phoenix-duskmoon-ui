@@ -292,12 +292,62 @@ Current baseline: **All 42 demo routes return HTTP 200.**
 
 ---
 
-## 6. Verification Screenshots
+## 6. Color Token Sync (Phase 2)
+
+### Token Flow: Core → Phoenix CSS → Shadow DOM
+
+```
+@duskmoon-dev/core themes   →   :root [data-theme]   →   element-theme-bridge.css   →   Shadow DOM
+(define --color-* values)        (applied to document)     (forces inherit on el-dm-*)     (inherits theme values)
+```
+
+### Gaps Found and Fixed
+
+#### A. Missing `inherit` declarations (now bridged)
+These theme tokens were defined in core but NOT bridged to custom elements:
+- `--color-primary-container`, `--color-on-primary-container`
+- `--color-secondary-container`, `--color-on-secondary-container`
+- `--color-tertiary-container`, `--color-on-tertiary-container`
+- `--color-surface-dim`, `--color-surface-bright`, `--color-surface-variant`
+- `--color-surface-container-lowest`, `--color-surface-container-high`, `--color-surface-container-highest`
+- `--color-inverse-surface`, `--color-inverse-on-surface`, `--color-inverse-primary`
+- `--color-info-content`, `--color-on-info`, `--color-info-container`, `--color-on-info-container`
+- `--color-success-content`, `--color-on-success`, `--color-success-container`, `--color-on-success-container`
+- `--color-warning-content`, `--color-on-warning`, `--color-warning-container`, `--color-on-warning-container`
+- `--color-error-content`, `--color-on-error`, `--color-error-container`, `--color-on-error-container`
+- `--color-accent`, `--color-accent-content`
+- `--color-neutral`, `--color-neutral-content`
+- `--color-shadow`, `--color-scrim`
+
+#### B. `--dm-*` namespace aliases (el-dm-table)
+`el-dm-table` uses a `--dm-color-*` namespace instead of `--color-*`. Added aliases:
+- `--dm-color-primary` → `var(--color-primary)` (and 8 more surface/outline vars)
+- `--dm-radius-sm` → `var(--radius-sm)`, `--dm-radius-md` → `var(--radius-md)`
+
+#### C. Non-standard variable aliases (el-dm-pagination, el-dm-bottom-navigation)
+These elements use non-standard variable names with hardcoded fallbacks. Added aliases mapping to closest theme equivalents:
+- `--color-border` → `var(--color-outline-variant)`
+- `--color-border-hover` → `var(--color-outline)`
+- `--color-surface-hover` → `var(--color-surface-container)`
+- `--color-text` → `var(--color-on-surface)`
+- `--color-text-muted` → `var(--color-on-surface-variant)`
+- `--color-text-secondary` → `var(--color-on-surface-variant)`
+- `--color-primary-contrast` → `var(--color-on-primary)`
+- `--color-secondary-contrast` → `var(--color-on-secondary)`
+- `--color-neutral-contrast` → `var(--color-neutral-content)`
+
+#### D. Remaining upstream issues (cannot fix in phoenix-duskmoon-ui)
+- `--color-primary-rgb` (RGB tuple) used by `el-file-upload` and `el-slider` — no OKLCH-to-RGB conversion available in CSS custom properties. Elements use hardcoded fallback `98, 0, 238`.
+- `--color-primary-dark` used by `el-breadcrumbs` — falls back to `var(--color-primary)` which is acceptable.
+
+---
+
+## 7. Verification Screenshots
 
 See `.loki/logs/screenshots/` and `.loki/audit/screenshots/` for baseline screenshots.
 
 ---
 
-## 7. Final Regression Results
+## 8. Final Regression Results
 
 _To be updated after component migrations._

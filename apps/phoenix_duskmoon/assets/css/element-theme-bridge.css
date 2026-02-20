@@ -43,29 +43,74 @@ el-dm-tooltip {
   --color-primary: inherit;
   --color-primary-content: inherit;
   --color-on-primary: inherit;
+  --color-primary-container: inherit;
+  --color-on-primary-container: inherit;
   --color-secondary: inherit;
   --color-secondary-content: inherit;
   --color-on-secondary: inherit;
+  --color-secondary-container: inherit;
+  --color-on-secondary-container: inherit;
   --color-tertiary: inherit;
   --color-tertiary-content: inherit;
   --color-on-tertiary: inherit;
+  --color-tertiary-container: inherit;
+  --color-on-tertiary-container: inherit;
 
   /* Surface colors */
   --color-surface: inherit;
-  --color-surface-container: inherit;
+  --color-surface-dim: inherit;
+  --color-surface-bright: inherit;
+  --color-surface-variant: inherit;
+  --color-surface-container-lowest: inherit;
   --color-surface-container-low: inherit;
+  --color-surface-container: inherit;
+  --color-surface-container-high: inherit;
+  --color-surface-container-highest: inherit;
   --color-on-surface: inherit;
   --color-on-surface-variant: inherit;
 
+  /* Inverse colors */
+  --color-inverse-surface: inherit;
+  --color-inverse-on-surface: inherit;
+  --color-inverse-primary: inherit;
+
   /* Semantic colors */
   --color-info: inherit;
+  --color-info-content: inherit;
+  --color-on-info: inherit;
+  --color-info-container: inherit;
+  --color-on-info-container: inherit;
   --color-success: inherit;
+  --color-success-content: inherit;
+  --color-on-success: inherit;
+  --color-success-container: inherit;
+  --color-on-success-container: inherit;
   --color-warning: inherit;
+  --color-warning-content: inherit;
+  --color-on-warning: inherit;
+  --color-warning-container: inherit;
+  --color-on-warning-container: inherit;
   --color-error: inherit;
+  --color-error-content: inherit;
+  --color-on-error: inherit;
+  --color-error-container: inherit;
+  --color-on-error-container: inherit;
+
+  /* Accent */
+  --color-accent: inherit;
+  --color-accent-content: inherit;
+
+  /* Neutral */
+  --color-neutral: inherit;
+  --color-neutral-content: inherit;
 
   /* Outline */
   --color-outline: inherit;
   --color-outline-variant: inherit;
+
+  /* Shadow/Scrim */
+  --color-shadow: inherit;
+  --color-scrim: inherit;
 
   /* Typography */
   --font-family: inherit;
@@ -106,4 +151,45 @@ el-dm-tooltip {
   /* Focus */
   --focus-ring: inherit;
   --focus-ring-offset: inherit;
+}
+
+/**
+ * el-dm-table uses a --dm-* namespace instead of --color-*.
+ * Bridge these by aliasing them to the standard --color-* tokens.
+ */
+el-dm-table {
+  --dm-color-primary: var(--color-primary);
+  --dm-color-primary-container: var(--color-primary-container);
+  --dm-color-surface: var(--color-surface);
+  --dm-color-surface-container: var(--color-surface-container);
+  --dm-color-surface-variant: var(--color-surface-variant);
+  --dm-color-on-surface: var(--color-on-surface);
+  --dm-color-on-surface-variant: var(--color-on-surface-variant);
+  --dm-color-outline: var(--color-outline);
+  --dm-color-outline-variant: var(--color-outline-variant);
+  --dm-radius-sm: var(--radius-sm);
+  --dm-radius-md: var(--radius-md);
+}
+
+/**
+ * el-dm-pagination uses non-standard variable names.
+ * Bridge these by aliasing to the closest theme equivalents.
+ */
+el-dm-pagination {
+  --color-border: var(--color-outline-variant);
+  --color-border-hover: var(--color-outline);
+  --color-surface-hover: var(--color-surface-container);
+  --color-text: var(--color-on-surface);
+  --color-text-muted: var(--color-on-surface-variant);
+  --color-primary-contrast: var(--color-on-primary);
+  --color-secondary-contrast: var(--color-on-secondary);
+  --color-neutral-contrast: var(--color-neutral-content);
+}
+
+/**
+ * el-dm-bottom-navigation uses non-standard variable names.
+ */
+el-dm-bottom-navigation {
+  --color-border: var(--color-outline-variant);
+  --color-text-secondary: var(--color-on-surface-variant);
 }
