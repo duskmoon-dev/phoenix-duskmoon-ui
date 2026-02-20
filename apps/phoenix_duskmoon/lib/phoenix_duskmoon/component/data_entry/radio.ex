@@ -35,7 +35,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    values: ["primary", "secondary", "tertiary", "accent", "info", "success", "warning", "error"],
     doc: "color variant"
   )
 
@@ -55,6 +55,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
   end
 
   def dm_radio(assigns) do
+    assigns = assign(assigns, :color, css_color(assigns.color))
+
     ~H"""
     <div class={["form-group", @class]}>
       <label class={["flex items-center gap-2", !@disabled && "cursor-pointer", @disabled && "cursor-not-allowed"]}>
@@ -86,4 +88,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
     </div>
     """
   end
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end

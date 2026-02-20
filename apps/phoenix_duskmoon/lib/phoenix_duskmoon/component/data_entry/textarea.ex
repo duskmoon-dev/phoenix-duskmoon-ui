@@ -37,7 +37,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    values: ["primary", "secondary", "tertiary", "accent", "info", "success", "warning", "error"],
     doc: "color variant"
   )
 
@@ -71,6 +71,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
   end
 
   def dm_textarea(assigns) do
+    assigns = assign(assigns, :color, css_color(assigns.color))
+
     ~H"""
     <div class={["form-group", @class]}>
       <label :if={@label} for={@id} class={["form-label", @label_class]}>
@@ -109,4 +111,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
   defp resize_class("vertical"), do: "textarea-resize-vertical"
   defp resize_class("horizontal"), do: "resize-x"
   defp resize_class("both"), do: "resize"
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end

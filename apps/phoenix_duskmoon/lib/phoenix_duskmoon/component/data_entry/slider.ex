@@ -35,7 +35,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    values: ["primary", "secondary", "tertiary", "accent", "info", "success", "warning", "error"],
     doc: "color variant"
   )
 
@@ -57,6 +57,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
   end
 
   def dm_slider(assigns) do
+    assigns = assign(assigns, :color, css_color(assigns.color))
+
     ~H"""
     <div class={["form-group", @class]}>
       <div :if={@label} class="flex items-center justify-between mb-2">
@@ -99,4 +101,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
     </div>
     """
   end
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end

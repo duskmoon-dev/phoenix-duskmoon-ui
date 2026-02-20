@@ -48,7 +48,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    values: ["primary", "secondary", "tertiary", "accent", "info", "success", "warning", "error"],
     doc: "color variant"
   )
 
@@ -71,6 +71,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
   end
 
   def dm_select(assigns) do
+    assigns = assign(assigns, :color, css_color(assigns.color))
+
     ~H"""
     <div class={["form-group", @class]}>
       <label :if={@label} for={@id} class={["form-label", @label_class]}>
@@ -118,4 +120,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
     {render_slot(@inner_block)}
     """
   end
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end

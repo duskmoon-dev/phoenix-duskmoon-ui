@@ -115,7 +115,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
           options: [{"1", "One"}]
         })
 
-      assert result =~ "select-#{color}"
+      css_class = if color == "accent", do: "tertiary", else: color
+      assert result =~ "select-#{css_class}"
     end
   end
 

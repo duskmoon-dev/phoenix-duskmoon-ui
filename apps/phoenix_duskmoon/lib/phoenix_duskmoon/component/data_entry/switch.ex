@@ -35,7 +35,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    values: ["primary", "secondary", "tertiary", "accent", "info", "success", "warning", "error"],
     doc: "color variant"
   )
 
@@ -57,6 +57,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
   end
 
   def dm_switch(assigns) do
+    assigns = assign(assigns, :color, css_color(assigns.color))
+
     ~H"""
     <div class={["form-group", @class]}>
       <label class="switch-label">
@@ -82,4 +84,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
     </div>
     """
   end
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end

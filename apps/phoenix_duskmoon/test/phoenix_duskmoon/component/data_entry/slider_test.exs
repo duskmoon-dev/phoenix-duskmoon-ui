@@ -68,7 +68,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
   test "renders slider with all color options" do
     for color <- ~w(primary secondary accent info success warning error) do
       result = render_component(&dm_slider/1, %{name: "vol", value: nil, color: color})
-      assert result =~ "slider-#{color}"
+      css_class = if color == "accent", do: "tertiary", else: color
+      assert result =~ "slider-#{css_class}"
     end
   end
 

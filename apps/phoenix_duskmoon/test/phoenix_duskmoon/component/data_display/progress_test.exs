@@ -35,7 +35,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
   test "renders progress with all color options" do
     for color <- ~w(primary secondary accent info success warning error) do
       result = render_component(&dm_progress/1, %{value: 50, color: color})
-      assert result =~ "progress-#{color}"
+      css_class = if color == "accent", do: "tertiary", else: color
+      assert result =~ "progress-#{css_class}"
     end
   end
 

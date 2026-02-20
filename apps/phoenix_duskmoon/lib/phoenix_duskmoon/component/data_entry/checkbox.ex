@@ -36,7 +36,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    values: ["primary", "secondary", "tertiary", "accent", "info", "success", "warning", "error"],
     doc: "color variant"
   )
 
@@ -64,6 +64,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
   end
 
   def dm_checkbox(assigns) do
+    assigns = assign(assigns, :color, css_color(assigns.color))
+
     ~H"""
     <div class={["form-group", @class]}>
       <label class={["flex items-center gap-2", !@disabled && "cursor-pointer", @disabled && "cursor-not-allowed"]}>
@@ -96,4 +98,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
     </div>
     """
   end
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end

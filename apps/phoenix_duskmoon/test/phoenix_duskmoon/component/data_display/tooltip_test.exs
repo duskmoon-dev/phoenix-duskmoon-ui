@@ -80,7 +80,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
           inner_block: inner_block()
         })
 
-      assert result =~ "tooltip-#{color}"
+      css_class = if color == "accent", do: "tertiary", else: color
+      assert result =~ "tooltip-#{css_class}"
     end
   end
 
@@ -309,7 +310,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
         inner_block: inner_block()
       })
 
-    assert result =~ "tooltip-accent"
+    assert result =~ "tooltip-tertiary"
   end
 
   test "renders tooltip with success color variant" do

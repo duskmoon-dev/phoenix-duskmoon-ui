@@ -50,7 +50,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    values: ["primary", "secondary", "tertiary", "accent", "info", "success", "warning", "error"],
     doc: "tooltip color variant"
   )
 
@@ -61,6 +61,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
   slot(:inner_block, required: true)
 
   def dm_tooltip(assigns) do
+    assigns = assign(assigns, :color, css_color(assigns.color))
+
     ~H"""
     <div
       class={[
@@ -78,4 +80,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
     </div>
     """
   end
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end

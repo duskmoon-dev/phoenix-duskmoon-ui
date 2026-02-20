@@ -40,7 +40,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    values: ["primary", "secondary", "tertiary", "accent", "info", "success", "warning", "error"],
     doc: "Progress color variant"
   )
 
@@ -62,6 +62,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
 
   def dm_progress(assigns) do
     assigns
+    |> assign(:color, css_color(assigns.color))
     |> assign(percentage: calculate_percentage(assigns.value, assigns.max))
     |> then(fn a ->
       case a.type do
@@ -181,4 +182,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
   defp circular_size_classes("md"), do: nil
   defp circular_size_classes("lg"), do: "progress-circular-lg"
   defp circular_size_classes("xl"), do: "progress-circular-xl"
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end
