@@ -1,0 +1,82 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/stat"}>Data Display</:crumb>
+  <:crumb>Stat</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Stat</span>
+    <span class="text-sm opacity-60">dm_stat</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Stat component for displaying key metrics and statistics. Shows a title, value, and optional description.
+
+  ## Usage
+  ```elixir
+  <.dm_stat title="Revenue" value="$1.2M" />
+  <.dm_stat title="Users" value="2,345" description="+12%" color="success" />
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Stats</h3>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <.dm_stat title="Total Users" value="1,234" class="bg-surface-container rounded-lg" />
+    <.dm_stat title="Revenue" value="$45.6K" class="bg-surface-container rounded-lg" />
+    <.dm_stat title="Orders" value="892" class="bg-surface-container rounded-lg" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Descriptions</h3>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <.dm_stat
+      title="Growth"
+      value="+24%"
+      description="Up from 18% last quarter"
+      color="success"
+      class="bg-surface-container rounded-lg"
+    />
+    <.dm_stat
+      title="Error Rate"
+      value="3.2%"
+      description="Above threshold"
+      color="error"
+      class="bg-surface-container rounded-lg"
+    />
+    <.dm_stat
+      title="Latency"
+      value="142ms"
+      description="Within target range"
+      color="warning"
+      class="bg-surface-container rounded-lg"
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Color Variants</h3>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <.dm_stat title="Primary" value="100" color="primary" class="bg-surface-container rounded-lg" />
+    <.dm_stat title="Secondary" value="200" color="secondary" class="bg-surface-container rounded-lg" />
+    <.dm_stat title="Success" value="300" color="success" class="bg-surface-container rounded-lg" />
+    <.dm_stat title="Error" value="400" color="error" class="bg-surface-container rounded-lg" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <.dm_stat title="Small" value="$1.2M" size="sm" class="bg-surface-container rounded-lg" />
+    <.dm_stat title="Medium" value="$1.2M" size="md" class="bg-surface-container rounded-lg" />
+    <.dm_stat title="Large" value="$1.2M" size="lg" class="bg-surface-container rounded-lg" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Icons</h3>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <.dm_stat title="Users" value="2,345" color="primary" class="bg-surface-container rounded-lg">
+      <:icon><.dm_mdi name="account-group" class="w-8 h-8" /></:icon>
+    </.dm_stat>
+    <.dm_stat title="Revenue" value="$45.6K" color="success" description="+12.3%" class="bg-surface-container rounded-lg">
+      <:icon><.dm_mdi name="cash-multiple" class="w-8 h-8" /></:icon>
+    </.dm_stat>
+    <.dm_stat title="Alerts" value="7" color="error" description="3 critical" class="bg-surface-container rounded-lg">
+      <:icon><.dm_mdi name="alert-circle" class="w-8 h-8" /></:icon>
+    </.dm_stat>
+  </div>
+</.dm_card>

@@ -46,6 +46,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/data-display/pagination", DataDisplayController, :pagination
     get "/data-display/progress", DataDisplayController, :progress
     get "/data-display/skeleton", DataDisplayController, :skeleton
+    get "/data-display/stat", DataDisplayController, :stat
     get "/data-display/table", DataDisplayController, :table
     get "/data-display/tooltip", DataDisplayController, :tooltip
 

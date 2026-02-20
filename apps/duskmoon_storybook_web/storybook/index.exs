@@ -97,6 +97,12 @@
       },
       %{
         kind: :story,
+        name: "Stat",
+        path: "/data_display/stat",
+        module: Storybook.DataDisplay.Stat
+      },
+      %{
+        kind: :story,
         name: "Table",
         path: "/data_display/table",
         module: Storybook.DataDisplay.Table
