@@ -14,7 +14,7 @@ defmodule PhoenixDuskmoon.CssArt.SpotlightSearchTest do
 
     assert result =~ ~s[<dialog id="spotlight"]
     assert result =~ "dm-art-spotlight-search"
-    assert result =~ "dm-modal"
+    assert result =~ "modal"
   end
 
   test "renders search input with default placeholder" do
@@ -56,7 +56,7 @@ defmodule PhoenixDuskmoon.CssArt.SpotlightSearchTest do
     result = render_component(&dm_art_spotlight_search/1, base_attrs())
 
     assert result =~ "dm-art-spotlight-input"
-    assert result =~ "dm-modal__box"
+    assert result =~ "modal-box"
   end
 
   test "renders search icon svg" do
@@ -133,7 +133,7 @@ defmodule PhoenixDuskmoon.CssArt.SpotlightSearchTest do
   test "renders keyboard shortcut indicator" do
     result = render_component(&dm_art_spotlight_search/1, base_attrs())
 
-    assert result =~ "dm-kbd"
+    assert result =~ "text-xs"
     assert result =~ "cmd+k"
   end
 
@@ -384,8 +384,8 @@ defmodule PhoenixDuskmoon.CssArt.SpotlightSearchTest do
   test "renders kbd shortcut in hidden div" do
     result = render_component(&dm_art_spotlight_search/1, base_attrs())
 
-    assert result =~ "dm-kbd"
-    assert result =~ "dm-kbd--xs"
+    assert result =~ "text-xs"
+    assert result =~ "text-xs"
     assert result =~ "hidden"
   end
 

@@ -91,8 +91,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
         })
 
       assert result =~ "Info message"
-      assert result =~ "dm-alert"
-      assert result =~ "dm-alert--info"
+      assert result =~ "alert"
+      assert result =~ "alert-info"
     end
 
     test "renders individual flash with kind error" do
@@ -103,8 +103,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
         })
 
       assert result =~ "Error message"
-      assert result =~ "dm-alert"
-      assert result =~ "dm-alert--error"
+      assert result =~ "alert"
+      assert result =~ "alert-error"
     end
 
     test "renders flash with title" do
@@ -168,9 +168,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
           flash: %{"info" => "Positioned"}
         })
 
-      assert result =~ "dm-toast"
-      assert result =~ "dm-toast--top"
-      assert result =~ "dm-toast--end"
+      assert result =~ "fixed"
+      assert result =~ "top-4"
+      assert result =~ "right-4"
     end
 
     test "does not render when flash message is empty for kind" do
@@ -181,7 +181,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
         })
 
       # The :if guard should prevent rendering the outer div
-      refute result =~ "dm-alert"
+      refute result =~ "alert"
     end
 
     test "does not render when flash has different kind" do
@@ -281,9 +281,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
           flash: %{"info" => "Positioned"}
         })
 
-      assert result =~ "dm-toast"
-      assert result =~ "dm-toast--top"
-      assert result =~ "dm-toast--end"
+      assert result =~ "fixed"
+      assert result =~ "top-4"
+      assert result =~ "right-4"
     end
 
     test "renders dm-alert class with kind-specific variant" do
@@ -299,8 +299,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
           flash: %{"error" => "Error alert"}
         })
 
-      assert info_result =~ "dm-alert--info"
-      assert error_result =~ "dm-alert--error"
+      assert info_result =~ "alert-info"
+      assert error_result =~ "alert-error"
     end
 
     test "renders flash with default Close aria-label on close button" do

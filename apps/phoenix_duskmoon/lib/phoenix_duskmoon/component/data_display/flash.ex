@@ -41,10 +41,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
       role="alert"
       aria-live={if(@kind == :error, do: "assertive", else: "polite")}
       aria-atomic="true"
-      class={"hidden w-80 sm:w-96 dm-toast dm-toast--top dm-toast--end z-[1000]"}
+      class={"hidden fixed top-4 right-4 w-80 sm:w-96 z-[1000]"}
       {@rest}
     >
-      <div class={["flex flex-col gap-2 relative dm-alert", if(@kind == :info, do: "dm-alert--info"), if(@kind == :error, do: "dm-alert--error")]}>
+      <div class={["alert", if(@kind == :info, do: "alert-info"), if(@kind == :error, do: "alert-error")]}>
         <div :if={@title} class="flex items-center gap-1.5 w-full text-xs font-semibold leading-6">
           <.dm_bsi :if={@kind == :info} name="info-circle" class="w-4 h-4" />
           <.dm_bsi :if={@kind == :error} name="exclamation-circle" class="w-4 h-4" />

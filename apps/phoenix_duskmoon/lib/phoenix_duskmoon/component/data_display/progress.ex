@@ -71,105 +71,33 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
         <span class="text-sm font-medium">{@percentage}%</span>
       </div>
 
-      <progress
+      <div
+        role="progressbar"
         class={[
-          "dm-progress dm-progress--#{@color}",
+          "progress",
+          "progress-#{@color}",
           size_classes(@size),
-          @animated && "dm-progress--animated",
-          @indeterminate && "dm-progress--indeterminate",
+          @animated && "progress-striped progress-animated",
+          @indeterminate && "progress-indeterminate",
           @progress_class
         ]}
-        value={if(@indeterminate, do: nil, else: @value)}
-        max={@max}
         aria-valuenow={if(!@indeterminate, do: @value)}
         aria-valuemin={0}
         aria-valuemax={@max}
         aria-label={if(!@show_label, do: @label_text)}
         {@rest}
-      ></progress>
+      >
+        <div
+          class="progress-bar"
+          style={if(!@indeterminate, do: "width: #{@percentage}%")}
+        ></div>
+      </div>
 
       <div :if={@show_label} class="text-sm text-[var(--color-on-surface-variant)] mt-1">
         {@percentage}% {@complete_text}
       </div>
     </div>
 
-    <style>
-      /* Animated striped progress */
-      .dm-progress--animated::-webkit-progress-value {
-        background-image: linear-gradient(
-          45deg,
-          rgba(255, 255, 255, 0.2) 25%,
-          transparent 25%,
-          transparent 50%,
-          rgba(255, 255, 255, 0.2) 50%,
-          rgba(255, 255, 255, 0.2) 75%,
-          transparent 75%,
-          transparent
-        );
-        background-size: 1rem 1rem;
-        animation: progress-bar-stripes 1s linear infinite;
-      }
-
-      .dm-progress--animated::-moz-progress-bar {
-        background-image: linear-gradient(
-          45deg,
-          rgba(255, 255, 255, 0.2) 25%,
-          transparent 25%,
-          transparent 50%,
-          rgba(255, 255, 255, 0.2) 50%,
-          rgba(255, 255, 255, 0.2) 75%,
-          transparent 75%,
-          transparent
-        );
-        background-size: 1rem 1rem;
-        animation: progress-bar-stripes 1s linear infinite;
-      }
-
-      @keyframes progress-bar-stripes {
-        0% {
-          background-position: 1rem 0;
-        }
-        100% {
-          background-position: 0 0;
-        }
-      }
-
-      /* Indeterminate progress */
-      .dm-progress--indeterminate::-webkit-progress-value {
-        background-image: linear-gradient(
-          90deg,
-          transparent,
-          currentColor,
-          transparent
-        );
-        animation: progress-indeterminate 2s ease-in-out infinite;
-      }
-
-      .dm-progress--indeterminate::-moz-progress-bar {
-        background-image: linear-gradient(
-          90deg,
-          transparent,
-          currentColor,
-          transparent
-        );
-        animation: progress-indeterminate 2s ease-in-out infinite;
-      }
-
-      @keyframes progress-indeterminate {
-        0% {
-          left: -35%;
-          right: 100%;
-        }
-        60% {
-          left: 100%;
-          right: -90%;
-        }
-        100% {
-          left: 100%;
-          right: -90%;
-        }
-      }
-    </style>
     """
   end
 
@@ -181,8 +109,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
 
   defp calculate_percentage(_, _), do: "0"
 
-  defp size_classes("xs"), do: "dm-progress--xs"
-  defp size_classes("sm"), do: "dm-progress--sm"
-  defp size_classes("md"), do: "dm-progress--md"
-  defp size_classes("lg"), do: "dm-progress--lg"
+  defp size_classes("xs"), do: "progress-xs"
+  defp size_classes("sm"), do: "progress-sm"
+  defp size_classes("md"), do: nil
+  defp size_classes("lg"), do: "progress-lg"
 end

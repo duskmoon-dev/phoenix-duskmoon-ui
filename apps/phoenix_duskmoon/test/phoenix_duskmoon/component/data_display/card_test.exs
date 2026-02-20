@@ -216,7 +216,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CardTest do
         })
 
       assert result =~ ~s[<el-dm-card]
-      assert result =~ "dm-alert"
+      assert result =~ "alert"
       assert result =~ "Network error"
       refute result =~ "skeleton"
     end
@@ -231,7 +231,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CardTest do
       assert result =~ ~s[<el-dm-card]
       assert result =~ "Success content"
       refute result =~ "skeleton"
-      refute result =~ "dm-alert"
+      refute result =~ "alert"
     end
 
     test "renders async card with title in loading state" do
@@ -257,7 +257,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CardTest do
 
       assert result =~ ~s[slot="header"]
       assert result =~ "Title"
-      assert result =~ "dm-alert"
+      assert result =~ "alert"
     end
 
     test "renders async card with action in success state" do

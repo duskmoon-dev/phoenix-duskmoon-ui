@@ -5,46 +5,62 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
   import Phoenix.LiveViewTest
   import PhoenixDuskmoon.Component.DataDisplay.Progress
 
-  test "renders basic progress bar with progress element" do
+  test "renders basic progress bar with div role=progressbar" do
     result = render_component(&dm_progress/1, %{value: 50})
 
-    assert result =~ "<progress"
-    assert result =~ "dm-progress"
-    assert result =~ ~s[value="50"]
-    assert result =~ ~s[max="100"]
+    assert result =~ ~s[role="progressbar"]
+    assert result =~ "progress"
+    assert result =~ "progress-bar"
+  end
+
+  test "renders progress bar with correct width percentage" do
+    result = render_component(&dm_progress/1, %{value: 50, max: 100})
+
+    assert result =~ "width: 50.0%"
   end
 
   test "renders progress with custom max" do
     result = render_component(&dm_progress/1, %{value: 25, max: 50})
 
-    assert result =~ ~s[value="25"]
-    assert result =~ ~s[max="50"]
+    assert result =~ ~s[aria-valuenow="25"]
+    assert result =~ ~s[aria-valuemax="50"]
   end
 
   test "renders progress with default color primary" do
     result = render_component(&dm_progress/1, %{value: 30})
 
-    assert result =~ "dm-progress--primary"
+    assert result =~ "progress-primary"
   end
 
   test "renders progress with all color options" do
     for color <- ~w(primary secondary accent info success warning error) do
       result = render_component(&dm_progress/1, %{value: 50, color: color})
-      assert result =~ "dm-progress--#{color}"
+      assert result =~ "progress-#{color}"
     end
   end
 
-  test "renders progress with default size md" do
+  test "renders progress with default size md (no size class)" do
     result = render_component(&dm_progress/1, %{value: 50})
 
-    assert result =~ "dm-progress--md"
+    refute result =~ "progress-md"
   end
 
-  test "renders progress with all size options" do
-    for size <- ~w(xs sm md lg) do
-      result = render_component(&dm_progress/1, %{value: 50, size: size})
-      assert result =~ "dm-progress--#{size}"
-    end
+  test "renders progress with xs size class" do
+    result = render_component(&dm_progress/1, %{value: 50, size: "xs"})
+
+    assert result =~ "progress-xs"
+  end
+
+  test "renders progress with sm size class" do
+    result = render_component(&dm_progress/1, %{value: 50, size: "sm"})
+
+    assert result =~ "progress-sm"
+  end
+
+  test "renders progress with lg size class" do
+    result = render_component(&dm_progress/1, %{value: 50, size: "lg"})
+
+    assert result =~ "progress-lg"
   end
 
   test "renders progress with show_label displaying percentage" do
@@ -59,29 +75,27 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
     result = render_component(&dm_progress/1, %{value: 60})
 
     refute result =~ "Complete"
-    # "Progress" appears only in aria-label, not as visible text
     refute result =~ ">Progress<"
   end
 
   test "renders progress with animated class" do
     result = render_component(&dm_progress/1, %{value: 50, animated: true})
 
-    assert result =~ "dm-progress--animated"
+    assert result =~ "progress-striped"
+    assert result =~ "progress-animated"
   end
 
-  test "renders progress element without animated class by default" do
+  test "renders progress without animated class by default" do
     result = render_component(&dm_progress/1, %{value: 50})
 
-    # The style block always contains .dm-progress--animated, so check the progress element itself
-    [_, progress_tag] = String.split(result, "<progress", parts: 2)
-    [progress_attrs, _] = String.split(progress_tag, ">", parts: 2)
-    refute progress_attrs =~ "dm-progress--animated"
+    refute result =~ "progress-animated"
+    refute result =~ "progress-striped"
   end
 
   test "renders indeterminate progress with class" do
     result = render_component(&dm_progress/1, %{indeterminate: true})
 
-    assert result =~ "dm-progress--indeterminate"
+    assert result =~ "progress-indeterminate"
   end
 
   test "renders progress with custom class" do
@@ -106,14 +120,6 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
       })
 
     assert result =~ "custom-label"
-  end
-
-  test "renders progress with style block for animations" do
-    result = render_component(&dm_progress/1, %{value: 50})
-
-    assert result =~ "<style>"
-    assert result =~ "@keyframes progress-bar-stripes"
-    assert result =~ "@keyframes progress-indeterminate"
   end
 
   test "renders progress with rest attributes" do
@@ -144,11 +150,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
     assert result =~ "0.0%"
   end
 
-  test "renders indeterminate progress without value attribute" do
+  test "renders indeterminate progress without width style" do
     result = render_component(&dm_progress/1, %{indeterminate: true})
 
-    assert result =~ "dm-progress--indeterminate"
-    assert result =~ "<progress"
+    assert result =~ "progress-indeterminate"
+    refute result =~ "width:"
   end
 
   test "renders animated and indeterminate combined" do
@@ -159,8 +165,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
         indeterminate: true
       })
 
-    assert result =~ "dm-progress--animated"
-    assert result =~ "dm-progress--indeterminate"
+    assert result =~ "progress-striped"
+    assert result =~ "progress-animated"
+    assert result =~ "progress-indeterminate"
   end
 
   test "renders progress wrapper div always present" do
@@ -172,8 +179,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
   test "renders progress with default value 0" do
     result = render_component(&dm_progress/1, %{})
 
-    assert result =~ ~s[value="0"]
-    assert result =~ ~s[max="100"]
+    assert result =~ ~s[aria-valuenow="0"]
+    assert result =~ ~s[aria-valuemax="100"]
   end
 
   test "renders aria-compatible progress element" do
@@ -205,31 +212,19 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
   test "renders progress with value exceeding max" do
     result = render_component(&dm_progress/1, %{value: 150, max: 100, show_label: true})
 
-    # 150/100 * 100 = 150.0%
     assert result =~ "150.0%"
   end
 
   test "renders progress with max 0 shows 0 percent" do
     result = render_component(&dm_progress/1, %{value: 50, max: 0, show_label: true})
 
-    # calculate_percentage(_, max) when max <= 0 returns "0"
     assert result =~ "0%"
   end
 
   test "renders progress with fractional percentage" do
     result = render_component(&dm_progress/1, %{value: 1, max: 3, show_label: true})
 
-    # 1/3 * 100 = 33.3%
     assert result =~ "33.3%"
-  end
-
-  test "renders indeterminate progress omits value attr from progress element" do
-    result = render_component(&dm_progress/1, %{indeterminate: true})
-
-    # When indeterminate, value should be nil (not rendered as HTML attr)
-    [_, progress_part] = String.split(result, "<progress", parts: 2)
-    [progress_attrs, _] = String.split(progress_part, ">", parts: 2)
-    refute progress_attrs =~ ~s[value=]
   end
 
   test "renders progress with all options combined" do
@@ -246,10 +241,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
         progress_class: "my-bar"
       })
 
-    assert result =~ "dm-progress--success"
-    assert result =~ "dm-progress--lg"
+    assert result =~ "progress-success"
+    assert result =~ "progress-lg"
     assert result =~ "75.0%"
-    assert result =~ "dm-progress--animated"
+    assert result =~ "progress-striped"
+    assert result =~ "progress-animated"
     assert result =~ "my-wrapper"
     assert result =~ "my-label"
     assert result =~ "my-bar"
@@ -265,9 +261,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
     test "does not render aria-label when show_label is true" do
       result = render_component(&dm_progress/1, %{value: 50, show_label: true})
 
-      [_, progress_part] = String.split(result, "<progress", parts: 2)
-      [progress_attrs, _] = String.split(progress_part, ">", parts: 2)
-      refute progress_attrs =~ "aria-label"
+      refute result =~ ~s[aria-label="Progress"]
     end
 
     test "uses custom label_text for aria-label when show_label is false" do
