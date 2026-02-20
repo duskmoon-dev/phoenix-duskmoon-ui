@@ -44,7 +44,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
     doc: "Progress color variant"
   )
 
-  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "Progress size")
+  attr(:size, :string,
+    default: "md",
+    values: ["xs", "sm", "md", "lg", "xl"],
+    doc: "Progress size"
+  )
+
   attr(:show_label, :boolean, default: false, doc: "Show percentage label")
   attr(:animated, :boolean, default: false, doc: "Enable striped animation (linear only)")
   attr(:indeterminate, :boolean, default: false, doc: "Show indeterminate progress")
@@ -169,9 +174,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
   defp linear_size_classes("sm"), do: "progress-sm"
   defp linear_size_classes("md"), do: nil
   defp linear_size_classes("lg"), do: "progress-lg"
+  defp linear_size_classes("xl"), do: "progress-xl"
 
   defp circular_size_classes("xs"), do: "progress-circular-sm"
   defp circular_size_classes("sm"), do: "progress-circular-sm"
   defp circular_size_classes("md"), do: nil
   defp circular_size_classes("lg"), do: "progress-circular-lg"
+  defp circular_size_classes("xl"), do: "progress-circular-xl"
 end

@@ -63,6 +63,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
     assert result =~ "progress-lg"
   end
 
+  test "renders progress with xl size class" do
+    result = render_component(&dm_progress/1, %{value: 50, size: "xl"})
+
+    assert result =~ "progress-xl"
+  end
+
   test "renders progress with show_label displaying percentage" do
     result = render_component(&dm_progress/1, %{value: 60, max: 100, show_label: true})
 
@@ -432,6 +438,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
         render_component(&dm_progress/1, %{type: "circular", value: 50, size: "lg"})
 
       assert result =~ "progress-circular-lg"
+    end
+
+    test "renders circular with xl size class" do
+      result =
+        render_component(&dm_progress/1, %{type: "circular", value: 50, size: "xl"})
+
+      assert result =~ "progress-circular-xl"
     end
 
     test "renders circular indeterminate with class" do
