@@ -209,7 +209,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         <%= @label %>
       </label>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-        <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>
     </div>
     """
@@ -238,7 +238,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           />
         </label>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -269,7 +269,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <%= Phoenix.HTML.Form.options_for_select(@options, @value) %>
         </select>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -304,7 +304,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           </label>
         </div>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -336,7 +336,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           </label>
         </div>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -363,7 +363,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           {@rest}
         ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -393,7 +393,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           {@rest}
         />
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -440,7 +440,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <span><%= @max %></span>
         </div>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -480,7 +480,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <% end %>
         </div>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -513,7 +513,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <.dm_mdi name="calendar" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-on-surface-variant)] pointer-events-none" />
         </div>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -546,7 +546,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <.dm_mdi name="clock" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-on-surface-variant)] pointer-events-none" />
         </div>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -598,7 +598,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           />
         </div>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -636,7 +636,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         </div>
       </label>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-        <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>
     </div>
     """
@@ -677,7 +677,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           </ul>
         </div>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -721,7 +721,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           </button>
         </div>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -774,7 +774,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         </div>
         <input type="hidden" name={@name} id={"#{@id}_hidden"} value={@value || ""} />
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -813,7 +813,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         </div>
         <input type="hidden" name={@name} value={inspect(@tags)} />
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -891,7 +891,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         </div>
         <input type="hidden" name={@name} value={inspect([@min_val, @max_val])} />
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -965,7 +965,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <p :if={@strength == "strong"}>{@password_hint_strong}</p>
         </div>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
@@ -996,7 +996,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           {@rest}
         />
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
-          <.dm_error :for={msg <- @errors}><%= msg %></.dm_error>
+          <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
       </div>
     </div>
