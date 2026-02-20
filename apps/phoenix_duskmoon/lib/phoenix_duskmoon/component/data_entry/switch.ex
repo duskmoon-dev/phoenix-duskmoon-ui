@@ -62,6 +62,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
     ~H"""
     <div class={["form-group", @class]}>
       <label class="switch-label">
+        <input type="hidden" name={@name} value="false" disabled={@disabled} />
         <input
           type="checkbox"
           role="switch"

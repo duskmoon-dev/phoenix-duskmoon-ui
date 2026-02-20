@@ -74,6 +74,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
     ~H"""
     <div class={["form-group", @class]}>
       <label class={["flex items-center gap-2", !@disabled && "cursor-pointer", @disabled && "cursor-not-allowed"]}>
+        <input type="hidden" name={@name} value="false" disabled={@disabled} />
         <input
           type="checkbox"
           name={@name}

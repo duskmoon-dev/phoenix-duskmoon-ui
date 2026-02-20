@@ -268,4 +268,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
     assert result =~ "cursor-not-allowed"
     refute result =~ "cursor-pointer"
   end
+
+  test "renders hidden false input for form submission" do
+    result = render_component(&dm_checkbox/1, %{name: "agree"})
+
+    assert result =~ ~s(type="hidden")
+    assert result =~ ~s(value="false")
+  end
+
+  test "hidden false input uses same name as checkbox" do
+    result = render_component(&dm_checkbox/1, %{name: "terms"})
+
+    assert result =~ ~s(<input type="hidden" name="terms" value="false")
+  end
 end

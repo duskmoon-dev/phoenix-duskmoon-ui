@@ -270,4 +270,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
 
     assert result =~ "disabled"
   end
+
+  test "renders hidden false input for form submission" do
+    result = render_component(&dm_switch/1, %{name: "notifications"})
+
+    assert result =~ ~s(type="hidden")
+    assert result =~ ~s(value="false")
+  end
+
+  test "hidden false input uses same name as switch" do
+    result = render_component(&dm_switch/1, %{name: "dark_mode"})
+
+    assert result =~ ~s(<input type="hidden" name="dark_mode" value="false")
+  end
 end
