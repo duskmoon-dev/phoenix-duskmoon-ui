@@ -55,6 +55,7 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.Action.Link
       import PhoenixDuskmoon.Component.Action.Dropdown
       import PhoenixDuskmoon.Component.Action.Menu
+      import PhoenixDuskmoon.Component.Action.Toggle
 
       # Data Display components
       import PhoenixDuskmoon.Component.DataDisplay.Accordion

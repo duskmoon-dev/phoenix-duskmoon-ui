@@ -16,4 +16,8 @@ defmodule DuskmoonStorybookWeb.Components.ActionController do
   def menu(conn, _params) do
     render(conn, :menu, active_menu: "action-menu")
   end
+
+  def toggle(conn, _params) do
+    render(conn, :toggle, active_menu: "action-toggle")
+  end
 end

@@ -35,6 +35,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/action/link", ActionController, :link
     get "/action/dropdown", ActionController, :dropdown
     get "/action/menu", ActionController, :menu
+    get "/action/toggle", ActionController, :toggle
 
     # Data Display
     get "/data-display/accordion", DataDisplayController, :accordion

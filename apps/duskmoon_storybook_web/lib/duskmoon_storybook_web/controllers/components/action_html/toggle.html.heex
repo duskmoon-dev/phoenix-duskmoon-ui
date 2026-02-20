@@ -1,0 +1,138 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/action/toggle"}>Action</:crumb>
+  <:crumb>Toggle</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Toggle</span>
+    <span class="text-sm opacity-60">dm_toggle_group</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Toggle button group component using `@duskmoon-dev/core` CSS classes.
+  Renders a group of toggle buttons for selecting one or multiple options.
+  Different from `dm_switch` (form on/off control) — these are action
+  buttons with active/inactive visual states.
+
+  ## Usage
+  ```elixir
+  <.dm_toggle_group>
+    <:item active>Bold</:item>
+    <:item>Italic</:item>
+    <:item>Underline</:item>
+  </.dm_toggle_group>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Toggle Group</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_toggle_group>
+      <:item active>Bold</:item>
+      <:item>Italic</:item>
+      <:item>Underline</:item>
+    </.dm_toggle_group>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Icon Toggle (Exclusive)</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_toggle_group exclusive>
+      <:item active value="left" icon="format-align-left" icon_only />
+      <:item value="center" icon="format-align-center" icon_only />
+      <:item value="right" icon="format-align-right" icon_only />
+      <:item value="justify" icon="format-align-justify" icon_only />
+    </.dm_toggle_group>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Style Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_toggle_group>
+      <:item active>Default</:item>
+      <:item>Option B</:item>
+      <:item>Option C</:item>
+    </.dm_toggle_group>
+    <.dm_toggle_group variant="segmented">
+      <:item active>Segmented</:item>
+      <:item>Option B</:item>
+      <:item>Option C</:item>
+    </.dm_toggle_group>
+    <.dm_toggle_group variant="outlined">
+      <:item active>Outlined</:item>
+      <:item>Option B</:item>
+      <:item>Option C</:item>
+    </.dm_toggle_group>
+    <.dm_toggle_group variant="filled">
+      <:item active>Filled</:item>
+      <:item>Option B</:item>
+      <:item>Option C</:item>
+    </.dm_toggle_group>
+    <.dm_toggle_group variant="chip">
+      <:item active>Chip A</:item>
+      <:item>Chip B</:item>
+      <:item>Chip C</:item>
+    </.dm_toggle_group>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Color Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_toggle_group>
+      <:item active>Primary (default)</:item>
+      <:item>Option B</:item>
+    </.dm_toggle_group>
+    <.dm_toggle_group color="secondary">
+      <:item active>Secondary</:item>
+      <:item>Option B</:item>
+    </.dm_toggle_group>
+    <.dm_toggle_group color="tertiary">
+      <:item active>Tertiary</:item>
+      <:item>Option B</:item>
+    </.dm_toggle_group>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Size Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_toggle_group size="sm">
+      <:item active>Small</:item>
+      <:item>Option B</:item>
+    </.dm_toggle_group>
+    <.dm_toggle_group>
+      <:item active>Default</:item>
+      <:item>Option B</:item>
+    </.dm_toggle_group>
+    <.dm_toggle_group size="lg">
+      <:item active>Large</:item>
+      <:item>Option B</:item>
+    </.dm_toggle_group>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Vertical Layout</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_toggle_group vertical>
+      <:item active icon="format-bold" icon_only />
+      <:item icon="format-italic" icon_only />
+      <:item icon="format-underline" icon_only />
+      <:item icon="format-strikethrough-variant" icon_only />
+    </.dm_toggle_group>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Full Width</h3>
+  <div class="mb-4 max-w-lg">
+    <.dm_toggle_group full>
+      <:item active>Day</:item>
+      <:item>Week</:item>
+      <:item>Month</:item>
+      <:item>Year</:item>
+    </.dm_toggle_group>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Disabled Items</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_toggle_group>
+      <:item active>Active</:item>
+      <:item>Normal</:item>
+      <:item disabled>Disabled</:item>
+    </.dm_toggle_group>
+  </div>
+</.dm_card>
