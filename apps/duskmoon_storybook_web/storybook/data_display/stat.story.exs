@@ -7,7 +7,7 @@ defmodule Storybook.DataDisplay.Stat do
     [
       %Variation{
         id: :default,
-        description: "Default stat",
+        description: "Default stat (no color)",
         attributes: %{title: "Total Users", value: "1,234"}
       },
       %Variation{
@@ -25,6 +25,21 @@ defmodule Storybook.DataDisplay.Stat do
         attributes: %{title: "Active Sessions", value: "892", color: "primary"}
       },
       %Variation{
+        id: :secondary_color,
+        description: "Secondary color",
+        attributes: %{title: "Page Views", value: "15.2K", color: "secondary"}
+      },
+      %Variation{
+        id: :accent_color,
+        description: "Accent color",
+        attributes: %{title: "Bookmarks", value: "348", color: "accent"}
+      },
+      %Variation{
+        id: :info_color,
+        description: "Info color",
+        attributes: %{title: "Pending", value: "42", color: "info"}
+      },
+      %Variation{
         id: :success_color,
         description: "Success color with description",
         attributes: %{
@@ -32,6 +47,16 @@ defmodule Storybook.DataDisplay.Stat do
           value: "+24%",
           color: "success",
           description: "Up from 18% last quarter"
+        }
+      },
+      %Variation{
+        id: :warning_color,
+        description: "Warning color",
+        attributes: %{
+          title: "Response Time",
+          value: "450ms",
+          color: "warning",
+          description: "Above 300ms target"
         }
       },
       %Variation{
@@ -48,6 +73,11 @@ defmodule Storybook.DataDisplay.Stat do
         id: :small_size,
         description: "Small size",
         attributes: %{title: "Uptime", value: "99.9%", size: "sm"}
+      },
+      %Variation{
+        id: :medium_size,
+        description: "Medium size (default)",
+        attributes: %{title: "CPU Usage", value: "67%", size: "md", color: "info"}
       },
       %Variation{
         id: :large_size,
