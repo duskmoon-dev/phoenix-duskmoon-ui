@@ -65,6 +65,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
     color_class_map = %{
       "primary" => "bg-primary",
       "secondary" => "bg-secondary",
+      "tertiary" => "bg-tertiary",
       "accent" => "bg-accent",
       "info" => "bg-[var(--color-info)]",
       "success" => "bg-[var(--color-success)]",

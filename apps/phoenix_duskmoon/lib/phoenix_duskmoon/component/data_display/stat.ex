@@ -35,7 +35,17 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Stat do
 
   attr(:color, :string,
     default: nil,
-    values: [nil, "primary", "secondary", "accent", "info", "success", "warning", "error"],
+    values: [
+      nil,
+      "primary",
+      "secondary",
+      "tertiary",
+      "accent",
+      "info",
+      "success",
+      "warning",
+      "error"
+    ],
     doc: "value text color variant"
   )
 
@@ -81,6 +91,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Stat do
   defp value_color(nil), do: nil
   defp value_color("primary"), do: "text-primary"
   defp value_color("secondary"), do: "text-secondary"
+  defp value_color("tertiary"), do: "text-tertiary"
   defp value_color("accent"), do: "text-accent"
   defp value_color("info"), do: "text-info"
   defp value_color("success"), do: "text-success"

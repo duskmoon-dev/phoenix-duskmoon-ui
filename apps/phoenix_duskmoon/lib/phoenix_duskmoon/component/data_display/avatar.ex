@@ -70,7 +70,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    values: ["primary", "secondary", "tertiary", "accent", "info", "success", "warning", "error"],
     doc: "background color for text-based avatars"
   )
 
@@ -228,6 +228,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
 
   defp color_classes("primary"), do: "bg-primary"
   defp color_classes("secondary"), do: "bg-secondary"
+  defp color_classes("tertiary"), do: "bg-tertiary"
   defp color_classes("accent"), do: "bg-accent"
   defp color_classes("info"), do: "bg-[var(--color-info)]"
   defp color_classes("success"), do: "bg-[var(--color-success)]"

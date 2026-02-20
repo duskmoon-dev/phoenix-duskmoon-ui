@@ -116,6 +116,17 @@ defmodule PhoenixDuskmoon.Component.Navigation.StepsTest do
     end
   end
 
+  test "maps accent color to tertiary" do
+    result =
+      render_component(&dm_steps/1, %{
+        steps: [%{label: "S1"}],
+        color: "accent"
+      })
+
+    assert result =~ ~s(color="tertiary")
+    refute result =~ ~s(color="accent")
+  end
+
   test "renders with class attribute" do
     result =
       render_component(&dm_steps/1, %{

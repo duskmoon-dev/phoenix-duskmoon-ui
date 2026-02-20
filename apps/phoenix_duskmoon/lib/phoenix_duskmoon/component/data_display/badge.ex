@@ -34,6 +34,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Badge do
     values: [
       "primary",
       "secondary",
+      "tertiary",
       "accent",
       "info",
       "success",

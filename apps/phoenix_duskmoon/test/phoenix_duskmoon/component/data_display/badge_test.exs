@@ -22,7 +22,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
   end
 
   test "renders badge with all variant options" do
-    for variant <- ~w(primary secondary accent info success warning error ghost neutral) do
+    for variant <- ~w(primary secondary tertiary accent info success warning error ghost neutral) do
       result =
         render_component(&dm_badge/1, %{
           variant: variant,

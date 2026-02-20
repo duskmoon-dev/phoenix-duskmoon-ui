@@ -49,7 +49,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
   end
 
   test "renders all color options" do
-    for color <- ~w(primary secondary accent info success warning error) do
+    for color <- ~w(primary secondary tertiary accent info success warning error) do
       result =
         render_component(&dm_stat/1, %{
           title: "Test",
@@ -178,8 +178,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
     assert result =~ "text-success"
   end
 
-  test "description does not get color for primary/secondary/accent/info" do
-    for color <- ~w(primary secondary accent info) do
+  test "description does not get color for primary/secondary/tertiary/accent/info" do
+    for color <- ~w(primary secondary tertiary accent info) do
       result =
         render_component(&dm_stat/1, %{
           title: "Test",

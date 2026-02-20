@@ -51,7 +51,17 @@ defmodule PhoenixDuskmoon.Component.Layout.Divider do
 
   attr(:variant, :string,
     default: "base",
-    values: ["base", "primary", "secondary", "accent", "info", "success", "warning", "error"],
+    values: [
+      "base",
+      "primary",
+      "secondary",
+      "tertiary",
+      "accent",
+      "info",
+      "success",
+      "warning",
+      "error"
+    ],
     doc: "divider color variant"
   )
 

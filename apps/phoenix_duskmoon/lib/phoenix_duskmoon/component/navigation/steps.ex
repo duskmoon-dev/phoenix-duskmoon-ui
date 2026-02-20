@@ -47,7 +47,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Steps do
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "tertiary", "success", "warning", "error", "info"],
+    values: ["primary", "secondary", "tertiary", "accent", "success", "warning", "error", "info"],
     doc: "Color theme"
   )
 
@@ -61,7 +61,10 @@ defmodule PhoenixDuskmoon.Component.Navigation.Steps do
   attr(:rest, :global)
 
   def dm_steps(assigns) do
-    assigns = assign(assigns, :steps_json, Jason.encode!(assigns.steps))
+    assigns =
+      assigns
+      |> assign(:color, css_color(assigns.color))
+      |> assign(:steps_json, Jason.encode!(assigns.steps))
 
     ~H"""
     <el-dm-stepper
@@ -77,4 +80,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Steps do
     </el-dm-stepper>
     """
   end
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end
