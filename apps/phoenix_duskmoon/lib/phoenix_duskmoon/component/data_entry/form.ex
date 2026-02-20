@@ -87,7 +87,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
 
   def dm_label(assigns) do
     ~H"""
-    <label for={@for} id={@id} class={["dm-label", @class]}>
+    <label for={@for} id={@id} class={["form-label", @class]}>
       {render_slot(@inner_block)}
     </label>
     """

@@ -54,7 +54,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
       })
 
     assert result =~ "Country"
-    assert result =~ "dm-label"
+    assert result =~ "form-label"
   end
 
   test "renders select with custom id" do
@@ -204,7 +204,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
       })
 
     assert result =~ "text-lg font-semibold"
-    assert result =~ "dm-label"
+    assert result =~ "form-label"
   end
 
   test "renders select without label by default" do
@@ -215,7 +215,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
         options: [{"1", "One"}]
       })
 
-    refute result =~ "dm-label"
+    refute result =~ "form-label"
     refute result =~ "<label"
   end
 

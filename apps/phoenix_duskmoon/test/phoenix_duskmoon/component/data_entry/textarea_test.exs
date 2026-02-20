@@ -54,7 +54,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
 
     assert result =~ "Biography"
     assert result =~ "dm-label__text"
-    assert result =~ "dm-label"
+    assert result =~ "form-label"
   end
 
   test "renders textarea without label when not provided" do

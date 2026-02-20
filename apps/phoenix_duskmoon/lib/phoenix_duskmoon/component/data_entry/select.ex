@@ -73,7 +73,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
   def dm_select(assigns) do
     ~H"""
     <div class={["form-group", @class]}>
-      <label :if={@label} for={@id} class={["dm-label", @label_class]}>
+      <label :if={@label} for={@id} class={["form-label", @label_class]}>
         <span class="dm-label__text">{@label}</span>
       </label>
       <select

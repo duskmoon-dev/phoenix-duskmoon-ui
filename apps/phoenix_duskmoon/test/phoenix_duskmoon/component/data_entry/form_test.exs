@@ -68,14 +68,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
   end
 
   describe "dm_label/1" do
-    test "renders label with dm-label class" do
+    test "renders label with form-label class" do
       result =
         render_component(&dm_label/1, %{
           inner_block: inner_block("Email")
         })
 
       assert result =~ "<label"
-      assert result =~ "dm-label"
+      assert result =~ "form-label"
       assert result =~ "Email"
     end
 
@@ -418,7 +418,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
 
       assert result =~ ~s[for="input-1"]
       assert result =~ "text-error"
-      assert result =~ "dm-label"
+      assert result =~ "form-label"
     end
   end
 
