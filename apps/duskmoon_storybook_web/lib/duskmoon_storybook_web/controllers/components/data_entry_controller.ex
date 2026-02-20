@@ -25,6 +25,10 @@ defmodule DuskmoonStorybookWeb.Components.DataEntryController do
     render(conn, :input, active_menu: "data-entry-input")
   end
 
+  def otp_input(conn, _params) do
+    render(conn, :otp_input, active_menu: "data-entry-otp-input")
+  end
+
   def rating(conn, _params) do
     render(conn, :rating, active_menu: "data-entry-rating")
   end

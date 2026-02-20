@@ -60,6 +60,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/data-entry/file-upload", DataEntryController, :file_upload
     get "/data-entry/form", DataEntryController, :form
     get "/data-entry/input", DataEntryController, :input
+    get "/data-entry/otp-input", DataEntryController, :otp_input
     get "/data-entry/rating", DataEntryController, :rating
     get "/data-entry/radio", DataEntryController, :radio
     get "/data-entry/segment-control", DataEntryController, :segment_control

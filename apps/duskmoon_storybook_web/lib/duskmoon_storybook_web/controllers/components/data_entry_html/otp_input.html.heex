@@ -1,0 +1,85 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/otp-input"}>Data Entry</:crumb>
+  <:crumb>OTP Input</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">OTP Input</span>
+    <span class="text-sm opacity-60">dm_otp_input</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  OTP/PIN input component using `@duskmoon-dev/core` CSS classes.
+  Renders a group of single-character input fields for entering
+  verification codes or PINs.
+
+  ## Usage
+  ```elixir
+  <.dm_otp_input length={6} color="primary" />
+
+  <.dm_otp_input
+    length={4}
+    label="Enter verification code"
+    helper="We sent a code to your email"
+  />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic OTP Input</h3>
+  <div class="mb-4">
+    <.dm_otp_input length={6} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Label and Helper</h3>
+  <div class="mb-4">
+    <.dm_otp_input
+      length={6}
+      color="primary"
+      label="Verification Code"
+      helper="We sent a 6-digit code to your email"
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">4-Digit PIN (Masked)</h3>
+  <div class="mb-4">
+    <.dm_otp_input length={4} masked label="Enter PIN" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Size Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_otp_input length={4} size="sm" label="Small" />
+    <.dm_otp_input length={4} label="Default" />
+    <.dm_otp_input length={4} size="lg" label="Large" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Color Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_otp_input length={4} color="primary" label="Primary" />
+    <.dm_otp_input length={4} color="secondary" label="Secondary" />
+    <.dm_otp_input length={4} color="tertiary" label="Tertiary" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Style Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_otp_input length={4} label="Outlined (default)" />
+    <.dm_otp_input length={4} variant="filled" label="Filled" />
+    <.dm_otp_input length={4} variant="underline" label="Underline" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Gap Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_otp_input length={6} gap="compact" label="Compact gap" />
+    <.dm_otp_input length={6} label="Default gap" />
+    <.dm_otp_input length={6} gap="wide" label="Wide gap" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">States</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_otp_input length={4} error error_message="Invalid verification code" label="Error" />
+    <.dm_otp_input length={4} success label="Success" helper="Code verified!" />
+    <.dm_otp_input length={4} disabled label="Disabled" />
+  </div>
+</.dm_card>
