@@ -356,4 +356,29 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
 
     assert result =~ ~s[role="tooltip"]
   end
+
+  test "renders visually hidden span with tooltip content for screen readers" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: "Screen reader text",
+        inner_block: inner_block()
+      })
+
+    assert result =~ ~s[class="sr-only"]
+    assert result =~ ~s[role="tooltip"]
+    assert result =~ "Screen reader text"
+  end
+
+  test "role=tooltip is on hidden span, not on wrapper div" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: "Tooltip text",
+        inner_block: inner_block()
+      })
+
+    # The wrapper div should NOT have role="tooltip"
+    # role="tooltip" should only be on the sr-only span
+    [wrapper | _] = String.split(result, "<span class=\"sr-only\"")
+    refute wrapper =~ ~s[role="tooltip"]
+  end
 end

@@ -398,6 +398,29 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
     assert result =~ ~s[backdrop="blur"]
   end
 
+  test "renders aria-label fallback when no title slot provided" do
+    result =
+      render_component(&dm_modal/1, %{
+        id: "no-title-dialog",
+        body: body()
+      })
+
+    assert result =~ ~s[aria-label="Dialog"]
+    refute result =~ "aria-labelledby"
+  end
+
+  test "does not render aria-label when title slot is present" do
+    result =
+      render_component(&dm_modal/1, %{
+        id: "titled-dialog",
+        title: [%{inner_block: fn _, _ -> "My Title" end}],
+        body: body()
+      })
+
+    assert result =~ ~s[aria-labelledby="titled-dialog-title"]
+    refute result =~ ~s[aria-label="Dialog"]
+  end
+
   test "only first title slot gets the id for aria-labelledby" do
     result =
       render_component(&dm_modal/1, %{

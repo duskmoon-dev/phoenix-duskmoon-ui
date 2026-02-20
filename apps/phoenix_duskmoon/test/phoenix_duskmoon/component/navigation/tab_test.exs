@@ -545,6 +545,27 @@ defmodule PhoenixDuskmoon.Component.Navigation.TabTest do
     end
   end
 
+  test "renders aria-orientation on tablist div" do
+    result =
+      render_component(&dm_tab/1, %{
+        orientation: "vertical",
+        tab: [%{id: "t1", inner_block: fn _, _ -> "Tab" end}],
+        tab_content: [%{id: "c1", inner_block: fn _, _ -> "Content" end}]
+      })
+
+    assert result =~ ~s[aria-orientation="vertical"]
+  end
+
+  test "renders default horizontal aria-orientation on tablist" do
+    result =
+      render_component(&dm_tab/1, %{
+        tab: [%{id: "t1", inner_block: fn _, _ -> "Tab" end}],
+        tab_content: [%{id: "c1", inner_block: fn _, _ -> "Content" end}]
+      })
+
+    assert result =~ ~s[aria-orientation="horizontal"]
+  end
+
   test "tabs without id omit aria-controls and aria-labelledby" do
     result =
       render_component(&dm_tab/1, %{

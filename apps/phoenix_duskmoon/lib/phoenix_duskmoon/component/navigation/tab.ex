@@ -102,7 +102,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Tab do
       class={@class}
       {@rest}
     >
-      <div slot="tabs" class={@header_class} role="tablist">
+      <div slot="tabs" class={@header_class} role="tablist" aria-orientation={@orientation}>
         <%= for {tab, i} <- Enum.with_index(@tab) do %>
           <button
             type="button"

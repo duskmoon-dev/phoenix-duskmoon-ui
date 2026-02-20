@@ -853,6 +853,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               max={@max}
               step={@step}
               aria-invalid={@errors != [] && "true"}
+              aria-describedby={@errors != [] && @id && "#{@id}-errors"}
               class={[
                 "dm-range dm-range--sm",
                 @color && "dm-range--#{@color}"

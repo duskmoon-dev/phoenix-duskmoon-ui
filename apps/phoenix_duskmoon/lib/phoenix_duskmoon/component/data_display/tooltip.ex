@@ -70,11 +70,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
         @open && "tooltip-open",
         @class
       ]}
-      role="tooltip"
       data-tip={@content}
       {@rest}
     >
       {render_slot(@inner_block)}
+      <span class="sr-only" role="tooltip">{@content}</span>
     </div>
     """
   end
