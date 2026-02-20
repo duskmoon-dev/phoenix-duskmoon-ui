@@ -48,4 +48,28 @@
   <div class="flex flex-col gap-4">
     <.dm_progress indeterminate={true} color="primary" />
   </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Circular</h3>
+  <div class="flex flex-row flex-wrap items-end gap-6">
+    <.dm_progress type="circular" value={75} color="primary" show_label={true} />
+    <.dm_progress type="circular" value={60} color="secondary" show_label={true} />
+    <.dm_progress type="circular" value={90} color="success" show_label={true} />
+    <.dm_progress type="circular" value={40} color="warning" show_label={true} />
+    <.dm_progress type="circular" value={25} color="error" show_label={true} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Circular Sizes</h3>
+  <div class="flex flex-row flex-wrap items-end gap-6">
+    <.dm_progress type="circular" value={70} size="xs" color="primary" />
+    <.dm_progress type="circular" value={70} size="sm" color="primary" />
+    <.dm_progress type="circular" value={70} size="md" color="primary" show_label={true} />
+    <.dm_progress type="circular" value={70} size="lg" color="primary" show_label={true} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Circular Indeterminate</h3>
+  <div class="flex flex-row flex-wrap items-end gap-6">
+    <.dm_progress type="circular" indeterminate={true} color="primary" />
+    <.dm_progress type="circular" indeterminate={true} color="secondary" />
+    <.dm_progress type="circular" indeterminate={true} color="success" />
+  </div>
 </.dm_card>

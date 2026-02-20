@@ -1,6 +1,8 @@
 defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
   @moduledoc """
-  Progress bar component for showing completion status.
+  Progress component for showing completion status.
+
+  Supports both linear (bar) and circular (ring) variants.
 
   ## Examples
 
@@ -10,47 +12,45 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
 
       <.dm_progress value={60} max={100} size="lg" color="warning" show_label />
 
-      <.dm_progress value={@upload_progress} max={100} color="primary" animated />
+      <.dm_progress type="circular" value={75} max={100} color="primary" show_label />
 
-  ## Attributes
-
-  * `value` - Current progress value (default: 0)
-  * `max` - Maximum progress value (default: 100)
-  * `color` - Progress color: primary, secondary, accent, info, success, warning, error (default: primary)
-  * `size` - Progress size: xs, sm, md, lg (default: md)
-  * `show_label` - Show percentage label (default: false)
-  * `animated` - Add striped animation effect (default: false)
-  * `indeterminate` - Show indeterminate progress animation (default: false)
-  * `class` - Additional CSS classes
-  * `label_class` - Additional CSS classes for label
-  * `progress_class` - Additional CSS classes for progress element
+      <.dm_progress type="circular" indeterminate color="secondary" />
 
   ## Styling
 
   This component uses `@duskmoon-dev/core` progress classes with additional
   styling for labels and animations. It supports both determinate and
-  indeterminate progress states.
+  indeterminate progress states, in linear and circular form.
   """
 
   use Phoenix.Component
 
+  @circle_radius 16
+  @circle_circumference 2 * :math.pi() * @circle_radius
+
   @doc type: :component
+  attr(:type, :string,
+    default: "linear",
+    values: ["linear", "circular"],
+    doc: "Progress type: linear bar or circular ring"
+  )
+
   attr(:value, :integer, default: 0, doc: "Current progress value")
   attr(:max, :integer, default: 100, doc: "Maximum progress value")
 
   attr(:color, :string,
     default: "primary",
     values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
-    doc: "Progress bar color variant"
+    doc: "Progress color variant"
   )
 
-  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "Progress bar size")
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "Progress size")
   attr(:show_label, :boolean, default: false, doc: "Show percentage label")
-  attr(:animated, :boolean, default: false, doc: "Enable animation")
+  attr(:animated, :boolean, default: false, doc: "Enable striped animation (linear only)")
   attr(:indeterminate, :boolean, default: false, doc: "Show indeterminate progress")
   attr(:class, :string, default: nil, doc: "Additional CSS classes for the wrapper")
   attr(:label_class, :string, default: nil, doc: "CSS classes for the label")
-  attr(:progress_class, :string, default: nil, doc: "CSS classes for the progress bar")
+  attr(:progress_class, :string, default: nil, doc: "CSS classes for the progress element")
   attr(:label_text, :string, default: "Progress", doc: "Text for the progress label")
   attr(:complete_text, :string, default: "Complete", doc: "Text appended after percentage")
   attr(:rest, :global)
@@ -58,10 +58,15 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
   def dm_progress(assigns) do
     assigns
     |> assign(percentage: calculate_percentage(assigns.value, assigns.max))
-    |> render_progress()
+    |> then(fn a ->
+      case a.type do
+        "circular" -> render_circular(a)
+        _ -> render_linear(a)
+      end
+    end)
   end
 
-  defp render_progress(assigns) do
+  defp render_linear(assigns) do
     ~H"""
     <div class={@class}>
       <div :if={@show_label} class="flex justify-between items-center mb-2">
@@ -76,7 +81,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
         class={[
           "progress",
           "progress-#{@color}",
-          size_classes(@size),
+          linear_size_classes(@size),
           @animated && "progress-striped progress-animated",
           @indeterminate && "progress-indeterminate",
           @progress_class
@@ -97,7 +102,52 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
         {@percentage}% {@complete_text}
       </div>
     </div>
+    """
+  end
 
+  defp render_circular(assigns) do
+    circumference = @circle_circumference
+    fraction = calculate_fraction(assigns.value, assigns.max)
+    dash_offset = circumference * (1 - fraction)
+
+    assigns =
+      assigns
+      |> assign(:circumference, Float.round(circumference, 2))
+      |> assign(:dash_offset, Float.round(dash_offset, 2))
+
+    ~H"""
+    <div class={@class}>
+      <div
+        class={[
+          "progress-circular",
+          circular_size_classes(@size),
+          @indeterminate && "progress-circular-indeterminate",
+          @progress_class
+        ]}
+        role="progressbar"
+        aria-valuenow={if(!@indeterminate, do: @value)}
+        aria-valuemin={0}
+        aria-valuemax={@max}
+        aria-label={if(!@show_label, do: @label_text)}
+        {@rest}
+      >
+        <svg viewBox="0 0 36 36">
+          <circle class="progress-circular-track" cx="18" cy="18" r="16" />
+          <circle
+            class="progress-circular-bar"
+            cx="18"
+            cy="18"
+            r="16"
+            stroke-dasharray={if(!@indeterminate, do: @circumference)}
+            stroke-dashoffset={if(!@indeterminate, do: @dash_offset)}
+            style={"stroke: var(--color-#{@color})"}
+          />
+        </svg>
+        <span :if={@show_label} class="progress-circular-label">
+          {@percentage}%
+        </span>
+      </div>
+    </div>
     """
   end
 
@@ -109,8 +159,19 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
 
   defp calculate_percentage(_, _), do: "0"
 
-  defp size_classes("xs"), do: "progress-xs"
-  defp size_classes("sm"), do: "progress-sm"
-  defp size_classes("md"), do: nil
-  defp size_classes("lg"), do: "progress-lg"
+  defp calculate_fraction(value, max) when max > 0 do
+    min(value / max, 1.0)
+  end
+
+  defp calculate_fraction(_, _), do: 0.0
+
+  defp linear_size_classes("xs"), do: "progress-xs"
+  defp linear_size_classes("sm"), do: "progress-sm"
+  defp linear_size_classes("md"), do: nil
+  defp linear_size_classes("lg"), do: "progress-lg"
+
+  defp circular_size_classes("xs"), do: "progress-circular-sm"
+  defp circular_size_classes("sm"), do: "progress-circular-sm"
+  defp circular_size_classes("md"), do: nil
+  defp circular_size_classes("lg"), do: "progress-circular-lg"
 end

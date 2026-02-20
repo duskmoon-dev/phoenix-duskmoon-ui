@@ -108,6 +108,44 @@ defmodule Storybook.DataDisplay.Progress do
           color: "success",
           show_label: true
         }
+      },
+      %Variation{
+        id: :circular_default,
+        attributes: %{
+          type: "circular",
+          value: 75,
+          max: 100,
+          color: "primary"
+        }
+      },
+      %Variation{
+        id: :circular_with_label,
+        attributes: %{
+          type: "circular",
+          value: 60,
+          max: 100,
+          color: "success",
+          show_label: true
+        }
+      },
+      %Variation{
+        id: :circular_indeterminate,
+        attributes: %{
+          type: "circular",
+          color: "secondary",
+          indeterminate: true
+        }
+      },
+      %Variation{
+        id: :circular_large,
+        attributes: %{
+          type: "circular",
+          value: 85,
+          max: 100,
+          color: "warning",
+          size: "lg",
+          show_label: true
+        }
       }
     ]
   end
