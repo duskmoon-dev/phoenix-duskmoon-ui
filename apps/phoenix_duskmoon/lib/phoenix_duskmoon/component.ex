@@ -84,6 +84,7 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.DataEntry.CompactInput
       import PhoenixDuskmoon.Component.DataEntry.Input
       import PhoenixDuskmoon.Component.DataEntry.OtpInput
+      import PhoenixDuskmoon.Component.DataEntry.PinInput
       import PhoenixDuskmoon.Component.DataEntry.Rating
       import PhoenixDuskmoon.Component.DataEntry.Radio
       import PhoenixDuskmoon.Component.DataEntry.SegmentControl

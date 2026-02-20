@@ -1,0 +1,102 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/pin-input"}>Data Entry</:crumb>
+  <:crumb>Pin Input</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Pin Input</span>
+    <span class="text-sm opacity-60">dm_pin_input</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  PIN input component using `@duskmoon-dev/core` CSS classes.
+  Renders styled single-character input fields for PIN or security code entry.
+  Features circle shape, dots display, visibility toggle, and compact spacing.
+
+  ## Usage
+  ```elixir
+  <.dm_pin_input length={4} color="primary" />
+
+  <.dm_pin_input
+    length={6}
+    shape="circle"
+    label="Enter PIN"
+    helper="4-digit security code"
+  />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Pin Input</h3>
+  <div class="mb-4">
+    <.dm_pin_input length={4} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Label and Helper</h3>
+  <div class="mb-4">
+    <.dm_pin_input
+      length={4}
+      color="primary"
+      label="Security PIN"
+      helper="Enter your 4-digit PIN"
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Size Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_pin_input length={4} size="sm" label="Small" />
+    <.dm_pin_input length={4} label="Default" />
+    <.dm_pin_input length={4} size="lg" label="Large" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Color Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_pin_input length={4} color="primary" label="Primary" />
+    <.dm_pin_input length={4} color="secondary" label="Secondary" />
+    <.dm_pin_input length={4} color="tertiary" label="Tertiary" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Shape and Style Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_pin_input length={4} label="Default (square)" />
+    <.dm_pin_input length={4} shape="circle" label="Circle" />
+    <.dm_pin_input length={4} variant="filled" label="Filled" />
+    <.dm_pin_input length={4} shape="circle" variant="filled" label="Circle + Filled" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Spacing and Display</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_pin_input length={6} compact label="Compact spacing" />
+    <.dm_pin_input length={6} dots label="Dots display" />
+    <.dm_pin_input length={4} visible={false} label="Hidden (masked)" />
+    <.dm_pin_input length={4} visible label="Visible (shown)" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">States</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_pin_input length={4} error error_message="Invalid PIN" label="Error" />
+    <.dm_pin_input length={4} success label="Success" helper="PIN verified!" />
+    <.dm_pin_input length={4} disabled label="Disabled" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Combined Features</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_pin_input
+      length={6}
+      size="lg"
+      color="primary"
+      shape="circle"
+      compact
+      label="Large circle primary compact"
+    />
+    <.dm_pin_input
+      length={4}
+      color="secondary"
+      variant="filled"
+      dots
+      label="Filled secondary dots"
+    />
+  </div>
+</.dm_card>

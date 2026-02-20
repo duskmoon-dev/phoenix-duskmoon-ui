@@ -60,4 +60,8 @@ defmodule DuskmoonStorybookWeb.Components.DataEntryController do
   def time_input(conn, _params) do
     render(conn, :time_input, active_menu: "data-entry-time-input")
   end
+
+  def pin_input(conn, _params) do
+    render(conn, :pin_input, active_menu: "data-entry-pin-input")
+  end
 end
