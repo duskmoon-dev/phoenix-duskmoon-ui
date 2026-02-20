@@ -68,6 +68,7 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.DataDisplay.Progress
       import PhoenixDuskmoon.Component.DataDisplay.Skeleton
       import PhoenixDuskmoon.Component.DataDisplay.Table
+      import PhoenixDuskmoon.Component.DataDisplay.Timeline
       import PhoenixDuskmoon.Component.DataDisplay.Tooltip
 
       # Data Entry components

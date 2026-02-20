@@ -1,0 +1,88 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/timeline"}>Data Display</:crumb>
+  <:crumb>Timeline</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Timeline</span>
+    <span class="text-sm opacity-60">dm_timeline</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Timeline component for displaying chronological events. Uses CSS classes from `@duskmoon-dev/core`.
+
+  ## Usage
+  ```elixir
+  <.dm_timeline>
+    <:item title="Step 1" time="Jan 1">First event.</:item>
+    <:item title="Step 2" time="Jan 5" color="success" completed>Done.</:item>
+  </.dm_timeline>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Timeline</h3>
+  <.dm_timeline>
+    <:item title="Order Placed" time="January 1, 2026">
+      Your order has been placed successfully.
+    </:item>
+    <:item title="Processing" time="January 2, 2026">
+      Order is being prepared.
+    </:item>
+    <:item title="Shipped" time="January 3, 2026">
+      Package has been shipped.
+    </:item>
+    <:item title="Delivered" time="January 5, 2026">
+      Package was delivered.
+    </:item>
+  </.dm_timeline>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Colors &amp; States</h3>
+  <.dm_timeline>
+    <:item title="Completed" time="Step 1" color="success" completed icon="check">
+      This step is complete.
+    </:item>
+    <:item title="In Progress" time="Step 2" color="primary" active>
+      Currently working on this.
+    </:item>
+    <:item title="Warning" time="Step 3" color="warning">
+      Needs attention.
+    </:item>
+    <:item title="Failed" time="Step 4" color="error">
+      This step encountered an error.
+    </:item>
+    <:item title="Pending" time="Step 5">
+      Waiting to start.
+    </:item>
+  </.dm_timeline>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Small Size</h3>
+  <.dm_timeline size="sm">
+    <:item title="Event A" time="9:00 AM">Morning meeting.</:item>
+    <:item title="Event B" time="12:00 PM">Lunch break.</:item>
+    <:item title="Event C" time="3:00 PM">Afternoon review.</:item>
+  </.dm_timeline>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Large Size</h3>
+  <.dm_timeline size="lg">
+    <:item title="Phase 1" time="Q1 2026" color="success" completed icon="check-circle">
+      Research and planning completed.
+    </:item>
+    <:item title="Phase 2" time="Q2 2026" color="primary" active icon="cog">
+      Development in progress.
+    </:item>
+    <:item title="Phase 3" time="Q3 2026" icon="rocket-launch">
+      Launch scheduled.
+    </:item>
+  </.dm_timeline>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Horizontal Layout</h3>
+  <.dm_timeline layout="horizontal">
+    <:item title="Step 1" color="success" completed icon="check">Done</:item>
+    <:item title="Step 2" color="success" completed icon="check">Done</:item>
+    <:item title="Step 3" color="primary" active>Current</:item>
+    <:item title="Step 4">Upcoming</:item>
+  </.dm_timeline>
+</.dm_card>

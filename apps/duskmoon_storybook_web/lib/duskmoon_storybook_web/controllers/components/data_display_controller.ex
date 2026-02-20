@@ -49,6 +49,10 @@ defmodule DuskmoonStorybookWeb.Components.DataDisplayController do
     render(conn, :table, active_menu: "data-display-table")
   end
 
+  def timeline(conn, _params) do
+    render(conn, :timeline, active_menu: "data-display-timeline")
+  end
+
   def tooltip(conn, _params) do
     render(conn, :tooltip, active_menu: "data-display-tooltip")
   end
