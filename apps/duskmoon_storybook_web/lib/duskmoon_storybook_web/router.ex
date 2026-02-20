@@ -36,6 +36,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/action/dropdown", ActionController, :dropdown
 
     # Data Display
+    get "/data-display/accordion", DataDisplayController, :accordion
     get "/data-display/avatar", DataDisplayController, :avatar
     get "/data-display/badge", DataDisplayController, :badge
     get "/data-display/card", DataDisplayController, :card
@@ -70,10 +71,12 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/navigation/navbar", NavigationController, :navbar
     get "/navigation/page-footer", NavigationController, :page_footer
     get "/navigation/page-header", NavigationController, :page_header
+    get "/navigation/steps", NavigationController, :steps
     get "/navigation/tab", NavigationController, :tab
 
     # Layout
     get "/layout/divider", LayoutController, :divider
+    get "/layout/drawer", LayoutController, :drawer
     get "/layout/theme-switcher", LayoutController, :theme_switcher
 
     # Icon

@@ -31,6 +31,12 @@
     entries: [
       %{
         kind: :story,
+        name: "Accordion",
+        path: "/data_display/accordion",
+        module: Storybook.DataDisplay.Accordion
+      },
+      %{
+        kind: :story,
         name: "Avatar",
         path: "/data_display/avatar",
         module: Storybook.DataDisplay.Avatar
@@ -232,6 +238,12 @@
       },
       %{
         kind: :story,
+        name: "Steps",
+        path: "/navigation/steps",
+        module: Storybook.Navigation.Steps
+      },
+      %{
+        kind: :story,
         name: "Tab",
         path: "/navigation/tab",
         module: Storybook.Navigation.Tab
@@ -248,6 +260,12 @@
         name: "Divider",
         path: "/layout/divider",
         module: Storybook.Layout.Divider
+      },
+      %{
+        kind: :story,
+        name: "Drawer",
+        path: "/layout/drawer",
+        module: Storybook.Layout.Drawer
       },
       %{
         kind: :story,

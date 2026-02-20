@@ -1,6 +1,10 @@
 defmodule DuskmoonStorybookWeb.Components.DataDisplayController do
   use DuskmoonStorybookWeb, :controller
 
+  def accordion(conn, _params) do
+    render(conn, :accordion, active_menu: "data-display-accordion")
+  end
+
   def avatar(conn, _params) do
     render(conn, :avatar, active_menu: "data-display-avatar")
   end

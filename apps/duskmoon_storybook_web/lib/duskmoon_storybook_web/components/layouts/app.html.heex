@@ -45,6 +45,10 @@
     <:menu>
       <.dm_left_menu_group active={assigns[:active_menu]}>
         <:title>Data Display</:title>
+        <:menu id="data-display-accordion" to={~p"/components/data-display/accordion"}>
+          <.dm_mdi name={"chevron-down"} class="w-4 h-4" />
+          Accordion
+        </:menu>
         <:menu id="data-display-avatar" to={~p"/components/data-display/avatar"}>
           <.dm_mdi name={"account-circle"} class="w-4 h-4" />
           Avatar
@@ -172,6 +176,10 @@
           <.dm_mdi name={"page-layout-header"} class="w-4 h-4" />
           Page Header
         </:menu>
+        <:menu id="navigation-steps" to={~p"/components/navigation/steps"}>
+          <.dm_mdi name={"step-forward"} class="w-4 h-4" />
+          Steps
+        </:menu>
         <:menu id="navigation-tab" to={~p"/components/navigation/tab"}>
           <.dm_mdi name={"tab-minus"} class="w-4 h-4" />
           Tab
@@ -184,6 +192,10 @@
         <:menu id="layout-divider" to={~p"/components/layout/divider"}>
           <.dm_mdi name={"minus"} class="w-4 h-4" />
           Divider
+        </:menu>
+        <:menu id="layout-drawer" to={~p"/components/layout/drawer"}>
+          <.dm_mdi name={"dock-left"} class="w-4 h-4" />
+          Drawer
         </:menu>
         <:menu id="layout-theme-switcher" to={~p"/components/layout/theme-switcher"}>
           <.dm_mdi name={"theme-light-dark"} class="w-4 h-4" />

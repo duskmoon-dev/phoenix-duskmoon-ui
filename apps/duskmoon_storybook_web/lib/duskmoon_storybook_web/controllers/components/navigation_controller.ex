@@ -29,6 +29,10 @@ defmodule DuskmoonStorybookWeb.Components.NavigationController do
     render(conn, :page_header, active_menu: "navigation-page-header")
   end
 
+  def steps(conn, _params) do
+    render(conn, :steps, active_menu: "navigation-steps")
+  end
+
   def tab(conn, _params) do
     render(conn, :tab, active_menu: "navigation-tab")
   end

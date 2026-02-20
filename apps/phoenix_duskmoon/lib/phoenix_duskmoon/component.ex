@@ -56,6 +56,7 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.Action.Dropdown
 
       # Data Display components
+      import PhoenixDuskmoon.Component.DataDisplay.Accordion
       import PhoenixDuskmoon.Component.DataDisplay.Avatar
       import PhoenixDuskmoon.Component.DataDisplay.Badge
       import PhoenixDuskmoon.Component.DataDisplay.Card
@@ -90,10 +91,12 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.Navigation.Navbar
       import PhoenixDuskmoon.Component.Navigation.PageFooter
       import PhoenixDuskmoon.Component.Navigation.PageHeader
+      import PhoenixDuskmoon.Component.Navigation.Steps
       import PhoenixDuskmoon.Component.Navigation.Tab
 
       # Layout components
       import PhoenixDuskmoon.Component.Layout.Divider
+      import PhoenixDuskmoon.Component.Layout.Drawer
       import PhoenixDuskmoon.Component.Layout.ThemeSwitcher
 
       # Icon components

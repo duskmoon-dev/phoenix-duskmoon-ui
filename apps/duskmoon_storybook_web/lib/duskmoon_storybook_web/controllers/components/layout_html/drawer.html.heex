@@ -1,0 +1,46 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/layout/drawer"}>Layout</:crumb>
+  <:crumb>Drawer</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Drawer</span>
+    <span class="text-sm opacity-60">dm_drawer</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Drawer component — a sliding panel from the left or right side. Wraps `<el-dm-drawer>` custom element.
+
+  ## Usage
+  ```elixir
+  <.dm_drawer id="nav" open={@drawer_open} position="left">
+    <:header>Navigation</:header>
+    Drawer content here.
+    <:footer>Footer</:footer>
+  </.dm_drawer>
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Left Drawer (Default)</h3>
+  <.dm_drawer id="demo-left" open position="left">
+    <:header>Left Navigation</:header>
+    <p>This drawer slides in from the left side.</p>
+  </.dm_drawer>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Right Drawer</h3>
+  <.dm_drawer id="demo-right" open position="right">
+    <:header>Settings Panel</:header>
+    <p>This drawer slides in from the right side.</p>
+    <:footer>
+      <span class="text-sm opacity-60">Footer content</span>
+    </:footer>
+  </.dm_drawer>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Custom Width</h3>
+  <.dm_drawer id="demo-wide" open width="400px">
+    <:header>Wide Drawer</:header>
+    <p>This drawer is 400px wide.</p>
+  </.dm_drawer>
+</.dm_card>

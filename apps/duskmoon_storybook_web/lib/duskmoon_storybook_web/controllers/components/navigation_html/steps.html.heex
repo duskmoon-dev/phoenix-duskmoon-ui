@@ -1,0 +1,64 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/navigation/steps"}>Navigation</:crumb>
+  <:crumb>Steps</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Steps</span>
+    <span class="text-sm opacity-60">dm_steps</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Stepper component for displaying progress through a multi-step process. Wraps `<el-dm-stepper>` custom element.
+
+  ## Usage
+  ```elixir
+  <.dm_steps current={1} steps={[
+    %{label: "Account"},
+    %{label: "Profile"},
+    %{label: "Review"}
+  ]} />
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Horizontal (Default)</h3>
+  <.dm_steps current={1} steps={[
+    %{label: "Account"},
+    %{label: "Profile"},
+    %{label: "Review"},
+    %{label: "Complete"}
+  ]} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Descriptions</h3>
+  <.dm_steps current={2} steps={[
+    %{label: "Sign Up", description: "Create your account"},
+    %{label: "Verify", description: "Confirm your email"},
+    %{label: "Setup", description: "Configure preferences"},
+    %{label: "Done", description: "Start using the app"}
+  ]} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Vertical</h3>
+  <.dm_steps current={1} orientation="vertical" steps={[
+    %{label: "Step 1", description: "First step"},
+    %{label: "Step 2", description: "Second step"},
+    %{label: "Step 3", description: "Third step"}
+  ]} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Color Variants</h3>
+  <div class="space-y-6">
+    <.dm_steps current={2} color="primary" steps={[%{label: "1"}, %{label: "2"}, %{label: "3"}, %{label: "4"}]} />
+    <.dm_steps current={2} color="success" steps={[%{label: "1"}, %{label: "2"}, %{label: "3"}, %{label: "4"}]} />
+    <.dm_steps current={2} color="warning" steps={[%{label: "1"}, %{label: "2"}, %{label: "3"}, %{label: "4"}]} />
+    <.dm_steps current={2} color="error" steps={[%{label: "1"}, %{label: "2"}, %{label: "3"}, %{label: "4"}]} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Clickable</h3>
+  <.dm_steps current={0} clickable steps={[
+    %{label: "General"},
+    %{label: "Appearance"},
+    %{label: "Notifications"},
+    %{label: "Security"}
+  ]} />
+</.dm_card>

@@ -1,0 +1,52 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/accordion"}>Data Display</:crumb>
+  <:crumb>Accordion</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Accordion</span>
+    <span class="text-sm opacity-60">dm_accordion</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Accordion component for collapsible content sections. Wraps `<el-dm-accordion>` and `<el-dm-accordion-item>` custom elements.
+
+  ## Usage
+  ```elixir
+  <.dm_accordion>
+    <:item value="s1" header="Section One">Content</:item>
+    <:item value="s2" header="Section Two">Content</:item>
+  </.dm_accordion>
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Accordion</h3>
+  <.dm_accordion>
+    <:item value="faq1" header="What is Phoenix Duskmoon UI?">
+      A comprehensive component library for Phoenix LiveView applications, providing
+      rich UI components with theme support and custom elements.
+    </:item>
+    <:item value="faq2" header="How do I install it?">
+      Add <code>phoenix_duskmoon</code> to your <code>mix.exs</code> dependencies
+      and follow the setup guide.
+    </:item>
+    <:item value="faq3" header="Is it open source?">
+      Yes, it is available on GitHub and published to Hex.pm.
+    </:item>
+  </.dm_accordion>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Multiple Open</h3>
+  <.dm_accordion multiple value="s1,s3">
+    <:item value="s1" header="Section One">First section is open by default.</:item>
+    <:item value="s2" header="Section Two">Second section starts closed.</:item>
+    <:item value="s3" header="Section Three">Third section is also open by default.</:item>
+  </.dm_accordion>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Disabled Item</h3>
+  <.dm_accordion>
+    <:item value="active" header="Active Item">This item can be toggled.</:item>
+    <:item value="disabled" header="Disabled Item" disabled>This item cannot be toggled.</:item>
+  </.dm_accordion>
+</.dm_card>
