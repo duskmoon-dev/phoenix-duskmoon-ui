@@ -108,6 +108,7 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.Navigation.PageFooter
       import PhoenixDuskmoon.Component.Navigation.PageHeader
       import PhoenixDuskmoon.Component.Navigation.Steps
+      import PhoenixDuskmoon.Component.Navigation.Stepper
       import PhoenixDuskmoon.Component.Navigation.Tab
 
       # Layout components

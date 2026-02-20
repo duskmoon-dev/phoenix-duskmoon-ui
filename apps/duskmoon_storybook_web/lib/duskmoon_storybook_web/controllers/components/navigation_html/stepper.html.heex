@@ -1,0 +1,117 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/navigation/stepper"}>Navigation</:crumb>
+  <:crumb>Stepper</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Stepper</span>
+    <span class="text-sm opacity-60">dm_stepper</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Stepper component using `@duskmoon-dev/core` CSS classes.
+  Multi-step progress indicator for wizards and multi-step forms.
+  Each step has a number, label, optional description, and state
+  (active/completed/error/disabled/optional).
+
+  ## Usage
+  ```elixir
+  <.dm_stepper>
+    <:step label="Account" completed />
+    <:step label="Profile" active />
+    <:step label="Review" />
+  </.dm_stepper>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Stepper</h3>
+  <div class="mb-4">
+    <.dm_stepper>
+      <:step label="Account" completed />
+      <:step label="Profile" active />
+      <:step label="Review" />
+    </.dm_stepper>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">With Descriptions</h3>
+  <div class="mb-4">
+    <.dm_stepper>
+      <:step label="Create Account" description="Sign up with email" completed />
+      <:step label="Fill Details" description="Personal information" active />
+      <:step label="Verify Email" description="Confirm your address" />
+      <:step label="Done" description="Start using the app" />
+    </.dm_stepper>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Vertical Layout</h3>
+  <div class="mb-4 max-w-md">
+    <.dm_stepper vertical>
+      <:step label="Order Placed" description="Your order has been confirmed" completed />
+      <:step label="Processing" description="Preparing your package" active />
+      <:step label="Shipped" description="On the way to you" />
+      <:step label="Delivered" description="Package arrived" />
+    </.dm_stepper>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Step States</h3>
+  <div class="mb-4">
+    <.dm_stepper>
+      <:step label="Completed" completed />
+      <:step label="Active" active />
+      <:step label="Error" error />
+      <:step label="Disabled" disabled />
+      <:step label="Optional" optional />
+    </.dm_stepper>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Dots Variant</h3>
+  <div class="mb-4">
+    <.dm_stepper variant="dots">
+      <:step label="Step 1" completed />
+      <:step label="Step 2" completed />
+      <:step label="Step 3" active />
+      <:step label="Step 4" />
+    </.dm_stepper>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Color Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_stepper>
+      <:step label="Primary" completed />
+      <:step label="Default" active />
+      <:step label="Pending" />
+    </.dm_stepper>
+    <.dm_stepper color="secondary">
+      <:step label="Secondary" completed />
+      <:step label="Current" active />
+      <:step label="Pending" />
+    </.dm_stepper>
+    <.dm_stepper color="tertiary">
+      <:step label="Tertiary" completed />
+      <:step label="Current" active />
+      <:step label="Pending" />
+    </.dm_stepper>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Size Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_stepper size="sm">
+      <:step label="Small" completed />
+      <:step label="Steps" active />
+      <:step label="Here" />
+    </.dm_stepper>
+    <.dm_stepper>
+      <:step label="Default" completed />
+      <:step label="Size" active />
+      <:step label="Steps" />
+    </.dm_stepper>
+    <.dm_stepper size="lg">
+      <:step label="Large" completed />
+      <:step label="Steps" active />
+      <:step label="Here" />
+    </.dm_stepper>
+  </div>
+</.dm_card>

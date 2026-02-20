@@ -40,4 +40,8 @@ defmodule DuskmoonStorybookWeb.Components.NavigationController do
   def tab(conn, _params) do
     render(conn, :tab, active_menu: "navigation-tab")
   end
+
+  def stepper(conn, _params) do
+    render(conn, :stepper, active_menu: "navigation-stepper")
+  end
 end

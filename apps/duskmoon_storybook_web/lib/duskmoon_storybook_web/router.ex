@@ -88,6 +88,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/navigation/page-footer", NavigationController, :page_footer
     get "/navigation/page-header", NavigationController, :page_header
     get "/navigation/steps", NavigationController, :steps
+    get "/navigation/stepper", NavigationController, :stepper
     get "/navigation/tab", NavigationController, :tab
 
     # Layout
