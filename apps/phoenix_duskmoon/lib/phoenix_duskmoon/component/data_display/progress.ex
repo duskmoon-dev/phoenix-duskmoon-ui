@@ -27,9 +27,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
 
   ## Styling
 
-  This component uses DaisyUI progress classes with additional styling for
-  labels and animations. It supports both determinate and indeterminate
-  progress states.
+  This component uses `@duskmoon-dev/core` progress classes with additional
+  styling for labels and animations. It supports both determinate and
+  indeterminate progress states.
   """
 
   use Phoenix.Component

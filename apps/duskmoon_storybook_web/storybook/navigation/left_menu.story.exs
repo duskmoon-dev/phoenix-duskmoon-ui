@@ -3,7 +3,7 @@ defmodule Storybook.Navigation.LeftMenu do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.Navigation.LeftMenu.dm_left_menu/1
-  def description, do: "A left menu element using daisyUI menu system."
+  def description, do: "A left menu element using @duskmoon-dev/core menu system."
 
   def variations do
     [
