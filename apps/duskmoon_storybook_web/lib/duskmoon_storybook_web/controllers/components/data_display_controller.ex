@@ -56,4 +56,8 @@ defmodule DuskmoonStorybookWeb.Components.DataDisplayController do
   def tooltip(conn, _params) do
     render(conn, :tooltip, active_menu: "data-display-tooltip")
   end
+
+  def popover(conn, _params) do
+    render(conn, :popover, active_menu: "data-display-popover")
+  end
 end

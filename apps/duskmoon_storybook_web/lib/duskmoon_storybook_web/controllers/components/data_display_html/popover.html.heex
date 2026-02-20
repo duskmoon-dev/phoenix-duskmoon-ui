@@ -1,0 +1,128 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/popover"}>Data Display</:crumb>
+  <:crumb>Popover</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Popover</span>
+    <span class="text-sm opacity-60">dm_popover</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Popover component wrapping the `el-dm-popover` custom element.
+  Displays floating content positioned relative to a trigger element.
+  Supports click, hover, and focus triggers, auto-flip positioning,
+  and an optional arrow indicator.
+
+  ## Usage
+  ```elixir
+  <.dm_popover>
+    <:trigger>
+      <button type="button" class="btn btn-primary">Click me</button>
+    </:trigger>
+    <p>Popover content here.</p>
+  </.dm_popover>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Basic Popover (Click)</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_popover>
+      <:trigger>
+        <button type="button" class="btn btn-primary">Click me</button>
+      </:trigger>
+      <p class="p-3">This popover opens on click.</p>
+    </.dm_popover>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Hover Trigger</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_popover trigger_mode="hover">
+      <:trigger>
+        <button type="button" class="btn btn-secondary">Hover me</button>
+      </:trigger>
+      <p class="p-3">This popover opens on hover.</p>
+    </.dm_popover>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Focus Trigger</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_popover trigger_mode="focus">
+      <:trigger>
+        <input type="text" placeholder="Focus me..." class="input input-bordered" />
+      </:trigger>
+      <p class="p-3">This popover opens on focus.</p>
+    </.dm_popover>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Placement Variants</h3>
+  <div class="flex flex-wrap gap-4 mb-4">
+    <.dm_popover placement="top">
+      <:trigger>
+        <button type="button" class="btn btn-outline">Top</button>
+      </:trigger>
+      <p class="p-3">Placed on top</p>
+    </.dm_popover>
+
+    <.dm_popover placement="bottom">
+      <:trigger>
+        <button type="button" class="btn btn-outline">Bottom</button>
+      </:trigger>
+      <p class="p-3">Placed on bottom</p>
+    </.dm_popover>
+
+    <.dm_popover placement="left">
+      <:trigger>
+        <button type="button" class="btn btn-outline">Left</button>
+      </:trigger>
+      <p class="p-3">Placed on left</p>
+    </.dm_popover>
+
+    <.dm_popover placement="right">
+      <:trigger>
+        <button type="button" class="btn btn-outline">Right</button>
+      </:trigger>
+      <p class="p-3">Placed on right</p>
+    </.dm_popover>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Custom Offset</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_popover offset={0}>
+      <:trigger>
+        <button type="button" class="btn btn-accent">Offset 0</button>
+      </:trigger>
+      <p class="p-3">No gap between trigger and popover.</p>
+    </.dm_popover>
+
+    <.dm_popover offset={20}>
+      <:trigger>
+        <button type="button" class="btn btn-accent">Offset 20</button>
+      </:trigger>
+      <p class="p-3">20px gap between trigger and popover.</p>
+    </.dm_popover>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Without Arrow</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_popover arrow={false}>
+      <:trigger>
+        <button type="button" class="btn btn-warning">No Arrow</button>
+      </:trigger>
+      <p class="p-3">This popover has no arrow indicator.</p>
+    </.dm_popover>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Initially Open</h3>
+  <div class="flex gap-4 mb-4">
+    <.dm_popover open placement="right">
+      <:trigger>
+        <button type="button" class="btn btn-info">Already Open</button>
+      </:trigger>
+      <p class="p-3">This popover starts open.</p>
+    </.dm_popover>
+  </div>
+</.dm_card>
