@@ -167,7 +167,7 @@
 | Registered el-* packages | 28 (all) |
 | Demo routes | 42 |
 | Storybook stories | 44 |
-| Tests | 1841 (all passing) |
+| Tests | 1869 (all passing) |
 | Compilation warnings | 0 |
 
 ---
