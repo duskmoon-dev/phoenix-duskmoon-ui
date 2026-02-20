@@ -88,6 +88,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControlTest do
       result = render_component(&dm_segment_control/1, %{color: "tertiary", item: items_slot()})
       assert result =~ "segment-control-tertiary"
     end
+
+    test "maps accent color to tertiary" do
+      result = render_component(&dm_segment_control/1, %{color: "accent", item: items_slot()})
+      assert result =~ "segment-control-tertiary"
+      refute result =~ "segment-control-accent"
+    end
   end
 
   describe "dm_segment_control variant" do

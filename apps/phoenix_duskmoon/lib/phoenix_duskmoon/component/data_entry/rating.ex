@@ -43,7 +43,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
 
   attr(:color, :string,
     default: nil,
-    values: [nil, "primary", "secondary", "success", "error"],
+    values: [nil, "primary", "secondary", "tertiary", "accent", "info", "success", "warning", "error"],
     doc: "color variant for filled stars"
   )
 
@@ -66,7 +66,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
   def dm_rating(assigns) do
     value = assigns.value || 0
 
-    assigns = assign(assigns, :safe_value, value)
+    assigns =
+      assigns
+      |> assign(:safe_value, value)
+      |> assign(:color, css_color(assigns.color))
 
     ~H"""
     <div
@@ -100,4 +103,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
     </div>
     """
   end
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end

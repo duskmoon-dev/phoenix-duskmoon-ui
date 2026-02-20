@@ -117,6 +117,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInputTest do
       result = render_component(&dm_time_input/1, %{color: "tertiary"})
       assert result =~ "time-input-tertiary"
     end
+
+    test "maps accent color to tertiary" do
+      result = render_component(&dm_time_input/1, %{color: "accent"})
+      assert result =~ "time-input-tertiary"
+      refute result =~ "time-input-accent"
+    end
   end
 
   describe "dm_time_input variant" do

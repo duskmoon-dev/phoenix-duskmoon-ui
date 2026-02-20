@@ -112,6 +112,27 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RatingTest do
       assert result =~ "rating-error"
     end
 
+    test "renders tertiary color" do
+      result = render_component(&dm_rating/1, %{color: "tertiary"})
+      assert result =~ "rating-tertiary"
+    end
+
+    test "renders info color" do
+      result = render_component(&dm_rating/1, %{color: "info"})
+      assert result =~ "rating-info"
+    end
+
+    test "renders warning color" do
+      result = render_component(&dm_rating/1, %{color: "warning"})
+      assert result =~ "rating-warning"
+    end
+
+    test "maps accent color to tertiary" do
+      result = render_component(&dm_rating/1, %{color: "accent"})
+      assert result =~ "rating-tertiary"
+      refute result =~ "rating-accent"
+    end
+
     test "default has no color class" do
       result = render_component(&dm_rating/1, %{})
       refute result =~ "rating-primary"

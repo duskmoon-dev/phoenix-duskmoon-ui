@@ -44,6 +44,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
       end
     end
 
+    test "maps accent color to tertiary" do
+      result = render_component(&dm_pin_input/1, %{color: "accent"})
+      assert result =~ "pin-input-tertiary"
+      refute result =~ "pin-input-accent"
+    end
+
     test "renders filled variant" do
       result = render_component(&dm_pin_input/1, %{variant: "filled"})
       assert result =~ "pin-input-filled"

@@ -46,7 +46,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControl do
 
   attr(:color, :string,
     default: nil,
-    values: [nil, "primary", "secondary", "tertiary"],
+    values: [nil, "primary", "secondary", "tertiary", "accent"],
     doc: "color variant for active item"
   )
 
@@ -70,6 +70,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControl do
   end
 
   def dm_segment_control(assigns) do
+    assigns = assign(assigns, :color, css_color(assigns.color))
+
     ~H"""
     <div
       id={@id}
@@ -104,4 +106,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControl do
     </div>
     """
   end
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end

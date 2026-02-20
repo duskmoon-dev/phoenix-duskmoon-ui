@@ -44,7 +44,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
 
   attr(:color, :string,
     default: nil,
-    values: [nil, "primary", "secondary", "tertiary"],
+    values: [nil, "primary", "secondary", "tertiary", "accent"],
     doc: "Color variant"
   )
 
@@ -68,6 +68,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
   end
 
   def dm_time_input(assigns) do
+    assigns = assign(assigns, :color, css_color(assigns.color))
+
     ~H"""
     <div
       id={@id}
@@ -123,4 +125,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
     </div>
     """
   end
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end

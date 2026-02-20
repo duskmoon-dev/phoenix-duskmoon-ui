@@ -89,6 +89,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInputTest do
       result = render_component(&dm_otp_input/1, %{color: "tertiary"})
       assert result =~ "otp-input-tertiary"
     end
+
+    test "maps accent color to tertiary" do
+      result = render_component(&dm_otp_input/1, %{color: "accent"})
+      assert result =~ "otp-input-tertiary"
+      refute result =~ "otp-input-accent"
+    end
   end
 
   describe "dm_otp_input variant" do
