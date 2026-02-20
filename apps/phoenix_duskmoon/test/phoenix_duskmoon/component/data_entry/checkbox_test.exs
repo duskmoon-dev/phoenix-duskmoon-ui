@@ -281,4 +281,35 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
 
     assert result =~ ~s(<input type="hidden" name="terms" value="false")
   end
+
+  describe "helper text" do
+    test "renders helper text when provided" do
+      result =
+        render_component(&dm_checkbox/1, %{
+          name: "agree",
+          helper: "You must accept to continue"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "You must accept to continue"
+    end
+
+    test "does not render helper text when not provided" do
+      result = render_component(&dm_checkbox/1, %{name: "agree"})
+
+      refute result =~ "helper-text"
+    end
+
+    test "hides helper text when errors are present" do
+      result =
+        render_component(&dm_checkbox/1, %{
+          name: "agree",
+          helper: "You must accept to continue",
+          errors: ["must be accepted"]
+        })
+
+      refute result =~ "You must accept to continue"
+      assert result =~ "must be accepted"
+    end
+  end
 end

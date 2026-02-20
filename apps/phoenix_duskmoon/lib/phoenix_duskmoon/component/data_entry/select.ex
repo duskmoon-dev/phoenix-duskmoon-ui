@@ -58,6 +58,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
     doc: "color variant"
   )
 
+  attr(:helper, :string, default: nil, doc: "helper text displayed below the select")
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:disabled, :boolean, default: false, doc: "disables the select")
   attr(:multiple, :boolean, default: false, doc: "allow multiple selections")
@@ -103,6 +104,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
       >
         {render_options(assigns)}
       </select>
+      <span :if={@helper && @errors == []} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>

@@ -44,6 +44,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
     doc: "color variant"
   )
 
+  attr(:helper, :string, default: nil, doc: "helper text displayed below the radio button")
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:disabled, :boolean, default: false, doc: "disables the radio button")
   attr(:class, :string, default: nil, doc: "additional CSS classes for the wrapper")
@@ -87,6 +88,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
           {@label}
         </span>
       </label>
+      <span :if={@helper && @errors == []} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>

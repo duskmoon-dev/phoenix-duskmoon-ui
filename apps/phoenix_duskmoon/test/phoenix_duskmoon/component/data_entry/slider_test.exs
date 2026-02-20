@@ -407,4 +407,37 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
     assert result =~ "slider-success"
     assert result =~ "slider-lg"
   end
+
+  describe "helper text" do
+    test "renders helper text when provided" do
+      result =
+        render_component(&dm_slider/1, %{
+          name: "vol",
+          value: 50,
+          helper: "Adjust the volume level"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "Adjust the volume level"
+    end
+
+    test "does not render helper text when not provided" do
+      result = render_component(&dm_slider/1, %{name: "vol", value: 50})
+
+      refute result =~ "helper-text"
+    end
+
+    test "hides helper text when errors are present" do
+      result =
+        render_component(&dm_slider/1, %{
+          name: "vol",
+          value: 50,
+          helper: "Adjust the volume level",
+          errors: ["is out of range"]
+        })
+
+      refute result =~ "Adjust the volume level"
+      assert result =~ "is out of range"
+    end
+  end
 end

@@ -376,4 +376,37 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
       assert result =~ "textarea-warning"
     end
   end
+
+  describe "helper text" do
+    test "renders helper text when provided" do
+      result =
+        render_component(&dm_textarea/1, %{
+          name: "bio",
+          value: nil,
+          helper: "Maximum 500 characters"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "Maximum 500 characters"
+    end
+
+    test "does not render helper text when not provided" do
+      result = render_component(&dm_textarea/1, %{name: "bio", value: nil})
+
+      refute result =~ "helper-text"
+    end
+
+    test "hides helper text when errors are present" do
+      result =
+        render_component(&dm_textarea/1, %{
+          name: "bio",
+          value: nil,
+          helper: "Maximum 500 characters",
+          errors: ["is too short"]
+        })
+
+      refute result =~ "Maximum 500 characters"
+      assert result =~ "is too short"
+    end
+  end
 end

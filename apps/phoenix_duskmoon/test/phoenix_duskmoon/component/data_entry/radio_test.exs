@@ -306,4 +306,37 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
     assert result =~ "cursor-not-allowed"
     refute result =~ "cursor-pointer"
   end
+
+  describe "helper text" do
+    test "renders helper text when provided" do
+      result =
+        render_component(&dm_radio/1, %{
+          name: "theme",
+          value: "dark",
+          helper: "Choose your preferred theme"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "Choose your preferred theme"
+    end
+
+    test "does not render helper text when not provided" do
+      result = render_component(&dm_radio/1, %{name: "theme", value: "dark"})
+
+      refute result =~ "helper-text"
+    end
+
+    test "hides helper text when errors are present" do
+      result =
+        render_component(&dm_radio/1, %{
+          name: "theme",
+          value: "dark",
+          helper: "Choose your preferred theme",
+          errors: ["must select one"]
+        })
+
+      refute result =~ "Choose your preferred theme"
+      assert result =~ "must select one"
+    end
+  end
 end

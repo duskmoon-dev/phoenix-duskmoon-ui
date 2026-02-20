@@ -58,6 +58,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
     doc: "the input style variant (ghost, filled, bordered)"
   )
 
+  attr(:helper, :string, default: nil, doc: "helper text displayed below the input")
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:checked, :boolean, doc: "the checked flag for checkbox inputs")
   attr(:prompt, :string, default: nil, doc: "the prompt for select inputs")
@@ -104,6 +105,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
         <option :if={@prompt} value="">{@prompt}</option>
         {Phoenix.HTML.Form.options_for_select(@options, @value)}
       </select>
+      <span :if={@helper && @errors == []} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>
@@ -138,6 +140,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
         {@rest}
       />
       {render_slot(@inner_block)}
+      <span :if={@helper && @errors == []} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>

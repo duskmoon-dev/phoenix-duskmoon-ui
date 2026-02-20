@@ -493,4 +493,44 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
       assert result =~ ~s(phx-feedback-for="country")
     end
   end
+
+  describe "helper text" do
+    test "renders helper text when provided" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "country",
+          value: nil,
+          helper: "Choose your country of residence",
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "Choose your country of residence"
+    end
+
+    test "does not render helper text when not provided" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "country",
+          value: nil,
+          options: [{"us", "USA"}]
+        })
+
+      refute result =~ "helper-text"
+    end
+
+    test "hides helper text when errors are present" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "country",
+          value: nil,
+          helper: "Choose your country",
+          errors: ["is required"],
+          options: [{"us", "USA"}]
+        })
+
+      refute result =~ "Choose your country"
+      assert result =~ "is required"
+    end
+  end
 end

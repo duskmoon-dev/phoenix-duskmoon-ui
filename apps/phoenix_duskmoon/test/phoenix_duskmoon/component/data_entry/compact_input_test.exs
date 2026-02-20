@@ -729,4 +729,71 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
       assert result =~ "input-success"
     end
   end
+
+  describe "helper text" do
+    test "renders helper text when provided" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "email",
+          label: "Email",
+          value: nil,
+          helper: "We will never share your email"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "We will never share your email"
+    end
+
+    test "does not render helper text when not provided" do
+      result =
+        render_component(&dm_compact_input/1, %{name: "email", label: "Email", value: nil})
+
+      refute result =~ "helper-text"
+    end
+
+    test "hides helper text when errors are present" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "email",
+          label: "Email",
+          value: nil,
+          helper: "We will never share your email",
+          errors: ["is invalid"]
+        })
+
+      refute result =~ "We will never share your email"
+      assert result =~ "is invalid"
+    end
+
+    test "renders helper text on compact select" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "country",
+          label: "Country",
+          type: "select",
+          value: nil,
+          helper: "Select your country of residence",
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "Select your country of residence"
+    end
+
+    test "hides helper text on compact select when errors present" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "country",
+          label: "Country",
+          type: "select",
+          value: nil,
+          helper: "Select your country of residence",
+          errors: ["is required"],
+          options: [{"us", "USA"}]
+        })
+
+      refute result =~ "Select your country of residence"
+      assert result =~ "is required"
+    end
+  end
 end

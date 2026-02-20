@@ -40,6 +40,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
     doc: "color variant"
   )
 
+  attr(:helper, :string, default: nil, doc: "helper text displayed below the slider")
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "slider size")
   attr(:disabled, :boolean, default: false, doc: "disables the slider")
@@ -98,6 +99,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
         <span>{@min}</span>
         <span>{@max}</span>
       </div>
+      <span :if={@helper && @errors == []} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>

@@ -53,6 +53,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
     doc: "resize behavior"
   )
 
+  attr(:helper, :string, default: nil, doc: "helper text displayed below the textarea")
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:disabled, :boolean, default: false, doc: "disables the textarea")
   attr(:readonly, :boolean, default: false, doc: "makes the textarea read-only")
@@ -107,6 +108,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
         ]}
         {@rest}
       >{@value}</textarea>
+      <span :if={@helper && @errors == []} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>

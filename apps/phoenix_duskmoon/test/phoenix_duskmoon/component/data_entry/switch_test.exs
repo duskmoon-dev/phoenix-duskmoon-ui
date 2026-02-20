@@ -283,4 +283,35 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
 
     assert result =~ ~s(<input type="hidden" name="dark_mode" value="false")
   end
+
+  describe "helper text" do
+    test "renders helper text when provided" do
+      result =
+        render_component(&dm_switch/1, %{
+          name: "notifications",
+          helper: "Enable to receive push notifications"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "Enable to receive push notifications"
+    end
+
+    test "does not render helper text when not provided" do
+      result = render_component(&dm_switch/1, %{name: "notifications"})
+
+      refute result =~ "helper-text"
+    end
+
+    test "hides helper text when errors are present" do
+      result =
+        render_component(&dm_switch/1, %{
+          name: "notifications",
+          helper: "Enable to receive push notifications",
+          errors: ["must be enabled"]
+        })
+
+      refute result =~ "Enable to receive push notifications"
+      assert result =~ "must be enabled"
+    end
+  end
 end
