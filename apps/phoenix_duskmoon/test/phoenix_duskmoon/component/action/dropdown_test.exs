@@ -333,4 +333,25 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
     assert result =~ ~s[aria-haspopup="menu"]
     assert result =~ ~s[role="menu"]
   end
+
+  test "trigger has aria-expanded false by default" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ ~s[aria-expanded="false"]
+  end
+
+  test "trigger has aria-controls pointing to popover id" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        id: "ctrl-test",
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ ~s[aria-controls="ctrl-test-popover"]
+  end
 end

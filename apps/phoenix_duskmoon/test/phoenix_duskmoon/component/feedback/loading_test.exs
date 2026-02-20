@@ -343,4 +343,18 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
       assert result =~ ~s[aria-label="Cargando"]
     end
   end
+
+  describe "accessibility" do
+    test "dm_loading_spinner includes aria-live polite" do
+      result = render_component(&dm_loading_spinner/1, %{})
+
+      assert result =~ ~s[aria-live="polite"]
+    end
+
+    test "dm_loading_ex includes aria-live polite" do
+      result = render_component(&dm_loading_ex/1, %{})
+
+      assert result =~ ~s[aria-live="polite"]
+    end
+  end
 end

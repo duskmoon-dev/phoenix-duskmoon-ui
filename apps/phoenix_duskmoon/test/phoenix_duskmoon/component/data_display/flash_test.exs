@@ -417,4 +417,36 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
       assert result =~ "Reconnecting..."
     end
   end
+
+  describe "accessibility" do
+    test "info flash uses aria-live polite" do
+      result =
+        render_component(&dm_flash/1, %{
+          kind: :info,
+          flash: %{"info" => "Polite message"}
+        })
+
+      assert result =~ ~s[aria-live="polite"]
+    end
+
+    test "error flash uses aria-live assertive" do
+      result =
+        render_component(&dm_flash/1, %{
+          kind: :error,
+          flash: %{"error" => "Urgent message"}
+        })
+
+      assert result =~ ~s[aria-live="assertive"]
+    end
+
+    test "flash includes aria-atomic true" do
+      result =
+        render_component(&dm_flash/1, %{
+          kind: :info,
+          flash: %{"info" => "Atomic message"}
+        })
+
+      assert result =~ ~s[aria-atomic="true"]
+    end
+  end
 end
