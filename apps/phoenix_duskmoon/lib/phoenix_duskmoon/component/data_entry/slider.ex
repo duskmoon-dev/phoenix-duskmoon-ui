@@ -24,27 +24,28 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
 
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:name, :any)
-  attr(:value, :any)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:name, :any, doc: "HTML name attribute for form submission")
+  attr(:value, :any, doc: "current slider value")
   attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
-  attr(:label, :string, default: nil)
-  attr(:min, :integer, default: 0)
-  attr(:max, :integer, default: 100)
-  attr(:step, :integer, default: 1)
+  attr(:label, :string, default: nil, doc: "text label displayed above the slider")
+  attr(:min, :integer, default: 0, doc: "minimum allowed value")
+  attr(:max, :integer, default: 100, doc: "maximum allowed value")
+  attr(:step, :integer, default: 1, doc: "step increment between values")
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    doc: "color variant"
   )
 
-  attr(:errors, :list, default: [])
-  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
-  attr(:disabled, :boolean, default: false)
-  attr(:show_value, :boolean, default: true)
-  attr(:class, :string, default: nil)
-  attr(:label_class, :string, default: nil)
-  attr(:slider_class, :string, default: nil)
+  attr(:errors, :list, default: [], doc: "list of error messages to display")
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "slider size")
+  attr(:disabled, :boolean, default: false, doc: "disables the slider")
+  attr(:show_value, :boolean, default: true, doc: "show the current value and min/max labels")
+  attr(:class, :string, default: nil, doc: "additional CSS classes for the wrapper")
+  attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
+  attr(:slider_class, :string, default: nil, doc: "additional CSS classes for the range input")
   attr(:rest, :global)
 
   def dm_slider(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do

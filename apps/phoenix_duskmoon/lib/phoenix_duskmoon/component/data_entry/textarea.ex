@@ -25,30 +25,41 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
 
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:name, :any)
-  attr(:value, :any)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:name, :any, doc: "HTML name attribute for form submission")
+  attr(:value, :any, doc: "the textarea content")
   attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
-  attr(:label, :string, default: nil)
-  attr(:placeholder, :string, default: nil)
-  attr(:rows, :integer, default: 3)
-  attr(:cols, :integer, default: nil)
-  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
+  attr(:label, :string, default: nil, doc: "text label displayed above the textarea")
+  attr(:placeholder, :string, default: nil, doc: "placeholder text shown when empty")
+  attr(:rows, :integer, default: 3, doc: "number of visible text rows")
+  attr(:cols, :integer, default: nil, doc: "number of visible text columns")
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "textarea size")
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    doc: "color variant"
   )
 
-  attr(:resize, :string, default: "vertical", values: ["none", "vertical", "horizontal", "both"])
-  attr(:errors, :list, default: [])
-  attr(:disabled, :boolean, default: false)
-  attr(:readonly, :boolean, default: false)
-  attr(:required, :boolean, default: false)
-  attr(:maxlength, :integer, default: nil)
-  attr(:class, :string, default: nil)
-  attr(:label_class, :string, default: nil)
-  attr(:textarea_class, :string, default: nil)
+  attr(:resize, :string,
+    default: "vertical",
+    values: ["none", "vertical", "horizontal", "both"],
+    doc: "resize behavior"
+  )
+
+  attr(:errors, :list, default: [], doc: "list of error messages to display")
+  attr(:disabled, :boolean, default: false, doc: "disables the textarea")
+  attr(:readonly, :boolean, default: false, doc: "makes the textarea read-only")
+  attr(:required, :boolean, default: false, doc: "marks the textarea as required")
+  attr(:maxlength, :integer, default: nil, doc: "maximum character count")
+  attr(:class, :string, default: nil, doc: "additional CSS classes for the wrapper")
+  attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
+
+  attr(:textarea_class, :string,
+    default: nil,
+    doc: "additional CSS classes for the textarea element"
+  )
+
   attr(:rest, :global)
 
   def dm_textarea(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do

@@ -43,16 +43,26 @@ defmodule PhoenixDuskmoon.Component.Layout.Divider do
       <.dm_divider variant="primary">Section</.dm_divider>
   """
   @doc type: :component
-  attr(:orientation, :string, default: "horizontal", values: ["horizontal", "vertical"])
+  attr(:orientation, :string,
+    default: "horizontal",
+    values: ["horizontal", "vertical"],
+    doc: "divider orientation"
+  )
 
   attr(:variant, :string,
     default: "base",
-    values: ["base", "primary", "secondary", "accent", "info", "success", "warning", "error"]
+    values: ["base", "primary", "secondary", "accent", "info", "success", "warning", "error"],
+    doc: "divider color variant"
   )
 
-  attr(:style, :string, default: "solid", values: ["solid", "dashed", "dotted"])
-  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
-  attr(:class, :string, default: nil)
+  attr(:style, :string,
+    default: "solid",
+    values: ["solid", "dashed", "dotted"],
+    doc: "line style"
+  )
+
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "divider thickness")
+  attr(:class, :string, default: nil, doc: "additional CSS classes")
   attr(:rest, :global)
 
   slot(:inner_block, required: false)

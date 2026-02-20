@@ -18,8 +18,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       <.dm_skeleton variant="circle" size="md" />
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
 
   attr(:variant, :string,
     default: nil,
@@ -74,8 +74,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       <.dm_skeleton_text lines={2} last_line_width="w-3/4" />
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:lines, :integer, default: 3, doc: "Number of skeleton lines")
   attr(:line_height, :string, default: "h-4", doc: "Height of each line")
   attr(:line_spacing, :string, default: "mb-2", doc: "Spacing between lines")
@@ -126,8 +126,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       <.dm_skeleton_avatar size="lg" class="ring ring-primary" />
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:size, :string, default: "md", doc: "Avatar size (xs, sm, md, lg, xl)")
   attr(:animation, :string, default: nil, doc: "Animation type")
 
@@ -171,8 +171,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       <.dm_skeleton_card show_avatar={true} lines={4} />
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:show_avatar, :boolean, default: false, doc: "Show avatar skeleton")
   attr(:avatar_size, :string, default: "md", doc: "Avatar size")
   attr(:lines, :integer, default: 3, doc: "Number of text lines")
@@ -245,8 +245,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       <.dm_skeleton_table rows={3} columns={2} show_header={true} />
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:rows, :integer, default: 5, doc: "Number of table rows")
   attr(:columns, :integer, default: 4, doc: "Number of table columns")
   attr(:show_header, :boolean, default: true, doc: "Show table header")
@@ -297,8 +297,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       <.dm_skeleton_list items={3} lines_per_item={2} />
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:items, :integer, default: 5, doc: "Number of list items")
   attr(:show_avatar, :boolean, default: false, doc: "Show avatar for each item")
   attr(:avatar_size, :string, default: "sm", doc: "Avatar size")
@@ -342,8 +342,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       <.dm_skeleton_form fields={3} field_types={["text", "select", "textarea"]} />
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:fields, :integer, default: 4, doc: "Number of form fields")
 
   attr(:field_types, :list,
@@ -413,8 +413,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       <.dm_skeleton_comment show_replies={2} />
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:show_replies, :integer, default: 0, doc: "Number of reply skeletons to show")
   attr(:animation, :string, default: nil, doc: "Animation type")
 

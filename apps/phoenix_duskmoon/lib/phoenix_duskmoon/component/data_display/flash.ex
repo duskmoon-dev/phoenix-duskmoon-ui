@@ -22,7 +22,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
   @doc type: :component
   attr(:id, :string, default: "flash", doc: "the optional id of flash container")
   attr(:flash, :map, default: %{}, doc: "the map of flash messages to display")
-  attr(:title, :string, default: nil)
+  attr(:title, :string, default: nil, doc: "flash message title")
   attr(:kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup")
   attr(:autoshow, :boolean, default: true, doc: "whether to auto show the flash on mount")
   attr(:close, :boolean, default: true, doc: "whether the flash can be closed")

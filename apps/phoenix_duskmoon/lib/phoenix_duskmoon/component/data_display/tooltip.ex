@@ -40,16 +40,22 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
       <.dm_tooltip content="Warning" position="bottom" color="warning">Hover me</.dm_tooltip>
   """
   @doc type: :component
-  attr(:content, :string, required: true)
-  attr(:position, :string, default: "top", values: ["top", "bottom", "left", "right"])
+  attr(:content, :string, required: true, doc: "tooltip text content")
+
+  attr(:position, :string,
+    default: "top",
+    values: ["top", "bottom", "left", "right"],
+    doc: "tooltip position relative to trigger"
+  )
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    doc: "tooltip color variant"
   )
 
-  attr(:open, :boolean, default: false)
-  attr(:class, :string, default: nil)
+  attr(:open, :boolean, default: false, doc: "force the tooltip to be visible")
+  attr(:class, :string, default: nil, doc: "additional CSS classes")
   attr(:rest, :global)
 
   slot(:inner_block, required: true)

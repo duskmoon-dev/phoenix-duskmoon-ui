@@ -38,8 +38,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
 
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes for the form")
   attr(:for, :any, doc: "the datastructure for the form")
   attr(:as, :any, default: nil, doc: "the server side parameter to collect all input under")
 
@@ -80,9 +80,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
 
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
-  attr(:for, :string, default: nil)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
+  attr(:for, :string, default: nil, doc: "the id of the input this label is for")
   slot(:inner_block, required: true)
 
   def dm_label(assigns) do
@@ -102,8 +102,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
 
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   slot(:inner_block, required: true)
 
   def dm_error(assigns) do
@@ -136,8 +136,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
 
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
 
   attr(:variant, :string,
     default: "info",

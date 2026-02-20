@@ -77,6 +77,11 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
     attr(:class, :string)
   end
 
+  slot(:inner_block,
+    required: false,
+    doc: "Hero or body content rendered inside the header area"
+  )
+
   def dm_page_header(assigns) do
     ~H"""
     <nav

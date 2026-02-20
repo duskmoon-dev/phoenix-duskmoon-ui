@@ -30,8 +30,8 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
 
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
 
   attr(:size, :string,
     default: "md",
@@ -94,8 +94,8 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
 
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
 
   attr(:item_count, :integer,
     default: 88,

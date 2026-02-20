@@ -41,19 +41,25 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Chip do
       <.dm_chip color="warning" variant="outlined" deletable>Filter</.dm_chip>
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :string, default: nil)
-  attr(:variant, :string, default: "filled", values: ["filled", "outlined", "soft"])
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :string, default: nil, doc: "additional CSS classes")
+
+  attr(:variant, :string,
+    default: "filled",
+    values: ["filled", "outlined", "soft"],
+    doc: "chip style variant"
+  )
 
   attr(:color, :string,
     default: nil,
-    values: [nil, "primary", "secondary", "tertiary", "success", "warning", "error", "info"]
+    values: [nil, "primary", "secondary", "tertiary", "success", "warning", "error", "info"],
+    doc: "chip color"
   )
 
-  attr(:size, :string, default: "md", values: ["sm", "md", "lg"])
-  attr(:deletable, :boolean, default: false)
-  attr(:selected, :boolean, default: false)
-  attr(:disabled, :boolean, default: false)
+  attr(:size, :string, default: "md", values: ["sm", "md", "lg"], doc: "chip size")
+  attr(:deletable, :boolean, default: false, doc: "show a delete button on the chip")
+  attr(:selected, :boolean, default: false, doc: "mark the chip as selected")
+  attr(:disabled, :boolean, default: false, doc: "disable the chip")
   attr(:rest, :global)
 
   slot(:inner_block, required: true)

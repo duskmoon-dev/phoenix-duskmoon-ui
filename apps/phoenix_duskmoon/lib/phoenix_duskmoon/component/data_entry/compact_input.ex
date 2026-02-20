@@ -26,24 +26,25 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
 
   """
   @doc type: :component
-  attr(:field_class, :any, default: nil)
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
-  attr(:name, :any)
-  attr(:label, :string, default: nil)
-  attr(:value, :any)
+  attr(:field_class, :any, default: nil, doc: "additional CSS classes for the field element")
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes for the wrapper")
+  attr(:name, :any, doc: "HTML name attribute for form submission")
+  attr(:label, :string, default: nil, doc: "inline label text")
+  attr(:value, :any, doc: "the input value")
 
   attr(:type, :string,
     default: "text",
     values: ~w(color date datetime-local email file month number password
-               search select tel text time url week)
+               search select tel text time url week),
+    doc: "the input type"
   )
 
   attr(:field, Phoenix.HTML.FormField,
     doc: "a form field struct retrieved from the form, for example: @form[:email]"
   )
 
-  attr(:errors, :list, default: [])
+  attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:checked, :boolean, doc: "the checked flag for checkbox inputs")
   attr(:prompt, :string, default: nil, doc: "the prompt for select inputs")
   attr(:options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2")

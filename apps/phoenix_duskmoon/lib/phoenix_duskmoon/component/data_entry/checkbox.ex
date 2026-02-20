@@ -26,26 +26,32 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
 
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:name, :any)
-  attr(:value, :any)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:name, :any, doc: "HTML name attribute for form submission")
+  attr(:value, :any, doc: "the input value")
   attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
-  attr(:checked, :boolean, default: false)
-  attr(:label, :string, default: nil)
-  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
+  attr(:checked, :boolean, default: false, doc: "whether the checkbox is checked")
+  attr(:label, :string, default: nil, doc: "text label displayed next to the checkbox")
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "checkbox size")
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    doc: "color variant"
   )
 
-  attr(:errors, :list, default: [])
-  attr(:disabled, :boolean, default: false)
-  attr(:indeterminate, :boolean, default: false)
-  attr(:class, :string, default: nil)
-  attr(:label_class, :string, default: nil)
-  attr(:checkbox_class, :string, default: nil)
-  attr(:multiple, :boolean, default: false)
+  attr(:errors, :list, default: [], doc: "list of error messages to display")
+  attr(:disabled, :boolean, default: false, doc: "disables the checkbox")
+  attr(:indeterminate, :boolean, default: false, doc: "renders in indeterminate state")
+  attr(:class, :string, default: nil, doc: "additional CSS classes for the wrapper")
+  attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
+
+  attr(:checkbox_class, :string,
+    default: nil,
+    doc: "additional CSS classes for the checkbox input"
+  )
+
+  attr(:multiple, :boolean, default: false, doc: "appends [] to the field name for array values")
   attr(:rest, :global)
 
   def dm_checkbox(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do

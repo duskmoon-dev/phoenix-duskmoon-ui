@@ -41,14 +41,15 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Badge do
       "error",
       "ghost",
       "neutral"
-    ]
+    ],
+    doc: "badge color variant"
   )
 
-  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
-  attr(:outline, :boolean, default: false)
-  attr(:pill, :boolean, default: false, doc: "Use pill (rounded) shape")
-  attr(:dot, :boolean, default: false, doc: "Show as a dot indicator only")
-  attr(:class, :string, default: nil)
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "badge size")
+  attr(:outline, :boolean, default: false, doc: "show outline style")
+  attr(:pill, :boolean, default: false, doc: "use pill (rounded) shape")
+  attr(:dot, :boolean, default: false, doc: "show as a dot indicator only")
+  attr(:class, :string, default: nil, doc: "additional CSS classes")
   attr(:rest, :global)
 
   slot(:inner_block, required: true)

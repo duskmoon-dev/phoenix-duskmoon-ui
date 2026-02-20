@@ -80,8 +80,8 @@ defmodule PhoenixDuskmoon.Component.Action.Link do
   By default, CSRF tokens are generated through `Plug.CSRFProtection`.
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :any, default: nil)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
 
   attr(:navigate, :string,
     doc: """

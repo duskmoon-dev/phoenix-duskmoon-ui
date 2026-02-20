@@ -27,18 +27,19 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Stat do
       <.dm_stat title="Revenue" value="$45.6K" description="+12.3%" color="success" />
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:class, :string, default: nil)
-  attr(:title, :string, required: true, doc: "Label/title for the stat")
-  attr(:value, :string, required: true, doc: "The main value to display")
-  attr(:description, :string, default: nil, doc: "Optional description or change indicator")
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :string, default: nil, doc: "additional CSS classes for the wrapper")
+  attr(:title, :string, required: true, doc: "label/title for the stat")
+  attr(:value, :string, required: true, doc: "the main value to display")
+  attr(:description, :string, default: nil, doc: "optional description or change indicator")
 
   attr(:color, :string,
     default: nil,
-    values: [nil, "primary", "secondary", "accent", "info", "success", "warning", "error"]
+    values: [nil, "primary", "secondary", "accent", "info", "success", "warning", "error"],
+    doc: "value text color variant"
   )
 
-  attr(:size, :string, default: "md", values: ["sm", "md", "lg"])
+  attr(:size, :string, default: "md", values: ["sm", "md", "lg"], doc: "stat size")
   attr(:rest, :global)
 
   slot(:icon, doc: "Optional icon displayed alongside the value")

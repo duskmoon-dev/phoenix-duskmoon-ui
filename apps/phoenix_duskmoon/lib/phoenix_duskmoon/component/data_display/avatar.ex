@@ -61,24 +61,29 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
       <.dm_avatar name="John Doe" color="primary" />
   """
   @doc type: :component
-  attr(:src, :string, default: nil)
-  attr(:alt, :string, default: nil)
-  attr(:name, :string, default: nil)
-  attr(:placeholder_img, :any, default: nil)
-  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg", "xl"])
-  attr(:shape, :string, default: "circle", values: ["circle", "square"])
+  attr(:src, :string, default: nil, doc: "image source URL")
+  attr(:alt, :string, default: nil, doc: "alt text for the image")
+  attr(:name, :string, default: nil, doc: "user name for text-based avatar initials")
+  attr(:placeholder_img, :any, default: nil, doc: "placeholder image URL or true for initials")
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg", "xl"], doc: "avatar size")
+  attr(:shape, :string, default: "circle", values: ["circle", "square"], doc: "avatar shape")
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    doc: "background color for text-based avatars"
   )
 
-  attr(:border, :boolean, default: false)
-  attr(:online, :boolean, default: false)
-  attr(:offline, :boolean, default: false)
-  attr(:class, :string, default: nil)
-  attr(:img_class, :string, default: nil)
-  attr(:placeholder_class, :string, default: nil)
+  attr(:border, :boolean, default: false, doc: "add border to avatar")
+  attr(:online, :boolean, default: false, doc: "show online status indicator")
+  attr(:offline, :boolean, default: false, doc: "show offline status indicator")
+  attr(:class, :string, default: nil, doc: "additional CSS classes for the wrapper")
+  attr(:img_class, :string, default: nil, doc: "additional CSS classes for the image element")
+
+  attr(:placeholder_class, :string,
+    default: nil,
+    doc: "additional CSS classes for the placeholder"
+  )
 
   attr(:online_label, :string,
     default: "Online",

@@ -32,26 +32,32 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
 
   """
   @doc type: :component
-  attr(:id, :any, default: nil)
-  attr(:name, :any)
-  attr(:value, :any)
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:name, :any, doc: "HTML name attribute for form submission")
+  attr(:value, :any, doc: "the currently selected value")
   attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
-  attr(:label, :string, default: nil)
-  attr(:options, :list, default: nil)
-  attr(:prompt, :string, default: nil)
-  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"])
+  attr(:label, :string, default: nil, doc: "text label displayed above the select")
+  attr(:options, :list, default: nil, doc: "list of {value, label} tuples for options")
+
+  attr(:prompt, :string,
+    default: nil,
+    doc: "placeholder option text shown when no value selected"
+  )
+
+  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "select size")
 
   attr(:color, :string,
     default: "primary",
-    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"]
+    values: ["primary", "secondary", "accent", "info", "success", "warning", "error"],
+    doc: "color variant"
   )
 
-  attr(:errors, :list, default: [])
-  attr(:disabled, :boolean, default: false)
-  attr(:multiple, :boolean, default: false)
-  attr(:class, :string, default: nil)
-  attr(:label_class, :string, default: nil)
-  attr(:select_class, :string, default: nil)
+  attr(:errors, :list, default: [], doc: "list of error messages to display")
+  attr(:disabled, :boolean, default: false, doc: "disables the select")
+  attr(:multiple, :boolean, default: false, doc: "allow multiple selections")
+  attr(:class, :string, default: nil, doc: "additional CSS classes for the wrapper")
+  attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
+  attr(:select_class, :string, default: nil, doc: "additional CSS classes for the select element")
   attr(:rest, :global)
 
   slot(:inner_block, required: false)
