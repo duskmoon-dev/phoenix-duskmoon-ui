@@ -45,6 +45,16 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AccordionTest do
     assert result =~ "multiple"
   end
 
+  test "does not render multiple when false" do
+    result =
+      render_component(&dm_accordion/1, %{
+        multiple: false,
+        item: [item("a", "A", "A content")]
+      })
+
+    refute result =~ "multiple"
+  end
+
   test "renders with value attribute for initially open items" do
     result =
       render_component(&dm_accordion/1, %{
@@ -66,6 +76,16 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AccordionTest do
       })
 
     assert result =~ "disabled"
+  end
+
+  test "does not render disabled when not set" do
+    result =
+      render_component(&dm_accordion/1, %{
+        item: [item("e1", "Enabled", "Enabled content")]
+      })
+
+    # The el-dm-accordion-item should not have a disabled attr
+    refute result =~ ~s(disabled)
   end
 
   test "renders with id attribute" do
@@ -110,5 +130,154 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AccordionTest do
       assert result =~ "Header #{i}"
       assert result =~ "Content #{i}"
     end
+  end
+
+  test "passes rest attributes to el-dm-accordion" do
+    result =
+      render_component(&dm_accordion/1, %{
+        item: [item("r1", "Rest", "Content")],
+        data_testid: "my-accordion"
+      })
+
+    assert result =~ ~s(data_testid="my-accordion")
+  end
+
+  test "renders single value for initially open item" do
+    result =
+      render_component(&dm_accordion/1, %{
+        value: "only-one",
+        item: [
+          item("only-one", "Only", "Single open item"),
+          item("closed", "Closed", "Closed item")
+        ]
+      })
+
+    assert result =~ ~s(value="only-one")
+  end
+
+  test "renders empty class when class is nil" do
+    result =
+      render_component(&dm_accordion/1, %{
+        item: [item("a1", "A", "Content")]
+      })
+
+    # Phoenix renders class="" for nil string attrs
+    assert result =~ ~s(class="")
+  end
+
+  test "mixed disabled and enabled items" do
+    result =
+      render_component(&dm_accordion/1, %{
+        item: [
+          item("e1", "Enabled", "Enabled content"),
+          item("d1", "Disabled", "Disabled content", disabled: true),
+          item("e2", "Also Enabled", "Also enabled content")
+        ]
+      })
+
+    # All items should render
+    assert result =~ "Enabled"
+    assert result =~ "Disabled"
+    assert result =~ "Also Enabled"
+    # Only the disabled item should have the disabled attribute
+    assert result =~ "disabled"
+  end
+
+  test "item values propagate to el-dm-accordion-item value attribute" do
+    result =
+      render_component(&dm_accordion/1, %{
+        item: [
+          item("unique-val-1", "First", "First content"),
+          item("unique-val-2", "Second", "Second content")
+        ]
+      })
+
+    assert result =~ ~s(value="unique-val-1")
+    assert result =~ ~s(value="unique-val-2")
+  end
+
+  test "renders with multiple true and value set together" do
+    result =
+      render_component(&dm_accordion/1, %{
+        multiple: true,
+        value: "a,c",
+        item: [
+          item("a", "A", "A content"),
+          item("b", "B", "B content"),
+          item("c", "C", "C content")
+        ]
+      })
+
+    assert result =~ "multiple"
+    assert result =~ ~s(value="a,c")
+    assert result =~ "A content"
+    assert result =~ "B content"
+    assert result =~ "C content"
+  end
+
+  test "each item wraps header in span with slot=header" do
+    result =
+      render_component(&dm_accordion/1, %{
+        item: [
+          item("x1", "Header Alpha", "Body Alpha"),
+          item("x2", "Header Beta", "Body Beta")
+        ]
+      })
+
+    assert result =~ ~s(<span slot="header">Header Alpha</span>)
+    assert result =~ ~s(<span slot="header">Header Beta</span>)
+  end
+
+  test "item content renders outside header slot" do
+    result =
+      render_component(&dm_accordion/1, %{
+        item: [item("c1", "Title", "Body text here")]
+      })
+
+    # Header is inside span[slot=header], body text should be outside it
+    assert result =~ "Body text here"
+    # Body should not be inside the header slot
+    refute result =~ ~s(slot="header">Body text here)
+  end
+
+  test "renders with phx attributes via rest" do
+    result =
+      render_component(&dm_accordion/1, %{
+        item: [item("p1", "Phx", "Content")],
+        phx_hook: "AccordionHook"
+      })
+
+    assert result =~ ~s(phx_hook="AccordionHook")
+  end
+
+  test "renders single item" do
+    result =
+      render_component(&dm_accordion/1, %{
+        item: [item("solo", "Only Item", "Only content")]
+      })
+
+    assert result =~ "<el-dm-accordion"
+    assert result =~ "<el-dm-accordion-item"
+    assert result =~ "Only Item"
+    assert result =~ "Only content"
+  end
+
+  test "renders with combined id, class, and multiple" do
+    result =
+      render_component(&dm_accordion/1, %{
+        id: "combined-test",
+        class: "combined-class",
+        multiple: true,
+        value: "first",
+        item: [
+          item("first", "First", "First content"),
+          item("second", "Second", "Second content")
+        ]
+      })
+
+    assert result =~ ~s(id="combined-test")
+    assert result =~ ~s(class="combined-class")
+    assert result =~ "multiple"
+    assert result =~ ~s(value="first")
   end
 end

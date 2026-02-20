@@ -27,6 +27,16 @@ defmodule PhoenixDuskmoon.Component.Layout.DrawerTest do
     assert result =~ "open"
   end
 
+  test "does not render open when false" do
+    result =
+      render_component(&dm_drawer/1, %{
+        open: false,
+        inner_block: inner_block("Closed drawer")
+      })
+
+    refute result =~ ~r/\sopen[\s>]/
+  end
+
   test "renders with position right" do
     result =
       render_component(&dm_drawer/1, %{
@@ -54,6 +64,16 @@ defmodule PhoenixDuskmoon.Component.Layout.DrawerTest do
       })
 
     assert result =~ "modal"
+  end
+
+  test "does not render modal when false" do
+    result =
+      render_component(&dm_drawer/1, %{
+        modal: false,
+        inner_block: inner_block("Non-modal drawer")
+      })
+
+    refute result =~ ~r/\smodal[\s>]/
   end
 
   test "renders with custom width" do
@@ -114,5 +134,150 @@ defmodule PhoenixDuskmoon.Component.Layout.DrawerTest do
       })
 
     refute result =~ ~s(slot="footer")
+  end
+
+  test "renders with class attribute" do
+    result =
+      render_component(&dm_drawer/1, %{
+        class: "my-drawer-class",
+        inner_block: inner_block("Content")
+      })
+
+    assert result =~ ~s(class="my-drawer-class")
+  end
+
+  test "renders empty class when class is nil" do
+    result =
+      render_component(&dm_drawer/1, %{
+        inner_block: inner_block("Content")
+      })
+
+    # Phoenix renders class="" for nil string attrs
+    assert result =~ ~s(class="")
+  end
+
+  test "omits width when nil" do
+    result =
+      render_component(&dm_drawer/1, %{
+        inner_block: inner_block("Content")
+      })
+
+    refute result =~ ~r/width="/
+  end
+
+  test "renders width with vw units" do
+    result =
+      render_component(&dm_drawer/1, %{
+        width: "30vw",
+        inner_block: inner_block("Content")
+      })
+
+    assert result =~ ~s(width="30vw")
+  end
+
+  test "renders width with percentage" do
+    result =
+      render_component(&dm_drawer/1, %{
+        width: "50%",
+        inner_block: inner_block("Content")
+      })
+
+    assert result =~ ~s(width="50%")
+  end
+
+  test "renders both header and footer together" do
+    result =
+      render_component(&dm_drawer/1, %{
+        header: [inner_block("Header Text")],
+        footer: [inner_block("Footer Text")],
+        inner_block: inner_block("Body Text")
+      })
+
+    assert result =~ ~s(slot="header")
+    assert result =~ "Header Text"
+    assert result =~ ~s(slot="footer")
+    assert result =~ "Footer Text"
+    assert result =~ "Body Text"
+  end
+
+  test "renders position right with modal" do
+    result =
+      render_component(&dm_drawer/1, %{
+        position: "right",
+        modal: true,
+        inner_block: inner_block("Right modal drawer")
+      })
+
+    assert result =~ ~s(position="right")
+    assert result =~ "modal"
+  end
+
+  test "passes rest attributes" do
+    result =
+      render_component(&dm_drawer/1, %{
+        inner_block: inner_block("Content"),
+        data_testid: "drawer-test"
+      })
+
+    assert result =~ ~s(data_testid="drawer-test")
+  end
+
+  test "passes phx-hook via rest" do
+    result =
+      render_component(&dm_drawer/1, %{
+        inner_block: inner_block("Content"),
+        phx_hook: "DrawerHook"
+      })
+
+    assert result =~ ~s(phx_hook="DrawerHook")
+  end
+
+  test "header slot wrapped in span element" do
+    result =
+      render_component(&dm_drawer/1, %{
+        header: [inner_block("Wrapped Header")],
+        inner_block: inner_block("Body")
+      })
+
+    assert result =~ ~s(<span)
+    assert result =~ ~s(slot="header")
+    assert result =~ "Wrapped Header"
+  end
+
+  test "footer slot wrapped in span element" do
+    result =
+      render_component(&dm_drawer/1, %{
+        footer: [inner_block("Wrapped Footer")],
+        inner_block: inner_block("Body")
+      })
+
+    assert result =~ ~s(<span)
+    assert result =~ ~s(slot="footer")
+    assert result =~ "Wrapped Footer"
+  end
+
+  test "renders with all options combined" do
+    result =
+      render_component(&dm_drawer/1, %{
+        id: "full-drawer",
+        class: "full-class",
+        open: true,
+        position: "right",
+        modal: true,
+        width: "500px",
+        header: [inner_block("Full Header")],
+        footer: [inner_block("Full Footer")],
+        inner_block: inner_block("Full Body")
+      })
+
+    assert result =~ ~s(id="full-drawer")
+    assert result =~ ~s(class="full-class")
+    assert result =~ "open"
+    assert result =~ ~s(position="right")
+    assert result =~ "modal"
+    assert result =~ ~s(width="500px")
+    assert result =~ "Full Header"
+    assert result =~ "Full Footer"
+    assert result =~ "Full Body"
   end
 end
