@@ -316,4 +316,64 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
     refute result =~ "aria-invalid"
     refute result =~ "aria-describedby"
   end
+
+  describe "style variants (ghost, filled, bordered)" do
+    test "renders textarea with ghost variant" do
+      result =
+        render_component(&dm_textarea/1, %{
+          name: "notes",
+          value: nil,
+          variant: "ghost"
+        })
+
+      assert result =~ "textarea-ghost"
+    end
+
+    test "renders textarea with filled variant" do
+      result =
+        render_component(&dm_textarea/1, %{
+          name: "notes",
+          value: nil,
+          variant: "filled"
+        })
+
+      assert result =~ "textarea-filled"
+    end
+
+    test "renders textarea with bordered variant" do
+      result =
+        render_component(&dm_textarea/1, %{
+          name: "notes",
+          value: nil,
+          variant: "bordered"
+        })
+
+      assert result =~ "textarea-bordered"
+    end
+
+    test "renders textarea without variant class by default" do
+      result =
+        render_component(&dm_textarea/1, %{
+          name: "notes",
+          value: nil
+        })
+
+      refute result =~ "textarea-ghost"
+      refute result =~ "textarea-filled"
+      refute result =~ "textarea-bordered"
+    end
+
+    test "renders textarea with filled variant and color combined" do
+      result =
+        render_component(&dm_textarea/1, %{
+          name: "notes",
+          value: nil,
+          variant: "filled",
+          color: "warning"
+        })
+
+      assert result =~ "textarea-filled"
+      assert result =~ "textarea-warning"
+    end
+  end
 end

@@ -415,4 +415,69 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
     refute result =~ "aria-invalid"
     refute result =~ "aria-describedby"
   end
+
+  describe "style variants (ghost, filled, bordered)" do
+    test "renders select with ghost variant" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "opt",
+          value: nil,
+          variant: "ghost",
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ "select-ghost"
+    end
+
+    test "renders select with filled variant" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "opt",
+          value: nil,
+          variant: "filled",
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ "select-filled"
+    end
+
+    test "renders select with bordered variant" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "opt",
+          value: nil,
+          variant: "bordered",
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ "select-bordered"
+    end
+
+    test "renders select without variant class by default" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "opt",
+          value: nil,
+          options: [{"us", "USA"}]
+        })
+
+      refute result =~ "select-ghost"
+      refute result =~ "select-filled"
+      refute result =~ "select-bordered"
+    end
+
+    test "renders select with ghost variant and color combined" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "opt",
+          value: nil,
+          variant: "ghost",
+          color: "success",
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ "select-ghost"
+      assert result =~ "select-success"
+    end
+  end
 end

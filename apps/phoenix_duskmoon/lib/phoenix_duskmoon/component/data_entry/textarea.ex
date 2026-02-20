@@ -35,6 +35,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
   attr(:cols, :integer, default: nil, doc: "number of visible text columns")
   attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "textarea size")
 
+  attr(:variant, :string,
+    default: nil,
+    values: ["ghost", "filled", "bordered", nil],
+    doc: "the textarea style variant (ghost, filled, bordered)"
+  )
+
   attr(:color, :string,
     default: "primary",
     values: ["primary", "secondary", "tertiary", "accent", "info", "success", "warning", "error"],
@@ -92,6 +98,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
         aria-describedby={@errors != [] && @id && "#{@id}-errors"}
         class={[
           "textarea",
+          @variant && "textarea-#{@variant}",
           "textarea-#{@size}",
           "textarea-#{@color}",
           resize_class(@resize),

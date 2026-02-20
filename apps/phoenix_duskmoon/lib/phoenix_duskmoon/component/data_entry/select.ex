@@ -46,6 +46,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
 
   attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "select size")
 
+  attr(:variant, :string,
+    default: nil,
+    values: ["ghost", "filled", "bordered", nil],
+    doc: "the select style variant (ghost, filled, bordered)"
+  )
+
   attr(:color, :string,
     default: "primary",
     values: ["primary", "secondary", "tertiary", "accent", "info", "success", "warning", "error"],
@@ -87,6 +93,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
         aria-describedby={@errors != [] && @id && "#{@id}-errors"}
         class={[
           "select",
+          @variant && "select-#{@variant}",
           "select-#{@size}",
           "select-#{@color}",
           @disabled && "opacity-50 cursor-not-allowed",
