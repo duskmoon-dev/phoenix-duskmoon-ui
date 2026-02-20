@@ -55,6 +55,8 @@ defmodule PhoenixDuskmoon.Component.Layout.Divider do
       "base",
       "primary",
       "secondary",
+      "light",
+      "dark",
       "tertiary",
       "accent",
       "info",
@@ -71,7 +73,26 @@ defmodule PhoenixDuskmoon.Component.Layout.Divider do
     doc: "line style"
   )
 
-  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "divider thickness")
+  attr(:size, :string,
+    default: "md",
+    values: ["xs", "sm", "md", "lg", "xl"],
+    doc: "divider spacing size"
+  )
+
+  attr(:gradient, :boolean, default: false, doc: "use gradient divider style")
+
+  attr(:inset, :string,
+    default: nil,
+    values: [nil, "left", "right", "both"],
+    doc: "inset the divider from edges"
+  )
+
+  attr(:text_position, :string,
+    default: nil,
+    values: [nil, "left", "right"],
+    doc: "position of text content within the divider"
+  )
+
   attr(:class, :string, default: nil, doc: "additional CSS classes")
   attr(:rest, :global)
 
@@ -88,7 +109,10 @@ defmodule PhoenixDuskmoon.Component.Layout.Divider do
         divider_variant(@variant),
         @style != "solid" && "divider-#{@style}",
         @size != "md" && "divider-#{@size}",
+        @gradient && "divider-gradient",
+        inset_class(@inset),
         @inner_block != [] && "divider-text",
+        @inner_block != [] && text_position_class(@text_position),
         @class
       ]}
       {@rest}
@@ -102,5 +126,16 @@ defmodule PhoenixDuskmoon.Component.Layout.Divider do
 
   defp divider_variant("primary"), do: "divider-primary"
   defp divider_variant("secondary"), do: "divider-secondary"
+  defp divider_variant("light"), do: "divider-light"
+  defp divider_variant("dark"), do: "divider-dark"
   defp divider_variant(_), do: nil
+
+  defp inset_class("left"), do: "divider-inset"
+  defp inset_class("right"), do: "divider-inset-right"
+  defp inset_class("both"), do: "divider-inset-both"
+  defp inset_class(_), do: nil
+
+  defp text_position_class("left"), do: "divider-text-left"
+  defp text_position_class("right"), do: "divider-text-right"
+  defp text_position_class(_), do: nil
 end

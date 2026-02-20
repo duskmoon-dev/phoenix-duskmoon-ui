@@ -268,4 +268,108 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
     assert result =~ "<div"
     assert result =~ ~s[role="separator"]
   end
+
+  describe "light and dark color variants" do
+    test "renders divider with light variant" do
+      result = render_component(&dm_divider/1, %{variant: "light"})
+
+      assert result =~ "divider-light"
+    end
+
+    test "renders divider with dark variant" do
+      result = render_component(&dm_divider/1, %{variant: "dark"})
+
+      assert result =~ "divider-dark"
+    end
+  end
+
+  describe "gradient style" do
+    test "renders divider with gradient" do
+      result = render_component(&dm_divider/1, %{gradient: true})
+
+      assert result =~ "divider-gradient"
+    end
+
+    test "renders divider without gradient by default" do
+      result = render_component(&dm_divider/1, %{})
+
+      refute result =~ "divider-gradient"
+    end
+
+    test "renders gradient divider with variant" do
+      result = render_component(&dm_divider/1, %{gradient: true, variant: "primary"})
+
+      assert result =~ "divider-gradient"
+      assert result =~ "divider-primary"
+    end
+  end
+
+  describe "inset variants" do
+    test "renders divider with left inset" do
+      result = render_component(&dm_divider/1, %{inset: "left"})
+
+      assert result =~ "divider-inset"
+    end
+
+    test "renders divider with right inset" do
+      result = render_component(&dm_divider/1, %{inset: "right"})
+
+      assert result =~ "divider-inset-right"
+    end
+
+    test "renders divider with both inset" do
+      result = render_component(&dm_divider/1, %{inset: "both"})
+
+      assert result =~ "divider-inset-both"
+    end
+
+    test "renders divider without inset by default" do
+      result = render_component(&dm_divider/1, %{})
+
+      refute result =~ "divider-inset"
+    end
+  end
+
+  describe "text position" do
+    test "renders divider with left-aligned text" do
+      result =
+        render_component(&dm_divider/1, %{
+          text_position: "left",
+          inner_block: [%{inner_block: fn _, _ -> "Left" end}]
+        })
+
+      assert result =~ "divider-text-left"
+      assert result =~ "Left"
+    end
+
+    test "renders divider with right-aligned text" do
+      result =
+        render_component(&dm_divider/1, %{
+          text_position: "right",
+          inner_block: [%{inner_block: fn _, _ -> "Right" end}]
+        })
+
+      assert result =~ "divider-text-right"
+      assert result =~ "Right"
+    end
+
+    test "renders divider with centered text by default" do
+      result =
+        render_component(&dm_divider/1, %{
+          inner_block: [%{inner_block: fn _, _ -> "Center" end}]
+        })
+
+      refute result =~ "divider-text-left"
+      refute result =~ "divider-text-right"
+      assert result =~ "Center"
+    end
+  end
+
+  describe "xl size" do
+    test "renders divider with xl size" do
+      result = render_component(&dm_divider/1, %{size: "xl"})
+
+      assert result =~ "divider-xl"
+    end
+  end
 end

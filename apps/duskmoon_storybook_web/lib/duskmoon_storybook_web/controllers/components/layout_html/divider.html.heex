@@ -58,4 +58,30 @@
     <.dm_divider orientation="vertical" variant="secondary" />
     <span>Right</span>
   </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Gradient</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_divider gradient />
+    <.dm_divider gradient variant="primary" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Inset</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_divider inset="left" />
+    <.dm_divider inset="right" />
+    <.dm_divider inset="both" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Text Position</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_divider text_position="left">Left Text</.dm_divider>
+    <.dm_divider>Center Text</.dm_divider>
+    <.dm_divider text_position="right">Right Text</.dm_divider>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Light &amp; Dark</h3>
+  <div class="flex flex-col gap-4">
+    <.dm_divider variant="light" />
+    <.dm_divider variant="dark" />
+  </div>
 </.dm_card>
