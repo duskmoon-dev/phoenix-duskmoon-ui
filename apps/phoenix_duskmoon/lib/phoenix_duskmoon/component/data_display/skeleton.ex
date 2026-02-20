@@ -2,7 +2,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   @moduledoc """
   Duskmoon UI Skeleton Component
 
-  Provides various skeleton loading placeholder formats using daisyui classes.
+  Provides various skeleton loading placeholder formats.
   Perfect for showing content placeholders while data is loading.
   """
 
