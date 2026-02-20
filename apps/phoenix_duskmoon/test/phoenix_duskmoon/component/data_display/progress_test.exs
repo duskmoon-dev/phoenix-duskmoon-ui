@@ -55,11 +55,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
     assert result =~ "Progress"
   end
 
-  test "renders progress without label by default" do
+  test "renders progress without visible label by default" do
     result = render_component(&dm_progress/1, %{value: 60})
 
     refute result =~ "Complete"
-    refute result =~ "Progress"
+    # "Progress" appears only in aria-label, not as visible text
+    refute result =~ ">Progress<"
   end
 
   test "renders progress with animated class" do
@@ -252,6 +253,39 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
     assert result =~ "my-wrapper"
     assert result =~ "my-label"
     assert result =~ "my-bar"
+  end
+
+  describe "aria-label accessibility" do
+    test "renders aria-label when show_label is false" do
+      result = render_component(&dm_progress/1, %{value: 50})
+
+      assert result =~ ~s[aria-label="Progress"]
+    end
+
+    test "does not render aria-label when show_label is true" do
+      result = render_component(&dm_progress/1, %{value: 50, show_label: true})
+
+      [_, progress_part] = String.split(result, "<progress", parts: 2)
+      [progress_attrs, _] = String.split(progress_part, ">", parts: 2)
+      refute progress_attrs =~ "aria-label"
+    end
+
+    test "uses custom label_text for aria-label when show_label is false" do
+      result =
+        render_component(&dm_progress/1, %{value: 50, label_text: "Upload"})
+
+      assert result =~ ~s[aria-label="Upload"]
+    end
+
+    test "explicit aria-label in rest attrs overrides auto-generated one" do
+      result =
+        render_component(&dm_progress/1, %{
+          value: 50,
+          "aria-label": "File upload progress"
+        })
+
+      assert result =~ ~s[aria-label="File upload progress"]
+    end
   end
 
   describe "configurable label text" do

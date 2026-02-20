@@ -84,6 +84,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
         aria-valuenow={if(!@indeterminate, do: @value)}
         aria-valuemin={0}
         aria-valuemax={@max}
+        aria-label={if(!@show_label, do: @label_text)}
         {@rest}
       ></progress>
 
