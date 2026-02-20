@@ -83,14 +83,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
   test "renders avatar with online indicator" do
     result = render_component(&dm_avatar/1, %{name: "T", online: true})
 
-    assert result =~ "bg-success"
-    assert result =~ "border-2 border-base-100"
+    assert result =~ "bg-[var(--color-success)]"
+    assert result =~ "border-2 border-[var(--color-surface)]"
   end
 
   test "renders avatar with offline indicator" do
     result = render_component(&dm_avatar/1, %{name: "T", offline: true})
 
-    assert result =~ "bg-base-300"
+    assert result =~ "bg-[var(--color-surface-variant)]"
   end
 
   test "renders avatar with placeholder image" do
@@ -173,7 +173,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
       })
 
     assert result =~ "avatar-border"
-    assert result =~ "bg-success"
+    assert result =~ "bg-[var(--color-success)]"
   end
 
   test "renders avatar wrapper div" do
@@ -306,7 +306,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
     assert result =~ "rounded-square"
     assert result =~ "bg-accent"
     assert result =~ "avatar-border"
-    assert result =~ "bg-success"
+    assert result =~ "bg-[var(--color-success)]"
     assert result =~ "my-avatar"
     assert result =~ "my-img"
   end
@@ -346,7 +346,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
       })
 
     assert result =~ "avatar-border"
-    assert result =~ "bg-base-300"
+    assert result =~ "bg-[var(--color-surface-variant)]"
     assert result =~ "bg-warning"
     assert result =~ "J"
   end

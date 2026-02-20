@@ -150,13 +150,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
       role="table"
       id={@id}
       class={[
-        "dm-table border-collapse border-spacing-0",
-        if(@border, do: "dm-table--bordered"),
-        if(@zebra, do: "dm-table--zebra"),
-        if(@pin_rows, do: "dm-table--pin-rows"),
-        if(@pin_cols, do: "dm-table--pin-cols"),
-        @size && "dm-table--#{@size}",
-        if(@compact, do: "dm-table--compact"),
+        "table border-collapse border-spacing-0",
+        if(@border, do: "table-bordered"),
+        if(@zebra, do: "table-zebra"),
+        if(@pin_rows, do: "table-pin-rows"),
+        if(@pin_cols, do: "table-pin-cols"),
+        @size && "table-#{@size}",
+        if(@compact, do: "table-compact"),
         @class,
       ]}
     >
@@ -166,7 +166,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
         class={Map.get(caption, :class, "")}
       ><%= render_slot(caption) %></caption>
       <thead role="row-group" class="hidden md:table-header-group sticky top-0">
-        <tr role="row" class="dm-table__row dm-table__row--header">
+        <tr role="row">
           <th
             :for={col <- @col}
             role="columnheader"
@@ -185,7 +185,6 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
             :for={{row_id, row} <- @data}
             role="row"
             id={row_id}
-            class={"dm-table__row"}
           >
             <td
               :for={col <- @col}
@@ -203,7 +202,6 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
           <%= for row <- @data do %>
             <tr
               role="row"
-              class={"dm-table__row"}
             >
               <td
                 :for={col <- @col}
@@ -218,7 +216,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
             <tr
               role="row"
               class={[
-                "dm-table__row dm-table__row--expand",
+                "table-row-expand",
                 Map.get(expand, :class, "")
               ]}
               :if={length(@expand) > 0}

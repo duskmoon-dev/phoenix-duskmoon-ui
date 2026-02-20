@@ -123,7 +123,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
           zebra: true
         })
 
-      assert result =~ "dm-table--zebra"
+      assert result =~ "table-zebra"
     end
 
     test "renders table with pinned rows" do
@@ -133,7 +133,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
           pin_rows: true
         })
 
-      assert result =~ "dm-table--pin-rows"
+      assert result =~ "table-pin-rows"
     end
 
     test "renders table with pinned columns" do
@@ -143,7 +143,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
           pin_cols: true
         })
 
-      assert result =~ "dm-table--pin-cols"
+      assert result =~ "table-pin-cols"
     end
 
     test "renders table with size variants" do
@@ -154,7 +154,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
             size: size
           })
 
-        assert result =~ "dm-table--#{size}"
+        assert result =~ "table-#{size}"
       end
     end
 
@@ -165,7 +165,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
           compact: true
         })
 
-      assert result =~ "dm-table--compact"
+      assert result =~ "table-compact"
     end
 
     test "renders table with caption" do
@@ -210,7 +210,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
           with_expand: true
         })
 
-      assert result =~ "dm-table__row--expand"
+      assert result =~ "table-row-expand"
       assert result =~ "Details: New York"
       assert result =~ "Details: Los Angeles"
     end
@@ -270,11 +270,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
         })
 
       assert result =~ "border"
-      assert result =~ "dm-table--zebra"
-      assert result =~ "dm-table--compact"
-      assert result =~ "dm-table--lg"
-      assert result =~ "dm-table--pin-rows"
-      assert result =~ "dm-table--pin-cols"
+      assert result =~ "table-zebra"
+      assert result =~ "table-compact"
+      assert result =~ "table-lg"
+      assert result =~ "table-pin-rows"
+      assert result =~ "table-pin-cols"
     end
 
     test "renders with stream mode enabled" do
@@ -311,16 +311,16 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
           data: @test_data
         })
 
-      refute result =~ "dm-table__row--expand"
+      refute result =~ "table-row-expand"
     end
 
-    test "renders table with dm-table class" do
+    test "renders table with table class" do
       result =
         render_component(&TestComponent.render/1, %{
           data: @test_data
         })
 
-      assert result =~ "dm-table"
+      assert result =~ "table"
     end
 
     test "renders without zebra by default" do
@@ -330,7 +330,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
         })
 
       # Check the table element itself, not any CSS style blocks
-      refute result =~ "dm-table--zebra"
+      refute result =~ "table-zebra"
     end
 
     test "renders with three columns" do
@@ -375,13 +375,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
       assert result =~ "font-bold"
     end
 
-    test "table rows have dm-table__row class" do
+    test "table rows have role row attribute" do
       result =
         render_component(&TestComponent.render/1, %{
           data: @test_data
         })
 
-      assert result =~ "dm-table__row"
+      assert result =~ ~s[role="row"]
     end
 
     test "expand row with 2 columns spans 2" do
@@ -413,7 +413,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
           with_expand: true
         })
 
-      assert result =~ "dm-table--bordered"
+      assert result =~ "table-bordered"
     end
 
     test "renders table header with sticky positioning" do
@@ -460,7 +460,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
 
       assert result =~ ~s[id="expand-row"]
       assert result =~ "bg-gray-50"
-      assert result =~ "dm-table__row--expand"
+      assert result =~ "table-row-expand"
     end
 
     test "stream body has id attribute" do
@@ -509,7 +509,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
           border: true
         })
 
-      assert result =~ "dm-table--bordered"
+      assert result =~ "table-bordered"
       assert result =~ "border"
     end
 

@@ -145,9 +145,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
             role="status"
             aria-label={if @online, do: @online_label, else: @offline_label}
             class={[
-              "absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-base-100",
-              @online && "bg-success",
-              @offline && "bg-base-300"
+              "absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-[var(--color-surface)]",
+              @online && "bg-[var(--color-success)]",
+              @offline && "bg-[var(--color-surface-variant)]"
             ]}
           >
           </div>
