@@ -43,7 +43,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
 
   attr(:color, :string,
     default: nil,
-    values: [nil, "primary", "secondary", "tertiary", "accent", "info", "success", "warning", "error"],
+    values: [
+      nil,
+      "primary",
+      "secondary",
+      "tertiary",
+      "accent",
+      "info",
+      "success",
+      "warning",
+      "error"
+    ],
     doc: "color variant for filled stars"
   )
 
