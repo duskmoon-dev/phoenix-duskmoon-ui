@@ -193,7 +193,15 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     |> dm_input()
   end
 
-  def dm_input(%{type: "checkbox"} = assigns) do
+  def dm_input(%{color: color} = assigns) when color != nil do
+    assigns
+    |> assign(:color, css_color(color))
+    |> dm_input_by_type()
+  end
+
+  def dm_input(assigns), do: dm_input_by_type(assigns)
+
+  defp dm_input_by_type(%{type: "checkbox"} = assigns) do
     assigns =
       assign_new(assigns, :checked, fn ->
         Phoenix.HTML.Form.normalize_value("checkbox", assigns[:value])
@@ -223,7 +231,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "toggle", value: value} = assigns) do
+  defp dm_input_by_type(%{type: "toggle", value: value} = assigns) do
     assigns =
       assign_new(assigns, :checked, fn -> Phoenix.HTML.Form.normalize_value("checkbox", value) end)
 
@@ -255,7 +263,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "select"} = assigns) do
+  defp dm_input_by_type(%{type: "select"} = assigns) do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
@@ -286,7 +294,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "checkbox_group"} = assigns) do
+  defp dm_input_by_type(%{type: "checkbox_group"} = assigns) do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} id={@id && "#{@id}-label"}>{@label}</.dm_label>
@@ -321,7 +329,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "radio_group"} = assigns) do
+  defp dm_input_by_type(%{type: "radio_group"} = assigns) do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} id={@id && "#{@id}-label"}>{@label}</.dm_label>
@@ -353,7 +361,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "textarea"} = assigns) do
+  defp dm_input_by_type(%{type: "textarea"} = assigns) do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
@@ -380,7 +388,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "file"} = assigns) do
+  defp dm_input_by_type(%{type: "file"} = assigns) do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
@@ -410,7 +418,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "range_slider"} = assigns) do
+  defp dm_input_by_type(%{type: "range_slider"} = assigns) do
     assigns =
       assign_new(assigns, :min, fn -> assigns.rest[:min] || 0 end)
       |> assign_new(:max, fn -> assigns.rest[:max] || 100 end)
@@ -457,7 +465,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "rating"} = assigns) do
+  defp dm_input_by_type(%{type: "rating"} = assigns) do
     assigns =
       assign_new(assigns, :max, fn -> assigns.rest[:max] || 5 end)
       |> assign_new(:readonly, fn -> assigns.rest[:readonly] || false end)
@@ -500,7 +508,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "datepicker"} = assigns) do
+  defp dm_input_by_type(%{type: "datepicker"} = assigns) do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
@@ -533,7 +541,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "timepicker"} = assigns) do
+  defp dm_input_by_type(%{type: "timepicker"} = assigns) do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
@@ -566,7 +574,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "color_picker"} = assigns) do
+  defp dm_input_by_type(%{type: "color_picker"} = assigns) do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
@@ -618,7 +626,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "switch"} = assigns) do
+  defp dm_input_by_type(%{type: "switch"} = assigns) do
     assigns =
       assign_new(assigns, :checked, fn ->
         Phoenix.HTML.Form.normalize_value("checkbox", assigns[:value])
@@ -655,7 +663,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "search_with_suggestions"} = assigns) do
+  defp dm_input_by_type(%{type: "search_with_suggestions"} = assigns) do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
@@ -697,7 +705,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "file_upload"} = assigns) do
+  defp dm_input_by_type(%{type: "file_upload"} = assigns) do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
@@ -750,7 +758,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "rich_text"} = assigns) do
+  defp dm_input_by_type(%{type: "rich_text"} = assigns) do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
@@ -803,7 +811,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "tags"} = assigns) do
+  defp dm_input_by_type(%{type: "tags"} = assigns) do
     assigns = assign(assigns, :tags, List.wrap(assigns[:value] || []))
 
     ~H"""
@@ -843,7 +851,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "slider_range"} = assigns) do
+  defp dm_input_by_type(%{type: "slider_range"} = assigns) do
     assigns =
       assign_new(assigns, :min, fn -> assigns.rest[:min] || 0 end)
       |> assign_new(:max, fn -> assigns.rest[:max] || 100 end)
@@ -921,7 +929,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     """
   end
 
-  def dm_input(%{type: "password_strength"} = assigns) do
+  defp dm_input_by_type(%{type: "password_strength"} = assigns) do
     assigns = assign(assigns, :strength, calculate_password_strength(assigns[:value] || ""))
 
     ~H"""
@@ -1004,7 +1012,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   end
 
   # All other inputs text, datetime-local, url, password, etc. are handled here...
-  def dm_input(assigns) do
+  defp dm_input_by_type(assigns) do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
@@ -1057,4 +1065,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         "weak"
     end
   end
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end
