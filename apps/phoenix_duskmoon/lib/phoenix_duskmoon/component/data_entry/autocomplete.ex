@@ -102,6 +102,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Autocomplete do
         noResultsText={@no_results_text}
         size={@size}
         class={[(@error || @errors != []) && "autocomplete-error", @class]}
+        aria-invalid={@errors != [] && "true"}
+        aria-describedby={
+          (@errors != [] && @id && "#{@id}-errors") ||
+            (@helper && @errors == [] && @id && "#{@id}-helper")
+        }
         {@rest}
       >
       </el-dm-autocomplete>

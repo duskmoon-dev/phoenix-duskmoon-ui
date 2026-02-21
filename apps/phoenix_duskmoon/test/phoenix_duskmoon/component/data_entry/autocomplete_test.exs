@@ -229,6 +229,51 @@ defmodule PhoenixDuskmoon.Component.DataEntry.AutocompleteTest do
 
       assert result =~ "autocomplete-error"
     end
+
+    test "renders aria-invalid when errors present" do
+      result =
+        render_component(&dm_autocomplete/1, %{
+          errors: ["is required"]
+        })
+
+      assert result =~ ~s(aria-invalid="true")
+    end
+
+    test "no aria-invalid when no errors" do
+      result = render_component(&dm_autocomplete/1, %{})
+      refute result =~ "aria-invalid"
+    end
+  end
+
+  describe "aria-describedby" do
+    test "references errors container when errors present" do
+      result =
+        render_component(&dm_autocomplete/1, %{
+          id: "ac",
+          errors: ["is required"]
+        })
+
+      assert result =~ ~s(aria-describedby="ac-errors")
+    end
+
+    test "references helper when no errors" do
+      result =
+        render_component(&dm_autocomplete/1, %{
+          id: "ac",
+          helper: "Search for a country"
+        })
+
+      assert result =~ ~s(aria-describedby="ac-helper")
+    end
+
+    test "no aria-describedby when no id" do
+      result =
+        render_component(&dm_autocomplete/1, %{
+          errors: ["is required"]
+        })
+
+      refute result =~ "aria-describedby"
+    end
   end
 
   test "renders phx-feedback-for with name" do
