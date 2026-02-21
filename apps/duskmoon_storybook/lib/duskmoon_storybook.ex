@@ -1,9 +1,8 @@
 defmodule DuskmoonStorybook do
   @moduledoc """
-  DuskmoonStorybook keeps the contexts that define your domain
-  and business logic.
+  Backend application for the Duskmoon UI Storybook.
 
-  Contexts are also responsible for managing your data, regardless
-  if it comes from the database, an external API or others.
+  Provides shared context and configuration for the storybook
+  web application that showcases Phoenix Duskmoon UI components.
   """
 end
