@@ -44,7 +44,7 @@ defmodule PhoenixDuskmoon.CssArt.PlasmaBall do
   attr(:size, :string, default: "medium", values: ["small", "medium", "large"])
   attr(:base_color, :string, default: "#222222")
   attr(:show_electrode, :boolean, default: true)
-  attr(:class, :string, default: nil)
+  attr(:class, :any, default: nil)
   attr(:phx_target, :any, default: nil)
 
   attr(:toggle_label, :string,

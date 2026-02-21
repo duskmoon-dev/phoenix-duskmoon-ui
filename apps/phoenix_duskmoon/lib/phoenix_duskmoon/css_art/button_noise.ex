@@ -54,7 +54,7 @@ defmodule PhoenixDuskmoon.CssArt.ButtonNoise do
   attr(:font_size, :string, default: "24px")
   attr(:font_family, :string, default: ~s("Josefin Sans", sans-serif))
   attr(:color_scheme, :string, default: "default", values: ["default", "electric", "neon"])
-  attr(:class, :string, default: nil)
+  attr(:class, :any, default: nil)
   attr(:phx_target, :any, default: nil)
   attr(:rest, :global)
 

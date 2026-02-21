@@ -48,7 +48,7 @@ defmodule PhoenixDuskmoon.CssArt.Eclipse do
   attr(:size, :string, default: "medium", values: ["small", "medium", "large"])
   attr(:bg_color, :string, default: "#09090b")
   attr(:animation_speed, :float, default: 1.0)
-  attr(:class, :string, default: nil)
+  attr(:class, :any, default: nil)
   attr(:rest, :global)
 
   def dm_art_eclipse(assigns) do

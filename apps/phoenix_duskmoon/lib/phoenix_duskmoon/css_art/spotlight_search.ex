@@ -42,7 +42,7 @@ defmodule PhoenixDuskmoon.CssArt.SpotlightSearch do
   attr(:shortcut, :string, default: "cmd+k")
   attr(:open, :boolean, default: false)
   attr(:loading, :boolean, default: false)
-  attr(:class, :string, default: nil)
+  attr(:class, :any, default: nil)
   attr(:phx_target, :any, default: nil)
 
   attr(:dialog_label, :string,

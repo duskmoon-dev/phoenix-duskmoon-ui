@@ -68,7 +68,7 @@ defmodule PhoenixDuskmoon.CssArt.Signature do
   attr(:right, :string, default: "2rem")
   attr(:top, :string, default: "2rem")
   attr(:position, :string, default: "absolute")
-  attr(:class, :string, default: nil)
+  attr(:class, :any, default: nil)
   attr(:rest, :global)
 
   def dm_art_signature(assigns) do
