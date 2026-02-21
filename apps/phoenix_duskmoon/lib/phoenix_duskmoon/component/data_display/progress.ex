@@ -29,6 +29,16 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
   @circle_radius 16
   @circle_circumference 2 * :math.pi() * @circle_radius
 
+  @doc """
+  Renders a progress indicator (linear bar or circular ring).
+
+  ## Examples
+
+      <.dm_progress value={75} max={100} />
+      <.dm_progress value={60} max={100} color="success" size="lg" show_label />
+      <.dm_progress type="circular" value={75} max={100} color="primary" show_label />
+
+  """
   @doc type: :component
   attr(:type, :string,
     default: "linear",

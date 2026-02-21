@@ -651,6 +651,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               @errors != [] && "input-error"
             ]}
             readonly
+            aria-hidden="true"
+            tabindex="-1"
           />
         </div>
         <div :if={@swatches} class="flex flex-wrap gap-2">
