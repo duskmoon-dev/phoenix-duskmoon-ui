@@ -50,8 +50,20 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
     doc: "Progress size"
   )
 
-  attr(:show_label, :boolean, default: false, doc: "Show percentage label")
-  attr(:animated, :boolean, default: false, doc: "Enable striped animation (linear only)")
+  attr(:show_label, :boolean, default: false, doc: "Show percentage label above/below the bar")
+
+  attr(:inline_label, :boolean,
+    default: false,
+    doc: "Show percentage label inside the bar (linear only)"
+  )
+
+  attr(:striped, :boolean, default: false, doc: "Show striped pattern (linear only)")
+
+  attr(:animated, :boolean,
+    default: false,
+    doc: "Animate the stripes (implies striped, linear only)"
+  )
+
   attr(:indeterminate, :boolean, default: false, doc: "Show indeterminate progress")
   attr(:class, :string, default: nil, doc: "Additional CSS classes for the wrapper")
   attr(:label_class, :string, default: nil, doc: "CSS classes for the label")
@@ -88,20 +100,23 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
           "progress",
           "progress-#{@color}",
           linear_size_classes(@size),
-          @animated && "progress-striped progress-animated",
+          @inline_label && "progress-labeled",
+          (@striped || @animated) && "progress-striped",
+          @animated && "progress-animated",
           @indeterminate && "progress-indeterminate",
           @progress_class
         ]}
         aria-valuenow={if(!@indeterminate, do: @value)}
         aria-valuemin={0}
         aria-valuemax={@max}
-        aria-label={if(!@show_label, do: @label_text)}
+        aria-label={if(!@show_label && !@inline_label, do: @label_text)}
         {@rest}
       >
         <div
           class="progress-bar"
           style={if(!@indeterminate, do: "width: #{@percentage}%")}
         ></div>
+        <span :if={@inline_label} class="progress-label">{@percentage}%</span>
       </div>
 
       <div :if={@show_label} class="text-sm text-[var(--color-on-surface-variant)] mt-1">

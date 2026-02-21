@@ -99,6 +99,42 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ProgressTest do
     refute result =~ "progress-striped"
   end
 
+  test "renders progress with striped class only (no animation)" do
+    result = render_component(&dm_progress/1, %{value: 50, striped: true})
+
+    assert result =~ "progress-striped"
+    refute result =~ "progress-animated"
+  end
+
+  test "renders progress with striped false by default" do
+    result = render_component(&dm_progress/1, %{value: 50})
+
+    refute result =~ "progress-striped"
+  end
+
+  describe "inline_label" do
+    test "renders inline label inside the progress bar" do
+      result = render_component(&dm_progress/1, %{value: 75, inline_label: true})
+
+      assert result =~ "progress-labeled"
+      assert result =~ "progress-label"
+      assert result =~ "75.0%"
+    end
+
+    test "does not render inline label by default" do
+      result = render_component(&dm_progress/1, %{value: 50})
+
+      refute result =~ "progress-labeled"
+      refute result =~ "progress-label"
+    end
+
+    test "inline label omits aria-label since label is visible" do
+      result = render_component(&dm_progress/1, %{value: 50, inline_label: true})
+
+      refute result =~ ~s[aria-label="Progress"]
+    end
+  end
+
   test "renders indeterminate progress with class" do
     result = render_component(&dm_progress/1, %{indeterminate: true})
 
