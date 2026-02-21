@@ -125,8 +125,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
       })
 
     assert result =~ "is required"
-    assert result =~ "text-error"
-    assert result =~ "text-error"
+    assert result =~ "form-group-error"
   end
 
   test "renders compact input with custom class" do
@@ -200,7 +199,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
 
     assert result =~ "is required"
     assert result =~ "must be at least 3 characters"
-    assert result =~ "text-error"
+    assert result =~ "form-group-error"
   end
 
   test "renders compact input with disabled attribute" do
@@ -287,8 +286,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
         errors: ["is required"]
       })
 
-    assert result =~ "text-error"
-    assert result =~ "text-error"
+    assert result =~ "form-group-error"
     assert result =~ "is required"
   end
 
@@ -488,7 +486,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
     assert result =~ ~s[value="test@test.com"]
     assert result =~ "Email"
     assert result =~ "my-wrapper"
-    assert result =~ "text-error"
+    assert result =~ "form-group-error"
     assert result =~ "is invalid"
     assert result =~ ~s[placeholder="Enter email"]
     assert result =~ "required"
@@ -516,7 +514,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
     assert result =~ "Choose..."
     assert result =~ "USA"
     assert result =~ "Canada"
-    assert result =~ "text-error"
+    assert result =~ "form-group-error"
     assert result =~ "is required"
     assert result =~ ~s[aria-invalid="true"]
   end

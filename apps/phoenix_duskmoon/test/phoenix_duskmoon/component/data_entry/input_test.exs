@@ -3536,7 +3536,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
         })
 
       assert result =~ "text-sm"
-      assert result =~ "text-error"
+      assert result =~ "form-group-error"
     end
 
     test "renders select label with label_class" do

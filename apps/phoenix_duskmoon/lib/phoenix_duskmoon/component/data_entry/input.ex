@@ -193,7 +193,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
       end)
 
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
       <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600">
         <input type="hidden" name={@name} value="false" />
         <input
@@ -221,7 +221,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
       assign_new(assigns, :checked, fn -> Phoenix.HTML.Form.normalize_value("checkbox", value) end)
 
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id}>{@label}</.dm_label>
       <div class="flex flex-col justify-center gap-2">
         <input type="hidden" name={@name} value="false" />
@@ -248,8 +248,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
   def dm_input(%{type: "select"} = assigns) do
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} class={[@errors != [] && "text-error", @label_class]}>{@label}</.dm_label>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
+      <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
         <select
           id={@id}
@@ -279,7 +279,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
   def dm_input(%{type: "checkbox_group"} = assigns) do
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} id={@id && "#{@id}-label"}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
         <div class="flex flex-wrap gap-6" role="group" aria-labelledby={@id && "#{@id}-label"}>
@@ -314,7 +314,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
   def dm_input(%{type: "radio_group"} = assigns) do
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} id={@id && "#{@id}-label"}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
         <div class="flex flex-wrap gap-6" role="group" aria-labelledby={@id && "#{@id}-label"}>
@@ -346,8 +346,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
   def dm_input(%{type: "textarea"} = assigns) do
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} class={[@errors != [] && "text-error", @label_class]}>{@label}</.dm_label>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
+      <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
         <textarea
           id={@id}
@@ -373,8 +373,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
   def dm_input(%{type: "file"} = assigns) do
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} class={[@errors != [] && "text-error", @label_class]}>{@label}</.dm_label>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
+      <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
         <input
           id={@id}
@@ -408,8 +408,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
       |> assign_new(:step, fn -> assigns.rest[:step] || 1 end)
 
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} class={[@errors != [] && "text-error", @label_class]}>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
+      <.dm_label for={@id} class={@label_class}>
         {@label} <span class="text-sm font-normal text-[var(--color-on-surface-variant)]">({@value || @min})</span>
       </.dm_label>
       <div class="flex flex-col gap-2">
@@ -454,8 +454,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
       |> assign_new(:readonly, fn -> assigns.rest[:readonly] || false end)
 
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} class={[@errors != [] && "text-error", @label_class]}>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
+      <.dm_label for={@id} class={@label_class}>
         {@label} <span class="text-sm font-normal text-[var(--color-on-surface-variant)]">({@value || 0}/{@max})</span>
       </.dm_label>
       <div class="flex flex-col gap-2">
@@ -489,8 +489,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
   def dm_input(%{type: "datepicker"} = assigns) do
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} class={[@errors != [] && "text-error", @label_class]}>{@label}</.dm_label>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
+      <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
         <div class="relative">
           <input
@@ -522,8 +522,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
   def dm_input(%{type: "timepicker"} = assigns) do
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} class={[@errors != [] && "text-error", @label_class]}>{@label}</.dm_label>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
+      <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
         <div class="relative">
           <input
@@ -555,8 +555,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
   def dm_input(%{type: "color_picker"} = assigns) do
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} class={[@errors != [] && "text-error", @label_class]}>{@label}</.dm_label>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
+      <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
         <div class="flex items-center gap-2">
           <div class="relative">
@@ -612,7 +612,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
       end)
 
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
       <label class="flex items-center justify-between gap-4">
         <span class="text-sm leading-6 text-zinc-600">{@label}</span>
         <div class="flex items-center">
@@ -644,8 +644,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
   def dm_input(%{type: "search_with_suggestions"} = assigns) do
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} class={[@errors != [] && "text-error", @label_class]}>{@label}</.dm_label>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
+      <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
         <div class="relative">
           <input
@@ -686,8 +686,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
   def dm_input(%{type: "file_upload"} = assigns) do
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} class={[@errors != [] && "text-error", @label_class]}>{@label}</.dm_label>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
+      <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
         <div class="border-2 border-dashed border-[var(--color-surface-container-high)] rounded-lg p-6 text-center hover:border-[var(--color-on-surface)] transition-colors">
           <.dm_mdi name="cloud-upload" class="w-12 h-12 mx-auto text-[var(--color-on-surface-variant)] mb-2" />
@@ -730,8 +730,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
   def dm_input(%{type: "rich_text"} = assigns) do
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} class={[@errors != [] && "text-error", @label_class]}>{@label}</.dm_label>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
+      <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
         <div class="toolbar flex items-center gap-1 p-2 bg-[var(--color-surface-container-low)] rounded-t-lg" role="toolbar" aria-label={@toolbar_label}>
           <button type="button" class="btn btn-ghost btn-xs" aria-label={@bold_label}>
@@ -785,8 +785,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     assigns = assign(assigns, :tags, List.wrap(assigns[:value] || []))
 
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} class={[@errors != [] && "text-error", @label_class]}>{@label}</.dm_label>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
+      <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
         <div class="flex flex-wrap gap-2 p-2 border border-[var(--color-surface-container-high)] rounded-lg" role="group" aria-label={"#{@label} tags"} aria-invalid={@errors != [] && "true"} aria-describedby={@errors != [] && @id && "#{@id}-errors"}>
           <span
@@ -842,8 +842,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
       )
 
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} class={[@errors != [] && "text-error", @label_class]}>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
+      <.dm_label for={@id} class={@label_class}>
         {@label} <span class="text-sm font-normal text-[var(--color-on-surface-variant)]">({@min_val} - {@max_val})</span>
       </.dm_label>
       <div class="flex flex-col gap-2">
@@ -903,8 +903,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     assigns = assign(assigns, :strength, calculate_password_strength(assigns[:value] || ""))
 
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} class={[@errors != [] && "text-error", @label_class]}>{@label}</.dm_label>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
+      <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
         <div class="relative">
           <input
@@ -976,8 +976,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   def dm_input(assigns) do
     ~H"""
-    <div class={["form-group", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} class={[@errors != [] && "text-error", @label_class]}>{@label}</.dm_label>
+    <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
+      <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
         <input
           type={@type}
