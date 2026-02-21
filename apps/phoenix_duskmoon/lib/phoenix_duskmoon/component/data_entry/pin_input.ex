@@ -24,7 +24,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
   use Phoenix.Component
 
   import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
-  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1, format_label: 2]
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1, format_label: 2, split_value: 2]
 
   @doc """
   Renders a PIN input group.
@@ -175,11 +175,4 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
     """
   end
 
-  defp split_value(nil, _length), do: []
-
-  defp split_value(value, length) when is_binary(value) do
-    value |> String.graphemes() |> Enum.take(length)
-  end
-
-  defp split_value(_, _length), do: []
 end
