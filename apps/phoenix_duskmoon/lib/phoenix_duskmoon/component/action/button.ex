@@ -186,6 +186,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
     assigns =
       assigns
       |> assign_new(:id, fn -> nil end)
+      |> assign_new(:inner_block, fn -> [] end)
 
     ~H"""
     <button
@@ -198,6 +199,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       {@rest}
     >
       <span aria-hidden="true"><i :for={_ <- 0..72} /></span>
+      <span :if={@inner_block != []} class="sr-only">{render_slot(@inner_block)}</span>
     </button>
     """
   end

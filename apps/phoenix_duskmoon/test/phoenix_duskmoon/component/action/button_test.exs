@@ -119,6 +119,18 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ ~s[<i></i>]
   end
 
+  test "renders noise button inner_block in sr-only span" do
+    result =
+      render_component(&dm_btn/1, %{
+        noise: true,
+        content: "SUBMIT",
+        inner_block: %{inner_block: fn _, _ -> "Submit form" end}
+      })
+
+    assert result =~ "sr-only"
+    assert result =~ "Submit form"
+  end
+
   test "renders button with confirmation dialog" do
     result =
       render_component(&dm_btn/1, %{
