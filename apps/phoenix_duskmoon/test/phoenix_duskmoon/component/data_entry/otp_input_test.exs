@@ -115,6 +115,19 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInputTest do
       result = render_component(&dm_otp_input/1, %{length: 4})
       assert result =~ "Verification code, 4 digits"
     end
+
+    test "uses aria-labelledby when label is provided" do
+      result = render_component(&dm_otp_input/1, %{id: "otp", label: "Enter code"})
+      assert result =~ ~s[aria-labelledby="otp-label"]
+      assert result =~ ~s[id="otp-label"]
+      refute result =~ ~s[aria-label="Verification code]
+    end
+
+    test "falls back to aria-label when no label is provided" do
+      result = render_component(&dm_otp_input/1, %{id: "otp"})
+      assert result =~ ~s[aria-label="Verification code, 6 digits"]
+      refute result =~ "aria-labelledby"
+    end
   end
 
   describe "dm_otp_input variant" do

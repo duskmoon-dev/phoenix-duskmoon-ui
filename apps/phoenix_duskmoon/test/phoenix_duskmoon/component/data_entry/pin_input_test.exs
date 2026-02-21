@@ -61,6 +61,19 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
       assert result =~ "PIN input, 6 digits"
     end
 
+    test "uses aria-labelledby when label is provided" do
+      result = render_component(&dm_pin_input/1, %{id: "pin", label: "Enter PIN"})
+      assert result =~ ~s[aria-labelledby="pin-label"]
+      assert result =~ ~s[id="pin-label"]
+      refute result =~ ~s[aria-label="PIN input]
+    end
+
+    test "falls back to aria-label when no label is provided" do
+      result = render_component(&dm_pin_input/1, %{id: "pin"})
+      assert result =~ ~s[aria-label="PIN input, 4 digits"]
+      refute result =~ "aria-labelledby"
+    end
+
     test "renders filled variant" do
       result = render_component(&dm_pin_input/1, %{variant: "filled"})
       assert result =~ "pin-input-filled"

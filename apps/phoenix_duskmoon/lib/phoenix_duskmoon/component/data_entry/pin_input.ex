@@ -115,7 +115,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
       ]}
       phx-feedback-for={@name}
       role="group"
-      aria-label={"PIN input, #{@length} digits"}
+      aria-labelledby={@label && @id && "#{@id}-label"}
+      aria-label={!@label && "PIN input, #{@length} digits"}
       aria-invalid={@errors != [] && "true"}
       aria-describedby={
         (@errors != [] && @id && "#{@id}-errors") ||
@@ -124,7 +125,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
       }
       {@rest}
     >
-      <label :if={@label} class={["pin-label", @label_class]}>{@label}</label>
+      <label :if={@label} id={@id && "#{@id}-label"} class={["pin-label", @label_class]}>{@label}</label>
       <div class={[
         "pin-input",
         @size && "pin-input-#{@size}",

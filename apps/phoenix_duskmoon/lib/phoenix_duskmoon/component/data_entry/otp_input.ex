@@ -113,7 +113,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
       ]}
       phx-feedback-for={@name}
       role="group"
-      aria-label={"Verification code, #{@length} digits"}
+      aria-labelledby={@label && @id && "#{@id}-label"}
+      aria-label={!@label && "Verification code, #{@length} digits"}
       aria-invalid={@errors != [] && "true"}
       aria-describedby={
         (@errors != [] && @id && "#{@id}-errors") ||
@@ -122,7 +123,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
       }
       {@rest}
     >
-      <label :if={@label} class={["otp-label", @label_class]}>{@label}</label>
+      <label :if={@label} id={@id && "#{@id}-label"} class={["otp-label", @label_class]}>{@label}</label>
       <div class={[
         "otp-input",
         @size && "otp-input-#{@size}",
