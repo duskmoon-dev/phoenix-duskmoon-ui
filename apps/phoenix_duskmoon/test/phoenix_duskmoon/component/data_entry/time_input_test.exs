@@ -169,6 +169,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInputTest do
       result = render_component(&dm_time_input/1, %{disabled: true})
       assert result =~ "disabled"
     end
+
+    test "renders disabled with visual styling" do
+      result = render_component(&dm_time_input/1, %{disabled: true})
+      assert result =~ "opacity-50"
+      assert result =~ "cursor-not-allowed"
+    end
   end
 
   describe "dm_time_input form integration" do

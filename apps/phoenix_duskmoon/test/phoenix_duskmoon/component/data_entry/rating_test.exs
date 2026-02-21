@@ -156,6 +156,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RatingTest do
       assert result =~ ~s(tabindex="-1")
     end
 
+    test "renders disabled with visual styling" do
+      result = render_component(&dm_rating/1, %{disabled: true})
+      assert result =~ "opacity-50"
+      assert result =~ "cursor-not-allowed"
+    end
+
     test "interactive by default" do
       result = render_component(&dm_rating/1, %{})
       refute result =~ "rating-readonly"

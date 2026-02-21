@@ -98,6 +98,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
           @animated && "rating-animated",
           @compact && "rating-compact",
           (@error || @errors != []) && "rating-error",
+          @disabled && "opacity-50 cursor-not-allowed",
           @class
         ]}
         role="group"
