@@ -126,7 +126,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
   def dm_error(assigns) do
     ~H"""
     <span id={@id} class={["helper-text helper-text-error helper-text-icon", @class]} {@rest}>
-      <.dm_bsi name="exclamation-circle" class="h-3 w-3 flex-none" />
+      <.dm_bsi name="exclamation-circle" class="h-3 w-3 flex-none" aria-hidden="true" />
       {render_slot(@inner_block)}
     </span>
     """

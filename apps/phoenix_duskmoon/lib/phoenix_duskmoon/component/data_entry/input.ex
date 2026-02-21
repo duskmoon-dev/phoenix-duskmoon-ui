@@ -538,7 +538,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             disabled={@readonly}
             aria-disabled={@readonly && "true"}
           >
-            <.dm_mdi name="star" class="rating-icon" />
+            <.dm_mdi name="star" class="rating-icon" aria-hidden="true" />
           </button>
         </div>
         <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
@@ -573,7 +573,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
             {@rest}
           />
-          <.dm_mdi name="calendar" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant pointer-events-none" />
+          <.dm_mdi name="calendar" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant pointer-events-none" aria-hidden="true" />
         </div>
         <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
@@ -607,7 +607,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
             {@rest}
           />
-          <.dm_mdi name="clock" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant pointer-events-none" />
+          <.dm_mdi name="clock" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant pointer-events-none" aria-hidden="true" />
         </div>
         <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
@@ -736,7 +736,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             ]}
             {@rest}
           />
-          <.dm_mdi name="magnify" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant pointer-events-none" />
+          <.dm_mdi name="magnify" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant pointer-events-none" aria-hidden="true" />
         </div>
         <div :if={@suggestions != []} class="dropdown dropdown-open">
           <ul class="dropdown-content menu w-full">
@@ -762,7 +762,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="file-upload">
         <div class="file-upload-dropzone">
-          <div class="file-upload-icon">
+          <div class="file-upload-icon" aria-hidden="true">
             <.dm_mdi name="cloud-upload" />
           </div>
           <div class="file-upload-text">
@@ -790,14 +790,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         </div>
         <div :if={@value} class="file-upload-list">
           <div class="file-upload-item">
-            <div class="file-upload-item-icon">
+            <div class="file-upload-item-icon" aria-hidden="true">
               <.dm_mdi name="file" />
             </div>
             <div class="file-upload-item-info">
               <span class="file-upload-item-name">{@value}</span>
             </div>
             <button type="button" class="file-upload-item-remove" aria-label={@remove_file_label}>
-              <.dm_mdi name="close" />
+              <.dm_mdi name="close" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -817,24 +817,24 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
       <div class="flex flex-col gap-2">
         <div class="toolbar flex items-center gap-1 p-2 bg-surface-container-low rounded-t-lg" role="toolbar" aria-label={@toolbar_label}>
           <button type="button" class="btn btn-ghost btn-xs" aria-label={@bold_label}>
-            <.dm_mdi name="format-bold" class="w-4 h-4" />
+            <.dm_mdi name="format-bold" class="w-4 h-4" aria-hidden="true" />
           </button>
           <button type="button" class="btn btn-ghost btn-xs" aria-label={@italic_label}>
-            <.dm_mdi name="format-italic" class="w-4 h-4" />
+            <.dm_mdi name="format-italic" class="w-4 h-4" aria-hidden="true" />
           </button>
           <button type="button" class="btn btn-ghost btn-xs" aria-label={@underline_label}>
-            <.dm_mdi name="format-underline" class="w-4 h-4" />
+            <.dm_mdi name="format-underline" class="w-4 h-4" aria-hidden="true" />
           </button>
           <div class="divider"></div>
           <button type="button" class="btn btn-ghost btn-xs" aria-label={@bulleted_list_label}>
-            <.dm_mdi name="format-list-bulleted" class="w-4 h-4" />
+            <.dm_mdi name="format-list-bulleted" class="w-4 h-4" aria-hidden="true" />
           </button>
           <button type="button" class="btn btn-ghost btn-xs" aria-label={@numbered_list_label}>
-            <.dm_mdi name="format-list-numbered" class="w-4 h-4" />
+            <.dm_mdi name="format-list-numbered" class="w-4 h-4" aria-hidden="true" />
           </button>
           <div class="divider"></div>
           <button type="button" class="btn btn-ghost btn-xs" aria-label={@insert_link_label}>
-            <.dm_mdi name="link" class="w-4 h-4" />
+            <.dm_mdi name="link" class="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
         <div
@@ -885,7 +885,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               class="btn btn-ghost btn-xs p-0"
               aria-label={format_label(@remove_tag_label, %{"tag" => tag})}
             >
-              <.dm_mdi name="close" class="w-3 h-3" />
+              <.dm_mdi name="close" class="w-3 h-3" aria-hidden="true" />
             </button>
           </span>
           <input
@@ -1015,7 +1015,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             class="absolute right-3 top-1/2 -translate-y-1/2"
             aria-label={@toggle_password_label}
           >
-            <.dm_mdi name="eye" class="w-4 h-4 text-on-surface-variant" />
+            <.dm_mdi name="eye" class="w-4 h-4 text-on-surface-variant" aria-hidden="true" />
           </button>
         </div>
         <div class="flex items-center gap-2">

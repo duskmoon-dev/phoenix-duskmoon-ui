@@ -61,7 +61,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
         class="toast-close"
         aria-label={@close_label}
       >
-        <.dm_mdi name="close" class="w-4 h-4" />
+        <.dm_mdi name="close" class="w-4 h-4" aria-hidden="true" />
       </button>
     </div>
     """

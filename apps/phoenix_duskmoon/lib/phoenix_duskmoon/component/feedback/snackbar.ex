@@ -96,7 +96,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Snackbar do
         {render_slot(action)}
       </button>
       <button :for={_close <- @close} type="button" class="snackbar-close" aria-label={@close_label}>
-        <.dm_mdi name="close" class="w-4 h-4" />
+        <.dm_mdi name="close" class="w-4 h-4" aria-hidden="true" />
       </button>
     </div>
     """

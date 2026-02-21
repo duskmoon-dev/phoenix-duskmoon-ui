@@ -121,7 +121,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Toast do
         <div class="toast-message">{render_slot(@inner_block)}</div>
       </div>
       <button :if={@show_close} type="button" class="toast-close" aria-label={@close_label}>
-        <.dm_mdi name="close" class="w-4 h-4" />
+        <.dm_mdi name="close" class="w-4 h-4" aria-hidden="true" />
       </button>
     </div>
     """
