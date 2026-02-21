@@ -626,7 +626,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             aria-invalid={@errors != [] && "true"}
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             class={[
-              "switch switch-lg",
+              "switch",
               @color && "switch-#{@color}",
               @size && "switch-#{@size}",
               @class
