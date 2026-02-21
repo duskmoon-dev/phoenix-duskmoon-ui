@@ -213,6 +213,39 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
 
       assert result =~ ~s(id="custom-pin")
     end
+
+    test "extracts value from form field" do
+      field = Phoenix.Component.to_form(%{"pin" => "1234"}, as: "auth")[:pin]
+
+      result = render_component(&dm_pin_input/1, %{field: field, length: 4})
+
+      assert result =~ ~s(value="1")
+      assert result =~ ~s(value="2")
+      assert result =~ ~s(value="3")
+      assert result =~ ~s(value="4")
+    end
+  end
+
+  describe "value attr" do
+    test "pre-fills value across fields" do
+      result = render_component(&dm_pin_input/1, %{value: "1234", length: 4})
+
+      assert result =~ ~s(value="1")
+      assert result =~ ~s(value="4")
+    end
+
+    test "handles shorter value than length" do
+      result = render_component(&dm_pin_input/1, %{value: "12", length: 4})
+
+      assert result =~ ~s(value="1")
+      assert result =~ ~s(value="2")
+    end
+
+    test "no value attrs when value is nil" do
+      result = render_component(&dm_pin_input/1, %{value: nil, length: 4})
+
+      refute result =~ "value="
+    end
   end
 
   describe "label_class" do

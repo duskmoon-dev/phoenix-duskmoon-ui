@@ -38,6 +38,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
   attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:name, :string, default: nil, doc: "form field name")
+  attr(:value, :any, doc: "pre-fill value (string split across fields)")
   attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
   attr(:length, :integer, default: 6, doc: "number of input fields")
 
@@ -90,11 +91,18 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
     assigns
     |> assign(field: nil, id: assigns.id || field.id)
     |> assign(:name, field.name)
+    |> assign_new(:value, fn -> field.value end)
     |> dm_otp_input()
   end
 
   def dm_otp_input(assigns) do
-    assigns = assign(assigns, :color, css_color(assigns.color))
+    assigns = assign_new(assigns, :value, fn -> nil end)
+    value_chars = split_value(assigns.value, assigns.length)
+
+    assigns =
+      assigns
+      |> assign(:color, css_color(assigns.color))
+      |> assign(:value_chars, value_chars)
 
     ~H"""
     <div
@@ -136,6 +144,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
           autocomplete="one-time-code"
           disabled={@disabled}
           name={@name && "#{@name}[#{i}]"}
+          value={Enum.at(@value_chars, i - 1)}
           aria-label={"Digit #{i} of #{@length}"}
         />
       </div>
@@ -147,4 +156,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
     </div>
     """
   end
+
+  defp split_value(nil, _length), do: []
+
+  defp split_value(value, length) when is_binary(value) do
+    value |> String.graphemes() |> Enum.take(length)
+  end
+
+  defp split_value(_, _length), do: []
 end
