@@ -1,18 +1,10 @@
 defmodule DuskmoonStorybookWeb.ErrorHTML do
-  use DuskmoonStorybookWeb, :html
+  @moduledoc """
+  Error page rendering for the storybook web application.
 
-  # If you want to customize your error pages,
-  # uncomment the embed_templates/1 call below
-  # and add pages to the error directory:
-  #
-  #   * lib/phx_next_web/controllers/error/404.html.heex
-  #   * lib/phx_next_web/controllers/error/500.html.heex
-  #
-  embed_templates "error/*"
+  Returns plain text status messages (e.g. "Not Found" for 404).
+  """
 
-  # The default is to render a plain text page based on
-  # the template name. For example, "404.html" becomes
-  # "Not Found".
   def render(template, _assigns) do
     Phoenix.Controller.status_message_from_template(template)
   end

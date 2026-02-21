@@ -11,10 +11,6 @@ defmodule DuskmoonStorybookWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
-
   scope "/" do
     storybook_assets()
   end
