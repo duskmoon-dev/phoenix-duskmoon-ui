@@ -60,7 +60,7 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
     doc: "Popover color variant (primary, secondary, tertiary)"
   )
 
-  attr(:class, :string, default: nil, doc: "Additional CSS classes on the wrapper")
+  attr(:class, :any, default: nil, doc: "Additional CSS classes on the wrapper")
   attr(:dropdown_class, :string, default: nil, doc: "Additional CSS classes on the popover panel")
   attr(:rest, :global)
 

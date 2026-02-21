@@ -64,7 +64,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
 
   attr(:online, :boolean, default: false, doc: "show online status indicator")
   attr(:offline, :boolean, default: false, doc: "show offline status indicator")
-  attr(:class, :string, default: nil, doc: "additional CSS classes for the wrapper")
+  attr(:class, :any, default: nil, doc: "additional CSS classes for the wrapper")
   attr(:img_class, :string, default: nil, doc: "additional CSS classes for the image element")
 
   attr(:placeholder_class, :string,

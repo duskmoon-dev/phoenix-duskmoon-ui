@@ -48,7 +48,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
   attr(:helper, :string, default: nil, doc: "helper text displayed below the radio button")
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:disabled, :boolean, default: false, doc: "disables the radio button")
-  attr(:class, :string, default: nil, doc: "additional CSS classes for the wrapper")
+  attr(:class, :any, default: nil, doc: "additional CSS classes for the wrapper")
   attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
   attr(:radio_class, :string, default: nil, doc: "additional CSS classes for the radio input")
   attr(:horizontal, :boolean, default: false, doc: "horizontal layout (label beside input)")

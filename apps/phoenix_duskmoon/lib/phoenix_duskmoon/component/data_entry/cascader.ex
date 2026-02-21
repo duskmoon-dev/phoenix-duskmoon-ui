@@ -42,7 +42,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :string, default: nil, doc: "additional CSS classes")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:name, :string, default: nil, doc: "form field name (submits last value in path)")
   attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
 

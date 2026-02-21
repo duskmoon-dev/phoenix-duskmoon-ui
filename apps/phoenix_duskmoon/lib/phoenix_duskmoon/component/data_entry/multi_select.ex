@@ -51,7 +51,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :string, default: nil, doc: "additional CSS classes")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:name, :string, default: nil, doc: "form field name")
   attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
   attr(:options, :list, default: [], doc: "list of option maps with :value, :label keys")

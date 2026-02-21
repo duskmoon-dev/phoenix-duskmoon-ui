@@ -56,7 +56,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
   )
 
   attr(:open, :boolean, default: false, doc: "force the tooltip to be visible")
-  attr(:class, :string, default: nil, doc: "additional CSS classes")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:rest, :global)
 
   slot(:inner_block, required: true)

@@ -36,7 +36,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FileUpload do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :string, default: nil, doc: "additional CSS classes")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:accept, :string, default: nil, doc: "accepted file types (e.g. \"image/*,.pdf\")")
   attr(:multiple, :boolean, default: false, doc: "allow multiple files")
   attr(:disabled, :boolean, default: false, doc: "disable the upload")

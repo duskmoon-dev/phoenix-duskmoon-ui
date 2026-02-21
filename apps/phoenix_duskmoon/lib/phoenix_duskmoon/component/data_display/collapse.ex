@@ -36,7 +36,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Collapse do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :string, default: nil, doc: "Additional CSS classes")
+  attr(:class, :any, default: nil, doc: "Additional CSS classes")
   attr(:open, :boolean, default: false, doc: "Whether the collapse is initially open")
   attr(:disabled, :boolean, default: false, doc: "Whether the collapse is disabled")
 
@@ -135,7 +135,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Collapse do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :string, default: nil, doc: "Additional CSS classes")
+  attr(:class, :any, default: nil, doc: "Additional CSS classes")
   attr(:rest, :global)
   slot(:inner_block, required: true)
 

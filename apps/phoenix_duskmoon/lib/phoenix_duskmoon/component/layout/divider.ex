@@ -93,7 +93,7 @@ defmodule PhoenixDuskmoon.Component.Layout.Divider do
     doc: "position of text content within the divider"
   )
 
-  attr(:class, :string, default: nil, doc: "additional CSS classes")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:rest, :global)
 
   slot(:inner_block, required: false)

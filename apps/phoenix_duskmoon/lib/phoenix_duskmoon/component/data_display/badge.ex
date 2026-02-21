@@ -55,7 +55,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Badge do
   attr(:soft, :boolean, default: false, doc: "show soft style with muted background")
   attr(:pill, :boolean, default: false, doc: "use pill (rounded) shape")
   attr(:dot, :boolean, default: false, doc: "show as a dot indicator only")
-  attr(:class, :string, default: nil, doc: "additional CSS classes")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:rest, :global)
 
   slot(:inner_block, required: true)

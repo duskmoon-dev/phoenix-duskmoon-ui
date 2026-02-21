@@ -37,7 +37,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Steps do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :string, default: nil, doc: "Additional CSS classes")
+  attr(:class, :any, default: nil, doc: "Additional CSS classes")
   attr(:current, :integer, default: 0, doc: "0-based index of the current step")
 
   attr(:orientation, :string,

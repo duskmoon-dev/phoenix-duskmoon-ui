@@ -38,7 +38,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Popover do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :string, default: nil, doc: "additional CSS classes")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:open, :boolean, default: false, doc: "whether the popover is initially visible")
 
   attr(:trigger_mode, :string,

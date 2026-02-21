@@ -67,7 +67,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
   attr(:error, :boolean, default: false, doc: "show error state")
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
-  attr(:class, :string, default: nil, doc: "additional CSS classes")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:rest, :global)
 
   def dm_rating(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do

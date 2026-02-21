@@ -66,7 +66,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
   )
 
   attr(:indeterminate, :boolean, default: false, doc: "Show indeterminate progress")
-  attr(:class, :string, default: nil, doc: "Additional CSS classes for the wrapper")
+  attr(:class, :any, default: nil, doc: "Additional CSS classes for the wrapper")
   attr(:label_class, :string, default: nil, doc: "CSS classes for the label")
   attr(:progress_class, :string, default: nil, doc: "CSS classes for the progress element")
   attr(:label_text, :string, default: "Progress", doc: "Text for the progress label")

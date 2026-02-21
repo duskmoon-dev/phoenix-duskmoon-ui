@@ -33,7 +33,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :string, default: nil, doc: "Additional CSS classes")
+  attr(:class, :any, default: nil, doc: "Additional CSS classes")
   attr(:name, :string, default: nil, doc: "Form name attribute")
   attr(:value, :string, default: nil, doc: "Time value (HH:MM or HH:MM:SS)")
   attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")

@@ -68,7 +68,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
   attr(:readonly, :boolean, default: false, doc: "makes the textarea read-only")
   attr(:required, :boolean, default: false, doc: "marks the textarea as required")
   attr(:maxlength, :integer, default: nil, doc: "maximum character count")
-  attr(:class, :string, default: nil, doc: "additional CSS classes for the wrapper")
+  attr(:class, :any, default: nil, doc: "additional CSS classes for the wrapper")
   attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
 
   attr(:textarea_class, :string,

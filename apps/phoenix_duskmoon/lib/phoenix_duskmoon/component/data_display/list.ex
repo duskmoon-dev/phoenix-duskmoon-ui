@@ -36,7 +36,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.List do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :string, default: nil, doc: "additional CSS classes")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:bordered, :boolean, default: false, doc: "add border and item separators")
   attr(:compact, :boolean, default: false, doc: "compact spacing")
   attr(:dense, :boolean, default: false, doc: "dense spacing (smaller than compact)")

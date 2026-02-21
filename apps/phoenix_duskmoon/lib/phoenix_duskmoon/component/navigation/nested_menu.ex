@@ -35,7 +35,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.NestedMenu do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :string, default: nil, doc: "Additional CSS classes")
+  attr(:class, :any, default: nil, doc: "Additional CSS classes")
 
   attr(:size, :string,
     default: nil,

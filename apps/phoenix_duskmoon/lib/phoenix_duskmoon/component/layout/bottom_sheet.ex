@@ -32,7 +32,7 @@ defmodule PhoenixDuskmoon.Component.Layout.BottomSheet do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :string, default: nil, doc: "additional CSS classes")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:open, :boolean, default: false, doc: "whether the sheet is visible")
   attr(:modal, :boolean, default: false, doc: "show backdrop and trap focus")
   attr(:persistent, :boolean, default: false, doc: "prevent dismiss via outside click or swipe")

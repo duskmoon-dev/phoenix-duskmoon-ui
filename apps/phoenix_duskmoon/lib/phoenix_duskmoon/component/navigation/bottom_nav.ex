@@ -35,7 +35,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.BottomNav do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :string, default: nil, doc: "additional CSS classes")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:value, :string, default: nil, doc: "currently selected item value")
 
   attr(:color, :string,

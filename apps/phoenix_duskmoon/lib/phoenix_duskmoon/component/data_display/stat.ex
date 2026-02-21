@@ -28,7 +28,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Stat do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :string, default: nil, doc: "additional CSS classes for the wrapper")
+  attr(:class, :any, default: nil, doc: "additional CSS classes for the wrapper")
   attr(:title, :string, required: true, doc: "label/title for the stat")
   attr(:value, :string, required: true, doc: "the main value to display")
   attr(:description, :string, default: nil, doc: "optional description or change indicator")

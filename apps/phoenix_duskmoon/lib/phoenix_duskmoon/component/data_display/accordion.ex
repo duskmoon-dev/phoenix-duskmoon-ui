@@ -37,7 +37,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Accordion do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :string, default: nil, doc: "Additional CSS classes")
+  attr(:class, :any, default: nil, doc: "Additional CSS classes")
   attr(:multiple, :boolean, default: false, doc: "Allow multiple panels open at once")
 
   attr(:value, :string,

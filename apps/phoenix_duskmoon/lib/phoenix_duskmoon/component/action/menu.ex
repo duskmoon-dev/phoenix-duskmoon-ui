@@ -48,7 +48,7 @@ defmodule PhoenixDuskmoon.Component.Action.Menu do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :string, default: nil, doc: "additional CSS classes")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:open, :boolean, default: false, doc: "whether the menu is initially visible")
 
   attr(:anchor, :string,
@@ -106,7 +106,7 @@ defmodule PhoenixDuskmoon.Component.Action.Menu do
   attr(:value, :string, default: nil, doc: "value emitted in the select event")
   attr(:disabled, :boolean, default: false, doc: "whether the item is disabled")
   attr(:icon, :string, default: nil, doc: "MDI icon name shown before content")
-  attr(:class, :string, default: nil, doc: "additional CSS classes")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:rest, :global)
   slot(:inner_block, required: true, doc: "Item label content")
 

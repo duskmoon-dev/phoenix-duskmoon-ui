@@ -36,7 +36,7 @@ defmodule PhoenixDuskmoon.Component.Layout.Drawer do
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
-  attr(:class, :string, default: nil, doc: "Additional CSS classes")
+  attr(:class, :any, default: nil, doc: "Additional CSS classes")
   attr(:open, :boolean, default: false, doc: "Whether the drawer is open")
 
   attr(:position, :string,
