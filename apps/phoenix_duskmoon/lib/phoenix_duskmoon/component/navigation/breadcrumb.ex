@@ -53,6 +53,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.Breadcrumb do
   end
 
   def dm_breadcrumb(assigns) do
+    assigns = assign(assigns, :last_index, length(assigns.crumb) - 1)
+
     ~H"""
     <el-dm-breadcrumbs
       id={@id}
@@ -67,7 +69,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Breadcrumb do
         id={crumb[:id]}
         class={crumb[:class]}
         data-href={crumb[:to]}
-        aria-current={i == length(@crumb) - 1 && "page"}
+        aria-current={i == @last_index && "page"}
       >
         <a :if={crumb[:to]} href={crumb[:to]}>{render_slot(crumb)}</a>
         <template :if={!crumb[:to]}>{render_slot(crumb)}</template>

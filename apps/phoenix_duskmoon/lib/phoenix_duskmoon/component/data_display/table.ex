@@ -131,6 +131,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
   end
 
   def dm_table(assigns) do
+    assigns = assign(assigns, :col_count, max(length(assigns.col), 1))
+
     ~H"""
     <table
       role="table"
@@ -197,7 +199,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
             id={expand[:id]}
           >
             <td
-              colspan={max(length(@col), 1)}
+              colspan={@col_count}
               role="cell"
               class="p-0"
             >{render_slot(expand, row)}</td>

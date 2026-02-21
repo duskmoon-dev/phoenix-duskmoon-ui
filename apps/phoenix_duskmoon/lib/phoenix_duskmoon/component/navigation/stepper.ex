@@ -74,7 +74,10 @@ defmodule PhoenixDuskmoon.Component.Navigation.Stepper do
   end
 
   def dm_stepper(assigns) do
-    assigns = assign(assigns, :color, css_color(assigns.color))
+    assigns =
+      assigns
+      |> assign(:color, css_color(assigns.color))
+      |> assign(:last_index, length(assigns.step) - 1)
 
     ~H"""
     <div
@@ -111,7 +114,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Stepper do
           <span class="stepper-step-label">{step[:label]}</span>
           <span :if={step[:description]} class="stepper-step-description">{step[:description]}</span>
         </div>
-        <div :if={idx < length(@step) - 1} class="stepper-step-connector" role="presentation" aria-hidden="true"></div>
+        <div :if={idx < @last_index} class="stepper-step-connector" role="presentation" aria-hidden="true"></div>
       <% end %>
     </div>
     """
