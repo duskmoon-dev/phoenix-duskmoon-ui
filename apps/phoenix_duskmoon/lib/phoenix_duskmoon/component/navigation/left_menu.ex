@@ -137,7 +137,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
           class={[m[:disabled] && "disabled"]}
         >
           <.link
-            navigate={m[:to] || "#"}
+            navigate={m[:to]}
             class={[
               m[:class],
               m[:id] == @active && @active != "" && "active"
