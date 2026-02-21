@@ -18,6 +18,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
   """
 
   use Phoenix.Component
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Generates a simple loading spinner.
@@ -50,6 +51,8 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
   attr(:rest, :global)
 
   def dm_loading_spinner(assigns) do
+    assigns = assign(assigns, :variant, css_color(assigns.variant))
+
     ~H"""
     <div
       id={@id}
@@ -81,7 +84,6 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
   defp spinner_color("primary"), do: "text-primary"
   defp spinner_color("secondary"), do: "text-secondary"
   defp spinner_color("tertiary"), do: "text-tertiary"
-  defp spinner_color("accent"), do: "text-tertiary"
   defp spinner_color("info"), do: "text-info"
   defp spinner_color("success"), do: "text-success"
   defp spinner_color("warning"), do: "text-warning"

@@ -17,6 +17,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Stat do
   """
 
   use Phoenix.Component
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders a stat display with title, value, and optional description.
@@ -55,6 +56,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Stat do
   slot(:icon, doc: "Optional icon displayed alongside the value")
 
   def dm_stat(assigns) do
+    assigns = assign(assigns, :color, css_color(assigns.color))
+
     ~H"""
     <div
       id={@id}
@@ -92,7 +95,6 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Stat do
   defp value_color("primary"), do: "text-primary"
   defp value_color("secondary"), do: "text-secondary"
   defp value_color("tertiary"), do: "text-tertiary"
-  defp value_color("accent"), do: "text-tertiary"
   defp value_color("info"), do: "text-info"
   defp value_color("success"), do: "text-success"
   defp value_color("warning"), do: "text-warning"
