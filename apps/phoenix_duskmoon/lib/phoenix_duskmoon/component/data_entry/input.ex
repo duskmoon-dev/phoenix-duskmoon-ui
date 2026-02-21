@@ -874,7 +874,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         >
           {Phoenix.HTML.raw(@value || "")}
         </div>
-        <input type="hidden" name={@name} id={"#{@id}_hidden"} value={@value || ""} />
+        <input type="hidden" name={@name} id={@id && "#{@id}_hidden"} value={@value || ""} />
         <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
@@ -956,7 +956,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <div class="flex-1 relative">
             <input
               type="range"
-              id={"#{@id}_min"}
+              id={@id && "#{@id}_min"}
               name={"#{@name}_min"}
               value={@min_val}
               min={@min}
@@ -971,7 +971,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             />
             <input
               type="range"
-              id={"#{@id}_max"}
+              id={@id && "#{@id}_max"}
               name={"#{@name}_max"}
               value={@max_val}
               min={@min}
