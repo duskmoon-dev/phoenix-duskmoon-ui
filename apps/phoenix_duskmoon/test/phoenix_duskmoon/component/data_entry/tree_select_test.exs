@@ -543,4 +543,30 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
 
     assert result =~ ~s[data-testid="my-tree"]
   end
+
+  describe "i18n labels" do
+    test "custom toggle_node_label" do
+      result =
+        render_component(&dm_tree_select/1, %{
+          options: @tree_options,
+          toggle_node_label: "Basculer {label}"
+        })
+
+      assert result =~ ~s(aria-label="Basculer Fruits")
+      refute result =~ "Toggle Fruits"
+    end
+
+    test "custom remove_tag_label in multiple mode" do
+      result =
+        render_component(&dm_tree_select/1, %{
+          options: @tree_options,
+          selected: ["apple"],
+          multiple: true,
+          remove_tag_label: "Supprimer {label}"
+        })
+
+      assert result =~ ~s(aria-label="Supprimer Apple")
+      refute result =~ "Remove Apple"
+    end
+  end
 end

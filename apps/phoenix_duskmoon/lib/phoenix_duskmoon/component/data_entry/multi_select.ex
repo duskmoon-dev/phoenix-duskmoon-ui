@@ -37,6 +37,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
   use Phoenix.Component
   import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
   import PhoenixDuskmoon.Component.Icon.Icons
+  import PhoenixDuskmoon.Component.Helpers, only: [format_label: 2]
 
   @doc """
   Renders a multi-select input with tags and dropdown.
@@ -119,6 +120,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
     doc: "text for the overflow indicator (e.g. '+3 more') for i18n"
   )
 
+  attr(:remove_tag_label, :string,
+    default: "Remove {label}",
+    doc: "accessible label template for tag removal buttons (i18n). Use {label} for the option label."
+  )
+
   attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
   attr(:rest, :global)
 
@@ -194,7 +200,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
             ]}
           >
             <span class="multi-select-tag-text">{opt[:label]}</span>
-            <span role="button" tabindex="0" class="multi-select-tag-remove" aria-label={"Remove #{opt[:label]}"}>
+            <span role="button" tabindex="0" class="multi-select-tag-remove" aria-label={format_label(@remove_tag_label, %{"label" => opt[:label]})}>
               <.dm_mdi name="close" class="w-3 h-3" />
             </span>
           </span>

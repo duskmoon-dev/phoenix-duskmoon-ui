@@ -573,4 +573,18 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
 
     assert result =~ ~s[data-testid="my-multi"]
   end
+
+  describe "i18n labels" do
+    test "custom remove_tag_label" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          options: @options,
+          selected: ["a"],
+          remove_tag_label: "Supprimer {label}"
+        })
+
+      assert result =~ ~s(aria-label="Supprimer Alpha")
+      refute result =~ "Remove Alpha"
+    end
+  end
 end

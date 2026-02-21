@@ -26,6 +26,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
   use Phoenix.Component
   import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
   import PhoenixDuskmoon.Component.Icon.Icons
+  import PhoenixDuskmoon.Component.Helpers, only: [format_label: 2]
 
   @doc """
   Renders a tree select dropdown with hierarchical options.
@@ -89,6 +90,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
   attr(:clear_label, :string,
     default: "Clear selection",
     doc: "accessible label for the clear button (i18n)"
+  )
+
+  attr(:toggle_node_label, :string,
+    default: "Toggle {label}",
+    doc: "accessible label template for node toggle buttons (i18n). Use {label} for the node label."
+  )
+
+  attr(:remove_tag_label, :string,
+    default: "Remove {label}",
+    doc: "accessible label template for tag removal buttons (i18n). Use {label} for the tag label."
   )
 
   attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
@@ -159,7 +170,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
               <span class="tree-select-tags">
                 <span :for={label <- @selected_labels} class="tree-select-tag">
                   {label}
-                  <span role="button" tabindex="0" class="tree-select-tag-remove" aria-label={"Remove #{label}"}>
+                  <span role="button" tabindex="0" class="tree-select-tag-remove" aria-label={format_label(@remove_tag_label, %{"label" => label})}>
                     <.dm_mdi name="close" class="w-3 h-3" />
                   </span>
                 </span>
@@ -203,6 +214,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
             selected_set={@selected_set}
             expanded_set={@expanded_set}
             multiple={@multiple}
+            toggle_node_label={@toggle_node_label}
           />
         </div>
       </div>
@@ -229,6 +241,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
         selected_set={@selected_set}
         expanded_set={@expanded_set}
         multiple={@multiple}
+        toggle_node_label={@toggle_node_label}
       />
     </div>
     """
@@ -258,7 +271,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
       aria-expanded={@has_children && to_string(@expanded)}
       data-value={@node[:value]}
     >
-      <button :if={@has_children} type="button" class="tree-select-node-toggle" aria-label={"Toggle #{@node[:label]}"}>
+      <button :if={@has_children} type="button" class="tree-select-node-toggle" aria-label={format_label(@toggle_node_label, %{"label" => @node[:label]})}>
         <span class="tree-select-node-icon"></span>
       </button>
       <span :if={@multiple} class="tree-select-checkbox">
@@ -280,6 +293,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
         selected_set={@selected_set}
         expanded_set={@expanded_set}
         multiple={@multiple}
+        toggle_node_label={@toggle_node_label}
       />
     </div>
     """
