@@ -81,7 +81,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div class={["form-group", @class]} phx-feedback-for={@name}>
+    <div class={["form-group", @disabled && "form-group-disabled", @class]} phx-feedback-for={@name}>
       <label :if={@label} for={@id} class={["form-label", @label_class]}>
         <span>{@label}</span>
       </label>
@@ -100,7 +100,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
           @variant && "select-#{@variant}",
           "select-#{@size}",
           "select-#{@color}",
-          @disabled && "opacity-50 cursor-not-allowed",
+
+
           @select_class
         ]}
         {@rest}

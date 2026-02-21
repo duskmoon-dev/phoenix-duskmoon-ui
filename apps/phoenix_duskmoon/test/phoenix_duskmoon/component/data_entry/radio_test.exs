@@ -74,7 +74,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
     result = render_component(&dm_radio/1, %{name: "choice", value: "a", disabled: true})
 
     assert result =~ "disabled"
-    assert result =~ "opacity-50"
+    assert result =~ "form-group-disabled"
   end
 
   test "renders radio with form-group wrapper" do
@@ -115,8 +115,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
   test "renders radio without disabled styles when not disabled" do
     result = render_component(&dm_radio/1, %{name: "choice", value: "a"})
 
-    refute result =~ "opacity-50"
-    refute result =~ "cursor-not-allowed"
+    refute result =~ "form-group-disabled"
   end
 
   test "renders radio with rest attributes" do
@@ -189,7 +188,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
     assert result =~ "data-testid=\"theme-radio\""
   end
 
-  test "renders radio with disabled state and cursor-not-allowed" do
+  test "renders radio with disabled state and form-group-disabled" do
     result =
       render_component(&dm_radio/1, %{
         name: "opt",
@@ -198,7 +197,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
       })
 
     assert result =~ "disabled"
-    assert result =~ "cursor-not-allowed"
+    assert result =~ "form-group-disabled"
   end
 
   test "renders radio without label when not provided" do
@@ -303,7 +302,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
         label: "Disabled Option"
       })
 
-    assert result =~ "cursor-not-allowed"
+    assert result =~ "form-group-disabled"
     refute result =~ "cursor-pointer"
   end
 

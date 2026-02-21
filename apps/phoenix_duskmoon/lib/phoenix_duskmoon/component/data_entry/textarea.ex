@@ -81,7 +81,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div class={["form-group", @class]} phx-feedback-for={@name}>
+    <div class={["form-group", @disabled && "form-group-disabled", @class]} phx-feedback-for={@name}>
       <label :if={@label} for={@id} class={["form-label", @label_class]}>
         <span>{@label}</span>
       </label>
@@ -106,7 +106,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
           "textarea-#{@size}",
           "textarea-#{@color}",
           resize_class(@resize),
-          @disabled && "opacity-50 cursor-not-allowed",
+
+
           @textarea_class
         ]}
         {@rest}

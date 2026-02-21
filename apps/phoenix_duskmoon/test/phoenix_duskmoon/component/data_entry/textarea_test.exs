@@ -113,7 +113,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
     result = render_component(&dm_textarea/1, %{name: "bio", value: nil, disabled: true})
 
     assert result =~ "disabled"
-    assert result =~ "opacity-50"
+    assert result =~ "form-group-disabled"
   end
 
   test "renders readonly textarea" do

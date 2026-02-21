@@ -61,7 +61,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div class={["form-group", @disabled && "opacity-50 cursor-not-allowed", @class]} phx-feedback-for={@name}>
+    <div class={["form-group", @disabled && "form-group-disabled", @class]} phx-feedback-for={@name}>
       <label class="switch-label">
         <input type="hidden" name={@name} value="false" disabled={@disabled} />
         <input

@@ -73,7 +73,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
     result = render_component(&dm_checkbox/1, %{name: "opt", disabled: true})
 
     assert result =~ "disabled"
-    assert result =~ "opacity-50"
+    assert result =~ "form-group-disabled"
   end
 
   test "renders checkbox with indeterminate state" do
@@ -141,7 +141,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
 
     assert result =~ "checked"
     assert result =~ "disabled"
-    assert result =~ "opacity-50"
+    assert result =~ "form-group-disabled"
   end
 
   test "renders checkbox with indeterminate and checked" do
@@ -177,7 +177,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
   test "renders enabled checkbox by default" do
     result = render_component(&dm_checkbox/1, %{name: "opt"})
 
-    refute result =~ "cursor-not-allowed"
+    refute result =~ "form-group-disabled"
   end
 
   describe "FormField integration" do
@@ -265,7 +265,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
         label: "Disabled option"
       })
 
-    assert result =~ "cursor-not-allowed"
+    assert result =~ "form-group-disabled"
     refute result =~ "cursor-pointer"
   end
 

@@ -86,8 +86,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
   test "renders disabled switch with visual styling" do
     result = render_component(&dm_switch/1, %{name: "opt", disabled: true})
 
-    assert result =~ "opacity-50"
-    assert result =~ "cursor-not-allowed"
+    assert result =~ "form-group-disabled"
   end
 
   test "renders switch with form-group wrapper" do

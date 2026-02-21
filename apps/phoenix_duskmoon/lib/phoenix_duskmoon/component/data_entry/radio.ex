@@ -64,8 +64,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div class={["form-group", @class]} phx-feedback-for={@name}>
-      <label class={["flex items-center gap-2", !@disabled && "cursor-pointer", @disabled && "cursor-not-allowed"]}>
+    <div class={["form-group", @disabled && "form-group-disabled", @class]} phx-feedback-for={@name}>
+      <label class={["flex items-center gap-2", !@disabled && "cursor-pointer"]}>
         <input
           type="radio"
           name={@name}
@@ -82,7 +82,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
             "radio",
             "radio-#{@size}",
             "radio-#{@color}",
-            @disabled && "opacity-50 cursor-not-allowed",
+
+
             @radio_class
           ]}
           {@rest}

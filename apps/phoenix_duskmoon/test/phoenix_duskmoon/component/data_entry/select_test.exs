@@ -130,7 +130,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
       })
 
     assert result =~ "disabled"
-    assert result =~ "opacity-50"
+    assert result =~ "form-group-disabled"
   end
 
   test "renders select with form-group wrapper" do
@@ -267,8 +267,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
         options: [{"1", "One"}]
       })
 
-    refute result =~ "opacity-50"
-    refute result =~ "cursor-not-allowed"
+    refute result =~ "form-group-disabled"
   end
 
   test "renders select label with for attribute matching id" do

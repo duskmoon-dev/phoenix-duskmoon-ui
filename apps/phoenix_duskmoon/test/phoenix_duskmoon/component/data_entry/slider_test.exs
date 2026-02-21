@@ -90,7 +90,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
     result = render_component(&dm_slider/1, %{name: "vol", value: nil, disabled: true})
 
     assert result =~ "disabled"
-    assert result =~ "opacity-50"
+    assert result =~ "form-group-disabled"
   end
 
   test "renders slider with show_value enabled by default" do

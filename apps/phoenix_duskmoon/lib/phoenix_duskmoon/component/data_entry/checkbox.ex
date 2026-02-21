@@ -73,8 +73,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div class={["form-group", @class]} phx-feedback-for={@name}>
-      <label class={["flex items-center gap-2", !@disabled && "cursor-pointer", @disabled && "cursor-not-allowed"]}>
+    <div class={["form-group", @disabled && "form-group-disabled", @class]} phx-feedback-for={@name}>
+      <label class={["flex items-center gap-2", !@disabled && "cursor-pointer"]}>
         <input type="hidden" name={@name} value="false" disabled={@disabled} />
         <input
           type="checkbox"
@@ -92,7 +92,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
             "checkbox",
             "checkbox-#{@size}",
             "checkbox-#{@color}",
-            @disabled && "opacity-50 cursor-not-allowed",
+
+
             @checkbox_class
           ]}
           phx-indeterminate={@indeterminate}
