@@ -85,6 +85,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
   attr(:for, :string, default: nil, doc: "the id of the input this label is for")
   attr(:required, :boolean, default: false, doc: "show required indicator (*)")
   attr(:optional, :boolean, default: false, doc: "show optional indicator")
+  attr(:size, :string, default: nil, values: ["sm", "lg", nil], doc: "label size (sm, lg)")
   slot(:inner_block, required: true)
 
   def dm_label(assigns) do
@@ -93,6 +94,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
       "form-label",
       @required && "form-label-required",
       @optional && "form-label-optional",
+      @size && "form-label-#{@size}",
       @class
     ]}>
       {render_slot(@inner_block)}

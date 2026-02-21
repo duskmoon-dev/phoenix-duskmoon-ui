@@ -136,6 +136,36 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
       refute result =~ "form-label-required"
       refute result =~ "form-label-optional"
     end
+
+    test "renders label with small size" do
+      result =
+        render_component(&dm_label/1, %{
+          size: "sm",
+          inner_block: inner_block("Email")
+        })
+
+      assert result =~ "form-label-sm"
+    end
+
+    test "renders label with large size" do
+      result =
+        render_component(&dm_label/1, %{
+          size: "lg",
+          inner_block: inner_block("Email")
+        })
+
+      assert result =~ "form-label-lg"
+    end
+
+    test "renders label without size class by default" do
+      result =
+        render_component(&dm_label/1, %{
+          inner_block: inner_block("Email")
+        })
+
+      refute result =~ "form-label-sm"
+      refute result =~ "form-label-lg"
+    end
   end
 
   describe "dm_error/1" do
