@@ -24,7 +24,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
   use Phoenix.Component
 
   import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
-  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1, format_label: 2]
 
   @doc """
   Renders a PIN input group.
@@ -173,12 +173,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
       <span :if={@helper && !@error_message && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
     </div>
     """
-  end
-
-  defp format_label(template, vars) do
-    Enum.reduce(vars, template, fn {key, val}, acc ->
-      String.replace(acc, "{#{key}}", to_string(val))
-    end)
   end
 
   defp split_value(nil, _length), do: []

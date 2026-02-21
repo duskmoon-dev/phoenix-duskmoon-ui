@@ -18,7 +18,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
 
   import PhoenixDuskmoon.Component.Icon.Icons
   import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
-  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1, format_label: 2]
 
   @doc """
   Renders an interactive star rating.
@@ -141,11 +141,5 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
       </div>
     </div>
     """
-  end
-
-  defp format_label(template, vars) do
-    Enum.reduce(vars, template, fn {key, val}, acc ->
-      String.replace(acc, "{#{key}}", to_string(val))
-    end)
   end
 end
