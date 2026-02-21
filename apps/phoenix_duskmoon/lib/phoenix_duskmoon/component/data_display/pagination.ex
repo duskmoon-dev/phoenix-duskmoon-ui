@@ -126,8 +126,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
           phx-value-current={if(@page_num == 1, do: nil, else: @page_num - 1)}
           disabled={@page_num == 1}
           aria-disabled={@page_num == 1 && "true"}
-          data-phx-link={@page_link_type}
-          data-phx-link-state="push"
+          data-phx-link={@page_url && @page_link_type}
+          data-phx-link-state={@page_url && "push"}
           href={page_url(@page_url, @page_url_marker, max(@page_num - 1, 1))}
         >
           <span class="sr-only">{@prev_label}</span>
@@ -145,8 +145,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
             aria-label={format_label(@page_button_label, %{"page" => p})}
             aria-current={p == @page_num && "page"}
             data-active={p == @page_num}
-            data-phx-link={@page_link_type}
-            data-phx-link-state="push"
+            data-phx-link={@page_url && @page_link_type}
+            data-phx-link-state={@page_url && "push"}
             href={page_url(@page_url, @page_url_marker, p)}
           >
             {p}
@@ -161,8 +161,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
           phx-value-current={if(@page_num == @max_page, do: nil, else: @page_num + 1)}
           disabled={@page_num == @max_page}
           aria-disabled={@page_num == @max_page && "true"}
-          data-phx-link={@page_link_type}
-          data-phx-link-state="push"
+          data-phx-link={@page_url && @page_link_type}
+          data-phx-link-state={@page_url && "push"}
           href={page_url(@page_url, @page_url_marker, min(@page_num + 1, @max_page))}
         >
           <span class="sr-only">{@next_label}</span>

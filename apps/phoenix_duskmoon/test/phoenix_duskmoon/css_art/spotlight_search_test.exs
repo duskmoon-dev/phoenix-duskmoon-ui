@@ -415,16 +415,14 @@ defmodule PhoenixDuskmoon.CssArt.SpotlightSearchTest do
     assert result =~ ~s[aria-label="Fermer la recherche"]
   end
 
-  test "renders loading indicator in both input area and content area" do
+  test "renders loading indicator in input area" do
     result =
       render_component(
         &dm_art_spotlight_search/1,
         base_attrs(%{loading: true})
       )
 
-    # Loading indicator appears twice: once in input area and once below
-    parts = String.split(result, "dm-art-spotlight-loading")
-    assert length(parts) >= 3
+    assert result =~ "dm-art-spotlight-loading"
   end
 
   test "suggestion list has role=listbox for accessibility" do

@@ -117,9 +117,6 @@ defmodule PhoenixDuskmoon.CssArt.SpotlightSearch do
           </button>
         </div>
 
-        <div :if={@loading} class="dm-art-spotlight-loading">
-        </div>
-
         <div :if={!@loading && @suggestion != []} class="dm-art-spotlight-suggestion-list" role="listbox" aria-label="Search suggestions">
           <div
             :for={{suggestion, index} <- Enum.with_index(@suggestion)}
