@@ -99,8 +99,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
     resize_map = %{
       "none" => "textarea-resize-none",
       "vertical" => "textarea-resize-vertical",
-      "horizontal" => "resize-x",
-      "both" => "resize"
+      "horizontal" => "textarea-resize-horizontal",
+      "both" => "textarea-resize-both"
     }
 
     for {resize, class} <- resize_map do

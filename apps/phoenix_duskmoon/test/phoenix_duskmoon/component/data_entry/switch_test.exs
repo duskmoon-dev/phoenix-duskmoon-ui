@@ -357,4 +357,45 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
       assert result =~ "must be enabled"
     end
   end
+
+  describe "horizontal layout" do
+    test "renders form-group-horizontal when horizontal is true" do
+      result = render_component(&dm_switch/1, %{name: "active", horizontal: true})
+
+      assert result =~ "form-group-horizontal"
+    end
+
+    test "does not render form-group-horizontal by default" do
+      result = render_component(&dm_switch/1, %{name: "active"})
+
+      refute result =~ "form-group-horizontal"
+    end
+  end
+
+  describe "validation state" do
+    test "renders form-group-success state" do
+      result = render_component(&dm_switch/1, %{name: "active", state: "success"})
+
+      assert result =~ "form-group-success"
+    end
+
+    test "renders form-group-warning state" do
+      result = render_component(&dm_switch/1, %{name: "active", state: "warning"})
+
+      assert result =~ "form-group-warning"
+    end
+
+    test "renders form-group-error when errors present" do
+      result = render_component(&dm_switch/1, %{name: "active", errors: ["required"]})
+
+      assert result =~ "form-group-error"
+    end
+
+    test "does not render state class by default" do
+      result = render_component(&dm_switch/1, %{name: "active"})
+
+      refute result =~ "form-group-success"
+      refute result =~ "form-group-warning"
+    end
+  end
 end

@@ -57,6 +57,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
     doc: "additional CSS classes for the checkbox input"
   )
 
+  attr(:horizontal, :boolean, default: false, doc: "horizontal layout (label beside input)")
+
+  attr(:state, :string,
+    default: nil,
+    values: [nil, "success", "warning"],
+    doc: "validation state (applies form-group-success/warning)"
+  )
+
   attr(:multiple, :boolean, default: false, doc: "appends [] to the field name for array values")
   attr(:rest, :global)
 
@@ -73,7 +81,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div class={["form-group", @disabled && "form-group-disabled", @class]} phx-feedback-for={@name}>
+    <div class={["form-group", @horizontal && "form-group-horizontal", @disabled && "form-group-disabled", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @class]} phx-feedback-for={@name}>
       <label class={["flex items-center gap-2", !@disabled && "cursor-pointer"]}>
         <input type="hidden" name={@name} value="false" disabled={@disabled} />
         <input

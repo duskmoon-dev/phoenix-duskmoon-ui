@@ -50,6 +50,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
   attr(:class, :string, default: nil, doc: "additional CSS classes for the wrapper")
   attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
   attr(:radio_class, :string, default: nil, doc: "additional CSS classes for the radio input")
+  attr(:horizontal, :boolean, default: false, doc: "horizontal layout (label beside input)")
+
+  attr(:state, :string,
+    default: nil,
+    values: [nil, "success", "warning"],
+    doc: "validation state (applies form-group-success/warning)"
+  )
+
   attr(:rest, :global)
 
   def dm_radio(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -64,7 +72,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div class={["form-group", @disabled && "form-group-disabled", @class]} phx-feedback-for={@name}>
+    <div class={["form-group", @horizontal && "form-group-horizontal", @disabled && "form-group-disabled", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @class]} phx-feedback-for={@name}>
       <label class={["flex items-center gap-2", !@disabled && "cursor-pointer"]}>
         <input
           type="radio"

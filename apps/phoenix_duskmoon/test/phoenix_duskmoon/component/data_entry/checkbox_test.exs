@@ -349,4 +349,45 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
       assert result =~ "must be accepted"
     end
   end
+
+  describe "horizontal layout" do
+    test "renders form-group-horizontal when horizontal is true" do
+      result = render_component(&dm_checkbox/1, %{name: "agree", horizontal: true})
+
+      assert result =~ "form-group-horizontal"
+    end
+
+    test "does not render form-group-horizontal by default" do
+      result = render_component(&dm_checkbox/1, %{name: "agree"})
+
+      refute result =~ "form-group-horizontal"
+    end
+  end
+
+  describe "validation state" do
+    test "renders form-group-success state" do
+      result = render_component(&dm_checkbox/1, %{name: "agree", state: "success"})
+
+      assert result =~ "form-group-success"
+    end
+
+    test "renders form-group-warning state" do
+      result = render_component(&dm_checkbox/1, %{name: "agree", state: "warning"})
+
+      assert result =~ "form-group-warning"
+    end
+
+    test "renders form-group-error when errors present" do
+      result = render_component(&dm_checkbox/1, %{name: "agree", errors: ["required"]})
+
+      assert result =~ "form-group-error"
+    end
+
+    test "does not render state class by default" do
+      result = render_component(&dm_checkbox/1, %{name: "agree"})
+
+      refute result =~ "form-group-success"
+      refute result =~ "form-group-warning"
+    end
+  end
 end

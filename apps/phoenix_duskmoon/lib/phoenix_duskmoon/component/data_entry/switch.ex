@@ -45,6 +45,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
   attr(:class, :string, default: nil, doc: "additional CSS classes for the wrapper")
   attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
   attr(:switch_class, :string, default: nil, doc: "additional CSS classes for the switch input")
+  attr(:horizontal, :boolean, default: false, doc: "horizontal layout (label beside input)")
+
+  attr(:state, :string,
+    default: nil,
+    values: [nil, "success", "warning"],
+    doc: "validation state (applies form-group-success/warning)"
+  )
+
   attr(:multiple, :boolean, default: false, doc: "appends [] to the field name for array values")
   attr(:rest, :global)
 
@@ -61,7 +69,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div class={["form-group", @disabled && "form-group-disabled", @class]} phx-feedback-for={@name}>
+    <div class={["form-group", @horizontal && "form-group-horizontal", @disabled && "form-group-disabled", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @class]} phx-feedback-for={@name}>
       <label class="switch-label">
         <input type="hidden" name={@name} value="false" disabled={@disabled} />
         <input
