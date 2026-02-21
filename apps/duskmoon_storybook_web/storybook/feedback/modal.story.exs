@@ -63,7 +63,7 @@ defmodule Storybook.Feedback.Modal do
           </:trigger>
           """,
           """
-          <:body class="flex justify-center items-center text-4xl text-rose-600">
+          <:body class="flex justify-center items-center text-4xl text-error">
             <form method="dialog">
               <button>PhoenixDuskmoon Is Awesome...</button>
             </form>
