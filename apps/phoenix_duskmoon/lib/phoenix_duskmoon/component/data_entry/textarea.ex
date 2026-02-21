@@ -108,6 +108,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
         rows={@rows}
         cols={@cols}
         disabled={@disabled}
+        aria-disabled={@disabled && "true"}
         readonly={@readonly}
         required={@required}
         maxlength={@maxlength}

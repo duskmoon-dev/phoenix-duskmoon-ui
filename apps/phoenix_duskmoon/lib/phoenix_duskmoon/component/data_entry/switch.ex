@@ -87,6 +87,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
           value="true"
           checked={@checked}
           disabled={@disabled}
+          aria-disabled={@disabled && "true"}
           class={["switch", "switch-#{@size}", "switch-#{@color}", @switch_class]}
           {@rest}
         />

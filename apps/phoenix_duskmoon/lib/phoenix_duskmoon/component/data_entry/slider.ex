@@ -98,6 +98,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
           max={@max}
           step={@step}
           disabled={@disabled}
+          aria-disabled={@disabled && "true"}
           aria-invalid={@errors != [] && "true"}
           aria-describedby={
             (@errors != [] && @id && "#{@id}-errors") ||

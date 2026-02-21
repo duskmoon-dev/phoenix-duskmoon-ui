@@ -114,6 +114,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
 
     assert result =~ "disabled"
     assert result =~ "form-group-disabled"
+    assert result =~ ~s(aria-disabled="true")
   end
 
   test "renders readonly textarea" do

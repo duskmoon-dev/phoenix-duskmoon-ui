@@ -91,6 +91,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
 
     assert result =~ "disabled"
     assert result =~ "form-group-disabled"
+    assert result =~ ~s(aria-disabled="true")
   end
 
   test "renders slider with show_value enabled by default" do

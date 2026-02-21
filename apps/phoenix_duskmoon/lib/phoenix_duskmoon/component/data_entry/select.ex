@@ -106,6 +106,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
         name={@name}
         multiple={@multiple}
         disabled={@disabled}
+        aria-disabled={@disabled && "true"}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={
           (@errors != [] && @id && "#{@id}-errors") ||

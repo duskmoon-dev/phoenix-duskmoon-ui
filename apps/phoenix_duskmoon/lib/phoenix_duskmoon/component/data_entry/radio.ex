@@ -82,6 +82,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
           value={@value}
           checked={@checked}
           disabled={@disabled}
+          aria-disabled={@disabled && "true"}
           aria-invalid={@errors != [] && "true"}
           aria-describedby={
             (@errors != [] && @id && "#{@id}-errors") ||

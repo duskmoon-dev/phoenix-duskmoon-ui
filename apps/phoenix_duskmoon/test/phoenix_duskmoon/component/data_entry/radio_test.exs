@@ -75,6 +75,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
 
     assert result =~ "disabled"
     assert result =~ "form-group-disabled"
+    assert result =~ ~s(aria-disabled="true")
   end
 
   test "renders radio with form-group wrapper" do

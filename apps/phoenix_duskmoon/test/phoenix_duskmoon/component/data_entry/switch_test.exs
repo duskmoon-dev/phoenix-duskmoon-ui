@@ -81,6 +81,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
     result = render_component(&dm_switch/1, %{name: "opt", disabled: true})
 
     assert result =~ "disabled"
+    assert result =~ ~s(aria-disabled="true")
   end
 
   test "renders disabled switch with visual styling" do
