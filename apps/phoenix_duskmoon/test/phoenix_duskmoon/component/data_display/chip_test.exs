@@ -227,6 +227,31 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ChipTest do
     assert result =~ ~s[slot="icon"]
   end
 
+  test "icon slot is wrapped in span element" do
+    result =
+      render_component(&dm_chip/1, %{
+        inner_block: inner_block(),
+        icon: %{inner_block: fn _, _ -> "ic" end}
+      })
+
+    assert result =~ ~s(<span slot="icon">)
+  end
+
+  test "renders selected and deletable without disabled" do
+    result =
+      render_component(&dm_chip/1, %{
+        selected: true,
+        deletable: true,
+        inner_block: inner_block("Active")
+      })
+
+    assert result =~ "selected"
+    assert result =~ "deletable"
+    [_, chip_tag] = String.split(result, "<el-dm-chip", parts: 2)
+    [chip_attrs, _] = String.split(chip_tag, ">", parts: 2)
+    refute chip_attrs =~ "disabled"
+  end
+
   test "renders all options combined" do
     result =
       render_component(&dm_chip/1, %{

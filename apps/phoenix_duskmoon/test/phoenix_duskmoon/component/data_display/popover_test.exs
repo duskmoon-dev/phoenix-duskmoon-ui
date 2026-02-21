@@ -71,39 +71,17 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PopoverTest do
       assert result =~ ~s(placement="bottom")
     end
 
-    test "renders top placement" do
-      result =
-        render_component(&dm_popover/1, %{placement: "top", trigger: trigger_slot()})
+    for placement <-
+          ~w(top bottom left right top-start top-end bottom-start bottom-end left-start left-end right-start right-end) do
+      test "renders #{placement} placement" do
+        result =
+          render_component(&dm_popover/1, %{
+            placement: unquote(placement),
+            trigger: trigger_slot()
+          })
 
-      assert result =~ ~s(placement="top")
-    end
-
-    test "renders left placement" do
-      result =
-        render_component(&dm_popover/1, %{placement: "left", trigger: trigger_slot()})
-
-      assert result =~ ~s(placement="left")
-    end
-
-    test "renders right placement" do
-      result =
-        render_component(&dm_popover/1, %{placement: "right", trigger: trigger_slot()})
-
-      assert result =~ ~s(placement="right")
-    end
-
-    test "renders bottom-start placement" do
-      result =
-        render_component(&dm_popover/1, %{placement: "bottom-start", trigger: trigger_slot()})
-
-      assert result =~ ~s(placement="bottom-start")
-    end
-
-    test "renders top-end placement" do
-      result =
-        render_component(&dm_popover/1, %{placement: "top-end", trigger: trigger_slot()})
-
-      assert result =~ ~s(placement="top-end")
+        assert result =~ ~s(placement="#{unquote(placement)}")
+      end
     end
   end
 
@@ -146,6 +124,25 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PopoverTest do
         render_component(&dm_popover/1, %{open: true, trigger: trigger_slot()})
 
       assert result =~ "open"
+    end
+  end
+
+  describe "dm_popover rest attrs" do
+    test "passes rest attributes through" do
+      result =
+        render_component(&dm_popover/1, %{
+          "data-testid": "info-pop",
+          trigger: trigger_slot()
+        })
+
+      assert result =~ ~s(data-testid="info-pop")
+    end
+  end
+
+  describe "dm_popover trigger structure" do
+    test "trigger is wrapped in div with slot=trigger" do
+      result = render_component(&dm_popover/1, %{trigger: trigger_slot()})
+      assert result =~ ~s(<div slot="trigger">)
     end
   end
 
