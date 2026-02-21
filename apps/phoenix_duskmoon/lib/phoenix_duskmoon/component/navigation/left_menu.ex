@@ -63,11 +63,6 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
   slot(:menu, required: false, doc: "Menu content, typically dm_left_menu_group components")
 
   def dm_left_menu(assigns) do
-    assigns =
-      assigns
-      |> assign_new(:title, fn -> [] end)
-      |> assign_new(:menu, fn -> [] end)
-
     ~H"""
     <nav id={@id} class={@class} aria-label={@nav_label} {@rest}>
       <ul class={[
@@ -132,10 +127,6 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
   end
 
   def dm_left_menu_group(assigns) do
-    assigns =
-      assigns
-      |> assign_new(:menu, fn -> [] end)
-
     ~H"""
     <details id={@id} class={@class} open={@open} {@rest}>
       <summary class={Map.get(List.first(@title), :class)}>

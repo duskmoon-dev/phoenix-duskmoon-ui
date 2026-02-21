@@ -54,11 +54,6 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
   slot(:user_profile, required: false, doc: "Appbar right side user profile / actions")
 
   def dm_appbar(assigns) do
-    assigns =
-      assigns
-      |> assign_new(:logo, fn -> [] end)
-      |> assign_new(:user_profile, fn -> [] end)
-
     ~H"""
     <header
       id={@id}
@@ -76,7 +71,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
       <div class="appbar-trailing">
         <.dm_link
           :for={menu <- @menu}
-          navigate={Map.get(menu, :to, "")}
+          navigate={Map.get(menu, :to)}
           class={["appbar-action w-auto px-3 rounded-md whitespace-nowrap", Map.get(menu, :class)]}
         >
           {render_slot(menu)}
