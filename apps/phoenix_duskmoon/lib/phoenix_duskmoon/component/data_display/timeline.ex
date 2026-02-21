@@ -82,6 +82,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Timeline do
       <div
         :for={item <- @item}
         role="listitem"
+        aria-current={item[:active] && "true"}
         class={[
           "timeline-item",
           item[:color] && "timeline-item-#{css_color(item[:color])}",

@@ -438,6 +438,25 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TimelineTest do
       result = render_component(&dm_timeline/1, %{item: timeline_items()})
       assert result =~ ~s(role="listitem")
     end
+
+    test "active timeline item has aria-current" do
+      items = [
+        %{__slot__: :item, title: "Done", inner_block: fn _, _ -> "Past" end},
+        %{__slot__: :item, title: "Now", active: true, inner_block: fn _, _ -> "Current" end}
+      ]
+
+      result = render_component(&dm_timeline/1, %{item: items})
+      assert result =~ ~s(aria-current="true")
+    end
+
+    test "inactive timeline item has no aria-current" do
+      items = [
+        %{__slot__: :item, title: "Step", inner_block: fn _, _ -> "Content" end}
+      ]
+
+      result = render_component(&dm_timeline/1, %{item: items})
+      refute result =~ "aria-current"
+    end
   end
 
   test "passes through global attributes" do
