@@ -164,7 +164,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
           class="cascader-clear"
           aria-label={@clear_label}
         >
-          <.dm_mdi name="close" class="w-3 h-3" />
+          <.dm_mdi name="close" class="w-3 h-3" aria-hidden="true" />
         </span>
         <span class="cascader-arrow" aria-hidden="true"></span>
       </button>
