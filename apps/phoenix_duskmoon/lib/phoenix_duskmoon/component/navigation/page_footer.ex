@@ -21,17 +21,13 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
   """
   @doc type: :component
   attr(:id, :any,
-    default: false,
-    doc: """
-    html attribute id
-    """
+    default: nil,
+    doc: "HTML id attribute"
   )
 
   attr(:class, :any,
-    default: "",
-    doc: """
-    html attribute class
-    """
+    default: nil,
+    doc: "additional CSS classes"
   )
 
   slot(:section,

@@ -23,8 +23,8 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
 
   """
   @doc type: :component
-  attr(:id, :any, default: false, doc: "HTML id attribute")
-  attr(:class, :any, default: "", doc: "Additional CSS classes")
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "Additional CSS classes")
   attr(:theme, :string, default: "", doc: "The active theme value")
 
   attr(:select_theme_label, :string,

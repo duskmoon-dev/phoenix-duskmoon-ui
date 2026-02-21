@@ -47,7 +47,7 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
       </.dm_dropdown>
   """
   @doc type: :component
-  attr(:id, :any, default: false, doc: "HTML id attribute")
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
 
   attr(:position, :string,
     default: "bottom",

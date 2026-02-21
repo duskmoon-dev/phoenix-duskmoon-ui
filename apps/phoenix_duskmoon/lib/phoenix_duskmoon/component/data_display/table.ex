@@ -33,17 +33,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
   """
   @doc type: :component
   attr(:id, :any,
-    default: false,
-    doc: """
-    html attribute id
-    """
+    default: nil,
+    doc: "HTML id attribute"
   )
 
   attr(:class, :any,
-    default: "",
-    doc: """
-    html attribute class
-    """
+    default: nil,
+    doc: "additional CSS classes"
   )
 
   attr(:border, :boolean,
