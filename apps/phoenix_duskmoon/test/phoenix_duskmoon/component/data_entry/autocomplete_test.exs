@@ -117,6 +117,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.AutocompleteTest do
     test "renders disabled when true" do
       result = render_component(&dm_autocomplete/1, %{disabled: true})
       assert result =~ "disabled"
+      assert result =~ ~s(aria-disabled="true")
+    end
+
+    test "no aria-disabled when not disabled" do
+      result = render_component(&dm_autocomplete/1, %{})
+      refute result =~ "aria-disabled"
     end
   end
 
