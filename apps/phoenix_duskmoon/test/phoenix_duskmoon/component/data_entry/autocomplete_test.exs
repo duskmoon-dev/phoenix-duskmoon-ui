@@ -199,6 +199,72 @@ defmodule PhoenixDuskmoon.Component.DataEntry.AutocompleteTest do
     end
   end
 
+  describe "error messages" do
+    test "renders error messages from errors list" do
+      result =
+        render_component(&dm_autocomplete/1, %{
+          options: @sample_options,
+          errors: ["is required"]
+        })
+
+      assert result =~ "is required"
+      assert result =~ "autocomplete-error"
+    end
+
+    test "does not render errors when list is empty" do
+      result =
+        render_component(&dm_autocomplete/1, %{
+          options: @sample_options,
+          errors: []
+        })
+
+      refute result =~ "helper-text text-error"
+    end
+
+    test "shows error state from errors list even without error boolean" do
+      result =
+        render_component(&dm_autocomplete/1, %{
+          errors: ["something wrong"]
+        })
+
+      assert result =~ "autocomplete-error"
+    end
+  end
+
+  test "renders phx-feedback-for with name" do
+    result =
+      render_component(&dm_autocomplete/1, %{
+        name: "user[country]"
+      })
+
+    assert result =~ ~s(phx-feedback-for="user[country]")
+  end
+
+  describe "helper text" do
+    test "renders helper text when provided" do
+      result =
+        render_component(&dm_autocomplete/1, %{
+          id: "ac",
+          helper: "Start typing to search"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "Start typing to search"
+    end
+
+    test "hides helper text when errors present" do
+      result =
+        render_component(&dm_autocomplete/1, %{
+          id: "ac",
+          helper: "Start typing to search",
+          errors: ["is required"]
+        })
+
+      refute result =~ "Start typing to search"
+      assert result =~ "is required"
+    end
+  end
+
   describe "FormField integration" do
     test "renders autocomplete with form field extracting id, name, and value" do
       field = Phoenix.Component.to_form(%{"country" => "us"}, as: "user")[:country]

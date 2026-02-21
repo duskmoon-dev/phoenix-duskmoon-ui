@@ -33,6 +33,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Autocomplete do
   """
   use Phoenix.Component
 
+  import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
+
   @doc """
   Renders an autocomplete input with searchable dropdown.
 
@@ -68,6 +70,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Autocomplete do
     doc: "component size"
   )
 
+  attr(:error, :boolean, default: false, doc: "show error state")
+  attr(:errors, :list, default: [], doc: "list of error messages to display")
+  attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
   attr(:rest, :global)
 
   def dm_autocomplete(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -83,22 +88,28 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Autocomplete do
     assigns = assign(assigns, :options_json, options_json)
 
     ~H"""
-    <el-dm-autocomplete
-      id={@id}
-      name={@name}
-      value={@value}
-      options={@options_json}
-      multiple={@multiple}
-      disabled={@disabled}
-      clearable={@clearable}
-      placeholder={@placeholder}
-      loading={@loading}
-      noResultsText={@no_results_text}
-      size={@size}
-      class={@class}
-      {@rest}
-    >
-    </el-dm-autocomplete>
+    <div phx-feedback-for={@name}>
+      <el-dm-autocomplete
+        id={@id}
+        name={@name}
+        value={@value}
+        options={@options_json}
+        multiple={@multiple}
+        disabled={@disabled}
+        clearable={@clearable}
+        placeholder={@placeholder}
+        loading={@loading}
+        noResultsText={@no_results_text}
+        size={@size}
+        class={[(@error || @errors != []) && "autocomplete-error", @class]}
+        {@rest}
+      >
+      </el-dm-autocomplete>
+      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
+      <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+      </div>
+    </div>
     """
   end
 end

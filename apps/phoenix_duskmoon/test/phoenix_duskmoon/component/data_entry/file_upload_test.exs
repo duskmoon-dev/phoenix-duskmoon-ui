@@ -139,6 +139,70 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FileUploadTest do
     end
   end
 
+  describe "error messages" do
+    test "renders error messages from errors list" do
+      result =
+        render_component(&dm_file_upload/1, %{
+          errors: ["file too large"]
+        })
+
+      assert result =~ "file too large"
+      assert result =~ "file-upload-error"
+    end
+
+    test "does not render errors when list is empty" do
+      result =
+        render_component(&dm_file_upload/1, %{
+          errors: []
+        })
+
+      refute result =~ "helper-text text-error"
+    end
+
+    test "shows error state from errors list even without error boolean" do
+      result =
+        render_component(&dm_file_upload/1, %{
+          errors: ["invalid file type"]
+        })
+
+      assert result =~ "file-upload-error"
+    end
+  end
+
+  test "renders phx-feedback-for with name" do
+    result =
+      render_component(&dm_file_upload/1, %{
+        name: "user[avatar]"
+      })
+
+    assert result =~ ~s(phx-feedback-for="user[avatar]")
+  end
+
+  describe "helper text" do
+    test "renders helper text when provided" do
+      result =
+        render_component(&dm_file_upload/1, %{
+          id: "fu",
+          helper: "Max 5MB per file"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "Max 5MB per file"
+    end
+
+    test "hides helper text when errors present" do
+      result =
+        render_component(&dm_file_upload/1, %{
+          id: "fu",
+          helper: "Max 5MB per file",
+          errors: ["file too large"]
+        })
+
+      refute result =~ "Max 5MB per file"
+      assert result =~ "file too large"
+    end
+  end
+
   describe "dm_file_upload combined attrs" do
     test "renders with all attrs" do
       result =

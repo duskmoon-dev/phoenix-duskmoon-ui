@@ -20,6 +20,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FileUpload do
   """
   use Phoenix.Component
 
+  import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
+
   @doc """
   Renders a file upload dropzone using the `el-dm-file-upload` custom element.
 
@@ -49,26 +51,36 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FileUpload do
     doc: "component size"
   )
 
+  attr(:name, :string, default: nil, doc: "form field name")
+  attr(:error, :boolean, default: false, doc: "show error state")
+  attr(:errors, :list, default: [], doc: "list of error messages to display")
+  attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
   attr(:rest, :global)
   slot(:inner_block, doc: "Custom dropzone content")
 
   def dm_file_upload(assigns) do
     ~H"""
-    <el-dm-file-upload
-      id={@id}
-      accept={@accept}
-      multiple={@multiple}
-      disabled={@disabled}
-      max-size={@max_size}
-      max-files={@max_files}
-      show-preview={@show_preview}
-      compact={@compact}
-      size={@size}
-      class={@class}
-      {@rest}
-    >
-      {render_slot(@inner_block)}
-    </el-dm-file-upload>
+    <div phx-feedback-for={@name}>
+      <el-dm-file-upload
+        id={@id}
+        accept={@accept}
+        multiple={@multiple}
+        disabled={@disabled}
+        max-size={@max_size}
+        max-files={@max_files}
+        show-preview={@show_preview}
+        compact={@compact}
+        size={@size}
+        class={[(@error || @errors != []) && "file-upload-error", @class]}
+        {@rest}
+      >
+        {render_slot(@inner_block)}
+      </el-dm-file-upload>
+      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
+      <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+      </div>
+    </div>
     """
   end
 end
