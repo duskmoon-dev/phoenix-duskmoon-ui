@@ -134,6 +134,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
         @loading && "multi-select-loading",
         @class
       ]}
+      aria-busy={@loading && "true"}
       phx-feedback-for={@name}
       {@rest}
     >

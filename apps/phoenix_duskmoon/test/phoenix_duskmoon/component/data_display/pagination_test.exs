@@ -457,6 +457,30 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
       assert result =~ "opacity-50" or result =~ "opacity-50"
     end
 
+    test "loading state sets aria-busy on nav" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 5,
+          page_size: 10,
+          total: 100,
+          loading: true
+        })
+
+      assert result =~ ~s(aria-busy="true")
+    end
+
+    test "no aria-busy when not loading" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 5,
+          page_size: 10,
+          total: 100,
+          loading: false
+        })
+
+      refute result =~ "aria-busy"
+    end
+
     test "disables clicks when loading" do
       result =
         render_component(&dm_pagination_thin/1, %{

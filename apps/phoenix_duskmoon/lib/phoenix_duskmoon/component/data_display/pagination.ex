@@ -229,6 +229,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
       id={@id}
       class={["pagination", @class]}
       aria-label={@pagination_label}
+      aria-busy={@loading && "true"}
       {@rest}
     >
       <div :if={@show_total} class="pagination-info">

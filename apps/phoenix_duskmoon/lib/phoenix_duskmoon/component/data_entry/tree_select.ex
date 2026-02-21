@@ -114,6 +114,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
         @multiple && "tree-select-multiple",
         @class
       ]}
+      aria-busy={@loading && "true"}
       phx-feedback-for={@name}
       {@rest}
     >

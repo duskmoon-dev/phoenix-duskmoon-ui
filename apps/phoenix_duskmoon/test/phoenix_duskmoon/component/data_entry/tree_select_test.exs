@@ -167,6 +167,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
       assert result =~ "tree-select-loading"
     end
 
+    test "loading state sets aria-busy" do
+      result = render_component(&dm_tree_select/1, %{loading: true})
+      assert result =~ ~s(aria-busy="true")
+    end
+
+    test "no aria-busy when not loading" do
+      result = render_component(&dm_tree_select/1, %{})
+      refute result =~ "aria-busy"
+    end
+
     test "renders multiple mode with checkboxes" do
       result =
         render_component(&dm_tree_select/1, %{

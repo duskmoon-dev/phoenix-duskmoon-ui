@@ -113,6 +113,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
         @loading && "cascader-loading",
         @class
       ]}
+      aria-busy={@loading && "true"}
       phx-feedback-for={@name}
       {@rest}
     >

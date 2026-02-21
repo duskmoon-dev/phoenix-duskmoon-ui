@@ -152,6 +152,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CascaderTest do
       assert result =~ "cascader-loading"
     end
 
+    test "loading state sets aria-busy" do
+      result = render_component(&dm_cascader/1, %{loading: true})
+      assert result =~ ~s(aria-busy="true")
+    end
+
+    test "no aria-busy when not loading" do
+      result = render_component(&dm_cascader/1, %{})
+      refute result =~ "aria-busy"
+    end
+
     test "renders searchable input" do
       result = render_component(&dm_cascader/1, %{searchable: true})
       assert result =~ "cascader-search"
