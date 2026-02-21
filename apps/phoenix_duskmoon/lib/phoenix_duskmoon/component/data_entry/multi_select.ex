@@ -114,6 +114,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
     doc: "text for the deselect all action button"
   )
 
+  attr(:overflow_text, :string,
+    default: "more",
+    doc: "text for the overflow indicator (e.g. '+3 more') for i18n"
+  )
+
   attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
   attr(:rest, :global)
 
@@ -193,7 +198,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
             </span>
           </span>
           <span :if={@overflow_count > 0} class="multi-select-tag-overflow">
-            +{@overflow_count} more
+            +{@overflow_count} {@overflow_text}
           </span>
         </span>
         <span :if={@show_counter && @selected_options != []} class="multi-select-counter">

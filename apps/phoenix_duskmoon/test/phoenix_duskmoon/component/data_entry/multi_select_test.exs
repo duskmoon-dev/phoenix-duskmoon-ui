@@ -283,6 +283,19 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       assert result =~ "Alpha"
     end
 
+    test "custom overflow_text for i18n" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          options: @options,
+          selected: ["a", "b", "c"],
+          max_tags: 1,
+          overflow_text: "más"
+        })
+
+      assert result =~ "+2 más"
+      refute result =~ "+2 more"
+    end
+
     test "no overflow when within max_tags" do
       result =
         render_component(&dm_multi_select/1, %{

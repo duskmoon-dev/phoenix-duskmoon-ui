@@ -86,6 +86,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   )
 
   attr(:errors, :list, default: [], doc: "list of error messages to display")
+  attr(:helper, :string, default: nil, doc: "helper text displayed below the input")
   attr(:checked, :boolean, doc: "the checked flag for checkbox inputs")
   attr(:prompt, :string, default: nil, doc: "the prompt for select inputs")
   attr(:options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2")
@@ -217,12 +218,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           value="true"
           checked={@checked}
           aria-invalid={@errors != [] && "true"}
-          aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+          aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
           class={[if(!@classic, do: "checkbox"), @class]}
           {@rest}
         />
         {@label}
       </label>
+      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>
@@ -250,10 +252,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             role="switch"
             aria-checked={to_string(@checked == true)}
             aria-invalid={@errors != [] && "true"}
-            aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+            aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
             {@rest}
           />
         </label>
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -271,7 +274,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           id={@id}
           name={@name}
           aria-invalid={@errors != [] && "true"}
-          aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+          aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
           class={[
             if(!@classic, do: "select"),
             @color && "select-#{@color}",
@@ -285,6 +288,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <option :if={@prompt} value="">{@prompt}</option>
           {Phoenix.HTML.Form.options_for_select(@options, @value)}
         </select>
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -315,11 +319,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               checked={Enum.member?(if(is_list(@value), do: @value, else: []), opt_value)}
               value={opt_value}
               aria-invalid={@errors != [] && "true"}
-              aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+              aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
             />
             {opt_label}
           </label>
         </div>
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -347,11 +352,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               checked={to_string(@value) == to_string(opt_value)}
               value={opt_value}
               aria-invalid={@errors != [] && "true"}
-              aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+              aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
             />
             {opt_label}
           </label>
         </div>
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -369,7 +375,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           id={@id}
           name={@name}
           aria-invalid={@errors != [] && "true"}
-          aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+          aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
           class={[
             if(!@classic, do: "textarea"),
             @color && "textarea-#{@color}",
@@ -379,6 +385,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           ]}
           {@rest}
         >{Phoenix.HTML.Form.normalize_value("textarea", @value)}</textarea>
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -398,7 +405,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           name={@name}
           value={Phoenix.HTML.Form.normalize_value(@type, @value)}
           aria-invalid={@errors != [] && "true"}
-          aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+          aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
           class={[
             @class,
             if(!@classic, do: "input file-upload"),
@@ -409,6 +416,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           ]}
           {@rest}
         />
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -440,7 +448,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             max={@max}
             step={@step}
             aria-invalid={@errors != [] && "true"}
-            aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+            aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
             class={[
               @class,
               if(!@classic, do: "slider"),
@@ -456,6 +464,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <span class="font-medium text-on-surface">{@value || @min}</span>
           <span>{@max}</span>
         </div>
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -485,7 +494,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           role="group"
           aria-label={"#{@label} rating"}
           aria-invalid={@errors != [] && "true"}
-          aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+          aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
         >
           <input type="hidden" name={@name} id={@id} value={@value || 0} />
           <button
@@ -499,6 +508,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             <.dm_mdi name="star" class="rating-icon" />
           </button>
         </div>
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -527,11 +537,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               @errors != [] && "input-error"
             ]}
             aria-invalid={@errors != [] && "true"}
-            aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+            aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
             {@rest}
           />
           <.dm_mdi name="calendar" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant pointer-events-none" />
         </div>
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -560,11 +571,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               @errors != [] && "input-error"
             ]}
             aria-invalid={@errors != [] && "true"}
-            aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+            aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
             {@rest}
           />
           <.dm_mdi name="clock" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant pointer-events-none" />
         </div>
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -586,7 +598,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               name={@name}
               value={@value || "#000000"}
               aria-invalid={@errors != [] && "true"}
-              aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+              aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
               class={[
                 "w-12 h-12 rounded cursor-pointer",
                 @color && "border-2 border-#{@color}",
@@ -617,6 +629,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             :for={swatch <- @swatches}
           />
         </div>
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -646,7 +659,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             role="switch"
             aria-checked={to_string(@checked == true)}
             aria-invalid={@errors != [] && "true"}
-            aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+            aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
             class={[
               "switch",
               @color && "switch-#{@color}",
@@ -657,6 +670,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           />
         </div>
       </label>
+      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>
@@ -676,7 +690,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             name={@name}
             value={@value}
             aria-invalid={@errors != [] && "true"}
-            aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+            aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
             class={[
               @class,
               if(!@classic, do: "input"),
@@ -698,6 +712,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             </li>
           </ul>
         </div>
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -725,7 +740,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             class="file-upload-input"
             multiple={@multiple}
             aria-invalid={@errors != [] && "true"}
-            aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+            aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
             {@rest}
           />
           <button
@@ -751,6 +766,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             </button>
           </div>
         </div>
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -793,7 +809,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           aria-label={@label}
           id={@id}
           aria-invalid={@errors != [] && "true"}
-          aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+          aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
           class={[
             "min-h-[150px] p-3 border border-surface-container-high rounded-b-lg focus:outline-none focus:border-primary",
             @color && "focus:border-#{@color}",
@@ -804,6 +820,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           {Phoenix.HTML.raw(@value || "")}
         </div>
         <input type="hidden" name={@name} id={"#{@id}_hidden"} value={@value || ""} />
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -819,7 +836,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
-        <div class="flex flex-wrap gap-2 p-2 border border-surface-container-high rounded-lg" role="group" aria-label={"#{@label} tags"} aria-invalid={@errors != [] && "true"} aria-describedby={@errors != [] && @id && "#{@id}-errors"}>
+        <div class="flex flex-wrap gap-2 p-2 border border-surface-container-high rounded-lg" role="group" aria-label={"#{@label} tags"} aria-invalid={@errors != [] && "true"} aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}>
           <span
             :for={tag <- @tags}
             class={[
@@ -844,6 +861,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           />
         </div>
         <input type="hidden" name={@name} value={inspect(@tags)} />
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -890,7 +908,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               max={@max}
               step={@step}
               aria-invalid={@errors != [] && "true"}
-              aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+              aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
               class={[
                 "slider slider-sm",
                 @color && "slider-#{@color}"
@@ -905,7 +923,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               max={@max}
               step={@step}
               aria-invalid={@errors != [] && "true"}
-              aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+              aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
               class={[
                 "slider slider-sm",
                 @color && "slider-#{@color}"
@@ -922,6 +940,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <span>{@max}</span>
         </div>
         <input type="hidden" name={@name} value={inspect([@min_val, @max_val])} />
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -944,7 +963,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             name={@name}
             value={@value}
             aria-invalid={@errors != [] && "true"}
-            aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+            aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
             class={[
               @class,
               if(!@classic, do: "input"),
@@ -1004,6 +1023,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <p :if={@strength == "medium"}>{@password_hint_medium}</p>
           <p :if={@strength == "strong"}>{@password_hint_strong}</p>
         </div>
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>
@@ -1024,7 +1044,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           id={@id}
           value={Phoenix.HTML.Form.normalize_value(@type, @value)}
           aria-invalid={@errors != [] && "true"}
-          aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+          aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
           class={[
             @class,
             if(!@classic, do: "input"),
@@ -1035,6 +1055,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           ]}
           {@rest}
         />
+        <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
         </div>

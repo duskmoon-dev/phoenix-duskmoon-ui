@@ -3682,4 +3682,105 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
       assert result =~ "form-group-success"
     end
   end
+
+  describe "helper text" do
+    test "renders helper text for default text input" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "email",
+          id: "email",
+          type: "email",
+          value: nil,
+          helper: "We'll never share your email"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "We&#39;ll never share your email"
+    end
+
+    test "hides helper text when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "email",
+          id: "email",
+          type: "email",
+          value: nil,
+          helper: "We'll never share your email",
+          errors: ["is required"]
+        })
+
+      refute result =~ "never share your email"
+      assert result =~ "is required"
+    end
+
+    test "aria-describedby references helper when no errors" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "email",
+          id: "email",
+          type: "email",
+          value: nil,
+          helper: "Enter your email"
+        })
+
+      assert result =~ ~s[aria-describedby="email-helper"]
+    end
+
+    test "aria-describedby references errors when errors present" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "email",
+          id: "email",
+          type: "email",
+          value: nil,
+          helper: "Enter your email",
+          errors: ["is required"]
+        })
+
+      assert result =~ ~s[aria-describedby="email-errors"]
+    end
+
+    test "renders helper text for select type" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "country",
+          id: "country",
+          type: "select",
+          options: [{"USA", "us"}],
+          value: nil,
+          helper: "Choose your country"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "Choose your country"
+    end
+
+    test "renders helper text for checkbox type" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "agree",
+          id: "agree",
+          type: "checkbox",
+          value: "false",
+          helper: "Required for registration"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "Required for registration"
+    end
+
+    test "renders helper text for switch type" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "dark_mode",
+          id: "dark-mode",
+          type: "switch",
+          value: "false",
+          helper: "Enable dark theme"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "Enable dark theme"
+    end
+  end
 end
