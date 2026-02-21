@@ -113,6 +113,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CollapseTest do
 
       assert result =~ "collapse-disabled"
       assert result =~ "disabled"
+      assert result =~ ~s(aria-disabled="true")
     end
   end
 

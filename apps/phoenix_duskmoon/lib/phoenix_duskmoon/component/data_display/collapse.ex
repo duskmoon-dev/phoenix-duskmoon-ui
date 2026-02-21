@@ -101,6 +101,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Collapse do
         type="button"
         class="collapse-trigger"
         disabled={@disabled}
+        aria-disabled={@disabled && "true"}
         aria-expanded={to_string(@open)}
         aria-controls={@id && "#{@id}-content"}
       >
