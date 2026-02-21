@@ -137,6 +137,29 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ ~s[aria-modal="true"]
   end
 
+  test "confirm dialog has aria-label fallback when no title" do
+    result =
+      render_component(&dm_btn/1, %{
+        confirm: "Are you sure?",
+        inner_block: %{inner_block: fn _, _ -> "Delete" end}
+      })
+
+    assert result =~ ~s[aria-label="Confirmation"]
+  end
+
+  test "confirm dialog has aria-labelledby when title is provided" do
+    result =
+      render_component(&dm_btn/1, %{
+        id: "del-btn",
+        confirm: "Are you sure?",
+        confirm_title: "Confirm Delete",
+        inner_block: %{inner_block: fn _, _ -> "Delete" end}
+      })
+
+    assert result =~ ~s[aria-labelledby="confirm-dialog-del-btn-title"]
+    refute result =~ ~s[aria-label="Confirmation"]
+  end
+
   test "renders button with confirmation dialog and custom title" do
     result =
       render_component(&dm_btn/1, %{

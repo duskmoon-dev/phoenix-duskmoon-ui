@@ -151,8 +151,14 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       {render_slot(@inner_block)}
       <span :for={suffix <- @suffix} slot="suffix">{render_slot(suffix)}</span>
     </el-dm-button>
-    <el-dm-dialog id={"confirm-dialog-#{@id}"} role="dialog" aria-modal="true">
-      <span slot="header" :if={String.length(@confirm_title) > 0}>
+    <el-dm-dialog
+      id={"confirm-dialog-#{@id}"}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={String.length(@confirm_title) > 0 && "confirm-dialog-#{@id}-title"}
+      aria-label={String.length(@confirm_title) == 0 && "Confirmation"}
+    >
+      <span id={"confirm-dialog-#{@id}-title"} slot="header" :if={String.length(@confirm_title) > 0}>
         {@confirm_title}
       </span>
       <p>{@confirm}</p>
