@@ -192,7 +192,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
               "table-row-expand",
               Map.get(expand, :class)
             ]}
-            :if={length(@expand) > 0}
+            :if={@expand != []}
             :for={expand <- @expand}
             id={Map.get(expand, :id, false)}
           >

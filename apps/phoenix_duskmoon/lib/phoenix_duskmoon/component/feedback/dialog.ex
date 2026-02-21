@@ -100,8 +100,8 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
       id={@id}
       role="dialog"
       aria-modal="true"
-      aria-labelledby={length(@title) > 0 && "#{@id}-title"}
-      aria-label={length(@title) == 0 && "Dialog"}
+      aria-labelledby={@title != [] && "#{@id}-title"}
+      aria-label={@title == [] && "Dialog"}
       position={@position}
       size={@size}
       backdrop={@backdrop && "blur"}

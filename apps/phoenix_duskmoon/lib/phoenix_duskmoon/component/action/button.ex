@@ -155,18 +155,18 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       id={"confirm-dialog-#{@id}"}
       role="dialog"
       aria-modal="true"
-      aria-labelledby={String.length(@confirm_title) > 0 && "confirm-dialog-#{@id}-title"}
-      aria-label={String.length(@confirm_title) == 0 && "Confirmation"}
+      aria-labelledby={@confirm_title != "" && "confirm-dialog-#{@id}-title"}
+      aria-label={@confirm_title == "" && "Confirmation"}
     >
-      <span id={"confirm-dialog-#{@id}-title"} slot="header" :if={String.length(@confirm_title) > 0}>
+      <span id={"confirm-dialog-#{@id}-title"} slot="header" :if={@confirm_title != ""}>
         {@confirm_title}
       </span>
       <p>{@confirm}</p>
       <div slot="footer">
-        <template :if={length(@confirm_action) > 0}>
+        <template :if={@confirm_action != []}>
           {render_slot(@confirm_action)}
         </template>
-        <form :if={length(@confirm_action) == 0} method="dialog">
+        <form :if={@confirm_action == []} method="dialog">
           <el-dm-button variant="primary" class={@confirm_class} {@rest}>
             {@confirm_text}
           </el-dm-button>

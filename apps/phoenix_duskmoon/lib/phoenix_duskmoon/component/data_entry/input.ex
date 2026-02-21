@@ -688,7 +688,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           />
           <.dm_mdi name="magnify" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant pointer-events-none" />
         </div>
-        <div :if={length(@suggestions) > 0} class="dropdown dropdown-open">
+        <div :if={@suggestions != []} class="dropdown dropdown-open">
           <ul class="dropdown-content menu w-full">
             <li :for={suggestion <- @suggestions}>
               <button type="button">

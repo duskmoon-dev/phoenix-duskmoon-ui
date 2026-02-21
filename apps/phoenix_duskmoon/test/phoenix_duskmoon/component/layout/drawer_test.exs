@@ -256,6 +256,34 @@ defmodule PhoenixDuskmoon.Component.Layout.DrawerTest do
     assert result =~ "Wrapped Footer"
   end
 
+  test "renders role=complementary" do
+    result =
+      render_component(&dm_drawer/1, %{
+        inner_block: inner_block("Content")
+      })
+
+    assert result =~ ~s(role="complementary")
+  end
+
+  test "renders aria-label when label is set" do
+    result =
+      render_component(&dm_drawer/1, %{
+        label: "Navigation panel",
+        inner_block: inner_block("Content")
+      })
+
+    assert result =~ ~s(aria-label="Navigation panel")
+  end
+
+  test "no aria-label when label is nil" do
+    result =
+      render_component(&dm_drawer/1, %{
+        inner_block: inner_block("Content")
+      })
+
+    refute result =~ "aria-label"
+  end
+
   test "renders with all options combined" do
     result =
       render_component(&dm_drawer/1, %{
