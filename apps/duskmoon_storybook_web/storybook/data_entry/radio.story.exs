@@ -34,7 +34,7 @@ defmodule Storybook.DataEntry.Radio do
             <div>
               <label class="text-sm font-medium text-base-content/90 mb-2 block">Choose your plan</label>
               <.dm_radio id="free" name="plan" value="free" label="Free Plan" />
-              <.dm_radio id="pro" name="plan" value="pro" label="Pro Plan" checked="true" />
+              <.dm_radio id="pro" name="plan" value="pro" label="Pro Plan" checked={true} />
               <.dm_radio id="enterprise" name="plan" value="enterprise" label="Enterprise Plan" />
             </div>
           </div>
@@ -101,9 +101,9 @@ defmodule Storybook.DataEntry.Radio do
           <div class="space-y-3">
             <div>
               <label class="text-sm font-medium text-base-content/90 mb-2 block">Notification Settings</label>
-              <.dm_radio id="all" name="notifications" value="all" label="All notifications" checked="true" />
+              <.dm_radio id="all" name="notifications" value="all" label="All notifications" checked={true} />
               <.dm_radio id="important" name="notifications" value="important" label="Important only" color="warning" />
-              <.dm_radio id="none" name="notifications" value="none" label="None" disabled="true" />
+              <.dm_radio id="none" name="notifications" value="none" label="None" disabled={true} />
             </div>
           </div>
           """

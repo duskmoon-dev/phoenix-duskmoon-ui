@@ -111,15 +111,15 @@ defmodule Storybook.DataEntry.Textarea do
           <div class="space-y-4">
             <div>
               <label class="text-xs text-base-content/70">Disabled</label>
-              <.dm_textarea id="disabled" name="disabled" label="Disabled Textarea" disabled="true" rows="3" value="This textarea is disabled and cannot be edited" />
+              <.dm_textarea id="disabled" name="disabled" label="Disabled Textarea" disabled={true} rows="3" value="This textarea is disabled and cannot be edited" />
             </div>
             <div>
               <label class="text-xs text-base-content/70">Readonly</label>
-              <.dm_textarea id="readonly" name="readonly" label="Readonly Textarea" readonly="true" rows="3" value="This textarea is readonly but can be focused" />
+              <.dm_textarea id="readonly" name="readonly" label="Readonly Textarea" readonly={true} rows="3" value="This textarea is readonly but can be focused" />
             </div>
             <div>
               <label class="text-xs text-base-content/70">Required</label>
-              <.dm_textarea id="required" name="required" label="Required Textarea" required="true" rows="3" placeholder="This field is required" />
+              <.dm_textarea id="required" name="required" label="Required Textarea" required={true} rows="3" placeholder="This field is required" />
             </div>
           </div>
           """
