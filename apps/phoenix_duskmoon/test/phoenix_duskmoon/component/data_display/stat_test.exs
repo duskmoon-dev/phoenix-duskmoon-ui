@@ -20,6 +20,27 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
     assert result =~ "<dd"
   end
 
+  test "renders base layout classes" do
+    result = render_component(&dm_stat/1, %{title: "Test", value: "0"})
+
+    assert result =~ "flex"
+    assert result =~ "gap-3"
+    assert result =~ "p-4"
+  end
+
+  test "title has text-on-surface-variant class" do
+    result = render_component(&dm_stat/1, %{title: "Label", value: "42"})
+
+    assert result =~ "text-on-surface-variant"
+  end
+
+  test "value has font-semibold tracking-tight" do
+    result = render_component(&dm_stat/1, %{title: "Test", value: "99"})
+
+    assert result =~ "font-semibold"
+    assert result =~ "tracking-tight"
+  end
+
   test "renders with description" do
     result =
       render_component(&dm_stat/1, %{
@@ -226,5 +247,28 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
     result = render_component(&dm_stat/1, %{title: "Ratio", value: "3 < 5"})
 
     assert result =~ "&lt;"
+  end
+
+  test "description has text-sm text-on-surface-variant by default" do
+    result =
+      render_component(&dm_stat/1, %{
+        title: "Test",
+        value: "0",
+        description: "some info"
+      })
+
+    assert result =~ "text-sm"
+    assert result =~ "some info"
+  end
+
+  test "icon wrapper has shrink-0 class" do
+    result =
+      render_component(&dm_stat/1, %{
+        title: "Test",
+        value: "0",
+        icon: %{inner_block: fn _, _ -> "icon-content" end}
+      })
+
+    assert result =~ "shrink-0"
   end
 end

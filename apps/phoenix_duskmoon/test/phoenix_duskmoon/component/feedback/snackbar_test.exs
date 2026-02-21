@@ -106,6 +106,30 @@ defmodule PhoenixDuskmoon.Component.Feedback.SnackbarTest do
       assert result =~ "Undo"
     end
 
+    test "action button has type=button" do
+      result =
+        render_component(&dm_snackbar/1, %{
+          message: basic_message(),
+          action: [%{__slot__: :action, inner_block: fn _, _ -> "Undo" end}]
+        })
+
+      assert result =~ ~s(type="button")
+    end
+
+    test "renders multiple action buttons" do
+      result =
+        render_component(&dm_snackbar/1, %{
+          message: basic_message(),
+          action: [
+            %{__slot__: :action, inner_block: fn _, _ -> "Retry" end},
+            %{__slot__: :action, inner_block: fn _, _ -> "Dismiss" end}
+          ]
+        })
+
+      assert result =~ "Retry"
+      assert result =~ "Dismiss"
+    end
+
     test "no action by default" do
       result = render_component(&dm_snackbar/1, %{message: basic_message()})
       refute result =~ "snackbar-action"
@@ -121,6 +145,26 @@ defmodule PhoenixDuskmoon.Component.Feedback.SnackbarTest do
         })
 
       assert result =~ "snackbar-close"
+    end
+
+    test "close button has aria-label" do
+      result =
+        render_component(&dm_snackbar/1, %{
+          message: basic_message(),
+          close: [%{__slot__: :close, inner_block: fn _, _ -> "" end}]
+        })
+
+      assert result =~ ~s(aria-label="Close")
+    end
+
+    test "close button renders times character" do
+      result =
+        render_component(&dm_snackbar/1, %{
+          message: basic_message(),
+          close: [%{__slot__: :close, inner_block: fn _, _ -> "" end}]
+        })
+
+      assert result =~ "&times;"
     end
 
     test "no close by default" do
@@ -151,6 +195,36 @@ defmodule PhoenixDuskmoon.Component.Feedback.SnackbarTest do
       assert result =~ "File saved"
       assert result =~ "View"
       assert result =~ "snackbar-close"
+    end
+  end
+
+  describe "dm_snackbar rest attrs" do
+    test "passes rest attributes through" do
+      result =
+        render_component(&dm_snackbar/1, %{
+          message: basic_message(),
+          "data-testid": "my-snack"
+        })
+
+      assert result =~ ~s(data-testid="my-snack")
+    end
+  end
+
+  describe "dm_snackbar position + type combined" do
+    test "renders type and position together" do
+      result =
+        render_component(&dm_snackbar/1, %{
+          type: "error",
+          position: "top-right",
+          open: true,
+          multiline: true,
+          message: basic_message()
+        })
+
+      assert result =~ "snackbar-error"
+      assert result =~ "snackbar-top-right"
+      assert result =~ "snackbar-show"
+      assert result =~ "snackbar-multiline"
     end
   end
 
@@ -186,6 +260,26 @@ defmodule PhoenixDuskmoon.Component.Feedback.SnackbarTest do
 
         assert result =~ "snackbar-container-#{unquote(pos)}"
       end
+    end
+
+    test "renders with custom class" do
+      result =
+        render_component(&dm_snackbar_container/1, %{
+          class: "my-container",
+          inner_block: [%{__slot__: :inner_block, inner_block: fn _, _ -> "" end}]
+        })
+
+      assert result =~ "my-container"
+    end
+
+    test "passes rest attributes through" do
+      result =
+        render_component(&dm_snackbar_container/1, %{
+          "data-testid": "notif-container",
+          inner_block: [%{__slot__: :inner_block, inner_block: fn _, _ -> "" end}]
+        })
+
+      assert result =~ ~s(data-testid="notif-container")
     end
   end
 end
