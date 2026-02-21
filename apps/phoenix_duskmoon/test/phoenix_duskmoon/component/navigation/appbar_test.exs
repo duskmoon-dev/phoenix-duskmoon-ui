@@ -129,6 +129,16 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
       assert result =~ "Dashboard"
     end
 
+    test "renders nav with aria-label for main navigation" do
+      result =
+        render_component(&dm_simple_appbar/1, %{
+          title: "App",
+          menu: [%{to: "/home", inner_block: fn _, _ -> "Home" end}]
+        })
+
+      assert result =~ ~s(aria-label="Main navigation")
+    end
+
     test "renders simple appbar with mobile menu toggle" do
       result = render_component(&dm_simple_appbar/1, %{title: "App"})
 

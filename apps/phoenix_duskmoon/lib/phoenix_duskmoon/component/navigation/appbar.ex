@@ -136,7 +136,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
           <span class="appbar-title select-none font-bold hidden lg:inline-flex">
             {@title}
           </span>
-          <nav class="mx-12 hidden md:flex flex-row items-center gap-4">
+          <nav class="mx-12 hidden md:flex flex-row items-center gap-4" aria-label="Main navigation">
             <a
               :for={menu <- @menu}
               class={[

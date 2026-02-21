@@ -18,6 +18,16 @@ defmodule PhoenixDuskmoon.Component.Navigation.NestedMenuTest do
       assert result =~ "nested-menu"
     end
 
+    test "renders default aria-label on nav" do
+      result = render_component(&dm_nested_menu/1, %{item: basic_items()})
+      assert result =~ ~s(aria-label="Navigation menu")
+    end
+
+    test "renders custom aria-label on nav" do
+      result = render_component(&dm_nested_menu/1, %{item: basic_items(), nav_label: "Sidebar"})
+      assert result =~ ~s(aria-label="Sidebar")
+    end
+
     test "renders items as links" do
       result = render_component(&dm_nested_menu/1, %{item: basic_items()})
       assert result =~ ~s(href="/home")

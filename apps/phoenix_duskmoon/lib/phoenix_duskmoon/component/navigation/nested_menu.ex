@@ -45,6 +45,12 @@ defmodule PhoenixDuskmoon.Component.Navigation.NestedMenu do
 
   attr(:bordered, :boolean, default: false, doc: "Bordered panel style")
   attr(:compact, :boolean, default: false, doc: "Compact padding")
+
+  attr(:nav_label, :string,
+    default: "Navigation menu",
+    doc: "Accessible label for the nav element"
+  )
+
   attr(:rest, :global)
 
   slot(:title, doc: "Menu section title")
@@ -71,6 +77,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.NestedMenu do
         @compact && "nested-menu-compact",
         @class
       ]}
+      aria-label={@nav_label}
       {@rest}
     >
       <ul>

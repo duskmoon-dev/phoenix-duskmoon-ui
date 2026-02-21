@@ -41,6 +41,16 @@ defmodule PhoenixDuskmoon.Component.Action.ToggleTest do
       assert result =~ ~s(role="group")
     end
 
+    test "renders aria-label on group" do
+      result = render_component(&dm_toggle_group/1, %{item: basic_items(), label: "Text style"})
+      assert result =~ ~s(aria-label="Text style")
+    end
+
+    test "no aria-label when label not provided" do
+      result = render_component(&dm_toggle_group/1, %{item: basic_items()})
+      refute result =~ "aria-label"
+    end
+
     test "buttons have type=button" do
       result = render_component(&dm_toggle_group/1, %{item: basic_items()})
       assert result =~ ~s(type="button")

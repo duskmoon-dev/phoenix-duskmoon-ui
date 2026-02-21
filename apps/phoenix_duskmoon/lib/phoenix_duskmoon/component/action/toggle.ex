@@ -62,6 +62,7 @@ defmodule PhoenixDuskmoon.Component.Action.Toggle do
   attr(:vertical, :boolean, default: false, doc: "Vertical layout")
   attr(:exclusive, :boolean, default: false, doc: "Only one item can be active (radio-like)")
   attr(:full, :boolean, default: false, doc: "Full width")
+  attr(:label, :string, default: nil, doc: "Accessible label for the toggle group (aria-label)")
   attr(:rest, :global)
 
   slot(:item, required: true, doc: "Toggle button items") do
@@ -88,6 +89,7 @@ defmodule PhoenixDuskmoon.Component.Action.Toggle do
         @class
       ]}
       role="group"
+      aria-label={@label}
       {@rest}
     >
       <button
