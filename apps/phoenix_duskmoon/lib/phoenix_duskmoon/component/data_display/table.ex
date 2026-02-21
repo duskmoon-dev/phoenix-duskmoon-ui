@@ -137,17 +137,17 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
       id={@id}
       class={[
         "table",
-        if(@border, do: "table-bordered"),
-        if(@zebra, do: "table-zebra"),
-        if(@hover, do: "table-hover"),
-        if(@compact, do: "table-compact"),
+        @border && "table-bordered",
+        @zebra && "table-zebra",
+        @hover && "table-hover",
+        @compact && "table-compact",
         @class,
       ]}
       {@rest}
     >
       <caption
         :for={caption <- @caption}
-        id={caption[:id] || false}
+        id={caption[:id]}
         class={caption[:class]}
       >{render_slot(caption)}</caption>
       <thead role="row-group" class="hidden md:table-header-group sticky top-0">
@@ -194,7 +194,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
             ]}
             :if={@expand != []}
             :for={expand <- @expand}
-            id={expand[:id] || false}
+            id={expand[:id]}
           >
             <td
               colspan={max(length(@col), 1)}

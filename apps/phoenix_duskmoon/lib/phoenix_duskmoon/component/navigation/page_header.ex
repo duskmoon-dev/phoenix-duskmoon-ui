@@ -113,7 +113,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
               "hover:opacity-50",
               menu[:class]
             ]}
-            href={menu[:to] || false}
+            href={menu[:to]}
             aria-current={menu[:active] && "page"}
           >
             {render_slot(menu)}
@@ -151,7 +151,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
               "hover:opacity-50",
               menu[:class]
             ]}
-            href={menu[:to] || false}
+            href={menu[:to]}
             aria-current={menu[:active] && "page"}
           >
             {render_slot(menu)}
@@ -198,7 +198,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
                 "hover:opacity-50",
                 menu[:class]
               ]}
-              href={menu[:to] || false}
+              href={menu[:to]}
               aria-current={menu[:active] && "page"}
             >
               {render_slot(menu)}
@@ -236,7 +236,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
                 "hover:opacity-50",
                 menu[:class]
               ]}
-              href={menu[:to] || false}
+              href={menu[:to]}
               aria-current={menu[:active] && "page"}
             >
               {render_slot(menu)}

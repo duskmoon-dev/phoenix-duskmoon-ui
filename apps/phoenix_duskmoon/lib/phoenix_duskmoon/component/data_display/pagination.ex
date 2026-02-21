@@ -265,7 +265,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
 
       <button
         type="button"
-        phx-click={if(@loading, do: nil, else: @update_event)}
+        phx-click={!@loading && @update_event}
         phx-value-current={@page_num}
         aria-label={format_label(@page_button_label, %{"page" => @page_num})}
         aria-current="page"
@@ -289,7 +289,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
 
       <div :if={@show_page_jumper} class="pagination-input">
         <.dm_mdi name="arrow-right-top" class="w-4 h-4" />
-        <form phx-change={if(@loading, do: nil, else: @update_event)}>
+        <form phx-change={!@loading && @update_event}>
           <input
             type="number"
             name="current"
