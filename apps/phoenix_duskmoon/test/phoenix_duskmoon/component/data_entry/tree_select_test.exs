@@ -412,4 +412,31 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
 
     assert result =~ ~s(phx-feedback-for="user[category]")
   end
+
+  describe "helper text" do
+    test "renders helper text when provided" do
+      result =
+        render_component(&dm_tree_select/1, %{
+          options: @tree_options,
+          id: "ts",
+          helper: "Choose a category"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "Choose a category"
+    end
+
+    test "hides helper text when errors present" do
+      result =
+        render_component(&dm_tree_select/1, %{
+          options: @tree_options,
+          id: "ts",
+          helper: "Choose a category",
+          errors: ["is required"]
+        })
+
+      refute result =~ "Choose a category"
+      assert result =~ "is required"
+    end
+  end
 end

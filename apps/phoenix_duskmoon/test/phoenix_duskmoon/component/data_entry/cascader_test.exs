@@ -330,4 +330,31 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CascaderTest do
 
     assert result =~ ~s(phx-feedback-for="user[location]")
   end
+
+  describe "helper text" do
+    test "renders helper text when provided" do
+      result =
+        render_component(&dm_cascader/1, %{
+          options: @cascader_options,
+          id: "casc",
+          helper: "Select a location"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "Select a location"
+    end
+
+    test "hides helper text when errors present" do
+      result =
+        render_component(&dm_cascader/1, %{
+          options: @cascader_options,
+          id: "casc",
+          helper: "Select a location",
+          errors: ["is required"]
+        })
+
+      refute result =~ "Select a location"
+      assert result =~ "is required"
+    end
+  end
 end

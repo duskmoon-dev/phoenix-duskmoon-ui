@@ -74,6 +74,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
   attr(:clearable, :boolean, default: false, doc: "show clear button")
   attr(:show_path, :boolean, default: false, doc: "show selected item path in trigger")
   attr(:empty_text, :string, default: "No options available", doc: "text when no options")
+  attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
   attr(:rest, :global)
 
   def dm_tree_select(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -185,6 +186,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
         name={@name && (if @multiple, do: "#{@name}[]", else: @name)}
         value={val}
       />
+      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>

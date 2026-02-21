@@ -78,6 +78,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
   attr(:clearable, :boolean, default: false, doc: "show clear button")
   attr(:separator, :string, default: " / ", doc: "path separator in display")
   attr(:empty_text, :string, default: "No options available", doc: "text when no options")
+  attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
   attr(:rest, :global)
 
   def dm_cascader(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -183,6 +184,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
         name={@name}
         value={List.last(@selected_path)}
       />
+      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>

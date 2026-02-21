@@ -418,4 +418,31 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
 
     assert result =~ ~s(phx-feedback-for="user[languages]")
   end
+
+  describe "helper text" do
+    test "renders helper text when provided" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          options: @options,
+          id: "ms",
+          helper: "Select one or more options"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "Select one or more options"
+    end
+
+    test "hides helper text when errors present" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          options: @options,
+          id: "ms",
+          helper: "Select one or more options",
+          errors: ["is required"]
+        })
+
+      refute result =~ "Select one or more options"
+      assert result =~ "is required"
+    end
+  end
 end

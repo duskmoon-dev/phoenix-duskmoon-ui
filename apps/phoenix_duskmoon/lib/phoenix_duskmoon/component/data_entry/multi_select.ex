@@ -87,6 +87,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
 
   attr(:max_tags, :integer, default: nil, doc: "max tags to show before overflow indicator")
   attr(:empty_text, :string, default: "No options available", doc: "text when no options")
+  attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
   attr(:rest, :global)
 
   def dm_multi_select(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -203,6 +204,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
         name={@name && "#{@name}[]"}
         value={val}
       />
+      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>
