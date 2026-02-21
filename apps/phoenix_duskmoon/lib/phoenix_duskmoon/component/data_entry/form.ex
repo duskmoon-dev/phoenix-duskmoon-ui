@@ -197,6 +197,146 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
   end
 
   @doc """
+  Renders a fieldset with optional legend.
+
+  ## Examples
+
+      <.dm_fieldset legend="Personal Info">
+        <.dm_input field={f[:name]} label="Name" />
+        <.dm_input field={f[:email]} label="Email" />
+      </.dm_fieldset>
+
+  """
+  @doc type: :component
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
+  attr(:legend, :string, default: nil, doc: "fieldset legend text")
+
+  attr(:variant, :string,
+    default: nil,
+    values: [nil, "filled", "borderless", "card"],
+    doc: "fieldset style variant"
+  )
+
+  attr(:rest, :global)
+  slot(:inner_block, required: true)
+
+  def dm_fieldset(assigns) do
+    ~H"""
+    <fieldset id={@id} class={[
+      "fieldset",
+      @variant && "fieldset-#{@variant}",
+      @class
+    ]} {@rest}>
+      <legend :if={@legend} class="fieldset-legend">{@legend}</legend>
+      {render_slot(@inner_block)}
+    </fieldset>
+    """
+  end
+
+  @doc """
+  Renders a form row for side-by-side fields.
+
+  ## Examples
+
+      <.dm_form_row>
+        <.dm_input field={f[:first_name]} label="First" />
+        <.dm_input field={f[:last_name]} label="Last" />
+      </.dm_form_row>
+
+  """
+  @doc type: :component
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
+  attr(:rest, :global)
+  slot(:inner_block, required: true)
+
+  def dm_form_row(assigns) do
+    ~H"""
+    <div id={@id} class={["form-row", @class]} {@rest}>
+      {render_slot(@inner_block)}
+    </div>
+    """
+  end
+
+  @doc """
+  Renders a form grid layout.
+
+  ## Examples
+
+      <.dm_form_grid cols={2}>
+        <.dm_input field={f[:city]} label="City" />
+        <.dm_input field={f[:state]} label="State" />
+      </.dm_form_grid>
+
+  """
+  @doc type: :component
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
+  attr(:cols, :integer, default: 2, values: [2, 3, 4], doc: "number of grid columns")
+  attr(:rest, :global)
+  slot(:inner_block, required: true)
+
+  def dm_form_grid(assigns) do
+    ~H"""
+    <div id={@id} class={["form-grid", "form-grid-#{@cols}", @class]} {@rest}>
+      {render_slot(@inner_block)}
+    </div>
+    """
+  end
+
+  @doc """
+  Renders a form section with title and optional description.
+
+  ## Examples
+
+      <.dm_form_section title="Contact Information" description="How we can reach you.">
+        <.dm_input field={f[:email]} label="Email" />
+        <.dm_input field={f[:phone]} label="Phone" />
+      </.dm_form_section>
+
+  """
+  @doc type: :component
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
+  attr(:title, :string, default: nil, doc: "section title")
+  attr(:description, :string, default: nil, doc: "section description")
+  attr(:rest, :global)
+  slot(:inner_block, required: true)
+
+  def dm_form_section(assigns) do
+    ~H"""
+    <div id={@id} class={["form-section", @class]} {@rest}>
+      <div :if={@title} class="form-section-title">{@title}</div>
+      <div :if={@description} class="form-section-description">{@description}</div>
+      {render_slot(@inner_block)}
+    </div>
+    """
+  end
+
+  @doc """
+  Renders a form divider, optionally with text.
+
+  ## Examples
+
+      <.dm_form_divider />
+      <.dm_form_divider text="or" />
+
+  """
+  @doc type: :component
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
+  attr(:text, :string, default: nil, doc: "divider text")
+  attr(:rest, :global)
+
+  def dm_form_divider(assigns) do
+    ~H"""
+    <div :if={!@text} id={@id} class={["form-divider", @class]} {@rest}></div>
+    <div :if={@text} id={@id} class={["form-divider-text", @class]} {@rest}>{@text}</div>
+    """
+  end
+
+  @doc """
   Normalizes checkbox values for boolean fields.
   """
   def normalize_checkbox_value(value) when value in [true, "true", "1"], do: true

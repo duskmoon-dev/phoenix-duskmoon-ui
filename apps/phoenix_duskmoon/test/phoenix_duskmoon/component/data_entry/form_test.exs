@@ -523,6 +523,283 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
     end
   end
 
+  describe "dm_fieldset/1" do
+    test "renders basic fieldset" do
+      result =
+        render_component(&dm_fieldset/1, %{
+          inner_block: inner_block("field content")
+        })
+
+      assert result =~ "<fieldset"
+      assert result =~ "fieldset"
+      assert result =~ "field content"
+    end
+
+    test "renders fieldset with legend" do
+      result =
+        render_component(&dm_fieldset/1, %{
+          legend: "Personal Info",
+          inner_block: inner_block("fields")
+        })
+
+      assert result =~ "<legend"
+      assert result =~ "fieldset-legend"
+      assert result =~ "Personal Info"
+    end
+
+    test "renders fieldset without legend by default" do
+      result =
+        render_component(&dm_fieldset/1, %{
+          inner_block: inner_block("fields")
+        })
+
+      refute result =~ "<legend"
+    end
+
+    test "renders fieldset with filled variant" do
+      result =
+        render_component(&dm_fieldset/1, %{
+          variant: "filled",
+          inner_block: inner_block("fields")
+        })
+
+      assert result =~ "fieldset-filled"
+    end
+
+    test "renders fieldset with borderless variant" do
+      result =
+        render_component(&dm_fieldset/1, %{
+          variant: "borderless",
+          inner_block: inner_block("fields")
+        })
+
+      assert result =~ "fieldset-borderless"
+    end
+
+    test "renders fieldset with card variant" do
+      result =
+        render_component(&dm_fieldset/1, %{
+          variant: "card",
+          inner_block: inner_block("fields")
+        })
+
+      assert result =~ "fieldset-card"
+    end
+
+    test "renders fieldset with custom id and class" do
+      result =
+        render_component(&dm_fieldset/1, %{
+          id: "my-fieldset",
+          class: "extra",
+          inner_block: inner_block("fields")
+        })
+
+      assert result =~ ~s[id="my-fieldset"]
+      assert result =~ "extra"
+    end
+
+    test "renders fieldset with rest attrs" do
+      result =
+        render_component(&dm_fieldset/1, %{
+          "data-testid": "fs-1",
+          inner_block: inner_block("fields")
+        })
+
+      assert result =~ ~s[data-testid="fs-1"]
+    end
+  end
+
+  describe "dm_form_row/1" do
+    test "renders form row with form-row class" do
+      result =
+        render_component(&dm_form_row/1, %{
+          inner_block: inner_block("row content")
+        })
+
+      assert result =~ "<div"
+      assert result =~ "form-row"
+      assert result =~ "row content"
+    end
+
+    test "renders form row with custom id and class" do
+      result =
+        render_component(&dm_form_row/1, %{
+          id: "row-1",
+          class: "gap-4",
+          inner_block: inner_block("content")
+        })
+
+      assert result =~ ~s[id="row-1"]
+      assert result =~ "gap-4"
+    end
+
+    test "renders form row with rest attrs" do
+      result =
+        render_component(&dm_form_row/1, %{
+          "data-testid": "row-1",
+          inner_block: inner_block("content")
+        })
+
+      assert result =~ ~s[data-testid="row-1"]
+    end
+  end
+
+  describe "dm_form_grid/1" do
+    test "renders form grid with default 2 columns" do
+      result =
+        render_component(&dm_form_grid/1, %{
+          inner_block: inner_block("grid content")
+        })
+
+      assert result =~ "form-grid"
+      assert result =~ "form-grid-2"
+      assert result =~ "grid content"
+    end
+
+    test "renders form grid with 3 columns" do
+      result =
+        render_component(&dm_form_grid/1, %{
+          cols: 3,
+          inner_block: inner_block("content")
+        })
+
+      assert result =~ "form-grid-3"
+    end
+
+    test "renders form grid with 4 columns" do
+      result =
+        render_component(&dm_form_grid/1, %{
+          cols: 4,
+          inner_block: inner_block("content")
+        })
+
+      assert result =~ "form-grid-4"
+    end
+
+    test "renders form grid with custom id and class" do
+      result =
+        render_component(&dm_form_grid/1, %{
+          id: "grid-1",
+          class: "my-grid",
+          inner_block: inner_block("content")
+        })
+
+      assert result =~ ~s[id="grid-1"]
+      assert result =~ "my-grid"
+    end
+  end
+
+  describe "dm_form_section/1" do
+    test "renders form section with form-section class" do
+      result =
+        render_component(&dm_form_section/1, %{
+          inner_block: inner_block("section content")
+        })
+
+      assert result =~ "form-section"
+      assert result =~ "section content"
+    end
+
+    test "renders form section with title" do
+      result =
+        render_component(&dm_form_section/1, %{
+          title: "Contact",
+          inner_block: inner_block("fields")
+        })
+
+      assert result =~ "form-section-title"
+      assert result =~ "Contact"
+    end
+
+    test "renders form section with description" do
+      result =
+        render_component(&dm_form_section/1, %{
+          description: "How we reach you",
+          inner_block: inner_block("fields")
+        })
+
+      assert result =~ "form-section-description"
+      assert result =~ "How we reach you"
+    end
+
+    test "renders form section with title and description" do
+      result =
+        render_component(&dm_form_section/1, %{
+          title: "Account",
+          description: "Your login info",
+          inner_block: inner_block("fields")
+        })
+
+      assert result =~ "form-section-title"
+      assert result =~ "Account"
+      assert result =~ "form-section-description"
+      assert result =~ "Your login info"
+    end
+
+    test "renders form section without title/description by default" do
+      result =
+        render_component(&dm_form_section/1, %{
+          inner_block: inner_block("fields")
+        })
+
+      refute result =~ "form-section-title"
+      refute result =~ "form-section-description"
+    end
+
+    test "renders form section with custom id and class" do
+      result =
+        render_component(&dm_form_section/1, %{
+          id: "sec-1",
+          class: "mb-8",
+          inner_block: inner_block("fields")
+        })
+
+      assert result =~ ~s[id="sec-1"]
+      assert result =~ "mb-8"
+    end
+  end
+
+  describe "dm_form_divider/1" do
+    test "renders plain divider" do
+      result = render_component(&dm_form_divider/1, %{})
+
+      assert result =~ "form-divider"
+      refute result =~ "form-divider-text"
+    end
+
+    test "renders divider with text" do
+      result =
+        render_component(&dm_form_divider/1, %{
+          text: "or"
+        })
+
+      assert result =~ "form-divider-text"
+      assert result =~ "or"
+    end
+
+    test "renders divider with custom id and class" do
+      result =
+        render_component(&dm_form_divider/1, %{
+          id: "div-1",
+          class: "my-divider"
+        })
+
+      assert result =~ ~s[id="div-1"]
+      assert result =~ "my-divider"
+    end
+
+    test "renders text divider with rest attrs" do
+      result =
+        render_component(&dm_form_divider/1, %{
+          text: "or",
+          "data-testid": "divider-1"
+        })
+
+      assert result =~ ~s[data-testid="divider-1"]
+      assert result =~ "or"
+    end
+  end
+
   describe "dm_alert style variants (filled, outlined)" do
     test "renders alert with filled style" do
       result =
