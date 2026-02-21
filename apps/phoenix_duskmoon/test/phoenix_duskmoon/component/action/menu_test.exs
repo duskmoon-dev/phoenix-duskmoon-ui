@@ -90,28 +90,18 @@ defmodule PhoenixDuskmoon.Component.Action.MenuTest do
       assert result =~ ~s(placement="bottom-start")
     end
 
-    test "renders top placement" do
-      result =
-        render_component(&dm_menu/1, %{
-          placement: "top",
-          inner_block: [
-            %{__slot__: :inner_block, inner_block: fn _, _ -> "items" end}
-          ]
-        })
+    for placement <- ~w(top bottom left right top-start top-end bottom-start bottom-end) do
+      test "renders #{placement} placement" do
+        result =
+          render_component(&dm_menu/1, %{
+            placement: unquote(placement),
+            inner_block: [
+              %{__slot__: :inner_block, inner_block: fn _, _ -> "items" end}
+            ]
+          })
 
-      assert result =~ ~s(placement="top")
-    end
-
-    test "renders bottom-end placement" do
-      result =
-        render_component(&dm_menu/1, %{
-          placement: "bottom-end",
-          inner_block: [
-            %{__slot__: :inner_block, inner_block: fn _, _ -> "items" end}
-          ]
-        })
-
-      assert result =~ ~s(placement="bottom-end")
+        assert result =~ ~s(placement="#{unquote(placement)}")
+      end
     end
   end
 
@@ -137,6 +127,20 @@ defmodule PhoenixDuskmoon.Component.Action.MenuTest do
         })
 
       assert result =~ "open"
+    end
+  end
+
+  describe "dm_menu rest attrs" do
+    test "passes rest attributes through" do
+      result =
+        render_component(&dm_menu/1, %{
+          "data-testid": "ctx-menu",
+          inner_block: [
+            %{__slot__: :inner_block, inner_block: fn _, _ -> "items" end}
+          ]
+        })
+
+      assert result =~ ~s(data-testid="ctx-menu")
     end
   end
 
@@ -250,6 +254,46 @@ defmodule PhoenixDuskmoon.Component.Action.MenuTest do
       assert result =~ ~s(slot="icon")
       # dm_mdi renders an SVG
       assert result =~ "<svg"
+    end
+
+    test "icon has sizing classes" do
+      result =
+        render_component(&dm_menu_item/1, %{
+          icon: "cog",
+          inner_block: [
+            %{__slot__: :inner_block, inner_block: fn _, _ -> "Settings" end}
+          ]
+        })
+
+      assert result =~ "w-5"
+      assert result =~ "h-5"
+    end
+  end
+
+  describe "dm_menu_item rest attrs" do
+    test "passes rest attributes through" do
+      result =
+        render_component(&dm_menu_item/1, %{
+          "data-action": "delete",
+          inner_block: [
+            %{__slot__: :inner_block, inner_block: fn _, _ -> "Delete" end}
+          ]
+        })
+
+      assert result =~ ~s(data-action="delete")
+    end
+  end
+
+  describe "dm_menu_item value" do
+    test "no value attr when nil" do
+      result =
+        render_component(&dm_menu_item/1, %{
+          inner_block: [
+            %{__slot__: :inner_block, inner_block: fn _, _ -> "Item" end}
+          ]
+        })
+
+      refute result =~ ~s(value=")
     end
   end
 

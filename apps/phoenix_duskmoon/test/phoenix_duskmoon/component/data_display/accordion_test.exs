@@ -262,6 +262,28 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AccordionTest do
     assert result =~ "Only content"
   end
 
+  test "no value attribute on container when nil" do
+    result =
+      render_component(&dm_accordion/1, %{
+        item: [item("a", "A", "Content")]
+      })
+
+    # The el-dm-accordion (not -item) should not have value="" since value is nil
+    # Match only the container tag (ends with > before the first -item)
+    [accordion_tag] = Regex.scan(~r/<el-dm-accordion\b(?!-)(?:[^>]*)>/, result) |> List.flatten()
+    refute accordion_tag =~ ~s(value=")
+  end
+
+  test "closing tags render correctly" do
+    result =
+      render_component(&dm_accordion/1, %{
+        item: [item("a", "A", "Content")]
+      })
+
+    assert result =~ "</el-dm-accordion-item>"
+    assert result =~ "</el-dm-accordion>"
+  end
+
   test "renders with combined id, class, and multiple" do
     result =
       render_component(&dm_accordion/1, %{
