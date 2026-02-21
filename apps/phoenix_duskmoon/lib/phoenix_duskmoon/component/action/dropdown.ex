@@ -133,5 +133,6 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
   defp popover_color("primary"), do: "popover-primary"
   defp popover_color("secondary"), do: "popover-secondary"
   defp popover_color("tertiary"), do: "popover-tertiary"
+  defp popover_color("accent"), do: "popover-tertiary"
   defp popover_color(_), do: nil
 end

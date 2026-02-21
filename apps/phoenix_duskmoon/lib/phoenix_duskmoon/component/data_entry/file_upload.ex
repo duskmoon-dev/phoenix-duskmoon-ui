@@ -52,11 +52,19 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FileUpload do
   )
 
   attr(:name, :string, default: nil, doc: "form field name")
+  attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
   attr(:error, :boolean, default: false, doc: "show error state")
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
   attr(:rest, :global)
   slot(:inner_block, doc: "Custom dropzone content")
+
+  def dm_file_upload(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+    assigns
+    |> assign(field: nil, id: assigns.id || field.id)
+    |> assign(:name, field.name)
+    |> dm_file_upload()
+  end
 
   def dm_file_upload(assigns) do
     ~H"""

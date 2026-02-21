@@ -248,6 +248,23 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FileUploadTest do
     end
   end
 
+  describe "dm_file_upload with form field" do
+    test "extracts id and name from FormField" do
+      field = Phoenix.Component.to_form(%{"avatar" => nil}, as: "user")[:avatar]
+
+      result = render_component(&dm_file_upload/1, %{field: field})
+      assert result =~ ~s(id="user_avatar")
+      assert result =~ ~s(phx-feedback-for="user[avatar]")
+    end
+
+    test "id attr overrides field id" do
+      field = Phoenix.Component.to_form(%{"avatar" => nil}, as: "user")[:avatar]
+
+      result = render_component(&dm_file_upload/1, %{field: field, id: "custom-id"})
+      assert result =~ ~s(id="custom-id")
+    end
+  end
+
   describe "dm_file_upload combined attrs" do
     test "renders with all attrs" do
       result =

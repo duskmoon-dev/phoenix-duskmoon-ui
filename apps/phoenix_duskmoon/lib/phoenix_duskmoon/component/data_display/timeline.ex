@@ -83,7 +83,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Timeline do
         role="listitem"
         class={[
           "timeline-item",
-          item[:color] && "timeline-item-#{item[:color]}",
+          item[:color] && "timeline-item-#{css_color(item[:color])}",
           item[:completed] && "completed",
           item[:active] && "active",
           item[:loading] && "loading",
@@ -107,4 +107,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Timeline do
     </div>
     """
   end
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end
