@@ -2665,6 +2665,38 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
 
       assert result =~ ~s(aria-disabled="true")
     end
+
+    test "custom select_color_label" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "color_picker",
+          name: "c",
+          id: "c",
+          label: "Color",
+          value: "#ff0000",
+          swatches: ["#ff0000", "#00ff00"],
+          select_color_label: "Farbe wählen {color}"
+        })
+
+      assert result =~ ~s[aria-label="Farbe wählen #ff0000"]
+      assert result =~ ~s[aria-label="Farbe wählen #00ff00"]
+      refute result =~ "Select color"
+    end
+
+    test "custom tags_group_label" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "tags",
+          name: "tags",
+          id: "tags",
+          label: "Keywords",
+          value: ["elixir"],
+          tags_group_label: "Étiquettes de {label}"
+        })
+
+      assert result =~ ~s[aria-label="Étiquettes de Keywords"]
+      refute result =~ "Keywords tags"
+    end
   end
 
   describe "aria-invalid across input types" do
