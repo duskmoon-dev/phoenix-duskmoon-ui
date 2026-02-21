@@ -262,6 +262,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CascaderTest do
       result = render_component(&dm_cascader/1, %{options: @cascader_options})
       assert result =~ ~s(role="option")
     end
+
+    test "arrow elements have aria-hidden" do
+      result = render_component(&dm_cascader/1, %{options: @cascader_options})
+      assert result =~ ~s(aria-hidden="true")
+    end
   end
 
   describe "FormField integration" do

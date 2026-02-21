@@ -140,7 +140,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
         >
           &times;
         </button>
-        <span class="cascader-arrow"></span>
+        <span class="cascader-arrow" aria-hidden="true"></span>
       </button>
 
       <div class="cascader-dropdown">
@@ -171,7 +171,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
                 data-value={opt[:value]}
               >
                 <span class="cascader-option-label">{opt[:label]}</span>
-                <span :if={opt[:has_children]} class="cascader-option-arrow"></span>
+                <span :if={opt[:has_children]} class="cascader-option-arrow" aria-hidden="true"></span>
               </div>
             </div>
           </div>

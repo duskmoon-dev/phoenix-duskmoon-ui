@@ -103,7 +103,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Collapse do
         aria-expanded={to_string(@open)}
       >
         {render_slot(@trigger)}
-        <span class="collapse-icon"></span>
+        <span class="collapse-icon" aria-hidden="true"></span>
       </button>
       <div class="collapse-content">
         <div class="collapse-inner">

@@ -389,6 +389,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CollapseTest do
 
       assert result =~ ~s(aria-expanded="true")
     end
+
+    test "collapse icon has aria-hidden" do
+      result =
+        render_component(&dm_collapse/1, %{trigger: basic_trigger(), content: basic_content()})
+
+      assert result =~ ~s(aria-hidden="true")
+    end
   end
 
   describe "dm_collapse_group" do

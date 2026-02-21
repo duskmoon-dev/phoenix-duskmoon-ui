@@ -110,7 +110,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Toast do
       role="alert"
       {@rest}
     >
-      <div :if={@icon} class="toast-icon">
+      <div :if={@icon} class="toast-icon" aria-hidden="true">
         <.dm_mdi name={@icon} class="w-5 h-5" />
       </div>
       <div class="toast-content">

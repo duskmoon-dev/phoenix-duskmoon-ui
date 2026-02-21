@@ -177,6 +177,11 @@ defmodule PhoenixDuskmoon.Component.Feedback.ToastTest do
       result = render_component(&dm_toast/1, %{})
       refute result =~ "toast-icon"
     end
+
+    test "icon wrapper has aria-hidden" do
+      result = render_component(&dm_toast/1, %{icon: "alert-circle"})
+      assert result =~ ~s(aria-hidden="true")
+    end
   end
 
   describe "dm_toast close button" do
