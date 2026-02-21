@@ -85,6 +85,11 @@ defmodule PhoenixDuskmoon.Component.Feedback.ToastTest do
       assert result =~ ~s(role="alert")
     end
 
+    test "renders with aria-live assertive" do
+      result = render_component(&dm_toast/1, %{})
+      assert result =~ ~s(aria-live="assertive")
+    end
+
     test "renders with custom id" do
       result = render_component(&dm_toast/1, %{id: "my-toast"})
       assert result =~ ~s(id="my-toast")
