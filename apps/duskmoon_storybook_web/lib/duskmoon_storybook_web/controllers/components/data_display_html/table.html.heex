@@ -46,6 +46,17 @@
     <:col :let={row} label="Price"><%= row.price %></:col>
   </.dm_table>
 
+  <h3 class="text-xl font-semibold mt-8 mb-4">Hover Effect</h3>
+  <.dm_table hover={true} data={[
+    %{name: "Alice", role: "Admin", status: "Active"},
+    %{name: "Bob", role: "Editor", status: "Active"},
+    %{name: "Charlie", role: "Viewer", status: "Inactive"}
+  ]}>
+    <:col :let={row} label="Name"><%= row.name %></:col>
+    <:col :let={row} label="Role"><%= row.role %></:col>
+    <:col :let={row} label="Status"><%= row.status %></:col>
+  </.dm_table>
+
   <h3 class="text-xl font-semibold mt-8 mb-4">Bordered & Compact</h3>
   <.dm_table border={true} compact={true} data={[
     %{key: "API_KEY", value: "sk-***", env: "production"},

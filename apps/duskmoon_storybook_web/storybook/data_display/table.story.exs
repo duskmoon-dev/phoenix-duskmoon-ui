@@ -12,6 +12,7 @@ defmodule Storybook.DataDisplay.Table do
         attributes: %{
           class: "w-full",
           border: true,
+          hover: true,
           data: table_data()
         },
         slots: [
