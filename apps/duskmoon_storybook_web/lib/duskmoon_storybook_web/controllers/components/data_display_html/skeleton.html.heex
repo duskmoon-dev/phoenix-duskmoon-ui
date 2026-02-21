@@ -59,4 +59,12 @@
   <div class="max-w-lg">
     <.dm_skeleton_comment show_replies={2} />
   </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Form Skeleton</h3>
+  <div class="max-w-md">
+    <.dm_skeleton_form />
+  </div>
+  <div class="max-w-md mt-4">
+    <.dm_skeleton_form field_types={[:text, :text, :textarea, :checkbox]} show_submit={true} />
+  </div>
 </.dm_card>

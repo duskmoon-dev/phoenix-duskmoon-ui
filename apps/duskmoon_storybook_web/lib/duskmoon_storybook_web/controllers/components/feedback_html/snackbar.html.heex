@@ -90,4 +90,17 @@
       <:action>Learn More</:action>
     </.dm_snackbar>
   </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Snackbar Container</h3>
+  <div class="relative mb-4" style="min-height: 150px;">
+    <.dm_snackbar_container position="bottom-right">
+      <.dm_snackbar type="info" open>
+        <:message>First notification</:message>
+      </.dm_snackbar>
+      <.dm_snackbar type="success" open>
+        <:message>Second notification</:message>
+        <:action>Undo</:action>
+      </.dm_snackbar>
+    </.dm_snackbar_container>
+  </div>
 </.dm_card>
