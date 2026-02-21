@@ -21,14 +21,46 @@
   """ %>
   <.dm_markdown content={md_content} />
 
-  <h3 class="text-xl font-semibold mt-8 mb-4">Flash Messages</h3>
-  <p class="mb-4 text-base-content/70">Flash messages appear as toast notifications. Use <code>dm_flash_group</code> in your layout to automatically display flash messages from the connection.</p>
+  <h3 class="text-xl font-semibold mt-8 mb-4">Info Flash</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_flash kind={:info} title="Success" flash={%{"info" => "Your changes have been saved."}} autoshow={false} />
+  </div>
 
-  <h3 class="text-xl font-semibold mt-8 mb-4">Alert Component</h3>
-  <div class="flex flex-col gap-4">
+  <h3 class="text-xl font-semibold mt-8 mb-4">Error Flash</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_flash kind={:error} title="Error" flash={%{"error" => "Could not save your changes. Please try again."}} autoshow={false} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Flash with Custom Inner Block</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_flash kind={:info} title="Custom Content" flash={%{"info" => "ignored"}} autoshow={false}>
+      <p>This flash uses <strong>custom HTML content</strong> via the inner block slot.</p>
+    </.dm_flash>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Flash without Close Button</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_flash kind={:info} title="Persistent" flash={%{"info" => "This flash cannot be dismissed by the user."}} close={false} autoshow={false} />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Alert Component Variants</h3>
+  <div class="flex flex-col gap-4 mb-4">
     <.dm_alert variant="info" title="Info">This is an informational message.</.dm_alert>
     <.dm_alert variant="success" title="Success">Operation completed successfully.</.dm_alert>
     <.dm_alert variant="warning" title="Warning">Please check your input.</.dm_alert>
     <.dm_alert variant="error" title="Error">Something went wrong.</.dm_alert>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Filled Alerts</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_alert variant="info" filled title="Info">Filled info alert with stronger emphasis.</.dm_alert>
+    <.dm_alert variant="success" filled title="Success">Filled success alert.</.dm_alert>
+    <.dm_alert variant="error" filled title="Error">Filled error alert.</.dm_alert>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Outlined Alerts</h3>
+  <div class="flex flex-col gap-4 mb-4">
+    <.dm_alert variant="info" outlined>Outlined info alert.</.dm_alert>
+    <.dm_alert variant="warning" outlined>Outlined warning alert.</.dm_alert>
   </div>
 </.dm_card>
