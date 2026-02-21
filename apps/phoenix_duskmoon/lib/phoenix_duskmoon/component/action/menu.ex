@@ -71,6 +71,7 @@ defmodule PhoenixDuskmoon.Component.Action.Menu do
     doc: "preferred placement of the menu"
   )
 
+  attr(:label, :string, default: nil, doc: "Accessible label for the menu (aria-label)")
   attr(:rest, :global)
   slot(:inner_block, required: true, doc: "Menu items")
 
@@ -82,6 +83,8 @@ defmodule PhoenixDuskmoon.Component.Action.Menu do
       anchor={@anchor}
       placement={@placement}
       class={@class}
+      role="menu"
+      aria-label={@label}
       {@rest}
     >
       {render_slot(@inner_block)}
@@ -113,6 +116,8 @@ defmodule PhoenixDuskmoon.Component.Action.Menu do
       value={@value}
       disabled={@disabled}
       class={@class}
+      role="menuitem"
+      aria-disabled={@disabled && "true"}
       {@rest}
     >
       <.dm_mdi :if={@icon} name={@icon} class="w-5 h-5" slot="icon" />

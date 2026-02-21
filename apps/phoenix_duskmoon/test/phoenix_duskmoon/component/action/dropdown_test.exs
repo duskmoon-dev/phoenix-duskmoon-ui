@@ -67,9 +67,9 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
         content: content()
       })
 
-    assert result =~ "appearance: none"
-    assert result =~ "border: none"
-    assert result =~ "cursor: pointer"
+    assert result =~ "appearance-none"
+    assert result =~ "border-0"
+    assert result =~ "cursor-pointer"
   end
 
   test "renders content with popover-menu class" do

@@ -94,8 +94,8 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
         id={"#{@popover_id}-trigger"}
         type="button"
         popovertarget={@popover_id}
-        style={"anchor-name: #{@anchor_name}; appearance: none; background: none; border: none; padding: 0; margin: 0; cursor: pointer; display: inline-flex; font: inherit; color: inherit;"}
-        class={trigger[:class]}
+        style={"anchor-name: #{@anchor_name}"}
+        class={["appearance-none bg-transparent border-0 p-0 m-0 cursor-pointer inline-flex text-inherit", trigger[:class]]}
         aria-haspopup="menu"
         aria-expanded="false"
         aria-controls={@popover_id}

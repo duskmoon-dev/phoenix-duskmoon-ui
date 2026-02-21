@@ -42,6 +42,7 @@ defmodule PhoenixDuskmoon.Component.Layout.BottomSheet do
     doc: "comma-separated snap point heights in percentages (e.g., \"25,50,100\")"
   )
 
+  attr(:label, :string, default: nil, doc: "Accessible label for the sheet (aria-label)")
   attr(:rest, :global)
   slot(:header, doc: "Header content above the drag handle")
   slot(:inner_block, doc: "Main sheet content")
@@ -55,6 +56,8 @@ defmodule PhoenixDuskmoon.Component.Layout.BottomSheet do
       persistent={@persistent}
       snap-points={@snap_points}
       class={@class}
+      role="dialog"
+      aria-label={@label}
       {@rest}
     >
       <div :if={@header != []} slot="header">

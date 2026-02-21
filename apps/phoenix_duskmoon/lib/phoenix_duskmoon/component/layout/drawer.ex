@@ -47,6 +47,7 @@ defmodule PhoenixDuskmoon.Component.Layout.Drawer do
 
   attr(:modal, :boolean, default: false, doc: "Show backdrop overlay and trap focus")
   attr(:width, :string, default: nil, doc: "Custom CSS width (e.g., '360px', '30vw')")
+  attr(:label, :string, default: nil, doc: "Accessible label for the drawer (aria-label)")
   attr(:rest, :global)
 
   slot(:header, doc: "Drawer header content")
@@ -62,6 +63,8 @@ defmodule PhoenixDuskmoon.Component.Layout.Drawer do
       modal={@modal}
       width={@width}
       class={@class}
+      role="complementary"
+      aria-label={@label}
       {@rest}
     >
       <span :if={@header != []} slot="header">
