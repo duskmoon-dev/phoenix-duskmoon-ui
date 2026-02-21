@@ -10,7 +10,7 @@ defmodule PhoenixDuskmoon.Mixfile do
     [
       app: :phoenix_duskmoon,
       version: @version,
-      elixir: "~> 1.12",
+      elixir: "~> 1.15",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
