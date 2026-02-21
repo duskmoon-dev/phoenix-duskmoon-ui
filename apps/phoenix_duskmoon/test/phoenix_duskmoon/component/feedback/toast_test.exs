@@ -235,4 +235,14 @@ defmodule PhoenixDuskmoon.Component.Feedback.ToastTest do
       assert result =~ "mb-2"
     end
   end
+
+  test "passes through global attributes" do
+    result =
+      render_component(&dm_toast_container/1, %{
+        inner_block: [%{__slot__: :inner_block, inner_block: fn _, _ -> "content" end}],
+        "data-testid": "my-toast"
+      })
+
+    assert result =~ ~s[data-testid="my-toast"]
+  end
 end

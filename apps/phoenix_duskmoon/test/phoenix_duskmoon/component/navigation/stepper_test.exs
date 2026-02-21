@@ -301,4 +301,9 @@ defmodule PhoenixDuskmoon.Component.Navigation.StepperTest do
       assert result =~ "Review"
     end
   end
+
+  test "passes through global attributes" do
+    result = render_component(&dm_stepper/1, %{step: basic_steps(), "data-testid": "my-stepper"})
+    assert result =~ ~s[data-testid="my-stepper"]
+  end
 end

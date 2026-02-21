@@ -3811,4 +3811,18 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
       refute result =~ ~s(aria-label="Password strength")
     end
   end
+
+  test "passes through global attributes" do
+    result =
+      render_component(&dm_input/1, %{
+        type: "text",
+        name: "user",
+        id: "user-input",
+        label: "User",
+        value: "",
+        "data-testid": "my-input"
+      })
+
+    assert result =~ ~s[data-testid="my-input"]
+  end
 end

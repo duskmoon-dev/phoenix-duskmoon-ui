@@ -247,4 +247,9 @@ defmodule PhoenixDuskmoon.Component.Navigation.NestedMenuTest do
       assert result =~ "Settings"
     end
   end
+
+  test "passes through global attributes" do
+    result = render_component(&dm_nested_menu/1, %{item: basic_items(), "data-testid": "my-menu"})
+    assert result =~ ~s[data-testid="my-menu"]
+  end
 end

@@ -308,4 +308,14 @@ defmodule PhoenixDuskmoon.Component.Layout.DrawerTest do
     assert result =~ "Full Footer"
     assert result =~ "Full Body"
   end
+
+  test "passes through global attributes" do
+    result =
+      render_component(&dm_drawer/1, %{
+        inner_block: [inner_block("content")],
+        "data-testid": "my-drawer"
+      })
+
+    assert result =~ ~s[data-testid="my-drawer"]
+  end
 end

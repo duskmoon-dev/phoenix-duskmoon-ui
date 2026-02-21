@@ -302,4 +302,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AccordionTest do
     assert result =~ "multiple"
     assert result =~ ~s(value="first")
   end
+
+  test "passes through global attributes" do
+    result =
+      render_component(&dm_accordion/1, %{
+        item: [item("s1", "Sec", "Content")],
+        "data-testid": "my-accordion"
+      })
+
+    assert result =~ ~s[data-testid="my-accordion"]
+  end
 end

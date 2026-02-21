@@ -429,4 +429,15 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CollapseTest do
       assert result =~ "space-y-2"
     end
   end
+
+  test "passes through global attributes" do
+    result =
+      render_component(&dm_collapse/1, %{
+        trigger: basic_trigger(),
+        content: basic_content(),
+        "data-testid": "my-collapse"
+      })
+
+    assert result =~ ~s[data-testid="my-collapse"]
+  end
 end

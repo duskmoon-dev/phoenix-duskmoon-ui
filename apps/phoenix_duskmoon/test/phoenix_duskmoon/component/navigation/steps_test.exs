@@ -282,4 +282,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.StepsTest do
     assert result =~ "<el-dm-stepper"
     assert result =~ "Only Step"
   end
+
+  test "passes through global attributes" do
+    result =
+      render_component(&dm_steps/1, %{
+        steps: [%{label: "Step 1"}],
+        "data-testid": "my-steps"
+      })
+
+    assert result =~ ~s[data-testid="my-steps"]
+  end
 end
