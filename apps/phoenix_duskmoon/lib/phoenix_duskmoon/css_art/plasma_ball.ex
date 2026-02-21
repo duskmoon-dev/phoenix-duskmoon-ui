@@ -89,7 +89,7 @@ defmodule PhoenixDuskmoon.CssArt.PlasmaBall do
       </div>
 
       <!-- Toggle switch -->
-      <input type="checkbox" class="switcher" aria-label={@toggle_label} phx-target={@phx_target} />
+      <input type="checkbox" class="switcher" aria-label={@toggle_label} />
 
       <!-- Glass ball with effects -->
       <div class="glassball" aria-hidden="true">

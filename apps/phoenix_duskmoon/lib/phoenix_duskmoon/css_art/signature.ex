@@ -27,8 +27,7 @@ defmodule PhoenixDuskmoon.CssArt.Signature do
         id="signature-3"
         content="★"
         size="small"
-        color="#gold"
-        use_star={true}
+        color="#daa520"
       />
 
   ## Attributes

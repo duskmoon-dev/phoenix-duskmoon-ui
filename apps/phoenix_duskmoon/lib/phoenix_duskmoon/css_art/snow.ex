@@ -114,7 +114,7 @@ defmodule PhoenixDuskmoon.CssArt.Snow do
           opacity: 1;
         }
         100% {
-          transform: translateY(calc(100vh + 100px)) translateX(#{:rand.uniform(40) - 20}px);
+          transform: translateY(calc(100vh + 100px));
           opacity: 0;
         }
       }
