@@ -17,10 +17,10 @@ defmodule Storybook.DataDisplay.Table do
         },
         slots: [
           """
-          <:caption class="text-2xl text-slate-700 py-4">Skywalker House</:caption>
+          <:caption class="text-2xl text-on-surface py-4">Skywalker House</:caption>
           """,
           """
-          <:col :let={r} label="Name" label_class="text-sky-600" class="align-top">
+          <:col :let={r} label="Name" label_class="text-info" class="align-top">
             <%= r.name %>
           </:col>
           <:col :let={r} label="Portrayal" class="align-top">
