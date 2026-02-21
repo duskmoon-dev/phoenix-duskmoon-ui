@@ -151,7 +151,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
         }
       >
         <span :if={@selected_options == [] && @placeholder} class="multi-select-placeholder">{@placeholder}</span>
-        <div :if={@selected_options != []} class="multi-select-tags">
+        <span :if={@selected_options != []} class="multi-select-tags">
           <span
             :for={opt <- @visible_tags}
             class={[
@@ -167,7 +167,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
           <span :if={@overflow_count > 0} class="multi-select-tag-overflow">
             +{@overflow_count} more
           </span>
-        </div>
+        </span>
         <span :if={@show_counter && @selected_options != []} class="multi-select-counter">
           {length(@selected_options)}
         </span>

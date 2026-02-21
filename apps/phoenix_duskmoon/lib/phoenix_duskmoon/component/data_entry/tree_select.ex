@@ -137,14 +137,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
                 {Enum.join(path, " / ")}
               </span>
             <% @multiple && @selected_labels != [] -> %>
-              <div class="tree-select-tags">
+              <span class="tree-select-tags">
                 <span :for={label <- @selected_labels} class="tree-select-tag">
                   {label}
                   <span role="button" tabindex="0" class="tree-select-tag-remove" aria-label={"Remove #{label}"}>
                     &times;
                   </span>
                 </span>
-              </div>
+              </span>
             <% @selected_labels != [] -> %>
               <span class="tree-select-value-selected">
                 {Enum.join(@selected_labels, ", ")}
