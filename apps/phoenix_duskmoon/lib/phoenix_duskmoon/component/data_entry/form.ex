@@ -337,6 +337,79 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
   end
 
   @doc """
+  Renders an inline form layout.
+
+  ## Examples
+
+      <.dm_form_inline>
+        <.dm_input field={f[:first]} label="First" />
+        <.dm_input field={f[:last]} label="Last" />
+        <.dm_btn type="submit">Go</.dm_btn>
+      </.dm_form_inline>
+
+  """
+  @doc type: :component
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
+  attr(:rest, :global)
+  slot(:inner_block, required: true)
+
+  def dm_form_inline(assigns) do
+    ~H"""
+    <div id={@id} class={["form-inline", @class]} {@rest}>
+      {render_slot(@inner_block)}
+    </div>
+    """
+  end
+
+  @doc """
+  Renders a form hint displayed above an input.
+
+  ## Examples
+
+      <.dm_form_hint>Must be at least 8 characters</.dm_form_hint>
+
+  """
+  @doc type: :component
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
+  attr(:rest, :global)
+  slot(:inner_block, required: true)
+
+  def dm_form_hint(assigns) do
+    ~H"""
+    <span id={@id} class={["form-hint", @class]} {@rest}>
+      {render_slot(@inner_block)}
+    </span>
+    """
+  end
+
+  @doc """
+  Renders a character counter for inputs.
+
+  ## Examples
+
+      <.dm_form_counter current={5} max={100} />
+      <.dm_form_counter current={150} max={100} error />
+
+  """
+  @doc type: :component
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes")
+  attr(:current, :integer, required: true, doc: "current character count")
+  attr(:max, :integer, required: true, doc: "maximum character count")
+  attr(:error, :boolean, default: false, doc: "whether to show error styling")
+  attr(:rest, :global)
+
+  def dm_form_counter(assigns) do
+    ~H"""
+    <span id={@id} class={["form-counter", @error && "form-counter-error", @class]} {@rest}>
+      {@current}/{@max}
+    </span>
+    """
+  end
+
+  @doc """
   Normalizes checkbox values for boolean fields.
   """
   def normalize_checkbox_value(value) when value in [true, "true", "1"], do: true

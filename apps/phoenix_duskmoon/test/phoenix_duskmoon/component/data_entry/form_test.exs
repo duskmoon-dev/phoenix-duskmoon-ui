@@ -876,4 +876,87 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
       assert result =~ ~s[variant="filled"]
     end
   end
+
+  describe "dm_form_inline/1" do
+    test "renders form inline with form-inline class" do
+      result =
+        render_component(&dm_form_inline/1, %{
+          inner_block: inner_block("inline content")
+        })
+
+      assert result =~ "form-inline"
+      assert result =~ "inline content"
+    end
+
+    test "renders form inline with custom id and class" do
+      result =
+        render_component(&dm_form_inline/1, %{
+          id: "inline-1",
+          class: "gap-4",
+          inner_block: inner_block("content")
+        })
+
+      assert result =~ ~s[id="inline-1"]
+      assert result =~ "gap-4"
+    end
+  end
+
+  describe "dm_form_hint/1" do
+    test "renders form hint with form-hint class" do
+      result =
+        render_component(&dm_form_hint/1, %{
+          inner_block: inner_block("Must be 8+ characters")
+        })
+
+      assert result =~ "form-hint"
+      assert result =~ "Must be 8+ characters"
+    end
+
+    test "renders form hint with custom id and class" do
+      result =
+        render_component(&dm_form_hint/1, %{
+          id: "hint-1",
+          class: "text-xs",
+          inner_block: inner_block("hint")
+        })
+
+      assert result =~ ~s[id="hint-1"]
+      assert result =~ "text-xs"
+    end
+  end
+
+  describe "dm_form_counter/1" do
+    test "renders counter with current and max" do
+      result = render_component(&dm_form_counter/1, %{current: 5, max: 100})
+
+      assert result =~ "form-counter"
+      assert result =~ "5/100"
+    end
+
+    test "renders counter with error styling" do
+      result = render_component(&dm_form_counter/1, %{current: 150, max: 100, error: true})
+
+      assert result =~ "form-counter-error"
+      assert result =~ "150/100"
+    end
+
+    test "does not render error styling by default" do
+      result = render_component(&dm_form_counter/1, %{current: 5, max: 100})
+
+      refute result =~ "form-counter-error"
+    end
+
+    test "renders counter with custom id and class" do
+      result =
+        render_component(&dm_form_counter/1, %{
+          current: 10,
+          max: 50,
+          id: "counter-1",
+          class: "mt-1"
+        })
+
+      assert result =~ ~s[id="counter-1"]
+      assert result =~ "mt-1"
+    end
+  end
 end
