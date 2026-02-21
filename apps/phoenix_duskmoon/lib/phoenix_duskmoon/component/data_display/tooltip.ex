@@ -20,7 +20,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
 
   * `content` - Tooltip text content (required)
   * `position` - Tooltip position: top, bottom, left, right (default: top)
-  * `color` - Tooltip color: primary, secondary, accent, info, success, warning, error (default: primary)
+  * `color` - Tooltip color: primary, secondary, tertiary, accent, info, success, warning, error (default: primary)
   * `open` - Force tooltip to be open
   * `class` - Additional CSS classes
 

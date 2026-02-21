@@ -18,10 +18,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Badge do
 
   ## Attributes
 
-  * `variant` - Badge color: primary, secondary, accent, info, success, warning, error, ghost, neutral (default: primary)
+  * `variant` - Badge color: primary, secondary, tertiary, accent, info, success, warning, error, ghost, neutral (default: primary)
   * `size` - Badge size: xs, sm, md, lg (default: md)
   * `outline` - Show outline style (default: false)
   * `soft` - Show soft style with muted background (default: false)
+  * `dot` - Show as a dot indicator only (default: false)
   * `class` - Additional CSS classes
 
   ## Slots
