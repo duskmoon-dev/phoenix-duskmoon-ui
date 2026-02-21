@@ -5,6 +5,12 @@
  * with duskmoon-elements custom elements.
  */
 
+/** Standard duskmoon-elements event names for automatic forwarding */
+const DM_EVENTS = [
+  "dm-click", "dm-change", "dm-input", "dm-focus", "dm-blur",
+  "dm-submit", "dm-select", "dm-close", "dm-open", "dm-toggle",
+];
+
 /**
  * WebComponentHook - Universal LiveView ↔ Custom Element bridge
  *
@@ -62,11 +68,7 @@ export const WebComponentHook = {
       this._sendListeners = null;
     }
     // Remove dm-* automatic forwarding listeners
-    const dmEvents = [
-      "dm-click", "dm-change", "dm-input", "dm-focus", "dm-blur",
-      "dm-submit", "dm-select", "dm-close", "dm-open", "dm-toggle",
-    ];
-    dmEvents.forEach((dmEvent) => {
+    DM_EVENTS.forEach((dmEvent) => {
       const listenerKey = `_dm_listener_${dmEvent}`;
       if (this[listenerKey]) {
         this.el.removeEventListener(dmEvent, this[listenerKey]);
@@ -152,23 +154,9 @@ export const WebComponentHook = {
    * When el-dm-button emits 'dm-click', it automatically calls the phx-click handler
    */
   _setupAutomaticForwarding() {
-    // Standard duskmoon-elements events to forward
-    const dmEvents = [
-      "dm-click",
-      "dm-change",
-      "dm-input",
-      "dm-focus",
-      "dm-blur",
-      "dm-submit",
-      "dm-select",
-      "dm-close",
-      "dm-open",
-      "dm-toggle",
-    ];
-
     const phxTarget = this.el.getAttribute("phx-target");
 
-    dmEvents.forEach((dmEvent) => {
+    DM_EVENTS.forEach((dmEvent) => {
       // Map dm-click -> phx-click, dm-change -> phx-change, etc.
       const phxAttr = "phx-" + dmEvent.replace("dm-", "");
       const phxEvent = this.el.getAttribute(phxAttr);
