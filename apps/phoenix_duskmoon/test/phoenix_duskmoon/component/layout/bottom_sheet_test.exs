@@ -203,6 +203,23 @@ defmodule PhoenixDuskmoon.Component.Layout.BottomSheetTest do
     end
   end
 
+  describe "dm_bottom_sheet ARIA attributes" do
+    test "renders role=dialog" do
+      result = render_component(&dm_bottom_sheet/1, %{})
+      assert result =~ ~s(role="dialog")
+    end
+
+    test "renders aria-label when label is set" do
+      result = render_component(&dm_bottom_sheet/1, %{label: "Action sheet"})
+      assert result =~ ~s(aria-label="Action sheet")
+    end
+
+    test "no aria-label when label is nil" do
+      result = render_component(&dm_bottom_sheet/1, %{})
+      refute result =~ "aria-label"
+    end
+  end
+
   describe "dm_bottom_sheet combined attrs" do
     test "renders with all attrs" do
       result =
