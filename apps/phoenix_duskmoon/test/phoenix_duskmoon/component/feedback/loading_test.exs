@@ -230,6 +230,16 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
       assert result =~ "--delay:"
     end
 
+    test "renders pre-computed --tx and --ty offsets" do
+      result = render_component(&dm_loading_ex/1, %{item_count: 3})
+
+      assert result =~ "--tx:"
+      assert result =~ "--ty:"
+      # Values should be numeric em values from pre-computed offsets
+      assert Regex.match?(~r/--tx: [\d.]+em/, result)
+      assert Regex.match?(~r/--ty: -?[\d.]+em/, result)
+    end
+
     test "renders with item_count 3 has exactly 3 nth-child rules" do
       result = render_component(&dm_loading_ex/1, %{item_count: 3})
 

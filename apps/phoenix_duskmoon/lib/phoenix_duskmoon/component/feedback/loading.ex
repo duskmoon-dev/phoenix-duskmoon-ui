@@ -128,10 +128,18 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
   attr(:rest, :global)
 
   def dm_loading_ex(assigns) do
+    item_count = max(assigns.item_count, 1)
+    size_factor = ceil(1000 * assigns.size / 21)
+
     assigns =
       assigns
-      |> assign(:random_inner, Enum.random(10_000..100_000))
-      |> assign(:item_count, max(assigns.item_count, 1))
+      |> assign_new(:random_inner, fn -> Enum.random(10_000..100_000) end)
+      |> assign(:item_count, item_count)
+      |> assign_new(:item_offsets, fn ->
+        Enum.map(0..(item_count - 1), fn _i ->
+          {Enum.random(1..size_factor) / 250, Enum.random(1..size_factor) / 125 - 2.5}
+        end)
+      end)
 
     ~H"""
     <style data-id={@random_inner}>
@@ -167,12 +175,12 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
       90%, 100% { transform: rotateZ(var(--rz, 0)) translateY(calc(var(--size, 21em) / 21 * 4)) translate(var(--tx, 0), var(--ty, 0)) scale(0); }
     }
 
-    <%= for i <- 0..(@item_count - 1) do %>
+    <%= for {i, {tx, ty}} <- Enum.zip(0..(@item_count - 1), @item_offsets) do %>
     .loader-<%= @random_inner %> i:nth-child(<%= i + 1 %>) {
       --rz: <%= i * (360 / @item_count) %>deg;
       --delay: calc(var(--duration) / <%= @item_count %> * <%= i %> - var(--duration));
-      --tx: <%= Enum.random(1..ceil(1000 * @size / 21)) / 250 %>em;
-      --ty: <%= Enum.random(1..ceil(1000 * @size / 21)) / 125 - 2.5 %>em;
+      --tx: <%= tx %>em;
+      --ty: <%= ty %>em;
       --hue: <%= i * (360 / @item_count) %>;
     }
     <% end %>
