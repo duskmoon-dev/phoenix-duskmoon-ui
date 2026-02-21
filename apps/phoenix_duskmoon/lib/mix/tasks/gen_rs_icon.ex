@@ -7,6 +7,7 @@ defmodule Mix.Tasks.PhoenixDuskmoon.GenRsIcons do
   use Mix.Task
 
   @shortdoc "Generate mdi.rs or bsi.rs file"
+  @impl Mix.Task
   def run(["mdi"]) do
     Mix.Task.run("app.start")
 

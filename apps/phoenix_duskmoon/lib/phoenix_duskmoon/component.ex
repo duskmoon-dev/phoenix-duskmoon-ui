@@ -10,6 +10,7 @@ defmodule PhoenixDuskmoon.Component do
   Generate a random id format `random-8DFBEE211780394A`
   """
 
+  @spec generate_id() :: String.t()
   def generate_id() do
     "random-#{:crypto.strong_rand_bytes(8) |> Base.encode16()}"
   end

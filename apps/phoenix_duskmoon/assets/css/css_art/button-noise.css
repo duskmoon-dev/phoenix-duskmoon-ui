@@ -8,16 +8,16 @@
       font-size: 24px;
       cursor: pointer;
       border: none;
-      --sy: 1;
-      --aps: running;
-      --op: 0;
+      --sy: 0;
+      --aps: paused;
+      --op: 1;
   
       &::after {
         content: attr(data-content);
         opacity: var(--op, 1);
         transition: opacity 0.4s;
       }
-      & > i {
+      & > span > i {
         position: absolute;
         left: var(--left, 0);
         top: 50%;

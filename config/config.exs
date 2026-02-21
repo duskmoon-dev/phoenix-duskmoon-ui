@@ -9,7 +9,10 @@ config :duskmoon_storybook_web,
 
 config :duskmoon_storybook_web, DuskmoonStorybookWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: DuskmoonStorybookWeb.ErrorView, accepts: ~w(html json), layout: false],
+  render_errors: [
+    formats: [html: DuskmoonStorybookWeb.ErrorHTML, json: DuskmoonStorybookWeb.ErrorJSON],
+    layout: false
+  ],
   pubsub_server: DuskmoonStorybook.PubSub,
   live_view: [signing_salt: "HkF5qV0r"]
 

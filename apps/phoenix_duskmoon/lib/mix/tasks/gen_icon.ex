@@ -8,6 +8,7 @@ defmodule Mix.Tasks.PhoenixDuskmoon.GenIcons do
   use Mix.Task
 
   @shortdoc "Generate PhoenixDuskmoon.MaterialDesignIcons.ex file"
+  @impl Mix.Task
   def run(_) do
     Mix.Task.run("app.start")
 
