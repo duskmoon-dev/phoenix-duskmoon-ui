@@ -416,4 +416,16 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TimelineTest do
 
     assert result =~ "my-item-class"
   end
+
+  describe "accessibility" do
+    test "timeline container has role list" do
+      result = render_component(&dm_timeline/1, %{item: timeline_items()})
+      assert result =~ ~s(role="list")
+    end
+
+    test "timeline items have role listitem" do
+      result = render_component(&dm_timeline/1, %{item: timeline_items()})
+      assert result =~ ~s(role="listitem")
+    end
+  end
 end

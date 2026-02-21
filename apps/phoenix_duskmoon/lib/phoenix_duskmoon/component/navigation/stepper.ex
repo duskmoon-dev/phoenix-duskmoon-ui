@@ -87,10 +87,12 @@ defmodule PhoenixDuskmoon.Component.Navigation.Stepper do
         @clickable && "stepper-clickable",
         @class
       ]}
+      role="list"
       {@rest}
     >
       <%= for {step, idx} <- Enum.with_index(@step) do %>
         <div
+          role="listitem"
           class={[
             "stepper-step",
             step[:active] && "stepper-step-active",

@@ -75,10 +75,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Timeline do
         @layout && "timeline-#{@layout}",
         @class
       ]}
+      role="list"
       {@rest}
     >
       <div
         :for={item <- @item}
+        role="listitem"
         class={[
           "timeline-item",
           item[:color] && "timeline-item-#{item[:color]}",

@@ -234,6 +234,16 @@ defmodule PhoenixDuskmoon.Component.Navigation.StepperTest do
       result = render_component(&dm_stepper/1, %{step: steps})
       refute result =~ "aria-current"
     end
+
+    test "stepper container has role list" do
+      result = render_component(&dm_stepper/1, %{step: basic_steps()})
+      assert result =~ ~s(role="list")
+    end
+
+    test "steps have role listitem" do
+      result = render_component(&dm_stepper/1, %{step: basic_steps()})
+      assert result =~ ~s(role="listitem")
+    end
   end
 
   describe "dm_stepper combined" do
