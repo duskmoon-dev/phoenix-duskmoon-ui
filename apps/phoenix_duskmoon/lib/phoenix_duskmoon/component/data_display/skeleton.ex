@@ -88,9 +88,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     doc: "Accessible label for the loading state"
   )
 
+  attr(:rest, :global, doc: "additional HTML attributes")
+
   def dm_skeleton_text(assigns) do
     ~H"""
-    <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_container_classes(@class)}>
+    <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_container_classes(@class)} {@rest}>
       <div :for={_i <- if(@lines > 1, do: 1..(@lines - 1), else: [])} class={build_line_classes(@line_height, "w-full", @animation)}></div>
       <div class={build_line_classes(@line_height, @last_line_width, @animation)}></div>
     </div>
@@ -133,9 +135,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     doc: "Accessible label for the loading state"
   )
 
+  attr(:rest, :global, doc: "additional HTML attributes")
+
   def dm_skeleton_avatar(assigns) do
     ~H"""
-    <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_avatar_classes(@size, @animation, @class)} />
+    <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_avatar_classes(@size, @animation, @class)} {@rest} />
     """
   end
 
@@ -180,9 +184,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     doc: "Accessible label for the loading state"
   )
 
+  attr(:rest, :global, doc: "additional HTML attributes")
+
   def dm_skeleton_card(assigns) do
     ~H"""
-    <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_card_classes(@class)}>
+    <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_card_classes(@class)} {@rest}>
       <div class="skeleton-card-content">
         <div class="skeleton-card-header">
           <.dm_skeleton_avatar :if={@show_avatar} size={@avatar_size} animation={@animation} />
@@ -248,9 +254,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     doc: "Accessible label for the loading state"
   )
 
+  attr(:rest, :global, doc: "additional HTML attributes")
+
   def dm_skeleton_table(assigns) do
     ~H"""
-    <div id={@id} aria-busy="true" aria-label={@loading_label} class={["skeleton-table", @class]}>
+    <div id={@id} aria-busy="true" aria-label={@loading_label} class={["skeleton-table", @class]} {@rest}>
       <div :if={@show_header} class="skeleton-table-row">
         <div :for={_i <- 1..@columns} class={["skeleton skeleton-table-cell", animation_class(@animation)]}></div>
       </div>
@@ -283,9 +291,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     doc: "Accessible label for the loading state"
   )
 
+  attr(:rest, :global, doc: "additional HTML attributes")
+
   def dm_skeleton_list(assigns) do
     ~H"""
-    <div id={@id} aria-busy="true" aria-label={@loading_label} class={["skeleton-list", @class]}>
+    <div id={@id} aria-busy="true" aria-label={@loading_label} class={["skeleton-list", @class]} {@rest}>
       <div :for={_i <- 1..@items} class="skeleton-list-item">
         <.dm_skeleton_avatar :if={@show_avatar} size={@avatar_size} animation={@animation} />
         <div class="skeleton-card-body">
@@ -322,6 +332,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     doc: "Accessible label for the loading state"
   )
 
+  attr(:rest, :global, doc: "additional HTML attributes")
+
   def dm_skeleton_form(assigns) do
     # Always ensure field_types is a valid list
     field_types =
@@ -349,7 +361,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     assigns = assign(assigns, :field_types, field_types)
 
     ~H"""
-    <form id={@id} aria-busy="true" aria-label={@loading_label} class={build_form_classes(@class)}>
+    <form id={@id} aria-busy="true" aria-label={@loading_label} class={build_form_classes(@class)} {@rest}>
       <div :for={field_type <- @field_types} class="form-group">
         <div class="form-label">
           <div class={build_label_classes(@animation)}></div>
@@ -382,9 +394,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     doc: "Accessible label for the loading state"
   )
 
+  attr(:rest, :global, doc: "additional HTML attributes")
+
   def dm_skeleton_comment(assigns) do
     ~H"""
-    <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_comment_container_classes(@class)}>
+    <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_comment_container_classes(@class)} {@rest}>
       <!-- Main comment -->
       <div class="skeleton-list-item">
         <.dm_skeleton_avatar size="sm" animation={@animation} />

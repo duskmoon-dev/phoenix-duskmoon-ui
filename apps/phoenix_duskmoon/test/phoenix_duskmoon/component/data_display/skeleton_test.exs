@@ -727,5 +727,40 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
 
       assert result =~ ~s[data-testid="my-skeleton"]
     end
+
+    test "renders skeleton_text with rest attributes" do
+      result = render_component(&dm_skeleton_text/1, %{"data-testid": "skel-text"})
+      assert result =~ ~s[data-testid="skel-text"]
+    end
+
+    test "renders skeleton_avatar with rest attributes" do
+      result = render_component(&dm_skeleton_avatar/1, %{"data-testid": "skel-avatar"})
+      assert result =~ ~s[data-testid="skel-avatar"]
+    end
+
+    test "renders skeleton_card with rest attributes" do
+      result = render_component(&dm_skeleton_card/1, %{"data-testid": "skel-card"})
+      assert result =~ ~s[data-testid="skel-card"]
+    end
+
+    test "renders skeleton_table with rest attributes" do
+      result = render_component(&dm_skeleton_table/1, %{"data-testid": "skel-table"})
+      assert result =~ ~s[data-testid="skel-table"]
+    end
+
+    test "renders skeleton_list with rest attributes" do
+      result = render_component(&dm_skeleton_list/1, %{"data-testid": "skel-list"})
+      assert result =~ ~s[data-testid="skel-list"]
+    end
+
+    test "renders skeleton_form with rest attributes" do
+      result = render_component(&dm_skeleton_form/1, %{"data-testid": "skel-form"})
+      assert result =~ ~s[data-testid="skel-form"]
+    end
+
+    test "renders skeleton_comment with rest attributes" do
+      result = render_component(&dm_skeleton_comment/1, %{"data-testid": "skel-comment"})
+      assert result =~ ~s[data-testid="skel-comment"]
+    end
   end
 end
