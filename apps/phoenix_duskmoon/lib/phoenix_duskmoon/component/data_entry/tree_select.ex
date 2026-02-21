@@ -25,6 +25,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
   """
   use Phoenix.Component
   import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
+  import PhoenixDuskmoon.Component.Icon.Icons
 
   @doc """
   Renders a tree select dropdown with hierarchical options.
@@ -142,7 +143,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
                 <span :for={label <- @selected_labels} class="tree-select-tag">
                   {label}
                   <span role="button" tabindex="0" class="tree-select-tag-remove" aria-label={"Remove #{label}"}>
-                    &times;
+                    <.dm_mdi name="close" class="w-3 h-3" />
                   </span>
                 </span>
               </span>
@@ -161,7 +162,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
           class="tree-select-clear"
           aria-label="Clear selection"
         >
-          &times;
+          <.dm_mdi name="close" class="w-3 h-3" />
         </span>
         <span class="tree-select-arrow"></span>
       </button>

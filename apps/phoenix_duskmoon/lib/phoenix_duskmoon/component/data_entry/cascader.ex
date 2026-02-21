@@ -27,6 +27,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
   """
   use Phoenix.Component
   import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
+  import PhoenixDuskmoon.Component.Icon.Icons
 
   @doc """
   Renders a cascader with horizontal multi-panel navigation.
@@ -146,7 +147,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
           class="cascader-clear"
           aria-label="Clear selection"
         >
-          &times;
+          <.dm_mdi name="close" class="w-3 h-3" />
         </span>
         <span class="cascader-arrow" aria-hidden="true"></span>
       </button>

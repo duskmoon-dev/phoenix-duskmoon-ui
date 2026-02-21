@@ -36,6 +36,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
   """
   use Phoenix.Component
   import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
+  import PhoenixDuskmoon.Component.Icon.Icons
 
   @doc """
   Renders a multi-select input with tags and dropdown.
@@ -162,7 +163,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
           >
             <span class="multi-select-tag-text">{opt[:label]}</span>
             <span role="button" tabindex="0" class="multi-select-tag-remove" aria-label={"Remove #{opt[:label]}"}>
-              &times;
+              <.dm_mdi name="close" class="w-3 h-3" />
             </span>
           </span>
           <span :if={@overflow_count > 0} class="multi-select-tag-overflow">
@@ -173,7 +174,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
           {length(@selected_options)}
         </span>
         <span :if={@clearable && @selected_options != []} role="button" tabindex="0" class="multi-select-clear-all" aria-label="Clear all">
-          &times;
+          <.dm_mdi name="close" class="w-3 h-3" />
         </span>
         <span class="multi-select-arrow"></span>
       </button>
