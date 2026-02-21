@@ -107,6 +107,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ListTest do
 
       result = render_component(&dm_list/1, %{item: items})
       assert result =~ "list-item-active"
+      assert result =~ ~s[aria-current="true"]
     end
 
     test "renders disabled item" do
@@ -116,6 +117,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ListTest do
 
       result = render_component(&dm_list/1, %{item: items})
       assert result =~ "list-item-disabled"
+      assert result =~ ~s[aria-disabled="true"]
     end
 
     test "renders interactive item" do
@@ -201,6 +203,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ListTest do
       result = render_component(&dm_list/1, %{item: basic_items()})
       refute result =~ "list-item-active"
       refute result =~ "list-item-disabled"
+      refute result =~ "aria-current"
+      refute result =~ "aria-disabled"
     end
   end
 

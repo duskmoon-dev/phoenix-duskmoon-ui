@@ -85,6 +85,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.List do
           item[:interactive] && "list-item-interactive",
           item[:class]
         ]}
+        aria-current={item[:active] && "true"}
         aria-disabled={item[:disabled] && "true"}
       >
         <span :if={item[:icon]} class="list-item-icon" aria-hidden="true">
