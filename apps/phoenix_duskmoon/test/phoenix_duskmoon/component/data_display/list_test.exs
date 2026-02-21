@@ -162,6 +162,106 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ListTest do
     end
   end
 
+  describe "dm_list defaults" do
+    test "no variant classes by default" do
+      result = render_component(&dm_list/1, %{item: basic_items()})
+      refute result =~ "list-bordered"
+      refute result =~ "list-compact"
+      refute result =~ "list-dense"
+      refute result =~ "list-hoverable"
+      refute result =~ "list-two-line"
+      refute result =~ "list-three-line"
+    end
+
+    test "no icon element when item has no icon" do
+      result = render_component(&dm_list/1, %{item: basic_items()})
+      refute result =~ "list-item-icon"
+    end
+
+    test "no subtitle element when item has no subtitle" do
+      result = render_component(&dm_list/1, %{item: basic_items()})
+      refute result =~ "list-item-subtitle"
+    end
+
+    test "no active or disabled classes by default" do
+      result = render_component(&dm_list/1, %{item: basic_items()})
+      refute result =~ "list-item-active"
+      refute result =~ "list-item-disabled"
+    end
+  end
+
+  describe "dm_list edge cases" do
+    test "item without title renders no title element" do
+      items = [
+        %{__slot__: :item, inner_block: fn _, _ -> "Content only" end}
+      ]
+
+      result = render_component(&dm_list/1, %{item: items})
+      assert result =~ "Content only"
+      refute result =~ "list-item-title"
+    end
+
+    test "multiple subheaders" do
+      result =
+        render_component(&dm_list/1, %{
+          subheader: [
+            %{__slot__: :subheader, inner_block: fn _, _ -> "Section A" end},
+            %{__slot__: :subheader, inner_block: fn _, _ -> "Section B" end}
+          ],
+          item: basic_items()
+        })
+
+      assert result =~ "Section A"
+      assert result =~ "Section B"
+    end
+
+    test "rest attributes pass through" do
+      result =
+        render_component(&dm_list/1, %{
+          item: basic_items(),
+          "data-testid": "my-list"
+        })
+
+      assert result =~ ~s[data-testid="my-list"]
+    end
+
+    test "combining multiple layout variants" do
+      result =
+        render_component(&dm_list/1, %{
+          bordered: true,
+          compact: true,
+          hoverable: true,
+          item: basic_items()
+        })
+
+      assert result =~ "list-bordered"
+      assert result =~ "list-compact"
+      assert result =~ "list-hoverable"
+    end
+
+    test "item with all slot attributes" do
+      items = [
+        %{
+          __slot__: :item,
+          title: "Full Item",
+          subtitle: "With everything",
+          icon: "star",
+          active: true,
+          class: "special-item",
+          inner_block: fn _, _ -> "Extra" end
+        }
+      ]
+
+      result = render_component(&dm_list/1, %{item: items})
+      assert result =~ "Full Item"
+      assert result =~ "With everything"
+      assert result =~ "list-item-icon"
+      assert result =~ "list-item-active"
+      assert result =~ "special-item"
+      assert result =~ "Extra"
+    end
+  end
+
   describe "dm_list combined" do
     test "renders with all options" do
       items = [
