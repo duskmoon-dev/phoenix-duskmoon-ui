@@ -167,7 +167,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
           >{col.label}</th>
         </tr>
       </thead>
-      <tbody :if={@stream} role="row-group" id={"@id-stream-body"} phx-update="stream">
+      <tbody :if={@stream} role="row-group" id={"#{@id}-stream-body"} phx-update="stream">
         <tr
           :for={{row_id, row} <- @data}
           role="row"

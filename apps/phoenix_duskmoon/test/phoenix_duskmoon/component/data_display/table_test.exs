@@ -444,7 +444,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
       assert result =~ "table-row-expand"
     end
 
-    test "stream body has id attribute" do
+    test "stream body has interpolated id attribute" do
       stream_data = [{"row-1", %{name: "Alice", age: 30, city: "NY"}}]
 
       result =
@@ -455,8 +455,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
         })
 
       assert result =~ ~s[phx-update="stream"]
-      # Stream body gets a generated id
-      assert result =~ "@id-stream-body"
+      assert result =~ ~s[id="my-table-stream-body"]
     end
 
     test "stream mode renders row ids from tuples" do
