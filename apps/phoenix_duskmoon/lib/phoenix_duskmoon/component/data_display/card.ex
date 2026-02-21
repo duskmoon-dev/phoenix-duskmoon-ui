@@ -132,7 +132,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
 
       <.dm_async_card :let={data} assign={@data}>
         <:title>User Profile</:title>
-        <%= data.name %>
+        {data.name}
       </.dm_async_card>
 
   """

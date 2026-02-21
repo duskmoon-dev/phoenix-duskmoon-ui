@@ -20,12 +20,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
       portrayal: "Mark Hamill (Episodes IV-IX, The Mandalorian, The Book of Boba Fett)"}
     ]}
   >
-    <:caption>Skywalker House</:catption>
-    <:col :let={r} label="Name" label_class="text-teal-600" class="text-teal-400">
-      <%= r.name %>
+    <:caption>Skywalker House</:caption>
+    <:col :let={r} label="Name" label_class="text-info" class="text-info">
+      {r.name}
     </:col>
     <:col :let={r} label="Portrayal">
-      <%= r.portrayal %>
+      {r.portrayal}
     </:col>
   </.dm_table>
   ```
@@ -101,7 +101,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
     Example
     ```heex
     <:col :let={r} label="Name">
-      <%= r.name %>
+      {r.name}
     </:col>
     ```
     """
@@ -120,7 +120,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
     ```heex
     <:expand :let={r} label="Name">
       <pre>
-        <%= r.description %>
+        {r.description}
       </pre>
     </:expand>
     ```
