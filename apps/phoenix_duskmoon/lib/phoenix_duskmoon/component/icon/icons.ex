@@ -90,7 +90,7 @@ defmodule PhoenixDuskmoon.Component.Icon.Icons do
 
     ~H"""
     <svg xmlns="http://www.w3.org/2000/svg" id={@id} class={@class} fill={@color} viewBox="0 0 24 24" aria-hidden="true" {@rest}>
-      <%= raw(@inner_svg) %>
+      {raw(@inner_svg)}
     </svg>
     """
   end
@@ -179,7 +179,7 @@ defmodule PhoenixDuskmoon.Component.Icon.Icons do
 
     ~H"""
     <svg xmlns="http://www.w3.org/2000/svg" id={@id} class={@class} fill={@color} viewBox="0 0 16 16" aria-hidden="true" {@rest}>
-      <%= raw(@inner_svg) %>
+      {raw(@inner_svg)}
     </svg>
     """
   end

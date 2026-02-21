@@ -165,16 +165,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
         </div>
 
         <div class="tree-select-options" role="tree">
-          <%= if @options == [] do %>
-            <div class="tree-select-empty">{@empty_text}</div>
-          <% else %>
-            <.render_nodes
-              nodes={@options}
-              selected_set={@selected_set}
-              expanded_set={@expanded_set}
-              multiple={@multiple}
-            />
-          <% end %>
+          <div :if={@options == []} class="tree-select-empty">{@empty_text}</div>
+          <.render_nodes
+            :if={@options != []}
+            nodes={@options}
+            selected_set={@selected_set}
+            expanded_set={@expanded_set}
+            multiple={@multiple}
+          />
         </div>
       </div>
 

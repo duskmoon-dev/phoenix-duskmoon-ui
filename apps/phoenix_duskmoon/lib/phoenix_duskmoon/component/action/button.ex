@@ -157,15 +157,14 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       </span>
       <p>{@confirm}</p>
       <div slot="footer">
-        <%= if length(@confirm_action) > 0 do %>
+        <template :if={length(@confirm_action) > 0}>
           {render_slot(@confirm_action)}
-        <% else %>
-          <form method="dialog">
-            <el-dm-button variant="primary" class={@confirm_class} {@rest}>
-              {@confirm_text}
-            </el-dm-button>
-          </form>
-        <% end %>
+        </template>
+        <form :if={length(@confirm_action) == 0} method="dialog">
+          <el-dm-button variant="primary" class={@confirm_class} {@rest}>
+            {@confirm_text}
+          </el-dm-button>
+        </form>
         <form :if={@show_cancel_action} method="dialog">
           <el-dm-button variant="ghost" class={@cancel_class}>
             {@cancel_text}

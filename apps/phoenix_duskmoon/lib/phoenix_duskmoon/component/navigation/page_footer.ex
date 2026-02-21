@@ -74,7 +74,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
       "py-20",
       @class
     ]}>
-      <%= render_slot(@inner_block) %>
+      {render_slot(@inner_block)}
       <div class={[
         "container mx-auto px-4",
         "flex flex-col",
@@ -90,13 +90,11 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
               Map.get(section, :class, "")
             ]}
           >
-            <%= if Map.get(section, :title, "") != "" do %>
-            <h4 class={["font-bold my-2", Map.get(section, :title_class, "")]}>
-              <%= Map.get(section, :title, "") %>
+            <h4 :if={Map.get(section, :title, "") != ""} class={["font-bold my-2", Map.get(section, :title_class, "")]}>
+              {Map.get(section, :title, "")}
             </h4>
-            <% end %>
             <div class={["flex flex-col", Map.get(section, :body_class, "")]}>
-              <%= render_slot(section) %>
+              {render_slot(section)}
             </div>
           </div>
           <div
@@ -106,13 +104,11 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
               Map.get(copyright, :class, "")
             ]}
           >
-            <%= if Map.get(copyright, :title, "") != "" do %>
-            <h4 class={["font-bold my-2", Map.get(copyright, :title_class, "")]}>
-              <%= Map.get(copyright, :title, "") %>
+            <h4 :if={Map.get(copyright, :title, "") != ""} class={["font-bold my-2", Map.get(copyright, :title_class, "")]}>
+              {Map.get(copyright, :title, "")}
             </h4>
-            <% end %>
             <div class={["flex flex-col", Map.get(copyright, :body_class, "")]}>
-              <%= render_slot(copyright) %>
+              {render_slot(copyright)}
             </div>
           </div>
         </div>

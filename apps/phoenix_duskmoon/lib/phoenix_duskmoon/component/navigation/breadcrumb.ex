@@ -69,11 +69,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.Breadcrumb do
         data-href={Map.get(crumb, :to)}
         aria-current={if i == length(@crumb) - 1, do: "page", else: nil}
       >
-        <%= if Map.get(crumb, :to) do %>
-          <a href={Map.get(crumb, :to)}>{render_slot(crumb)}</a>
-        <% else %>
-          {render_slot(crumb)}
-        <% end %>
+        <a :if={Map.get(crumb, :to)} href={Map.get(crumb, :to)}>{render_slot(crumb)}</a>
+        <template :if={!Map.get(crumb, :to)}>{render_slot(crumb)}</template>
       </span>
     </el-dm-breadcrumbs>
     """

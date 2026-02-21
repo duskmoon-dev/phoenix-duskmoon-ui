@@ -90,11 +90,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   def dm_skeleton_text(assigns) do
     ~H"""
     <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_container_classes(@class)}>
-      <%= if @lines > 1 do %>
-        <%= for i <- 1..(@lines - 1) do %>
-        <div class={build_line_classes(@line_height, "w-full", @animation)}></div>
-        <% end %>
-      <% end %>
+      <div :for={_i <- if(@lines > 1, do: 1..(@lines - 1), else: [])} class={build_line_classes(@line_height, "w-full", @animation)}></div>
       <div class={build_line_classes(@line_height, @last_line_width, @animation)}></div>
     </div>
     """
@@ -183,19 +179,15 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_card_classes(@class)}>
       <div class="card-body">
         <div class="flex items-start gap-4">
-          <%= if @show_avatar do %>
-            <.dm_skeleton_avatar size={@avatar_size} animation={@animation} />
-          <% end %>
+          <.dm_skeleton_avatar :if={@show_avatar} size={@avatar_size} animation={@animation} />
           <div class="flex-1">
             <div class={build_title_classes(@animation)}></div>
             <.dm_skeleton_text lines={@lines} animation={@animation} />
           </div>
         </div>
-        <%= if @show_action do %>
-          <div class="card-actions justify-end mt-4">
-            <div class={build_action_classes(@animation)}></div>
-          </div>
-        <% end %>
+        <div :if={@show_action} class="card-actions justify-end mt-4">
+          <div class={build_action_classes(@animation)}></div>
+        </div>
       </div>
     </div>
     """
@@ -255,27 +247,19 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     ~H"""
     <div id={@id} aria-busy="true" aria-label={@loading_label} class={["overflow-x-auto", @class]}>
       <table class="table">
-        <%= if @show_header do %>
-          <thead>
-            <tr>
-              <%= for _i <- 1..@columns do %>
-                <th>
-                  <div class={["skeleton", "h-4", "w-full", animation_class(@animation)]}></div>
-                </th>
-              <% end %>
-            </tr>
-          </thead>
-        <% end %>
+        <thead :if={@show_header}>
+          <tr>
+            <th :for={_i <- 1..@columns}>
+              <div class={["skeleton", "h-4", "w-full", animation_class(@animation)]}></div>
+            </th>
+          </tr>
+        </thead>
         <tbody>
-          <%= for _row <- 1..@rows do %>
-            <tr>
-              <%= for _col <- 1..@columns do %>
-                <td>
-                  <div class={["skeleton", "h-4", "w-full", animation_class(@animation)]}></div>
-                </td>
-              <% end %>
-            </tr>
-          <% end %>
+          <tr :for={_row <- 1..@rows}>
+            <td :for={_col <- 1..@columns}>
+              <div class={["skeleton", "h-4", "w-full", animation_class(@animation)]}></div>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -307,16 +291,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   def dm_skeleton_list(assigns) do
     ~H"""
     <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_list_container_classes(@class)}>
-      <%= for _i <- 1..@items do %>
-        <div class="flex items-start gap-3">
-          <%= if @show_avatar do %>
-            <.dm_skeleton_avatar size={@avatar_size} animation={@animation} />
-          <% end %>
-          <div class="flex-1">
-            <.dm_skeleton_text lines={@lines_per_item} animation={@animation} />
-          </div>
+      <div :for={_i <- 1..@items} class="flex items-start gap-3">
+        <.dm_skeleton_avatar :if={@show_avatar} size={@avatar_size} animation={@animation} />
+        <div class="flex-1">
+          <.dm_skeleton_text lines={@lines_per_item} animation={@animation} />
         </div>
-      <% end %>
+      </div>
     </div>
     """
   end
@@ -381,19 +361,15 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
     ~H"""
     <form id={@id} aria-busy="true" aria-label={@loading_label} class={build_form_classes(@class)}>
-      <%= for field_type <- @field_types do %>
-        <div class="form-group">
-          <div class="form-label">
-            <div class={build_label_classes(@animation)}></div>
-          </div>
-          <div class={build_field_classes(field_type, @animation)}></div>
+      <div :for={field_type <- @field_types} class="form-group">
+        <div class="form-label">
+          <div class={build_label_classes(@animation)}></div>
         </div>
-      <% end %>
-      <%= if @show_submit do %>
-        <div class="form-group">
-          <div class={build_submit_classes(@animation)}></div>
-        </div>
-      <% end %>
+        <div class={build_field_classes(field_type, @animation)}></div>
+      </div>
+      <div :if={@show_submit} class="form-group">
+        <div class={build_submit_classes(@animation)}></div>
+      </div>
     </form>
     """
   end
@@ -433,22 +409,18 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       </div>
 
       <!-- Replies -->
-      <%= if @show_replies > 0 do %>
-        <div class="ml-12 space-y-4">
-          <%= for _i <- 1..@show_replies do %>
-            <div class="flex gap-3">
-              <.dm_skeleton_avatar size="xs" animation={@animation} />
-              <div class="flex-1 space-y-2">
-                <div class="flex items-center gap-2">
-                  <div class={build_reply_name_classes(@animation)}></div>
-                  <div class={build_reply_meta_classes(@animation)}></div>
-                </div>
-                <.dm_skeleton_text lines={2} last_line_width="w-3/4" animation={@animation} />
-              </div>
+      <div :if={@show_replies > 0} class="ml-12 space-y-4">
+        <div :for={_i <- 1..@show_replies} class="flex gap-3">
+          <.dm_skeleton_avatar size="xs" animation={@animation} />
+          <div class="flex-1 space-y-2">
+            <div class="flex items-center gap-2">
+              <div class={build_reply_name_classes(@animation)}></div>
+              <div class={build_reply_meta_classes(@animation)}></div>
             </div>
-          <% end %>
+            <.dm_skeleton_text lines={2} last_line_width="w-3/4" animation={@animation} />
+          </div>
         </div>
-      <% end %>
+      </div>
     </div>
     """
   end

@@ -140,27 +140,24 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
         aria-expanded={to_string(@open)}
         aria-haspopup="listbox"
       >
-        <%= if @selected_options == [] do %>
-          <span :if={@placeholder} class="multi-select-placeholder">{@placeholder}</span>
-        <% else %>
-          <div class="multi-select-tags">
-            <span
-              :for={opt <- @visible_tags}
-              class={[
-                "multi-select-tag",
-                @tag_variant && "multi-select-tag-#{@tag_variant}"
-              ]}
-            >
-              <span class="multi-select-tag-text">{opt[:label]}</span>
-              <button type="button" class="multi-select-tag-remove" aria-label={"Remove #{opt[:label]}"}>
-                &times;
-              </button>
-            </span>
-            <span :if={@overflow_count > 0} class="multi-select-tag-overflow">
-              +{@overflow_count} more
-            </span>
-          </div>
-        <% end %>
+        <span :if={@selected_options == [] && @placeholder} class="multi-select-placeholder">{@placeholder}</span>
+        <div :if={@selected_options != []} class="multi-select-tags">
+          <span
+            :for={opt <- @visible_tags}
+            class={[
+              "multi-select-tag",
+              @tag_variant && "multi-select-tag-#{@tag_variant}"
+            ]}
+          >
+            <span class="multi-select-tag-text">{opt[:label]}</span>
+            <button type="button" class="multi-select-tag-remove" aria-label={"Remove #{opt[:label]}"}>
+              &times;
+            </button>
+          </span>
+          <span :if={@overflow_count > 0} class="multi-select-tag-overflow">
+            +{@overflow_count} more
+          </span>
+        </div>
         <span :if={@show_counter && @selected_options != []} class="multi-select-counter">
           {length(@selected_options)}
         </span>
@@ -186,23 +183,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
         </div>
 
         <div class="multi-select-options" role="listbox" aria-multiselectable="true">
-          <%= if @options == [] do %>
-            <div class="multi-select-empty">{@empty_text}</div>
-          <% else %>
-            <%= for {group, opts} <- @grouped_options do %>
-              <%= if group do %>
-                <div class="multi-select-group">
-                  <div class="multi-select-group-header">{group}</div>
-                  <%= for opt <- opts do %>
-                    <.render_option opt={opt} selected_set={@selected_set} />
-                  <% end %>
-                </div>
-              <% else %>
-                <%= for opt <- opts do %>
-                  <.render_option opt={opt} selected_set={@selected_set} />
-                <% end %>
-              <% end %>
-            <% end %>
+          <div :if={@options == []} class="multi-select-empty">{@empty_text}</div>
+          <%= for {group, opts} <- @grouped_options do %>
+            <div :if={group} class="multi-select-group">
+              <div class="multi-select-group-header">{group}</div>
+              <.render_option :for={opt <- opts} opt={opt} selected_set={@selected_set} />
+            </div>
+            <.render_option :for={opt <- opts} :if={!group} opt={opt} selected_set={@selected_set} />
           <% end %>
         </div>
       </div>

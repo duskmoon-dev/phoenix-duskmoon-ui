@@ -112,14 +112,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
             ]}
             href={Map.get(menu, :to, false)}
           >
-            <%= render_slot(menu) %>
+            {render_slot(menu)}
           </a>
         </div>
         <div
             :for={user_profile <- @user_profile}
             class={["flex", Map.get(user_profile, :class, "")]}
           >
-            <%= render_slot(user_profile) %>
+            {render_slot(user_profile)}
           </div>
       </div>
       <div
@@ -149,7 +149,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
             ]}
             href={Map.get(menu, :to, false)}
           >
-            <%= render_slot(menu) %>
+            {render_slot(menu)}
           </a>
           <hr />
           <div
@@ -161,7 +161,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
               Map.get(user_profile, :class, "")
             ]}
           >
-            <%= render_slot(user_profile) %>
+            {render_slot(user_profile)}
           </div>
         </div>
       </div>
@@ -194,14 +194,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
               ]}
               href={Map.get(menu, :to, false)}
             >
-              <%= render_slot(menu) %>
+              {render_slot(menu)}
             </a>
           </div>
           <div
             :for={user_profile <- @user_profile}
             class={["flex", Map.get(user_profile, :class, "")]}
           >
-            <%= render_slot(user_profile) %>
+            {render_slot(user_profile)}
           </div>
         </div>
         <div
@@ -231,7 +231,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
               ]}
               href={Map.get(menu, :to, false)}
             >
-              <%= render_slot(menu) %>
+              {render_slot(menu)}
             </a>
             <div
               :for={user_profile <- @user_profile}
@@ -242,13 +242,13 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
                 Map.get(user_profile, :class, "")
               ]}
             >
-              <%= render_slot(user_profile) %>
+              {render_slot(user_profile)}
             </div>
           </div>
         </div>
       </nav>
       <div class="flex-1 flex flex-col justify-center items-center">
-        <%= render_slot(@inner_block) %>
+        {render_slot(@inner_block)}
       </div>
     </header>
     """

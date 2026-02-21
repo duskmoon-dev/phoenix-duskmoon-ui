@@ -128,23 +128,21 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
         </button>
 
         <%= for p <- @pages do %>
-          <%= if is_binary(p) do %>
-            <span slot="page" class="pagination-ellipsis" aria-label={@ellipsis_label}>{p}</span>
-          <% else %>
-            <button
-              type="button"
-              slot="page"
-              phx-click={@update_event}
-              phx-value-current={p}
-              aria-current={if p == @page_num, do: "page", else: nil}
-              data-active={p == @page_num}
-              data-phx-link={@page_link_type}
-              data-phx-link-state="push"
-              href={page_url(@page_url, @page_url_marker, p)}
-            >
-              {p}
-            </button>
-          <% end %>
+          <span :if={is_binary(p)} slot="page" class="pagination-ellipsis" aria-label={@ellipsis_label}>{p}</span>
+          <button
+            :if={!is_binary(p)}
+            type="button"
+            slot="page"
+            phx-click={@update_event}
+            phx-value-current={p}
+            aria-current={if p == @page_num, do: "page", else: nil}
+            data-active={p == @page_num}
+            data-phx-link={@page_link_type}
+            data-phx-link-state="push"
+            href={page_url(@page_url, @page_url_marker, p)}
+          >
+            {p}
+          </button>
         <% end %>
 
         <button

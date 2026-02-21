@@ -48,9 +48,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
         <div :if={@title} class="flex items-center gap-1.5 w-full text-xs font-semibold leading-6">
           <.dm_bsi :if={@kind == :info} name="info-circle" class="w-4 h-4" />
           <.dm_bsi :if={@kind == :error} name="exclamation-circle" class="w-4 h-4" />
-          <%= @title %>
+          {@title}
         </div>
-        <div class="w-full text-xs leading-5"><%= msg %></div>
+        <div class="w-full text-xs leading-5">{msg}</div>
         <button
           :if={@close}
           type="button"

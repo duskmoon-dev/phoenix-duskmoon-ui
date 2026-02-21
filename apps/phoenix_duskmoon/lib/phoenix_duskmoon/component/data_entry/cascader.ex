@@ -120,16 +120,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
         aria-haspopup="listbox"
       >
         <span class="cascader-value">
-          <%= if @path_labels != [] do %>
-            <span class="cascader-path">
-              <%= for {label, idx} <- Enum.with_index(@path_labels) do %>
-                <span :if={idx > 0} class="cascader-path-separator">{@separator}</span>
-                <span>{label}</span>
-              <% end %>
-            </span>
-          <% else %>
-            <span :if={@placeholder} class="cascader-placeholder">{@placeholder}</span>
-          <% end %>
+          <span :if={@path_labels != []} class="cascader-path">
+            <%= for {label, idx} <- Enum.with_index(@path_labels) do %>
+              <span :if={idx > 0} class="cascader-path-separator">{@separator}</span>
+              <span>{label}</span>
+            <% end %>
+          </span>
+          <span :if={@path_labels == [] && @placeholder} class="cascader-placeholder">{@placeholder}</span>
         </span>
         <button
           :if={@clearable && @selected_path != []}
@@ -153,30 +150,27 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
         </div>
 
         <div class="cascader-panels">
-          <%= if @options == [] do %>
-            <div class="cascader-empty">{@empty_text}</div>
-          <% else %>
-            <div :for={panel <- @panels} class="cascader-panel">
-              <div :if={panel[:header]} class="cascader-panel-header">{panel[:header]}</div>
-              <div class="cascader-options">
-                <div
-                  :for={opt <- panel.options}
-                  class={[
-                    "cascader-option",
-                    opt[:selected] && "cascader-option-selected",
-                    opt[:active] && "cascader-option-active",
-                    opt[:disabled] && "cascader-option-disabled"
-                  ]}
-                  role="option"
-                  aria-selected={to_string(opt[:selected] || false)}
-                  data-value={opt[:value]}
-                >
-                  <span class="cascader-option-label">{opt[:label]}</span>
-                  <span :if={opt[:has_children]} class="cascader-option-arrow"></span>
-                </div>
+          <div :if={@options == []} class="cascader-empty">{@empty_text}</div>
+          <div :for={panel <- @panels} class="cascader-panel">
+            <div :if={panel[:header]} class="cascader-panel-header">{panel[:header]}</div>
+            <div class="cascader-options">
+              <div
+                :for={opt <- panel.options}
+                class={[
+                  "cascader-option",
+                  opt[:selected] && "cascader-option-selected",
+                  opt[:active] && "cascader-option-active",
+                  opt[:disabled] && "cascader-option-disabled"
+                ]}
+                role="option"
+                aria-selected={to_string(opt[:selected] || false)}
+                data-value={opt[:value]}
+              >
+                <span class="cascader-option-label">{opt[:label]}</span>
+                <span :if={opt[:has_children]} class="cascader-option-arrow"></span>
               </div>
             </div>
-          <% end %>
+          </div>
         </div>
       </div>
 

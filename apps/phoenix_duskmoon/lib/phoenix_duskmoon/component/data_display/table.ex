@@ -164,7 +164,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
         :for={caption <- @caption}
         id={Map.get(caption, :id, false)}
         class={Map.get(caption, :class, "")}
-      ><%= render_slot(caption) %></caption>
+      >{render_slot(caption)}</caption>
       <thead role="row-group" class="hidden md:table-header-group sticky top-0">
         <tr role="row">
           <th
@@ -176,15 +176,30 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
               if(@border, do: "border"),
               Map.get(col, :label_class, "")
             ]}
-          ><%= col.label %></th>
+          >{col.label}</th>
         </tr>
       </thead>
-      <%= if @stream do %>
-        <tbody role="row-group" id={"@id-stream-body"} phx-update="stream">
+      <tbody :if={@stream} role="row-group" id={"@id-stream-body"} phx-update="stream">
+        <tr
+          :for={{row_id, row} <- @data}
+          role="row"
+          id={row_id}
+        >
+          <td
+            :for={col <- @col}
+            data-label={col.label}
+            role="cell"
+            class={[
+              if(@border, do: "border"),
+              Map.get(col, :class, "")
+            ]}
+          >{render_slot(col, row)}</td>
+        </tr>
+      </tbody>
+      <tbody :if={!@stream} role="row-group">
+        <%= for row <- @data do %>
           <tr
-            :for={{row_id, row} <- @data}
             role="row"
-            id={row_id}
           >
             <td
               :for={col <- @col}
@@ -194,47 +209,29 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
                 if(@border, do: "border"),
                 Map.get(col, :class, "")
               ]}
-            ><%= render_slot(col, row) %></td>
+            >{render_slot(col, row)}</td>
           </tr>
-        </tbody>
-      <% else %>
-        <tbody role="row-group">
-          <%= for row <- @data do %>
-            <tr
-              role="row"
-            >
-              <td
-                :for={col <- @col}
-                data-label={col.label}
-                role="cell"
-                class={[
-                  if(@border, do: "border"),
-                  Map.get(col, :class, "")
-                ]}
-              ><%= render_slot(col, row) %></td>
-            </tr>
-            <tr
-              role="row"
+          <tr
+            role="row"
+            class={[
+              "table-row-expand",
+              Map.get(expand, :class, "")
+            ]}
+            :if={length(@expand) > 0}
+            :for={expand <- @expand}
+            id={Map.get(expand, :id, false)}
+          >
+            <td
+              colspan={max(length(@col), 1)}
+              role="cell"
               class={[
-                "table-row-expand",
-                Map.get(expand, :class, "")
+                "p-0",
+                if(@border, do: "border"),
               ]}
-              :if={length(@expand) > 0}
-              :for={expand <- @expand}
-              id={Map.get(expand, :id, false)}
-            >
-              <td
-                colspan={max(length(@col), 1)}
-                role="cell"
-                class={[
-                  "p-0",
-                  if(@border, do: "border"),
-                ]}
-              ><%= render_slot(expand, row) %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      <%  end %>
+            >{render_slot(expand, row)}</td>
+          </tr>
+        <% end %>
+      </tbody>
     </table>
     """
   end

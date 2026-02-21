@@ -110,15 +110,14 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
       class={@class}
       {@rest}
     >
-      <%= for {title, idx} <- Enum.with_index(@title) do %>
-        <span
-          id={idx == 0 && "#{@id}-title"}
-          slot="header"
-          class={Map.get(title, :class)}
-        >
-          {render_slot(title)}
-        </span>
-      <% end %>
+      <span
+        :for={{title, idx} <- Enum.with_index(@title)}
+        id={idx == 0 && "#{@id}-title"}
+        slot="header"
+        class={Map.get(title, :class)}
+      >
+        {render_slot(title)}
+      </span>
       <form :if={!@hide_close} method="dialog" slot="close">
         <el-dm-button variant="ghost" size="sm" shape="circle" aria-label={@close_label}>
           <.dm_mdi name="close" class="w-4 h-4" />

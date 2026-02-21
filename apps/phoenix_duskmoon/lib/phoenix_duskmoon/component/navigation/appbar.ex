@@ -74,14 +74,13 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
         <span class="appbar-title">{@title}</span>
       </div>
       <div class="appbar-trailing">
-        <%= for menu <- @menu do %>
-          <.dm_link
-            navigate={Map.get(menu, :to, "")}
-            class={["appbar-action w-auto px-3 rounded-md whitespace-nowrap", Map.get(menu, :class, "")]}
-          >
-            {render_slot(menu)}
-          </.dm_link>
-        <% end %>
+        <.dm_link
+          :for={menu <- @menu}
+          navigate={Map.get(menu, :to, "")}
+          class={["appbar-action w-auto px-3 rounded-md whitespace-nowrap", Map.get(menu, :class, "")]}
+        >
+          {render_slot(menu)}
+        </.dm_link>
         {render_slot(@user_profile)}
       </div>
     </header>
@@ -138,18 +137,17 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
             {@title}
           </span>
           <nav class="mx-12 hidden md:flex flex-row items-center gap-4">
-            <%= for menu <- @menu do %>
-              <a
-                class={[
-                  "appbar-nav py-2 px-6",
-                  "text-lg font-semibold leading-6 text-center",
-                  Map.get(menu, :class, "")
-                ]}
-                href={Map.get(menu, :to)}
-              >
-                {render_slot(menu)}
-              </a>
-            <% end %>
+            <a
+              :for={menu <- @menu}
+              class={[
+                "appbar-nav py-2 px-6",
+                "text-lg font-semibold leading-6 text-center",
+                Map.get(menu, :class, "")
+              ]}
+              href={Map.get(menu, :to)}
+            >
+              {render_slot(menu)}
+            </a>
           </nav>
         </div>
         <div class="appbar-trailing">

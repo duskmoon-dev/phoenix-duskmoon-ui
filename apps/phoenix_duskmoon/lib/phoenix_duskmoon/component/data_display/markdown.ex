@@ -87,7 +87,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Markdown do
       no-mermaid={@no_mermaid}
       class={@class}
       {@rest}
-    ><%= @content %></el-dm-markdown>
+    >{@content}</el-dm-markdown>
     """
   end
 end
