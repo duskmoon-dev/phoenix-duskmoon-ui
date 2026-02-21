@@ -17,7 +17,7 @@ defmodule PhoenixDuskmoon.Mixfile do
       lockfile: "../../mix.lock",
       deps: deps(),
       name: "PhoenixDuskmoon",
-      description: "Phoenix view functions for working with WebComponent",
+      description: "Duskmoon UI component library for Phoenix LiveView",
       package: package(),
       aliases: aliases(),
       docs: [

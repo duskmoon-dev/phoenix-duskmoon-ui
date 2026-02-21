@@ -14,7 +14,7 @@ defmodule PhoenixDuskmoon do
 
   Install npm packages:
 
-      npm install @duskmoon-dev/core duskmoon-elements
+      npm install @duskmoon-dev/core @duskmoon-dev/elements
 
   ## Setup in `Phoenix` project
 
