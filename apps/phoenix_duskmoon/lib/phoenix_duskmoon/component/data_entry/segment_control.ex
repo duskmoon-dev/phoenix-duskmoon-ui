@@ -46,7 +46,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControl do
 
   attr(:color, :string,
     default: nil,
-    values: [nil, "primary", "secondary", "tertiary", "accent"],
+    values: [
+      nil,
+      "primary",
+      "secondary",
+      "tertiary",
+      "accent",
+      "info",
+      "success",
+      "warning",
+      "error"
+    ],
     doc: "color variant for active item"
   )
 

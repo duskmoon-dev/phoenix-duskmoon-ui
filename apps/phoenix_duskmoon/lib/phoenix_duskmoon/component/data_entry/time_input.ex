@@ -46,7 +46,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
 
   attr(:color, :string,
     default: nil,
-    values: [nil, "primary", "secondary", "tertiary", "accent"],
+    values: [
+      nil,
+      "primary",
+      "secondary",
+      "tertiary",
+      "accent",
+      "info",
+      "success",
+      "warning",
+      "error"
+    ],
     doc: "Color variant"
   )
 
@@ -86,6 +96,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
           (@error || @errors != []) && "time-input-error",
           @class
         ]}
+        role="group"
+        aria-label="Time input"
         aria-invalid={@errors != [] && "true"}
         aria-describedby={
           (@errors != [] && @id && "#{@id}-errors") ||

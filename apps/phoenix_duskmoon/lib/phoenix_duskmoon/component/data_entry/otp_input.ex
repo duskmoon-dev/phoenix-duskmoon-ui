@@ -48,7 +48,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
 
   attr(:color, :string,
     default: nil,
-    values: [nil, "primary", "secondary", "tertiary", "accent"],
+    values: [
+      nil,
+      "primary",
+      "secondary",
+      "tertiary",
+      "accent",
+      "info",
+      "success",
+      "warning",
+      "error"
+    ],
     doc: "focus ring color"
   )
 
@@ -93,6 +103,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
         @class
       ]}
       phx-feedback-for={@name}
+      role="group"
+      aria-label={"Verification code, #{@length} digits"}
       aria-invalid={@errors != [] && "true"}
       aria-describedby={
         (@errors != [] && @id && "#{@id}-errors") ||

@@ -123,6 +123,21 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInputTest do
       assert result =~ "time-input-tertiary"
       refute result =~ "time-input-accent"
     end
+
+    test "renders info, success, warning, error colors" do
+      for color <- ~w(info success warning error) do
+        result = render_component(&dm_time_input/1, %{color: color})
+        assert result =~ "time-input-#{color}"
+      end
+    end
+  end
+
+  describe "dm_time_input role=group" do
+    test "has role group with aria-label" do
+      result = render_component(&dm_time_input/1, %{})
+      assert result =~ ~s[role="group"]
+      assert result =~ ~s[aria-label="Time input"]
+    end
   end
 
   describe "dm_time_input variant" do

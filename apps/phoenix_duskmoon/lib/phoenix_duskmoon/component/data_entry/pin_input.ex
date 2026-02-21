@@ -48,7 +48,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
 
   attr(:color, :string,
     default: nil,
-    values: [nil, "primary", "secondary", "tertiary", "accent"],
+    values: [
+      nil,
+      "primary",
+      "secondary",
+      "tertiary",
+      "accent",
+      "info",
+      "success",
+      "warning",
+      "error"
+    ],
     doc: "focus ring color"
   )
 
@@ -95,6 +105,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
         @class
       ]}
       phx-feedback-for={@name}
+      role="group"
+      aria-label={"PIN input, #{@length} digits"}
       aria-invalid={@errors != [] && "true"}
       aria-describedby={
         (@errors != [] && @id && "#{@id}-errors") ||

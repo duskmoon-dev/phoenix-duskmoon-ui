@@ -95,6 +95,26 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInputTest do
       assert result =~ "otp-input-tertiary"
       refute result =~ "otp-input-accent"
     end
+
+    test "renders info, success, warning, error colors" do
+      for color <- ~w(info success warning error) do
+        result = render_component(&dm_otp_input/1, %{color: color})
+        assert result =~ "otp-input-#{color}"
+      end
+    end
+  end
+
+  describe "dm_otp_input role=group" do
+    test "has role group with aria-label" do
+      result = render_component(&dm_otp_input/1, %{})
+      assert result =~ ~s[role="group"]
+      assert result =~ "Verification code, 6 digits"
+    end
+
+    test "aria-label reflects custom length" do
+      result = render_component(&dm_otp_input/1, %{length: 4})
+      assert result =~ "Verification code, 4 digits"
+    end
   end
 
   describe "dm_otp_input variant" do

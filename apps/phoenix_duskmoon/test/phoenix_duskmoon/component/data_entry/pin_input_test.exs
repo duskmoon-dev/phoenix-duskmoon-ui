@@ -38,7 +38,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
     end
 
     test "renders color variants" do
-      for color <- ["primary", "secondary", "tertiary"] do
+      for color <- ~w(primary secondary tertiary info success warning error) do
         result = render_component(&dm_pin_input/1, %{color: color})
         assert result =~ "pin-input-#{color}"
       end
@@ -48,6 +48,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
       result = render_component(&dm_pin_input/1, %{color: "accent"})
       assert result =~ "pin-input-tertiary"
       refute result =~ "pin-input-accent"
+    end
+
+    test "has role group with aria-label" do
+      result = render_component(&dm_pin_input/1, %{})
+      assert result =~ ~s[role="group"]
+      assert result =~ "PIN input, 4 digits"
+    end
+
+    test "aria-label reflects custom length" do
+      result = render_component(&dm_pin_input/1, %{length: 6})
+      assert result =~ "PIN input, 6 digits"
     end
 
     test "renders filled variant" do

@@ -94,6 +94,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControlTest do
       assert result =~ "segment-control-tertiary"
       refute result =~ "segment-control-accent"
     end
+
+    test "renders info, success, warning, error colors" do
+      for color <- ~w(info success warning error) do
+        result = render_component(&dm_segment_control/1, %{color: color, item: items_slot()})
+        assert result =~ "segment-control-#{color}"
+      end
+    end
   end
 
   describe "dm_segment_control variant" do
