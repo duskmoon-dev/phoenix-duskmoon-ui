@@ -22,7 +22,7 @@
     ]}
     active={assigns[:active_menu]}
   >
-    <:title class="text-slate-400 font-bold">
+    <:title class="text-on-surface-variant font-bold">
       Components
     </:title>
     <:menu>
@@ -345,14 +345,14 @@
 </main>
 
 <.dm_page_footer
-  class={["bg-gradient-to-br from-cyan-500 to-blue-500 text-slate-100"]}
+  class={["bg-primary text-primary-content"]}
 >
-  <:section title="Web Sites" body_class="text-slate-300">
+  <:section title="Web Sites" body_class="text-primary-content/70">
     <.link href="https://github.com/duskmoon-dev">Github Repos</.link>
     <.link href="https://gsmlg.org/blogs">Blog</.link>
     <.link href="https://gsmlg.org/tools">Tools</.link>
   </:section>
-  <:section title="Other Libraries" body_class="text-slate-300">
+  <:section title="Other Libraries" body_class="text-primary-content/70">
     <.link href="https://gsmlg-dev.github.io/yew-duskmoon-ui/">Yew Duskmoon UI</.link>
     <.link href="https://gsmlg-dev.github.io/lit">Web Component</.link>
     <.link href="https://gsmlg-dev.github.io/react">React Component</.link>
