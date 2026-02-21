@@ -975,6 +975,55 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
 
       assert result =~ ~s[aria-label="Ir a la pagina"]
     end
+
+    test "dm_pagination page buttons have aria-label with page number" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 30
+        })
+
+      assert result =~ ~s[aria-label="Page 1"]
+      assert result =~ ~s[aria-label="Page 2"]
+      assert result =~ ~s[aria-label="Page 3"]
+    end
+
+    test "dm_pagination renders custom page_button_label template" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 30,
+          page_button_label: "Ir a pagina {page}"
+        })
+
+      assert result =~ ~s[aria-label="Ir a pagina 1"]
+      assert result =~ ~s[aria-label="Ir a pagina 2"]
+    end
+
+    test "dm_pagination_thin current page button has aria-label" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 3,
+          page_size: 10,
+          total: 50
+        })
+
+      assert result =~ ~s[aria-label="Page 3"]
+    end
+
+    test "dm_pagination_thin renders custom page_button_label template" do
+      result =
+        render_component(&dm_pagination_thin/1, %{
+          page_num: 2,
+          page_size: 10,
+          total: 50,
+          page_button_label: "Pagina {page}"
+        })
+
+      assert result =~ ~s[aria-label="Pagina 2"]
+    end
   end
 
   describe "page_url nil handling" do

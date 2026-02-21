@@ -12,6 +12,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
   use Phoenix.Component
 
   import PhoenixDuskmoon.Component.Icon.Icons
+  import PhoenixDuskmoon.Component.Helpers, only: [format_label: 2]
 
   @doc """
   Generates a pagination control.
@@ -69,6 +70,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
   attr(:ellipsis_label, :string,
     default: "More pages",
     doc: "Accessible label for ellipsis indicators"
+  )
+
+  attr(:page_button_label, :string,
+    default: "Page {page}",
+    doc: "Label template for page number buttons ({page} replaced with number)"
   )
 
   attr(:el_size, :string,
@@ -136,6 +142,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
             slot="page"
             phx-click={@update_event}
             phx-value-current={p}
+            aria-label={format_label(@page_button_label, %{"page" => p})}
             aria-current={if p == @page_num, do: "page", else: nil}
             data-active={p == @page_num}
             data-phx-link={@page_link_type}
@@ -219,6 +226,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
     doc: "Accessible label for the page jumper input"
   )
 
+  attr(:page_button_label, :string,
+    default: "Page {page}",
+    doc: "Label template for page number buttons ({page} replaced with number)"
+  )
+
   attr(:rest, :global)
 
   def dm_pagination_thin(assigns) do
@@ -255,6 +267,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
         type="button"
         phx-click={if(@loading, do: nil, else: @update_event)}
         phx-value-current={@page_num}
+        aria-label={format_label(@page_button_label, %{"page" => @page_num})}
         aria-current="page"
         class="pagination-item pagination-item-active"
       >
