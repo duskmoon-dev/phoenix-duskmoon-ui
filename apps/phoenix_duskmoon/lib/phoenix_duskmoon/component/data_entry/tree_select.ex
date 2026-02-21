@@ -75,6 +75,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
   attr(:clearable, :boolean, default: false, doc: "show clear button")
   attr(:show_path, :boolean, default: false, doc: "show selected item path in trigger")
   attr(:empty_text, :string, default: "No options available", doc: "text when no options")
+
+  attr(:search_placeholder, :string,
+    default: "Search...",
+    doc: "placeholder text for the search input"
+  )
+
+  attr(:search_label, :string,
+    default: "Search options",
+    doc: "accessible label for the search input"
+  )
+
   attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
   attr(:rest, :global)
 
@@ -172,9 +183,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
           <input
             type="text"
             class="tree-select-search-input"
-            placeholder="Search..."
+            placeholder={@search_placeholder}
             autocomplete="off"
-            aria-label="Search options"
+            aria-label={@search_label}
           />
         </div>
 

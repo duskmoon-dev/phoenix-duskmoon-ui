@@ -78,7 +78,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControl do
     attr(:disabled, :boolean)
     attr(:icon, :string)
     attr(:value, :string)
-    attr(:class, :string)
+    attr(:class, :any)
   end
 
   def dm_segment_control(assigns) do

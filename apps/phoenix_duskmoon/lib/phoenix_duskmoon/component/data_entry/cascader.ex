@@ -79,6 +79,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
   attr(:clearable, :boolean, default: false, doc: "show clear button")
   attr(:separator, :string, default: " / ", doc: "path separator in display")
   attr(:empty_text, :string, default: "No options available", doc: "text when no options")
+
+  attr(:search_placeholder, :string,
+    default: "Search...",
+    doc: "placeholder text for the search input"
+  )
+
+  attr(:search_label, :string,
+    default: "Search options",
+    doc: "accessible label for the search input"
+  )
+
   attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
   attr(:rest, :global)
 
@@ -157,9 +168,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
           <input
             type="text"
             class="cascader-search-input"
-            placeholder="Search..."
+            placeholder={@search_placeholder}
             autocomplete="off"
-            aria-label="Search options"
+            aria-label={@search_label}
           />
         </div>
 

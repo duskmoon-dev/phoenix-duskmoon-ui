@@ -46,7 +46,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
   attr(:rest, :global)
 
   slot(:menu, required: false, doc: "Appbar navigation menus") do
-    attr(:class, :string)
+    attr(:class, :any)
     attr(:to, :string)
   end
 
@@ -107,7 +107,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
   attr(:rest, :global)
 
   slot(:menu, required: false, doc: "Appbar menus") do
-    attr(:class, :string)
+    attr(:class, :any)
     attr(:to, :string)
   end
 

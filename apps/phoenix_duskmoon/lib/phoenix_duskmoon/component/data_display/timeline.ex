@@ -63,7 +63,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Timeline do
     attr(:completed, :boolean, doc: "Mark item as completed")
     attr(:active, :boolean, doc: "Mark item as the current/active item")
     attr(:loading, :boolean, doc: "Show loading animation on marker")
-    attr(:class, :string, doc: "Additional CSS classes for the item")
+    attr(:class, :any, doc: "Additional CSS classes for the item")
   end
 
   def dm_timeline(assigns) do

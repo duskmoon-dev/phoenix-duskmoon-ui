@@ -51,7 +51,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.List do
     attr(:icon, :string)
     attr(:active, :boolean)
     attr(:disabled, :boolean)
-    attr(:class, :string)
+    attr(:class, :any)
   end
 
   slot(:subheader, doc: "Optional section header")

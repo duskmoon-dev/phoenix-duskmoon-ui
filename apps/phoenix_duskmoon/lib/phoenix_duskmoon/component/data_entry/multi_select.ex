@@ -88,6 +88,27 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
 
   attr(:max_tags, :integer, default: nil, doc: "max tags to show before overflow indicator")
   attr(:empty_text, :string, default: "No options available", doc: "text when no options")
+
+  attr(:search_placeholder, :string,
+    default: "Search...",
+    doc: "placeholder text for the search input"
+  )
+
+  attr(:search_label, :string,
+    default: "Search options",
+    doc: "accessible label for the search input"
+  )
+
+  attr(:select_all_text, :string,
+    default: "Select All",
+    doc: "text for the select all action button"
+  )
+
+  attr(:deselect_all_text, :string,
+    default: "Deselect All",
+    doc: "text for the deselect all action button"
+  )
+
   attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
   attr(:rest, :global)
 
@@ -184,15 +205,15 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
           <input
             type="text"
             class="multi-select-search-input"
-            placeholder="Search..."
+            placeholder={@search_placeholder}
             autocomplete="off"
-            aria-label="Search options"
+            aria-label={@search_label}
           />
         </div>
 
         <div :if={@show_actions} class="multi-select-actions">
-          <button type="button" class="multi-select-action">Select All</button>
-          <button type="button" class="multi-select-action">Deselect All</button>
+          <button type="button" class="multi-select-action">{@select_all_text}</button>
+          <button type="button" class="multi-select-action">{@deselect_all_text}</button>
         </div>
 
         <div class="multi-select-options" role="listbox" aria-multiselectable="true" aria-labelledby={@id && "#{@id}-trigger"}>

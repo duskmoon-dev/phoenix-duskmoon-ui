@@ -65,11 +65,11 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
   attr(:rest, :global)
 
   slot :trigger, required: true, doc: "Trigger content that toggles the dropdown" do
-    attr(:class, :string)
+    attr(:class, :any)
   end
 
   slot :content, required: true, doc: "Dropdown panel content" do
-    attr(:class, :string)
+    attr(:class, :any)
   end
 
   def dm_dropdown(assigns) do

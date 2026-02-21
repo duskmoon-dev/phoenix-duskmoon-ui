@@ -72,7 +72,7 @@ defmodule PhoenixDuskmoon.Component.Action.Toggle do
     attr(:value, :string, doc: "Value for this toggle")
     attr(:icon, :string, doc: "MDI icon name")
     attr(:icon_only, :boolean, doc: "Icon-only button (no text)")
-    attr(:class, :string, doc: "Additional CSS classes")
+    attr(:class, :any, doc: "Additional CSS classes")
   end
 
   def dm_toggle_group(assigns) do

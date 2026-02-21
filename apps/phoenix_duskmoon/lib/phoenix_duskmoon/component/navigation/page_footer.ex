@@ -36,7 +36,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
     Page footer section
     """
   ) do
-    attr(:class, :string)
+    attr(:class, :any)
     attr(:title, :string)
     attr(:title_class, :string)
     attr(:body_class, :string)
@@ -48,7 +48,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
     Page footer right side copyright.
     """
   ) do
-    attr(:class, :string)
+    attr(:class, :any)
     attr(:title, :string)
     attr(:title_class, :string)
     attr(:body_class, :string)

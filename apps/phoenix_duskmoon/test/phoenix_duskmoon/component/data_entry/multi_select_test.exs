@@ -165,6 +165,20 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       assert result =~ ~s(aria-label="Search options")
     end
 
+    test "custom search_placeholder" do
+      result =
+        render_component(&dm_multi_select/1, %{searchable: true, search_placeholder: "Buscar..."})
+
+      assert result =~ ~s(placeholder="Buscar...")
+    end
+
+    test "custom search_label" do
+      result =
+        render_component(&dm_multi_select/1, %{searchable: true, search_label: "Buscar opciones"})
+
+      assert result =~ ~s(aria-label="Buscar opciones")
+    end
+
     test "no search input by default" do
       result = render_component(&dm_multi_select/1, %{})
       refute result =~ "multi-select-search"
@@ -176,6 +190,19 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       assert result =~ "multi-select-action"
       assert result =~ "Select All"
       assert result =~ "Deselect All"
+    end
+
+    test "custom action button text" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          show_actions: true,
+          select_all_text: "Tout sélectionner",
+          deselect_all_text: "Tout désélectionner"
+        })
+
+      assert result =~ "Tout sélectionner"
+      assert result =~ "Tout désélectionner"
+      refute result =~ "Select All"
     end
 
     test "no actions by default" do
