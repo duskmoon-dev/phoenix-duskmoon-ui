@@ -103,7 +103,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
         phx-disconnected={JS.add_class("toast-open", to: "#disconnected")}
         phx-connected={JS.remove_class("toast-open", to: "#disconnected")}
       >
-        {@reconnecting_text} <.dm_bsi name="arrow-repeat" class="inline ml-1 w-3 h-3 animate-spin" />
+        {@reconnecting_text} <.dm_bsi name="arrow-repeat" class="inline ml-1 w-3 h-3 animate-spin" aria-hidden="true" />
       </.dm_flash>
     </div>
     """

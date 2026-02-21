@@ -103,7 +103,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
       {@rest}
     >
       <div :if={@show_total} class="flex items-center gap-1 text-sm text-on-surface-variant">
-        <.dm_mdi name="view-dashboard" class="w-5 h-5" />
+        <.dm_mdi name="view-dashboard" class="w-5 h-5" aria-hidden="true" />
         <code>{@total}</code>
       </div>
       <el-dm-pagination
@@ -235,7 +235,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
       {@rest}
     >
       <div :if={@show_total} class="pagination-info">
-        <.dm_mdi name="view-dashboard" class="w-5 h-5" />
+        <.dm_mdi name="view-dashboard" class="w-5 h-5" aria-hidden="true" />
         <code>{@total}</code>
       </div>
       <button

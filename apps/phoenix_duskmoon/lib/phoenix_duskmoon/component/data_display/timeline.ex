@@ -96,6 +96,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Timeline do
             :if={item[:icon]}
             name={item[:icon]}
             class="timeline-marker-icon"
+            aria-hidden="true"
           />
           <span :if={!item[:icon]} class="timeline-marker-dot" aria-hidden="true" />
         </div>

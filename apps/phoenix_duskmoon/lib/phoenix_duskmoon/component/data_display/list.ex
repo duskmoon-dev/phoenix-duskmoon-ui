@@ -87,7 +87,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.List do
         ]}
         aria-disabled={item[:disabled] && "true"}
       >
-        <span :if={item[:icon]} class="list-item-icon">
+        <span :if={item[:icon]} class="list-item-icon" aria-hidden="true">
           <.dm_mdi name={item[:icon]} class="w-6 h-6" />
         </span>
         <div class="list-item-content">
