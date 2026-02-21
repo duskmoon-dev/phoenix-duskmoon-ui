@@ -41,6 +41,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
       <.dm_tooltip content="Warning" position="bottom" color="warning">Hover me</.dm_tooltip>
   """
   @doc type: :component
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:content, :string, required: true, doc: "tooltip text content")
 
   attr(:position, :string,
@@ -62,10 +63,21 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
   slot(:inner_block, required: true)
 
   def dm_tooltip(assigns) do
-    assigns = assign(assigns, :color, css_color(assigns.color))
+    assigns =
+      assigns
+      |> assign(:color, css_color(assigns.color))
+      |> assign_new(:rid, fn -> Enum.random(0..999_999) end)
+
+    tooltip_id =
+      if assigns[:id] && assigns[:id] != false,
+        do: "#{assigns[:id]}-tooltip",
+        else: "tooltip-#{assigns.rid}"
+
+    assigns = assign(assigns, :tooltip_id, tooltip_id)
 
     ~H"""
     <div
+      id={@id}
       class={[
         "tooltip",
         "tooltip-#{@position}",
@@ -74,10 +86,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
         @class
       ]}
       data-tip={@content}
+      aria-describedby={@tooltip_id}
       {@rest}
     >
       {render_slot(@inner_block)}
-      <span class="sr-only" role="tooltip">{@content}</span>
+      <span id={@tooltip_id} class="sr-only" role="tooltip">{@content}</span>
     </div>
     """
   end

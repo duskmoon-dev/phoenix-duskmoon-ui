@@ -370,6 +370,18 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
     assert result =~ "Screen reader text"
   end
 
+  test "tooltip span has id and wrapper has aria-describedby linking to it" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        content: "Linked tooltip",
+        id: "my-tip",
+        inner_block: inner_block()
+      })
+
+    assert result =~ ~s[aria-describedby="my-tip-tooltip"]
+    assert result =~ ~s[id="my-tip-tooltip"]
+  end
+
   test "role=tooltip is on hidden span, not on wrapper div" do
     result =
       render_component(&dm_tooltip/1, %{
@@ -379,7 +391,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
 
     # The wrapper div should NOT have role="tooltip"
     # role="tooltip" should only be on the sr-only span
-    [wrapper | _] = String.split(result, "<span class=\"sr-only\"")
+    [wrapper | _] = String.split(result, "class=\"sr-only\"")
     refute wrapper =~ ~s[role="tooltip"]
   end
 end
