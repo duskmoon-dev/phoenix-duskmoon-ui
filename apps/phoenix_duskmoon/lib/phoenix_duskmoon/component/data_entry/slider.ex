@@ -99,7 +99,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
           {@rest}
         />
       </div>
-      <div :if={@show_value} class="flex justify-between text-xs mt-1 opacity-60">
+      <div :if={@show_value} class="slider-labels">
         <span>{@min}</span>
         <span>{@max}</span>
       </div>

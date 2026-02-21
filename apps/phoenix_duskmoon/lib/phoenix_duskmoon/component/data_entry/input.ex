@@ -435,7 +435,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           />
           <span class="text-sm text-[var(--color-on-surface-variant)]">{@max}</span>
         </div>
-        <div class="flex justify-between text-xs text-[var(--color-on-surface-variant)]">
+        <div class="slider-labels">
           <span>{@min}</span>
           <span class="font-medium text-[var(--color-on-surface)]">{@value || @min}</span>
           <span>{@max}</span>
@@ -668,7 +668,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <.dm_mdi name="magnify" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-on-surface-variant)] pointer-events-none" />
         </div>
         <div :if={length(@suggestions) > 0} class="dropdown dropdown-open">
-          <ul class="dropdown-content menu p-2 shadow bg-[var(--color-surface)] rounded-lg w-full">
+          <ul class="dropdown-content menu w-full">
             <li :for={suggestion <- @suggestions}>
               <button type="button">
                 {suggestion}
@@ -894,7 +894,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           </div>
           <span class="text-sm text-[var(--color-on-surface-variant)]">{@max}</span>
         </div>
-        <div class="flex justify-between text-xs text-[var(--color-on-surface-variant)]">
+        <div class="slider-labels">
           <span>{@min}</span>
           <span class="font-medium text-[var(--color-on-surface)]">{@min_val} - {@max_val}</span>
           <span>{@max}</span>

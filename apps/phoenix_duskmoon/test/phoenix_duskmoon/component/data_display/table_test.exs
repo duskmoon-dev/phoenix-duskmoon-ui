@@ -347,13 +347,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
       assert result =~ ~s[phx-update="stream"]
     end
 
-    test "column headers have font-bold class" do
+    test "column headers render as th elements (upstream .table th provides font-weight)" do
       result =
         render_component(&TestComponent.render/1, %{
           data: @test_data
         })
 
-      assert result =~ "font-bold"
+      assert result =~ "<th"
+      assert result =~ ~s[role="columnheader"]
     end
 
     test "table rows have role row attribute" do

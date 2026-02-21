@@ -125,7 +125,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
     # Label still renders
     assert result =~ "Volume"
     # Min/max labels should not render
-    refute result =~ "flex justify-between text-xs"
+    refute result =~ "slider-labels"
   end
 
   test "renders slider with custom wrapper class" do

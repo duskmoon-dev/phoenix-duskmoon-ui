@@ -156,10 +156,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
             :for={col <- @col}
             role="columnheader"
             scope="col"
-            class={[
-              "font-bold",
-              Map.get(col, :label_class, "")
-            ]}
+            class={Map.get(col, :label_class, "")}
           >{col.label}</th>
         </tr>
       </thead>
