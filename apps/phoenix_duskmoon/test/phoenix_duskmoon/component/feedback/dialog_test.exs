@@ -441,4 +441,18 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
     assert result =~ "Primary Title"
     assert result =~ "Subtitle"
   end
+
+  describe "dialog_label i18n" do
+    test "custom dialog_label when no title" do
+      result =
+        render_component(&dm_modal/1, %{
+          id: "dl",
+          body: body(),
+          dialog_label: "Dialogue"
+        })
+
+      assert result =~ ~s[aria-label="Dialogue"]
+      refute result =~ ~s[aria-label="Dialog"]
+    end
+  end
 end

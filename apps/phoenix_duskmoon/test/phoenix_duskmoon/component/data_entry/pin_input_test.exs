@@ -393,4 +393,37 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
 
     assert result =~ ~s[data-testid="my-pin"]
   end
+
+  describe "i18n label templates" do
+    test "default group_label contains length" do
+      result = render_component(&dm_pin_input/1, %{length: 4})
+      assert result =~ ~s(aria-label="PIN input, 4 digits")
+    end
+
+    test "custom group_label template" do
+      result =
+        render_component(&dm_pin_input/1, %{length: 4, group_label: "Code PIN, {length} chiffres"})
+
+      assert result =~ ~s(aria-label="Code PIN, 4 chiffres")
+      refute result =~ "PIN input"
+    end
+
+    test "default digit_label contains index and length" do
+      result = render_component(&dm_pin_input/1, %{length: 4})
+      assert result =~ ~s(aria-label="PIN digit 1 of 4")
+      assert result =~ ~s(aria-label="PIN digit 4 of 4")
+    end
+
+    test "custom digit_label template" do
+      result =
+        render_component(&dm_pin_input/1, %{
+          length: 3,
+          digit_label: "Chiffre {index} sur {length}"
+        })
+
+      assert result =~ ~s(aria-label="Chiffre 1 sur 3")
+      assert result =~ ~s(aria-label="Chiffre 3 sur 3")
+      refute result =~ "PIN digit"
+    end
+  end
 end

@@ -68,6 +68,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
   attr(:class, :any, default: nil, doc: "additional CSS classes")
+
+  attr(:group_label, :string,
+    default: "Rating: {value} out of {max}",
+    doc: "Accessible label for the rating group. Use {value} and {max} (i18n)"
+  )
+
+  attr(:item_label, :string,
+    default: "Rate {index} out of {max}",
+    doc: "Accessible label template for each star button. Use {index} and {max} (i18n)"
+  )
+
   attr(:rest, :global)
 
   def dm_rating(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -102,7 +113,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
           @class
         ]}
         role="group"
-        aria-label={"Rating: #{@safe_value} out of #{@max}"}
+        aria-label={format_label(@group_label, %{"value" => @safe_value, "max" => @max})}
         aria-disabled={@disabled && "true"}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={
@@ -116,7 +127,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
           :for={i <- 1..@max}
           type="button"
           class={["rating-item", i <= @safe_value && "filled"]}
-          aria-label={"Rate #{i} out of #{@max}"}
+          aria-label={format_label(@item_label, %{"index" => i, "max" => @max})}
           aria-pressed={to_string(i <= @safe_value)}
           disabled={@disabled || @readonly}
           tabindex={if(@readonly || @disabled, do: "-1", else: "0")}
@@ -130,5 +141,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
       </div>
     </div>
     """
+  end
+
+  defp format_label(template, vars) do
+    Enum.reduce(vars, template, fn {key, val}, acc ->
+      String.replace(acc, "{#{key}}", to_string(val))
+    end)
   end
 end

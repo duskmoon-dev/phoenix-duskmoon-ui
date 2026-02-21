@@ -85,6 +85,18 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
   attr(:label_class, :any, default: nil, doc: "additional CSS classes for the label")
   attr(:helper, :string, default: nil, doc: "helper text below the input")
   attr(:error_message, :string, default: nil, doc: "error message below the input")
+
+  attr(:group_label, :string,
+    default: "Verification code, {length} digits",
+    doc:
+      "Accessible fallback label when no label attr is set. Use {length} for the digit count (i18n)"
+  )
+
+  attr(:digit_label, :string,
+    default: "Digit {index} of {length}",
+    doc: "Accessible label template for each input field. Use {index} and {length} (i18n)"
+  )
+
   attr(:rest, :global)
 
   def dm_otp_input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -114,7 +126,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
       phx-feedback-for={@name}
       role="group"
       aria-labelledby={@label && @id && "#{@id}-label"}
-      aria-label={!@label && "Verification code, #{@length} digits"}
+      aria-label={!@label && format_label(@group_label, %{"length" => @length})}
       aria-disabled={@disabled && "true"}
       aria-invalid={@errors != [] && "true"}
       aria-describedby={
@@ -147,7 +159,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
           disabled={@disabled}
           name={@name && "#{@name}[#{i}]"}
           value={Enum.at(@value_chars, i - 1)}
-          aria-label={"Digit #{i} of #{@length}"}
+          aria-label={format_label(@digit_label, %{"index" => i, "length" => @length})}
         />
       </div>
       <span :if={@error_message && @errors == []} id={@id && "#{@id}-error-message"} class="helper-text helper-text-error">{@error_message}</span>
@@ -157,6 +169,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
       <span :if={@helper && !@error_message && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
     </div>
     """
+  end
+
+  defp format_label(template, vars) do
+    Enum.reduce(vars, template, fn {key, val}, acc ->
+      String.replace(acc, "{#{key}}", to_string(val))
+    end)
   end
 
   defp split_value(nil, _length), do: []

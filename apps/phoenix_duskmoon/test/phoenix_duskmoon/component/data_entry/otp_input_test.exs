@@ -461,4 +461,40 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInputTest do
 
     assert result =~ ~s[data-testid="my-otp"]
   end
+
+  describe "i18n label templates" do
+    test "default group_label contains length" do
+      result = render_component(&dm_otp_input/1, %{length: 6})
+      assert result =~ ~s(aria-label="Verification code, 6 digits")
+    end
+
+    test "custom group_label template" do
+      result =
+        render_component(&dm_otp_input/1, %{
+          length: 6,
+          group_label: "Code de vérification, {length} chiffres"
+        })
+
+      assert result =~ ~s(aria-label="Code de vérification, 6 chiffres")
+      refute result =~ "Verification code"
+    end
+
+    test "default digit_label contains index and length" do
+      result = render_component(&dm_otp_input/1, %{length: 6})
+      assert result =~ ~s(aria-label="Digit 1 of 6")
+      assert result =~ ~s(aria-label="Digit 6 of 6")
+    end
+
+    test "custom digit_label template" do
+      result =
+        render_component(&dm_otp_input/1, %{
+          length: 4,
+          digit_label: "Chiffre {index} sur {length}"
+        })
+
+      assert result =~ ~s(aria-label="Chiffre 1 sur 4")
+      assert result =~ ~s(aria-label="Chiffre 4 sur 4")
+      refute result =~ "Digit 1 of"
+    end
+  end
 end

@@ -396,4 +396,38 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RatingTest do
 
     assert result =~ ~s[data-testid="my-rating"]
   end
+
+  describe "i18n label templates" do
+    test "default group_label contains value and max" do
+      result = render_component(&dm_rating/1, %{value: 3, max: 5})
+      assert result =~ ~s(aria-label="Rating: 3 out of 5")
+    end
+
+    test "custom group_label template" do
+      result =
+        render_component(&dm_rating/1, %{
+          value: 3,
+          max: 5,
+          group_label: "Note : {value} sur {max}"
+        })
+
+      assert result =~ ~s(aria-label="Note : 3 sur 5")
+      refute result =~ "Rating: 3"
+    end
+
+    test "default item_label contains index and max" do
+      result = render_component(&dm_rating/1, %{value: 0, max: 5})
+      assert result =~ ~s(aria-label="Rate 1 out of 5")
+      assert result =~ ~s(aria-label="Rate 5 out of 5")
+    end
+
+    test "custom item_label template" do
+      result =
+        render_component(&dm_rating/1, %{value: 0, max: 3, item_label: "Noter {index} sur {max}"})
+
+      assert result =~ ~s(aria-label="Noter 1 sur 3")
+      assert result =~ ~s(aria-label="Noter 3 sur 3")
+      refute result =~ "Rate 1"
+    end
+  end
 end

@@ -102,6 +102,11 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   attr(:cancel_class, :any, default: nil, doc: "CSS class for cancel button")
   attr(:show_cancel_action, :boolean, default: true, doc: "Show cancel button in dialog")
 
+  attr(:confirm_dialog_label, :string,
+    default: "Confirmation",
+    doc: "Accessible fallback label for confirm dialog when no title is set (i18n)"
+  )
+
   attr(:rest, :global,
     include: ~w(phx-click phx-target phx-value-id phx-disable-with name value type form),
     doc: "Additional HTML attributes"
@@ -157,7 +162,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       role="dialog"
       aria-modal="true"
       aria-labelledby={@confirm_title != "" && "confirm-dialog-#{@id}-title"}
-      aria-label={@confirm_title == "" && "Confirmation"}
+      aria-label={@confirm_title == "" && @confirm_dialog_label}
     >
       <span id={"confirm-dialog-#{@id}-title"} slot="header" :if={@confirm_title != ""}>
         {@confirm_title}

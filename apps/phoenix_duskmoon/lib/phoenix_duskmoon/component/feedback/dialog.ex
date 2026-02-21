@@ -71,6 +71,12 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
   )
 
   attr(:close_label, :string, default: "Close", doc: "Accessible label for the close button")
+
+  attr(:dialog_label, :string,
+    default: "Dialog",
+    doc: "Accessible fallback label when no title slot is provided (i18n)"
+  )
+
   attr(:rest, :global)
 
   slot(:trigger, doc: "Element that opens the modal") do
@@ -101,7 +107,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
       role="dialog"
       aria-modal="true"
       aria-labelledby={@title != [] && "#{@id}-title"}
-      aria-label={@title == [] && "Dialog"}
+      aria-label={@title == [] && @dialog_label}
       position={@position}
       size={@size}
       backdrop={@backdrop && "blur"}

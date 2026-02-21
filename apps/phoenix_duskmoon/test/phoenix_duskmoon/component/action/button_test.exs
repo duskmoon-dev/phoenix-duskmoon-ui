@@ -615,4 +615,18 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
 
     assert result =~ ~s[type="button"]
   end
+
+  describe "confirm_dialog_label i18n" do
+    test "custom confirm_dialog_label" do
+      result =
+        render_component(&dm_btn/1, %{
+          confirm: "Are you sure?",
+          confirm_dialog_label: "Bestätigung",
+          inner_block: %{inner_block: fn _, _ -> "Delete" end}
+        })
+
+      assert result =~ ~s[aria-label="Bestätigung"]
+      refute result =~ ~s[aria-label="Confirmation"]
+    end
+  end
 end
