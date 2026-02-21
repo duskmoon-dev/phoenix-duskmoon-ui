@@ -85,6 +85,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
     """
   )
 
+  attr(:rest, :global, doc: "additional HTML attributes for the table element")
+
   attr(:stream, :boolean,
     default: false,
     doc: "stream data"
@@ -159,6 +161,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
         if(@compact, do: "table-compact"),
         @class,
       ]}
+      {@rest}
     >
       <caption
         :for={caption <- @caption}

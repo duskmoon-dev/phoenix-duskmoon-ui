@@ -699,4 +699,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
       assert result =~ ~s[animate-pulse]
     end
   end
+
+  describe "rest attributes" do
+    test "renders skeleton with rest attributes" do
+      result = render_component(&dm_skeleton/1, %{"data-testid": "my-skeleton"})
+
+      assert result =~ ~s[data-testid="my-skeleton"]
+    end
+  end
 end

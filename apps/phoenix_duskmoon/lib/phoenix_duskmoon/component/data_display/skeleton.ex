@@ -39,6 +39,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   attr(:width, :string, default: nil, doc: "Custom width (e.g., 'w-32', 'w-full')")
   attr(:height, :string, default: nil, doc: "Custom height (e.g., 'h-4', 'h-8')")
   attr(:loading_label, :string, default: "Loading", doc: "Accessible label for the loading state")
+  attr(:rest, :global, doc: "additional HTML attributes")
 
   def dm_skeleton(assigns) do
     ~H"""
@@ -47,6 +48,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       aria-busy="true"
       aria-label={@loading_label}
       class={build_skeleton_classes(@variant, @size, @animation, @width, @height, @class)}
+      {@rest}
     />
     """
   end

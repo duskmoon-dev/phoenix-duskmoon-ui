@@ -32,6 +32,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
     attr(:col_classes, :boolean, default: false)
     attr(:empty, :boolean, default: false)
     attr(:num_cols, :integer, default: 2)
+    attr(:data_testid, :string, default: nil)
 
     def render(assigns) do
       ~H"""
@@ -46,6 +47,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
         size={@size}
         compact={@compact}
         stream={@stream}
+        data-testid={@data_testid}
       >
         <:caption :if={@with_caption} id={@caption_id} class={@caption_class}>Test Caption</:caption>
         <:col :let={row} label="Name" label_class={if(@col_classes, do: "text-primary")} class={if(@col_classes, do: "font-bold")}>
@@ -580,6 +582,18 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
 
       scope_count = length(String.split(result, ~s[scope="col"])) - 1
       assert scope_count == 3
+    end
+  end
+
+  describe "rest attributes" do
+    test "renders table with rest attributes" do
+      result =
+        render_component(&TestComponent.render/1, %{
+          data: @test_data,
+          data_testid: "my-table"
+        })
+
+      assert result =~ ~s[data-testid="my-table"]
     end
   end
 end

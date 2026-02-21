@@ -36,6 +36,7 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
   attr(:auto_label, :string, default: "Auto", doc: "Label for the auto/default theme option")
   attr(:light_label, :string, default: "Sunshine", doc: "Label for the light theme option")
   attr(:dark_label, :string, default: "Moonlight", doc: "Label for the dark theme option")
+  attr(:rest, :global, doc: "additional HTML attributes")
 
   def dm_theme_switcher(assigns) do
     assigns =
@@ -51,6 +52,7 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
       class={["theme-controller-dropdown theme-controller-dropdown-end", @class]}
       phx-hook="ThemeSwitcher"
       data-theme={@theme}
+      {@rest}
     >
       <summary class="theme-controller-trigger" aria-label={@select_theme_label} aria-haspopup="true">
         {@button_text}

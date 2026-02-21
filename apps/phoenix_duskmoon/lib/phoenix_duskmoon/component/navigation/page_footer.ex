@@ -65,6 +65,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
     """
   )
 
+  attr(:rest, :global, doc: "additional HTML attributes for the footer element")
+
   def dm_page_footer(assigns) do
     ~H"""
 
@@ -73,7 +75,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
       "flex flex-col",
       "py-20",
       @class
-    ]}>
+    ]} {@rest}>
       {render_slot(@inner_block)}
       <div class={[
         "container mx-auto px-4",

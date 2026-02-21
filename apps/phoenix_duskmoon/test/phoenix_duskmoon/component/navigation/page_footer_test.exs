@@ -379,4 +379,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooterTest do
 
     assert result =~ "min-h-fit"
   end
+
+  test "renders with rest attributes" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: [],
+        "data-testid": "footer-test"
+      })
+
+    assert result =~ ~s[data-testid="footer-test"]
+  end
 end

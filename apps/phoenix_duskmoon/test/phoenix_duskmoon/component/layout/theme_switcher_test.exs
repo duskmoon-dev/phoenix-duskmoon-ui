@@ -207,4 +207,10 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcherTest do
     assert result =~ "theme-controller-label"
     assert result =~ "theme-controller-menu"
   end
+
+  test "renders with rest attributes" do
+    result = render_component(&dm_theme_switcher/1, %{"data-testid": "theme-test"})
+
+    assert result =~ ~s[data-testid="theme-test"]
+  end
 end

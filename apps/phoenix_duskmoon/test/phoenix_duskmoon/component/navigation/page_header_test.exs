@@ -406,4 +406,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeaderTest do
     # Checkboxes should be accessible to screen readers
     refute Regex.match?(~r/<input[^>]*aria-hidden/, result)
   end
+
+  test "renders with rest attributes" do
+    result =
+      render_component(&dm_page_header/1, %{
+        inner_block: inner_block(),
+        "data-testid": "header-test"
+      })
+
+    assert result =~ ~s[data-testid="header-test"]
+  end
 end

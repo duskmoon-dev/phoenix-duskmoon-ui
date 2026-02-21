@@ -82,6 +82,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
     doc: "Hero or body content rendered inside the header area"
   )
 
+  attr(:rest, :global, doc: "additional HTML attributes for the header element")
+
   def dm_page_header(assigns) do
     ~H"""
     <nav
@@ -175,6 +177,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
       ]}
       phx-hook="PageHeader"
       data-nav-id={@nav_id}
+      {@rest}
     >
       <nav aria-label={@nav_label} class={["w-full h-12", "flex items-center flex-none"]}>
         <div
