@@ -944,7 +944,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         </div>
         <div class="flex items-center gap-2">
           <div
-            class="flex-1 h-2 bg-[var(--color-surface-container-low)] rounded-full overflow-hidden"
+            class={[
+              "progress flex-1",
+              @strength == "weak" && "progress-error",
+              @strength == "medium" && "progress-warning",
+              @strength == "strong" && "progress-success"
+            ]}
             role="progressbar"
             aria-valuenow={strength_value(@strength)}
             aria-valuemin="0"
@@ -952,12 +957,15 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             aria-label="Password strength"
           >
             <div
-              class={[
-                "h-full transition-all duration-300",
-                @strength == "weak" && "bg-error w-1/3",
-                @strength == "medium" && "bg-warning w-2/3",
-                @strength == "strong" && "bg-success w-full"
-              ]}
+              class="progress-bar"
+              style={
+                cond do
+                  @strength == "weak" -> "width: 33%"
+                  @strength == "medium" -> "width: 67%"
+                  @strength == "strong" -> "width: 100%"
+                  true -> "width: 0%"
+                end
+              }
             />
           </div>
           <span class={[

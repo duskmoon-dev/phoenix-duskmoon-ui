@@ -1840,7 +1840,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
         })
 
       assert result =~ "Weak"
-      assert result =~ "bg-error"
+      assert result =~ "progress-error"
     end
 
     test "renders medium strength for moderate password" do
@@ -1853,7 +1853,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
         })
 
       assert result =~ "Medium"
-      assert result =~ "bg-warning"
+      assert result =~ "progress-warning"
     end
 
     test "renders strong strength for complex password" do
@@ -1866,7 +1866,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
         })
 
       assert result =~ "Strong"
-      assert result =~ "bg-success"
+      assert result =~ "progress-success"
     end
 
     test "renders eye toggle button" do
