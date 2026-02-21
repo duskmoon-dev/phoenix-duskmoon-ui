@@ -56,6 +56,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
   attr(:helper, :string, default: nil, doc: "helper text displayed below the textarea")
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:disabled, :boolean, default: false, doc: "disables the textarea")
+  attr(:horizontal, :boolean, default: false, doc: "horizontal layout (label beside input)")
+
+  attr(:state, :string,
+    default: nil,
+    values: [nil, "success", "warning"],
+    doc: "validation state (applies form-group-success/warning)"
+  )
+
   attr(:readonly, :boolean, default: false, doc: "makes the textarea read-only")
   attr(:required, :boolean, default: false, doc: "marks the textarea as required")
   attr(:maxlength, :integer, default: nil, doc: "maximum character count")
@@ -81,7 +89,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div class={["form-group", @disabled && "form-group-disabled", @class]} phx-feedback-for={@name}>
+    <div class={[
+      "form-group",
+      @horizontal && "form-group-horizontal",
+      @disabled && "form-group-disabled",
+      @state && "form-group-#{@state}",
+      @class
+    ]} phx-feedback-for={@name}>
       <label :if={@label} for={@id} class={["form-label", @label_class]}>
         <span>{@label}</span>
       </label>

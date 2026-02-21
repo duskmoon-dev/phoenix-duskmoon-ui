@@ -61,6 +61,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
   attr(:helper, :string, default: nil, doc: "helper text displayed below the select")
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:disabled, :boolean, default: false, doc: "disables the select")
+  attr(:horizontal, :boolean, default: false, doc: "horizontal layout (label beside input)")
+
+  attr(:state, :string,
+    default: nil,
+    values: [nil, "success", "warning"],
+    doc: "validation state (applies form-group-success/warning)"
+  )
+
   attr(:multiple, :boolean, default: false, doc: "allow multiple selections")
   attr(:class, :string, default: nil, doc: "additional CSS classes for the wrapper")
   attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
@@ -81,7 +89,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div class={["form-group", @disabled && "form-group-disabled", @class]} phx-feedback-for={@name}>
+    <div class={[
+      "form-group",
+      @horizontal && "form-group-horizontal",
+      @disabled && "form-group-disabled",
+      @state && "form-group-#{@state}",
+      @class
+    ]} phx-feedback-for={@name}>
       <label :if={@label} for={@id} class={["form-label", @label_class]}>
         <span>{@label}</span>
       </label>

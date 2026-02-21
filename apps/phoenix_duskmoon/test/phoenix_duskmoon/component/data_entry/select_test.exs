@@ -575,4 +575,68 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
       assert result =~ "is required"
     end
   end
+
+  describe "horizontal layout" do
+    test "renders select with form-group-horizontal" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "country",
+          value: nil,
+          horizontal: true,
+          label: "Country",
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ "form-group-horizontal"
+    end
+
+    test "does not render form-group-horizontal by default" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "country",
+          value: nil,
+          options: [{"us", "USA"}]
+        })
+
+      refute result =~ "form-group-horizontal"
+    end
+  end
+
+  describe "validation state" do
+    test "renders select with form-group-success" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "country",
+          value: "us",
+          state: "success",
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ "form-group-success"
+    end
+
+    test "renders select with form-group-warning" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "country",
+          value: "us",
+          state: "warning",
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ "form-group-warning"
+    end
+
+    test "does not render state class by default" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "country",
+          value: nil,
+          options: [{"us", "USA"}]
+        })
+
+      refute result =~ "form-group-success"
+      refute result =~ "form-group-warning"
+    end
+  end
 end

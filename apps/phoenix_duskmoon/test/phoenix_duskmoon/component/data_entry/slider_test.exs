@@ -480,4 +480,47 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
       assert result =~ "is out of range"
     end
   end
+
+  describe "horizontal layout" do
+    test "renders slider with form-group-horizontal" do
+      result =
+        render_component(&dm_slider/1, %{
+          name: "vol",
+          value: 50,
+          horizontal: true,
+          label: "Volume"
+        })
+
+      assert result =~ "form-group-horizontal"
+    end
+
+    test "does not render form-group-horizontal by default" do
+      result = render_component(&dm_slider/1, %{name: "vol", value: 50})
+
+      refute result =~ "form-group-horizontal"
+    end
+  end
+
+  describe "validation state" do
+    test "renders slider with form-group-success" do
+      result =
+        render_component(&dm_slider/1, %{name: "vol", value: 50, state: "success"})
+
+      assert result =~ "form-group-success"
+    end
+
+    test "renders slider with form-group-warning" do
+      result =
+        render_component(&dm_slider/1, %{name: "vol", value: 50, state: "warning"})
+
+      assert result =~ "form-group-warning"
+    end
+
+    test "does not render state class by default" do
+      result = render_component(&dm_slider/1, %{name: "vol", value: 50})
+
+      refute result =~ "form-group-success"
+      refute result =~ "form-group-warning"
+    end
+  end
 end

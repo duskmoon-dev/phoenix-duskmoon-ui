@@ -44,6 +44,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "slider size")
   attr(:disabled, :boolean, default: false, doc: "disables the slider")
+  attr(:horizontal, :boolean, default: false, doc: "horizontal layout (label beside input)")
+
+  attr(:state, :string,
+    default: nil,
+    values: [nil, "success", "warning"],
+    doc: "validation state (applies form-group-success/warning)"
+  )
+
   attr(:vertical, :boolean, default: false, doc: "render as a vertical slider")
   attr(:show_value, :boolean, default: true, doc: "show the current value and min/max labels")
   attr(:class, :string, default: nil, doc: "additional CSS classes for the wrapper")
@@ -63,7 +71,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div class={["form-group", @disabled && "form-group-disabled", @class]} phx-feedback-for={@name}>
+    <div class={[
+      "form-group",
+      @horizontal && "form-group-horizontal",
+      @disabled && "form-group-disabled",
+      @state && "form-group-#{@state}",
+      @class
+    ]} phx-feedback-for={@name}>
       <div :if={@label} class="flex items-center justify-between mb-2">
         <label for={@id} class={["form-label", @label_class]}>
           {@label}

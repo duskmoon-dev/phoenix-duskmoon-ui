@@ -449,4 +449,47 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
       assert result =~ "is too short"
     end
   end
+
+  describe "horizontal layout" do
+    test "renders textarea with form-group-horizontal" do
+      result =
+        render_component(&dm_textarea/1, %{
+          name: "notes",
+          value: nil,
+          horizontal: true,
+          label: "Notes"
+        })
+
+      assert result =~ "form-group-horizontal"
+    end
+
+    test "does not render form-group-horizontal by default" do
+      result = render_component(&dm_textarea/1, %{name: "notes", value: nil})
+
+      refute result =~ "form-group-horizontal"
+    end
+  end
+
+  describe "validation state" do
+    test "renders textarea with form-group-success" do
+      result =
+        render_component(&dm_textarea/1, %{name: "notes", value: "ok", state: "success"})
+
+      assert result =~ "form-group-success"
+    end
+
+    test "renders textarea with form-group-warning" do
+      result =
+        render_component(&dm_textarea/1, %{name: "notes", value: "hmm", state: "warning"})
+
+      assert result =~ "form-group-warning"
+    end
+
+    test "does not render state class by default" do
+      result = render_component(&dm_textarea/1, %{name: "notes", value: nil})
+
+      refute result =~ "form-group-success"
+      refute result =~ "form-group-warning"
+    end
+  end
 end
