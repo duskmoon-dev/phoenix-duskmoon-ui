@@ -57,6 +57,7 @@ defmodule PhoenixDuskmoon.Component.Layout.BottomSheet do
       snap-points={@snap_points}
       class={@class}
       role="dialog"
+      aria-modal={@modal && "true"}
       aria-label={@label}
       {@rest}
     >

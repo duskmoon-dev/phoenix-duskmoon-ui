@@ -63,7 +63,8 @@ defmodule PhoenixDuskmoon.Component.Layout.Drawer do
       modal={@modal}
       width={@width}
       class={@class}
-      role="complementary"
+      role={if @modal, do: "dialog", else: "complementary"}
+      aria-modal={@modal && "true"}
       aria-label={@label}
       {@rest}
     >
