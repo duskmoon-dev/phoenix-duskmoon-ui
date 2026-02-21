@@ -73,8 +73,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
     doc: "validation state (applies form-group-success/warning)"
   )
 
+  attr(:disabled, :boolean, default: false, doc: "disables the input")
+
   attr(:rest, :global,
-    include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength
+    include: ~w(accept autocomplete capture cols form list max maxlength min minlength
                 multiple pattern placeholder readonly required rows size step)
   )
 
@@ -95,6 +97,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
     <div class={[
       "form-group",
       @horizontal && "form-group-horizontal",
+      @disabled && "form-group-disabled",
       @errors != [] && "form-group-error",
       @state && "form-group-#{@state}",
       @class
@@ -112,6 +115,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
           "select-#{@color}"
         ]}
         multiple={@multiple}
+        disabled={@disabled}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={
           (@errors != [] && @id && "#{@id}-errors") ||
@@ -138,6 +142,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
       class={[
         "form-group",
         @horizontal && "form-group-horizontal",
+        @disabled && "form-group-disabled",
         @errors != [] && "form-group-error",
         @state && "form-group-#{@state}",
         @class
@@ -152,6 +157,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
         name={@name}
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+        disabled={@disabled}
         class={[
           "input",
           @variant && "input-#{@variant}",

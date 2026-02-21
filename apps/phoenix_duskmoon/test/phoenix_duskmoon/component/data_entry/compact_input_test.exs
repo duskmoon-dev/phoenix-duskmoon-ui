@@ -212,6 +212,18 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
       })
 
     assert result =~ "disabled"
+    assert result =~ "form-group-disabled"
+  end
+
+  test "renders compact input without disabled styling when not disabled" do
+    result =
+      render_component(&dm_compact_input/1, %{
+        name: "user",
+        label: "User",
+        value: nil
+      })
+
+    refute result =~ "form-group-disabled"
   end
 
   test "renders compact input with readonly attribute" do
