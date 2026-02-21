@@ -3918,6 +3918,21 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
       assert result =~ ~s(aria-label="Sécurité du mot de passe")
       refute result =~ ~s(aria-label="Password strength")
     end
+
+    test "custom strength level labels (i18n)" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "password",
+          type: "password_strength",
+          value: "abc",
+          strength_label_weak: "Faible",
+          strength_label_medium: "Moyen",
+          strength_label_strong: "Fort"
+        })
+
+      assert result =~ "Faible"
+      refute result =~ "Weak"
+    end
   end
 
   test "passes through global attributes" do

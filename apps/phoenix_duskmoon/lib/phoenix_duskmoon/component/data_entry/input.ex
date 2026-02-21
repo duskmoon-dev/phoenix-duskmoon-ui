@@ -151,6 +151,21 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     doc: "accessible label for the password strength progressbar (i18n)"
   )
 
+  attr(:strength_label_weak, :string,
+    default: "Weak",
+    doc: "visible label for weak password strength (i18n)"
+  )
+
+  attr(:strength_label_medium, :string,
+    default: "Medium",
+    doc: "visible label for medium password strength (i18n)"
+  )
+
+  attr(:strength_label_strong, :string,
+    default: "Strong",
+    doc: "visible label for strong password strength (i18n)"
+  )
+
   attr(:remove_file_label, :string,
     default: "Remove file",
     doc: "accessible label for the remove file button in file_upload type"
@@ -1055,7 +1070,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             @strength == "medium" && "text-warning",
             @strength == "strong" && "text-success"
           ]}>
-            {String.capitalize(@strength)}
+            {strength_label(@strength, @strength_label_weak, @strength_label_medium, @strength_label_strong)}
           </span>
         </div>
         <div class="text-xs text-on-surface-variant">
@@ -1108,6 +1123,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   defp strength_value("medium"), do: 66
   defp strength_value("strong"), do: 100
   defp strength_value(_), do: 0
+
+  defp strength_label("weak", weak, _medium, _strong), do: weak
+  defp strength_label("medium", _weak, medium, _strong), do: medium
+  defp strength_label("strong", _weak, _medium, strong), do: strong
+  defp strength_label(_, _weak, _medium, _strong), do: ""
 
   defp calculate_password_strength(password) do
     cond do
