@@ -137,14 +137,15 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
           </span>
           <span :if={@path_labels == [] && @placeholder} class="cascader-placeholder">{@placeholder}</span>
         </span>
-        <button
+        <span
           :if={@clearable && @selected_path != []}
-          type="button"
+          role="button"
+          tabindex="0"
           class="cascader-clear"
           aria-label="Clear selection"
         >
           &times;
-        </button>
+        </span>
         <span class="cascader-arrow" aria-hidden="true"></span>
       </button>
 

@@ -91,6 +91,7 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
     <div class={@class} {@rest}>
       <button
         :for={trigger <- @trigger}
+        type="button"
         popovertarget={@popover_id}
         style={"anchor-name: #{@anchor_name}; appearance: none; background: none; border: none; padding: 0; margin: 0; cursor: pointer; display: inline-flex; font: inherit; color: inherit;"}
         class={trigger[:class]}

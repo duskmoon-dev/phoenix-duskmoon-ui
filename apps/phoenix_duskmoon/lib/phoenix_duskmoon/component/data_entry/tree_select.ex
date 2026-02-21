@@ -139,9 +139,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
               <div class="tree-select-tags">
                 <span :for={label <- @selected_labels} class="tree-select-tag">
                   {label}
-                  <button type="button" class="tree-select-tag-remove" aria-label={"Remove #{label}"}>
+                  <span role="button" tabindex="0" class="tree-select-tag-remove" aria-label={"Remove #{label}"}>
                     &times;
-                  </button>
+                  </span>
                 </span>
               </div>
             <% @selected_labels != [] -> %>
@@ -152,14 +152,15 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
               <span :if={@placeholder} class="tree-select-placeholder">{@placeholder}</span>
           <% end %>
         </span>
-        <button
+        <span
           :if={@clearable && @selected != []}
-          type="button"
+          role="button"
+          tabindex="0"
           class="tree-select-clear"
           aria-label="Clear selection"
         >
           &times;
-        </button>
+        </span>
         <span class="tree-select-arrow"></span>
       </button>
 

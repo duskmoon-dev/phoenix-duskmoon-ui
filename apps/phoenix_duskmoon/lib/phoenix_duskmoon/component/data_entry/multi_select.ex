@@ -159,9 +159,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
             ]}
           >
             <span class="multi-select-tag-text">{opt[:label]}</span>
-            <button type="button" class="multi-select-tag-remove" aria-label={"Remove #{opt[:label]}"}>
+            <span role="button" tabindex="0" class="multi-select-tag-remove" aria-label={"Remove #{opt[:label]}"}>
               &times;
-            </button>
+            </span>
           </span>
           <span :if={@overflow_count > 0} class="multi-select-tag-overflow">
             +{@overflow_count} more
@@ -170,9 +170,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
         <span :if={@show_counter && @selected_options != []} class="multi-select-counter">
           {length(@selected_options)}
         </span>
-        <button :if={@clearable && @selected_options != []} type="button" class="multi-select-clear-all" aria-label="Clear all">
+        <span :if={@clearable && @selected_options != []} role="button" tabindex="0" class="multi-select-clear-all" aria-label="Clear all">
           &times;
-        </button>
+        </span>
         <span class="multi-select-arrow"></span>
       </button>
 

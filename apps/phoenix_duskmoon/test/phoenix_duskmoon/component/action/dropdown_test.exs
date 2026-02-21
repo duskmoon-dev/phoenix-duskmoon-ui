@@ -354,4 +354,15 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
 
     assert result =~ ~s[aria-controls="ctrl-test-popover"]
   end
+
+  test "trigger button has type=button" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        id: "btn-type",
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ ~s[type="button"]
+  end
 end
