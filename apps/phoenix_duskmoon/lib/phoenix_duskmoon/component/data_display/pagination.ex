@@ -143,7 +143,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
             phx-click={@update_event}
             phx-value-current={p}
             aria-label={format_label(@page_button_label, %{"page" => p})}
-            aria-current={if p == @page_num, do: "page", else: nil}
+            aria-current={p == @page_num && "page"}
             data-active={p == @page_num}
             data-phx-link={@page_link_type}
             data-phx-link-state="push"

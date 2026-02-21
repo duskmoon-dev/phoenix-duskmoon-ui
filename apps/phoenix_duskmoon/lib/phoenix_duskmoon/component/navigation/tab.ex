@@ -97,8 +97,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.Tab do
       orientation={@orientation}
       variant={@variant}
       size={@size}
-      active-index={if @active_tab_name == "", do: @active_tab_index, else: nil}
-      active-name={if @active_tab_name != "", do: @active_tab_name, else: nil}
+      active-index={@active_tab_name == "" && @active_tab_index}
+      active-name={@active_tab_name != "" && @active_tab_name}
       class={@class}
       {@rest}
     >

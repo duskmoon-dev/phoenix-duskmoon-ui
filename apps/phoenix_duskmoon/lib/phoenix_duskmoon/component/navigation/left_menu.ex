@@ -142,9 +142,9 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
               m[:class],
               m[:id] == @active && @active != "" && "active"
             ]}
-            tabindex={if m[:disabled], do: "-1", else: nil}
-            aria-current={if m[:id] == @active && @active != "", do: "page", else: nil}
-            aria-disabled={if m[:disabled], do: "true", else: nil}
+            tabindex={m[:disabled] && "-1"}
+            aria-current={m[:id] == @active && @active != "" && "page"}
+            aria-disabled={m[:disabled] && "true"}
           >
             {render_slot(m)}
           </.link>

@@ -67,7 +67,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Breadcrumb do
         id={crumb[:id]}
         class={crumb[:class]}
         data-href={crumb[:to]}
-        aria-current={if i == length(@crumb) - 1, do: "page", else: nil}
+        aria-current={i == length(@crumb) - 1 && "page"}
       >
         <a :if={crumb[:to]} href={crumb[:to]}>{render_slot(crumb)}</a>
         <template :if={!crumb[:to]}>{render_slot(crumb)}</template>
