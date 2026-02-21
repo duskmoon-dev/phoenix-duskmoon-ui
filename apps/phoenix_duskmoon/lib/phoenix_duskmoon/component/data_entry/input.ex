@@ -688,15 +688,19 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     ~H"""
     <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
-      <div class="flex flex-col gap-2">
-        <div class="border-2 border-dashed border-[var(--color-surface-container-high)] rounded-lg p-6 text-center hover:border-[var(--color-on-surface)] transition-colors">
-          <.dm_mdi name="cloud-upload" class="w-12 h-12 mx-auto text-[var(--color-on-surface-variant)] mb-2" />
-          <p class="text-sm text-[var(--color-on-surface-variant)] mb-2">{@drop_text}</p>
+      <div class="file-upload">
+        <div class="file-upload-dropzone">
+          <div class="file-upload-icon">
+            <.dm_mdi name="cloud-upload" />
+          </div>
+          <div class="file-upload-text">
+            <p class="file-upload-title">{@drop_text}</p>
+          </div>
           <input
             type="file"
             id={@id}
             name={@name}
-            class="hidden"
+            class="file-upload-input"
             multiple={@multiple}
             aria-invalid={@errors != [] && "true"}
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
@@ -705,20 +709,25 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <button
             type="button"
             class={[
-              "btn btn-sm",
-              @color && "btn-#{@color}",
+              "file-upload-button",
               @size && "btn-#{@size}"
             ]}
           >
             {@choose_files_text}
           </button>
         </div>
-        <div :if={@value} class="flex items-center gap-2 p-2 bg-[var(--color-surface-container-low)] rounded">
-          <.dm_mdi name="file" class="w-4 h-4" />
-          <span class="text-sm flex-1">{@value}</span>
-          <button type="button" class="btn btn-ghost btn-xs" aria-label={@remove_file_label}>
-            <.dm_mdi name="close" class="w-3 h-3" />
-          </button>
+        <div :if={@value} class="file-upload-list">
+          <div class="file-upload-item">
+            <div class="file-upload-item-icon">
+              <.dm_mdi name="file" />
+            </div>
+            <div class="file-upload-item-info">
+              <span class="file-upload-item-name">{@value}</span>
+            </div>
+            <button type="button" class="file-upload-item-remove" aria-label={@remove_file_label}>
+              <.dm_mdi name="close" />
+            </button>
+          </div>
         </div>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>

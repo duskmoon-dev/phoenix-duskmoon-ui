@@ -1514,7 +1514,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
           value: nil
         })
 
-      assert result =~ ~s[btn-primary]
+      assert result =~ "file-upload-button"
     end
 
     test "renders file upload with existing value" do
