@@ -169,7 +169,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
             aria-haspopup="true"
             aria-controls={@menu_id}
           >
-            <.dm_mdi name="menu" class="w-8 h-8" aria-hidden="true" />
+            <.dm_mdi name="menu" class="w-8 h-8" />
           </button>
         </div>
       </div>

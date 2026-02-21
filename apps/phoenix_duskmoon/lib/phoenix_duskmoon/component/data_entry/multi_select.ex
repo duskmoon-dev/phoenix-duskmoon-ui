@@ -203,7 +203,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
           >
             <span class="multi-select-tag-text">{opt[:label]}</span>
             <span role="button" tabindex="0" class="multi-select-tag-remove" aria-label={format_label(@remove_tag_label, %{"label" => opt[:label]})}>
-              <.dm_mdi name="close" class="w-3 h-3" aria-hidden="true" />
+              <.dm_mdi name="close" class="w-3 h-3" />
             </span>
           </span>
           <span :if={@overflow_count > 0} class="multi-select-tag-overflow">
@@ -214,7 +214,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
           {length(@selected_options)}
         </span>
         <span :if={@clearable && @selected_options != []} role="button" tabindex="0" class="multi-select-clear-all" aria-label={@clear_label}>
-          <.dm_mdi name="close" class="w-3 h-3" aria-hidden="true" />
+          <.dm_mdi name="close" class="w-3 h-3" />
         </span>
         <span class="multi-select-arrow"></span>
       </button>

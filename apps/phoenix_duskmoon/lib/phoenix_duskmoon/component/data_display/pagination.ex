@@ -109,7 +109,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
       {@rest}
     >
       <div :if={@show_total} class="flex items-center gap-1 text-sm text-on-surface-variant">
-        <.dm_mdi name="view-dashboard" class="w-5 h-5" aria-hidden="true" />
+        <.dm_mdi name="view-dashboard" class="w-5 h-5" />
         <code>{@total}</code>
       </div>
       <el-dm-pagination
@@ -131,7 +131,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
           href={page_url(@page_url, @page_url_marker, max(@page_num - 1, 1))}
         >
           <span class="sr-only">{@prev_label}</span>
-          <.dm_mdi name="page-previous" class="w-5 h-5" aria-hidden="true" />
+          <.dm_mdi name="page-previous" class="w-5 h-5" />
         </button>
 
         <%= for p <- @pages do %>
@@ -166,7 +166,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
           href={page_url(@page_url, @page_url_marker, min(@page_num + 1, @max_page))}
         >
           <span class="sr-only">{@next_label}</span>
-          <.dm_mdi name="page-next" class="w-5 h-5" aria-hidden="true" />
+          <.dm_mdi name="page-next" class="w-5 h-5" />
         </button>
       </el-dm-pagination>
       {render_slot(@inner_block)}
@@ -247,7 +247,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
       {@rest}
     >
       <div :if={@show_total} class="pagination-info">
-        <.dm_mdi name="view-dashboard" class="w-5 h-5" aria-hidden="true" />
+        <.dm_mdi name="view-dashboard" class="w-5 h-5" />
         <code>{@total}</code>
       </div>
       <button
@@ -260,7 +260,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
         class={["pagination-prev", @loading && "opacity-50"]}
       >
         <span class="sr-only">{@prev_label}</span>
-        <.dm_mdi name="chevron-left" class="w-5 h-5" aria-hidden="true" />
+        <.dm_mdi name="chevron-left" class="w-5 h-5" />
       </button>
 
       <button
@@ -284,11 +284,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
         class={["pagination-next", @loading && "opacity-50"]}
       >
         <span class="sr-only">{@next_label}</span>
-        <.dm_mdi name="chevron-right" class="w-5 h-5" aria-hidden="true" />
+        <.dm_mdi name="chevron-right" class="w-5 h-5" />
       </button>
 
       <div :if={@show_page_jumper} class="pagination-input">
-        <.dm_mdi name="arrow-right-top" class="w-4 h-4" aria-hidden="true" />
+        <.dm_mdi name="arrow-right-top" class="w-4 h-4" />
         <form phx-change={if(@loading, do: nil, else: @update_event)}>
           <input
             type="number"

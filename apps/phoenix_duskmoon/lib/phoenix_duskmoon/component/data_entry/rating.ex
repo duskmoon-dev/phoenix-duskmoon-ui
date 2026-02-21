@@ -133,7 +133,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
         aria-disabled={(@disabled || @readonly) && "true"}
         tabindex={if(@readonly || @disabled, do: "-1", else: "0")}
       >
-        <.dm_mdi name={@icon} class="rating-icon" aria-hidden="true" />
+        <.dm_mdi name={@icon} class="rating-icon" />
       </button>
       <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>

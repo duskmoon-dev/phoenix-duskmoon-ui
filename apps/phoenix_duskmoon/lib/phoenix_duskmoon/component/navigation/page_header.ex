@@ -133,7 +133,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
         ]}
       >
         <label for="mobile-menu" aria-label={@toggle_menu_label}>
-          <PhoenixDuskmoon.Component.Icon.Icons.dm_mdi name="menu" class="w-8 h-8 cursor-pointer" aria-hidden="true" />
+          <PhoenixDuskmoon.Component.Icon.Icons.dm_mdi name="menu" class="w-8 h-8 cursor-pointer" />
         </label>
         <input class="sr-only peer" id="mobile-menu" type="checkbox" />
         <div
@@ -218,7 +218,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
           ]}
         >
           <label for="dm-mobile-menu-control" aria-label={@toggle_menu_label}>
-            <PhoenixDuskmoon.Component.Icon.Icons.dm_mdi name="menu" class="w-8 h-8" aria-hidden="true" />
+            <PhoenixDuskmoon.Component.Icon.Icons.dm_mdi name="menu" class="w-8 h-8" />
           </label>
           <input class="sr-only peer" id="dm-mobile-menu-control" type="checkbox" />
           <div

@@ -174,7 +174,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
                 <span :for={label <- @selected_labels} class="tree-select-tag">
                   {label}
                   <span role="button" tabindex="0" class="tree-select-tag-remove" aria-label={format_label(@remove_tag_label, %{"label" => label})}>
-                    <.dm_mdi name="close" class="w-3 h-3" aria-hidden="true" />
+                    <.dm_mdi name="close" class="w-3 h-3" />
                   </span>
                 </span>
               </span>
@@ -193,7 +193,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
           class="tree-select-clear"
           aria-label={@clear_label}
         >
-          <.dm_mdi name="close" class="w-3 h-3" aria-hidden="true" />
+          <.dm_mdi name="close" class="w-3 h-3" />
         </span>
         <span class="tree-select-arrow"></span>
       </button>

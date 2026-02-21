@@ -113,7 +113,7 @@ defmodule PhoenixDuskmoon.Component.Action.Toggle do
         value={item[:value]}
         aria-pressed={to_string(item[:active] || false)}
       >
-        <.dm_mdi :if={item[:icon]} name={item[:icon]} class="toggle-icon" aria-hidden="true" />
+        <.dm_mdi :if={item[:icon]} name={item[:icon]} class="toggle-icon" />
         {render_slot(item)}
       </button>
     </div>

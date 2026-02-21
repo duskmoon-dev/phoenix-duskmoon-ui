@@ -120,7 +120,7 @@ defmodule PhoenixDuskmoon.Component.Action.Menu do
       aria-disabled={@disabled && "true"}
       {@rest}
     >
-      <.dm_mdi :if={@icon} name={@icon} class="w-5 h-5" slot="icon" aria-hidden="true" />
+      <.dm_mdi :if={@icon} name={@icon} class="w-5 h-5" slot="icon" />
       {render_slot(@inner_block)}
     </el-dm-menu-item>
     """
