@@ -72,6 +72,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
   attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
   attr(:show_seconds, :boolean, default: false, doc: "Show seconds segment")
   attr(:show_period, :boolean, default: false, doc: "Show AM/PM toggle")
+  attr(:label, :string, default: "Time input", doc: "Accessible label for the time input group")
+  attr(:am_label, :string, default: "AM", doc: "Label for the AM period button (i18n)")
+  attr(:pm_label, :string, default: "PM", doc: "Label for the PM period button (i18n)")
   attr(:rest, :global)
 
   def dm_time_input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -99,7 +102,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
           @class
         ]}
         role="group"
-        aria-label="Time input"
+        aria-label={@label}
         aria-disabled={@disabled && "true"}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={
@@ -144,8 +147,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
           />
         </div>
         <div :if={@show_period} class="time-input-period">
-          <button type="button" class="time-input-period-btn" disabled={@disabled}>AM</button>
-          <button type="button" class="time-input-period-btn" disabled={@disabled}>PM</button>
+          <button type="button" class="time-input-period-btn" disabled={@disabled}>{@am_label}</button>
+          <button type="button" class="time-input-period-btn" disabled={@disabled}>{@pm_label}</button>
         </div>
       </div>
       <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>

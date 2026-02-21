@@ -77,6 +77,20 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInputTest do
       assert result =~ "AM"
       assert result =~ "PM"
     end
+
+    test "renders custom AM/PM labels for i18n" do
+      result =
+        render_component(&dm_time_input/1, %{
+          show_period: true,
+          am_label: "上午",
+          pm_label: "下午"
+        })
+
+      assert result =~ "上午"
+      assert result =~ "下午"
+      refute result =~ ">AM<"
+      refute result =~ ">PM<"
+    end
   end
 
   describe "dm_time_input sizes" do
@@ -137,6 +151,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInputTest do
       result = render_component(&dm_time_input/1, %{})
       assert result =~ ~s[role="group"]
       assert result =~ ~s[aria-label="Time input"]
+    end
+
+    test "renders custom group label" do
+      result = render_component(&dm_time_input/1, %{label: "Departure time"})
+      assert result =~ ~s[aria-label="Departure time"]
     end
   end
 
