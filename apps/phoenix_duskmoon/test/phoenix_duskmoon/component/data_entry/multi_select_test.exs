@@ -425,7 +425,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
           errors: []
         })
 
-      refute result =~ "helper-text text-error"
+      refute result =~ "helper-text helper-text-error"
     end
 
     test "shows error state from errors list even without error boolean" do

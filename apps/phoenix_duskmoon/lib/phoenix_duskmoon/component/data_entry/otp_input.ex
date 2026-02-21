@@ -138,7 +138,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
           aria-label={"Digit #{i} of #{@length}"}
         />
       </div>
-      <span :if={@error_message && @errors == []} id={@id && "#{@id}-error-message"} class="helper-text text-error">{@error_message}</span>
+      <span :if={@error_message && @errors == []} id={@id && "#{@id}-error-message"} class="helper-text helper-text-error">{@error_message}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>

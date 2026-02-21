@@ -52,7 +52,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
         })
 
       assert result =~ "Save"
-      assert result =~ "flex items-center justify-between"
+      assert result =~ "form-actions form-actions-between"
     end
 
     test "renders form without for defaults to empty form" do
@@ -106,26 +106,48 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
 
       assert result =~ "required-label"
     end
+
+    test "renders label with form-label-required class when required" do
+      result =
+        render_component(&dm_label/1, %{
+          required: true,
+          inner_block: inner_block("Email")
+        })
+
+      assert result =~ "form-label-required"
+    end
+
+    test "renders label with form-label-optional class when optional" do
+      result =
+        render_component(&dm_label/1, %{
+          optional: true,
+          inner_block: inner_block("Email")
+        })
+
+      assert result =~ "form-label-optional"
+    end
+
+    test "renders label without required/optional classes by default" do
+      result =
+        render_component(&dm_label/1, %{
+          inner_block: inner_block("Email")
+        })
+
+      refute result =~ "form-label-required"
+      refute result =~ "form-label-optional"
+    end
   end
 
   describe "dm_error/1" do
-    test "renders error with helper-text text-error class" do
+    test "renders error with upstream helper-text classes" do
       result =
         render_component(&dm_error/1, %{
           inner_block: inner_block("is required")
         })
 
-      assert result =~ "helper-text text-error"
+      assert result =~ "helper-text-error"
+      assert result =~ "helper-text-icon"
       assert result =~ "is required"
-    end
-
-    test "renders error with icon" do
-      result =
-        render_component(&dm_error/1, %{
-          inner_block: inner_block("error")
-        })
-
-      assert result =~ "flex items-center gap-1"
     end
 
     test "renders error with custom id" do
@@ -350,8 +372,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
 
       assert result =~ "Save"
       assert result =~ "Cancel"
-      # Each action gets its own flex wrapper
-      count = result |> String.split("flex items-center justify-between") |> length()
+      # Each action gets its own form-actions wrapper
+      count = result |> String.split("form-actions form-actions-between") |> length()
       assert count >= 3
     end
   end

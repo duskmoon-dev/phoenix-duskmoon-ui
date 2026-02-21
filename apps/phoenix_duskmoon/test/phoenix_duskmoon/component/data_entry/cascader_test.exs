@@ -359,7 +359,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CascaderTest do
           errors: []
         })
 
-      refute result =~ "helper-text text-error"
+      refute result =~ "helper-text helper-text-error"
     end
   end
 

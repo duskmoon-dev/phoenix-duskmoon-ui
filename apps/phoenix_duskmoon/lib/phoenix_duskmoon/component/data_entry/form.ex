@@ -64,7 +64,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
       {@rest}
     >
       {render_slot(@inner_block, f)}
-      <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
+      <div :for={action <- @actions} class="form-actions form-actions-between">
         {render_slot(action, f)}
       </div>
     </.form>
@@ -83,11 +83,18 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
   attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:for, :string, default: nil, doc: "the id of the input this label is for")
+  attr(:required, :boolean, default: false, doc: "show required indicator (*)")
+  attr(:optional, :boolean, default: false, doc: "show optional indicator")
   slot(:inner_block, required: true)
 
   def dm_label(assigns) do
     ~H"""
-    <label for={@for} id={@id} class={["form-label", @class]}>
+    <label for={@for} id={@id} class={[
+      "form-label",
+      @required && "form-label-required",
+      @optional && "form-label-optional",
+      @class
+    ]}>
       {render_slot(@inner_block)}
     </label>
     """
@@ -108,7 +115,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
 
   def dm_error(assigns) do
     ~H"""
-    <span id={@id} class={["helper-text text-error flex items-center gap-1", @class]}>
+    <span id={@id} class={["helper-text helper-text-error helper-text-icon", @class]}>
       <.dm_bsi name="exclamation-circle" class="h-3 w-3 flex-none" />
       {render_slot(@inner_block)}
     </span>
