@@ -80,7 +80,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.NestedMenu do
       aria-label={@nav_label}
       {@rest}
     >
-      <ul>
+      <ul role="list">
         <li :for={t <- @title} class="nested-menu-title">{render_slot(t)}</li>
         <li :for={item <- @item} class={[item[:disabled] && "disabled"]}>
           <a
@@ -96,7 +96,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.NestedMenu do
         <li :for={group <- @group}>
           <details open={group[:open]}>
             <summary>{group[:title]}</summary>
-            <ul>
+            <ul role="list">
               {render_slot(group)}
             </ul>
           </details>

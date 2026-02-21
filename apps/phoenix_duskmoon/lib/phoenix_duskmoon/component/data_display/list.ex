@@ -61,6 +61,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.List do
     ~H"""
     <ul
       id={@id}
+      role="list"
       class={[
         "list",
         @bordered && "list-bordered",

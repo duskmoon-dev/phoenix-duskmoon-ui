@@ -65,7 +65,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
   def dm_left_menu(assigns) do
     ~H"""
     <nav id={@id} class={@class} aria-label={@nav_label} {@rest}>
-      <ul class={[
+      <ul role="list" class={[
         "nested-menu",
         nested_menu_size(@size)
       ]}>
@@ -131,7 +131,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
       <summary class={List.first(@title)[:class]}>
         {render_slot(List.first(@title))}
       </summary>
-      <ul>
+      <ul role="list">
         <li
           :for={m <- @menu}
           class={[m[:disabled] && "disabled"]}
