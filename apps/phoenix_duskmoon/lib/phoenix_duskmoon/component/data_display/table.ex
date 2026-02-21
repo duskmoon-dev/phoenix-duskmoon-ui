@@ -156,7 +156,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
             :for={col <- @col}
             role="columnheader"
             scope="col"
-            class={Map.get(col, :label_class, "")}
+            class={Map.get(col, :label_class)}
           >{col.label}</th>
         </tr>
       </thead>
