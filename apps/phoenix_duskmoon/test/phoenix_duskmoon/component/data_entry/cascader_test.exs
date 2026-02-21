@@ -203,6 +203,18 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CascaderTest do
       refute result =~ "cascader-clear"
     end
 
+    test "renders custom clear_label for i18n" do
+      result =
+        render_component(&dm_cascader/1, %{
+          options: @cascader_options,
+          selected_path: ["asia"],
+          clearable: true,
+          clear_label: "Auswahl löschen"
+        })
+
+      assert result =~ ~s(aria-label="Auswahl löschen")
+    end
+
     test "renders empty state" do
       result = render_component(&dm_cascader/1, %{options: []})
       assert result =~ "cascader-empty"

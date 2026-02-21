@@ -246,6 +246,18 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       refute result =~ "multi-select-clear-all"
     end
 
+    test "renders custom clear_label for i18n" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          options: @options,
+          selected: ["a"],
+          clearable: true,
+          clear_label: "すべてクリア"
+        })
+
+      assert result =~ ~s(aria-label="すべてクリア")
+    end
+
     test "renders tag variant" do
       result =
         render_component(&dm_multi_select/1, %{

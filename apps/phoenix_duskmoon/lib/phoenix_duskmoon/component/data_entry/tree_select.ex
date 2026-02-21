@@ -86,6 +86,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
     doc: "accessible label for the search input"
   )
 
+  attr(:clear_label, :string,
+    default: "Clear selection",
+    doc: "accessible label for the clear button (i18n)"
+  )
+
   attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
   attr(:rest, :global)
 
@@ -171,7 +176,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
           role="button"
           tabindex="0"
           class="tree-select-clear"
-          aria-label="Clear selection"
+          aria-label={@clear_label}
         >
           <.dm_mdi name="close" class="w-3 h-3" />
         </span>

@@ -99,6 +99,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
     doc: "accessible label for the search input"
   )
 
+  attr(:clear_label, :string,
+    default: "Clear all",
+    doc: "accessible label for the clear all button (i18n)"
+  )
+
   attr(:select_all_text, :string,
     default: "Select All",
     doc: "text for the select all action button"
@@ -194,7 +199,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
         <span :if={@show_counter && @selected_options != []} class="multi-select-counter">
           {length(@selected_options)}
         </span>
-        <span :if={@clearable && @selected_options != []} role="button" tabindex="0" class="multi-select-clear-all" aria-label="Clear all">
+        <span :if={@clearable && @selected_options != []} role="button" tabindex="0" class="multi-select-clear-all" aria-label={@clear_label}>
           <.dm_mdi name="close" class="w-3 h-3" />
         </span>
         <span class="multi-select-arrow"></span>

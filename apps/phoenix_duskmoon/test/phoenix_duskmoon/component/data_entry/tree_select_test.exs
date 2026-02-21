@@ -244,6 +244,18 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
       refute result =~ "tree-select-clear"
     end
 
+    test "renders custom clear_label for i18n" do
+      result =
+        render_component(&dm_tree_select/1, %{
+          options: @flat_options,
+          selected: ["a"],
+          clearable: true,
+          clear_label: "Tout effacer"
+        })
+
+      assert result =~ ~s(aria-label="Tout effacer")
+    end
+
     test "renders path display" do
       result =
         render_component(&dm_tree_select/1, %{
