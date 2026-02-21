@@ -21,6 +21,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Steps do
   """
 
   use Phoenix.Component
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders a stepper component.
@@ -80,7 +81,4 @@ defmodule PhoenixDuskmoon.Component.Navigation.Steps do
     </el-dm-stepper>
     """
   end
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

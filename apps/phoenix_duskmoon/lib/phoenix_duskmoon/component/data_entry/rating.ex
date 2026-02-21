@@ -18,6 +18,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
 
   import PhoenixDuskmoon.Component.Icon.Icons
   import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders an interactive star rating.
@@ -129,7 +130,4 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
     </div>
     """
   end
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

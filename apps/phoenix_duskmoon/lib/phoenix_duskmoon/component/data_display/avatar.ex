@@ -25,6 +25,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
   """
 
   use Phoenix.Component
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders a user avatar with image, initials, or placeholder.
@@ -206,7 +207,4 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
   defp color_class("success"), do: "bg-success text-success-content"
   defp color_class("warning"), do: "bg-warning text-warning-content"
   defp color_class("error"), do: "bg-error text-error-content"
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

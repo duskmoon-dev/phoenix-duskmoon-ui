@@ -30,6 +30,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Badge do
   """
 
   use Phoenix.Component
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc type: :component
   attr(:variant, :string,
@@ -86,7 +87,4 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Badge do
     </el-dm-badge>
     """
   end
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

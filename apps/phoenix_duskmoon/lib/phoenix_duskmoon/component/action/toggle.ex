@@ -25,6 +25,7 @@ defmodule PhoenixDuskmoon.Component.Action.Toggle do
 
   use Phoenix.Component
   import PhoenixDuskmoon.Component.Icon.Icons
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders a group of toggle buttons.
@@ -115,7 +116,4 @@ defmodule PhoenixDuskmoon.Component.Action.Toggle do
     </div>
     """
   end
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

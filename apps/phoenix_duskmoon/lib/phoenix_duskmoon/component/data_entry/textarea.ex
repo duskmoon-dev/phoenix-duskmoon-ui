@@ -14,6 +14,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
   use Phoenix.Component
 
   import PhoenixDuskmoon.Component.DataEntry.Form
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders a textarea input.
@@ -139,7 +140,4 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
   defp resize_class("vertical"), do: "textarea-resize-vertical"
   defp resize_class("horizontal"), do: "textarea-resize-horizontal"
   defp resize_class("both"), do: "textarea-resize-both"
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

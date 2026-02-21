@@ -22,6 +22,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
   use Phoenix.Component
 
   import PhoenixDuskmoon.Component.DataEntry.Form
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders a select dropdown.
@@ -146,7 +147,4 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
     {render_slot(@inner_block)}
     """
   end
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

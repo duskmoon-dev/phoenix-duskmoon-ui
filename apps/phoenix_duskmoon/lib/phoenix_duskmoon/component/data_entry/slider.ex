@@ -14,6 +14,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
   use Phoenix.Component
 
   import PhoenixDuskmoon.Component.DataEntry.Form
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders a range slider input.
@@ -125,7 +126,4 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
     </div>
     """
   end
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

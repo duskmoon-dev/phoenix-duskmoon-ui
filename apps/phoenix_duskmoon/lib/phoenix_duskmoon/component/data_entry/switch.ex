@@ -14,6 +14,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
 
   alias PhoenixDuskmoon.Component.DataEntry.Form
   import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders a toggle switch input.
@@ -98,7 +99,4 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
     </div>
     """
   end
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

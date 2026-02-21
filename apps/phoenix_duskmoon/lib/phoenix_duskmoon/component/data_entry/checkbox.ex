@@ -15,6 +15,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
 
   alias PhoenixDuskmoon.Component.DataEntry.Form
   import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders a checkbox input.
@@ -118,7 +119,4 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
     </div>
     """
   end
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

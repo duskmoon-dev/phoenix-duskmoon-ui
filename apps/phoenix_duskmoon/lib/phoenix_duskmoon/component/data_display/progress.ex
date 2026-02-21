@@ -24,6 +24,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
   """
 
   use Phoenix.Component
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @circle_radius 16
   @circle_circumference 2 * :math.pi() * @circle_radius
@@ -197,7 +198,4 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
   defp circular_size_classes("md"), do: nil
   defp circular_size_classes("lg"), do: "progress-circular-lg"
   defp circular_size_classes("xl"), do: "progress-circular-xl"
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

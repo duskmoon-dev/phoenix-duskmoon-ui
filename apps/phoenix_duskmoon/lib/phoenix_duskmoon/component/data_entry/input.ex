@@ -18,6 +18,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   use PhoenixDuskmoon.Component, :html
   import PhoenixDuskmoon.Component.Icon.Icons
   import PhoenixDuskmoon.Component.DataEntry.Form
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders an input with label and error messages.
@@ -1065,7 +1066,4 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         "weak"
     end
   end
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

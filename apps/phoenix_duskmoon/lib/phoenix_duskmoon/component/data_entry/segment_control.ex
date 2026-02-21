@@ -22,6 +22,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControl do
   use Phoenix.Component
 
   import PhoenixDuskmoon.Component.Icon.Icons
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders a segmented control group.
@@ -118,7 +119,4 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControl do
     </div>
     """
   end
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

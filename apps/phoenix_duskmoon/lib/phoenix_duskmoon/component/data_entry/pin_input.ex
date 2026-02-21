@@ -24,6 +24,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
   use Phoenix.Component
 
   import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders a PIN input group.
@@ -150,7 +151,4 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
     </div>
     """
   end
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

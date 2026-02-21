@@ -21,6 +21,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Collapse do
   """
 
   use Phoenix.Component
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders a collapsible panel with trigger and content.
@@ -145,7 +146,4 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Collapse do
     </div>
     """
   end
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

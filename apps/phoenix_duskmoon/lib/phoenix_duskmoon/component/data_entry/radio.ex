@@ -14,6 +14,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
   use Phoenix.Component
 
   import PhoenixDuskmoon.Component.DataEntry.Form
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders a radio button input.
@@ -107,7 +108,4 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
     </div>
     """
   end
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

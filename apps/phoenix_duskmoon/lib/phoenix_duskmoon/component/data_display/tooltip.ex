@@ -30,6 +30,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
   """
 
   use Phoenix.Component
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders a tooltip that appears on hover over the child element.
@@ -80,7 +81,4 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
     </div>
     """
   end
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end

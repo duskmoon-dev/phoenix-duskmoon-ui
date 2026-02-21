@@ -21,6 +21,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
   use Phoenix.Component
 
   import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders a time input with segmented hour/minute/second fields.
@@ -153,7 +154,4 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
     </div>
     """
   end
-
-  defp css_color("accent"), do: "tertiary"
-  defp css_color(color), do: color
 end
