@@ -331,6 +331,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CascaderTest do
       result = render_component(&dm_cascader/1, %{options: @cascader_options})
       refute result =~ "aria-labelledby"
     end
+
+    test "trigger has aria-controls pointing to dropdown" do
+      result = render_component(&dm_cascader/1, %{id: "casc"})
+      assert result =~ ~s(aria-controls="casc-dropdown")
+      assert result =~ ~s(id="casc-dropdown")
+    end
+
+    test "no aria-controls when no component id" do
+      result = render_component(&dm_cascader/1, %{})
+      refute result =~ "aria-controls"
+    end
   end
 
   describe "FormField integration" do

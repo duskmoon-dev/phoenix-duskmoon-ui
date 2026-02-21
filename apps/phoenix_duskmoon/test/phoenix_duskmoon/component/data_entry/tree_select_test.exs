@@ -409,6 +409,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
       result = render_component(&dm_tree_select/1, %{options: @tree_options})
       refute result =~ "aria-labelledby"
     end
+
+    test "trigger has aria-controls pointing to dropdown" do
+      result = render_component(&dm_tree_select/1, %{id: "ts"})
+      assert result =~ ~s(aria-controls="ts-dropdown")
+      assert result =~ ~s(id="ts-dropdown")
+    end
+
+    test "no aria-controls when no component id" do
+      result = render_component(&dm_tree_select/1, %{})
+      refute result =~ "aria-controls"
+    end
   end
 
   describe "FormField integration" do

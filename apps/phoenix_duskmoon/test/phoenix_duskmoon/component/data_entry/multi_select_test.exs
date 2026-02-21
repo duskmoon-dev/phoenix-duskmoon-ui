@@ -414,6 +414,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       result = render_component(&dm_multi_select/1, %{options: @options})
       refute result =~ "aria-labelledby"
     end
+
+    test "trigger has aria-controls pointing to dropdown" do
+      result = render_component(&dm_multi_select/1, %{id: "ms"})
+      assert result =~ ~s(aria-controls="ms-dropdown")
+      assert result =~ ~s(id="ms-dropdown")
+    end
+
+    test "no aria-controls when no component id" do
+      result = render_component(&dm_multi_select/1, %{})
+      refute result =~ "aria-controls"
+    end
   end
 
   describe "FormField integration" do
