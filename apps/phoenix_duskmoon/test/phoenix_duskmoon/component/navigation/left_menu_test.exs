@@ -248,6 +248,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
 
       assert result =~ ~s(class="disabled")
       assert result =~ ~s[aria-disabled="true"]
+      assert result =~ ~s[tabindex="-1"]
     end
 
     test "renders with custom id" do

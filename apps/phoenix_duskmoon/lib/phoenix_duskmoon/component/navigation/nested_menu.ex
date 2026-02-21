@@ -86,7 +86,9 @@ defmodule PhoenixDuskmoon.Component.Navigation.NestedMenu do
           <a
             href={item[:to]}
             class={[item[:active] && "active"]}
+            tabindex={item[:disabled] && "-1"}
             aria-current={item[:active] && "page"}
+            aria-disabled={item[:disabled] && "true"}
           >
             {render_slot(item)}
           </a>
@@ -126,7 +128,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.NestedMenu do
   def dm_nested_menu_item(assigns) do
     ~H"""
     <li class={[@disabled && "disabled"]}>
-      <a href={@to} class={[@active && "active"]} aria-current={@active && "page"} {@rest}>
+      <a
+        href={@to}
+        class={[@active && "active"]}
+        tabindex={@disabled && "-1"}
+        aria-current={@active && "page"}
+        aria-disabled={@disabled && "true"}
+        {@rest}
+      >
         {render_slot(@inner_block)}
       </a>
     </li>

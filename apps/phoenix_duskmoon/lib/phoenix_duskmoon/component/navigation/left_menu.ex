@@ -142,6 +142,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
               Map.get(m, :class),
               Map.get(m, :id) == @active && @active != "" && "active"
             ]}
+            tabindex={if Map.get(m, :disabled), do: "-1", else: nil}
             aria-current={if Map.get(m, :id) == @active && @active != "", do: "page", else: nil}
             aria-disabled={if Map.get(m, :disabled), do: "true", else: nil}
           >

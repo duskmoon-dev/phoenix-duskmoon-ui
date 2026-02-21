@@ -83,6 +83,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.NestedMenuTest do
 
       result = render_component(&dm_nested_menu/1, %{item: items})
       assert result =~ "disabled"
+      assert result =~ ~s[aria-disabled="true"]
+      assert result =~ ~s[tabindex="-1"]
     end
   end
 
@@ -204,6 +206,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.NestedMenuTest do
         })
 
       assert result =~ "disabled"
+      assert result =~ ~s[aria-disabled="true"]
+      assert result =~ ~s[tabindex="-1"]
     end
   end
 
