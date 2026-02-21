@@ -6,7 +6,7 @@
 <.dm_card class="w-full h-full overflow-auto" body_class="p-4">
   <:title class="flex flex-row justify-center items-center gap-3">
     <span class="text-4xl text-primary">Form</span>
-    <span class="text-sm opacity-60">dm_form, dm_label, dm_error, dm_alert</span>
+    <span class="text-sm opacity-60">dm_form, dm_label, dm_error, dm_alert, dm_fieldset, dm_form_row, dm_form_grid, dm_form_section, dm_form_divider, dm_form_inline, dm_form_hint, dm_form_counter</span>
   </:title>
 
   <% md_content = """
@@ -66,6 +66,92 @@
     <.dm_alert variant="success" filled compact>Compact filled success alert.</.dm_alert>
     <.dm_alert variant="warning" dismissible title="Dismissible">Click the close button to dismiss.</.dm_alert>
     <.dm_alert variant="error" outlined dismissible compact>Compact outlined dismissible error.</.dm_alert>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Fieldset</h3>
+  <div class="flex flex-col gap-4 max-w-lg">
+    <.dm_fieldset legend="Personal Info">
+      <div class="flex flex-col gap-2 p-4">
+        <.dm_input name="fs-name" value="" placeholder="Full name" label="Name" />
+        <.dm_input name="fs-email" type="email" value="" placeholder="Email" label="Email" />
+      </div>
+    </.dm_fieldset>
+    <.dm_fieldset legend="Filled Variant" variant="filled">
+      <div class="flex flex-col gap-2 p-4">
+        <.dm_input name="fs2-name" value="" placeholder="Name" label="Name" />
+      </div>
+    </.dm_fieldset>
+    <.dm_fieldset legend="Card Variant" variant="card">
+      <div class="flex flex-col gap-2 p-4">
+        <.dm_input name="fs3-name" value="" placeholder="Name" label="Name" />
+      </div>
+    </.dm_fieldset>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Form Row</h3>
+  <div class="max-w-lg">
+    <.dm_form_row>
+      <.dm_input name="row-first" value="" placeholder="First name" label="First" />
+      <.dm_input name="row-last" value="" placeholder="Last name" label="Last" />
+    </.dm_form_row>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Form Grid</h3>
+  <div class="max-w-lg">
+    <.dm_form_grid cols={2}>
+      <.dm_input name="grid-city" value="" placeholder="City" label="City" />
+      <.dm_input name="grid-state" value="" placeholder="State" label="State" />
+    </.dm_form_grid>
+    <.dm_form_grid cols={3} class="mt-4">
+      <.dm_input name="grid-day" value="" placeholder="DD" label="Day" />
+      <.dm_input name="grid-month" value="" placeholder="MM" label="Month" />
+      <.dm_input name="grid-year" value="" placeholder="YYYY" label="Year" />
+    </.dm_form_grid>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Form Section</h3>
+  <div class="max-w-lg">
+    <.dm_form_section title="Account" description="Your login credentials.">
+      <div class="flex flex-col gap-2">
+        <.dm_input name="sec-user" value="" placeholder="Username" label="Username" />
+        <.dm_input name="sec-pass" type="password" value="" placeholder="Password" label="Password" />
+      </div>
+    </.dm_form_section>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Form Divider</h3>
+  <div class="max-w-lg flex flex-col gap-4">
+    <.dm_input name="div-email" type="email" value="" placeholder="Email" label="Email" />
+    <.dm_form_divider />
+    <.dm_input name="div-phone" value="" placeholder="Phone" label="Phone" />
+    <.dm_form_divider text="or" />
+    <.dm_input name="div-social" value="" placeholder="Social handle" label="Social" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Form Inline</h3>
+  <div class="max-w-lg">
+    <.dm_form_inline>
+      <.dm_input name="inline-search" value="" placeholder="Search..." />
+      <.dm_btn variant="primary">Go</.dm_btn>
+    </.dm_form_inline>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Form Hint</h3>
+  <div class="max-w-md flex flex-col gap-1">
+    <.dm_form_hint>Must be at least 8 characters with one uppercase letter</.dm_form_hint>
+    <.dm_input name="hint-pass" type="password" value="" placeholder="Password" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Form Counter</h3>
+  <div class="max-w-md flex flex-col gap-1">
+    <.dm_input name="counter-bio" value="" placeholder="Write a short bio..." />
+    <div class="flex justify-between">
+      <.dm_form_hint>Keep it brief</.dm_form_hint>
+      <.dm_form_counter current={42} max={200} />
+    </div>
+    <div class="flex justify-end mt-4">
+      <.dm_form_counter current={210} max={200} error />
+    </div>
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Complete Form Example</h3>
