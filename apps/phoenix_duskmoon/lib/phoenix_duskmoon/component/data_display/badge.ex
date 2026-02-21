@@ -33,6 +33,15 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Badge do
   use Phoenix.Component
   import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
+  @doc """
+  Renders a badge for status indicators and labels.
+
+  ## Examples
+
+      <.dm_badge>New</.dm_badge>
+      <.dm_badge variant="success" size="sm">Active</.dm_badge>
+
+  """
   @doc type: :component
   attr(:variant, :string,
     default: "primary",
