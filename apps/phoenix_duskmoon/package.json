@@ -19,7 +19,8 @@
     "package.json",
     "assets/",
     "priv/static/",
-    "priv/svg/"
+    "priv/mdi/",
+    "priv/bsi/"
   ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
