@@ -46,13 +46,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.List do
   attr(:rest, :global)
 
   slot :item, required: true, doc: "List items" do
-    attr(:title, :string)
-    attr(:subtitle, :string)
-    attr(:icon, :string)
-    attr(:active, :boolean)
-    attr(:disabled, :boolean)
-    attr(:interactive, :boolean)
-    attr(:class, :any)
+    attr(:title, :string, doc: "item primary text")
+    attr(:subtitle, :string, doc: "item secondary text")
+    attr(:icon, :string, doc: "Material Design icon name")
+    attr(:active, :boolean, doc: "highlight the item as active")
+    attr(:disabled, :boolean, doc: "disable the item")
+    attr(:interactive, :boolean, doc: "enable hover/focus effects")
+    attr(:class, :any, doc: "item CSS classes")
   end
 
   slot(:subheader, doc: "Optional section header")

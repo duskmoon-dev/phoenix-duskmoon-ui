@@ -36,10 +36,10 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
     Page footer section
     """
   ) do
-    attr(:class, :any)
-    attr(:title, :string)
-    attr(:title_class, :any)
-    attr(:body_class, :any)
+    attr(:class, :any, doc: "section container CSS classes")
+    attr(:title, :string, doc: "section heading text")
+    attr(:title_class, :any, doc: "section heading CSS classes")
+    attr(:body_class, :any, doc: "section body CSS classes")
   end
 
   slot(:copyright,
@@ -48,10 +48,10 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
     Page footer right side copyright.
     """
   ) do
-    attr(:class, :any)
-    attr(:title, :string)
-    attr(:title_class, :any)
-    attr(:body_class, :any)
+    attr(:class, :any, doc: "copyright container CSS classes")
+    attr(:title, :string, doc: "copyright heading text")
+    attr(:title_class, :any, doc: "copyright heading CSS classes")
+    attr(:body_class, :any, doc: "copyright body CSS classes")
   end
 
   slot(:inner_block,

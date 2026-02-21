@@ -75,8 +75,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.Tab do
     required: false,
     doc: "Tab button"
   ) do
-    attr(:id, :any)
-    attr(:class, :any)
+    attr(:id, :any, doc: "tab button HTML id")
+    attr(:class, :any, doc: "tab button CSS classes")
     attr(:name, :string, doc: "Tab name for matching with tab_content")
     attr(:phx_click, :any, doc: "Phoenix click event")
   end
@@ -85,8 +85,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.Tab do
     required: false,
     doc: "Tab content panel"
   ) do
-    attr(:id, :any)
-    attr(:class, :any)
+    attr(:id, :any, doc: "tab content panel HTML id")
+    attr(:class, :any, doc: "tab content panel CSS classes")
     attr(:name, :string, doc: "Content name for matching with tab")
   end
 

@@ -64,8 +64,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
     Appbar menus
     """
   ) do
-    attr(:class, :any)
-    attr(:to, :string)
+    attr(:class, :any, doc: "menu item CSS classes")
+    attr(:to, :string, doc: "navigation path")
   end
 
   slot(:user_profile,
@@ -74,7 +74,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
     Appbar right side user_profile.
     """
   ) do
-    attr(:class, :any)
+    attr(:class, :any, doc: "user profile container CSS classes")
   end
 
   slot(:inner_block,

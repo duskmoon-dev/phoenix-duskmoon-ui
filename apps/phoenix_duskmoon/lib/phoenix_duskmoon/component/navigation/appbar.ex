@@ -46,8 +46,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
   attr(:rest, :global)
 
   slot(:menu, required: false, doc: "Appbar navigation menus") do
-    attr(:class, :any)
-    attr(:to, :string)
+    attr(:class, :any, doc: "menu item CSS classes")
+    attr(:to, :string, doc: "navigation path")
   end
 
   slot(:logo, required: false, doc: "Appbar Logo (displayed in the brand area)")
@@ -112,8 +112,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
   attr(:rest, :global)
 
   slot(:menu, required: false, doc: "Appbar menus") do
-    attr(:class, :any)
-    attr(:to, :string)
+    attr(:class, :any, doc: "menu item CSS classes")
+    attr(:to, :string, doc: "navigation path")
   end
 
   slot(:logo, required: false, doc: "Appbar Logo")

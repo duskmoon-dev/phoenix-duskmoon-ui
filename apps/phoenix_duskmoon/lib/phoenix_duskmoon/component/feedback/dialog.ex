@@ -80,19 +80,19 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
   attr(:rest, :global)
 
   slot(:trigger, doc: "Element that opens the modal") do
-    attr(:class, :any)
+    attr(:class, :any, doc: "trigger wrapper CSS classes")
   end
 
   slot(:title, doc: "Modal title") do
-    attr(:class, :any)
+    attr(:class, :any, doc: "title container CSS classes")
   end
 
   slot(:body, doc: "Modal content", required: true) do
-    attr(:class, :any)
+    attr(:class, :any, doc: "body container CSS classes")
   end
 
   slot(:footer, doc: "Modal footer with actions") do
-    attr(:class, :any)
+    attr(:class, :any, doc: "footer container CSS classes")
   end
 
   def dm_modal(assigns) do

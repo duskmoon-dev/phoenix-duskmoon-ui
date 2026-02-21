@@ -47,8 +47,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.Breadcrumb do
     required: true,
     doc: "Breadcrumb item"
   ) do
-    attr(:id, :any)
-    attr(:class, :any)
+    attr(:id, :any, doc: "breadcrumb item HTML id")
+    attr(:class, :any, doc: "breadcrumb item CSS classes")
     attr(:to, :string, doc: "Link destination")
   end
 

@@ -57,7 +57,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
   attr(:rest, :global)
 
   slot(:title, required: false, doc: "Menu title displayed as a section heading") do
-    attr(:class, :any)
+    attr(:class, :any, doc: "title CSS classes")
   end
 
   slot(:menu, required: false, doc: "Menu content, typically dm_left_menu_group components")
@@ -116,14 +116,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
   attr(:rest, :global)
 
   slot(:title, required: true, doc: "Group title shown in the summary element") do
-    attr(:class, :any)
+    attr(:class, :any, doc: "title CSS classes")
   end
 
   slot(:menu, required: false, doc: "Menu item") do
-    attr(:id, :string)
-    attr(:class, :any)
-    attr(:to, :string)
-    attr(:disabled, :boolean)
+    attr(:id, :string, doc: "menu item identifier for active matching")
+    attr(:class, :any, doc: "menu item CSS classes")
+    attr(:to, :string, doc: "navigation path")
+    attr(:disabled, :boolean, doc: "disable the menu item")
   end
 
   def dm_left_menu_group(assigns) do

@@ -33,13 +33,13 @@ defmodule PhoenixDuskmoon.Component.Navigation.Actionbar do
   attr(:rest, :global)
 
   slot(:left, required: false, doc: "Left part of action bar") do
-    attr(:id, :any)
-    attr(:class, :any)
+    attr(:id, :any, doc: "left section HTML id")
+    attr(:class, :any, doc: "left section CSS classes")
   end
 
   slot(:right, required: false, doc: "Right part of action bar") do
-    attr(:id, :any)
-    attr(:class, :any)
+    attr(:id, :any, doc: "right section HTML id")
+    attr(:class, :any, doc: "right section CSS classes")
   end
 
   def dm_actionbar(assigns) do

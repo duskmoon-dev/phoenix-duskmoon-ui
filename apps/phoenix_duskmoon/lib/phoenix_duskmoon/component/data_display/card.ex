@@ -152,16 +152,16 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
 
   attr(:rest, :global)
 
-  slot(:inner_block, required: true)
+  slot(:inner_block, required: true, doc: "card body content")
 
-  slot(:title, required: false) do
-    attr(:id, :any)
-    attr(:class, :any)
+  slot(:title, required: false, doc: "card title content") do
+    attr(:id, :any, doc: "title element id")
+    attr(:class, :any, doc: "title CSS classes")
   end
 
-  slot(:action, required: false) do
-    attr(:id, :any)
-    attr(:class, :any)
+  slot(:action, required: false, doc: "card action buttons") do
+    attr(:id, :any, doc: "action container id")
+    attr(:class, :any, doc: "action container CSS classes")
   end
 
   def dm_async_card(assigns) do
