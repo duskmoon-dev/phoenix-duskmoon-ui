@@ -80,7 +80,6 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:lines, :integer, default: 3, doc: "Number of skeleton lines")
   attr(:line_height, :string, default: "h-4", doc: "Height of each line")
-  attr(:line_spacing, :string, default: "mb-2", doc: "Spacing between lines")
   attr(:last_line_width, :string, default: "w-full", doc: "Width of the last line")
   attr(:animation, :string, default: nil, doc: "Animation type")
 

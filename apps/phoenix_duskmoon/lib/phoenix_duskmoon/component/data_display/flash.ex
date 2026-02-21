@@ -45,11 +45,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
       {@rest}
     >
       <div class={["alert", if(@kind == :info, do: "alert-info"), if(@kind == :error, do: "alert-error")]}>
-        <div :if={@title} class="flex items-center gap-1.5 w-full text-xs font-semibold leading-6">
+        <strong :if={@title} class="flex items-center gap-1.5 w-full text-xs font-semibold leading-6">
           <.dm_bsi :if={@kind == :info} name="info-circle" class="w-4 h-4" />
           <.dm_bsi :if={@kind == :error} name="exclamation-circle" class="w-4 h-4" />
           {@title}
-        </div>
+        </strong>
         <div class="w-full text-xs leading-5">{msg}</div>
         <button
           :if={@close}
