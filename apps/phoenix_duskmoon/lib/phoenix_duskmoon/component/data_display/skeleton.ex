@@ -94,7 +94,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     ~H"""
     <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_container_classes(@class)} {@rest}>
       <div :for={_i <- if(@lines > 1, do: 1..(@lines - 1), else: [])} class={build_line_classes(@line_height, "w-full", @animation)}></div>
-      <div class={build_line_classes(@line_height, @last_line_width, @animation)}></div>
+      <div :if={@lines > 0} class={build_line_classes(@line_height, @last_line_width, @animation)}></div>
     </div>
     """
   end
@@ -260,10 +260,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     ~H"""
     <div id={@id} aria-busy="true" aria-label={@loading_label} class={["skeleton-table", @class]} {@rest}>
       <div :if={@show_header} class="skeleton-table-row">
-        <div :for={_i <- 1..@columns} class={["skeleton skeleton-table-cell", animation_class(@animation)]}></div>
+        <div :for={_i <- if(@columns > 0, do: 1..@columns, else: [])} class={["skeleton skeleton-table-cell", animation_class(@animation)]}></div>
       </div>
-      <div :for={_row <- 1..@rows} class="skeleton-table-row">
-        <div :for={_col <- 1..@columns} class={["skeleton skeleton-table-cell", animation_class(@animation)]}></div>
+      <div :for={_row <- if(@rows > 0, do: 1..@rows, else: [])} class="skeleton-table-row">
+        <div :for={_col <- if(@columns > 0, do: 1..@columns, else: [])} class={["skeleton skeleton-table-cell", animation_class(@animation)]}></div>
       </div>
     </div>
     """
@@ -296,7 +296,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   def dm_skeleton_list(assigns) do
     ~H"""
     <div id={@id} aria-busy="true" aria-label={@loading_label} class={["skeleton-list", @class]} {@rest}>
-      <div :for={_i <- 1..@items} class="skeleton-list-item">
+      <div :for={_i <- if(@items > 0, do: 1..@items, else: [])} class="skeleton-list-item">
         <.dm_skeleton_avatar :if={@show_avatar} size={@avatar_size} animation={@animation} />
         <div class="skeleton-card-body">
           <.dm_skeleton_text lines={@lines_per_item} animation={@animation} />
