@@ -138,7 +138,7 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcherTest do
   test "renders trigger with aria-haspopup" do
     result = render_component(&dm_theme_switcher/1, %{})
 
-    assert result =~ ~s[aria-haspopup="true"]
+    assert result =~ ~s[aria-haspopup="menu"]
   end
 
   test "renders menu with radiogroup role" do

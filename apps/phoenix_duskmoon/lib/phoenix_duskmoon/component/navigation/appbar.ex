@@ -160,7 +160,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
             onclick="document.getElementById('header-md-menu').classList.toggle('hidden'); this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true')"
             aria-label={@toggle_menu_label}
             aria-expanded="false"
-            aria-haspopup="true"
+            aria-haspopup="menu"
             aria-controls="header-md-menu"
           >
             <.dm_mdi name="menu" class="w-8 h-8" aria-hidden="true" />

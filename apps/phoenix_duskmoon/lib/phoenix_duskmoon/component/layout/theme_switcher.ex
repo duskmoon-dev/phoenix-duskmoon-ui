@@ -54,7 +54,7 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
       data-theme={@theme}
       {@rest}
     >
-      <summary class="theme-controller-trigger" aria-label={@select_theme_label} aria-haspopup="true">
+      <summary class="theme-controller-trigger" aria-label={@select_theme_label} aria-haspopup="menu">
         {@button_text}
       </summary>
       <div class="theme-controller-menu" role="radiogroup" aria-label={@select_theme_label}>
