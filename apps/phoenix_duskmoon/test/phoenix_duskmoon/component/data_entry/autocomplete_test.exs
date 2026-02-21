@@ -142,6 +142,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.AutocompleteTest do
       result = render_component(&dm_autocomplete/1, %{loading: true})
       assert result =~ "loading"
     end
+
+    test "sets aria-busy when loading" do
+      result = render_component(&dm_autocomplete/1, %{loading: true})
+      assert result =~ ~s(aria-busy="true")
+    end
+
+    test "no aria-busy when not loading" do
+      result = render_component(&dm_autocomplete/1, %{})
+      refute result =~ "aria-busy"
+    end
   end
 
   describe "dm_autocomplete size" do
