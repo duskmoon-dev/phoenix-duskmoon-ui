@@ -201,12 +201,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
   describe "dm_avatar online/offline indicator" do
     test "renders online indicator" do
       result = render_component(&dm_avatar/1, %{name: "T", online: true})
-      assert result =~ "bg-[var(--color-success)]"
+      assert result =~ "avatar-online"
     end
 
     test "renders offline indicator" do
       result = render_component(&dm_avatar/1, %{name: "T", offline: true})
-      assert result =~ "bg-[var(--color-surface-variant)]"
+      assert result =~ "avatar-offline"
     end
 
     test "no indicator by default" do
@@ -215,23 +215,25 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
       refute result =~ ~s[aria-label="Offline"]
     end
 
-    test "online indicator has role=status and aria-label" do
+    test "online indicator has role=status and sr-only text" do
       result = render_component(&dm_avatar/1, %{name: "T", online: true})
       assert result =~ ~s[role="status"]
-      assert result =~ ~s[aria-label="Online"]
+      assert result =~ "Online"
+      assert result =~ "sr-only"
     end
 
-    test "offline indicator has role=status and aria-label" do
+    test "offline indicator has role=status and sr-only text" do
       result = render_component(&dm_avatar/1, %{name: "T", offline: true})
       assert result =~ ~s[role="status"]
-      assert result =~ ~s[aria-label="Offline"]
+      assert result =~ "Offline"
+      assert result =~ "sr-only"
     end
 
     test "custom online_label" do
       result =
         render_component(&dm_avatar/1, %{name: "T", online: true, online_label: "En ligne"})
 
-      assert result =~ ~s[aria-label="En ligne"]
+      assert result =~ "En ligne"
     end
 
     test "custom offline_label" do
@@ -242,12 +244,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
           offline_label: "Hors ligne"
         })
 
-      assert result =~ ~s[aria-label="Hors ligne"]
+      assert result =~ "Hors ligne"
     end
 
-    test "indicator dot styling" do
+    test "indicator uses upstream avatar-online class" do
       result = render_component(&dm_avatar/1, %{name: "T", online: true})
-      assert result =~ "w-3 h-3 rounded-full border-2"
+      assert result =~ "avatar-online"
     end
   end
 
@@ -343,7 +345,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
       assert result =~ "avatar-tertiary"
       assert result =~ "avatar-ring"
       assert result =~ "avatar-ring-tertiary"
-      assert result =~ "bg-[var(--color-success)]"
+      assert result =~ "avatar-online"
       assert result =~ "my-avatar"
       assert result =~ "my-img"
     end
@@ -364,7 +366,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
         })
 
       assert result =~ "avatar-ring"
-      assert result =~ "bg-[var(--color-surface-variant)]"
+      assert result =~ "avatar-offline"
       assert result =~ "var(--color-warning)"
       assert result =~ "J"
     end

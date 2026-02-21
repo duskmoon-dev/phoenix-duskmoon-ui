@@ -106,6 +106,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
       color_class(@color),
       @ring && "avatar-ring",
       @ring && @ring_color && "avatar-ring-#{@ring_color}",
+      @online && "avatar-online",
+      @offline && "avatar-offline",
       @class
     ]} {@rest}>
       <img
@@ -122,17 +124,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
         {render_avatar_content(assigns)}
       </div>
 
-      <div
-        :if={@online || @offline}
-        role="status"
-        aria-label={if @online, do: @online_label, else: @offline_label}
-        class={[
-          "absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-[var(--color-surface)]",
-          @online && "bg-[var(--color-success)]",
-          @offline && "bg-[var(--color-surface-variant)]"
-        ]}
-      >
-      </div>
+      <span :if={@online || @offline} class="sr-only" role="status">
+        {if @online, do: @online_label, else: @offline_label}
+      </span>
     </div>
     """
   end
@@ -158,7 +152,6 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
     <img
       src={@img_src}
       alt={@placeholder_alt}
-      class="w-full h-full object-cover"
     />
     """
   end
