@@ -139,6 +139,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
         type="button"
         class="cascader-trigger"
         disabled={@disabled}
+        aria-disabled={@disabled && "true"}
         aria-expanded={to_string(@open)}
         aria-haspopup="listbox"
         aria-invalid={@errors != [] && "true"}

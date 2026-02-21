@@ -175,6 +175,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
         type="button"
         class="multi-select-trigger"
         disabled={@disabled}
+        aria-disabled={@disabled && "true"}
         aria-expanded={to_string(@open)}
         aria-haspopup="listbox"
         aria-invalid={@errors != [] && "true"}

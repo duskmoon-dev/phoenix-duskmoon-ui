@@ -160,6 +160,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
     test "renders disabled state" do
       result = render_component(&dm_tree_select/1, %{disabled: true})
       assert result =~ "tree-select-disabled"
+      assert result =~ ~s(aria-disabled="true")
     end
 
     test "renders loading state" do

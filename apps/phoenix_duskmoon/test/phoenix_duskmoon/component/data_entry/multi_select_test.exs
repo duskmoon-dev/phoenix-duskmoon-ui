@@ -89,6 +89,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       result = render_component(&dm_multi_select/1, %{disabled: true})
       assert result =~ "multi-select-disabled"
       assert result =~ "disabled"
+      assert result =~ ~s(aria-disabled="true")
     end
 
     test "renders loading state" do

@@ -145,6 +145,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CascaderTest do
     test "renders disabled state" do
       result = render_component(&dm_cascader/1, %{disabled: true})
       assert result =~ "cascader-disabled"
+      assert result =~ ~s(aria-disabled="true")
     end
 
     test "renders loading state" do

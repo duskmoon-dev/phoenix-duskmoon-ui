@@ -140,6 +140,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
         type="button"
         class="tree-select-trigger"
         disabled={@disabled}
+        aria-disabled={@disabled && "true"}
         aria-expanded={to_string(@open)}
         aria-haspopup="tree"
         aria-invalid={@errors != [] && "true"}

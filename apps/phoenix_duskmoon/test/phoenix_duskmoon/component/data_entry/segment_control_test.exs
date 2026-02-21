@@ -157,6 +157,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControlTest do
 
       result = render_component(&dm_segment_control/1, %{item: items})
       assert result =~ "disabled"
+      assert result =~ ~s(aria-disabled="true")
     end
 
     test "renders item with value" do
