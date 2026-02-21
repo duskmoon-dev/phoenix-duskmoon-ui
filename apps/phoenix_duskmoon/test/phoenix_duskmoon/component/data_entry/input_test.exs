@@ -397,6 +397,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
         })
 
       assert result =~ ~s[checked]
+      assert result =~ ~s[role="switch"]
+      assert result =~ ~s[aria-checked="true"]
     end
 
     test "renders toggle with unchecked value" do
@@ -408,7 +410,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
           value: false
         })
 
-      refute result =~ ~s[checked]
+      refute result =~ ~s[ checked]
+      assert result =~ ~s[aria-checked="false"]
     end
 
     test "renders toggle with color variant" do

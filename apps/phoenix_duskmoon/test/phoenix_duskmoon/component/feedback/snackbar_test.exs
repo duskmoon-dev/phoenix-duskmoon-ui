@@ -167,14 +167,15 @@ defmodule PhoenixDuskmoon.Component.Feedback.SnackbarTest do
       assert result =~ ~s(aria-label="Close")
     end
 
-    test "close button renders times character" do
+    test "close button renders close icon" do
       result =
         render_component(&dm_snackbar/1, %{
           message: basic_message(),
           close: [%{__slot__: :close, inner_block: fn _, _ -> "" end}]
         })
 
-      assert result =~ "&times;"
+      assert result =~ "<svg"
+      assert result =~ "w-4 h-4"
     end
 
     test "no close by default" do

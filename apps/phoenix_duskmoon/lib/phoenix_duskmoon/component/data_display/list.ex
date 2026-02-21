@@ -83,6 +83,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.List do
           item[:disabled] && "list-item-disabled",
           item[:class]
         ]}
+        aria-disabled={item[:disabled] && "true"}
       >
         <span :if={item[:icon]} class="list-item-icon">
           <.dm_mdi name={item[:icon]} class="w-6 h-6" />

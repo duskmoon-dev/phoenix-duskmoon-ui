@@ -240,6 +240,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             name={@name}
             value="true"
             checked={@checked}
+            role="switch"
+            aria-checked={to_string(@checked == true)}
             aria-invalid={@errors != [] && "true"}
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             {@rest}

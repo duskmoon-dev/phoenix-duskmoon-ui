@@ -25,6 +25,8 @@ defmodule PhoenixDuskmoon.Component.Feedback.Snackbar do
 
   use Phoenix.Component
 
+  import PhoenixDuskmoon.Component.Icon.Icons
+
   @doc """
   Renders a snackbar notification.
 
@@ -67,6 +69,8 @@ defmodule PhoenixDuskmoon.Component.Feedback.Snackbar do
   attr(:rest, :global)
 
   slot(:message, required: true, doc: "Message content")
+  attr(:close_label, :string, default: "Close", doc: "Accessible label for the close button")
+
   slot(:action, doc: "Action button")
   slot(:close, doc: "Close button")
 
@@ -91,8 +95,8 @@ defmodule PhoenixDuskmoon.Component.Feedback.Snackbar do
       <button :for={action <- @action} type="button" class="snackbar-action">
         {render_slot(action)}
       </button>
-      <button :for={_close <- @close} type="button" class="snackbar-close" aria-label="Close">
-        &times;
+      <button :for={_close <- @close} type="button" class="snackbar-close" aria-label={@close_label}>
+        <.dm_mdi name="close" class="w-4 h-4" />
       </button>
     </div>
     """

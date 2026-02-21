@@ -93,6 +93,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Toast do
   attr(:filled, :boolean, default: false, doc: "use filled background style")
   attr(:open, :boolean, default: false, doc: "whether the toast is visible")
   attr(:show_close, :boolean, default: false, doc: "show a close button")
+  attr(:close_label, :string, default: "Close", doc: "accessible label for the close button")
   attr(:rest, :global)
   slot(:inner_block, doc: "Toast message content")
 
@@ -119,7 +120,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Toast do
         <div :if={@title} class="toast-title">{@title}</div>
         <div class="toast-message">{render_slot(@inner_block)}</div>
       </div>
-      <button :if={@show_close} type="button" class="toast-close" aria-label="Close">
+      <button :if={@show_close} type="button" class="toast-close" aria-label={@close_label}>
         <.dm_mdi name="close" class="w-4 h-4" />
       </button>
     </div>
