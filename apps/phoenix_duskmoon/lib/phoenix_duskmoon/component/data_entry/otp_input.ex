@@ -99,6 +99,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
         @variant && "otp-input-#{@variant}",
         @gap && "otp-input-#{@gap}",
         @masked && "otp-input-masked",
+        @disabled && "opacity-50 cursor-not-allowed",
         @error && "otp-input-error",
         @success && "otp-input-success"
       ]}>

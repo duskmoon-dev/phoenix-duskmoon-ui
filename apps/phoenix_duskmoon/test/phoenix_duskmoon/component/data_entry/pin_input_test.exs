@@ -93,6 +93,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
     test "renders disabled fields" do
       result = render_component(&dm_pin_input/1, %{disabled: true})
       assert result =~ "disabled"
+      assert result =~ "opacity-50"
+      assert result =~ "cursor-not-allowed"
+    end
+
+    test "renders enabled state without disabled styling" do
+      result = render_component(&dm_pin_input/1, %{})
+      refute result =~ "opacity-50"
+      refute result =~ "cursor-not-allowed"
     end
 
     test "renders label" do
