@@ -72,7 +72,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
   end
 
   test "renders tooltip with all color variants" do
-    for color <- ~w(primary secondary accent info success warning error) do
+    for color <- ~w(primary secondary tertiary accent info success warning error) do
       result =
         render_component(&dm_tooltip/1, %{
           content: "#{color} tip",

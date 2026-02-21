@@ -69,7 +69,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
   end
 
   test "renders textarea with all color options" do
-    for color <- ~w(primary secondary accent info success warning error) do
+    for color <- ~w(primary secondary tertiary accent info success warning error) do
       result = render_component(&dm_textarea/1, %{name: "bio", value: nil, color: color})
       css_class = if color == "accent", do: "tertiary", else: color
       assert result =~ "textarea-#{css_class}"

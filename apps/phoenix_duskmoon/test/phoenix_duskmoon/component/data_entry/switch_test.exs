@@ -64,7 +64,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
   end
 
   test "renders switch with all color options" do
-    for color <- ~w(primary secondary accent info success warning error) do
+    for color <- ~w(primary secondary tertiary accent info success warning error) do
       result = render_component(&dm_switch/1, %{name: "opt", color: color})
       css_class = if color == "accent", do: "tertiary", else: color
       assert result =~ "switch-#{css_class}"

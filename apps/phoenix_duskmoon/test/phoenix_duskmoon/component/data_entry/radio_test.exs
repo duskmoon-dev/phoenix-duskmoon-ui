@@ -57,7 +57,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
   end
 
   test "renders radio with all color options" do
-    for color <- ~w(primary secondary accent info success warning error) do
+    for color <- ~w(primary secondary tertiary accent info success warning error) do
       result = render_component(&dm_radio/1, %{name: "choice", value: "a", color: color})
       css_class = if color == "accent", do: "tertiary", else: color
       assert result =~ "radio-#{css_class}"

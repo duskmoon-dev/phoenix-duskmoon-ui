@@ -56,7 +56,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
   end
 
   test "renders checkbox with all color options" do
-    for color <- ~w(primary secondary accent info success warning error) do
+    for color <- ~w(primary secondary tertiary accent info success warning error) do
       result = render_component(&dm_checkbox/1, %{name: "opt", color: color})
       css_class = if color == "accent", do: "tertiary", else: color
       assert result =~ "checkbox-#{css_class}"
