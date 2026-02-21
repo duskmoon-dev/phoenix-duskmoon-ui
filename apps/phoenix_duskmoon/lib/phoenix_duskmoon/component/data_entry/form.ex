@@ -92,6 +92,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
   attr(:required, :boolean, default: false, doc: "show required indicator (*)")
   attr(:optional, :boolean, default: false, doc: "show optional indicator")
   attr(:size, :string, default: nil, values: ["sm", "lg", nil], doc: "label size (sm, lg)")
+  attr(:rest, :global, doc: "additional HTML attributes")
   slot(:inner_block, required: true)
 
   def dm_label(assigns) do
@@ -102,7 +103,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
       @optional && "form-label-optional",
       @size && "form-label-#{@size}",
       @class
-    ]}>
+    ]} {@rest}>
       {render_slot(@inner_block)}
     </label>
     """
@@ -119,11 +120,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:class, :any, default: nil, doc: "additional CSS classes")
+  attr(:rest, :global, doc: "additional HTML attributes")
   slot(:inner_block, required: true)
 
   def dm_error(assigns) do
     ~H"""
-    <span id={@id} class={["helper-text helper-text-error helper-text-icon", @class]}>
+    <span id={@id} class={["helper-text helper-text-error helper-text-icon", @class]} {@rest}>
       <.dm_bsi name="exclamation-circle" class="h-3 w-3 flex-none" />
       {render_slot(@inner_block)}
     </span>

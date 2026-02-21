@@ -511,6 +511,30 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
     end
   end
 
+  describe "dm_label rest attributes" do
+    test "renders label with rest attributes" do
+      result =
+        render_component(&dm_label/1, %{
+          "data-testid": "label-1",
+          inner_block: inner_block("Name")
+        })
+
+      assert result =~ ~s[data-testid="label-1"]
+    end
+  end
+
+  describe "dm_error rest attributes" do
+    test "renders error with rest attributes" do
+      result =
+        render_component(&dm_error/1, %{
+          "data-testid": "error-1",
+          inner_block: inner_block("is required")
+        })
+
+      assert result =~ ~s[data-testid="error-1"]
+    end
+  end
+
   describe "dm_alert rest attributes" do
     test "renders alert with rest attributes" do
       result =
