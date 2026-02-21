@@ -107,6 +107,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControl do
         class={[
           "segment-item",
           item[:active] && "segment-item-active",
+          item[:disabled] && "segment-item-disabled",
           item[:class]
         ]}
         disabled={item[:disabled]}
