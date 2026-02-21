@@ -94,7 +94,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
           @color && "time-input-#{@color}",
           @variant && "time-input-#{@variant}",
           (@error || @errors != []) && "time-input-error",
-          @disabled && "opacity-50 cursor-not-allowed",
+          @disabled && "form-group-disabled",
           @class
         ]}
         role="group"

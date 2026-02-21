@@ -125,7 +125,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
         @compact && "pin-input-compact",
         @dots && "pin-input-dots",
         @visible && "pin-input-visible",
-        @disabled && "opacity-50 cursor-not-allowed",
+        @disabled && "form-group-disabled",
         (@error || @errors != []) && "pin-input-error",
         @success && "pin-input-success"
       ]}>
