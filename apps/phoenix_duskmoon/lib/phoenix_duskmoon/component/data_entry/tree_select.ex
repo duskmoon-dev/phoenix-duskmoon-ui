@@ -24,6 +24,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
 
   """
   use Phoenix.Component
+  import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
 
   @doc """
   Renders a tree select dropdown with hierarchical options.
@@ -66,6 +67,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
   )
 
   attr(:error, :boolean, default: false, doc: "show error state")
+  attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:disabled, :boolean, default: false, doc: "disable the component")
   attr(:loading, :boolean, default: false, doc: "show loading state")
   attr(:searchable, :boolean, default: false, doc: "show search input in dropdown")
@@ -105,7 +107,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
         @size && "tree-select-#{@size}",
         @variant && "tree-select-#{@variant}",
         @open && "tree-select-open",
-        @error && "tree-select-error",
+        (@error || @errors != []) && "tree-select-error",
         @disabled && "tree-select-disabled",
         @loading && "tree-select-loading",
         @multiple && "tree-select-multiple",
@@ -182,6 +184,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
         name={@name && (if @multiple, do: "#{@name}[]", else: @name)}
         value={val}
       />
+      <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+      </div>
     </div>
     """
   end

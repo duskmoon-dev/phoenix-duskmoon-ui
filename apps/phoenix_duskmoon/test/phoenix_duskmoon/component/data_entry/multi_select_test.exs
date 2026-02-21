@@ -374,4 +374,38 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       assert result =~ ~s(id="custom-ms")
     end
   end
+
+  describe "error messages" do
+    test "renders error messages from errors list" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          options: @options,
+          errors: ["is required", "must select at least 2"]
+        })
+
+      assert result =~ "is required"
+      assert result =~ "must select at least 2"
+      assert result =~ "multi-select-error"
+    end
+
+    test "does not render errors when list is empty" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          options: @options,
+          errors: []
+        })
+
+      refute result =~ "helper-text text-error"
+    end
+
+    test "shows error state from errors list even without error boolean" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          options: @options,
+          errors: ["something wrong"]
+        })
+
+      assert result =~ "multi-select-error"
+    end
+  end
 end

@@ -275,4 +275,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RatingTest do
       assert result =~ ~s(id="custom-rating")
     end
   end
+
+  test "renders rating with rest attributes" do
+    result =
+      render_component(&dm_rating/1, %{
+        name: "rating",
+        "data-testid": "my-rating"
+      })
+
+    assert result =~ ~s[data-testid="my-rating"]
+  end
 end

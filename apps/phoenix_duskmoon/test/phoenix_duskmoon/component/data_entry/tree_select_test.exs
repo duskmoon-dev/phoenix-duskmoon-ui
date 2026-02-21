@@ -379,4 +379,27 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
       assert result =~ ~s(id="custom-tree")
     end
   end
+
+  describe "error messages" do
+    test "renders error messages from errors list" do
+      result =
+        render_component(&dm_tree_select/1, %{
+          options: @tree_options,
+          errors: ["is required"]
+        })
+
+      assert result =~ "is required"
+      assert result =~ "tree-select-error"
+    end
+
+    test "does not render errors when list is empty" do
+      result =
+        render_component(&dm_tree_select/1, %{
+          options: @tree_options,
+          errors: []
+        })
+
+      refute result =~ "helper-text text-error"
+    end
+  end
 end

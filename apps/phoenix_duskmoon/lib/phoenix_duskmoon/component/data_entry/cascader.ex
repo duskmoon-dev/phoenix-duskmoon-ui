@@ -26,6 +26,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
 
   """
   use Phoenix.Component
+  import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
 
   @doc """
   Renders a cascader with horizontal multi-panel navigation.
@@ -70,6 +71,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
   )
 
   attr(:error, :boolean, default: false, doc: "show error state")
+  attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:disabled, :boolean, default: false, doc: "disable the component")
   attr(:loading, :boolean, default: false, doc: "show loading state")
   attr(:searchable, :boolean, default: false, doc: "show search input")
@@ -105,7 +107,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
         @size && "cascader-#{@size}",
         @variant && "cascader-#{@variant}",
         @open && "cascader-open",
-        @error && "cascader-error",
+        (@error || @errors != []) && "cascader-error",
         @disabled && "cascader-disabled",
         @loading && "cascader-loading",
         @class
@@ -180,6 +182,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
         name={@name}
         value={List.last(@selected_path)}
       />
+      <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+      </div>
     </div>
     """
   end

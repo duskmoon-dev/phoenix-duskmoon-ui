@@ -288,4 +288,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInputTest do
       assert result =~ "text-sm"
     end
   end
+
+  test "renders otp input with rest attributes" do
+    result =
+      render_component(&dm_otp_input/1, %{
+        name: "otp",
+        "data-testid": "my-otp"
+      })
+
+    assert result =~ ~s[data-testid="my-otp"]
+  end
 end

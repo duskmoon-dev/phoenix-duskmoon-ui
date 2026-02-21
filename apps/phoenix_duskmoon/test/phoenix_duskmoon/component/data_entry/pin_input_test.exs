@@ -229,4 +229,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
       assert result =~ "text-sm"
     end
   end
+
+  test "renders pin input with rest attributes" do
+    result =
+      render_component(&dm_pin_input/1, %{
+        name: "pin",
+        "data-testid": "my-pin"
+      })
+
+    assert result =~ ~s[data-testid="my-pin"]
+  end
 end

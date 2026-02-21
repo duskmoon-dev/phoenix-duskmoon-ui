@@ -219,4 +219,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInputTest do
       assert result =~ ~s(id="custom-time")
     end
   end
+
+  test "renders time input with rest attributes" do
+    result =
+      render_component(&dm_time_input/1, %{
+        name: "time",
+        "data-testid": "my-time"
+      })
+
+    assert result =~ ~s[data-testid="my-time"]
+  end
 end

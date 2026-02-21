@@ -35,6 +35,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
 
   """
   use Phoenix.Component
+  import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
 
   @doc """
   Renders a multi-select input with tags and dropdown.
@@ -70,6 +71,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
   )
 
   attr(:error, :boolean, default: false, doc: "show error state")
+  attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:disabled, :boolean, default: false, doc: "disable the component")
   attr(:loading, :boolean, default: false, doc: "show loading state")
   attr(:searchable, :boolean, default: false, doc: "show search input in dropdown")
@@ -126,7 +128,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
         @size && "multi-select-#{@size}",
         @variant && "multi-select-#{@variant}",
         @open && "multi-select-open",
-        @error && "multi-select-error",
+        (@error || @errors != []) && "multi-select-error",
         @disabled && "multi-select-disabled",
         @loading && "multi-select-loading",
         @class
@@ -200,6 +202,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
         name={@name && "#{@name}[]"}
         value={val}
       />
+      <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+      </div>
     </div>
     """
   end
