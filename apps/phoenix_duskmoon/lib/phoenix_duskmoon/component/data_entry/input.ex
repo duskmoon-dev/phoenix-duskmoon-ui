@@ -52,7 +52,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   attr(:classic, :boolean, default: false, doc: "use classic input styling instead of modern")
   attr(:name, :any, doc: "HTML name attribute for form submission")
   attr(:label, :string, default: nil, doc: "text label displayed above the input")
-  attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
+  attr(:label_class, :any, default: nil, doc: "additional CSS classes for the label")
   attr(:value, :any, doc: "the input value")
 
   attr(:color, :string,

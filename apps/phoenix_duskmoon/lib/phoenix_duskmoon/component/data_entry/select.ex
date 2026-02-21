@@ -72,8 +72,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
 
   attr(:multiple, :boolean, default: false, doc: "allow multiple selections")
   attr(:class, :any, default: nil, doc: "additional CSS classes for the wrapper")
-  attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
-  attr(:select_class, :string, default: nil, doc: "additional CSS classes for the select element")
+  attr(:label_class, :any, default: nil, doc: "additional CSS classes for the label")
+  attr(:select_class, :any, default: nil, doc: "additional CSS classes for the select element")
   attr(:rest, :global)
 
   slot(:inner_block, required: false)

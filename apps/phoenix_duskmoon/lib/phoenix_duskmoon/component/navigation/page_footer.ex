@@ -38,8 +38,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
   ) do
     attr(:class, :any)
     attr(:title, :string)
-    attr(:title_class, :string)
-    attr(:body_class, :string)
+    attr(:title_class, :any)
+    attr(:body_class, :any)
   end
 
   slot(:copyright,
@@ -50,8 +50,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
   ) do
     attr(:class, :any)
     attr(:title, :string)
-    attr(:title_class, :string)
-    attr(:body_class, :string)
+    attr(:title_class, :any)
+    attr(:body_class, :any)
   end
 
   slot(:inner_block,

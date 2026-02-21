@@ -51,9 +51,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
   attr(:disabled, :boolean, default: false, doc: "disables the checkbox")
   attr(:indeterminate, :boolean, default: false, doc: "renders in indeterminate state")
   attr(:class, :any, default: nil, doc: "additional CSS classes for the wrapper")
-  attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
+  attr(:label_class, :any, default: nil, doc: "additional CSS classes for the label")
 
-  attr(:checkbox_class, :string,
+  attr(:checkbox_class, :any,
     default: nil,
     doc: "additional CSS classes for the checkbox input"
   )

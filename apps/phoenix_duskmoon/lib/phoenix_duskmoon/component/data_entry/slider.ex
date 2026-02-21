@@ -56,8 +56,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
   attr(:vertical, :boolean, default: false, doc: "render as a vertical slider")
   attr(:show_value, :boolean, default: true, doc: "show the current value and min/max labels")
   attr(:class, :any, default: nil, doc: "additional CSS classes for the wrapper")
-  attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
-  attr(:slider_class, :string, default: nil, doc: "additional CSS classes for the range input")
+  attr(:label_class, :any, default: nil, doc: "additional CSS classes for the label")
+  attr(:slider_class, :any, default: nil, doc: "additional CSS classes for the range input")
   attr(:rest, :global)
 
   def dm_slider(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do

@@ -44,8 +44,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:disabled, :boolean, default: false, doc: "disables the switch")
   attr(:class, :any, default: nil, doc: "additional CSS classes for the wrapper")
-  attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
-  attr(:switch_class, :string, default: nil, doc: "additional CSS classes for the switch input")
+  attr(:label_class, :any, default: nil, doc: "additional CSS classes for the label")
+  attr(:switch_class, :any, default: nil, doc: "additional CSS classes for the switch input")
   attr(:horizontal, :boolean, default: false, doc: "horizontal layout (label beside input)")
 
   attr(:state, :string,

@@ -83,7 +83,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:success, :boolean, default: false, doc: "show success state")
   attr(:label, :string, default: nil, doc: "label text above the input")
-  attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
+  attr(:label_class, :any, default: nil, doc: "additional CSS classes for the label")
   attr(:helper, :string, default: nil, doc: "helper text below the input")
   attr(:error_message, :string, default: nil, doc: "error message below the input")
   attr(:rest, :global)

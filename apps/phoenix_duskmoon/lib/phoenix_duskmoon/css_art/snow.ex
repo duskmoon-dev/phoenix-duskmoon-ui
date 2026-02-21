@@ -55,8 +55,8 @@ defmodule PhoenixDuskmoon.CssArt.Snow do
   attr(:color, :string, default: "#FFFFFF")
   attr(:use_unicode, :boolean, default: false)
   attr(:animation_duration, :any, default: {5, 15})
-  attr(:container_class, :string, default: "relative w-full h-full")
-  attr(:snowflake_class, :string, default: nil)
+  attr(:container_class, :any, default: "relative w-full h-full")
+  attr(:snowflake_class, :any, default: nil)
   attr(:rest, :global)
 
   def dm_art_snow(assigns) do

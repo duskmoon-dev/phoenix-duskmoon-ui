@@ -69,9 +69,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
   attr(:required, :boolean, default: false, doc: "marks the textarea as required")
   attr(:maxlength, :integer, default: nil, doc: "maximum character count")
   attr(:class, :any, default: nil, doc: "additional CSS classes for the wrapper")
-  attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
+  attr(:label_class, :any, default: nil, doc: "additional CSS classes for the label")
 
-  attr(:textarea_class, :string,
+  attr(:textarea_class, :any,
     default: nil,
     doc: "additional CSS classes for the textarea element"
   )

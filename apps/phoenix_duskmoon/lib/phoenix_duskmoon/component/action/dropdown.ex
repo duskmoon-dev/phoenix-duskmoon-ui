@@ -61,7 +61,7 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
   )
 
   attr(:class, :any, default: nil, doc: "Additional CSS classes on the wrapper")
-  attr(:dropdown_class, :string, default: nil, doc: "Additional CSS classes on the popover panel")
+  attr(:dropdown_class, :any, default: nil, doc: "Additional CSS classes on the popover panel")
   attr(:rest, :global)
 
   slot :trigger, required: true, doc: "Trigger content that toggles the dropdown" do
