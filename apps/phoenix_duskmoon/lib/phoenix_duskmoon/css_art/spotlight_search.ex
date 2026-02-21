@@ -78,6 +78,7 @@ defmodule PhoenixDuskmoon.CssArt.SpotlightSearch do
       id={@id}
       open={@open}
       role="dialog"
+      aria-modal="true"
       aria-label={@dialog_label}
       phx-hook="Spotlight"
       class={[
