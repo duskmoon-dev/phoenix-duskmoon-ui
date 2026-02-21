@@ -22,7 +22,7 @@ config :duskmoon_storybook_web, DuskmoonStorybookWeb.Endpoint,
     ]
   ]
 
-config :duskmoon_storybook_web, Storybook,
+config :duskmoon_storybook_web, DuskmoonStorybookWeb.Storybook,
   compilation_mode: :lazy,
   compilation_debug: true
 
