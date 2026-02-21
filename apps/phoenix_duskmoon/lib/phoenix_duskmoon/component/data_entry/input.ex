@@ -183,8 +183,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     doc: "accessible label for the password visibility toggle"
   )
 
-  slot(:inner_block)
-
   def dm_input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns
     |> assign(field: nil, id: assigns.id || field.id)

@@ -1,61 +1,76 @@
 defmodule Storybook.DataEntry.FileUpload do
   use PhoenixStorybook.Story, :component
 
-  def function, do: &PhoenixDuskmoon.Component.DataEntry.Input.dm_input/1
-  def description, do: "An enhanced file upload with progress and preview."
+  def function, do: &PhoenixDuskmoon.Component.DataEntry.FileUpload.dm_file_upload/1
+  def description, do: "An enhanced file upload with drag-and-drop, preview, and validation."
 
   def variations do
     [
       %Variation{
         id: :default,
+        description: "Default file upload",
         attributes: %{
-          type: "file_upload",
-          label: "Upload Document",
-          name: "document",
-          value: nil
+          id: "file-default",
+          name: "document"
         }
       },
       %Variation{
         id: :multiple_files,
+        description: "Multiple file upload with image filter",
         attributes: %{
-          type: "file_upload",
-          label: "Upload Images",
+          id: "file-multiple",
           name: "images",
-          value: nil,
           multiple: true,
           accept: "image/*"
         }
       },
       %Variation{
-        id: :with_color,
+        id: :with_preview,
+        description: "File upload with preview enabled",
         attributes: %{
-          type: "file_upload",
-          label: "Import Data",
-          name: "data_file",
-          value: nil,
-          color: "success",
-          accept: ".csv,.xlsx,.json"
-        }
-      },
-      %Variation{
-        id: :small_size,
-        attributes: %{
-          type: "file_upload",
-          label: "Avatar",
-          name: "avatar",
-          value: nil,
-          size: "sm",
+          id: "file-preview",
+          name: "photo",
+          show_preview: true,
           accept: "image/jpeg,image/png"
         }
       },
       %Variation{
-        id: :with_errors,
+        id: :compact,
+        description: "Compact file upload",
         attributes: %{
-          type: "file_upload",
-          label: "Resume",
+          id: "file-compact",
+          name: "attachment",
+          compact: true,
+          size: "sm"
+        }
+      },
+      %Variation{
+        id: :with_constraints,
+        description: "File upload with size and count limits",
+        attributes: %{
+          id: "file-constrained",
           name: "resume",
-          value: nil,
+          max_size: 5_000_000,
+          max_files: 3,
+          accept: ".pdf,.docx"
+        }
+      },
+      %Variation{
+        id: :with_errors,
+        description: "File upload showing validation errors",
+        attributes: %{
+          id: "file-errors",
+          name: "upload",
           errors: ["File must be PDF format and under 5MB"]
+        }
+      },
+      %Variation{
+        id: :disabled,
+        description: "Disabled file upload",
+        attributes: %{
+          id: "file-disabled",
+          name: "locked",
+          disabled: true
         }
       }
     ]
