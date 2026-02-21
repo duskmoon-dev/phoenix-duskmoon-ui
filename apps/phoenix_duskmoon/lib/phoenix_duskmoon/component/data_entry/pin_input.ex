@@ -142,7 +142,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
           aria-label={"PIN digit #{i} of #{@length}"}
         />
       </div>
-      <span :if={@error_message && @errors == []} id={@id && "#{@id}-error-message"} class="pin-error-message">{@error_message}</span>
+      <span :if={@error_message && @errors == []} id={@id && "#{@id}-error-message"} class="helper-text text-error">{@error_message}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>

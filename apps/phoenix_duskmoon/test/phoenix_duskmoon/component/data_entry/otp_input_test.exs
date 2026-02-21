@@ -211,7 +211,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInputTest do
 
     test "renders error message" do
       result = render_component(&dm_otp_input/1, %{error_message: "Invalid code"})
-      assert result =~ "otp-error-message"
+      assert result =~ "text-error"
       assert result =~ "Invalid code"
     end
 

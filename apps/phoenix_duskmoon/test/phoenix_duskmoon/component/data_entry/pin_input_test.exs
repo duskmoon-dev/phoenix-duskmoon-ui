@@ -128,7 +128,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
 
     test "renders error message" do
       result = render_component(&dm_pin_input/1, %{error_message: "Invalid PIN"})
-      assert result =~ "pin-error-message"
+      assert result =~ "text-error"
       assert result =~ "Invalid PIN"
     end
 
@@ -194,7 +194,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
     test "no helper or error renders no message" do
       result = render_component(&dm_pin_input/1, %{})
       refute result =~ "helper-text"
-      refute result =~ "pin-error-message"
+      refute result =~ "text-error"
     end
   end
 
