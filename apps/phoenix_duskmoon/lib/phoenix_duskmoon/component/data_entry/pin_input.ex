@@ -23,6 +23,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
   """
   use Phoenix.Component
 
+  import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
+
   @doc """
   Renders a PIN input group.
 
@@ -67,6 +69,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
   attr(:visible, :boolean, default: true, doc: "show entered values (false masks as dots)")
   attr(:disabled, :boolean, default: false, doc: "disable all fields")
   attr(:error, :boolean, default: false, doc: "show error state with shake animation")
+  attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:success, :boolean, default: false, doc: "show success state")
   attr(:label, :string, default: nil, doc: "label text above the input")
   attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
@@ -91,6 +94,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
         "pin-group",
         @class
       ]}
+      phx-feedback-for={@name}
       {@rest}
     >
       <label :if={@label} class={["pin-label", @label_class]}>{@label}</label>
@@ -104,7 +108,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
         @dots && "pin-input-dots",
         @visible && "pin-input-visible",
         @disabled && "opacity-50 cursor-not-allowed",
-        @error && "pin-input-error",
+        (@error || @errors != []) && "pin-input-error",
         @success && "pin-input-success"
       ]}>
         <input
@@ -120,8 +124,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
           aria-label={"PIN digit #{i} of #{@length}"}
         />
       </div>
-      <span :if={@error_message} class="pin-error-message">{@error_message}</span>
-      <span :if={@helper && !@error_message} class="pin-helper">{@helper}</span>
+      <span :if={@error_message && @errors == []} class="pin-error-message">{@error_message}</span>
+      <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+      </div>
+      <span :if={@helper && !@error_message && @errors == []} class="pin-helper">{@helper}</span>
     </div>
     """
   end

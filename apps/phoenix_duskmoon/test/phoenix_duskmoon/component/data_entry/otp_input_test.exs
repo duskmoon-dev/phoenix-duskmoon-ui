@@ -289,6 +289,56 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInputTest do
     end
   end
 
+  describe "errors list" do
+    test "renders error messages from errors list" do
+      result =
+        render_component(&dm_otp_input/1, %{
+          errors: ["is required"]
+        })
+
+      assert result =~ "is required"
+      assert result =~ "otp-input-error"
+    end
+
+    test "does not render errors when list is empty" do
+      result =
+        render_component(&dm_otp_input/1, %{
+          errors: []
+        })
+
+      refute result =~ "helper-text text-error"
+    end
+
+    test "shows error state from errors list even without error boolean" do
+      result =
+        render_component(&dm_otp_input/1, %{
+          errors: ["invalid code"]
+        })
+
+      assert result =~ "otp-input-error"
+    end
+
+    test "errors list takes precedence over error_message" do
+      result =
+        render_component(&dm_otp_input/1, %{
+          error_message: "Old error",
+          errors: ["New error"]
+        })
+
+      assert result =~ "New error"
+      refute result =~ "Old error"
+    end
+  end
+
+  test "renders phx-feedback-for with name" do
+    result =
+      render_component(&dm_otp_input/1, %{
+        name: "user[code]"
+      })
+
+    assert result =~ ~s(phx-feedback-for="user[code]")
+  end
+
   test "renders otp input with rest attributes" do
     result =
       render_component(&dm_otp_input/1, %{

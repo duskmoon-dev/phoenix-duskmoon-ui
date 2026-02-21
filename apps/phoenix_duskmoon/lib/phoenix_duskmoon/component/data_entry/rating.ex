@@ -17,6 +17,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
   use Phoenix.Component
 
   import PhoenixDuskmoon.Component.Icon.Icons
+  import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
 
   @doc """
   Renders an interactive star rating.
@@ -62,6 +63,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
   attr(:animated, :boolean, default: false, doc: "enable pop animation on filled stars")
   attr(:compact, :boolean, default: false, doc: "reduce spacing between stars")
   attr(:icon, :string, default: "star", doc: "MDI icon name for rating items")
+  attr(:error, :boolean, default: false, doc: "show error state")
+  attr(:errors, :list, default: [], doc: "list of error messages to display")
+  attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
   attr(:class, :string, default: nil, doc: "additional CSS classes")
   attr(:rest, :global)
 
@@ -82,34 +86,41 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
       |> assign(:color, css_color(assigns.color))
 
     ~H"""
-    <div
-      id={@id}
-      class={[
-        "rating",
-        @size && "rating-#{@size}",
-        @color && "rating-#{@color}",
-        @readonly && "rating-readonly",
-        @disabled && "rating-disabled",
-        @animated && "rating-animated",
-        @compact && "rating-compact",
-        @class
-      ]}
-      role="group"
-      aria-label={"Rating: #{@safe_value} out of #{@max}"}
-      {@rest}
-    >
-      <input :if={@name} type="hidden" name={@name} value={@safe_value} class="rating-input" />
-      <button
-        :for={i <- 1..@max}
-        type="button"
-        class={["rating-item", i <= @safe_value && "filled"]}
-        aria-label={"Rate #{i} out of #{@max}"}
-        aria-pressed={to_string(i <= @safe_value)}
-        disabled={@disabled || @readonly}
-        tabindex={if(@readonly || @disabled, do: "-1", else: "0")}
+    <div phx-feedback-for={@name}>
+      <div
+        id={@id}
+        class={[
+          "rating",
+          @size && "rating-#{@size}",
+          @color && "rating-#{@color}",
+          @readonly && "rating-readonly",
+          @disabled && "rating-disabled",
+          @animated && "rating-animated",
+          @compact && "rating-compact",
+          (@error || @errors != []) && "rating-error",
+          @class
+        ]}
+        role="group"
+        aria-label={"Rating: #{@safe_value} out of #{@max}"}
+        {@rest}
       >
-        <.dm_mdi name={@icon} class="rating-icon" />
-      </button>
+        <input :if={@name} type="hidden" name={@name} value={@safe_value} class="rating-input" />
+        <button
+          :for={i <- 1..@max}
+          type="button"
+          class={["rating-item", i <= @safe_value && "filled"]}
+          aria-label={"Rate #{i} out of #{@max}"}
+          aria-pressed={to_string(i <= @safe_value)}
+          disabled={@disabled || @readonly}
+          tabindex={if(@readonly || @disabled, do: "-1", else: "0")}
+        >
+          <.dm_mdi name={@icon} class="rating-icon" />
+        </button>
+      </div>
+      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
+      <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+      </div>
     </div>
     """
   end

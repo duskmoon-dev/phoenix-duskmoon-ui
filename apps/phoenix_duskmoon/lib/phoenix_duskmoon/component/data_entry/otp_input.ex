@@ -23,6 +23,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
   """
   use Phoenix.Component
 
+  import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
+
   @doc """
   Renders an OTP/PIN input group.
 
@@ -65,6 +67,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
   attr(:masked, :boolean, default: false, doc: "mask input as password dots")
   attr(:disabled, :boolean, default: false, doc: "disable all fields")
   attr(:error, :boolean, default: false, doc: "show error state")
+  attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:success, :boolean, default: false, doc: "show success state")
   attr(:label, :string, default: nil, doc: "label text above the input")
   attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
@@ -89,6 +92,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
         "otp-group",
         @class
       ]}
+      phx-feedback-for={@name}
       {@rest}
     >
       <label :if={@label} class={["otp-label", @label_class]}>{@label}</label>
@@ -100,7 +104,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
         @gap && "otp-input-#{@gap}",
         @masked && "otp-input-masked",
         @disabled && "opacity-50 cursor-not-allowed",
-        @error && "otp-input-error",
+        (@error || @errors != []) && "otp-input-error",
         @success && "otp-input-success"
       ]}>
         <input
@@ -116,8 +120,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
           aria-label={"Digit #{i} of #{@length}"}
         />
       </div>
-      <span :if={@error_message} class="otp-error-message">{@error_message}</span>
-      <span :if={@helper && !@error_message} class="otp-helper">{@helper}</span>
+      <span :if={@error_message && @errors == []} class="otp-error-message">{@error_message}</span>
+      <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
+      </div>
+      <span :if={@helper && !@error_message && @errors == []} class="otp-helper">{@helper}</span>
     </div>
     """
   end

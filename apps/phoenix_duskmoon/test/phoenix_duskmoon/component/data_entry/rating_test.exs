@@ -276,6 +276,70 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RatingTest do
     end
   end
 
+  describe "error messages" do
+    test "renders error messages from errors list" do
+      result =
+        render_component(&dm_rating/1, %{
+          errors: ["is required"]
+        })
+
+      assert result =~ "is required"
+      assert result =~ "rating-error"
+    end
+
+    test "does not render errors when list is empty" do
+      result =
+        render_component(&dm_rating/1, %{
+          errors: []
+        })
+
+      refute result =~ "helper-text text-error"
+    end
+
+    test "shows error state from errors list even without error boolean" do
+      result =
+        render_component(&dm_rating/1, %{
+          errors: ["something wrong"]
+        })
+
+      assert result =~ "rating-error"
+    end
+  end
+
+  test "renders phx-feedback-for with name" do
+    result =
+      render_component(&dm_rating/1, %{
+        name: "review[rating]"
+      })
+
+    assert result =~ ~s(phx-feedback-for="review[rating]")
+  end
+
+  describe "helper text" do
+    test "renders helper text when provided" do
+      result =
+        render_component(&dm_rating/1, %{
+          id: "rt",
+          helper: "Rate this product"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "Rate this product"
+    end
+
+    test "hides helper text when errors present" do
+      result =
+        render_component(&dm_rating/1, %{
+          id: "rt",
+          helper: "Rate this product",
+          errors: ["is required"]
+        })
+
+      refute result =~ "Rate this product"
+      assert result =~ "is required"
+    end
+  end
+
   test "renders rating with rest attributes" do
     result =
       render_component(&dm_rating/1, %{

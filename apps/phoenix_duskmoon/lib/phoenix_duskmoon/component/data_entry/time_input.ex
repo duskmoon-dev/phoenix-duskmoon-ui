@@ -20,6 +20,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
 
   use Phoenix.Component
 
+  import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
+
   @doc """
   Renders a time input with segmented hour/minute/second fields.
 
@@ -55,6 +57,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
   )
 
   attr(:error, :boolean, default: false, doc: "Error state")
+  attr(:errors, :list, default: [], doc: "list of error messages to display")
+  attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
   attr(:show_seconds, :boolean, default: false, doc: "Show seconds segment")
   attr(:show_period, :boolean, default: false, doc: "Show AM/PM toggle")
   attr(:rest, :global)
@@ -71,56 +75,62 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div
-      id={@id}
-      class={[
-        "time-input",
-        @size && "time-input-#{@size}",
-        @color && "time-input-#{@color}",
-        @variant && "time-input-#{@variant}",
-        @error && "time-input-error",
-        @class
-      ]}
-      {@rest}
-    >
-      <div class="time-input-segments">
-        <input
-          type="text"
-          class="time-input-segment"
-          placeholder="HH"
-          maxlength="2"
-          inputmode="numeric"
-          aria-label="Hours"
-          disabled={@disabled}
-          name={@name && "#{@name}[hour]"}
-        />
-        <span class="time-input-separator">:</span>
-        <input
-          type="text"
-          class="time-input-segment"
-          placeholder="MM"
-          maxlength="2"
-          inputmode="numeric"
-          aria-label="Minutes"
-          disabled={@disabled}
-          name={@name && "#{@name}[minute]"}
-        />
-        <span :if={@show_seconds} class="time-input-separator">:</span>
-        <input
-          :if={@show_seconds}
-          type="text"
-          class="time-input-segment"
-          placeholder="SS"
-          maxlength="2"
-          inputmode="numeric"
-          aria-label="Seconds"
-          disabled={@disabled}
-          name={@name && "#{@name}[second]"}
-        />
+    <div phx-feedback-for={@name}>
+      <div
+        id={@id}
+        class={[
+          "time-input",
+          @size && "time-input-#{@size}",
+          @color && "time-input-#{@color}",
+          @variant && "time-input-#{@variant}",
+          (@error || @errors != []) && "time-input-error",
+          @class
+        ]}
+        {@rest}
+      >
+        <div class="time-input-segments">
+          <input
+            type="text"
+            class="time-input-segment"
+            placeholder="HH"
+            maxlength="2"
+            inputmode="numeric"
+            aria-label="Hours"
+            disabled={@disabled}
+            name={@name && "#{@name}[hour]"}
+          />
+          <span class="time-input-separator">:</span>
+          <input
+            type="text"
+            class="time-input-segment"
+            placeholder="MM"
+            maxlength="2"
+            inputmode="numeric"
+            aria-label="Minutes"
+            disabled={@disabled}
+            name={@name && "#{@name}[minute]"}
+          />
+          <span :if={@show_seconds} class="time-input-separator">:</span>
+          <input
+            :if={@show_seconds}
+            type="text"
+            class="time-input-segment"
+            placeholder="SS"
+            maxlength="2"
+            inputmode="numeric"
+            aria-label="Seconds"
+            disabled={@disabled}
+            name={@name && "#{@name}[second]"}
+          />
+        </div>
+        <div :if={@show_period} class="time-input-period">
+          <button type="button" class="time-input-period-btn" disabled={@disabled}>AM</button>
+          <button type="button" class="time-input-period-btn" disabled={@disabled}>PM</button>
+        </div>
       </div>
-      <div :if={@show_period} class="time-input-period">
-        <button type="button" class="time-input-period-btn" disabled={@disabled}>AM</button>
-        <button type="button" class="time-input-period-btn" disabled={@disabled}>PM</button>
+      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
+      <div :if={@errors != []} id={@id && "#{@id}-errors"}>
+        <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>
     </div>
     """

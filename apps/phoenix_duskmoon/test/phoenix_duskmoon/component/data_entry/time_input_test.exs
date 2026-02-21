@@ -220,6 +220,70 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInputTest do
     end
   end
 
+  describe "error messages" do
+    test "renders error messages from errors list" do
+      result =
+        render_component(&dm_time_input/1, %{
+          errors: ["is required"]
+        })
+
+      assert result =~ "is required"
+      assert result =~ "time-input-error"
+    end
+
+    test "does not render errors when list is empty" do
+      result =
+        render_component(&dm_time_input/1, %{
+          errors: []
+        })
+
+      refute result =~ "helper-text text-error"
+    end
+
+    test "shows error state from errors list even without error boolean" do
+      result =
+        render_component(&dm_time_input/1, %{
+          errors: ["invalid time"]
+        })
+
+      assert result =~ "time-input-error"
+    end
+  end
+
+  test "renders phx-feedback-for with name" do
+    result =
+      render_component(&dm_time_input/1, %{
+        name: "event[start_time]"
+      })
+
+    assert result =~ ~s(phx-feedback-for="event[start_time]")
+  end
+
+  describe "helper text" do
+    test "renders helper text when provided" do
+      result =
+        render_component(&dm_time_input/1, %{
+          id: "ti",
+          helper: "Enter start time"
+        })
+
+      assert result =~ "helper-text"
+      assert result =~ "Enter start time"
+    end
+
+    test "hides helper text when errors present" do
+      result =
+        render_component(&dm_time_input/1, %{
+          id: "ti",
+          helper: "Enter start time",
+          errors: ["is required"]
+        })
+
+      refute result =~ "Enter start time"
+      assert result =~ "is required"
+    end
+  end
+
   test "renders time input with rest attributes" do
     result =
       render_component(&dm_time_input/1, %{
