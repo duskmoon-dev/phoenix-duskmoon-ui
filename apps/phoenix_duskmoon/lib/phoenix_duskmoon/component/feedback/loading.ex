@@ -129,7 +129,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
 
   def dm_loading_ex(assigns) do
     item_count = max(assigns.item_count, 1)
-    size_factor = ceil(1000 * assigns.size / 21)
+    size_factor = max(ceil(1000 * assigns.size / 21), 1)
 
     assigns =
       assigns
