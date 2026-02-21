@@ -105,67 +105,66 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div phx-feedback-for={@name}>
-      <div
-        id={@id}
-        class={[
-          "time-input",
-          @size && "time-input-#{@size}",
-          @color && "time-input-#{@color}",
-          @variant && "time-input-#{@variant}",
-          (@error || @errors != []) && "time-input-error",
-          @disabled && "time-input-disabled",
-          @class
-        ]}
-        role="group"
-        aria-label={@label}
-        aria-disabled={@disabled && "true"}
-        aria-invalid={@errors != [] && "true"}
-        aria-describedby={
-          (@errors != [] && @id && "#{@id}-errors") ||
-            (@helper && @errors == [] && @id && "#{@id}-helper")
-        }
-        {@rest}
-      >
-        <div class="time-input-segments">
-          <input
-            type="text"
-            class="time-input-segment"
-            placeholder="HH"
-            maxlength="2"
-            inputmode="numeric"
-            aria-label={@hours_label}
-            disabled={@disabled}
-            name={@name && "#{@name}[hour]"}
-          />
-          <span class="time-input-separator">:</span>
-          <input
-            type="text"
-            class="time-input-segment"
-            placeholder="MM"
-            maxlength="2"
-            inputmode="numeric"
-            aria-label={@minutes_label}
-            disabled={@disabled}
-            name={@name && "#{@name}[minute]"}
-          />
-          <span :if={@show_seconds} class="time-input-separator">:</span>
-          <input
-            :if={@show_seconds}
-            type="text"
-            class="time-input-segment"
-            placeholder="SS"
-            maxlength="2"
-            inputmode="numeric"
-            aria-label={@seconds_label}
-            disabled={@disabled}
-            name={@name && "#{@name}[second]"}
-          />
-        </div>
-        <div :if={@show_period} class="time-input-period">
-          <button type="button" class="time-input-period-btn" disabled={@disabled} aria-disabled={@disabled && "true"}>{@am_label}</button>
-          <button type="button" class="time-input-period-btn" disabled={@disabled} aria-disabled={@disabled && "true"}>{@pm_label}</button>
-        </div>
+    <div
+      id={@id}
+      class={[
+        "time-input",
+        @size && "time-input-#{@size}",
+        @color && "time-input-#{@color}",
+        @variant && "time-input-#{@variant}",
+        (@error || @errors != []) && "time-input-error",
+        @disabled && "time-input-disabled",
+        @class
+      ]}
+      phx-feedback-for={@name}
+      role="group"
+      aria-label={@label}
+      aria-disabled={@disabled && "true"}
+      aria-invalid={@errors != [] && "true"}
+      aria-describedby={
+        (@errors != [] && @id && "#{@id}-errors") ||
+          (@helper && @errors == [] && @id && "#{@id}-helper")
+      }
+      {@rest}
+    >
+      <div class="time-input-segments">
+        <input
+          type="text"
+          class="time-input-segment"
+          placeholder="HH"
+          maxlength="2"
+          inputmode="numeric"
+          aria-label={@hours_label}
+          disabled={@disabled}
+          name={@name && "#{@name}[hour]"}
+        />
+        <span class="time-input-separator">:</span>
+        <input
+          type="text"
+          class="time-input-segment"
+          placeholder="MM"
+          maxlength="2"
+          inputmode="numeric"
+          aria-label={@minutes_label}
+          disabled={@disabled}
+          name={@name && "#{@name}[minute]"}
+        />
+        <span :if={@show_seconds} class="time-input-separator">:</span>
+        <input
+          :if={@show_seconds}
+          type="text"
+          class="time-input-segment"
+          placeholder="SS"
+          maxlength="2"
+          inputmode="numeric"
+          aria-label={@seconds_label}
+          disabled={@disabled}
+          name={@name && "#{@name}[second]"}
+        />
+      </div>
+      <div :if={@show_period} class="time-input-period">
+        <button type="button" class="time-input-period-btn" disabled={@disabled} aria-disabled={@disabled && "true"}>{@am_label}</button>
+        <button type="button" class="time-input-period-btn" disabled={@disabled} aria-disabled={@disabled && "true"}>{@pm_label}</button>
       </div>
       <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>

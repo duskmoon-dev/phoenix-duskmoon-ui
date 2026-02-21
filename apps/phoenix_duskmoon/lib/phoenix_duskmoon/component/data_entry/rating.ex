@@ -98,44 +98,43 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
       |> assign(:color, css_color(assigns.color))
 
     ~H"""
-    <div phx-feedback-for={@name}>
-      <div
-        id={@id}
-        class={[
-          "rating",
-          @size && "rating-#{@size}",
-          @color && "rating-#{@color}",
-          @readonly && "rating-readonly",
-          @disabled && "rating-disabled",
-          @animated && "rating-animated",
-          @compact && "rating-compact",
-          (@error || @errors != []) && "rating-error",
-          @class
-        ]}
-        role="group"
-        aria-label={format_label(@group_label, %{"value" => @safe_value, "max" => @max})}
-        aria-disabled={@disabled && "true"}
-        aria-invalid={@errors != [] && "true"}
-        aria-describedby={
-          (@errors != [] && @id && "#{@id}-errors") ||
-            (@helper && @errors == [] && @id && "#{@id}-helper")
-        }
-        {@rest}
+    <div
+      id={@id}
+      class={[
+        "rating",
+        @size && "rating-#{@size}",
+        @color && "rating-#{@color}",
+        @readonly && "rating-readonly",
+        @disabled && "rating-disabled",
+        @animated && "rating-animated",
+        @compact && "rating-compact",
+        (@error || @errors != []) && "rating-error",
+        @class
+      ]}
+      phx-feedback-for={@name}
+      role="group"
+      aria-label={format_label(@group_label, %{"value" => @safe_value, "max" => @max})}
+      aria-disabled={@disabled && "true"}
+      aria-invalid={@errors != [] && "true"}
+      aria-describedby={
+        (@errors != [] && @id && "#{@id}-errors") ||
+          (@helper && @errors == [] && @id && "#{@id}-helper")
+      }
+      {@rest}
+    >
+      <input :if={@name} type="hidden" name={@name} value={@safe_value} class="rating-input" />
+      <button
+        :for={i <- 1..@max}
+        type="button"
+        class={["rating-item", i <= @safe_value && "filled"]}
+        aria-label={format_label(@item_label, %{"index" => i, "max" => @max})}
+        aria-pressed={to_string(i <= @safe_value)}
+        disabled={@disabled || @readonly}
+        aria-disabled={(@disabled || @readonly) && "true"}
+        tabindex={if(@readonly || @disabled, do: "-1", else: "0")}
       >
-        <input :if={@name} type="hidden" name={@name} value={@safe_value} class="rating-input" />
-        <button
-          :for={i <- 1..@max}
-          type="button"
-          class={["rating-item", i <= @safe_value && "filled"]}
-          aria-label={format_label(@item_label, %{"index" => i, "max" => @max})}
-          aria-pressed={to_string(i <= @safe_value)}
-          disabled={@disabled || @readonly}
-          aria-disabled={(@disabled || @readonly) && "true"}
-          tabindex={if(@readonly || @disabled, do: "-1", else: "0")}
-        >
-          <.dm_mdi name={@icon} class="rating-icon" />
-        </button>
-      </div>
+        <.dm_mdi name={@icon} class="rating-icon" aria-hidden="true" />
+      </button>
       <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
