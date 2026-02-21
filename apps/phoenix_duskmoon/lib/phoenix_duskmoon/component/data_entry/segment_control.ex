@@ -79,6 +79,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControl do
     attr(:icon, :string)
     attr(:value, :string)
     attr(:class, :any)
+    attr(:label, :string, doc: "accessible label for icon-only items (aria-label)")
   end
 
   def dm_segment_control(assigns) do
@@ -112,6 +113,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControl do
         ]}
         disabled={item[:disabled]}
         aria-disabled={item[:disabled] && "true"}
+        aria-label={item[:label]}
         value={item[:value]}
         aria-pressed={to_string(item[:active] || false)}
       >

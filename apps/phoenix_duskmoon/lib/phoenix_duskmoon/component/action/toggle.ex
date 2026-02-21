@@ -73,6 +73,7 @@ defmodule PhoenixDuskmoon.Component.Action.Toggle do
     attr(:icon, :string, doc: "MDI icon name")
     attr(:icon_only, :boolean, doc: "Icon-only button (no text)")
     attr(:class, :any, doc: "Additional CSS classes")
+    attr(:label, :string, doc: "accessible label for icon-only items (aria-label)")
   end
 
   def dm_toggle_group(assigns) do
@@ -108,6 +109,7 @@ defmodule PhoenixDuskmoon.Component.Action.Toggle do
         ]}
         disabled={item[:disabled]}
         aria-disabled={item[:disabled] && "true"}
+        aria-label={item[:label]}
         value={item[:value]}
         aria-pressed={to_string(item[:active] || false)}
       >

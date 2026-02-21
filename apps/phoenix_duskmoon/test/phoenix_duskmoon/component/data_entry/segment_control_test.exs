@@ -239,4 +239,27 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControlTest do
     result = render_component(&dm_segment_control/1, %{item: items, "data-testid": "my-seg"})
     assert result =~ ~s[data-testid="my-seg"]
   end
+
+  test "icon-only item with label gets aria-label" do
+    items = [
+      %{
+        __slot__: :item,
+        icon: "view-list",
+        label: "List view",
+        inner_block: fn _, _ -> "" end
+      }
+    ]
+
+    result = render_component(&dm_segment_control/1, %{item: items, icon_only: true})
+    assert result =~ ~s(aria-label="List view")
+  end
+
+  test "item without label has no aria-label" do
+    items = [
+      %{__slot__: :item, inner_block: fn _, _ -> "Day" end}
+    ]
+
+    result = render_component(&dm_segment_control/1, %{item: items})
+    refute result =~ "aria-label"
+  end
 end

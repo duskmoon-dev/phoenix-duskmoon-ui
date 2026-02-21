@@ -258,4 +258,28 @@ defmodule PhoenixDuskmoon.Component.Action.ToggleTest do
 
     assert result =~ ~s[data-testid="my-toggle"]
   end
+
+  test "icon-only item with label gets aria-label" do
+    items = [
+      %{
+        __slot__: :item,
+        icon: "format-align-left",
+        icon_only: true,
+        label: "Align left",
+        inner_block: fn _, _ -> "" end
+      }
+    ]
+
+    result = render_component(&dm_toggle_group/1, %{item: items})
+    assert result =~ ~s(aria-label="Align left")
+  end
+
+  test "item without label has no aria-label" do
+    items = [
+      %{__slot__: :item, inner_block: fn _, _ -> "Bold" end}
+    ]
+
+    result = render_component(&dm_toggle_group/1, %{item: items})
+    refute result =~ "aria-label"
+  end
 end
