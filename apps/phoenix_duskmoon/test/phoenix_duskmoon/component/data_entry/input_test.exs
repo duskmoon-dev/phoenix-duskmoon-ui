@@ -3510,4 +3510,62 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
       assert result =~ ~s[value="test"]
     end
   end
+
+  describe "label_class" do
+    test "renders label with custom label_class" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "user",
+          label: "Username",
+          label_class: "text-lg font-bold",
+          value: nil
+        })
+
+      assert result =~ "text-lg font-bold"
+      assert result =~ "Username"
+    end
+
+    test "renders label with label_class and error class combined" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "user",
+          label: "Username",
+          label_class: "text-sm",
+          errors: ["is required"],
+          value: nil
+        })
+
+      assert result =~ "text-sm"
+      assert result =~ "text-error"
+    end
+
+    test "renders select label with label_class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "select",
+          name: "country",
+          label: "Country",
+          label_class: "font-semibold",
+          options: [{"us", "USA"}],
+          value: nil
+        })
+
+      assert result =~ "font-semibold"
+      assert result =~ "Country"
+    end
+
+    test "renders textarea label with label_class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "textarea",
+          name: "bio",
+          label: "Bio",
+          label_class: "italic",
+          value: nil
+        })
+
+      assert result =~ "italic"
+      assert result =~ "Bio"
+    end
+  end
 end

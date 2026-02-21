@@ -197,4 +197,28 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
       assert result =~ ~s(id="custom-pin")
     end
   end
+
+  describe "label_class" do
+    test "renders label with custom label_class" do
+      result =
+        render_component(&dm_pin_input/1, %{
+          label: "Enter PIN",
+          label_class: "text-lg font-bold"
+        })
+
+      assert result =~ "text-lg font-bold"
+      assert result =~ "Enter PIN"
+    end
+
+    test "renders label with pin-label base class and label_class" do
+      result =
+        render_component(&dm_pin_input/1, %{
+          label: "PIN",
+          label_class: "text-sm"
+        })
+
+      assert result =~ "pin-label"
+      assert result =~ "text-sm"
+    end
+  end
 end

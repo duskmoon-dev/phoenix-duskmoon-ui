@@ -67,6 +67,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
   attr(:error, :boolean, default: false, doc: "show error state")
   attr(:success, :boolean, default: false, doc: "show success state")
   attr(:label, :string, default: nil, doc: "label text above the input")
+  attr(:label_class, :string, default: nil, doc: "additional CSS classes for the label")
   attr(:helper, :string, default: nil, doc: "helper text below the input")
   attr(:error_message, :string, default: nil, doc: "error message below the input")
   attr(:rest, :global)
@@ -90,7 +91,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
       ]}
       {@rest}
     >
-      <label :if={@label} class="otp-label">{@label}</label>
+      <label :if={@label} class={["otp-label", @label_class]}>{@label}</label>
       <div class={[
         "otp-input",
         @size && "otp-input-#{@size}",

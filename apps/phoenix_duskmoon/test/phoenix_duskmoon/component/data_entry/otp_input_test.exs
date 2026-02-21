@@ -256,4 +256,28 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInputTest do
       assert result =~ ~s(id="custom-otp")
     end
   end
+
+  describe "label_class" do
+    test "renders label with custom label_class" do
+      result =
+        render_component(&dm_otp_input/1, %{
+          label: "Verification Code",
+          label_class: "text-lg font-bold"
+        })
+
+      assert result =~ "text-lg font-bold"
+      assert result =~ "Verification Code"
+    end
+
+    test "renders label with otp-label base class and label_class" do
+      result =
+        render_component(&dm_otp_input/1, %{
+          label: "Code",
+          label_class: "text-sm"
+        })
+
+      assert result =~ "otp-label"
+      assert result =~ "text-sm"
+    end
+  end
 end
