@@ -209,7 +209,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
         </div>
 
         <div class="tree-select-options" role="tree" aria-labelledby={@id && "#{@id}-trigger"}>
-          <div :if={@options == []} class="tree-select-empty">{@empty_text}</div>
+          <div :if={@options == []} class="tree-select-empty" role="presentation">{@empty_text}</div>
           <.render_nodes
             :if={@options != []}
             nodes={@options}
@@ -237,7 +237,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
 
   defp render_nodes(assigns) do
     ~H"""
-    <div :for={node <- @nodes}>
+    <div :for={node <- @nodes} role="none">
       <.render_node
         node={node}
         selected_set={@selected_set}
@@ -289,7 +289,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
       <span :if={@node[:icon]} class="tree-select-node-custom-icon">{@node[:icon]}</span>
       <span class="tree-select-node-label">{@node[:label]}</span>
     </div>
-    <div :if={@has_children && @expanded} class="tree-select-children">
+    <div :if={@has_children && @expanded} class="tree-select-children" role="group">
       <.render_nodes
         nodes={@node[:children]}
         selected_set={@selected_set}
