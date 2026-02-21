@@ -43,6 +43,7 @@
   <div class="flex flex-wrap gap-4 items-center">
     <.dm_avatar name="Circle" shape="circle" size="lg" />
     <.dm_avatar name="Square" shape="square" size="lg" />
+    <.dm_avatar name="Rounded" shape="rounded" size="lg" />
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Online / Offline Status</h3>
@@ -51,8 +52,11 @@
     <.dm_avatar name="Off" offline={true} size="lg" />
   </div>
 
-  <h3 class="text-xl font-semibold mt-8 mb-4">With Border</h3>
+  <h3 class="text-xl font-semibold mt-8 mb-4">Ring</h3>
   <div class="flex flex-wrap gap-4 items-center">
-    <.dm_avatar name="BD" border={true} size="lg" />
+    <.dm_avatar name="Ring" ring={true} size="lg" />
+    <.dm_avatar name="P" ring={true} ring_color="primary" size="lg" />
+    <.dm_avatar name="S" ring={true} ring_color="secondary" size="lg" />
+    <.dm_avatar name="T" ring={true} ring_color="tertiary" size="lg" />
   </div>
 </.dm_card>

@@ -14,11 +14,11 @@ defmodule Storybook.DataDisplay.Avatar do
         }
       },
       %Variation{
-        id: :with_border,
+        id: :with_ring,
         attributes: %{
           src: "https://picsum.photos/seed/user2/100/100.jpg",
           alt: "User Avatar",
-          border: true
+          ring: true
         }
       },
       %Variation{
@@ -27,7 +27,7 @@ defmodule Storybook.DataDisplay.Avatar do
           src: "https://picsum.photos/seed/user3/100/100.jpg",
           alt: "User Avatar",
           online: true,
-          border: true
+          ring: true
         }
       },
       %Variation{
@@ -36,7 +36,7 @@ defmodule Storybook.DataDisplay.Avatar do
           src: "https://picsum.photos/seed/user4/100/100.jpg",
           alt: "User Avatar",
           offline: true,
-          border: true
+          ring: true
         }
       },
       %Variation{
@@ -75,7 +75,7 @@ defmodule Storybook.DataDisplay.Avatar do
           src: "https://picsum.photos/seed/user7/100/100.jpg",
           alt: "User Avatar",
           size: "lg",
-          border: true
+          ring: true
         }
       },
       %Variation{
@@ -84,7 +84,7 @@ defmodule Storybook.DataDisplay.Avatar do
           src: "https://picsum.photos/seed/user8/100/100.jpg",
           alt: "User Avatar",
           size: "xl",
-          border: true,
+          ring: true,
           online: true
         }
       },
@@ -94,7 +94,31 @@ defmodule Storybook.DataDisplay.Avatar do
           src: "https://picsum.photos/seed/user9/100/100.jpg",
           alt: "User Avatar",
           shape: "square",
-          border: true
+          ring: true
+        }
+      },
+      %Variation{
+        id: :rounded_shape,
+        attributes: %{
+          src: "https://picsum.photos/seed/user10/100/100.jpg",
+          alt: "User Avatar",
+          shape: "rounded"
+        }
+      },
+      %Variation{
+        id: :ring_primary,
+        attributes: %{
+          name: "Ring",
+          ring: true,
+          ring_color: "primary"
+        }
+      },
+      %Variation{
+        id: :ring_secondary,
+        attributes: %{
+          name: "Ring",
+          ring: true,
+          ring_color: "secondary"
         }
       },
       %Variation{
