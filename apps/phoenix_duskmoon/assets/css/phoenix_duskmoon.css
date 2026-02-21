@@ -12,7 +12,6 @@
 @import "./element-theme-bridge.css";
 
 /* CSS Art — decorative/animated visual effects */
-@import "./css_art/atom.css";
 @import "./css_art/button-noise.css";
 @import "./css_art/eclipse.css";
 @import "./css_art/plasma-ball.css";
