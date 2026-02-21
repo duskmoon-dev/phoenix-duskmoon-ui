@@ -77,7 +77,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
         <.dm_link
           :for={menu <- @menu}
           navigate={Map.get(menu, :to, "")}
-          class={["appbar-action w-auto px-3 rounded-md whitespace-nowrap", Map.get(menu, :class, "")]}
+          class={["appbar-action w-auto px-3 rounded-md whitespace-nowrap", Map.get(menu, :class)]}
         >
           {render_slot(menu)}
         </.dm_link>
@@ -142,7 +142,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
               class={[
                 "appbar-nav py-2 px-6",
                 "text-lg font-semibold leading-6 text-center",
-                Map.get(menu, :class, "")
+                Map.get(menu, :class)
               ]}
               href={Map.get(menu, :to)}
             >
@@ -181,7 +181,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
             "w-full py-2 px-6",
             "font-semibold leading-6",
             "text-lg text-center",
-            Map.get(menu, :class, "")
+            Map.get(menu, :class)
           ]}
           href={Map.get(menu, :to)}
         >

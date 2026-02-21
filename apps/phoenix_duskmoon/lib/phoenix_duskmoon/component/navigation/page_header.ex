@@ -110,7 +110,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
               "py-2 px-6",
               "text-lg font-semibold leading-6 text-center",
               "hover:opacity-50",
-              Map.get(menu, :class, "")
+              Map.get(menu, :class)
             ]}
             href={Map.get(menu, :to, false)}
           >
@@ -119,7 +119,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
         </div>
         <div
             :for={user_profile <- @user_profile}
-            class={["flex", Map.get(user_profile, :class, "")]}
+            class={["flex", Map.get(user_profile, :class)]}
           >
             {render_slot(user_profile)}
           </div>
@@ -147,7 +147,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
               "py-2 px-12 w-full",
               "text-lg font-semibold leading-6 text-center",
               "hover:opacity-50",
-              Map.get(menu, :class, "")
+              Map.get(menu, :class)
             ]}
             href={Map.get(menu, :to, false)}
           >
@@ -160,7 +160,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
               "py-2 px-12 w-full",
               "text-lg font-semibold leading-6",
               "hover:opacity-50 flex justify-center",
-              Map.get(user_profile, :class, "")
+              Map.get(user_profile, :class)
             ]}
           >
             {render_slot(user_profile)}
@@ -193,7 +193,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
                 "py-2 px-6",
                 "text-lg font-semibold leading-6 text-center",
                 "hover:opacity-50",
-                Map.get(menu, :class, "")
+                Map.get(menu, :class)
               ]}
               href={Map.get(menu, :to, false)}
             >
@@ -202,7 +202,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
           </div>
           <div
             :for={user_profile <- @user_profile}
-            class={["flex", Map.get(user_profile, :class, "")]}
+            class={["flex", Map.get(user_profile, :class)]}
           >
             {render_slot(user_profile)}
           </div>
@@ -230,7 +230,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
                 "py-2 px-12 w-full",
                 "text-lg font-semibold leading-6",
                 "hover:opacity-50",
-                Map.get(menu, :class, "")
+                Map.get(menu, :class)
               ]}
               href={Map.get(menu, :to, false)}
             >
@@ -242,7 +242,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
                 "py-2 px-12 w-full",
                 "text-lg font-semibold leading-6",
                 "hover:opacity-50",
-                Map.get(user_profile, :class, "")
+                Map.get(user_profile, :class)
               ]}
             >
               {render_slot(user_profile)}

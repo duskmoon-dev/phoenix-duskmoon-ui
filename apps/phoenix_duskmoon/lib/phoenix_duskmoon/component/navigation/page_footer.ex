@@ -85,7 +85,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
             :for={section <- @section}
             class={[
               "flex flex-col",
-              Map.get(section, :class, "")
+              Map.get(section, :class)
             ]}
           >
             <h4 :if={Map.get(section, :title, "") != ""} class={["font-bold my-2", Map.get(section, :title_class, "")]}>
@@ -99,7 +99,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
             :for={copyright <- @copyright}
             class={[
               "flex flex-col self-center",
-              Map.get(copyright, :class, "")
+              Map.get(copyright, :class)
             ]}
           >
             <h4 :if={Map.get(copyright, :title, "") != ""} class={["font-bold my-2", Map.get(copyright, :title_class, "")]}>

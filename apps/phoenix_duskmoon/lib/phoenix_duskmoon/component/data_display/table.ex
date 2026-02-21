@@ -148,7 +148,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
       <caption
         :for={caption <- @caption}
         id={Map.get(caption, :id, false)}
-        class={Map.get(caption, :class, "")}
+        class={Map.get(caption, :class)}
       >{render_slot(caption)}</caption>
       <thead role="row-group" class="hidden md:table-header-group sticky top-0">
         <tr role="row">
@@ -170,7 +170,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
             :for={col <- @col}
             data-label={col.label}
             role="cell"
-            class={Map.get(col, :class, "")}
+            class={Map.get(col, :class)}
           >{render_slot(col, row)}</td>
         </tr>
       </tbody>
@@ -183,14 +183,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
               :for={col <- @col}
               data-label={col.label}
               role="cell"
-              class={Map.get(col, :class, "")}
+              class={Map.get(col, :class)}
             >{render_slot(col, row)}</td>
           </tr>
           <tr
             role="row"
             class={[
               "table-row-expand",
-              Map.get(expand, :class, "")
+              Map.get(expand, :class)
             ]}
             :if={length(@expand) > 0}
             :for={expand <- @expand}
