@@ -1,5 +1,4 @@
 @source "../js/**/*.js";
-@source '../js/**/*.js';
 @source '../../lib/**/*.exs';
 @source '../../lib/**/*.*ex';
 @source '../../storybook/**/*.exs';
