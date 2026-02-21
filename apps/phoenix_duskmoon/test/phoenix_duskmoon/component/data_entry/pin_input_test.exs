@@ -117,7 +117,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
     test "renders disabled fields" do
       result = render_component(&dm_pin_input/1, %{disabled: true})
       assert result =~ "disabled"
-      assert result =~ "form-group-disabled"
+      assert result =~ "pin-input-disabled"
     end
 
     test "renders aria-disabled on group when disabled" do
@@ -127,7 +127,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
 
     test "renders enabled state without disabled styling" do
       result = render_component(&dm_pin_input/1, %{})
-      refute result =~ "form-group-disabled"
+      refute result =~ "pin-input-disabled"
       refute result =~ "aria-disabled"
     end
 

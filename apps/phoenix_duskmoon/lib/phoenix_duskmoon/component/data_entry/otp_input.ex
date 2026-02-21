@@ -144,7 +144,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
         @variant && "otp-input-#{@variant}",
         @gap && "otp-input-#{@gap}",
         @masked && "otp-input-masked",
-        @disabled && "form-group-disabled",
+        @disabled && "otp-input-disabled",
         (@error || @errors != []) && "otp-input-error",
         @success && "otp-input-success"
       ]}>

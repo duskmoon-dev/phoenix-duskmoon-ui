@@ -193,7 +193,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInputTest do
     test "renders disabled state" do
       result = render_component(&dm_otp_input/1, %{disabled: true})
       assert result =~ "disabled"
-      assert result =~ "form-group-disabled"
+      assert result =~ "otp-input-disabled"
     end
 
     test "renders aria-disabled on group when disabled" do
@@ -203,7 +203,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInputTest do
 
     test "renders enabled state without disabled styling" do
       result = render_component(&dm_otp_input/1, %{})
-      refute result =~ "form-group-disabled"
+      refute result =~ "otp-input-disabled"
       refute result =~ "aria-disabled"
     end
   end
