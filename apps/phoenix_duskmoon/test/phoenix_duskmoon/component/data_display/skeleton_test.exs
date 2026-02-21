@@ -141,6 +141,24 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
 
       assert result =~ ~s[ring ring-primary]
     end
+
+    test "renders avatar skeleton with aria-busy" do
+      result = render_component(&dm_skeleton_avatar/1, %{})
+
+      assert result =~ ~s[aria-busy="true"]
+    end
+
+    test "renders avatar skeleton with default loading_label" do
+      result = render_component(&dm_skeleton_avatar/1, %{})
+
+      assert result =~ ~s[aria-label="Loading avatar"]
+    end
+
+    test "renders avatar skeleton with custom loading_label" do
+      result = render_component(&dm_skeleton_avatar/1, %{loading_label: "Chargement avatar"})
+
+      assert result =~ ~s[aria-label="Chargement avatar"]
+    end
   end
 
   describe "dm_skeleton_card/1" do

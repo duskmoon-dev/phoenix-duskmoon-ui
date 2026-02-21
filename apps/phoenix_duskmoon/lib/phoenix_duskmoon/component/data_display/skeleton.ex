@@ -128,9 +128,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   attr(:size, :string, default: "md", doc: "Avatar size (xs, sm, md, lg, xl)")
   attr(:animation, :string, default: nil, doc: "Animation type")
 
+  attr(:loading_label, :string,
+    default: "Loading avatar",
+    doc: "Accessible label for the loading state"
+  )
+
   def dm_skeleton_avatar(assigns) do
     ~H"""
-    <div id={@id} class={build_avatar_classes(@size, @animation, @class)} />
+    <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_avatar_classes(@size, @animation, @class)} />
     """
   end
 
