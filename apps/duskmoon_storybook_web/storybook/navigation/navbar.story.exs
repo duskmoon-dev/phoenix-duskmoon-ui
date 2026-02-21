@@ -9,6 +9,7 @@ defmodule Storybook.Navigation.Navbar do
     [
       %Variation{
         id: :default,
+        description: "Default navbar with start and end parts",
         attributes: %{
           class: "shadow"
         },
@@ -19,6 +20,28 @@ defmodule Storybook.Navigation.Navbar do
           </:start_part>
           <:end_part>
             <button type="button">action</button>
+          </:end_part>
+          """
+        ]
+      },
+      %Variation{
+        id: :with_center,
+        description: "Navbar with all three parts including center navigation",
+        attributes: %{
+          class: "shadow"
+        },
+        slots: [
+          """
+          <:start_part>
+            <span class="font-bold text-lg">MyApp</span>
+          </:start_part>
+          <:center_part>
+            <a href="#" class="px-3">Home</a>
+            <a href="#" class="px-3">About</a>
+            <a href="#" class="px-3">Contact</a>
+          </:center_part>
+          <:end_part>
+            <button type="button" class="btn btn-sm">Sign In</button>
           </:end_part>
           """
         ]

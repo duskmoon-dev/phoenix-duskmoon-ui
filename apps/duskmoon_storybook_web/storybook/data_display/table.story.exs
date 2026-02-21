@@ -9,6 +9,7 @@ defmodule Storybook.DataDisplay.Table do
     [
       %Variation{
         id: :default,
+        description: "Default table with border, hover, caption, and expand rows",
         attributes: %{
           class: "w-full",
           border: true,
@@ -36,6 +37,45 @@ defmodule Storybook.DataDisplay.Table do
               <%= r.description %>
             </pre>
           </:expand>
+          """
+        ]
+      },
+      %Variation{
+        id: :zebra,
+        description: "Zebra-striped table with alternating row colors",
+        attributes: %{
+          class: "w-full",
+          zebra: true,
+          data: table_data()
+        },
+        slots: [
+          """
+          <:col :let={r} label="Name" class="align-top">
+            <%= r.name %>
+          </:col>
+          <:col :let={r} label="Portrayal" class="align-top">
+            <%= r.portrayal %>
+          </:col>
+          """
+        ]
+      },
+      %Variation{
+        id: :compact,
+        description: "Compact table with reduced padding",
+        attributes: %{
+          class: "w-full",
+          compact: true,
+          border: true,
+          data: table_data()
+        },
+        slots: [
+          """
+          <:col :let={r} label="Name">
+            <%= r.name %>
+          </:col>
+          <:col :let={r} label="Portrayal">
+            <%= r.portrayal %>
+          </:col>
           """
         ]
       }
