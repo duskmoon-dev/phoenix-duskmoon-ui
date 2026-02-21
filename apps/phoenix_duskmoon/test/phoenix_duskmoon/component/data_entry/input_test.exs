@@ -1797,9 +1797,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
           value: 2
         })
 
-      # Stars render as SVG icons (mdi star)
+      # Stars render as SVG icons (mdi star) in rating-item buttons
       assert result =~ "<svg"
-      assert result =~ "btn"
+      assert result =~ "rating-item"
     end
 
     test "renders rating with errors" do
@@ -2464,8 +2464,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
           max: 3
         })
 
-      # Should have text-warning for filled stars (1 and 2)
-      assert result =~ "text-warning"
+      # Should have rating-warning on the container for color variant
+      assert result =~ "rating-warning"
       # The hidden input should have value 2
       assert result =~ ~s[value="2"]
     end

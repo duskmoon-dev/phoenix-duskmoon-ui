@@ -465,27 +465,31 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>
-        {@label} <span class="text-sm font-normal text-on-surface-variant">({@value || 0}/{@max})</span>
+        {@label} <span class="rating-count">({@value || 0}/{@max})</span>
       </.dm_label>
       <div class="flex flex-col gap-2">
-        <div class="flex items-center gap-1" role="group" aria-label={"#{@label} rating"} aria-invalid={@errors != [] && "true"} aria-describedby={@errors != [] && @id && "#{@id}-errors"}>
+        <div
+          class={[
+            "rating",
+            @color && "rating-#{@color}",
+            @size && "rating-#{@size}",
+            @readonly && "rating-readonly"
+          ]}
+          role="group"
+          aria-label={"#{@label} rating"}
+          aria-invalid={@errors != [] && "true"}
+          aria-describedby={@errors != [] && @id && "#{@id}-errors"}
+        >
           <input type="hidden" name={@name} id={@id} value={@value || 0} />
           <button
             :for={i <- 1..@max}
             type="button"
             aria-label={"Rate #{i} out of #{@max}"}
             aria-pressed={to_string(i <= (@value || 0))}
-            class={[
-              "btn btn-ghost btn-sm p-1",
-              i <= (@value || 0) && "text-warning",
-              @color && i <= (@value || 0) && "text-#{@color}",
-              @size == "xs" && "btn-xs",
-              @size == "sm" && "btn-sm",
-              @size == "lg" && "btn-lg"
-            ]}
+            class={["rating-item", i <= (@value || 0) && "filled"]}
             disabled={@readonly}
           >
-            <.dm_mdi name="star" class="w-4 h-4" />
+            <.dm_mdi name="star" class="rating-icon" />
           </button>
         </div>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
