@@ -117,7 +117,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControl do
         value={item[:value]}
         aria-pressed={to_string(item[:active] || false)}
       >
-        <.dm_mdi :if={item[:icon]} name={item[:icon]} class="segment-icon" />
+        <.dm_mdi :if={item[:icon]} name={item[:icon]} class="segment-icon" aria-hidden="true" />
         {render_slot(item)}
       </button>
     </div>
