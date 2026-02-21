@@ -598,7 +598,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
         <div :if={@swatches} class="flex flex-wrap gap-2">
           <button
             type="button"
-            class="w-8 h-8 rounded border-2 border-[var(--color-surface-container-high)] hover:border-[var(--color-on-surface)] transition-colors"
+            class="w-8 h-8 rounded border-2 border-surface-container-high hover:border-on-surface transition-colors"
             style={"background-color: #{swatch}"}
             aria-label={"Select color #{swatch}"}
             :for={swatch <- @swatches}
@@ -780,7 +780,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           aria-invalid={@errors != [] && "true"}
           aria-describedby={@errors != [] && @id && "#{@id}-errors"}
           class={[
-            "min-h-[150px] p-3 border border-[var(--color-surface-container-high)] rounded-b-lg focus:outline-none focus:border-primary",
+            "min-h-[150px] p-3 border border-surface-container-high rounded-b-lg focus:outline-none focus:border-primary",
             @color && "focus:border-#{@color}",
             @errors != [] && "border-error"
           ]}
@@ -804,7 +804,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
-        <div class="flex flex-wrap gap-2 p-2 border border-[var(--color-surface-container-high)] rounded-lg" role="group" aria-label={"#{@label} tags"} aria-invalid={@errors != [] && "true"} aria-describedby={@errors != [] && @id && "#{@id}-errors"}>
+        <div class="flex flex-wrap gap-2 p-2 border border-surface-container-high rounded-lg" role="group" aria-label={"#{@label} tags"} aria-invalid={@errors != [] && "true"} aria-describedby={@errors != [] && @id && "#{@id}-errors"}>
           <span
             :for={tag <- @tags}
             class={[
