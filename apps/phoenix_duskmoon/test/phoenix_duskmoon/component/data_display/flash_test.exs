@@ -70,6 +70,16 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
       assert result =~ "Attempting to reconnect"
     end
 
+    test "renders flash group inside toast-container" do
+      result =
+        render_component(&dm_flash_group/1, %{
+          flash: %{"info" => "Test"}
+        })
+
+      assert result =~ "toast-container"
+      assert result =~ "toast-container-top-right"
+    end
+
     test "renders flash group with specific ids" do
       result =
         render_component(&dm_flash_group/1, %{
@@ -91,8 +101,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
         })
 
       assert result =~ "Info message"
-      assert result =~ "alert"
-      assert result =~ "alert-info"
+      assert result =~ "toast"
+      assert result =~ "toast-info"
     end
 
     test "renders individual flash with kind error" do
@@ -103,8 +113,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
         })
 
       assert result =~ "Error message"
-      assert result =~ "alert"
-      assert result =~ "alert-error"
+      assert result =~ "toast"
+      assert result =~ "toast-error"
     end
 
     test "renders flash with title" do
@@ -147,7 +157,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
         })
 
       assert result =~ ~s[aria-label="Close"]
-      assert result =~ "btn btn-ghost btn-xs"
+      assert result =~ "toast-close"
     end
 
     test "renders flash without close button when close=false" do
@@ -161,16 +171,17 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
       refute result =~ ~s[aria-label="Close"]
     end
 
-    test "renders flash with toast positioning classes" do
+    test "renders flash with toast CSS classes" do
       result =
         render_component(&dm_flash/1, %{
           kind: :info,
           flash: %{"info" => "Positioned"}
         })
 
-      assert result =~ "fixed"
-      assert result =~ "top-4"
-      assert result =~ "right-4"
+      assert result =~ "toast"
+      assert result =~ "toast-info"
+      assert result =~ "toast-content"
+      assert result =~ "toast-message"
     end
 
     test "does not render when flash message is empty for kind" do
@@ -181,7 +192,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
         })
 
       # The :if guard should prevent rendering the outer div
-      refute result =~ "alert"
+      refute result =~ "toast"
     end
 
     test "does not render when flash has different kind" do
@@ -274,16 +285,16 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
       assert result =~ ~s[type="button"]
     end
 
-    test "renders toast positioning classes" do
+    test "renders toast structure classes" do
       result =
         render_component(&dm_flash/1, %{
           kind: :info,
           flash: %{"info" => "Positioned"}
         })
 
-      assert result =~ "fixed"
-      assert result =~ "top-4"
-      assert result =~ "right-4"
+      assert result =~ "toast-content"
+      assert result =~ "toast-message"
+      assert result =~ "toast-close"
     end
 
     test "renders dm-alert class with kind-specific variant" do
@@ -299,8 +310,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
           flash: %{"error" => "Error alert"}
         })
 
-      assert info_result =~ "alert-info"
-      assert error_result =~ "alert-error"
+      assert info_result =~ "toast-info"
+      assert error_result =~ "toast-error"
     end
 
     test "renders flash with default Close aria-label on close button" do

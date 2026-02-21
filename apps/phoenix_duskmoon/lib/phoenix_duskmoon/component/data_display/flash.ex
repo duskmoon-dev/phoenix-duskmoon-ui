@@ -36,30 +36,33 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
     <div
       :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
       id={@id}
-      phx-mounted={@autoshow && JS.show(to: "##{@id}")}
-      phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> JS.hide(to: "##{@id}")}
+      phx-mounted={@autoshow && JS.add_class("toast-open", to: "##{@id}")}
+      phx-click={
+        JS.push("lv:clear-flash", value: %{key: @kind})
+        |> JS.remove_class("toast-open", to: "##{@id}")
+      }
       role="alert"
       aria-live={if(@kind == :error, do: "assertive", else: "polite")}
       aria-atomic="true"
-      class={"hidden fixed top-4 right-4 w-80 sm:w-96 z-[1000]"}
+      class={["toast", "toast-#{@kind}"]}
       {@rest}
     >
-      <div class={["alert", if(@kind == :info, do: "alert-info"), if(@kind == :error, do: "alert-error")]}>
-        <strong :if={@title} class="flex items-center gap-1.5 w-full text-xs font-semibold leading-6">
-          <.dm_bsi :if={@kind == :info} name="info-circle" class="w-4 h-4" />
-          <.dm_bsi :if={@kind == :error} name="exclamation-circle" class="w-4 h-4" />
-          {@title}
-        </strong>
-        <div class="w-full text-xs leading-5">{msg}</div>
-        <button
-          :if={@close}
-          type="button"
-          class="absolute top-2 right-2 btn btn-ghost btn-xs"
-          aria-label={@close_label}
-        >
-          <.dm_bsi name="x" class="w-5 h-5 " />
-        </button>
+      <div :if={@title} class="toast-icon" aria-hidden="true">
+        <.dm_bsi :if={@kind == :info} name="info-circle" class="w-5 h-5" />
+        <.dm_bsi :if={@kind == :error} name="exclamation-circle" class="w-5 h-5" />
       </div>
+      <div class="toast-content">
+        <div :if={@title} class="toast-title">{@title}</div>
+        <div class="toast-message">{msg}</div>
+      </div>
+      <button
+        :if={@close}
+        type="button"
+        class="toast-close"
+        aria-label={@close_label}
+      >
+        <.dm_bsi name="x" class="w-4 h-4" />
+      </button>
     </div>
     """
   end
@@ -88,19 +91,21 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
 
   def dm_flash_group(assigns) do
     ~H"""
-    <.dm_flash id="flash-info" kind={:info} title={@info_title} flash={@flash} />
-    <.dm_flash id="flash-error" kind={:error} title={@error_title} flash={@flash} />
-    <.dm_flash
-      id="disconnected"
-      kind={:error}
-      title={@disconnected_title}
-      close={false}
-      autoshow={false}
-      phx-disconnected={JS.show(to: "#disconnected")}
-      phx-connected={JS.hide(to: "#disconnected")}
-    >
-      {@reconnecting_text} <.dm_bsi name="arrow-repeat" class="inline ml-1 w-3 h-3 animate-spin" />
-    </.dm_flash>
+    <div class="toast-container toast-container-top-right">
+      <.dm_flash id="flash-info" kind={:info} title={@info_title} flash={@flash} />
+      <.dm_flash id="flash-error" kind={:error} title={@error_title} flash={@flash} />
+      <.dm_flash
+        id="disconnected"
+        kind={:error}
+        title={@disconnected_title}
+        close={false}
+        autoshow={false}
+        phx-disconnected={JS.add_class("toast-open", to: "#disconnected")}
+        phx-connected={JS.remove_class("toast-open", to: "#disconnected")}
+      >
+        {@reconnecting_text} <.dm_bsi name="arrow-repeat" class="inline ml-1 w-3 h-3 animate-spin" />
+      </.dm_flash>
+    </div>
     """
   end
 end
