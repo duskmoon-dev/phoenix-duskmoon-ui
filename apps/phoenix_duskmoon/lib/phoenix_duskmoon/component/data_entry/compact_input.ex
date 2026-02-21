@@ -116,6 +116,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
         ]}
         multiple={@multiple}
         disabled={@disabled}
+        aria-disabled={@disabled && "true"}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={
           (@errors != [] && @id && "#{@id}-errors") ||
@@ -158,6 +159,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         disabled={@disabled}
+        aria-disabled={@disabled && "true"}
         class={[
           "input",
           @variant && "input-#{@variant}",

@@ -213,6 +213,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
 
     assert result =~ "disabled"
     assert result =~ "form-group-disabled"
+    assert result =~ ~s(aria-disabled="true")
   end
 
   test "renders compact input without disabled styling when not disabled" do
