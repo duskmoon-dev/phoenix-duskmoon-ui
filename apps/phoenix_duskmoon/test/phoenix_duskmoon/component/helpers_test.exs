@@ -72,4 +72,34 @@ defmodule PhoenixDuskmoon.Component.HelpersTest do
       assert format_label("{label}", %{"label" => "Test"}) == "Test"
     end
   end
+
+  describe "split_value/2" do
+    test "splits a binary into graphemes up to length" do
+      assert split_value("1234", 4) == ["1", "2", "3", "4"]
+    end
+
+    test "takes at most length graphemes" do
+      assert split_value("123456", 4) == ["1", "2", "3", "4"]
+    end
+
+    test "returns fewer graphemes when value is shorter than length" do
+      assert split_value("12", 4) == ["1", "2"]
+    end
+
+    test "returns empty list for nil" do
+      assert split_value(nil, 4) == []
+    end
+
+    test "returns empty list for non-binary values" do
+      assert split_value(123, 4) == []
+    end
+
+    test "returns empty list for empty string" do
+      assert split_value("", 4) == []
+    end
+
+    test "handles multibyte graphemes" do
+      assert split_value("日本語テ", 3) == ["日", "本", "語"]
+    end
+  end
 end
