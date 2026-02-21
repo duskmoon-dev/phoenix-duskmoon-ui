@@ -117,6 +117,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
       {@rest}
     >
       <button
+        id={@id && "#{@id}-trigger"}
         type="button"
         class="cascader-trigger"
         disabled={@disabled}
@@ -163,7 +164,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
           <div :if={@options == []} class="cascader-empty">{@empty_text}</div>
           <div :for={panel <- @panels} class="cascader-panel">
             <div :if={panel[:header]} class="cascader-panel-header">{panel[:header]}</div>
-            <div class="cascader-options">
+            <div class="cascader-options" role="listbox" aria-labelledby={@id && "#{@id}-trigger"}>
               <div
                 :for={opt <- panel.options}
                 class={[

@@ -350,6 +350,23 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
       result = render_component(&dm_tree_select/1, %{options: @tree_options})
       assert result =~ ~s(aria-label="Toggle Fruits")
     end
+
+    test "trigger has id when component has id" do
+      result = render_component(&dm_tree_select/1, %{id: "ts"})
+      assert result =~ ~s(id="ts-trigger")
+    end
+
+    test "tree has aria-labelledby pointing to trigger" do
+      result =
+        render_component(&dm_tree_select/1, %{id: "ts", options: @tree_options})
+
+      assert result =~ ~s(aria-labelledby="ts-trigger")
+    end
+
+    test "no trigger id or aria-labelledby when no component id" do
+      result = render_component(&dm_tree_select/1, %{options: @tree_options})
+      refute result =~ "aria-labelledby"
+    end
   end
 
   describe "FormField integration" do

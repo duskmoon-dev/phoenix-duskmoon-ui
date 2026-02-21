@@ -267,6 +267,28 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CascaderTest do
       result = render_component(&dm_cascader/1, %{options: @cascader_options})
       assert result =~ ~s(aria-hidden="true")
     end
+
+    test "trigger has id when component has id" do
+      result = render_component(&dm_cascader/1, %{id: "casc"})
+      assert result =~ ~s(id="casc-trigger")
+    end
+
+    test "options container has role listbox" do
+      result = render_component(&dm_cascader/1, %{options: @cascader_options})
+      assert result =~ ~s(role="listbox")
+    end
+
+    test "listbox has aria-labelledby pointing to trigger" do
+      result =
+        render_component(&dm_cascader/1, %{id: "casc", options: @cascader_options})
+
+      assert result =~ ~s(aria-labelledby="casc-trigger")
+    end
+
+    test "no trigger id or aria-labelledby when no component id" do
+      result = render_component(&dm_cascader/1, %{options: @cascader_options})
+      refute result =~ "aria-labelledby"
+    end
   end
 
   describe "FormField integration" do

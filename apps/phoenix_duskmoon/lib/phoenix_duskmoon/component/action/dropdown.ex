@@ -91,6 +91,7 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
     <div class={@class} {@rest}>
       <button
         :for={trigger <- @trigger}
+        id={"#{@popover_id}-trigger"}
         type="button"
         popovertarget={@popover_id}
         style={"anchor-name: #{@anchor_name}; appearance: none; background: none; border: none; padding: 0; margin: 0; cursor: pointer; display: inline-flex; font: inherit; color: inherit;"}
@@ -115,6 +116,7 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
         ]}
         style={"position-anchor: #{@anchor_name}"}
         role="menu"
+        aria-labelledby={"#{@popover_id}-trigger"}
       >
         {render_slot(content)}
       </div>

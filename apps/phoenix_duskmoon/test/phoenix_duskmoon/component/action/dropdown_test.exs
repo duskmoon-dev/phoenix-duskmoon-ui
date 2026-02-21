@@ -365,4 +365,38 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
 
     assert result =~ ~s[type="button"]
   end
+
+  test "trigger has id derived from popover id" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        id: "trig-id",
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ ~s[id="trig-id-popover-trigger"]
+  end
+
+  test "menu has aria-labelledby pointing to trigger" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        id: "lbl-test",
+        trigger: trigger(),
+        content: content()
+      })
+
+    assert result =~ ~s[aria-labelledby="lbl-test-popover-trigger"]
+  end
+
+  test "menu has aria-labelledby with generated id" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        trigger: trigger(),
+        content: content()
+      })
+
+    # Extract the trigger id
+    [_, trigger_id] = Regex.run(~r/id="(dropdown-\d+-trigger)"/, result)
+    assert result =~ ~s[aria-labelledby="#{trigger_id}"]
+  end
 end

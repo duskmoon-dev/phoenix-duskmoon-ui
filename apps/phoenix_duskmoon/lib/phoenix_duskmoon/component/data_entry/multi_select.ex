@@ -138,6 +138,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
       {@rest}
     >
       <button
+        id={@id && "#{@id}-trigger"}
         type="button"
         class="multi-select-trigger"
         disabled={@disabled}
@@ -191,7 +192,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
           <button type="button" class="multi-select-action">Deselect All</button>
         </div>
 
-        <div class="multi-select-options" role="listbox" aria-multiselectable="true">
+        <div class="multi-select-options" role="listbox" aria-multiselectable="true" aria-labelledby={@id && "#{@id}-trigger"}>
           <div :if={@options == []} class="multi-select-empty">{@empty_text}</div>
           <%= for {group, opts} <- @grouped_options do %>
             <div :if={group} class="multi-select-group">

@@ -118,6 +118,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
       {@rest}
     >
       <button
+        id={@id && "#{@id}-trigger"}
         type="button"
         class="tree-select-trigger"
         disabled={@disabled}
@@ -174,7 +175,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
           />
         </div>
 
-        <div class="tree-select-options" role="tree">
+        <div class="tree-select-options" role="tree" aria-labelledby={@id && "#{@id}-trigger"}>
           <div :if={@options == []} class="tree-select-empty">{@empty_text}</div>
           <.render_nodes
             :if={@options != []}

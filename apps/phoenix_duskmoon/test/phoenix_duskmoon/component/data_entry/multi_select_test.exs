@@ -331,6 +331,21 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       result = render_component(&dm_multi_select/1, %{options: @options})
       assert result =~ ~s(role="option")
     end
+
+    test "trigger has id when component has id" do
+      result = render_component(&dm_multi_select/1, %{id: "ms"})
+      assert result =~ ~s(id="ms-trigger")
+    end
+
+    test "listbox has aria-labelledby pointing to trigger" do
+      result = render_component(&dm_multi_select/1, %{id: "ms", options: @options})
+      assert result =~ ~s(aria-labelledby="ms-trigger")
+    end
+
+    test "no trigger id or aria-labelledby when no component id" do
+      result = render_component(&dm_multi_select/1, %{options: @options})
+      refute result =~ "aria-labelledby"
+    end
   end
 
   describe "FormField integration" do
