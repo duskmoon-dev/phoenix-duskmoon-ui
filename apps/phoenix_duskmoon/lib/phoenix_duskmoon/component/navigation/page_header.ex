@@ -66,6 +66,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
   ) do
     attr(:class, :any, doc: "menu item CSS classes")
     attr(:to, :string, doc: "navigation path")
+    attr(:active, :boolean, doc: "whether this menu item is the current page")
   end
 
   slot(:user_profile,
@@ -113,6 +114,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
               Map.get(menu, :class)
             ]}
             href={Map.get(menu, :to, false)}
+            aria-current={Map.get(menu, :active) && "page"}
           >
             {render_slot(menu)}
           </a>
@@ -150,6 +152,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
               Map.get(menu, :class)
             ]}
             href={Map.get(menu, :to, false)}
+            aria-current={Map.get(menu, :active) && "page"}
           >
             {render_slot(menu)}
           </a>
@@ -196,6 +199,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
                 Map.get(menu, :class)
               ]}
               href={Map.get(menu, :to, false)}
+              aria-current={Map.get(menu, :active) && "page"}
             >
               {render_slot(menu)}
             </a>
@@ -233,6 +237,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
                 Map.get(menu, :class)
               ]}
               href={Map.get(menu, :to, false)}
+              aria-current={Map.get(menu, :active) && "page"}
             >
               {render_slot(menu)}
             </a>

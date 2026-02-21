@@ -416,4 +416,24 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeaderTest do
 
     assert result =~ ~s[data-testid="header-test"]
   end
+
+  test "active menu item gets aria-current page" do
+    result =
+      render_component(&dm_page_header/1, %{
+        menu: [%{to: "/home", active: true, inner_block: fn _, _ -> "Home" end}],
+        inner_block: inner_block()
+      })
+
+    assert result =~ ~s(aria-current="page")
+  end
+
+  test "inactive menu item has no aria-current" do
+    result =
+      render_component(&dm_page_header/1, %{
+        menu: [%{to: "/about", inner_block: fn _, _ -> "About" end}],
+        inner_block: inner_block()
+      })
+
+    refute result =~ "aria-current"
+  end
 end

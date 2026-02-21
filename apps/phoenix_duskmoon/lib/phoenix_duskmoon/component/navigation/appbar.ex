@@ -48,6 +48,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
   slot(:menu, required: false, doc: "Appbar navigation menus") do
     attr(:class, :any, doc: "menu item CSS classes")
     attr(:to, :string, doc: "navigation path")
+    attr(:active, :boolean, doc: "whether this menu item is the current page")
   end
 
   slot(:logo, required: false, doc: "Appbar Logo (displayed in the brand area)")
@@ -73,6 +74,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
           :for={menu <- @menu}
           navigate={Map.get(menu, :to)}
           class={["appbar-action w-auto px-3 rounded-md whitespace-nowrap", Map.get(menu, :class)]}
+          aria-current={Map.get(menu, :active) && "page"}
         >
           {render_slot(menu)}
         </.dm_link>
@@ -114,6 +116,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
   slot(:menu, required: false, doc: "Appbar menus") do
     attr(:class, :any, doc: "menu item CSS classes")
     attr(:to, :string, doc: "navigation path")
+    attr(:active, :boolean, doc: "whether this menu item is the current page")
   end
 
   slot(:logo, required: false, doc: "Appbar Logo")
@@ -145,6 +148,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
                 Map.get(menu, :class)
               ]}
               href={Map.get(menu, :to)}
+              aria-current={Map.get(menu, :active) && "page"}
             >
               {render_slot(menu)}
             </a>
@@ -184,6 +188,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
             Map.get(menu, :class)
           ]}
           href={Map.get(menu, :to)}
+          aria-current={Map.get(menu, :active) && "page"}
         >
           {render_slot(menu)}
         </a>

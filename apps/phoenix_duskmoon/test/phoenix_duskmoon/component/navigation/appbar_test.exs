@@ -104,6 +104,26 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
     assert result =~ "data-testid=\"app-header\""
   end
 
+  test "active menu item gets aria-current page" do
+    result =
+      render_component(&dm_appbar/1, %{
+        title: "App",
+        menu: [%{to: "/home", active: true, __slot__: :menu, inner_block: fn _, _ -> "Home" end}]
+      })
+
+    assert result =~ ~s(aria-current="page")
+  end
+
+  test "inactive menu item has no aria-current" do
+    result =
+      render_component(&dm_appbar/1, %{
+        title: "App",
+        menu: [%{to: "/about", __slot__: :menu, inner_block: fn _, _ -> "About" end}]
+      })
+
+    refute result =~ "aria-current"
+  end
+
   describe "dm_simple_appbar/1" do
     test "renders simple appbar with header element" do
       result = render_component(&dm_simple_appbar/1, %{title: "SimpleApp"})
@@ -425,6 +445,26 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
 
     # The mobile menu toggle should have type="button"
     assert result =~ ~s[type="button"]
+  end
+
+  test "simple appbar active menu item gets aria-current page" do
+    result =
+      render_component(&dm_simple_appbar/1, %{
+        title: "App",
+        menu: [%{to: "/home", active: true, __slot__: :menu, inner_block: fn _, _ -> "Home" end}]
+      })
+
+    assert result =~ ~s(aria-current="page")
+  end
+
+  test "simple appbar inactive menu item has no aria-current" do
+    result =
+      render_component(&dm_simple_appbar/1, %{
+        title: "App",
+        menu: [%{to: "/about", __slot__: :menu, inner_block: fn _, _ -> "About" end}]
+      })
+
+    refute result =~ "aria-current"
   end
 
   describe "nav_label i18n" do
