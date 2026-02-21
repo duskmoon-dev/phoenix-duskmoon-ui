@@ -91,7 +91,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Switch do
         />
         <span :if={@label} class={@label_class}>{@label}</span>
       </label>
-      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
+      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class={["helper-text", @state && "helper-text-#{@state}"]}>{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>

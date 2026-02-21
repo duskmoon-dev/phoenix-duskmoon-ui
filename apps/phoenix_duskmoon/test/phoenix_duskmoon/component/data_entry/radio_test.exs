@@ -419,4 +419,39 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RadioTest do
       refute result =~ "form-group-warning"
     end
   end
+
+  describe "helper-text state variant" do
+    test "renders helper-text-success when state is success" do
+      result =
+        render_component(&dm_radio/1, %{
+          name: "choice",
+          value: "a",
+          state: "success",
+          helper: "Good choice!"
+        })
+
+      assert result =~ "helper-text-success"
+    end
+
+    test "renders helper-text-warning when state is warning" do
+      result =
+        render_component(&dm_radio/1, %{
+          name: "choice",
+          value: "a",
+          state: "warning",
+          helper: "Reconsider"
+        })
+
+      assert result =~ "helper-text-warning"
+    end
+
+    test "renders plain helper-text without state" do
+      result =
+        render_component(&dm_radio/1, %{name: "choice", value: "a", helper: "Pick one"})
+
+      assert result =~ "helper-text"
+      refute result =~ "helper-text-success"
+      refute result =~ "helper-text-warning"
+    end
+  end
 end

@@ -93,6 +93,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
       "form-group",
       @horizontal && "form-group-horizontal",
       @disabled && "form-group-disabled",
+      @errors != [] && "form-group-error",
       @state && "form-group-#{@state}",
       @class
     ]} phx-feedback-for={@name}>
@@ -126,7 +127,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
         ]}
         {@rest}
       >{@value}</textarea>
-      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
+      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class={["helper-text", @state && "helper-text-#{@state}"]}>{@helper}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>

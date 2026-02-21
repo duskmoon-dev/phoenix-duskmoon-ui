@@ -398,4 +398,29 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SwitchTest do
       refute result =~ "form-group-warning"
     end
   end
+
+  describe "helper-text state variant" do
+    test "renders helper-text-success when state is success" do
+      result =
+        render_component(&dm_switch/1, %{name: "active", state: "success", helper: "Enabled!"})
+
+      assert result =~ "helper-text-success"
+    end
+
+    test "renders helper-text-warning when state is warning" do
+      result =
+        render_component(&dm_switch/1, %{name: "active", state: "warning", helper: "Careful"})
+
+      assert result =~ "helper-text-warning"
+    end
+
+    test "renders plain helper-text without state" do
+      result =
+        render_component(&dm_switch/1, %{name: "active", helper: "Toggle this"})
+
+      assert result =~ "helper-text"
+      refute result =~ "helper-text-success"
+      refute result =~ "helper-text-warning"
+    end
+  end
 end

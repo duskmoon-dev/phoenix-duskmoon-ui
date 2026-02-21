@@ -522,5 +522,50 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SliderTest do
       refute result =~ "form-group-success"
       refute result =~ "form-group-warning"
     end
+
+    test "renders form-group-error when errors present" do
+      result = render_component(&dm_slider/1, %{name: "vol", value: 50, errors: ["invalid"]})
+
+      assert result =~ "form-group-error"
+    end
+  end
+
+  describe "helper-text state variant" do
+    test "renders helper-text-success when state is success" do
+      result =
+        render_component(&dm_slider/1, %{
+          name: "vol",
+          value: 50,
+          state: "success",
+          helper: "Perfect!"
+        })
+
+      assert result =~ "helper-text-success"
+    end
+
+    test "renders helper-text-warning when state is warning" do
+      result =
+        render_component(&dm_slider/1, %{
+          name: "vol",
+          value: 50,
+          state: "warning",
+          helper: "Too loud"
+        })
+
+      assert result =~ "helper-text-warning"
+    end
+
+    test "renders plain helper-text without state" do
+      result =
+        render_component(&dm_slider/1, %{
+          name: "vol",
+          value: 50,
+          helper: "Adjust volume"
+        })
+
+      assert result =~ "helper-text"
+      refute result =~ "helper-text-success"
+      refute result =~ "helper-text-warning"
+    end
   end
 end

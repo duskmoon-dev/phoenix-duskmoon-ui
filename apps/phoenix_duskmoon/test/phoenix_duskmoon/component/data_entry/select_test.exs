@@ -638,5 +638,59 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
       refute result =~ "form-group-success"
       refute result =~ "form-group-warning"
     end
+
+    test "renders form-group-error when errors present" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "country",
+          value: nil,
+          options: [{"us", "USA"}],
+          errors: ["is required"]
+        })
+
+      assert result =~ "form-group-error"
+    end
+  end
+
+  describe "helper-text state variant" do
+    test "renders helper-text-success when state is success" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "country",
+          value: nil,
+          options: [{"us", "USA"}],
+          state: "success",
+          helper: "Looks good!"
+        })
+
+      assert result =~ "helper-text-success"
+    end
+
+    test "renders helper-text-warning when state is warning" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "country",
+          value: nil,
+          options: [{"us", "USA"}],
+          state: "warning",
+          helper: "Double check"
+        })
+
+      assert result =~ "helper-text-warning"
+    end
+
+    test "renders plain helper-text without state" do
+      result =
+        render_component(&dm_select/1, %{
+          name: "country",
+          value: nil,
+          options: [{"us", "USA"}],
+          helper: "Pick a country"
+        })
+
+      assert result =~ "helper-text"
+      refute result =~ "helper-text-success"
+      refute result =~ "helper-text-warning"
+    end
   end
 end
