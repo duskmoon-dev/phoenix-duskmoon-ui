@@ -8,15 +8,15 @@ defmodule PhoenixDuskmoon.Component.Navigation.ActionbarTest do
   test "renders basic actionbar" do
     result = render_component(&dm_actionbar/1, %{})
 
-    assert result =~ "flex items-center justify-between"
+    assert result =~ "appbar"
   end
 
   test "renders actionbar with left and right sections" do
     result = render_component(&dm_actionbar/1, %{})
 
-    # Both inner sections use flex layout
-    parts = String.split(result, "flex items-center gap-2")
-    assert length(parts) >= 3
+    # Both sections use upstream appbar classes
+    assert result =~ "appbar-brand"
+    assert result =~ "appbar-trailing"
   end
 
   test "renders actionbar with left slot" do
@@ -71,7 +71,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.ActionbarTest do
     result = render_component(&dm_actionbar/1, %{class: "shadow-lg"})
 
     assert result =~ "shadow-lg"
-    assert result =~ "flex items-center justify-between"
+    assert result =~ "appbar"
   end
 
   test "renders actionbar with left_class" do
@@ -155,7 +155,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.ActionbarTest do
     result = render_component(&dm_actionbar/1, %{})
 
     # Both flex-row sections are rendered
-    assert result =~ "flex items-center gap-2"
+    assert result =~ "appbar-brand"
   end
 
   test "renders actionbar left slot with class but no id" do
@@ -219,7 +219,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.ActionbarTest do
   test "renders actionbar base class always present" do
     result = render_component(&dm_actionbar/1, %{class: "extra"})
 
-    assert result =~ "flex items-center justify-between"
+    assert result =~ "appbar"
     assert result =~ "extra"
   end
 
@@ -269,7 +269,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.ActionbarTest do
         right: []
       })
 
-    assert result =~ "flex items-center gap-2"
+    assert result =~ "appbar-brand"
   end
 
   test "renders actionbar left slot items each as separate wrapping div" do

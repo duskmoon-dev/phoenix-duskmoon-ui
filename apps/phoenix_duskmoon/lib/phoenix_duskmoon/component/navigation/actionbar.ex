@@ -48,10 +48,10 @@ defmodule PhoenixDuskmoon.Component.Navigation.Actionbar do
       id={@id}
       role="toolbar"
       aria-label={@toolbar_label}
-      class={["flex items-center justify-between w-full", @class]}
+      class={["appbar", @class]}
       {@rest}
     >
-      <div class={["flex items-center gap-2", @left_class]}>
+      <div class={["appbar-brand", @left_class]}>
         <div
           :for={left <- @left}
           id={Map.get(left, :id)}
@@ -60,7 +60,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Actionbar do
           {render_slot(left)}
         </div>
       </div>
-      <div class={["flex items-center gap-2", @right_class]}>
+      <div class={["appbar-trailing", @right_class]}>
         <div
           :for={right <- @right}
           id={Map.get(right, :id)}
