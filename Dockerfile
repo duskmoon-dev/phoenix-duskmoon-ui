@@ -13,7 +13,7 @@ set -ex
 apk update
 mix deps.get
 npm install
-export MATCH_STRING="s%@version \"[0-9\.]\+\"%@version \"${RELEASE_VERSION}\"%"
+export MATCH_STRING="s%@version \"[^\"]\+\"%@version \"${RELEASE_VERSION}\"%"
 sed -i "$MATCH_STRING" mix.exs;
 sed -i "$MATCH_STRING" apps/duskmoon_storybook_web/mix.exs;
 sed -i "$MATCH_STRING" apps/duskmoon_storybook/mix.exs;

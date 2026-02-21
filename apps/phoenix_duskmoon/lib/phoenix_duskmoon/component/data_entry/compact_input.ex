@@ -14,7 +14,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
   """
   use Phoenix.Component
 
-  import PhoenixDuskmoon.Component.DataEntry.Form
+  import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
   import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """

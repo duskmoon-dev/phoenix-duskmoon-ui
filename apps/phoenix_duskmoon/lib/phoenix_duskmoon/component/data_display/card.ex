@@ -19,7 +19,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
   """
   use Phoenix.Component
 
-  import PhoenixDuskmoon.Component.DataEntry.Form
+  import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_alert: 1]
 
   @doc """
   Generates a card container.
