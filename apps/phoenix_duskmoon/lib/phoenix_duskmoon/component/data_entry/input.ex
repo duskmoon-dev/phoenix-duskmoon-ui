@@ -18,7 +18,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   use PhoenixDuskmoon.Component, :html
   import PhoenixDuskmoon.Component.Icon.Icons
   import PhoenixDuskmoon.Component.DataEntry.Form
-  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1, format_label: 2]
 
   @doc """
   Renders an input with label and error messages.
@@ -187,6 +187,21 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   attr(:toggle_password_label, :string,
     default: "Toggle password visibility",
     doc: "accessible label for the password visibility toggle"
+  )
+
+  attr(:rating_group_label, :string,
+    default: "{label} rating",
+    doc: "accessible label template for the rating group (i18n). Use {label} for the field label."
+  )
+
+  attr(:rating_item_label, :string,
+    default: "Rate {index} out of {max}",
+    doc: "accessible label template for each rating item (i18n). Use {index} and {max}."
+  )
+
+  attr(:remove_tag_label, :string,
+    default: "Remove tag {tag}",
+    doc: "accessible label template for tag removal buttons (i18n). Use {tag} for the tag value."
   )
 
   def dm_input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -497,7 +512,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             @readonly && "rating-readonly"
           ]}
           role="group"
-          aria-label={"#{@label} rating"}
+          aria-label={format_label(@rating_group_label, %{"label" => @label})}
           aria-invalid={@errors != [] && "true"}
           aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
         >
@@ -505,10 +520,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <button
             :for={i <- 1..@max}
             type="button"
-            aria-label={"Rate #{i} out of #{@max}"}
+            aria-label={format_label(@rating_item_label, %{"index" => i, "max" => @max})}
             aria-pressed={to_string(i <= (@value || 0))}
             class={["rating-item", i <= (@value || 0) && "filled"]}
             disabled={@readonly}
+            aria-disabled={@readonly && "true"}
           >
             <.dm_mdi name="star" class="rating-icon" />
           </button>
@@ -853,7 +869,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             <button
               type="button"
               class="btn btn-ghost btn-xs p-0"
-              aria-label={"Remove tag #{tag}"}
+              aria-label={format_label(@remove_tag_label, %{"tag" => tag})}
             >
               <.dm_mdi name="close" class="w-3 h-3" />
             </button>

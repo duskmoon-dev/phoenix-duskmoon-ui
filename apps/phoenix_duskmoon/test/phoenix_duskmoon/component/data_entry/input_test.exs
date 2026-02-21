@@ -2604,6 +2604,69 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
     end
   end
 
+  describe "i18n labels" do
+    test "custom rating_group_label" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rating",
+          name: "r",
+          id: "r",
+          label: "Quality",
+          value: 3,
+          rating_group_label: "Bewertung: {label}"
+        })
+
+      assert result =~ ~s[aria-label="Bewertung: Quality"]
+      refute result =~ "Quality rating"
+    end
+
+    test "custom rating_item_label" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rating",
+          name: "r",
+          id: "r",
+          label: "Rating",
+          value: 1,
+          max: 3,
+          rating_item_label: "Étoile {index} sur {max}"
+        })
+
+      assert result =~ ~s[aria-label="Étoile 1 sur 3"]
+      assert result =~ ~s[aria-label="Étoile 3 sur 3"]
+      refute result =~ "Rate 1 out of 3"
+    end
+
+    test "custom remove_tag_label" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "tags",
+          name: "tags",
+          id: "tags",
+          label: "Tags",
+          value: ["elixir"],
+          remove_tag_label: "Supprimer {tag}"
+        })
+
+      assert result =~ ~s[aria-label="Supprimer elixir"]
+      refute result =~ "Remove tag"
+    end
+
+    test "rating readonly buttons have aria-disabled" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "rating",
+          name: "r",
+          id: "r",
+          label: "Rating",
+          value: 3,
+          readonly: true
+        })
+
+      assert result =~ ~s(aria-disabled="true")
+    end
+  end
+
   describe "aria-invalid across input types" do
     test "toggle type has aria-invalid when errors present" do
       result =
