@@ -162,7 +162,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
     test "renders simple appbar with mobile menu toggle" do
       result = render_component(&dm_simple_appbar/1, %{title: "App"})
 
-      assert result =~ "header-md-menu"
+      assert result =~ "appbar-mobile-menu"
       assert result =~ "md:hidden"
     end
 
@@ -407,7 +407,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
   test "renders simple appbar mobile menu with onclick toggle" do
     result = render_component(&dm_simple_appbar/1, %{title: "App"})
 
-    assert result =~ "header-md-menu"
+    assert result =~ "appbar-mobile-menu"
     assert result =~ "classList.toggle"
   end
 
@@ -427,15 +427,22 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
     result = render_component(&dm_simple_appbar/1, %{title: "App"})
 
     assert result =~ ~s[aria-expanded="false"]
-    assert result =~ ~s[aria-controls="header-md-menu"]
+    assert result =~ ~s[aria-controls="appbar-mobile-menu"]
     assert result =~ ~s[aria-haspopup="true"]
   end
 
   test "mobile menu div has role=navigation and aria-label" do
     result = render_component(&dm_simple_appbar/1, %{title: "App"})
 
-    assert result =~ ~s[id="header-md-menu"]
+    assert result =~ ~s[id="appbar-mobile-menu"]
     assert result =~ ~s[role="navigation"]
+  end
+
+  test "mobile menu id derives from component id" do
+    result = render_component(&dm_simple_appbar/1, %{id: "site-nav", title: "App"})
+
+    assert result =~ ~s[id="site-nav-mobile-menu"]
+    assert result =~ ~s[aria-controls="site-nav-mobile-menu"]
   end
 
   test "renders simple appbar with custom toggle_menu_label" do

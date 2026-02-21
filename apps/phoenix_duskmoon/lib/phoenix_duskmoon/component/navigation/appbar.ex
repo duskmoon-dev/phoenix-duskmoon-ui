@@ -123,6 +123,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
   slot(:user_profile, required: false, doc: "Appbar right side user profile")
 
   def dm_simple_appbar(assigns) do
+    assigns = assign_new(assigns, :menu_id, fn -> "#{assigns[:id] || "appbar"}-mobile-menu" end)
+
     ~H"""
     <header
       id={@id}
@@ -161,18 +163,18 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
           <button
             type="button"
             class="appbar-nav md:hidden"
-            onclick="document.getElementById('header-md-menu').classList.toggle('hidden'); this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true')"
+            onclick={"document.getElementById('#{@menu_id}').classList.toggle('hidden'); this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true')"}
             aria-label={@toggle_menu_label}
             aria-expanded="false"
             aria-haspopup="true"
-            aria-controls="header-md-menu"
+            aria-controls={@menu_id}
           >
             <.dm_mdi name="menu" class="w-8 h-8" aria-hidden="true" />
           </button>
         </div>
       </div>
       <div
-        id="header-md-menu"
+        id={@menu_id}
         class={[
           "w-full flex flex-col",
           "md:hidden hidden",
