@@ -248,6 +248,17 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TimelineTest do
       assert result =~ "timeline-marker"
     end
 
+    test "marker dot has aria-hidden" do
+      result =
+        render_component(&dm_timeline/1, %{
+          item: [
+            %{title: "Item", inner_block: fn _, _ -> "Body" end, __slot__: :item}
+          ]
+        })
+
+      assert result =~ ~s(class="timeline-marker-dot" aria-hidden="true")
+    end
+
     test "renders icon marker when icon provided" do
       result =
         render_component(&dm_timeline/1, %{

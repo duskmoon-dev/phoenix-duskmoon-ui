@@ -40,6 +40,11 @@ defmodule PhoenixDuskmoon.Component.Navigation.StepperTest do
       assert result =~ "stepper-step-connector"
     end
 
+    test "connectors are aria-hidden" do
+      result = render_component(&dm_stepper/1, %{step: basic_steps()})
+      assert result =~ ~s(class="stepper-step-connector" aria-hidden="true")
+    end
+
     test "renders with custom id" do
       result = render_component(&dm_stepper/1, %{id: "checkout", step: basic_steps()})
       assert result =~ ~s(id="checkout")

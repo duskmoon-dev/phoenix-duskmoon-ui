@@ -109,7 +109,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Stepper do
           <span class="stepper-step-label">{step[:label]}</span>
           <span :if={step[:description]} class="stepper-step-description">{step[:description]}</span>
         </div>
-        <div :if={idx < length(@step) - 1} class="stepper-step-connector"></div>
+        <div :if={idx < length(@step) - 1} class="stepper-step-connector" aria-hidden="true"></div>
       <% end %>
     </div>
     """
