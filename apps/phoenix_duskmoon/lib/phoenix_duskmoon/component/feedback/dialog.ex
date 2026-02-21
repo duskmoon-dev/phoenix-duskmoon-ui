@@ -120,7 +120,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
         :for={{title, idx} <- Enum.with_index(@title)}
         id={idx == 0 && "#{@id}-title"}
         slot="header"
-        class={Map.get(title, :class)}
+        class={title[:class]}
       >
         {render_slot(title)}
       </span>
@@ -131,14 +131,14 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
       </form>
       <div
         :for={body <- @body}
-        class={Map.get(body, :class)}
+        class={body[:class]}
       >
         {render_slot(body)}
       </div>
       <span
         :for={footer <- @footer}
         slot="footer"
-        class={Map.get(footer, :class)}
+        class={footer[:class]}
       >
         {render_slot(footer)}
       </span>

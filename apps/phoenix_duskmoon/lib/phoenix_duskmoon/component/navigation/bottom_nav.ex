@@ -68,7 +68,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.BottomNav do
     items_json =
       assigns.items
       |> Enum.map(fn item ->
-        case Map.get(item, :icon) do
+        case item[:icon] do
           nil -> item
           name when is_binary(name) -> Map.put(item, :icon, icon_svg(name))
           _ -> item

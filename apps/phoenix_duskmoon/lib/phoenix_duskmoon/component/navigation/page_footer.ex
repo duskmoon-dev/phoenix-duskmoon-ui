@@ -85,13 +85,13 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
             :for={section <- @section}
             class={[
               "flex flex-col",
-              Map.get(section, :class)
+              section[:class]
             ]}
           >
-            <h4 :if={Map.get(section, :title) not in [nil, ""]} class={["font-bold my-2", Map.get(section, :title_class)]}>
-              {Map.get(section, :title)}
+            <h4 :if={section[:title] not in [nil, ""]} class={["font-bold my-2", section[:title_class]]}>
+              {section[:title]}
             </h4>
-            <div class={["flex flex-col", Map.get(section, :body_class)]}>
+            <div class={["flex flex-col", section[:body_class]]}>
               {render_slot(section)}
             </div>
           </div>
@@ -99,13 +99,13 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
             :for={copyright <- @copyright}
             class={[
               "flex flex-col self-center",
-              Map.get(copyright, :class)
+              copyright[:class]
             ]}
           >
-            <h4 :if={Map.get(copyright, :title) not in [nil, ""]} class={["font-bold my-2", Map.get(copyright, :title_class)]}>
-              {Map.get(copyright, :title)}
+            <h4 :if={copyright[:title] not in [nil, ""]} class={["font-bold my-2", copyright[:title_class]]}>
+              {copyright[:title]}
             </h4>
-            <div class={["flex flex-col", Map.get(copyright, :body_class)]}>
+            <div class={["flex flex-col", copyright[:body_class]]}>
               {render_slot(copyright)}
             </div>
           </div>

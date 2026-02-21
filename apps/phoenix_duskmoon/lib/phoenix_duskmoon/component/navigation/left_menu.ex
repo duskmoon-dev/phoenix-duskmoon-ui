@@ -71,7 +71,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
       ]}>
         <li
           :for={title <- @title}
-          class={["nested-menu-title", Map.get(title, :class)]}
+          class={["nested-menu-title", title[:class]]}
         >
           {render_slot(title)}
         </li>
@@ -128,23 +128,23 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
   def dm_left_menu_group(assigns) do
     ~H"""
     <details id={@id} class={@class} open={@open} {@rest}>
-      <summary class={Map.get(List.first(@title), :class)}>
+      <summary class={List.first(@title)[:class]}>
         {render_slot(List.first(@title))}
       </summary>
       <ul>
         <li
           :for={m <- @menu}
-          class={[Map.get(m, :disabled) && "disabled"]}
+          class={[m[:disabled] && "disabled"]}
         >
           <.link
-            navigate={Map.get(m, :to, "#")}
+            navigate={m[:to] || "#"}
             class={[
-              Map.get(m, :class),
-              Map.get(m, :id) == @active && @active != "" && "active"
+              m[:class],
+              m[:id] == @active && @active != "" && "active"
             ]}
-            tabindex={if Map.get(m, :disabled), do: "-1", else: nil}
-            aria-current={if Map.get(m, :id) == @active && @active != "", do: "page", else: nil}
-            aria-disabled={if Map.get(m, :disabled), do: "true", else: nil}
+            tabindex={if m[:disabled], do: "-1", else: nil}
+            aria-current={if m[:id] == @active && @active != "", do: "page", else: nil}
+            aria-disabled={if m[:disabled], do: "true", else: nil}
           >
             {render_slot(m)}
           </.link>

@@ -54,8 +54,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.Actionbar do
       <div class={["appbar-brand", @left_class]}>
         <div
           :for={left <- @left}
-          id={Map.get(left, :id)}
-          class={Map.get(left, :class)}
+          id={left[:id]}
+          class={left[:class]}
         >
           {render_slot(left)}
         </div>
@@ -63,8 +63,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.Actionbar do
       <div class={["appbar-trailing", @right_class]}>
         <div
           :for={right <- @right}
-          id={Map.get(right, :id)}
-          class={Map.get(right, :class)}
+          id={right[:id]}
+          class={right[:class]}
         >
           {render_slot(right)}
         </div>

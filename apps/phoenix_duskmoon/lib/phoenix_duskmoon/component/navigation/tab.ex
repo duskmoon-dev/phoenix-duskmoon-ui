@@ -107,14 +107,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.Tab do
           :for={{tab, i} <- Enum.with_index(@tab)}
           type="button"
           slot="tab"
-          id={Map.get(tab, :id) || (@id && "#{@id}-tab-#{i}")}
-          class={Map.get(tab, :class)}
+          id={tab[:id] || (@id && "#{@id}-tab-#{i}")}
+          class={tab[:class]}
           role="tab"
-          data-tab-name={Map.get(tab, :name)}
+          data-tab-name={tab[:name]}
           data-tab-index={i}
           aria-selected={tab_active?(@active_tab_name, @active_tab_index, tab, i)}
           aria-controls={@id && "#{@id}-panel-#{i}"}
-          phx-click={Map.get(tab, :phx_click)}
+          phx-click={tab[:phx_click]}
         >
           {render_slot(tab)}
         </button>
@@ -124,9 +124,9 @@ defmodule PhoenixDuskmoon.Component.Navigation.Tab do
         :if={content_active?(@active_tab_name, @active_tab_index, tab_content, i)}
         slot="panel"
         role="tabpanel"
-        id={Map.get(tab_content, :id) || (@id && "#{@id}-panel-#{i}")}
-        class={[@content_class, Map.get(tab_content, :class)]}
-        data-panel-name={Map.get(tab_content, :name)}
+        id={tab_content[:id] || (@id && "#{@id}-panel-#{i}")}
+        class={[@content_class, tab_content[:class]]}
+        data-panel-name={tab_content[:name]}
         data-panel-index={i}
         aria-labelledby={@id && "#{@id}-tab-#{i}"}
       >
@@ -138,7 +138,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Tab do
 
   defp tab_active?(active_name, active_index, tab, index) do
     if active_name != "" do
-      active_name == Map.get(tab, :name, "")
+      active_name == (tab[:name] || "")
     else
       active_index == index
     end
@@ -146,7 +146,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Tab do
 
   defp content_active?(active_name, active_index, content, index) do
     if active_name != "" do
-      active_name == Map.get(content, :name, "")
+      active_name == (content[:name] || "")
     else
       active_index == index
     end

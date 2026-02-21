@@ -64,13 +64,13 @@ defmodule PhoenixDuskmoon.Component.Navigation.Breadcrumb do
       <span
         :for={{crumb, i} <- Enum.with_index(@crumb)}
         slot="item"
-        id={Map.get(crumb, :id)}
-        class={Map.get(crumb, :class)}
-        data-href={Map.get(crumb, :to)}
+        id={crumb[:id]}
+        class={crumb[:class]}
+        data-href={crumb[:to]}
         aria-current={if i == length(@crumb) - 1, do: "page", else: nil}
       >
-        <a :if={Map.get(crumb, :to)} href={Map.get(crumb, :to)}>{render_slot(crumb)}</a>
-        <template :if={!Map.get(crumb, :to)}>{render_slot(crumb)}</template>
+        <a :if={crumb[:to]} href={crumb[:to]}>{render_slot(crumb)}</a>
+        <template :if={!crumb[:to]}>{render_slot(crumb)}</template>
       </span>
     </el-dm-breadcrumbs>
     """

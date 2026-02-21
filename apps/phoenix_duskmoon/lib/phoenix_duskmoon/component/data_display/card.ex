@@ -99,8 +99,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
       <span
         :for={title <- @title}
         slot="header"
-        id={Map.get(title, :id)}
-        class={Map.get(title, :class)}
+        id={title[:id]}
+        class={title[:class]}
       >
         {render_slot(title)}
       </span>
@@ -113,8 +113,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
       <span
         :for={action <- @action}
         slot="footer"
-        id={Map.get(action, :id)}
-        class={Map.get(action, :class)}
+        id={action[:id]}
+        class={action[:class]}
       >
         {render_slot(action)}
       </span>
@@ -178,7 +178,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
           {@rest}
         >
           <div :if={@image} slot="image" class={["skeleton skeleton-image", @skeleton_class]}></div>
-          <span :for={title <- @title} slot="header" id={Map.get(title, :id)} class={Map.get(title, :class)}>
+          <span :for={title <- @title} slot="header" id={title[:id]} class={title[:class]}>
             {render_slot(title)}
           </span>
           <div class={["skeleton w-full h-16", @skeleton_class]}></div>
@@ -194,7 +194,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
           class={@class}
           {@rest}
         >
-          <span :for={title <- @title} slot="header" id={Map.get(title, :id)} class={Map.get(title, :class)}>
+          <span :for={title <- @title} slot="header" id={title[:id]} class={title[:class]}>
             {render_slot(title)}
           </span>
           <.dm_alert variant="error">
@@ -212,7 +212,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
         {@rest}
       >
         <img :if={@image} slot="image" src={@image} alt={@image_alt} />
-        <span :for={title <- @title} slot="header" id={Map.get(title, :id)} class={Map.get(title, :class)}>
+        <span :for={title <- @title} slot="header" id={title[:id]} class={title[:class]}>
           {render_slot(title)}
         </span>
         <div :if={@body_class} class={@body_class}>
@@ -221,7 +221,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
         <template :if={!@body_class}>
           {render_slot(@inner_block, Map.get(@assign, :result))}
         </template>
-        <span :for={action <- @action} slot="footer" id={Map.get(action, :id)} class={Map.get(action, :class)}>
+        <span :for={action <- @action} slot="footer" id={action[:id]} class={action[:class]}>
           {render_slot(action, Map.get(@assign, :result))}
         </span>
       </el-dm-card>

@@ -72,9 +72,9 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
       <div class="appbar-trailing">
         <.dm_link
           :for={menu <- @menu}
-          navigate={Map.get(menu, :to)}
-          class={["appbar-action w-auto px-3 rounded-md whitespace-nowrap", Map.get(menu, :class)]}
-          aria-current={Map.get(menu, :active) && "page"}
+          navigate={menu[:to]}
+          class={["appbar-action w-auto px-3 rounded-md whitespace-nowrap", menu[:class]]}
+          aria-current={menu[:active] && "page"}
         >
           {render_slot(menu)}
         </.dm_link>
@@ -145,10 +145,10 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
               class={[
                 "appbar-nav py-2 px-6",
                 "text-lg font-semibold leading-6 text-center",
-                Map.get(menu, :class)
+                menu[:class]
               ]}
-              href={Map.get(menu, :to)}
-              aria-current={Map.get(menu, :active) && "page"}
+              href={menu[:to]}
+              aria-current={menu[:active] && "page"}
             >
               {render_slot(menu)}
             </a>
@@ -187,10 +187,10 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
             "w-full py-2 px-6",
             "font-semibold leading-6",
             "text-lg text-center",
-            Map.get(menu, :class)
+            menu[:class]
           ]}
-          href={Map.get(menu, :to)}
-          aria-current={Map.get(menu, :active) && "page"}
+          href={menu[:to]}
+          aria-current={menu[:active] && "page"}
         >
           {render_slot(menu)}
         </a>
