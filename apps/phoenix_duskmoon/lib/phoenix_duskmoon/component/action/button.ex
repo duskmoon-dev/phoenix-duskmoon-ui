@@ -143,6 +143,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       shape={@shape}
       loading={@loading}
       disabled={@disabled}
+      aria-disabled={@disabled && "true"}
       class={@class}
       style={@el_style}
       onclick={"document.getElementById('confirm-dialog-#{@id}').showModal()"}
@@ -216,6 +217,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       shape={@shape}
       loading={@loading}
       disabled={@disabled}
+      aria-disabled={@disabled && "true"}
       class={@class}
       style={@el_style}
       phx-hook={if @rest["phx-click"], do: "WebComponentHook"}

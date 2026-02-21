@@ -74,6 +74,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FileUpload do
         accept={@accept}
         multiple={@multiple}
         disabled={@disabled}
+        aria-disabled={@disabled && "true"}
         max-size={@max_size}
         max-files={@max_files}
         show-preview={@show_preview}

@@ -93,6 +93,16 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
 
     assert result =~ ~s[<el-dm-button]
     assert result =~ ~s[disabled]
+    assert result =~ ~s[aria-disabled="true"]
+  end
+
+  test "renders button without aria-disabled when not disabled" do
+    result =
+      render_component(&dm_btn/1, %{
+        inner_block: %{inner_block: fn _, _ -> "Enabled" end}
+      })
+
+    refute result =~ "aria-disabled"
   end
 
   test "renders button with noise effect" do

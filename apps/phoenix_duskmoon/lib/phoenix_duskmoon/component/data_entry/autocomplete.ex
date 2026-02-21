@@ -96,6 +96,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Autocomplete do
         options={@options_json}
         multiple={@multiple}
         disabled={@disabled}
+        aria-disabled={@disabled && "true"}
         clearable={@clearable}
         placeholder={@placeholder}
         loading={@loading}

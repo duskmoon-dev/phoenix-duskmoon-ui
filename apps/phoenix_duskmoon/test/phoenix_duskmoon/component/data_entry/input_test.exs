@@ -1331,8 +1331,34 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
       assert result =~ ~s[type="checkbox"]
       assert result =~ ~s[id="dark-mode-switch"]
       assert result =~ ~s[name="dark_mode"]
+      assert result =~ ~s[role="switch"]
       assert result =~ "switch"
       assert result =~ "Dark Mode"
+    end
+
+    test "renders switch with aria-checked matching checked state" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "switch",
+          name: "toggle",
+          label: "Toggle",
+          value: true
+        })
+
+      assert result =~ ~s[role="switch"]
+      assert result =~ ~s[aria-checked="true"]
+    end
+
+    test "renders switch with aria-checked false when unchecked" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "switch",
+          name: "toggle",
+          label: "Toggle",
+          value: false
+        })
+
+      assert result =~ ~s[aria-checked="false"]
     end
 
     test "renders switch with checked value" do

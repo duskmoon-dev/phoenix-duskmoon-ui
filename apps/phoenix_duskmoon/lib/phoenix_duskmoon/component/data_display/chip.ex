@@ -75,6 +75,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Chip do
       deletable={@deletable}
       selected={@selected}
       disabled={@disabled}
+      aria-disabled={@disabled && "true"}
       class={@class}
       {@rest}
     >

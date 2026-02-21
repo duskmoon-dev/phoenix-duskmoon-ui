@@ -66,6 +66,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Accordion do
         :for={item <- @item}
         value={item[:value]}
         disabled={item[:disabled]}
+        aria-disabled={item[:disabled] && "true"}
       >
         <span slot="header">{item[:header]}</span>
         {render_slot(item)}

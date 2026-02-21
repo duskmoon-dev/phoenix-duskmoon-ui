@@ -103,6 +103,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Stepper do
             step[:optional] && "stepper-step-optional"
           ]}
           aria-current={step[:active] && "step"}
+          aria-disabled={step[:disabled] && "true"}
         >
           <div class="stepper-step-button">
             <span class="stepper-step-icon">{idx + 1}</span>
