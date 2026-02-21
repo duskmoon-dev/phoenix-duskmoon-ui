@@ -6,7 +6,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Actionbar do
 
       <.dm_actionbar>
         <:left>Title</:left>
-        <:right><button>Action</button></:right>
+        <:right><button type="button">Action</button></:right>
       </.dm_actionbar>
 
   """
@@ -19,8 +19,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.Actionbar do
 
       <.dm_actionbar class="shadow">
         <:left>Star Wars</:left>
-        <:right><button>open</button></:right>
-        <:right><button>show</button></:right>
+        <:right><button type="button">open</button></:right>
+        <:right><button type="button">show</button></:right>
       </.dm_actionbar>
 
   """

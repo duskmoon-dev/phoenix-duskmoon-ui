@@ -10,18 +10,18 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
       <.dm_dropdown>
         <:trigger>Menu</:trigger>
         <:content>
-          <button class="popover-menu-item">Profile</button>
-          <button class="popover-menu-item">Settings</button>
+          <button type="button" class="popover-menu-item">Profile</button>
+          <button type="button" class="popover-menu-item">Settings</button>
           <div class="popover-menu-divider"></div>
-          <button class="popover-menu-item">Logout</button>
+          <button type="button" class="popover-menu-item">Logout</button>
         </:content>
       </.dm_dropdown>
 
       <.dm_dropdown position="right" color="primary">
         <:trigger>Actions</:trigger>
         <:content>
-          <button class="popover-menu-item" phx-click="edit">Edit</button>
-          <button class="popover-menu-item" phx-click="delete">Delete</button>
+          <button type="button" class="popover-menu-item" phx-click="edit">Edit</button>
+          <button type="button" class="popover-menu-item" phx-click="delete">Delete</button>
         </:content>
       </.dm_dropdown>
 
@@ -42,7 +42,7 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
       <.dm_dropdown>
         <:trigger>Click me</:trigger>
         <:content>
-          <button class="popover-menu-item">Item 1</button>
+          <button type="button" class="popover-menu-item">Item 1</button>
         </:content>
       </.dm_dropdown>
   """

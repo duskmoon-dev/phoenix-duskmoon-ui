@@ -31,7 +31,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Popover do
   ## Examples
 
       <.dm_popover placement="right">
-        <:trigger><button class="btn">Open</button></:trigger>
+        <:trigger><button type="button" class="btn">Open</button></:trigger>
         Content here.
       </.dm_popover>
 
