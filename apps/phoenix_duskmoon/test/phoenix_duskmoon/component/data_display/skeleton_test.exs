@@ -52,7 +52,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
   describe "dm_skeleton_text/1" do
     test "renders text skeleton with default lines" do
       result = render_component(&dm_skeleton_text/1, %{})
-      assert result =~ ~s[class="space-y-2"]
+      assert result =~ ~s[class="skeleton-group"]
       assert result =~ ~s[<div class="skeleton h-4 w-full"></div>]
       # Should have 3 lines total (2 full width + 1 last line)
       assert result
@@ -66,7 +66,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
 
     test "renders text skeleton with custom lines" do
       result = render_component(&dm_skeleton_text/1, %{lines: 5})
-      assert result =~ ~s[class="space-y-2"]
+      assert result =~ ~s[class="skeleton-group"]
       assert result =~ ~s[<div class="skeleton h-4 w-full"></div>]
       # Should have 5 lines total (4 full width + 1 last line)
       assert result
@@ -85,7 +85,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
           last_line_width: "w-3/4"
         })
 
-      assert result =~ ~s[class="space-y-2"]
+      assert result =~ ~s[class="skeleton-group"]
       assert result =~ ~s[<div class="skeleton h-6 w-full"></div>]
       assert result =~ ~s[<div class="skeleton h-6 w-3/4"></div>]
     end
@@ -147,17 +147,17 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     test "renders basic card skeleton" do
       result = render_component(&dm_skeleton_card/1, %{})
 
-      assert result =~ ~s[class="card shadow-xl"]
-      assert result =~ ~s[<div class="card-body">]
+      assert result =~ ~s[class="skeleton skeleton-card"]
+      assert result =~ ~s[<div class="skeleton-card-content">]
       assert result =~ ~s[<div class="skeleton h-6 w-3/4 mb-4">]
-      assert result =~ ~s[class="space-y-2"]
+      assert result =~ ~s[class="skeleton-group"]
     end
 
     test "renders card skeleton with avatar" do
       result = render_component(&dm_skeleton_card/1, %{show_avatar: true})
 
       assert result =~ ~s[skeleton skeleton-avatar]
-      assert result =~ ~s[flex items-start gap-4]
+      assert result =~ "skeleton-card-header"
     end
 
     test "renders card skeleton with custom lines" do
@@ -171,8 +171,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     test "renders card skeleton with action button" do
       result = render_component(&dm_skeleton_card/1, %{show_action: true})
 
-      assert result =~ ~s[<div class="card-actions justify-end mt-4">]
-      assert result =~ ~s[<div class="skeleton h-10 w-20">]
+      assert result =~ ~s[<div class="skeleton-card-body">]
+      assert result =~ ~s[<div class="skeleton skeleton-button">]
     end
 
     test "renders card skeleton with animation" do
@@ -186,28 +186,27 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     test "renders table skeleton with header" do
       result = render_component(&dm_skeleton_table/1, %{rows: 3, columns: 2})
 
-      assert result =~ ~s[<table class="table">]
-      assert result =~ ~s[<thead>]
-      assert result =~ ~s[<th>]
-      assert result =~ ~s[<tbody>]
-      assert result =~ ~s[<td>]
+      assert result =~ "skeleton-table"
+      assert result =~ "skeleton-table-row"
+      assert result =~ "skeleton-table-cell"
 
-      # Should have header cells
-      # 2 columns + 1 split
-      assert result |> String.split("<th>") |> length() == 3
-      # Should have data cells (3 rows * 2 columns = 6 cells)
-      # 6 cells + 1 split
-      assert result |> String.split("<td>") |> length() == 7
+      # Header row + 3 data rows = 4 rows
+      # 4 rows + 1 split
+      assert result |> String.split("skeleton-table-row") |> length() == 5
+      # 2 columns per row * 4 rows = 8 cells
+      # 8 cells + 1 split
+      assert result |> String.split("skeleton-table-cell") |> length() == 9
     end
 
     test "renders table skeleton without header" do
       result = render_component(&dm_skeleton_table/1, %{show_header: false, rows: 2, columns: 3})
 
-      refute result =~ ~s[<thead>]
-      assert result =~ ~s[<tbody>]
-      # Should have data cells (2 rows * 3 columns = 6 cells)
+      # No header row, just 2 data rows
+      # 2 rows + 1 split
+      assert result |> String.split("skeleton-table-row") |> length() == 3
+      # 2 rows * 3 columns = 6 cells
       # 6 cells + 1 split
-      assert result |> String.split("<td>") |> length() == 7
+      assert result |> String.split("skeleton-table-cell") |> length() == 7
     end
 
     test "renders table skeleton with animation" do
@@ -221,13 +220,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     test "renders basic list skeleton" do
       result = render_component(&dm_skeleton_list/1, %{items: 3})
 
-      assert result =~ ~s[class="space-y-4"]
-      assert result =~ ~s[flex items-start gap-3]
-      assert result =~ ~s[flex-1]
+      assert result =~ "skeleton-list"
+      assert result =~ "skeleton-list-item"
+      assert result =~ ~s[skeleton-card-body]
 
       # Should have 3 items
       # 3 items + 1 split
-      assert result |> String.split("flex items-start gap-3") |> length() == 4
+      assert result |> String.split("skeleton-list-item") |> length() == 4
     end
 
     test "renders list skeleton with avatars" do
@@ -243,7 +242,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
 
       # Each item should have 3 lines
       # 2 items + 1 split
-      assert result |> String.split("space-y-2") |> length() == 3
+      assert result |> String.split("skeleton-group") |> length() == 3
     end
 
     test "renders list skeleton with animation" do
@@ -257,7 +256,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     test "renders basic form skeleton" do
       result = render_component(&dm_skeleton_form/1, %{fields: 3})
 
-      assert result =~ ~s[class="space-y-6"]
+      assert result =~ ~s[class="skeleton-group"]
       assert result =~ ~s[<div class="form-group">]
       assert result =~ ~s[<div class="form-label">]
       assert result =~ ~s[<div class="skeleton h-4 w-24">]
@@ -357,7 +356,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     test "renders text skeleton with 1 line (only last line)" do
       result = render_component(&dm_skeleton_text/1, %{lines: 1})
 
-      assert result =~ "space-y-2"
+      assert result =~ "skeleton-group"
       # Only the last line rendered (no loop for lines > 1)
       assert result
              |> String.split("<div class=\"skeleton h-4")
@@ -382,8 +381,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     test "renders comment skeleton with show_replies 0 (no replies section)" do
       result = render_component(&dm_skeleton_comment/1, %{show_replies: 0})
 
-      refute result =~ "ml-12 space-y-4"
-      refute result =~ "flex gap-3"
+      refute result =~ "ml-12 skeleton-group"
+      # Main comment has one list-item, but no reply items inside ml-12
+      assert result =~ "skeleton-list-item"
     end
 
     test "renders comment skeleton with id" do
@@ -410,8 +410,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
         })
 
       assert result =~ "skeleton skeleton-avatar"
-      assert result =~ "card-actions"
-      assert result =~ "skeleton h-10 w-20"
+      assert result =~ "skeleton-card-body"
+      assert result =~ "skeleton skeleton-button"
       assert result =~ "animate-pulse"
     end
 
@@ -461,11 +461,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
       assert result =~ ~s[id="full-tbl"]
       assert result =~ "w-full"
       assert result =~ "skeleton-wave"
-      assert result =~ "<thead>"
-      # 3 header cells + 1 split
-      assert result |> String.split("<th>") |> length() == 4
-      # 6 data cells + 1 split
-      assert result |> String.split("<td>") |> length() == 7
+      assert result =~ "skeleton-table-row"
+      # 1 header row + 2 data rows = 3 rows
+      # 3 rows + 1 split
+      assert result |> String.split("skeleton-table-row") |> length() == 4
+      # 3 columns * 3 rows = 9 cells
+      # 9 cells + 1 split
+      assert result |> String.split("skeleton-table-cell") |> length() == 10
     end
   end
 
@@ -508,7 +510,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
       assert result =~ "border rounded"
       assert result =~ "animate-pulse"
       assert result =~ "skeleton skeleton-avatar"
-      assert result |> String.split("flex items-start gap-3") |> length() == 4
+      assert result |> String.split("skeleton-list-item") |> length() == 4
     end
   end
 
@@ -521,8 +523,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
         })
 
       assert result =~ "skeleton-wave"
-      assert result =~ "ml-12 space-y-4"
-      assert result |> String.split("flex gap-3") |> length() == 4
+      assert result =~ "ml-12 skeleton-group"
+      # Main comment (1) + 3 replies = 4 list items
+      assert result |> String.split("skeleton-list-item") |> length() == 5
     end
 
     test "renders comment skeleton with all options" do
@@ -673,10 +676,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     test "renders basic comment skeleton" do
       result = render_component(&dm_skeleton_comment/1, %{})
 
-      assert result =~ ~s[class="space-y-4"]
-      assert result =~ ~s[flex gap-4]
+      assert result =~ ~s[class="skeleton-group"]
+      assert result =~ ~s[skeleton-list-item]
       assert result =~ ~s[skeleton skeleton-avatar skeleton-avatar-sm]
-      assert result =~ ~s[flex items-center gap-2]
+      assert result =~ ~s[skeleton-card-header]
       # name
       assert result =~ ~s[skeleton h-4 w-20]
       # timestamp
@@ -687,10 +690,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
       result = render_component(&dm_skeleton_comment/1, %{show_replies: 2})
 
       # replies container
-      assert result =~ ~s[ml-12 space-y-4]
-      # Should have main comment + 2 replies
-      # 2 replies + 1 split
-      assert result |> String.split("flex gap-3") |> length() == 3
+      assert result =~ ~s[ml-12 skeleton-group]
+      # Should have main comment + 2 replies = 3 list items
+      # 3 items + 1 split
+      assert result |> String.split("skeleton-list-item") |> length() == 4
     end
 
     test "renders comment skeleton with animation" do

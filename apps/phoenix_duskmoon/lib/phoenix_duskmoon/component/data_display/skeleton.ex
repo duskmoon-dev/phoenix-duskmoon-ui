@@ -98,7 +98,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   end
 
   defp build_container_classes(class) do
-    ["space-y-2", class]
+    ["skeleton-group", class]
     |> Enum.reject(&is_nil/1)
     |> Enum.join(" ")
   end
@@ -178,15 +178,15 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   def dm_skeleton_card(assigns) do
     ~H"""
     <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_card_classes(@class)}>
-      <div class="card-body">
-        <div class="flex items-start gap-4">
+      <div class="skeleton-card-content">
+        <div class="skeleton-card-header">
           <.dm_skeleton_avatar :if={@show_avatar} size={@avatar_size} animation={@animation} />
-          <div class="flex-1">
+          <div class="skeleton-card-body">
             <div class={build_title_classes(@animation)}></div>
             <.dm_skeleton_text lines={@lines} animation={@animation} />
           </div>
         </div>
-        <div :if={@show_action} class="card-actions justify-end mt-4">
+        <div :if={@show_action} class="skeleton-card-body">
           <div class={build_action_classes(@animation)}></div>
         </div>
       </div>
@@ -195,7 +195,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   end
 
   defp build_card_classes(class) do
-    ["card", "shadow-xl", class]
+    ["skeleton skeleton-card", class]
     |> Enum.reject(&is_nil/1)
     |> Enum.join(" ")
   end
@@ -215,8 +215,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   defp build_action_classes(animation) do
     [
       "skeleton",
-      "h-10",
-      "w-20",
+      "skeleton-button",
       animation_class(animation)
     ]
     |> Enum.reject(&is_nil/1)
@@ -246,23 +245,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   def dm_skeleton_table(assigns) do
     ~H"""
-    <div id={@id} aria-busy="true" aria-label={@loading_label} class={["overflow-x-auto", @class]}>
-      <table class="table">
-        <thead :if={@show_header}>
-          <tr>
-            <th :for={_i <- 1..@columns}>
-              <div class={["skeleton", "h-4", "w-full", animation_class(@animation)]}></div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr :for={_row <- 1..@rows}>
-            <td :for={_col <- 1..@columns}>
-              <div class={["skeleton", "h-4", "w-full", animation_class(@animation)]}></div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div id={@id} aria-busy="true" aria-label={@loading_label} class={["skeleton-table", @class]}>
+      <div :if={@show_header} class="skeleton-table-row">
+        <div :for={_i <- 1..@columns} class={["skeleton skeleton-table-cell", animation_class(@animation)]}></div>
+      </div>
+      <div :for={_row <- 1..@rows} class="skeleton-table-row">
+        <div :for={_col <- 1..@columns} class={["skeleton skeleton-table-cell", animation_class(@animation)]}></div>
+      </div>
     </div>
     """
   end
@@ -291,21 +280,15 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   def dm_skeleton_list(assigns) do
     ~H"""
-    <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_list_container_classes(@class)}>
-      <div :for={_i <- 1..@items} class="flex items-start gap-3">
+    <div id={@id} aria-busy="true" aria-label={@loading_label} class={["skeleton-list", @class]}>
+      <div :for={_i <- 1..@items} class="skeleton-list-item">
         <.dm_skeleton_avatar :if={@show_avatar} size={@avatar_size} animation={@animation} />
-        <div class="flex-1">
+        <div class="skeleton-card-body">
           <.dm_skeleton_text lines={@lines_per_item} animation={@animation} />
         </div>
       </div>
     </div>
     """
-  end
-
-  defp build_list_container_classes(class) do
-    ["space-y-4", class]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
   end
 
   @doc """
@@ -398,10 +381,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
     ~H"""
     <div id={@id} aria-busy="true" aria-label={@loading_label} class={build_comment_container_classes(@class)}>
       <!-- Main comment -->
-      <div class="flex gap-4">
+      <div class="skeleton-list-item">
         <.dm_skeleton_avatar size="sm" animation={@animation} />
-        <div class="flex-1 space-y-2">
-          <div class="flex items-center gap-2">
+        <div class="skeleton-card-body">
+          <div class="skeleton-card-header">
             <div class={build_comment_name_classes(@animation)}></div>
             <div class={build_comment_meta_classes(@animation)}></div>
           </div>
@@ -410,11 +393,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
       </div>
 
       <!-- Replies -->
-      <div :if={@show_replies > 0} class="ml-12 space-y-4">
-        <div :for={_i <- 1..@show_replies} class="flex gap-3">
+      <div :if={@show_replies > 0} class="ml-12 skeleton-group">
+        <div :for={_i <- 1..@show_replies} class="skeleton-list-item">
           <.dm_skeleton_avatar size="xs" animation={@animation} />
-          <div class="flex-1 space-y-2">
-            <div class="flex items-center gap-2">
+          <div class="skeleton-card-body">
+            <div class="skeleton-card-header">
               <div class={build_reply_name_classes(@animation)}></div>
               <div class={build_reply_meta_classes(@animation)}></div>
             </div>
@@ -433,7 +416,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   defp animation_class(_), do: nil
 
   defp build_comment_container_classes(class) do
-    ["space-y-4", class]
+    ["skeleton-group", class]
     |> Enum.reject(&is_nil/1)
     |> Enum.join(" ")
   end
@@ -483,7 +466,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   end
 
   defp build_form_classes(class) do
-    ["space-y-6", class]
+    ["skeleton-group", class]
     |> Enum.reject(&is_nil/1)
     |> Enum.join(" ")
   end
@@ -519,8 +502,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   defp build_submit_classes(animation) do
     [
       "skeleton",
-      "h-10",
-      "w-24",
+      "skeleton-button",
       animation_class(animation)
     ]
     |> Enum.reject(&is_nil/1)
