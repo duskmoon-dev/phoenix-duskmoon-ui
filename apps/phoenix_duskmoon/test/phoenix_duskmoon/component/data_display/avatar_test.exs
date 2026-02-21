@@ -66,7 +66,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
       "primary" => "bg-primary",
       "secondary" => "bg-secondary",
       "tertiary" => "bg-tertiary",
-      "accent" => "bg-accent",
+      "accent" => "bg-tertiary",
       "info" => "bg-[var(--color-info)]",
       "success" => "bg-[var(--color-success)]",
       "warning" => "bg-[var(--color-warning)]",
@@ -315,7 +315,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
     assert result =~ ~s[alt="Full Avatar"]
     assert result =~ "w-xl"
     assert result =~ "rounded-square"
-    assert result =~ "bg-accent"
+    assert result =~ "bg-tertiary"
     assert result =~ "avatar-border"
     assert result =~ "bg-[var(--color-success)]"
     assert result =~ "my-avatar"

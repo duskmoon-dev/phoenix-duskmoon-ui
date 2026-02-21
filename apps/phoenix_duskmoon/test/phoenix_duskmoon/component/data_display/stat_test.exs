@@ -70,7 +70,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
   end
 
   test "renders all color options" do
-    for color <- ~w(primary secondary tertiary accent info success warning error) do
+    for color <- ~w(primary secondary tertiary info success warning error) do
       result =
         render_component(&dm_stat/1, %{
           title: "Test",
@@ -80,6 +80,17 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
 
       assert result =~ "text-#{color}"
     end
+  end
+
+  test "accent color maps to tertiary" do
+    result =
+      render_component(&dm_stat/1, %{
+        title: "Test",
+        value: "0",
+        color: "accent"
+      })
+
+    assert result =~ "text-tertiary"
   end
 
   test "renders without color by default" do
@@ -200,6 +211,15 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
   end
 
   test "description does not get color for primary/secondary/tertiary/accent/info" do
+    # accent maps to tertiary in CSS output
+    color_css_map = %{
+      "primary" => "text-primary",
+      "secondary" => "text-secondary",
+      "tertiary" => "text-tertiary",
+      "accent" => "text-tertiary",
+      "info" => "text-info"
+    }
+
     for color <- ~w(primary secondary tertiary accent info) do
       result =
         render_component(&dm_stat/1, %{
@@ -209,12 +229,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
           description: "desc-text"
         })
 
-      # The value <dd> gets text-{color}, but the description <p> should not
-      assert result =~ "text-#{color}"
+      expected_css = color_css_map[color]
+      # The value <dd> gets the color class, but the description <p> should not
+      assert result =~ expected_css
       assert result =~ "desc-text"
       # Extract the <p> tag containing desc-text
       [p_tag] = Regex.scan(~r/<p[^>]*>/, result) |> List.flatten()
-      refute p_tag =~ "text-#{color}"
+      refute p_tag =~ expected_css
     end
   end
 

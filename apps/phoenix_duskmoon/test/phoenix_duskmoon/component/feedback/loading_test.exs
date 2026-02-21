@@ -57,10 +57,15 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
     end
 
     test "renders with all variant options" do
-      for variant <- ~w(primary secondary tertiary accent info success warning error) do
+      for variant <- ~w(primary secondary tertiary info success warning error) do
         result = render_component(&dm_loading_spinner/1, %{variant: variant})
         assert result =~ "var(--color-#{variant})"
       end
+    end
+
+    test "accent variant maps to tertiary color" do
+      result = render_component(&dm_loading_spinner/1, %{variant: "accent"})
+      assert result =~ "var(--color-tertiary)"
     end
 
     test "renders with text" do

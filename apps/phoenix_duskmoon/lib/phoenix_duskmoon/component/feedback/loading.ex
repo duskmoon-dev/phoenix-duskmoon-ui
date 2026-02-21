@@ -81,7 +81,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
   defp spinner_color("primary"), do: "text-[var(--color-primary)]"
   defp spinner_color("secondary"), do: "text-[var(--color-secondary)]"
   defp spinner_color("tertiary"), do: "text-[var(--color-tertiary)]"
-  defp spinner_color("accent"), do: "text-[var(--color-accent)]"
+  defp spinner_color("accent"), do: "text-[var(--color-tertiary)]"
   defp spinner_color("info"), do: "text-[var(--color-info)]"
   defp spinner_color("success"), do: "text-[var(--color-success)]"
   defp spinner_color("warning"), do: "text-[var(--color-warning)]"

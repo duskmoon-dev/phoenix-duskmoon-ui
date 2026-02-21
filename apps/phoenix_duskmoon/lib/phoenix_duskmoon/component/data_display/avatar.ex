@@ -110,6 +110,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
   slot(:placeholder, doc: "Custom placeholder content")
 
   def dm_avatar(assigns) do
+    assigns = assign(assigns, :color, css_color(assigns.color))
+
     ~H"""
     <div class={[
       "avatar",
@@ -229,9 +231,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
   defp color_classes("primary"), do: "bg-primary"
   defp color_classes("secondary"), do: "bg-secondary"
   defp color_classes("tertiary"), do: "bg-tertiary"
-  defp color_classes("accent"), do: "bg-accent"
   defp color_classes("info"), do: "bg-[var(--color-info)]"
   defp color_classes("success"), do: "bg-[var(--color-success)]"
   defp color_classes("warning"), do: "bg-[var(--color-warning)]"
   defp color_classes("error"), do: "bg-error"
+
+  defp css_color("accent"), do: "tertiary"
+  defp css_color(color), do: color
 end
