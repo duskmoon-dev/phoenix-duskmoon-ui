@@ -661,6 +661,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             class="w-8 h-8 rounded border-2 border-surface-container-high hover:border-on-surface transition-colors"
             style={"background-color: #{swatch}"}
             aria-label={format_label(@select_color_label, %{"color" => swatch})}
+            aria-pressed={to_string(swatch == (@value || "#000000"))}
             :for={swatch <- @swatches}
           />
         </div>
@@ -724,6 +725,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             id={@id}
             name={@name}
             value={@value}
+            role="combobox"
+            aria-expanded={to_string(@suggestions != [])}
+            aria-autocomplete="list"
+            aria-controls={@id && "#{@id}-listbox"}
             aria-invalid={@errors != [] && "true"}
             aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}
             class={[
@@ -739,8 +744,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
           <.dm_mdi name="magnify" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant pointer-events-none" aria-hidden="true" />
         </div>
         <div :if={@suggestions != []} class="dropdown dropdown-open">
-          <ul class="dropdown-content menu w-full">
-            <li :for={suggestion <- @suggestions}>
+          <ul class="dropdown-content menu w-full" role="listbox" id={@id && "#{@id}-listbox"}>
+            <li :for={suggestion <- @suggestions} role="option">
               <button type="button">
                 {suggestion}
               </button>
@@ -871,7 +876,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
-        <div class="flex flex-wrap gap-2 p-2 border border-surface-container-high rounded-lg" role="group" aria-label={format_label(@tags_group_label, %{"label" => @label})} aria-invalid={@errors != [] && "true"} aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}>
+        <div class="flex flex-wrap gap-2 p-2 border border-surface-container-high rounded-lg" role="group" aria-label={format_label(@tags_group_label, %{"label" => @label})} aria-live="polite" aria-invalid={@errors != [] && "true"} aria-describedby={(@errors != [] && @id && "#{@id}-errors") || (@helper && @errors == [] && @id && "#{@id}-helper")}>
           <span
             :for={tag <- @tags}
             class={[

@@ -1288,6 +1288,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
       assert result =~ ~s[aria-label="Select color #0000ff"]
       assert result =~ ~s[background-color: #ff0000]
       assert result =~ ~s[background-color: #00ff00]
+      # Active swatch has aria-pressed=true
+      assert result =~ ~s[aria-pressed="true"]
+      assert result =~ ~s[aria-pressed="false"]
     end
 
     test "renders color picker with size sm" do
@@ -1497,6 +1500,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
       assert result =~ "elixir"
       assert result =~ "elm"
       assert result =~ "electron"
+      # Combobox ARIA pattern
+      assert result =~ ~s[role="combobox"]
+      assert result =~ ~s[aria-expanded="true"]
+      assert result =~ ~s[aria-autocomplete="list"]
+      assert result =~ ~s[aria-controls="search-field-listbox"]
+      assert result =~ ~s[role="listbox"]
+      assert result =~ ~s[id="search-field-listbox"]
+      assert result =~ ~s[role="option"]
     end
 
     test "renders search without dropdown when suggestions empty" do
@@ -1511,6 +1522,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
         })
 
       refute result =~ "dropdown-open"
+      assert result =~ ~s[aria-expanded="false"]
     end
   end
 
@@ -2569,6 +2581,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
 
       assert result =~ ~s[role="group"]
       assert result =~ ~s[aria-label="Keywords tags"]
+      assert result =~ ~s[aria-live="polite"]
     end
 
     test "checkbox_group container has role=group and aria-labelledby" do
