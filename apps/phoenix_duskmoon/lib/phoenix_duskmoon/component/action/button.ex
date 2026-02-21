@@ -201,10 +201,9 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       class={["btn-noise", @class]}
       data-content={@content}
       aria-label={@content}
-      style="--aps: running"
       {@rest}
     >
-      <span aria-hidden="true"><i :for={_ <- 0..72} /></span>
+      <span aria-hidden="true"><i :for={_ <- 1..72} /></span>
       <span :if={@inner_block != []} class="sr-only">{render_slot(@inner_block)}</span>
     </button>
     """

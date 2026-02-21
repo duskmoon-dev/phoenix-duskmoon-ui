@@ -125,7 +125,6 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
 
     assert result =~ "btn-noise"
     assert result =~ ~s[data-content="Noise"]
-    assert result =~ ~s[style="--aps: running"]
     assert result =~ ~s[<i></i>]
   end
 
@@ -334,7 +333,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ ~s[data-content="SUBMIT"]
   end
 
-  test "renders noise button with 73 i elements" do
+  test "renders noise button with 72 i elements" do
     result =
       render_component(&dm_btn/1, %{
         noise: true,
@@ -342,9 +341,9 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
         inner_block: %{inner_block: fn _, _ -> "" end}
       })
 
-    # 0..72 = 73 elements
+    # 1..72 = 72 elements matching CSS nth-child rules
     i_count = length(String.split(result, "<i></i>")) - 1
-    assert i_count == 73
+    assert i_count == 72
   end
 
   test "renders button with confirm and custom id" do
