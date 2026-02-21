@@ -63,7 +63,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Chip do
   attr(:rest, :global)
 
   slot(:inner_block, required: true, doc: "chip label text")
-  slot(:icon)
+  slot(:icon, doc: "leading icon content")
 
   def dm_chip(assigns) do
     ~H"""

@@ -41,14 +41,14 @@ defmodule PhoenixDuskmoon.Component.Icon.Icons do
   """
   @doc type: :component
   attr(:id, :any,
-    default: false,
+    default: nil,
     doc: """
     html attribute id
     """
   )
 
   attr(:class, :any,
-    default: "",
+    default: nil,
     doc: """
     html attribute class
     """
@@ -130,14 +130,14 @@ defmodule PhoenixDuskmoon.Component.Icon.Icons do
   """
   @doc type: :component
   attr(:id, :any,
-    default: false,
+    default: nil,
     doc: """
     html attribute id
     """
   )
 
   attr(:class, :any,
-    default: "",
+    default: nil,
     doc: """
     html attribute class
     """

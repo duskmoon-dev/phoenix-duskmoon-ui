@@ -35,14 +35,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
   )
 
   attr(:class, :any,
-    default: "",
+    default: nil,
     doc: """
     html attribute class
     """
   )
 
   attr(:nav_class, :any,
-    default: "",
+    default: nil,
     doc: """
     nav html attribute class
     """
