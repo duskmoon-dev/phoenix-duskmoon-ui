@@ -311,7 +311,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
         max_page == 1 ->
           [1]
 
-        max_page < 7 ->
+        max_page <= 7 ->
           1..max_page |> Enum.to_list()
 
         page_num < 3 ->
