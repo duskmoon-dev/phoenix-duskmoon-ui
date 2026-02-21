@@ -44,7 +44,7 @@ defmodule Mix.Tasks.Version.Sync do
     phoenix_duskmoon_mix = File.read!(phoenix_duskmoon_mix_path)
 
     version =
-      case Regex.run(~r/@version "([0-9]+\.[0-9]+\.[0-9]+)"/, phoenix_duskmoon_mix) do
+      case Regex.run(~r/@version "([^"]+)"/, phoenix_duskmoon_mix) do
         [_, version] ->
           version
 
@@ -75,7 +75,7 @@ defmodule Mix.Tasks.Version.Sync do
 
     updated_content =
       Regex.replace(
-        ~r/"version": "[0-9]+\.[0-9]+\.[0-9]+"/,
+        ~r/"version": "[^"]+"/,
         content,
         "\"version\": \"#{version}\""
       )
@@ -101,7 +101,7 @@ defmodule Mix.Tasks.Version.Sync do
 
     updated_content =
       Regex.replace(
-        ~r/@version "[0-9]+\.[0-9]+\.[0-9]+"/,
+        ~r/@version "[^"]+"/,
         content,
         "@version \"#{version}\""
       )
