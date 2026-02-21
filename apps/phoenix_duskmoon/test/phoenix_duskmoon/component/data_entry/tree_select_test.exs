@@ -199,6 +199,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
       assert result =~ "tree-select-search-input"
     end
 
+    test "search input has aria-label" do
+      result = render_component(&dm_tree_select/1, %{searchable: true})
+      assert result =~ ~s(aria-label="Search options")
+    end
+
     test "renders clearable button" do
       result =
         render_component(&dm_tree_select/1, %{

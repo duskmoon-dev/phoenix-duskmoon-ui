@@ -172,6 +172,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
             class="tree-select-search-input"
             placeholder="Search..."
             autocomplete="off"
+            aria-label="Search options"
           />
         </div>
 

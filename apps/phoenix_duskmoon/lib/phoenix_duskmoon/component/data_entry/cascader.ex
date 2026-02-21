@@ -157,6 +157,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
             class="cascader-search-input"
             placeholder="Search..."
             autocomplete="off"
+            aria-label="Search options"
           />
         </div>
 

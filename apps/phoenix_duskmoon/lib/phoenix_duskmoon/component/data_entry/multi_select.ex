@@ -184,6 +184,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
             class="multi-select-search-input"
             placeholder="Search..."
             autocomplete="off"
+            aria-label="Search options"
           />
         </div>
 

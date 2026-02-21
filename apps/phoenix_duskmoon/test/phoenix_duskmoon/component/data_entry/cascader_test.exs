@@ -158,6 +158,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CascaderTest do
       assert result =~ "cascader-search-input"
     end
 
+    test "search input has aria-label" do
+      result = render_component(&dm_cascader/1, %{searchable: true})
+      assert result =~ ~s(aria-label="Search options")
+    end
+
     test "renders clearable button" do
       result =
         render_component(&dm_cascader/1, %{

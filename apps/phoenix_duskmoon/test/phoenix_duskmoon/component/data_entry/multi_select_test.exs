@@ -150,6 +150,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       assert result =~ "multi-select-search-input"
     end
 
+    test "search input has aria-label" do
+      result = render_component(&dm_multi_select/1, %{searchable: true})
+      assert result =~ ~s(aria-label="Search options")
+    end
+
     test "no search input by default" do
       result = render_component(&dm_multi_select/1, %{})
       refute result =~ "multi-select-search"
