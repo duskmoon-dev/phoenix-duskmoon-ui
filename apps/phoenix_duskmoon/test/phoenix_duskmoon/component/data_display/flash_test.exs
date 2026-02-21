@@ -297,7 +297,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
       assert result =~ "toast-close"
     end
 
-    test "renders dm-alert class with kind-specific variant" do
+    test "renders toast class with kind-specific variant" do
       info_result =
         render_component(&dm_flash/1, %{
           kind: :info,

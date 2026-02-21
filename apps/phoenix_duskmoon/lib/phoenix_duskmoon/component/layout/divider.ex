@@ -16,12 +16,12 @@ defmodule PhoenixDuskmoon.Component.Layout.Divider do
         Settings
       </.dm_divider>
 
-      <.dm_divider size="lg" variant="accent" />
+      <.dm_divider size="lg" variant="primary" />
 
   ## Attributes
 
   * `orientation` - Divider orientation: horizontal, vertical (default: horizontal)
-  * `variant` - Divider color variant: base, primary, secondary, tertiary, accent, info, success, warning, error (default: base)
+  * `variant` - Divider color variant: base, primary, secondary, light, dark (default: base)
   * `style` - Divider line style: solid, dashed, dotted (default: solid)
   * `size` - Divider thickness: xs, sm, md, lg (default: md)
   * `class` - Additional CSS classes
@@ -56,13 +56,7 @@ defmodule PhoenixDuskmoon.Component.Layout.Divider do
       "primary",
       "secondary",
       "light",
-      "dark",
-      "tertiary",
-      "accent",
-      "info",
-      "success",
-      "warning",
-      "error"
+      "dark"
     ],
     doc: "divider color variant"
   )

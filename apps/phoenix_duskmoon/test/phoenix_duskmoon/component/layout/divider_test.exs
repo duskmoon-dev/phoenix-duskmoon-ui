@@ -50,13 +50,20 @@ defmodule PhoenixDuskmoon.Component.Layout.DividerTest do
     assert result =~ "divider-secondary"
   end
 
-  test "renders divider with unsupported variants without CSS class" do
-    for variant <- ~w(base tertiary accent info success warning error) do
-      result = render_component(&dm_divider/1, %{variant: variant})
-      # Base variants without upstream CSS just render the base divider
-      assert result =~ "divider"
-      refute result =~ "divider-#{variant}"
-    end
+  test "renders divider with base variant without color class" do
+    result = render_component(&dm_divider/1, %{variant: "base"})
+    assert result =~ "divider"
+    refute result =~ "divider-base"
+  end
+
+  test "renders divider with light variant" do
+    result = render_component(&dm_divider/1, %{variant: "light"})
+    assert result =~ "divider-light"
+  end
+
+  test "renders divider with dark variant" do
+    result = render_component(&dm_divider/1, %{variant: "dark"})
+    assert result =~ "divider-dark"
   end
 
   test "renders divider with default style solid (no style class)" do

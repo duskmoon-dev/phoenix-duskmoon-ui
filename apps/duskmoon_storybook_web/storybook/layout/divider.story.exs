@@ -32,39 +32,30 @@ defmodule Storybook.Layout.Divider do
         ]
       },
       %Variation{
-        id: :success_divider,
+        id: :secondary_colored,
         attributes: %{
-          variant: "success"
+          variant: "secondary"
         },
         slots: [
-          "Success"
+          "Secondary Section"
         ]
       },
       %Variation{
-        id: :warning_divider,
+        id: :light_divider,
         attributes: %{
-          variant: "warning"
+          variant: "light"
         },
         slots: [
-          "Warning Area"
+          "Light Divider"
         ]
       },
       %Variation{
-        id: :error_divider,
+        id: :dark_divider,
         attributes: %{
-          variant: "error"
+          variant: "dark"
         },
         slots: [
-          "Error Section"
-        ]
-      },
-      %Variation{
-        id: :info_divider,
-        attributes: %{
-          variant: "info"
-        },
-        slots: [
-          "Information"
+          "Dark Divider"
         ]
       },
       %Variation{
@@ -81,7 +72,7 @@ defmodule Storybook.Layout.Divider do
         id: :dotted_variant,
         attributes: %{
           style: "dotted",
-          variant: "accent"
+          variant: "secondary"
         },
         slots: [
           "Dotted Divider"
@@ -118,7 +109,7 @@ defmodule Storybook.Layout.Divider do
         id: :vertical_with_color,
         attributes: %{
           orientation: "vertical",
-          variant: "success"
+          variant: "primary"
         }
       },
       %Variation{
@@ -126,26 +117,8 @@ defmodule Storybook.Layout.Divider do
         attributes: %{
           orientation: "vertical",
           size: "lg",
-          variant: "accent"
+          variant: "dark"
         }
-      },
-      %Variation{
-        id: :accent_colored,
-        attributes: %{
-          variant: "accent"
-        },
-        slots: [
-          "Accent Content"
-        ]
-      },
-      %Variation{
-        id: :secondary_colored,
-        attributes: %{
-          variant: "secondary"
-        },
-        slots: [
-          "Secondary Section"
-        ]
       }
     ]
   end
