@@ -39,6 +39,14 @@ defmodule PhoenixDuskmoon.CssArt.PlasmaBall do
 
   use Phoenix.Component
 
+  @doc """
+  Renders an interactive plasma ball with animated electricity effects.
+
+  ## Examples
+
+      <.dm_art_plasma_ball id="plasma" size="medium" />
+
+  """
   @doc type: :component
   attr(:id, :string, required: true)
   attr(:size, :string, default: "medium", values: ["small", "medium", "large"])
@@ -74,7 +82,7 @@ defmodule PhoenixDuskmoon.CssArt.PlasmaBall do
       {@rest}
     >
       <!-- Base structure -->
-      <div class="base">
+      <div class="base" aria-hidden="true">
         <div></div>
         <div></div>
         <span></span>
@@ -84,7 +92,7 @@ defmodule PhoenixDuskmoon.CssArt.PlasmaBall do
       <input type="checkbox" class="switcher" aria-label={@toggle_label} phx-target={@phx_target} />
 
       <!-- Glass ball with effects -->
-      <div class="glassball">
+      <div class="glassball" aria-hidden="true">
         <!-- Electrode -->
         <div class={["electrode", !@show_electrode && "hide-electrode"]}></div>
 
@@ -120,7 +128,7 @@ defmodule PhoenixDuskmoon.CssArt.PlasmaBall do
       </div>
 
       <!-- Switch button -->
-      <div class="switch"></div>
+      <div class="switch" aria-hidden="true"></div>
     </div>
     """
   end

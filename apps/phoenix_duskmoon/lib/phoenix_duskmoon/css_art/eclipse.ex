@@ -43,6 +43,14 @@ defmodule PhoenixDuskmoon.CssArt.Eclipse do
 
   use Phoenix.Component
 
+  @doc """
+  Renders an animated eclipse visual effect with multiple rotating layers.
+
+  ## Examples
+
+      <.dm_art_eclipse id="eclipse" size="medium" />
+
+  """
   @doc type: :component
   attr(:id, :string, required: true)
   attr(:size, :string, default: "medium", values: ["small", "medium", "large"])

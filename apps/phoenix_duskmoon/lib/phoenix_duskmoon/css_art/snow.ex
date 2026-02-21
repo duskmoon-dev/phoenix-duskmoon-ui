@@ -48,6 +48,14 @@ defmodule PhoenixDuskmoon.CssArt.Snow do
 
   use Phoenix.Component
 
+  @doc """
+  Renders animated falling snowflakes for winter/seasonal effects.
+
+  ## Examples
+
+      <.dm_art_snow id="snow" count={30} />
+
+  """
   @doc type: :component
   attr(:id, :string, required: true)
   attr(:count, :integer, default: 30)

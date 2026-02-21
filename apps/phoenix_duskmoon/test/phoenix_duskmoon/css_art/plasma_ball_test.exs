@@ -231,6 +231,15 @@ defmodule PhoenixDuskmoon.CssArt.PlasmaBallTest do
     assert result =~ "dm-art-plasma-ball"
   end
 
+  test "renders decorative elements with aria-hidden" do
+    result = render_component(&dm_art_plasma_ball/1, %{id: "plasma-deco"})
+
+    # base, glassball, and switch divs are decorative and should be hidden
+    assert result =~ ~s[class="base" aria-hidden="true"]
+    assert result =~ ~s[class="glassball" aria-hidden="true"]
+    assert result =~ ~s[class="switch" aria-hidden="true"]
+  end
+
   test "renders custom toggle_label on checkbox" do
     result =
       render_component(&dm_art_plasma_ball/1, %{

@@ -36,6 +36,14 @@ defmodule PhoenixDuskmoon.CssArt.SpotlightSearch do
 
   use Phoenix.Component
 
+  @doc """
+  Renders a spotlight search modal with keyboard shortcut activation and suggestion list.
+
+  ## Examples
+
+      <.dm_art_spotlight_search id="search" placeholder="Search..." />
+
+  """
   @doc type: :component
   attr(:id, :string, required: true)
   attr(:placeholder, :string, default: "Search...")

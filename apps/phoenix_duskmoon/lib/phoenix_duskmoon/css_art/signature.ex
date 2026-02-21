@@ -58,6 +58,14 @@ defmodule PhoenixDuskmoon.CssArt.Signature do
 
   use Phoenix.Component
 
+  @doc """
+  Renders a decorative signature/seal stamp element.
+
+  ## Examples
+
+      <.dm_art_signature id="seal" content="A" size="medium" />
+
+  """
   @doc type: :component
   attr(:id, :string, required: true)
   attr(:content, :string, default: "A")

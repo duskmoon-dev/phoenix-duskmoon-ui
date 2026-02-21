@@ -48,6 +48,14 @@ defmodule PhoenixDuskmoon.CssArt.ButtonNoise do
 
   use Phoenix.Component
 
+  @doc """
+  Renders a button with animated noise/electronic interference effect on hover.
+
+  ## Examples
+
+      <.dm_art_button_noise id="noise-btn" content="Click Me" />
+
+  """
   @doc type: :component
   attr(:id, :string, required: true)
   attr(:content, :string, required: true)
