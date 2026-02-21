@@ -117,6 +117,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
       role="group"
       aria-labelledby={@label && @id && "#{@id}-label"}
       aria-label={!@label && "PIN input, #{@length} digits"}
+      aria-disabled={@disabled && "true"}
       aria-invalid={@errors != [] && "true"}
       aria-describedby={
         (@errors != [] && @id && "#{@id}-errors") ||

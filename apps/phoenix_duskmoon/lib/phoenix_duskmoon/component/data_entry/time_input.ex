@@ -100,6 +100,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
         ]}
         role="group"
         aria-label="Time input"
+        aria-disabled={@disabled && "true"}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={
           (@errors != [] && @id && "#{@id}-errors") ||

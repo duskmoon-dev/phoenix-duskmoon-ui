@@ -161,6 +161,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.RatingTest do
       assert result =~ "rating-disabled"
     end
 
+    test "renders aria-disabled on group when disabled" do
+      result = render_component(&dm_rating/1, %{disabled: true})
+      assert result =~ ~s(aria-disabled="true")
+    end
+
+    test "no aria-disabled when enabled" do
+      result = render_component(&dm_rating/1, %{})
+      refute result =~ "aria-disabled"
+    end
+
     test "interactive by default" do
       result = render_component(&dm_rating/1, %{})
       refute result =~ "rating-readonly"

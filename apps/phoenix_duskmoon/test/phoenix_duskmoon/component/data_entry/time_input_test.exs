@@ -174,6 +174,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInputTest do
       result = render_component(&dm_time_input/1, %{disabled: true})
       assert result =~ "form-group-disabled"
     end
+
+    test "renders aria-disabled on group when disabled" do
+      result = render_component(&dm_time_input/1, %{disabled: true})
+      assert result =~ ~s(aria-disabled="true")
+    end
+
+    test "no aria-disabled when enabled" do
+      result = render_component(&dm_time_input/1, %{})
+      refute result =~ "aria-disabled"
+    end
   end
 
   describe "dm_time_input form integration" do

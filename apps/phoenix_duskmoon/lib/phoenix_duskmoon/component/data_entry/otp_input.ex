@@ -115,6 +115,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
       role="group"
       aria-labelledby={@label && @id && "#{@id}-label"}
       aria-label={!@label && "Verification code, #{@length} digits"}
+      aria-disabled={@disabled && "true"}
       aria-invalid={@errors != [] && "true"}
       aria-describedby={
         (@errors != [] && @id && "#{@id}-errors") ||

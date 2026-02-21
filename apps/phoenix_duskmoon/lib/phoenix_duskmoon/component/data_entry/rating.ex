@@ -103,6 +103,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
         ]}
         role="group"
         aria-label={"Rating: #{@safe_value} out of #{@max}"}
+        aria-disabled={@disabled && "true"}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={
           (@errors != [] && @id && "#{@id}-errors") ||
