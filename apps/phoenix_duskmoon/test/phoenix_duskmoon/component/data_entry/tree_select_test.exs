@@ -439,4 +439,39 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
       assert result =~ "is required"
     end
   end
+
+  describe "aria-describedby" do
+    test "trigger references errors container when errors present" do
+      result =
+        render_component(&dm_tree_select/1, %{
+          options: @tree_options,
+          id: "ts",
+          errors: ["is required"]
+        })
+
+      assert result =~ ~s[aria-describedby="ts-errors"]
+      assert result =~ ~s[aria-invalid="true"]
+    end
+
+    test "trigger references helper when no errors" do
+      result =
+        render_component(&dm_tree_select/1, %{
+          options: @tree_options,
+          id: "ts",
+          helper: "Choose a category"
+        })
+
+      assert result =~ ~s[aria-describedby="ts-helper"]
+    end
+
+    test "no aria-describedby when no id" do
+      result =
+        render_component(&dm_tree_select/1, %{
+          options: @tree_options,
+          errors: ["is required"]
+        })
+
+      refute result =~ "aria-describedby"
+    end
+  end
 end

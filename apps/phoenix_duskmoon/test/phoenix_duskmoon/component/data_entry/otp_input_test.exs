@@ -339,6 +339,38 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInputTest do
     assert result =~ ~s(phx-feedback-for="user[code]")
   end
 
+  describe "aria-describedby" do
+    test "references errors container when errors present" do
+      result =
+        render_component(&dm_otp_input/1, %{
+          id: "otp",
+          errors: ["is required"]
+        })
+
+      assert result =~ ~s[aria-describedby="otp-errors"]
+      assert result =~ ~s[aria-invalid="true"]
+    end
+
+    test "references helper when no errors and no error_message" do
+      result =
+        render_component(&dm_otp_input/1, %{
+          id: "otp",
+          helper: "Check your email"
+        })
+
+      assert result =~ ~s[aria-describedby="otp-helper"]
+    end
+
+    test "no aria-describedby when no id" do
+      result =
+        render_component(&dm_otp_input/1, %{
+          errors: ["is required"]
+        })
+
+      refute result =~ "aria-describedby"
+    end
+  end
+
   test "renders otp input with rest attributes" do
     result =
       render_component(&dm_otp_input/1, %{

@@ -143,6 +143,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
         disabled={@disabled}
         aria-expanded={to_string(@open)}
         aria-haspopup="listbox"
+        aria-invalid={@errors != [] && "true"}
+        aria-describedby={
+          (@errors != [] && @id && "#{@id}-errors") ||
+            (@helper && @errors == [] && @id && "#{@id}-helper")
+        }
       >
         <span :if={@selected_options == [] && @placeholder} class="multi-select-placeholder">{@placeholder}</span>
         <div :if={@selected_options != []} class="multi-select-tags">

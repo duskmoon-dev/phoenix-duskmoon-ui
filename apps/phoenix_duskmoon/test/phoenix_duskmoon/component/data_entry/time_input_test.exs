@@ -284,6 +284,38 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInputTest do
     end
   end
 
+  describe "aria-describedby" do
+    test "references errors container when errors present" do
+      result =
+        render_component(&dm_time_input/1, %{
+          id: "ti",
+          errors: ["is required"]
+        })
+
+      assert result =~ ~s[aria-describedby="ti-errors"]
+      assert result =~ ~s[aria-invalid="true"]
+    end
+
+    test "references helper when no errors" do
+      result =
+        render_component(&dm_time_input/1, %{
+          id: "ti",
+          helper: "Pick a time"
+        })
+
+      assert result =~ ~s[aria-describedby="ti-helper"]
+    end
+
+    test "no aria-describedby when no id" do
+      result =
+        render_component(&dm_time_input/1, %{
+          errors: ["is required"]
+        })
+
+      refute result =~ "aria-describedby"
+    end
+  end
+
   test "renders time input with rest attributes" do
     result =
       render_component(&dm_time_input/1, %{

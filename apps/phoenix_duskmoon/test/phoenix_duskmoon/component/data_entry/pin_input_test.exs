@@ -280,6 +280,38 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
     assert result =~ ~s(phx-feedback-for="auth[pin]")
   end
 
+  describe "aria-describedby" do
+    test "references errors container when errors present" do
+      result =
+        render_component(&dm_pin_input/1, %{
+          id: "pin",
+          errors: ["is required"]
+        })
+
+      assert result =~ ~s[aria-describedby="pin-errors"]
+      assert result =~ ~s[aria-invalid="true"]
+    end
+
+    test "references helper when no errors and no error_message" do
+      result =
+        render_component(&dm_pin_input/1, %{
+          id: "pin",
+          helper: "Enter your PIN"
+        })
+
+      assert result =~ ~s[aria-describedby="pin-helper"]
+    end
+
+    test "no aria-describedby when no id" do
+      result =
+        render_component(&dm_pin_input/1, %{
+          errors: ["is required"]
+        })
+
+      refute result =~ "aria-describedby"
+    end
+  end
+
   test "renders pin input with rest attributes" do
     result =
       render_component(&dm_pin_input/1, %{

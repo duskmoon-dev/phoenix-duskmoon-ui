@@ -362,4 +362,39 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CascaderTest do
       assert result =~ "is required"
     end
   end
+
+  describe "aria-describedby" do
+    test "trigger references errors container when errors present" do
+      result =
+        render_component(&dm_cascader/1, %{
+          options: @cascader_options,
+          id: "casc",
+          errors: ["is required"]
+        })
+
+      assert result =~ ~s[aria-describedby="casc-errors"]
+      assert result =~ ~s[aria-invalid="true"]
+    end
+
+    test "trigger references helper when no errors" do
+      result =
+        render_component(&dm_cascader/1, %{
+          options: @cascader_options,
+          id: "casc",
+          helper: "Select a location"
+        })
+
+      assert result =~ ~s[aria-describedby="casc-helper"]
+    end
+
+    test "no aria-describedby when no id" do
+      result =
+        render_component(&dm_cascader/1, %{
+          options: @cascader_options,
+          errors: ["is required"]
+        })
+
+      refute result =~ "aria-describedby"
+    end
+  end
 end

@@ -123,6 +123,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
         disabled={@disabled}
         aria-expanded={to_string(@open)}
         aria-haspopup="tree"
+        aria-invalid={@errors != [] && "true"}
+        aria-describedby={
+          (@errors != [] && @id && "#{@id}-errors") ||
+            (@helper && @errors == [] && @id && "#{@id}-helper")
+        }
       >
         <span class="tree-select-value">
           <%= cond do %>

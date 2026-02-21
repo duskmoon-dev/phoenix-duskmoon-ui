@@ -95,6 +95,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
         @class
       ]}
       phx-feedback-for={@name}
+      aria-invalid={@errors != [] && "true"}
+      aria-describedby={
+        (@errors != [] && @id && "#{@id}-errors") ||
+          (@helper && !@error_message && @errors == [] && @id && "#{@id}-helper")
+      }
       {@rest}
     >
       <label :if={@label} class={["pin-label", @label_class]}>{@label}</label>
@@ -128,7 +133,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>
-      <span :if={@helper && !@error_message && @errors == []} class="pin-helper">{@helper}</span>
+      <span :if={@helper && !@error_message && @errors == []} id={@id && "#{@id}-helper"} class="pin-helper">{@helper}</span>
     </div>
     """
   end

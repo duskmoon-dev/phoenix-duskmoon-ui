@@ -102,6 +102,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
         ]}
         role="group"
         aria-label={"Rating: #{@safe_value} out of #{@max}"}
+        aria-invalid={@errors != [] && "true"}
+        aria-describedby={
+          (@errors != [] && @id && "#{@id}-errors") ||
+            (@helper && @errors == [] && @id && "#{@id}-helper")
+        }
         {@rest}
       >
         <input :if={@name} type="hidden" name={@name} value={@safe_value} class="rating-input" />

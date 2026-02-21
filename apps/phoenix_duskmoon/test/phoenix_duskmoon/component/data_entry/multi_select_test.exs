@@ -445,4 +445,39 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       assert result =~ "is required"
     end
   end
+
+  describe "aria-describedby" do
+    test "trigger references errors container when errors present" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          options: @options,
+          id: "ms",
+          errors: ["is required"]
+        })
+
+      assert result =~ ~s[aria-describedby="ms-errors"]
+      assert result =~ ~s[aria-invalid="true"]
+    end
+
+    test "trigger references helper when no errors" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          options: @options,
+          id: "ms",
+          helper: "Select options"
+        })
+
+      assert result =~ ~s[aria-describedby="ms-helper"]
+    end
+
+    test "no aria-describedby when no id" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          options: @options,
+          errors: ["is required"]
+        })
+
+      refute result =~ "aria-describedby"
+    end
+  end
 end

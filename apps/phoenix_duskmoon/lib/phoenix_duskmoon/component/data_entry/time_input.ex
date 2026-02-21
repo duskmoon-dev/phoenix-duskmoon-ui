@@ -86,6 +86,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
           (@error || @errors != []) && "time-input-error",
           @class
         ]}
+        aria-invalid={@errors != [] && "true"}
+        aria-describedby={
+          (@errors != [] && @id && "#{@id}-errors") ||
+            (@helper && @errors == [] && @id && "#{@id}-helper")
+        }
         {@rest}
       >
         <div class="time-input-segments">

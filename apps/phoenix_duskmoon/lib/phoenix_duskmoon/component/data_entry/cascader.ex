@@ -122,6 +122,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
         disabled={@disabled}
         aria-expanded={to_string(@open)}
         aria-haspopup="listbox"
+        aria-invalid={@errors != [] && "true"}
+        aria-describedby={
+          (@errors != [] && @id && "#{@id}-errors") ||
+            (@helper && @errors == [] && @id && "#{@id}-helper")
+        }
       >
         <span class="cascader-value">
           <span :if={@path_labels != []} class="cascader-path">

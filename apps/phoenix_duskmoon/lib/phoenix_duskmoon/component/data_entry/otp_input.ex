@@ -93,6 +93,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
         @class
       ]}
       phx-feedback-for={@name}
+      aria-invalid={@errors != [] && "true"}
+      aria-describedby={
+        (@errors != [] && @id && "#{@id}-errors") ||
+          (@helper && !@error_message && @errors == [] && @id && "#{@id}-helper")
+      }
       {@rest}
     >
       <label :if={@label} class={["otp-label", @label_class]}>{@label}</label>
@@ -124,7 +129,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>
-      <span :if={@helper && !@error_message && @errors == []} class="otp-helper">{@helper}</span>
+      <span :if={@helper && !@error_message && @errors == []} id={@id && "#{@id}-helper"} class="otp-helper">{@helper}</span>
     </div>
     """
   end
