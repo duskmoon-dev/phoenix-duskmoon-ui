@@ -43,10 +43,6 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       # lg → nested-menu-lg
       result = render_component(&dm_left_menu/1, %{size: "lg", menu: []})
       assert result =~ "nested-menu-lg"
-
-      # xl → nested-menu-lg (mapped)
-      result = render_component(&dm_left_menu/1, %{size: "xl", menu: []})
-      assert result =~ "nested-menu-lg"
     end
 
     test "renders with custom id" do

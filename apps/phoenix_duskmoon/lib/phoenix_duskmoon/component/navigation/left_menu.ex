@@ -48,7 +48,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
 
   attr(:size, :string,
     default: "md",
-    values: ["xs", "sm", "md", "lg", "xl"],
+    values: ["xs", "sm", "md", "lg"],
     doc: "Menu size variant"
   )
 
@@ -84,7 +84,6 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
   defp nested_menu_size("xs"), do: "nested-menu-xs"
   defp nested_menu_size("sm"), do: "nested-menu-sm"
   defp nested_menu_size("lg"), do: "nested-menu-lg"
-  defp nested_menu_size("xl"), do: "nested-menu-lg"
   defp nested_menu_size(_), do: nil
 
   @doc """
