@@ -408,4 +408,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       assert result =~ "multi-select-error"
     end
   end
+
+  test "renders phx-feedback-for with name" do
+    result =
+      render_component(&dm_multi_select/1, %{
+        options: @options,
+        name: "user[languages]"
+      })
+
+    assert result =~ ~s(phx-feedback-for="user[languages]")
+  end
 end

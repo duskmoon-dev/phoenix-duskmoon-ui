@@ -320,4 +320,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CascaderTest do
       refute result =~ "helper-text text-error"
     end
   end
+
+  test "renders phx-feedback-for with name" do
+    result =
+      render_component(&dm_cascader/1, %{
+        options: @cascader_options,
+        name: "user[location]"
+      })
+
+    assert result =~ ~s(phx-feedback-for="user[location]")
+  end
 end

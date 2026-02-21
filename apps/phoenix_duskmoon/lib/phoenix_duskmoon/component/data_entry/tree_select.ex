@@ -113,6 +113,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
         @multiple && "tree-select-multiple",
         @class
       ]}
+      phx-feedback-for={@name}
       {@rest}
     >
       <button

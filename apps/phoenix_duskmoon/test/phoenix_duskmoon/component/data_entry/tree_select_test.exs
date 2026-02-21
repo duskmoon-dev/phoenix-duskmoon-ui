@@ -402,4 +402,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
       refute result =~ "helper-text text-error"
     end
   end
+
+  test "renders phx-feedback-for with name" do
+    result =
+      render_component(&dm_tree_select/1, %{
+        options: @tree_options,
+        name: "user[category]"
+      })
+
+    assert result =~ ~s(phx-feedback-for="user[category]")
+  end
 end

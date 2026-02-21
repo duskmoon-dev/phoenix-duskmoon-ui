@@ -133,6 +133,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
         @loading && "multi-select-loading",
         @class
       ]}
+      phx-feedback-for={@name}
       {@rest}
     >
       <button

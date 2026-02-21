@@ -112,6 +112,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
         @loading && "cascader-loading",
         @class
       ]}
+      phx-feedback-for={@name}
       {@rest}
     >
       <button
