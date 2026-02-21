@@ -107,6 +107,7 @@ defmodule PhoenixDuskmoon.Component.Action.Toggle do
           item[:class]
         ]}
         disabled={item[:disabled]}
+        aria-disabled={item[:disabled] && "true"}
         value={item[:value]}
         aria-pressed={to_string(item[:active] || false)}
       >

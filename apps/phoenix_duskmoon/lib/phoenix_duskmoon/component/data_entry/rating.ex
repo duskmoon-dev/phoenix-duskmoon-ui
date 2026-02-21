@@ -130,6 +130,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Rating do
           aria-label={format_label(@item_label, %{"index" => i, "max" => @max})}
           aria-pressed={to_string(i <= @safe_value)}
           disabled={@disabled || @readonly}
+          aria-disabled={(@disabled || @readonly) && "true"}
           tabindex={if(@readonly || @disabled, do: "-1", else: "0")}
         >
           <.dm_mdi name={@icon} class="rating-icon" />

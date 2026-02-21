@@ -30,6 +30,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
 
       # Previous button should be disabled on first page
       assert result =~ ~s[disabled]
+      assert result =~ ~s[aria-disabled="true"]
       # Current page should be marked
       assert result =~ ~s[aria-current="page"]
     end
@@ -44,6 +45,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
 
       # Next button should be disabled on last page
       assert result =~ ~s[disabled]
+      assert result =~ ~s[aria-disabled="true"]
       # Should show page 10
       assert result =~ ~s[phx-value-current="10"]
     end
@@ -430,6 +432,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       assert result =~ ~s[disabled]
+      assert result =~ ~s[aria-disabled="true"]
       # Previous button should not have phx-click event when disabled
       refute result =~ ~s[phx-value-current="0"]
     end
@@ -443,6 +446,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       assert result =~ ~s[disabled]
+      assert result =~ ~s[aria-disabled="true"]
     end
 
     test "renders with loading state" do

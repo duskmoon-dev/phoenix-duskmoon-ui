@@ -119,6 +119,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
           phx-click={if(@page_num == 1, do: nil, else: @update_event)}
           phx-value-current={if(@page_num == 1, do: nil, else: @page_num - 1)}
           disabled={@page_num == 1}
+          aria-disabled={@page_num == 1 && "true"}
           data-phx-link={@page_link_type}
           data-phx-link-state="push"
           href={page_url(@page_url, @page_url_marker, max(@page_num - 1, 1))}
@@ -152,6 +153,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
           phx-click={if(@page_num == @max_page, do: nil, else: @update_event)}
           phx-value-current={if(@page_num == @max_page, do: nil, else: @page_num + 1)}
           disabled={@page_num == @max_page}
+          aria-disabled={@page_num == @max_page && "true"}
           data-phx-link={@page_link_type}
           data-phx-link-state="push"
           href={page_url(@page_url, @page_url_marker, min(@page_num + 1, @max_page))}
@@ -242,6 +244,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
         phx-click={if(@page_num == 1 || @loading, do: nil, else: @update_event)}
         phx-value-current={if(@page_num == 1, do: nil, else: @page_num - 1)}
         disabled={@page_num == 1}
+        aria-disabled={@page_num == 1 && "true"}
         class={["pagination-prev", @loading && "opacity-50"]}
       >
         <span class="sr-only">{@prev_label}</span>
@@ -264,6 +267,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
         phx-click={if(@page_num == @max_page || @loading, do: nil, else: @update_event)}
         phx-value-current={if(@page_num == @max_page, do: nil, else: @page_num + 1)}
         disabled={@page_num == @max_page}
+        aria-disabled={@page_num == @max_page && "true"}
         class={["pagination-next", @loading && "opacity-50"]}
       >
         <span class="sr-only">{@next_label}</span>

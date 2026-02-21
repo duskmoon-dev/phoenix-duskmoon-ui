@@ -77,6 +77,7 @@ defmodule PhoenixDuskmoon.Component.Action.ToggleTest do
       result = render_component(&dm_toggle_group/1, %{item: items})
       assert result =~ "toggle-btn-disabled"
       assert result =~ "disabled"
+      assert result =~ ~s(aria-disabled="true")
     end
 
     test "renders item with value" do
@@ -252,7 +253,9 @@ defmodule PhoenixDuskmoon.Component.Action.ToggleTest do
   end
 
   test "passes through global attributes" do
-    result = render_component(&dm_toggle_group/1, %{item: basic_items(), "data-testid": "my-toggle"})
+    result =
+      render_component(&dm_toggle_group/1, %{item: basic_items(), "data-testid": "my-toggle"})
+
     assert result =~ ~s[data-testid="my-toggle"]
   end
 end

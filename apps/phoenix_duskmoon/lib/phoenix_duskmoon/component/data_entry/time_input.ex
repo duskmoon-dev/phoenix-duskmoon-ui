@@ -163,8 +163,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
           />
         </div>
         <div :if={@show_period} class="time-input-period">
-          <button type="button" class="time-input-period-btn" disabled={@disabled}>{@am_label}</button>
-          <button type="button" class="time-input-period-btn" disabled={@disabled}>{@pm_label}</button>
+          <button type="button" class="time-input-period-btn" disabled={@disabled} aria-disabled={@disabled && "true"}>{@am_label}</button>
+          <button type="button" class="time-input-period-btn" disabled={@disabled} aria-disabled={@disabled && "true"}>{@pm_label}</button>
         </div>
       </div>
       <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
