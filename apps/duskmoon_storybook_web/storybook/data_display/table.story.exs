@@ -22,10 +22,10 @@ defmodule Storybook.DataDisplay.Table do
           """,
           """
           <:col :let={r} label="Name" label_class="text-info" class="align-top">
-            <%= r.name %>
+            {r.name}
           </:col>
           <:col :let={r} label="Portrayal" class="align-top">
-            <%= r.portrayal %>
+            {r.portrayal}
           </:col>
           <:col :let={r} label="" class="align-top">
             <button type="button" class="btn" phx-click={JS.toggle_class("hidden", to: "tr:has(#description-#\{Map.get(r, :id)\})")}>
@@ -34,7 +34,7 @@ defmodule Storybook.DataDisplay.Table do
           </:col>
           <:expand :let={r} class={["align-top", "hidden"]}>
             <pre id={"description-#\{Map.get(r, :id)\}"} class="p-4 whitespace-break-spaces">
-              <%= r.description %>
+              {r.description}
             </pre>
           </:expand>
           """
@@ -51,10 +51,10 @@ defmodule Storybook.DataDisplay.Table do
         slots: [
           """
           <:col :let={r} label="Name" class="align-top">
-            <%= r.name %>
+            {r.name}
           </:col>
           <:col :let={r} label="Portrayal" class="align-top">
-            <%= r.portrayal %>
+            {r.portrayal}
           </:col>
           """
         ]
@@ -71,10 +71,10 @@ defmodule Storybook.DataDisplay.Table do
         slots: [
           """
           <:col :let={r} label="Name">
-            <%= r.name %>
+            {r.name}
           </:col>
           <:col :let={r} label="Portrayal">
-            <%= r.portrayal %>
+            {r.portrayal}
           </:col>
           """
         ]
