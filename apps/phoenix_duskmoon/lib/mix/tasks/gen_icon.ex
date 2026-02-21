@@ -3,7 +3,7 @@ defmodule Mix.Tasks.PhoenixDuskmoon.GenIcons do
   # try to define with macro, it's too slow
 
   @moduledoc """
-  Generate PhoenixDuskmoon.MaterialDesignIcons fron 7000+ svg files
+  Generate PhoenixDuskmoon.MaterialDesignIcons from 7000+ svg files
   """
   use Mix.Task
 

@@ -2,7 +2,7 @@ defmodule Mix.Tasks.PhoenixDuskmoon.GenRsIcons do
   # Generate Material Design Icons and Bootstrap Icons to yew components
 
   @moduledoc """
-  Generate mdi.rs or bsi.rs fron svg files.
+  Generate mdi.rs or bsi.rs from svg files.
   """
   use Mix.Task
 
