@@ -3568,4 +3568,89 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
       assert result =~ "Bio"
     end
   end
+
+  describe "horizontal layout" do
+    test "renders text input with form-group-horizontal" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "email",
+          label: "Email",
+          value: nil,
+          horizontal: true
+        })
+
+      assert result =~ "form-group-horizontal"
+    end
+
+    test "does not render form-group-horizontal by default" do
+      result =
+        render_component(&dm_input/1, %{name: "email", label: "Email", value: nil})
+
+      refute result =~ "form-group-horizontal"
+    end
+
+    test "renders select input with form-group-horizontal" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "country",
+          type: "select",
+          value: nil,
+          horizontal: true,
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ "form-group-horizontal"
+    end
+
+    test "renders textarea input with form-group-horizontal" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "bio",
+          type: "textarea",
+          value: nil,
+          horizontal: true
+        })
+
+      assert result =~ "form-group-horizontal"
+    end
+  end
+
+  describe "validation state" do
+    test "renders input with form-group-success" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "email",
+          value: "ok@test.com",
+          state: "success"
+        })
+
+      assert result =~ "form-group-success"
+    end
+
+    test "renders input with form-group-warning" do
+      result =
+        render_component(&dm_input/1, %{name: "email", value: "hmm", state: "warning"})
+
+      assert result =~ "form-group-warning"
+    end
+
+    test "does not render state class by default" do
+      result = render_component(&dm_input/1, %{name: "email", value: nil})
+
+      refute result =~ "form-group-success"
+      refute result =~ "form-group-warning"
+    end
+
+    test "renders checkbox with form-group-success" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "agree",
+          type: "checkbox",
+          value: "true",
+          state: "success"
+        })
+
+      assert result =~ "form-group-success"
+    end
+  end
 end

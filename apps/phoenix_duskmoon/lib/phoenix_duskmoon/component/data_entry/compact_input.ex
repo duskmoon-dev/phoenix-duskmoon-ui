@@ -64,6 +64,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
   attr(:prompt, :string, default: nil, doc: "the prompt for select inputs")
   attr(:options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2")
   attr(:multiple, :boolean, default: false, doc: "the multiple flag for select inputs")
+  attr(:horizontal, :boolean, default: false, doc: "horizontal layout (label beside input)")
+
+  attr(:state, :string,
+    default: nil,
+    values: [nil, "success", "warning"],
+    doc: "validation state (applies form-group-success/warning)"
+  )
 
   attr(:rest, :global,
     include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength
@@ -84,7 +91,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div class={["form-group", @errors != [] && "form-group-error", @class]} phx-feedback-for={@name}>
+    <div class={[
+      "form-group",
+      @horizontal && "form-group-horizontal",
+      @errors != [] && "form-group-error",
+      @state && "form-group-#{@state}",
+      @class
+    ]} phx-feedback-for={@name}>
       <label for={@id} class="form-label">
         {@label}
       </label>
@@ -121,7 +134,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
 
     ~H"""
     <div
-      class={["form-group", @errors != [] && "form-group-error", @class]}
+      class={[
+        "form-group",
+        @horizontal && "form-group-horizontal",
+        @errors != [] && "form-group-error",
+        @state && "form-group-#{@state}",
+        @class
+      ]}
       phx-feedback-for={@name}
     >
       <label for={@id} class="form-label">

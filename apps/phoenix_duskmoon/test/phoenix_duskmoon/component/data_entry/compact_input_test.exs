@@ -870,4 +870,87 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
       assert result =~ "is required"
     end
   end
+
+  describe "horizontal layout" do
+    test "renders compact input with form-group-horizontal" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "email",
+          label: "Email",
+          value: nil,
+          horizontal: true
+        })
+
+      assert result =~ "form-group-horizontal"
+    end
+
+    test "does not render form-group-horizontal by default" do
+      result =
+        render_component(&dm_compact_input/1, %{name: "email", label: "Email", value: nil})
+
+      refute result =~ "form-group-horizontal"
+    end
+
+    test "renders compact select with form-group-horizontal" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "country",
+          label: "Country",
+          type: "select",
+          value: nil,
+          horizontal: true,
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ "form-group-horizontal"
+    end
+  end
+
+  describe "validation state" do
+    test "renders compact input with form-group-success" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "email",
+          label: "Email",
+          value: "ok@test.com",
+          state: "success"
+        })
+
+      assert result =~ "form-group-success"
+    end
+
+    test "renders compact input with form-group-warning" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "email",
+          label: "Email",
+          value: "hmm",
+          state: "warning"
+        })
+
+      assert result =~ "form-group-warning"
+    end
+
+    test "does not render state class by default" do
+      result =
+        render_component(&dm_compact_input/1, %{name: "email", label: "Email", value: nil})
+
+      refute result =~ "form-group-success"
+      refute result =~ "form-group-warning"
+    end
+
+    test "renders compact select with form-group-success" do
+      result =
+        render_component(&dm_compact_input/1, %{
+          name: "country",
+          label: "Country",
+          type: "select",
+          value: "us",
+          state: "success",
+          options: [{"us", "USA"}]
+        })
+
+      assert result =~ "form-group-success"
+    end
+  end
 end
