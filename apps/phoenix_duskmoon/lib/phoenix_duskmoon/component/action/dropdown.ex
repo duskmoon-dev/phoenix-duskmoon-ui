@@ -28,6 +28,7 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
   """
 
   use Phoenix.Component
+  import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
   Renders a dropdown menu using the native Popover API with
@@ -73,7 +74,10 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
   end
 
   def dm_dropdown(assigns) do
-    assigns = assign_new(assigns, :rid, fn -> Enum.random(0..999_999) end)
+    assigns =
+      assigns
+      |> assign(:color, css_color(assigns.color))
+      |> assign_new(:rid, fn -> Enum.random(0..999_999) end)
 
     popover_id =
       if assigns[:id] && assigns[:id] != false,
@@ -133,6 +137,5 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
   defp popover_color("primary"), do: "popover-primary"
   defp popover_color("secondary"), do: "popover-secondary"
   defp popover_color("tertiary"), do: "popover-tertiary"
-  defp popover_color("accent"), do: "popover-tertiary"
   defp popover_color(_), do: nil
 end

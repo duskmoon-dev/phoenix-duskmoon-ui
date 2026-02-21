@@ -428,6 +428,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
 
     assert result =~ ~s[aria-expanded="false"]
     assert result =~ ~s[aria-controls="header-md-menu"]
+    assert result =~ ~s[aria-haspopup="true"]
+  end
+
+  test "mobile menu div has role=navigation and aria-label" do
+    result = render_component(&dm_simple_appbar/1, %{title: "App"})
+
+    assert result =~ ~s[id="header-md-menu"]
+    assert result =~ ~s[role="navigation"]
   end
 
   test "renders simple appbar with custom toggle_menu_label" do
