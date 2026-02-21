@@ -354,4 +354,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.AutocompleteTest do
       assert result =~ ~s(id="custom-auto")
     end
   end
+
+  test "passes through global attributes" do
+    result =
+      render_component(&dm_autocomplete/1, %{
+        "data-testid": "my-autocomplete"
+      })
+
+    assert result =~ ~s[data-testid="my-autocomplete"]
+  end
 end

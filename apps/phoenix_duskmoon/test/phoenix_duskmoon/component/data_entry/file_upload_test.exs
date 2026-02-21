@@ -299,4 +299,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FileUploadTest do
       assert result =~ "Upload photos"
     end
   end
+
+  test "passes through global attributes" do
+    result =
+      render_component(&dm_file_upload/1, %{
+        "data-testid": "my-upload"
+      })
+
+    assert result =~ ~s[data-testid="my-upload"]
+  end
 end

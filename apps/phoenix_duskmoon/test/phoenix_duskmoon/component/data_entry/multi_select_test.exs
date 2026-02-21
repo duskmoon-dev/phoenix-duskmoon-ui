@@ -563,4 +563,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       refute result =~ "aria-describedby"
     end
   end
+
+  test "passes through global attributes" do
+    result =
+      render_component(&dm_multi_select/1, %{
+        options: @options,
+        "data-testid": "my-multi"
+      })
+
+    assert result =~ ~s[data-testid="my-multi"]
+  end
 end

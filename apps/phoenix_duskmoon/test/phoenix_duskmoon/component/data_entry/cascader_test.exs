@@ -461,4 +461,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CascaderTest do
       refute result =~ "aria-describedby"
     end
   end
+
+  test "passes through global attributes" do
+    result =
+      render_component(&dm_cascader/1, %{
+        options: @cascader_options,
+        "data-testid": "my-cascader"
+      })
+
+    assert result =~ ~s[data-testid="my-cascader"]
+  end
 end

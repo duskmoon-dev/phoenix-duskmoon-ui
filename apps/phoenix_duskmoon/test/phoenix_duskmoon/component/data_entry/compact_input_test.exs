@@ -965,4 +965,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
       assert result =~ "form-group-success"
     end
   end
+
+  test "passes through global attributes" do
+    result =
+      render_component(&dm_compact_input/1, %{
+        name: "test",
+        label: "Test",
+        value: nil,
+        "data-testid": "my-compact"
+      })
+
+    assert result =~ ~s[data-testid="my-compact"]
+  end
 end

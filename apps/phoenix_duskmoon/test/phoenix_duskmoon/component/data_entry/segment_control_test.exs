@@ -229,4 +229,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControlTest do
       assert result =~ ~s(value="grid")
     end
   end
+
+  test "passes through global attributes" do
+    items = [
+      %{__slot__: :item, inner_block: fn _, _ -> "A" end}
+    ]
+
+    result = render_component(&dm_segment_control/1, %{item: items, "data-testid": "my-seg"})
+    assert result =~ ~s[data-testid="my-seg"]
+  end
 end

@@ -533,4 +533,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
       refute result =~ "aria-describedby"
     end
   end
+
+  test "passes through global attributes" do
+    result =
+      render_component(&dm_tree_select/1, %{
+        options: @tree_options,
+        "data-testid": "my-tree"
+      })
+
+    assert result =~ ~s[data-testid="my-tree"]
+  end
 end
