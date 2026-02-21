@@ -109,8 +109,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Slider do
             "slider-#{@size}",
             "slider-#{@color}",
             @vertical && "slider-vertical",
-
-
             @slider_class
           ]}
           {@rest}

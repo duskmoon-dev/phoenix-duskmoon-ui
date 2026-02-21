@@ -117,8 +117,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
           @variant && "select-#{@variant}",
           "select-#{@size}",
           "select-#{@color}",
-
-
           @select_class
         ]}
         {@rest}

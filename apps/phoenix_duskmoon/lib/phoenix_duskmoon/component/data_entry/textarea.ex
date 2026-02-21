@@ -123,8 +123,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
           "textarea-#{@size}",
           "textarea-#{@color}",
           resize_class(@resize),
-
-
           @textarea_class
         ]}
         {@rest}
