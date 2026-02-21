@@ -3704,6 +3704,36 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
       assert result =~ "italic"
       assert result =~ "Bio"
     end
+
+    test "renders checkbox_group label with label_class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "checkbox_group",
+          name: "colors",
+          id: "colors",
+          label: "Colors",
+          label_class: "font-bold",
+          options: [{"Red", "red"}],
+          value: []
+        })
+
+      assert result =~ "font-bold"
+    end
+
+    test "renders radio_group label with label_class" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "radio_group",
+          name: "size",
+          id: "size",
+          label: "Size",
+          label_class: "uppercase",
+          options: [{"Small", "sm"}],
+          value: nil
+        })
+
+      assert result =~ "uppercase"
+    end
   end
 
   describe "horizontal layout" do

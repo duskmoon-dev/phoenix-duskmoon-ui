@@ -285,7 +285,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id}>{@label}</.dm_label>
+      <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col justify-center gap-2">
         <input type="hidden" name={@name} value="false" />
         <label class="switch-label">
@@ -347,7 +347,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   defp dm_input_by_type(%{type: "checkbox_group"} = assigns) do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} id={@id && "#{@id}-label"}>{@label}</.dm_label>
+      <.dm_label for={@id} id={@id && "#{@id}-label"} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
         <div class="flex flex-wrap gap-6" role="group" aria-labelledby={@id && "#{@id}-label"}>
           <label
@@ -383,7 +383,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   defp dm_input_by_type(%{type: "radio_group"} = assigns) do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
-      <.dm_label for={@id} id={@id && "#{@id}-label"}>{@label}</.dm_label>
+      <.dm_label for={@id} id={@id && "#{@id}-label"} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
         <div class="flex flex-wrap gap-6" role="group" aria-labelledby={@id && "#{@id}-label"}>
           <label class="inline-flex items-center gap-2 min-w-max" :for={{opt_label, opt_value} <- @options}>
