@@ -48,9 +48,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
 
   attr(:border, :boolean,
     default: false,
-    doc: """
-    show table border
-    """
+    doc: "show table borders using table-bordered CSS class"
   )
 
   attr(:zebra, :boolean,
@@ -58,19 +56,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
     doc: "show zebra striping"
   )
 
-  attr(:pin_rows, :boolean,
+  attr(:hover, :boolean,
     default: false,
-    doc: "pin rows for sticky positioning"
-  )
-
-  attr(:pin_cols, :boolean,
-    default: false,
-    doc: "pin columns for sticky positioning"
-  )
-
-  attr(:size, :string,
-    default: nil,
-    doc: "table size (xs, sm, md, lg)"
+    doc: "highlight rows on hover"
   )
 
   attr(:compact, :boolean,
@@ -152,12 +140,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
       role="table"
       id={@id}
       class={[
-        "table border-collapse border-spacing-0",
+        "table",
         if(@border, do: "table-bordered"),
         if(@zebra, do: "table-zebra"),
-        if(@pin_rows, do: "table-pin-rows"),
-        if(@pin_cols, do: "table-pin-cols"),
-        @size && "table-#{@size}",
+        if(@hover, do: "table-hover"),
         if(@compact, do: "table-compact"),
         @class,
       ]}
@@ -176,7 +162,6 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
             scope="col"
             class={[
               "font-bold",
-              if(@border, do: "border"),
               Map.get(col, :label_class, "")
             ]}
           >{col.label}</th>
@@ -192,10 +177,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
             :for={col <- @col}
             data-label={col.label}
             role="cell"
-            class={[
-              if(@border, do: "border"),
-              Map.get(col, :class, "")
-            ]}
+            class={Map.get(col, :class, "")}
           >{render_slot(col, row)}</td>
         </tr>
       </tbody>
@@ -208,10 +190,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
               :for={col <- @col}
               data-label={col.label}
               role="cell"
-              class={[
-                if(@border, do: "border"),
-                Map.get(col, :class, "")
-              ]}
+              class={Map.get(col, :class, "")}
             >{render_slot(col, row)}</td>
           </tr>
           <tr
@@ -227,10 +206,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
             <td
               colspan={max(length(@col), 1)}
               role="cell"
-              class={[
-                "p-0",
-                if(@border, do: "border"),
-              ]}
+              class="p-0"
             >{render_slot(expand, row)}</td>
           </tr>
         <% end %>

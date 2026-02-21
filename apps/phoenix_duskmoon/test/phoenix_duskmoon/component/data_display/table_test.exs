@@ -16,9 +16,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
     attr(:data, :list, default: [])
     attr(:border, :boolean, default: false)
     attr(:zebra, :boolean, default: false)
-    attr(:pin_rows, :boolean, default: false)
-    attr(:pin_cols, :boolean, default: false)
-    attr(:size, :string, default: nil)
+    attr(:hover, :boolean, default: false)
     attr(:compact, :boolean, default: false)
     attr(:stream, :boolean, default: false)
     attr(:id, :string, default: nil)
@@ -42,9 +40,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
         data={if(@empty, do: [], else: @data)}
         border={@border}
         zebra={@zebra}
-        pin_rows={@pin_rows}
-        pin_cols={@pin_cols}
-        size={@size}
+        hover={@hover}
         compact={@compact}
         stream={@stream}
         data-testid={@data_testid}
@@ -128,36 +124,23 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
       assert result =~ "table-zebra"
     end
 
-    test "renders table with pinned rows" do
+    test "renders table with hover effect" do
       result =
         render_component(&TestComponent.render/1, %{
           data: @test_data,
-          pin_rows: true
+          hover: true
         })
 
-      assert result =~ "table-pin-rows"
+      assert result =~ "table-hover"
     end
 
-    test "renders table with pinned columns" do
+    test "no hover class by default" do
       result =
         render_component(&TestComponent.render/1, %{
-          data: @test_data,
-          pin_cols: true
+          data: @test_data
         })
 
-      assert result =~ "table-pin-cols"
-    end
-
-    test "renders table with size variants" do
-      for size <- ["xs", "sm", "md", "lg"] do
-        result =
-          render_component(&TestComponent.render/1, %{
-            data: @test_data,
-            size: size
-          })
-
-        assert result =~ "table-#{size}"
-      end
+      refute result =~ "table-hover"
     end
 
     test "renders compact table" do
@@ -265,18 +248,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
           data: @test_data,
           border: true,
           zebra: true,
-          compact: true,
-          size: "lg",
-          pin_rows: true,
-          pin_cols: true
+          hover: true,
+          compact: true
         })
 
-      assert result =~ "border"
+      assert result =~ "table-bordered"
       assert result =~ "table-zebra"
+      assert result =~ "table-hover"
       assert result =~ "table-compact"
-      assert result =~ "table-lg"
-      assert result =~ "table-pin-rows"
-      assert result =~ "table-pin-cols"
     end
 
     test "renders with stream mode enabled" do
@@ -501,7 +480,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
       assert result =~ "Charlie"
     end
 
-    test "stream mode applies border to cells" do
+    test "stream mode applies table-bordered class" do
       stream_data = [{"row-1", %{name: "Alice", age: 30, city: "NY"}}]
 
       result =
@@ -512,7 +491,6 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
         })
 
       assert result =~ "table-bordered"
-      assert result =~ "border"
     end
 
     test "stream mode applies column class" do
