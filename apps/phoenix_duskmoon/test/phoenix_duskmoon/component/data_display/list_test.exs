@@ -118,6 +118,20 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ListTest do
       assert result =~ "list-item-disabled"
     end
 
+    test "renders interactive item" do
+      items = [
+        %{__slot__: :item, title: "Clickable", interactive: true, inner_block: fn _, _ -> "" end}
+      ]
+
+      result = render_component(&dm_list/1, %{item: items})
+      assert result =~ "list-item-interactive"
+    end
+
+    test "does not render interactive class by default" do
+      result = render_component(&dm_list/1, %{item: basic_items()})
+      refute result =~ "list-item-interactive"
+    end
+
     test "renders item with custom class" do
       items = [
         %{

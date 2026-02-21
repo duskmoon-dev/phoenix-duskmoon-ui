@@ -47,6 +47,21 @@ defmodule Storybook.DataDisplay.List do
           <:item title="Disabled item" disabled={true}>Cannot interact</:item>
           """
         ]
+      },
+      %Variation{
+        id: :interactive,
+        description: "Interactive list items with clickable appearance",
+        attributes: %{
+          id: "list-interactive",
+          bordered: true
+        },
+        slots: [
+          """
+          <:item title="Dashboard" icon="view-dashboard" interactive={true}>Go to dashboard</:item>
+          <:item title="Analytics" icon="chart-bar" interactive={true}>View reports</:item>
+          <:item title="Settings" icon="cog" interactive={true}>Configure app</:item>
+          """
+        ]
       }
     ]
   end

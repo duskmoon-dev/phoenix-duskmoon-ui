@@ -51,6 +51,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.List do
     attr(:icon, :string)
     attr(:active, :boolean)
     attr(:disabled, :boolean)
+    attr(:interactive, :boolean)
     attr(:class, :any)
   end
 
@@ -81,6 +82,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.List do
           "list-item",
           item[:active] && "list-item-active",
           item[:disabled] && "list-item-disabled",
+          item[:interactive] && "list-item-interactive",
           item[:class]
         ]}
         aria-disabled={item[:disabled] && "true"}
