@@ -30,6 +30,42 @@ import "@duskmoon-dev/el-table/register";
 import "@duskmoon-dev/el-tabs/register";
 import "@duskmoon-dev/el-tooltip/register";
 
+// Theme switcher (standalone — no LiveView required)
+// Mirrors the ThemeSwitcher hook logic for controller-rendered pages.
+(function initThemeSwitcher() {
+  function applyTheme(theme) {
+    if (theme && theme !== "default") {
+      document.documentElement.setAttribute("data-theme", theme);
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+    }
+  }
+
+  function setup() {
+    const saved = localStorage.getItem("theme") || "default";
+    applyTheme(saved);
+
+    const radios = document.querySelectorAll(".theme-controller-item");
+    radios.forEach(function(radio) {
+      radio.checked = radio.value === saved;
+      radio.addEventListener("change", function(e) {
+        var theme = e.target.value;
+        localStorage.setItem("theme", theme);
+        applyTheme(theme);
+        // Close the <details> dropdown
+        var details = e.target.closest("details");
+        if (details) details.removeAttribute("open");
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setup);
+  } else {
+    setup();
+  }
+})();
+
 // Clipboard functionality
 function fallbackCopyTextToClipboard(text) {
   var textArea = document.createElement("textarea");
