@@ -39,6 +39,11 @@ defmodule PhoenixDuskmoon.Component.Feedback.SnackbarTest do
       result = render_component(&dm_snackbar/1, %{message: basic_message()})
       assert result =~ ~s(aria-live="assertive")
     end
+
+    test "renders with aria-atomic true" do
+      result = render_component(&dm_snackbar/1, %{message: basic_message()})
+      assert result =~ ~s(aria-atomic="true")
+    end
   end
 
   describe "dm_snackbar types" do

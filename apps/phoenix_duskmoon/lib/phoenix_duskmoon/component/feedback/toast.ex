@@ -109,6 +109,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Toast do
       ]}
       role="alert"
       aria-live="assertive"
+      aria-atomic="true"
       {@rest}
     >
       <div :if={@icon} class="toast-icon" aria-hidden="true">

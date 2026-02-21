@@ -84,6 +84,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Snackbar do
       ]}
       role="alert"
       aria-live="assertive"
+      aria-atomic="true"
       {@rest}
     >
       <span class="snackbar-message">{render_slot(@message)}</span>
