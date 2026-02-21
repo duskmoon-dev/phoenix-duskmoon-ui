@@ -53,19 +53,19 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
     test "renders with default variant primary" do
       result = render_component(&dm_loading_spinner/1, %{})
 
-      assert result =~ "var(--color-primary)"
+      assert result =~ "text-primary"
     end
 
     test "renders with all variant options" do
       for variant <- ~w(primary secondary tertiary info success warning error) do
         result = render_component(&dm_loading_spinner/1, %{variant: variant})
-        assert result =~ "var(--color-#{variant})"
+        assert result =~ "text-#{variant}"
       end
     end
 
     test "accent variant maps to tertiary color" do
       result = render_component(&dm_loading_spinner/1, %{variant: "accent"})
-      assert result =~ "var(--color-tertiary)"
+      assert result =~ "text-tertiary"
     end
 
     test "renders with text" do
@@ -298,7 +298,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
       assert result =~ ~s[id="my-spinner"]
       assert result =~ "extra-class"
       assert result =~ "w-8 h-8"
-      assert result =~ "var(--color-success)"
+      assert result =~ "text-success"
       assert result =~ "Please wait..."
       assert result =~ "text-sm"
       assert result =~ ~s[aria-label="Please wait..."]
@@ -315,7 +315,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.LoadingTest do
       result = render_component(&dm_loading_spinner/1, %{size: "xs", variant: "warning"})
 
       assert result =~ "w-4 h-4"
-      assert result =~ "var(--color-warning)"
+      assert result =~ "text-warning"
       assert result =~ "animate-spin"
     end
 

@@ -201,7 +201,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
-      <label class="flex items-center gap-4 text-sm leading-6 text-[var(--color-on-surface-variant)]">
+      <label class="flex items-center gap-4 text-sm leading-6 text-on-surface-variant">
         <input type="hidden" name={@name} value="false" />
         <input
           type="checkbox"
@@ -417,11 +417,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>
-        {@label} <span class="text-sm font-normal text-[var(--color-on-surface-variant)]">({@value || @min})</span>
+        {@label} <span class="text-sm font-normal text-on-surface-variant">({@value || @min})</span>
       </.dm_label>
       <div class="flex flex-col gap-2">
         <div class="flex items-center gap-4">
-          <span class="text-sm text-[var(--color-on-surface-variant)]">{@min}</span>
+          <span class="text-sm text-on-surface-variant">{@min}</span>
           <input
             type="range"
             id={@id}
@@ -440,11 +440,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             ]}
             {@rest}
           />
-          <span class="text-sm text-[var(--color-on-surface-variant)]">{@max}</span>
+          <span class="text-sm text-on-surface-variant">{@max}</span>
         </div>
         <div class="slider-labels">
           <span>{@min}</span>
-          <span class="font-medium text-[var(--color-on-surface)]">{@value || @min}</span>
+          <span class="font-medium text-on-surface">{@value || @min}</span>
           <span>{@max}</span>
         </div>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
@@ -463,7 +463,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>
-        {@label} <span class="text-sm font-normal text-[var(--color-on-surface-variant)]">({@value || 0}/{@max})</span>
+        {@label} <span class="text-sm font-normal text-on-surface-variant">({@value || 0}/{@max})</span>
       </.dm_label>
       <div class="flex flex-col gap-2">
         <div class="flex items-center gap-1" role="group" aria-label={"#{@label} rating"} aria-invalid={@errors != [] && "true"} aria-describedby={@errors != [] && @id && "#{@id}-errors"}>
@@ -517,7 +517,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             {@rest}
           />
-          <.dm_mdi name="calendar" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-on-surface-variant)] pointer-events-none" />
+          <.dm_mdi name="calendar" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant pointer-events-none" />
         </div>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
@@ -550,7 +550,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             aria-describedby={@errors != [] && @id && "#{@id}-errors"}
             {@rest}
           />
-          <.dm_mdi name="clock" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-on-surface-variant)] pointer-events-none" />
+          <.dm_mdi name="clock" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant pointer-events-none" />
         </div>
         <div :if={@errors != []} id={@id && "#{@id}-errors"}>
           <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
@@ -621,7 +621,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <label class="flex items-center justify-between gap-4">
-        <span class="text-sm leading-6 text-[var(--color-on-surface-variant)]">{@label}</span>
+        <span class="text-sm leading-6 text-on-surface-variant">{@label}</span>
         <div class="flex items-center">
           <input type="hidden" name={@name} value="false" />
           <input
@@ -672,7 +672,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             ]}
             {@rest}
           />
-          <.dm_mdi name="magnify" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-on-surface-variant)] pointer-events-none" />
+          <.dm_mdi name="magnify" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant pointer-events-none" />
         </div>
         <div :if={length(@suggestions) > 0} class="dropdown dropdown-open">
           <ul class="dropdown-content menu w-full">
@@ -749,7 +749,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
       <div class="flex flex-col gap-2">
-        <div class="toolbar flex items-center gap-1 p-2 bg-[var(--color-surface-container-low)] rounded-t-lg" role="toolbar" aria-label={@toolbar_label}>
+        <div class="toolbar flex items-center gap-1 p-2 bg-surface-container-low rounded-t-lg" role="toolbar" aria-label={@toolbar_label}>
           <button type="button" class="btn btn-ghost btn-xs" aria-label={@bold_label}>
             <.dm_mdi name="format-bold" class="w-4 h-4" />
           </button>
@@ -860,11 +860,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>
-        {@label} <span class="text-sm font-normal text-[var(--color-on-surface-variant)]">({@min_val} - {@max_val})</span>
+        {@label} <span class="text-sm font-normal text-on-surface-variant">({@min_val} - {@max_val})</span>
       </.dm_label>
       <div class="flex flex-col gap-2">
         <div class="flex items-center gap-4">
-          <span class="text-sm text-[var(--color-on-surface-variant)]">{@min}</span>
+          <span class="text-sm text-on-surface-variant">{@min}</span>
           <div class="flex-1 relative">
             <input
               type="range"
@@ -899,11 +899,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
               phx-change="range_max_change"
             />
           </div>
-          <span class="text-sm text-[var(--color-on-surface-variant)]">{@max}</span>
+          <span class="text-sm text-on-surface-variant">{@max}</span>
         </div>
         <div class="slider-labels">
           <span>{@min}</span>
-          <span class="font-medium text-[var(--color-on-surface)]">{@min_val} - {@max_val}</span>
+          <span class="font-medium text-on-surface">{@min_val} - {@max_val}</span>
           <span>{@max}</span>
         </div>
         <input type="hidden" name={@name} value={inspect([@min_val, @max_val])} />
@@ -946,7 +946,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             class="absolute right-3 top-1/2 -translate-y-1/2"
             aria-label={@toggle_password_label}
           >
-            <.dm_mdi name="eye" class="w-4 h-4 text-[var(--color-on-surface-variant)]" />
+            <.dm_mdi name="eye" class="w-4 h-4 text-on-surface-variant" />
           </button>
         </div>
         <div class="flex items-center gap-2">
@@ -984,7 +984,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             {String.capitalize(@strength)}
           </span>
         </div>
-        <div class="text-xs text-[var(--color-on-surface-variant)]">
+        <div class="text-xs text-on-surface-variant">
           <p :if={@strength == "weak"}>{@password_hint_weak}</p>
           <p :if={@strength == "medium"}>{@password_hint_medium}</p>
           <p :if={@strength == "strong"}>{@password_hint_strong}</p>

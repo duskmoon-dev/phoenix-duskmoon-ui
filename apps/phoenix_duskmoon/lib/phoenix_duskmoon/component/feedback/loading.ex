@@ -78,14 +78,14 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
   defp spinner_size("md"), do: "w-6 h-6"
   defp spinner_size("lg"), do: "w-8 h-8"
 
-  defp spinner_color("primary"), do: "text-[var(--color-primary)]"
-  defp spinner_color("secondary"), do: "text-[var(--color-secondary)]"
-  defp spinner_color("tertiary"), do: "text-[var(--color-tertiary)]"
-  defp spinner_color("accent"), do: "text-[var(--color-tertiary)]"
-  defp spinner_color("info"), do: "text-[var(--color-info)]"
-  defp spinner_color("success"), do: "text-[var(--color-success)]"
-  defp spinner_color("warning"), do: "text-[var(--color-warning)]"
-  defp spinner_color("error"), do: "text-[var(--color-error)]"
+  defp spinner_color("primary"), do: "text-primary"
+  defp spinner_color("secondary"), do: "text-secondary"
+  defp spinner_color("tertiary"), do: "text-tertiary"
+  defp spinner_color("accent"), do: "text-tertiary"
+  defp spinner_color("info"), do: "text-info"
+  defp spinner_color("success"), do: "text-success"
+  defp spinner_color("warning"), do: "text-warning"
+  defp spinner_color("error"), do: "text-error"
 
   @doc """
   Generates an advanced animated particle loading effect.

@@ -108,7 +108,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
     test "renders fallback color classes for info/success/warning/error" do
       for color <- ~w(info success warning error) do
         result = render_component(&dm_avatar/1, %{name: "T", color: color})
-        assert result =~ "var(--color-#{color})"
+        assert result =~ "bg-#{color}"
+        assert result =~ "text-#{color}-content"
       end
     end
   end
@@ -352,7 +353,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
 
     test "renders name and color combined" do
       result = render_component(&dm_avatar/1, %{name: "JD", color: "error"})
-      assert result =~ "var(--color-error)"
+      assert result =~ "bg-error"
       assert result =~ "J"
     end
 
@@ -367,7 +368,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
 
       assert result =~ "avatar-ring"
       assert result =~ "avatar-offline"
-      assert result =~ "var(--color-warning)"
+      assert result =~ "bg-warning"
       assert result =~ "J"
     end
   end

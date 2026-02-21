@@ -102,7 +102,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
       aria-label={@pagination_label}
       {@rest}
     >
-      <div :if={@show_total} class="flex items-center gap-1 text-sm text-[var(--color-on-surface-variant)]">
+      <div :if={@show_total} class="flex items-center gap-1 text-sm text-on-surface-variant">
         <.dm_mdi name="view-dashboard" class="w-5 h-5" />
         <code>{@total}</code>
       </div>

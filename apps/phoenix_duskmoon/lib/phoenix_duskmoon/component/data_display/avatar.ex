@@ -202,10 +202,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
   defp color_class("primary"), do: "avatar-primary"
   defp color_class("secondary"), do: "avatar-secondary"
   defp color_class("tertiary"), do: "avatar-tertiary"
-  defp color_class("info"), do: "bg-[var(--color-info)] text-[var(--color-on-info,#fff)]"
-  defp color_class("success"), do: "bg-[var(--color-success)] text-[var(--color-on-success,#fff)]"
-  defp color_class("warning"), do: "bg-[var(--color-warning)] text-[var(--color-on-warning,#fff)]"
-  defp color_class("error"), do: "bg-[var(--color-error)] text-[var(--color-on-error,#fff)]"
+  defp color_class("info"), do: "bg-info text-info-content"
+  defp color_class("success"), do: "bg-success text-success-content"
+  defp color_class("warning"), do: "bg-warning text-warning-content"
+  defp color_class("error"), do: "bg-error text-error-content"
 
   defp css_color("accent"), do: "tertiary"
   defp css_color(color), do: color
