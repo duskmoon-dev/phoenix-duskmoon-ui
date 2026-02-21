@@ -69,6 +69,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControl do
   attr(:full, :boolean, default: false, doc: "expand to full width")
   attr(:icon_only, :boolean, default: false, doc: "icon-only mode (no text labels)")
   attr(:multi, :boolean, default: false, doc: "allow multiple selection")
+  attr(:label, :string, default: nil, doc: "accessible label for the segment group (aria-label)")
   attr(:rest, :global)
 
   slot :item, required: true, doc: "Segment items" do
@@ -96,6 +97,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControl do
         @class
       ]}
       role="group"
+      aria-label={@label}
       {@rest}
     >
       <button

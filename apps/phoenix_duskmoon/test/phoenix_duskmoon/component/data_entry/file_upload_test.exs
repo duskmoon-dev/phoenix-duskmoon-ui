@@ -167,6 +167,51 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FileUploadTest do
 
       assert result =~ "file-upload-error"
     end
+
+    test "renders aria-invalid when errors present" do
+      result =
+        render_component(&dm_file_upload/1, %{
+          errors: ["file too large"]
+        })
+
+      assert result =~ ~s(aria-invalid="true")
+    end
+
+    test "no aria-invalid when no errors" do
+      result = render_component(&dm_file_upload/1, %{})
+      refute result =~ "aria-invalid"
+    end
+  end
+
+  describe "aria-describedby" do
+    test "references errors container when errors present" do
+      result =
+        render_component(&dm_file_upload/1, %{
+          id: "fu",
+          errors: ["file too large"]
+        })
+
+      assert result =~ ~s(aria-describedby="fu-errors")
+    end
+
+    test "references helper when no errors" do
+      result =
+        render_component(&dm_file_upload/1, %{
+          id: "fu",
+          helper: "Max 5MB"
+        })
+
+      assert result =~ ~s(aria-describedby="fu-helper")
+    end
+
+    test "no aria-describedby when no id" do
+      result =
+        render_component(&dm_file_upload/1, %{
+          errors: ["file too large"]
+        })
+
+      refute result =~ "aria-describedby"
+    end
   end
 
   test "renders phx-feedback-for with name" do

@@ -72,6 +72,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FileUpload do
         compact={@compact}
         size={@size}
         class={[(@error || @errors != []) && "file-upload-error", @class]}
+        aria-invalid={@errors != [] && "true"}
+        aria-describedby={
+          (@errors != [] && @id && "#{@id}-errors") ||
+            (@helper && @errors == [] && @id && "#{@id}-helper")
+        }
         {@rest}
       >
         {render_slot(@inner_block)}

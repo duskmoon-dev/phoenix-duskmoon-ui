@@ -19,6 +19,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControlTest do
       assert result =~ ~s(role="group")
     end
 
+    test "renders aria-label on group" do
+      result = render_component(&dm_segment_control/1, %{item: items_slot(), label: "View mode"})
+      assert result =~ ~s(aria-label="View mode")
+    end
+
+    test "no aria-label when label not provided" do
+      result = render_component(&dm_segment_control/1, %{item: items_slot()})
+      refute result =~ "aria-label"
+    end
+
     test "renders with custom id" do
       result = render_component(&dm_segment_control/1, %{id: "view-toggle", item: items_slot()})
       assert result =~ ~s(id="view-toggle")
