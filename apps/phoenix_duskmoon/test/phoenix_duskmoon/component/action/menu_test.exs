@@ -130,6 +130,42 @@ defmodule PhoenixDuskmoon.Component.Action.MenuTest do
     end
   end
 
+  describe "dm_menu ARIA attributes" do
+    test "renders role=menu" do
+      result =
+        render_component(&dm_menu/1, %{
+          inner_block: [
+            %{__slot__: :inner_block, inner_block: fn _, _ -> "items" end}
+          ]
+        })
+
+      assert result =~ ~s(role="menu")
+    end
+
+    test "renders aria-label when label is set" do
+      result =
+        render_component(&dm_menu/1, %{
+          label: "File actions",
+          inner_block: [
+            %{__slot__: :inner_block, inner_block: fn _, _ -> "items" end}
+          ]
+        })
+
+      assert result =~ ~s(aria-label="File actions")
+    end
+
+    test "no aria-label when label is nil" do
+      result =
+        render_component(&dm_menu/1, %{
+          inner_block: [
+            %{__slot__: :inner_block, inner_block: fn _, _ -> "items" end}
+          ]
+        })
+
+      refute result =~ "aria-label"
+    end
+  end
+
   describe "dm_menu rest attrs" do
     test "passes rest attributes through" do
       result =
@@ -267,6 +303,42 @@ defmodule PhoenixDuskmoon.Component.Action.MenuTest do
 
       assert result =~ "w-5"
       assert result =~ "h-5"
+    end
+  end
+
+  describe "dm_menu_item ARIA attributes" do
+    test "renders role=menuitem" do
+      result =
+        render_component(&dm_menu_item/1, %{
+          inner_block: [
+            %{__slot__: :inner_block, inner_block: fn _, _ -> "Item" end}
+          ]
+        })
+
+      assert result =~ ~s(role="menuitem")
+    end
+
+    test "renders aria-disabled=true when disabled" do
+      result =
+        render_component(&dm_menu_item/1, %{
+          disabled: true,
+          inner_block: [
+            %{__slot__: :inner_block, inner_block: fn _, _ -> "Disabled" end}
+          ]
+        })
+
+      assert result =~ ~s(aria-disabled="true")
+    end
+
+    test "no aria-disabled when not disabled" do
+      result =
+        render_component(&dm_menu_item/1, %{
+          inner_block: [
+            %{__slot__: :inner_block, inner_block: fn _, _ -> "Item" end}
+          ]
+        })
+
+      refute result =~ "aria-disabled"
     end
   end
 
