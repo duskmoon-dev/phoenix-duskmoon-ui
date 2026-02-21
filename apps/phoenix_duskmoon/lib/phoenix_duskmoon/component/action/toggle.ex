@@ -85,7 +85,7 @@ defmodule PhoenixDuskmoon.Component.Action.Toggle do
         @vertical && "toggle-group-vertical",
         @exclusive && "toggle-group-exclusive",
         @full && "toggle-group-full",
-        @variant && "toggle-#{@variant}",
+        @variant == "segmented" && "toggle-segmented",
         @class
       ]}
       role="group"
@@ -100,6 +100,7 @@ defmodule PhoenixDuskmoon.Component.Action.Toggle do
           item[:active] && "toggle-btn-active",
           item[:disabled] && "toggle-btn-disabled",
           item[:icon_only] && "toggle-btn-icon-only",
+          @variant in ["outlined", "filled", "chip"] && "toggle-#{@variant}",
           @color && "toggle-btn-#{@color}",
           @size && "toggle-btn-#{@size}",
           item[:class]

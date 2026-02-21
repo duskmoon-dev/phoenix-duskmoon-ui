@@ -355,6 +355,45 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
     end
   end
 
+  describe "dm_form actions_align" do
+    test "renders form actions with default between alignment" do
+      result =
+        render_component(&dm_form/1, %{
+          for: %{},
+          inner_block: inner_block(),
+          actions: [%{inner_block: fn _, _ -> "Save" end}]
+        })
+
+      assert result =~ "form-actions-between"
+    end
+
+    test "renders form actions with right alignment" do
+      result =
+        render_component(&dm_form/1, %{
+          for: %{},
+          actions_align: "right",
+          inner_block: inner_block(),
+          actions: [%{inner_block: fn _, _ -> "Save" end}]
+        })
+
+      assert result =~ "form-actions-right"
+      refute result =~ "form-actions-between"
+    end
+
+    test "renders form actions with center alignment" do
+      result =
+        render_component(&dm_form/1, %{
+          for: %{},
+          actions_align: "center",
+          inner_block: inner_block(),
+          actions: [%{inner_block: fn _, _ -> "Save" end}]
+        })
+
+      assert result =~ "form-actions-center"
+      refute result =~ "form-actions-between"
+    end
+  end
+
   describe "dm_form rest attrs" do
     test "renders form with phx-change rest attribute" do
       result =

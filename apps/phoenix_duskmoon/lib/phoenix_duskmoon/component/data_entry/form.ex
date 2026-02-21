@@ -43,6 +43,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
   attr(:for, :any, doc: "the datastructure for the form")
   attr(:as, :any, default: nil, doc: "the server side parameter to collect all input under")
 
+  attr(:actions_align, :string,
+    default: "between",
+    values: ["between", "right", "center"],
+    doc: "alignment of form actions (between, right, center)"
+  )
+
   attr(:rest, :global,
     include: ~w(autocomplete name rel action enctype method novalidate target multipart),
     doc: "the arbitrary HTML attributes to apply to the form tag"
@@ -64,7 +70,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
       {@rest}
     >
       {render_slot(@inner_block, f)}
-      <div :for={action <- @actions} class="form-actions form-actions-between">
+      <div :for={action <- @actions} class={["form-actions", "form-actions-#{@actions_align}"]}>
         {render_slot(action, f)}
       </div>
     </.form>
