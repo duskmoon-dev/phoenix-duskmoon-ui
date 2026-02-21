@@ -62,7 +62,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Chip do
   attr(:disabled, :boolean, default: false, doc: "disable the chip")
   attr(:rest, :global)
 
-  slot(:inner_block, required: true)
+  slot(:inner_block, required: true, doc: "chip label text")
   slot(:icon)
 
   def dm_chip(assigns) do

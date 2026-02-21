@@ -107,7 +107,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
     """
   ) do
     attr(:label, :string, doc: "table column title")
-    attr(:label_class, :any, doc: "table column title title")
+    attr(:label_class, :any, doc: "table column title CSS classes")
     attr(:class, :any, doc: "table row column class")
   end
 

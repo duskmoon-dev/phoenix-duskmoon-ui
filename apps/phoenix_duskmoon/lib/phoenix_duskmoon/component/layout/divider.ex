@@ -90,7 +90,7 @@ defmodule PhoenixDuskmoon.Component.Layout.Divider do
   attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:rest, :global)
 
-  slot(:inner_block, required: false)
+  slot(:inner_block, required: false, doc: "optional text content displayed within the divider")
 
   def dm_divider(assigns) do
     ~H"""

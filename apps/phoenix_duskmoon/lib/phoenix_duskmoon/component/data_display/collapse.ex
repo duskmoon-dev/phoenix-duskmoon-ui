@@ -138,7 +138,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Collapse do
   attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:class, :any, default: nil, doc: "Additional CSS classes")
   attr(:rest, :global)
-  slot(:inner_block, required: true)
+  slot(:inner_block, required: true, doc: "collapse items to render inside the group")
 
   def dm_collapse_group(assigns) do
     ~H"""

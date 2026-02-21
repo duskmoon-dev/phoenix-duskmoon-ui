@@ -94,12 +94,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
 
   attr(:toggle_node_label, :string,
     default: "Toggle {label}",
-    doc: "accessible label template for node toggle buttons (i18n). Use {label} for the node label."
+    doc:
+      "accessible label template for node toggle buttons (i18n). Use {label} for the node label."
   )
 
   attr(:remove_tag_label, :string,
     default: "Remove {label}",
-    doc: "accessible label template for tag removal buttons (i18n). Use {label} for the tag label."
+    doc:
+      "accessible label template for tag removal buttons (i18n). Use {label} for the tag label."
   )
 
   attr(:helper, :string, default: nil, doc: "helper text displayed below the component")

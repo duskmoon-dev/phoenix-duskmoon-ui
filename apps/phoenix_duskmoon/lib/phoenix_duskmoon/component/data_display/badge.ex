@@ -68,7 +68,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Badge do
   attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:rest, :global)
 
-  slot(:inner_block, required: true)
+  slot(:inner_block, required: true, doc: "badge text or content")
 
   def dm_badge(assigns) do
     element_variant =

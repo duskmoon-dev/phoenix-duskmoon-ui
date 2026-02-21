@@ -122,7 +122,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
 
   attr(:remove_tag_label, :string,
     default: "Remove {label}",
-    doc: "accessible label template for tag removal buttons (i18n). Use {label} for the option label."
+    doc:
+      "accessible label template for tag removal buttons (i18n). Use {label} for the option label."
   )
 
   attr(:helper, :string, default: nil, doc: "helper text displayed below the component")

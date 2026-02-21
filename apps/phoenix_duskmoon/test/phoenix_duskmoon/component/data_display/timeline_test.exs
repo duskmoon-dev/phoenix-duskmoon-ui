@@ -441,7 +441,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TimelineTest do
   end
 
   test "passes through global attributes" do
-    result = render_component(&dm_timeline/1, %{item: timeline_items(), "data-testid": "my-timeline"})
+    result =
+      render_component(&dm_timeline/1, %{item: timeline_items(), "data-testid": "my-timeline"})
+
     assert result =~ ~s[data-testid="my-timeline"]
   end
 end

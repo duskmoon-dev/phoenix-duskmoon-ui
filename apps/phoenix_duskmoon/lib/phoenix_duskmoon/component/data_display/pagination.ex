@@ -85,7 +85,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
 
   attr(:rest, :global)
 
-  slot(:inner_block, required: false)
+  slot(:inner_block, required: false, doc: "optional extra content after the pagination controls")
 
   def dm_pagination(assigns) do
     {max_page, pages} = generate_pages(assigns.total, assigns.page_size, assigns.page_num)

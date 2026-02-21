@@ -60,7 +60,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
   attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:rest, :global)
 
-  slot(:inner_block, required: true)
+  slot(:inner_block, required: true, doc: "element the tooltip is attached to")
 
   def dm_tooltip(assigns) do
     assigns =
