@@ -194,7 +194,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
     ~H"""
     <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
-      <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600">
+      <label class="flex items-center gap-4 text-sm leading-6 text-[var(--color-on-surface-variant)]">
         <input type="hidden" name={@name} value="false" />
         <input
           type="checkbox"
@@ -614,7 +614,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     ~H"""
     <div class={["form-group", @errors != [] && "form-group-error", @field_class]} phx-feedback-for={@name}>
       <label class="flex items-center justify-between gap-4">
-        <span class="text-sm leading-6 text-zinc-600">{@label}</span>
+        <span class="text-sm leading-6 text-[var(--color-on-surface-variant)]">{@label}</span>
         <div class="flex items-center">
           <input type="hidden" name={@name} value="false" />
           <input
