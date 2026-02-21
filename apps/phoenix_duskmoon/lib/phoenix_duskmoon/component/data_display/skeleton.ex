@@ -56,15 +56,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   defp build_skeleton_classes(variant, size, animation, width, height, class) do
     [
       "skeleton",
-      if(variant, do: "skeleton-#{variant}", else: nil),
-      if(size, do: "skeleton-#{size}", else: nil),
+      variant && "skeleton-#{variant}",
+      size && "skeleton-#{size}",
       animation_class(animation),
       width,
       height,
       class
     ]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
   end
 
   @doc """
@@ -101,19 +99,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   defp build_container_classes(class) do
     ["skeleton-group", class]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
   end
 
   defp build_line_classes(height, width, animation) do
-    [
-      "skeleton",
-      height,
-      width,
-      animation_class(animation)
-    ]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
+    ["skeleton", height, width, animation_class(animation)]
   end
 
   @doc """
@@ -144,15 +133,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   end
 
   defp build_avatar_classes(size, animation, class) do
-    [
-      "skeleton",
-      "skeleton-avatar",
-      skeleton_avatar_size(size),
-      animation_class(animation),
-      class
-    ]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
+    ["skeleton", "skeleton-avatar", skeleton_avatar_size(size), animation_class(animation), class]
   end
 
   defp skeleton_avatar_size("xs"), do: "w-6 h-6"
@@ -207,30 +188,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   defp build_card_classes(class) do
     ["skeleton skeleton-card", class]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
   end
 
   defp build_title_classes(animation) do
-    [
-      "skeleton",
-      "h-6",
-      "w-3/4",
-      "mb-4",
-      animation_class(animation)
-    ]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
+    ["skeleton", "h-6", "w-3/4", "mb-4", animation_class(animation)]
   end
 
   defp build_action_classes(animation) do
-    [
-      "skeleton",
-      "skeleton-button",
-      animation_class(animation)
-    ]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
+    ["skeleton", "skeleton-button", animation_class(animation)]
   end
 
   @doc """
@@ -436,69 +401,30 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
 
   defp build_comment_container_classes(class) do
     ["skeleton-group", class]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
   end
 
   defp build_comment_name_classes(animation) do
-    [
-      "skeleton",
-      "h-4",
-      "w-20",
-      animation_class(animation)
-    ]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
+    ["skeleton", "h-4", "w-20", animation_class(animation)]
   end
 
   defp build_comment_meta_classes(animation) do
-    [
-      "skeleton",
-      "h-3",
-      "w-16",
-      animation_class(animation)
-    ]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
+    ["skeleton", "h-3", "w-16", animation_class(animation)]
   end
 
   defp build_reply_name_classes(animation) do
-    [
-      "skeleton",
-      "h-3",
-      "w-16",
-      animation_class(animation)
-    ]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
+    ["skeleton", "h-3", "w-16", animation_class(animation)]
   end
 
   defp build_reply_meta_classes(animation) do
-    [
-      "skeleton",
-      "h-3",
-      "w-12",
-      animation_class(animation)
-    ]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
+    ["skeleton", "h-3", "w-12", animation_class(animation)]
   end
 
   defp build_form_classes(class) do
     ["skeleton-group", class]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
   end
 
   defp build_label_classes(animation) do
-    [
-      "skeleton",
-      "h-4",
-      "w-24",
-      animation_class(animation)
-    ]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
+    ["skeleton", "h-4", "w-24", animation_class(animation)]
   end
 
   defp build_field_classes(field_type, animation) do
@@ -511,20 +437,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
         _ -> "skeleton h-10 w-full"
       end
 
-    animation_class = animation_class(animation)
-
-    [base_classes, animation_class]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
+    [base_classes, animation_class(animation)]
   end
 
   defp build_submit_classes(animation) do
-    [
-      "skeleton",
-      "skeleton-button",
-      animation_class(animation)
-    ]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join(" ")
+    ["skeleton", "skeleton-button", animation_class(animation)]
   end
 end
