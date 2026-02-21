@@ -75,6 +75,22 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
   attr(:label, :string, default: "Time input", doc: "Accessible label for the time input group")
   attr(:am_label, :string, default: "AM", doc: "Label for the AM period button (i18n)")
   attr(:pm_label, :string, default: "PM", doc: "Label for the PM period button (i18n)")
+
+  attr(:hours_label, :string,
+    default: "Hours",
+    doc: "Accessible label for the hours segment (i18n)"
+  )
+
+  attr(:minutes_label, :string,
+    default: "Minutes",
+    doc: "Accessible label for the minutes segment (i18n)"
+  )
+
+  attr(:seconds_label, :string,
+    default: "Seconds",
+    doc: "Accessible label for the seconds segment (i18n)"
+  )
+
   attr(:rest, :global)
 
   def dm_time_input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
@@ -118,7 +134,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
             placeholder="HH"
             maxlength="2"
             inputmode="numeric"
-            aria-label="Hours"
+            aria-label={@hours_label}
             disabled={@disabled}
             name={@name && "#{@name}[hour]"}
           />
@@ -129,7 +145,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
             placeholder="MM"
             maxlength="2"
             inputmode="numeric"
-            aria-label="Minutes"
+            aria-label={@minutes_label}
             disabled={@disabled}
             name={@name && "#{@name}[minute]"}
           />
@@ -141,7 +157,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInput do
             placeholder="SS"
             maxlength="2"
             inputmode="numeric"
-            aria-label="Seconds"
+            aria-label={@seconds_label}
             disabled={@disabled}
             name={@name && "#{@name}[second]"}
           />

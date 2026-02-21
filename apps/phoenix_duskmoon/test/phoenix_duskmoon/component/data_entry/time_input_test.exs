@@ -374,4 +374,33 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TimeInputTest do
 
     assert result =~ ~s[data-testid="my-time"]
   end
+
+  describe "i18n segment labels" do
+    test "default segment labels are Hours, Minutes, Seconds" do
+      result = render_component(&dm_time_input/1, %{show_seconds: true})
+      assert result =~ ~s(aria-label="Hours")
+      assert result =~ ~s(aria-label="Minutes")
+      assert result =~ ~s(aria-label="Seconds")
+    end
+
+    test "custom hours_label" do
+      result = render_component(&dm_time_input/1, %{hours_label: "Heures"})
+      assert result =~ ~s(aria-label="Heures")
+      refute result =~ ~s(aria-label="Hours")
+    end
+
+    test "custom minutes_label" do
+      result = render_component(&dm_time_input/1, %{minutes_label: "Minuten"})
+      assert result =~ ~s(aria-label="Minuten")
+      refute result =~ ~s(aria-label="Minutes")
+    end
+
+    test "custom seconds_label" do
+      result =
+        render_component(&dm_time_input/1, %{show_seconds: true, seconds_label: "Sekunden"})
+
+      assert result =~ ~s(aria-label="Sekunden")
+      refute result =~ ~s(aria-label="Seconds")
+    end
+  end
 end

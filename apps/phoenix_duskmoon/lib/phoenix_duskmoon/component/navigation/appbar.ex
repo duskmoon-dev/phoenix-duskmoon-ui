@@ -104,6 +104,11 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
     doc: "Accessible label for the mobile menu toggle button"
   )
 
+  attr(:nav_label, :string,
+    default: "Main navigation",
+    doc: "Accessible label for the navigation landmark (i18n)"
+  )
+
   attr(:rest, :global)
 
   slot(:menu, required: false, doc: "Appbar menus") do
@@ -131,7 +136,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
           <span class="appbar-title select-none font-bold hidden lg:inline-flex">
             {@title}
           </span>
-          <nav class="mx-12 hidden md:flex flex-row items-center gap-4" aria-label="Main navigation">
+          <nav class="mx-12 hidden md:flex flex-row items-center gap-4" aria-label={@nav_label}>
             <a
               :for={menu <- @menu}
               class={[

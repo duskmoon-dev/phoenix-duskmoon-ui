@@ -3783,4 +3783,32 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
       assert result =~ "Enable dark theme"
     end
   end
+
+  describe "password_strength_label i18n" do
+    test "default password strength label" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "password",
+          id: "pw",
+          type: "password_strength",
+          value: "abc"
+        })
+
+      assert result =~ ~s(aria-label="Password strength")
+    end
+
+    test "custom password_strength_label" do
+      result =
+        render_component(&dm_input/1, %{
+          name: "password",
+          id: "pw",
+          type: "password_strength",
+          value: "abc",
+          password_strength_label: "Sécurité du mot de passe"
+        })
+
+      assert result =~ ~s(aria-label="Sécurité du mot de passe")
+      refute result =~ ~s(aria-label="Password strength")
+    end
+  end
 end

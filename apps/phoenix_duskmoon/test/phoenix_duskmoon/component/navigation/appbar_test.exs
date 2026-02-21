@@ -426,4 +426,19 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
     # The mobile menu toggle should have type="button"
     assert result =~ ~s[type="button"]
   end
+
+  describe "nav_label i18n" do
+    test "default nav label is Main navigation" do
+      result = render_component(&dm_simple_appbar/1, %{title: "App"})
+      assert result =~ ~s(aria-label="Main navigation")
+    end
+
+    test "custom nav_label" do
+      result =
+        render_component(&dm_simple_appbar/1, %{title: "App", nav_label: "Navigation principale"})
+
+      assert result =~ ~s(aria-label="Navigation principale")
+      refute result =~ ~s(aria-label="Main navigation")
+    end
+  end
 end

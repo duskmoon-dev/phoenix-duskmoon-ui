@@ -146,6 +146,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
     doc: "hint text shown when password strength is strong"
   )
 
+  attr(:password_strength_label, :string,
+    default: "Password strength",
+    doc: "accessible label for the password strength progressbar (i18n)"
+  )
+
   attr(:remove_file_label, :string,
     default: "Remove file",
     doc: "accessible label for the remove file button in file_upload type"
@@ -995,7 +1000,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
             aria-valuenow={strength_value(@strength)}
             aria-valuemin="0"
             aria-valuemax="100"
-            aria-label="Password strength"
+            aria-label={@password_strength_label}
           >
             <div
               class="progress-bar"
