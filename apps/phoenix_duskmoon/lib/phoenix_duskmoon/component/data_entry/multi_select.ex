@@ -185,6 +185,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
         aria-disabled={@disabled && "true"}
         aria-expanded={to_string(@open)}
         aria-haspopup="listbox"
+        aria-controls={@id && "#{@id}-dropdown"}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={
           (@errors != [] && @id && "#{@id}-errors") ||
@@ -218,7 +219,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
         <span class="multi-select-arrow"></span>
       </button>
 
-      <div class="multi-select-dropdown">
+      <div id={@id && "#{@id}-dropdown"} class="multi-select-dropdown">
         <div :if={@searchable} class="multi-select-search">
           <input
             type="text"

@@ -156,6 +156,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
         aria-disabled={@disabled && "true"}
         aria-expanded={to_string(@open)}
         aria-haspopup="tree"
+        aria-controls={@id && "#{@id}-dropdown"}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={
           (@errors != [] && @id && "#{@id}-errors") ||
@@ -197,7 +198,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
         <span class="tree-select-arrow"></span>
       </button>
 
-      <div class="tree-select-dropdown">
+      <div id={@id && "#{@id}-dropdown"} class="tree-select-dropdown">
         <div :if={@searchable} class="tree-select-search">
           <input
             type="text"

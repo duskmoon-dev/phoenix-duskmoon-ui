@@ -142,6 +142,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
         aria-disabled={@disabled && "true"}
         aria-expanded={to_string(@open)}
         aria-haspopup="listbox"
+        aria-controls={@id && "#{@id}-dropdown"}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={
           (@errors != [] && @id && "#{@id}-errors") ||
@@ -169,7 +170,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
         <span class="cascader-arrow" aria-hidden="true"></span>
       </button>
 
-      <div class="cascader-dropdown">
+      <div id={@id && "#{@id}-dropdown"} class="cascader-dropdown">
         <div :if={@searchable} class="cascader-search">
           <input
             type="text"
