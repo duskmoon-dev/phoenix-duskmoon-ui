@@ -55,7 +55,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
   test "does not render description when nil" do
     result = render_component(&dm_stat/1, %{title: "Count", value: "5"})
 
-    refute result =~ "<p"
+    # Only one dd (the value), no description dd
+    assert length(String.split(result, "<dd")) == 2
   end
 
   test "renders with color applied to value" do
@@ -230,12 +231,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
         })
 
       expected_css = color_css_map[color]
-      # The value <dd> gets the color class, but the description <p> should not
+      # The value <dd> gets the color class, but the description <dd> should not
       assert result =~ expected_css
       assert result =~ "desc-text"
-      # Extract the <p> tag containing desc-text
-      [p_tag] = Regex.scan(~r/<p[^>]*>/, result) |> List.flatten()
-      refute p_tag =~ expected_css
+      # Extract all <dd> tags — find the one with text-sm (the description)
+      dd_tags = Regex.scan(~r/<dd[^>]*>/, result) |> List.flatten()
+      desc_dd = Enum.find(dd_tags, &String.contains?(&1, "text-sm"))
+      assert desc_dd, "expected a <dd> with text-sm class"
+      refute desc_dd =~ expected_css
     end
   end
 

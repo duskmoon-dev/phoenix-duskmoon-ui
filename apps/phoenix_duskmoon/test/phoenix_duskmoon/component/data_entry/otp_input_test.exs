@@ -185,7 +185,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInputTest do
 
     test "renders helper text" do
       result = render_component(&dm_otp_input/1, %{helper: "Check your email"})
-      assert result =~ "otp-helper"
+      assert result =~ "helper-text"
       assert result =~ "Check your email"
     end
 

@@ -72,9 +72,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Stat do
         <dd class={["font-semibold tracking-tight", value_color(@color), value_size(@size)]}>
           {@value}
         </dd>
-        <p :if={@description} class={["text-sm text-on-surface-variant", desc_color(@color)]}>
+        <dd :if={@description} class={["text-sm text-on-surface-variant", desc_color(@color)]}>
           {@description}
-        </p>
+        </dd>
       </dl>
     </div>
     """

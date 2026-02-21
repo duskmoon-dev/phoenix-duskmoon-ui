@@ -133,7 +133,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>
-      <span :if={@helper && !@error_message && @errors == []} id={@id && "#{@id}-helper"} class="pin-helper">{@helper}</span>
+      <span :if={@helper && !@error_message && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
     </div>
     """
   end
