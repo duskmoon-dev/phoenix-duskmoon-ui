@@ -92,8 +92,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Radio do
             "radio",
             "radio-#{@size}",
             "radio-#{@color}",
-
-
             @radio_class
           ]}
           {@rest}

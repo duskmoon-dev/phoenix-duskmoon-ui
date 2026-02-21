@@ -82,6 +82,16 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
 
     assert result =~ ~s[<el-dm-button]
     assert result =~ ~s[loading]
+    assert result =~ ~s[aria-busy="true"]
+  end
+
+  test "renders button without aria-busy when not loading" do
+    result =
+      render_component(&dm_btn/1, %{
+        inner_block: %{inner_block: fn _, _ -> "Idle" end}
+      })
+
+    refute result =~ "aria-busy"
   end
 
   test "renders button with disabled state" do

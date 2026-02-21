@@ -102,8 +102,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
             "checkbox",
             "checkbox-#{@size}",
             "checkbox-#{@color}",
-
-
             @checkbox_class
           ]}
           phx-indeterminate={@indeterminate}
