@@ -381,6 +381,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInputTest do
       assert result =~ ~s[aria-describedby="otp-helper"]
     end
 
+    test "references error_message when set and no errors list" do
+      result =
+        render_component(&dm_otp_input/1, %{
+          id: "otp",
+          error_message: "Invalid code"
+        })
+
+      assert result =~ ~s[aria-describedby="otp-error-message"]
+      assert result =~ ~s[id="otp-error-message"]
+    end
+
     test "no aria-describedby when no id" do
       result =
         render_component(&dm_otp_input/1, %{

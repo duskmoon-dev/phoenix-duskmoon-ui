@@ -108,6 +108,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
       aria-invalid={@errors != [] && "true"}
       aria-describedby={
         (@errors != [] && @id && "#{@id}-errors") ||
+          (@error_message && @errors == [] && @id && "#{@id}-error-message") ||
           (@helper && !@error_message && @errors == [] && @id && "#{@id}-helper")
       }
       {@rest}
@@ -137,7 +138,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
           aria-label={"Digit #{i} of #{@length}"}
         />
       </div>
-      <span :if={@error_message && @errors == []} class="otp-error-message">{@error_message}</span>
+      <span :if={@error_message && @errors == []} id={@id && "#{@id}-error-message"} class="otp-error-message">{@error_message}</span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>

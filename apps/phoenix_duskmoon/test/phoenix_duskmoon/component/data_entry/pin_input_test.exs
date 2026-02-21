@@ -313,6 +313,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
       assert result =~ ~s[aria-describedby="pin-helper"]
     end
 
+    test "references error_message when set and no errors list" do
+      result =
+        render_component(&dm_pin_input/1, %{
+          id: "pin",
+          error_message: "Invalid PIN"
+        })
+
+      assert result =~ ~s[aria-describedby="pin-error-message"]
+      assert result =~ ~s[id="pin-error-message"]
+    end
+
     test "no aria-describedby when no id" do
       result =
         render_component(&dm_pin_input/1, %{
