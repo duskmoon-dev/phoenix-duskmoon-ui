@@ -16,9 +16,8 @@ config :duskmoon_storybook_web, DuskmoonStorybookWeb.Endpoint,
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/phoenix_duskmoon/.*(ex)$",
-      ~r"lib/duskmoon_storybook_web/(live|views)/.*(ex)$",
-      ~r"lib/duskmoon_storybook_web/templates/.*(eex)$"
+      ~r"lib/duskmoon_storybook_web/.*(ex|heex)$",
+      ~r"storybook/.*(exs)$"
     ]
   ]
 

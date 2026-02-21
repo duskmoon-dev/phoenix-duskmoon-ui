@@ -12,10 +12,11 @@ end
 
 if config_env() == :prod do
   secret_key_base =
-    System.get_env(
-      "SECRET_KEY_BASE",
-      "MZp9owsA4KMpak7Pxu/sPIs3dKPx95C0gpRvAI3LsKnq54Gxtl9ZMyzQF9xa8X5q"
-    )
+    System.get_env("SECRET_KEY_BASE") ||
+      raise """
+      environment variable SECRET_KEY_BASE is missing.
+      You can generate one by calling: mix phx.gen.secret
+      """
 
   config :duskmoon_storybook_web, DuskmoonStorybookWeb.Endpoint,
     http: [

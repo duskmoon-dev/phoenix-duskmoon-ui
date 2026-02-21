@@ -42,9 +42,9 @@ defmodule PhoenixDuskmoon.Mixfile do
       {:phoenix, "~> 1.8.1"},
       {:phoenix_html, "~> 4.0"},
       {:phoenix_live_view, "~> 1.1.0"},
-      {:plug, "~> 1.5", optional: true},
+      {:plug, "~> 1.14", optional: true},
       {:bun, "~> 1.4", runtime: Mix.env() == :dev},
-      {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
       {:jason, "~> 1.2", only: :test},
       {:ex_doc, ">= 0.0.0", only: :prod, runtime: false}
     ]
