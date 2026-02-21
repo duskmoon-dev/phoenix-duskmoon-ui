@@ -135,7 +135,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
 
     assigns =
       assigns
-      |> assign_new(:random_inner, fn -> Enum.random(10_000..100_000) end)
+      |> assign_new(:random_inner, fn -> System.unique_integer([:positive]) end)
       |> assign(:item_count, item_count)
       |> assign_new(:item_offsets, fn ->
         Enum.map(0..(item_count - 1), fn _i ->

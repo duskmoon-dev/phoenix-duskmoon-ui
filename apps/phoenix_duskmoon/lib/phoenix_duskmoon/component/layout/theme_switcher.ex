@@ -41,7 +41,7 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
   def dm_theme_switcher(assigns) do
     assigns =
       assigns
-      |> assign_new(:rid, fn -> Enum.random(0..999_999) end)
+      |> assign_new(:rid, fn -> System.unique_integer([:positive]) end)
 
     base_id = assigns[:id] || "theme-switcher-#{assigns.rid}"
     assigns = assign(assigns, :base_id, base_id)

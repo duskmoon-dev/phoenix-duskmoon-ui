@@ -98,7 +98,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
   def dm_modal(assigns) do
     assigns =
       assigns
-      |> assign_new(:id, fn -> "modal-#{Enum.random(0..999_999)}" end)
+      |> assign_new(:id, fn -> "modal-#{System.unique_integer([:positive])}" end)
 
     ~H"""
     {render_slot(@trigger, @id)}

@@ -136,7 +136,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   def dm_btn(%{confirm: confirm} = assigns) when confirm != "" do
     assigns =
       assigns
-      |> assign_new(:id, fn -> "btn-#{Enum.random(0..999_999)}" end)
+      |> assign_new(:id, fn -> "btn-#{System.unique_integer([:positive])}" end)
       |> assign(:el_variant, map_variant(assigns.variant))
       |> assign(:el_style, variant_style(assigns.variant))
 

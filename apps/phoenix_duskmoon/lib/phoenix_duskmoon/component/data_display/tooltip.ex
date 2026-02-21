@@ -66,7 +66,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
     assigns =
       assigns
       |> assign(:color, css_color(assigns.color))
-      |> assign_new(:rid, fn -> Enum.random(0..999_999) end)
+      |> assign_new(:rid, fn -> System.unique_integer([:positive]) end)
 
     tooltip_id =
       if assigns[:id] && assigns[:id] != false,
