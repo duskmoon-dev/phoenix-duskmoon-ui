@@ -3,7 +3,7 @@ defmodule Storybook.DataDisplay.Markdown do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataDisplay.Markdown.dm_markdown/1
-  def description, do: "A markdown render element."
+  def description, do: "Markdown renderer with syntax highlighting, Mermaid diagram support, and theme switching. Uses el-dm-markdown."
 
   def variations do
     [

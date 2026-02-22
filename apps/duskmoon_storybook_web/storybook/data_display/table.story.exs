@@ -3,7 +3,7 @@ defmodule Storybook.DataDisplay.Table do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataDisplay.Table.dm_table/1
-  def description, do: "A table element."
+  def description, do: "Data table with sorting, zebra striping, hover effects, and expandable rows."
 
   def variations do
     [

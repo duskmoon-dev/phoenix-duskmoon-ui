@@ -3,7 +3,7 @@ defmodule Storybook.Navigation.Breadcrumb do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.Navigation.Breadcrumb.dm_breadcrumb/1
-  def description, do: "A breadcrumb element."
+  def description, do: "Breadcrumb navigation trail with customizable separators and aria-current on the last crumb."
 
   def variations do
     [

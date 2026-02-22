@@ -3,7 +3,7 @@ defmodule Storybook.DataDisplay.PaginationThin do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataDisplay.Pagination.dm_pagination_thin/1
-  def description, do: "A pagination thin element."
+  def description, do: "Compact pagination variant with minimal footprint — prev/next buttons with optional total and page jumper."
 
   def variations do
     [

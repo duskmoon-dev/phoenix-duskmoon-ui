@@ -3,7 +3,7 @@ defmodule Storybook.DataDisplay.Card do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataDisplay.Card.dm_card/1
-  def description, do: "A card element."
+  def description, do: "Card container with title, body, image, and action slots. Uses el-dm-card custom element."
 
   def variations do
     [

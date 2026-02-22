@@ -3,7 +3,7 @@ defmodule Storybook.DataEntry.Input do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataEntry.Input.dm_input/1
-  def description, do: "A input element."
+  def description, do: "Form input supporting text, email, password, number, select, and other HTML input types with validation states."
 
   def variations do
     [

@@ -3,7 +3,7 @@ defmodule Storybook.DataDisplay.Pagination do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataDisplay.Pagination.dm_pagination/1
-  def description, do: "A pagination element."
+  def description, do: "Page navigation control with page numbers, size selector, and total count. Uses el-dm-pagination."
 
   def variations do
     [

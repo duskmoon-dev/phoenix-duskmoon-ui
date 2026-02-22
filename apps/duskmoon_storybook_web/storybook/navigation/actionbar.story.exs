@@ -3,7 +3,7 @@ defmodule Storybook.Navigation.Actionbar do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.Navigation.Actionbar.dm_actionbar/1
-  def description, do: "An actionbar element."
+  def description, do: "Toolbar layout for grouping action buttons and controls with flexible alignment."
 
   def variations do
     [

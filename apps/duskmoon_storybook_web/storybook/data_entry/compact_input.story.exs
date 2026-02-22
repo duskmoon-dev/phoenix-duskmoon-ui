@@ -3,7 +3,7 @@ defmodule Storybook.DataEntry.CompactInput do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataEntry.CompactInput.dm_compact_input/1
-  def description, do: "A compact input element."
+  def description, do: "Compact input combining label and field in a single row. Ideal for dense forms and settings panels."
 
   def variations do
     [

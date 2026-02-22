@@ -3,7 +3,7 @@ defmodule Storybook.Navigation.Navbar do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.Navigation.Navbar.dm_navbar/1
-  def description, do: "A navbar element."
+  def description, do: "Horizontal navigation bar with start, center, and end slots for logo, links, and actions."
 
   def variations do
     [
