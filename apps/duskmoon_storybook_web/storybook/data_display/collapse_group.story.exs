@@ -6,6 +6,10 @@ defmodule Storybook.DataDisplay.CollapseGroup do
   def description,
     do: "Container that groups multiple dm_collapse panels. Provides consistent spacing and styling."
 
+  def imports do
+    [{PhoenixDuskmoon.Component.DataDisplay.Collapse, [dm_collapse: 1]}]
+  end
+
   def variations do
     [
       %Variation{
@@ -16,18 +20,18 @@ defmodule Storybook.DataDisplay.CollapseGroup do
         },
         slots: [
           """
-          <PhoenixDuskmoon.Component.DataDisplay.Collapse.dm_collapse variant="bordered">
+          <.dm_collapse variant="bordered">
             <:trigger>Section One</:trigger>
             <:content>Content for section one.</:content>
-          </PhoenixDuskmoon.Component.DataDisplay.Collapse.dm_collapse>
-          <PhoenixDuskmoon.Component.DataDisplay.Collapse.dm_collapse variant="bordered">
+          </.dm_collapse>
+          <.dm_collapse variant="bordered">
             <:trigger>Section Two</:trigger>
             <:content>Content for section two.</:content>
-          </PhoenixDuskmoon.Component.DataDisplay.Collapse.dm_collapse>
-          <PhoenixDuskmoon.Component.DataDisplay.Collapse.dm_collapse variant="bordered">
+          </.dm_collapse>
+          <.dm_collapse variant="bordered">
             <:trigger>Section Three</:trigger>
             <:content>Content for section three.</:content>
-          </PhoenixDuskmoon.Component.DataDisplay.Collapse.dm_collapse>
+          </.dm_collapse>
           """
         ]
       },
@@ -40,14 +44,14 @@ defmodule Storybook.DataDisplay.CollapseGroup do
         },
         slots: [
           """
-          <PhoenixDuskmoon.Component.DataDisplay.Collapse.dm_collapse variant="card">
+          <.dm_collapse variant="card">
             <:trigger>FAQ Item 1</:trigger>
             <:content>Answer to FAQ 1.</:content>
-          </PhoenixDuskmoon.Component.DataDisplay.Collapse.dm_collapse>
-          <PhoenixDuskmoon.Component.DataDisplay.Collapse.dm_collapse variant="card">
+          </.dm_collapse>
+          <.dm_collapse variant="card">
             <:trigger>FAQ Item 2</:trigger>
             <:content>Answer to FAQ 2.</:content>
-          </PhoenixDuskmoon.Component.DataDisplay.Collapse.dm_collapse>
+          </.dm_collapse>
           """
         ]
       }

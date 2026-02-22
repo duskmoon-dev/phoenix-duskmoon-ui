@@ -4,6 +4,10 @@ defmodule Storybook.Navigation.Breadcrumb do
   def function, do: &PhoenixDuskmoon.Component.Navigation.Breadcrumb.dm_breadcrumb/1
   def description, do: "Breadcrumb navigation trail with customizable separators and aria-current on the last crumb."
 
+  def imports do
+    [{PhoenixDuskmoon.Component.Icon.Icons, [dm_mdi: 1]}]
+  end
+
   def variations do
     [
       %Variation{
@@ -14,7 +18,7 @@ defmodule Storybook.Navigation.Breadcrumb do
         slots: [
           """
           <:crumb class="flex gap-2">
-            <PhoenixDuskmoon.Component.Icon.Icons.dm_mdi name="home" class="w-4 h-4" />
+            <.dm_mdi name="home" class="w-4 h-4" />
             <a href="/">Home</a>
           </:crumb>
           <:crumb>
