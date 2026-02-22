@@ -51,6 +51,10 @@ defmodule Storybook.DataEntry.Switch do
           %Variation{
             id: :lg,
             attributes: %{id: "lg", name: "lg", label: "LG switch", size: "lg"}
+          },
+          %Variation{
+            id: :xl,
+            attributes: %{id: "xl", name: "xl", label: "XL switch", size: "xl"}
           }
         ]
       },
@@ -72,8 +76,16 @@ defmodule Storybook.DataEntry.Switch do
             }
           },
           %Variation{
+            id: :tertiary,
+            attributes: %{id: "tertiary", name: "tertiary", label: "Tertiary", color: "tertiary"}
+          },
+          %Variation{
             id: :accent,
             attributes: %{id: "accent", name: "accent", label: "Accent", color: "accent"}
+          },
+          %Variation{
+            id: :info,
+            attributes: %{id: "info", name: "info", label: "Info", color: "info"}
           },
           %Variation{
             id: :success,

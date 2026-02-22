@@ -42,6 +42,10 @@ defmodule Storybook.DataEntry.Checkbox do
           %Variation{
             id: :lg,
             attributes: %{id: "lg", name: "lg", label: "LG checkbox", size: "lg"}
+          },
+          %Variation{
+            id: :xl,
+            attributes: %{id: "xl", name: "xl", label: "XL checkbox", size: "xl"}
           }
         ]
       },
@@ -63,8 +67,21 @@ defmodule Storybook.DataEntry.Checkbox do
             }
           },
           %Variation{
+            id: :tertiary,
+            attributes: %{
+              id: "tertiary",
+              name: "tertiary",
+              label: "Tertiary option",
+              color: "tertiary"
+            }
+          },
+          %Variation{
             id: :accent,
             attributes: %{id: "accent", name: "accent", label: "Accent option", color: "accent"}
+          },
+          %Variation{
+            id: :info,
+            attributes: %{id: "info", name: "info", label: "Info option", color: "info"}
           },
           %Variation{
             id: :success,
@@ -97,6 +114,15 @@ defmodule Storybook.DataEntry.Checkbox do
           name: "disabled",
           label: "Disabled checkbox",
           disabled: true
+        }
+      },
+      %Variation{
+        id: :indeterminate,
+        attributes: %{
+          id: "checkbox-indet",
+          name: "indeterminate",
+          label: "Indeterminate state",
+          indeterminate: true
         }
       }
     ]
