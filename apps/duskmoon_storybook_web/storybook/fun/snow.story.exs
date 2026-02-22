@@ -2,6 +2,7 @@ defmodule Storybook.Fun.Snow do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.CssArt.Snow.dm_art_snow/1
+  def description, do: "CSS art falling snowflakes with configurable count and size."
 
   def variations do
     [

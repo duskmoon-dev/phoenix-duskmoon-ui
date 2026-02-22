@@ -2,6 +2,7 @@ defmodule Storybook.DataDisplay.Chip do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataDisplay.Chip.dm_chip/1
+  def description, do: "Compact label for categories, tags, and selections with color, size, and state variants."
 
   def variations do
     [

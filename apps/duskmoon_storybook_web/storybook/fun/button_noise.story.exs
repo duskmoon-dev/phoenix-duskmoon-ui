@@ -2,6 +2,7 @@ defmodule Storybook.Fun.ButtonNoise do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.CssArt.ButtonNoise.dm_art_button_noise/1
+  def description, do: "CSS art button with animated noise texture effect."
 
   def variations do
     [

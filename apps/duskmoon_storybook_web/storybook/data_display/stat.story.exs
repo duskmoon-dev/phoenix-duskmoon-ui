@@ -2,6 +2,7 @@ defmodule Storybook.DataDisplay.Stat do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataDisplay.Stat.dm_stat/1
+  def description, do: "Statistic display with title, value, and optional description slots for dashboards and summaries."
 
   def variations do
     [

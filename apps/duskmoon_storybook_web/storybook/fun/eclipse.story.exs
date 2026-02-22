@@ -2,6 +2,7 @@ defmodule Storybook.Fun.Eclipse do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.CssArt.Eclipse.dm_art_eclipse/1
+  def description, do: "CSS art eclipse animation with configurable size."
 
   def variations do
     [

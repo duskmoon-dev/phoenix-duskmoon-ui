@@ -2,6 +2,7 @@ defmodule Storybook.Fun.SpotlightSearch do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.CssArt.SpotlightSearch.dm_art_spotlight_search/1
+  def description, do: "CSS art macOS-style spotlight search overlay with animated ring."
 
   def variations do
     [

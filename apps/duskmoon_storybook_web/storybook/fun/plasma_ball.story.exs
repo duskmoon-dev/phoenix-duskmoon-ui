@@ -2,6 +2,7 @@ defmodule Storybook.Fun.PlasmaBall do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.CssArt.PlasmaBall.dm_art_plasma_ball/1
+  def description, do: "CSS art plasma ball with animated electric arcs."
 
   def variations do
     [

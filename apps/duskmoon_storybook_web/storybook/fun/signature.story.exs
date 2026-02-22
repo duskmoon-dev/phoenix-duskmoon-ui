@@ -2,6 +2,7 @@ defmodule Storybook.Fun.Signature do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.CssArt.Signature.dm_art_signature/1
+  def description, do: "CSS art animated handwriting signature effect."
 
   def variations do
     [

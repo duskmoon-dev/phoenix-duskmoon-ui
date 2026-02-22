@@ -2,6 +2,7 @@ defmodule Storybook.Navigation.Tab do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.Navigation.Tab.dm_tab/1
+  def description, do: "Tabbed content switcher with multiple style variants and active tab tracking."
 
   def variations do
     [
