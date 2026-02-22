@@ -781,3 +781,40 @@ Storybook stories                 → 84 (100% with descriptions)
 Demo routes                       → 42 (unchanged)
 Console errors (our code)         → 0
 ```
+
+---
+
+## 12. Iteration 9 — Docker Fix, Test Expansion & Storybook Coverage
+
+### 12a. Docker Build Fix
+
+Docker build was failing 5 times due to `SECRET_KEY_BASE` missing during `mix release`:
+- **Root cause**: Elixir 1.17's `mix release` evaluates `runtime.exs` during build, which requires SECRET_KEY_BASE
+- **Fix**: Added `ARG SECRET_KEY_BASE=build-time-placeholder-replaced-at-runtime` to Dockerfile builder stage
+- **Also fixed**: Tailwind version mismatch — updated download URL from 4.0.3 to 4.1.11 to match `config.exs`
+
+### 12b. Test Coverage Expansion (+9 tests)
+
+| Component | Tests Added | What's Tested |
+|-----------|-------------|---------------|
+| `navigation/nested_menu_item` | 3 | rest attrs passthrough, nil `to` link, default state (no active/disabled) |
+| `data_entry/form_inline` | 2 | rest attrs passthrough, div element type |
+| `data_entry/form_hint` | 2 | rest attrs passthrough, span element type |
+| `data_entry/form_counter` | 2 | rest attrs passthrough, zero-value edge case |
+
+### 12c. Storybook Coverage Expansion
+
+| Story | Variations Added | Attrs Demonstrated |
+|-------|-----------------|-------------------|
+| `action/button` | 3 (confirm_customization group) | `confirm_text`, `cancel_text`, `show_cancel_action`, `confirm_dialog_label` |
+| `feedback/snackbar` | 4 (color_types group) | `type: "primary"/"secondary"/"tertiary"/"dark"` |
+| `data_display/progress` | 2 (label_customization group) | `label_text`, `complete_text` |
+
+### 12d. Regression Results
+```
+mix compile --warnings-as-errors  → 0 warnings
+mix format --check-formatted      → clean
+mix test                          → 3207 tests, 0 failures (+12 from iteration 8)
+Storybook stories                 → 84 (unchanged count, expanded variations)
+Demo routes                       → 42 (unchanged)
+```
