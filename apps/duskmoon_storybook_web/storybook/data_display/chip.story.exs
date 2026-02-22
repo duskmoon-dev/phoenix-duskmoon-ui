@@ -11,95 +11,44 @@ defmodule Storybook.DataDisplay.Chip do
         description: "Default chip (no color)",
         slots: ["Default"]
       },
-      %Variation{
-        id: :primary,
-        description: "Primary color",
-        attributes: %{color: "primary"},
-        slots: ["Primary"]
+      %VariationGroup{
+        id: :colors,
+        description: "Color variants",
+        variations: [
+          %Variation{id: :primary, attributes: %{color: "primary"}, slots: ["Primary"]},
+          %Variation{id: :secondary, attributes: %{color: "secondary"}, slots: ["Secondary"]},
+          %Variation{id: :tertiary, attributes: %{color: "tertiary"}, slots: ["Tertiary"]},
+          %Variation{id: :success, attributes: %{color: "success"}, slots: ["Success"]},
+          %Variation{id: :warning, attributes: %{color: "warning"}, slots: ["Warning"]},
+          %Variation{id: :error, attributes: %{color: "error"}, slots: ["Error"]},
+          %Variation{id: :info, attributes: %{color: "info"}, slots: ["Info"]}
+        ]
       },
-      %Variation{
-        id: :secondary,
-        description: "Secondary color",
-        attributes: %{color: "secondary"},
-        slots: ["Secondary"]
+      %VariationGroup{
+        id: :variants,
+        description: "Fill style variants",
+        variations: [
+          %Variation{id: :outlined, attributes: %{variant: "outlined", color: "primary"}, slots: ["Outlined"]},
+          %Variation{id: :soft, attributes: %{variant: "soft", color: "secondary"}, slots: ["Soft"]}
+        ]
       },
-      %Variation{
-        id: :tertiary,
-        description: "Tertiary color",
-        attributes: %{color: "tertiary"},
-        slots: ["Tertiary"]
+      %VariationGroup{
+        id: :sizes,
+        description: "Size variants",
+        variations: [
+          %Variation{id: :small, attributes: %{size: "sm", color: "primary"}, slots: ["Small"]},
+          %Variation{id: :medium, attributes: %{size: "md", color: "primary"}, slots: ["Medium"]},
+          %Variation{id: :large, attributes: %{size: "lg", color: "primary"}, slots: ["Large"]}
+        ]
       },
-      %Variation{
-        id: :success,
-        description: "Success color",
-        attributes: %{color: "success"},
-        slots: ["Success"]
-      },
-      %Variation{
-        id: :warning,
-        description: "Warning color",
-        attributes: %{color: "warning"},
-        slots: ["Warning"]
-      },
-      %Variation{
-        id: :error,
-        description: "Error color",
-        attributes: %{color: "error"},
-        slots: ["Error"]
-      },
-      %Variation{
-        id: :info,
-        description: "Info color",
-        attributes: %{color: "info"},
-        slots: ["Info"]
-      },
-      %Variation{
-        id: :outlined,
-        description: "Outlined variant",
-        attributes: %{variant: "outlined", color: "primary"},
-        slots: ["Outlined"]
-      },
-      %Variation{
-        id: :soft,
-        description: "Soft variant",
-        attributes: %{variant: "soft", color: "secondary"},
-        slots: ["Soft"]
-      },
-      %Variation{
-        id: :small,
-        description: "Small size",
-        attributes: %{size: "sm", color: "primary"},
-        slots: ["Small"]
-      },
-      %Variation{
-        id: :medium,
-        description: "Medium size (default)",
-        attributes: %{size: "md", color: "primary"},
-        slots: ["Medium"]
-      },
-      %Variation{
-        id: :large,
-        description: "Large size",
-        attributes: %{size: "lg", color: "primary"},
-        slots: ["Large"]
-      },
-      %Variation{
-        id: :deletable,
-        description: "Deletable chip",
-        attributes: %{color: "error", deletable: true},
-        slots: ["Remove me"]
-      },
-      %Variation{
-        id: :selected,
-        description: "Selected chip",
-        attributes: %{color: "success", selected: true},
-        slots: ["Active"]
-      },
-      %Variation{
-        id: :disabled,
-        description: "Disabled chip",
-        attributes: %{color: "info", disabled: true},
-        slots: ["Disabled"]
+      %VariationGroup{
+        id: :states,
+        description: "Interactive states",
+        variations: [
+          %Variation{id: :deletable, attributes: %{color: "error", deletable: true}, slots: ["Remove me"]},
+          %Variation{id: :selected, attributes: %{color: "success", selected: true}, slots: ["Active"]},
+          %Variation{id: :disabled, attributes: %{color: "info", disabled: true}, slots: ["Disabled"]}
+        ]
       }
     ]
   end

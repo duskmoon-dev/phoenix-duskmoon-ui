@@ -8,182 +8,81 @@ defmodule Storybook.DataDisplay.Progress do
     [
       %Variation{
         id: :default,
-        attributes: %{
-          value: 75,
-          max: 100
-        }
+        description: "Basic linear progress bar at 75%",
+        attributes: %{value: 75, max: 100}
       },
       %Variation{
         id: :with_label,
-        attributes: %{
-          value: 60,
-          max: 100,
-          show_label: true
-        }
+        description: "Progress bar with percentage label",
+        attributes: %{value: 60, max: 100, show_label: true}
       },
-      %Variation{
-        id: :color_variants,
-        attributes: %{
-          value: 30,
-          max: 100,
-          color: "success"
-        }
+      %VariationGroup{
+        id: :colors,
+        description: "Color variants",
+        variations: [
+          %Variation{id: :success, attributes: %{value: 30, max: 100, color: "success"}},
+          %Variation{id: :warning, attributes: %{value: 85, max: 100, color: "warning"}},
+          %Variation{id: :error, attributes: %{value: 95, max: 100, color: "error"}}
+        ]
       },
-      %Variation{
-        id: :warning_progress,
-        attributes: %{
-          value: 85,
-          max: 100,
-          color: "warning"
-        }
+      %VariationGroup{
+        id: :sizes,
+        description: "Size variants",
+        variations: [
+          %Variation{id: :xs, attributes: %{value: 50, max: 100, size: "xs", color: "info"}},
+          %Variation{id: :sm, attributes: %{value: 25, max: 100, size: "sm", color: "success", show_label: true}},
+          %Variation{id: :lg, attributes: %{value: 40, max: 100, size: "lg", color: "accent", show_label: true}}
+        ]
       },
-      %Variation{
-        id: :error_progress,
-        attributes: %{
-          value: 95,
-          max: 100,
-          color: "error"
-        }
+      %VariationGroup{
+        id: :animations,
+        description: "Animated and indeterminate states",
+        variations: [
+          %Variation{id: :animated, attributes: %{value: 70, max: 100, color: "primary", animated: true}},
+          %Variation{id: :indeterminate, attributes: %{color: "secondary", indeterminate: true}},
+          %Variation{id: :complete, attributes: %{value: 100, max: 100, color: "success", show_label: true}}
+        ]
       },
-      %Variation{
-        id: :size_variants,
-        attributes: %{
-          value: 50,
-          max: 100,
-          size: "xs",
-          color: "info"
-        }
+      %VariationGroup{
+        id: :striped,
+        description: "Striped pattern variants",
+        variations: [
+          %Variation{id: :striped_basic, attributes: %{value: 65, max: 100, color: "primary", striped: true}},
+          %Variation{
+            id: :striped_animated,
+            attributes: %{value: 55, max: 100, color: "success", striped: true, animated: true}
+          }
+        ]
       },
-      %Variation{
-        id: :large_progress,
-        attributes: %{
-          value: 40,
-          max: 100,
-          size: "lg",
-          color: "accent",
-          show_label: true
-        }
+      %VariationGroup{
+        id: :inline_labels,
+        description: "Inline label positioning",
+        variations: [
+          %Variation{id: :inline, attributes: %{value: 72, max: 100, color: "accent", inline_label: true}},
+          %Variation{
+            id: :inline_striped,
+            attributes: %{value: 80, max: 100, color: "info", inline_label: true, striped: true}
+          }
+        ]
       },
-      %Variation{
-        id: :animated_progress,
-        attributes: %{
-          value: 70,
-          max: 100,
-          color: "primary",
-          animated: true
-        }
-      },
-      %Variation{
-        id: :indeterminate_progress,
-        attributes: %{
-          color: "secondary",
-          indeterminate: true
-        }
-      },
-      %Variation{
-        id: :upload_progress,
-        attributes: %{
-          value: 45,
-          max: 100,
-          color: "primary",
-          animated: true,
-          show_label: true
-        }
-      },
-      %Variation{
-        id: :small_with_label,
-        attributes: %{
-          value: 25,
-          max: 100,
-          size: "sm",
-          color: "success",
-          show_label: true
-        }
-      },
-      %Variation{
-        id: :complete_progress,
-        attributes: %{
-          value: 100,
-          max: 100,
-          color: "success",
-          show_label: true
-        }
-      },
-      %Variation{
-        id: :circular_default,
-        attributes: %{
-          type: "circular",
-          value: 75,
-          max: 100,
-          color: "primary"
-        }
-      },
-      %Variation{
-        id: :circular_with_label,
-        attributes: %{
-          type: "circular",
-          value: 60,
-          max: 100,
-          color: "success",
-          show_label: true
-        }
-      },
-      %Variation{
-        id: :circular_indeterminate,
-        attributes: %{
-          type: "circular",
-          color: "secondary",
-          indeterminate: true
-        }
-      },
-      %Variation{
-        id: :circular_large,
-        attributes: %{
-          type: "circular",
-          value: 85,
-          max: 100,
-          color: "warning",
-          size: "lg",
-          show_label: true
-        }
-      },
-      %Variation{
-        id: :striped_progress,
-        attributes: %{
-          value: 65,
-          max: 100,
-          color: "primary",
-          striped: true
-        }
-      },
-      %Variation{
-        id: :striped_animated,
-        attributes: %{
-          value: 55,
-          max: 100,
-          color: "success",
-          striped: true,
-          animated: true
-        }
-      },
-      %Variation{
-        id: :inline_label,
-        attributes: %{
-          value: 72,
-          max: 100,
-          color: "accent",
-          inline_label: true
-        }
-      },
-      %Variation{
-        id: :inline_label_striped,
-        attributes: %{
-          value: 80,
-          max: 100,
-          color: "info",
-          inline_label: true,
-          striped: true
-        }
+      %VariationGroup{
+        id: :circular,
+        description: "Circular progress variants",
+        variations: [
+          %Variation{id: :circular_default, attributes: %{type: "circular", value: 75, max: 100, color: "primary"}},
+          %Variation{
+            id: :circular_label,
+            attributes: %{type: "circular", value: 60, max: 100, color: "success", show_label: true}
+          },
+          %Variation{
+            id: :circular_indeterminate,
+            attributes: %{type: "circular", color: "secondary", indeterminate: true}
+          },
+          %Variation{
+            id: :circular_large,
+            attributes: %{type: "circular", value: 85, max: 100, color: "warning", size: "lg", show_label: true}
+          }
+        ]
       },
       %VariationGroup{
         id: :label_customization,
@@ -192,24 +91,12 @@ defmodule Storybook.DataDisplay.Progress do
           %Variation{
             id: :custom_label_text,
             description: "Custom progress label text",
-            attributes: %{
-              value: 3,
-              max: 5,
-              color: "primary",
-              show_label: true,
-              label_text: "Steps"
-            }
+            attributes: %{value: 3, max: 5, color: "primary", show_label: true, label_text: "Steps"}
           },
           %Variation{
             id: :custom_complete_text,
             description: "Custom completion text appended to percentage",
-            attributes: %{
-              value: 100,
-              max: 100,
-              color: "success",
-              show_label: true,
-              complete_text: "Done"
-            }
+            attributes: %{value: 100, max: 100, color: "success", show_label: true, complete_text: "Done"}
           }
         ]
       }

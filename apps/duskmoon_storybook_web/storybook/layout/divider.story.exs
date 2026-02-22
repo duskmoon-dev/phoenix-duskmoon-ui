@@ -14,207 +14,69 @@ defmodule Storybook.Layout.Divider do
       %Variation{
         id: :with_text,
         description: "Divider with centered text label",
-        slots: [
-          "Section Title"
+        slots: ["Section Title"]
+      },
+      %VariationGroup{
+        id: :colors,
+        description: "Color variants with text",
+        variations: [
+          %Variation{id: :primary, attributes: %{variant: "primary"}, slots: ["Primary"]},
+          %Variation{id: :secondary, attributes: %{variant: "secondary"}, slots: ["Secondary"]},
+          %Variation{id: :light, attributes: %{variant: "light"}, slots: ["Light"]},
+          %Variation{id: :dark, attributes: %{variant: "dark"}, slots: ["Dark"]}
         ]
       },
-      %Variation{
-        id: :vertical_divider,
-        description: "Vertical orientation",
-        attributes: %{
-          orientation: "vertical"
-        }
-      },
-      %Variation{
-        id: :primary_color,
-        description: "Primary color variant with text",
-        attributes: %{
-          variant: "primary"
-        },
-        slots: [
-          "Primary Section"
+      %VariationGroup{
+        id: :styles,
+        description: "Line style variants",
+        variations: [
+          %Variation{id: :dashed, attributes: %{style: "dashed", variant: "primary"}, slots: ["Dashed"]},
+          %Variation{id: :dotted, attributes: %{style: "dotted", variant: "secondary"}, slots: ["Dotted"]}
         ]
       },
-      %Variation{
-        id: :secondary_colored,
-        description: "Secondary color variant with text",
-        attributes: %{
-          variant: "secondary"
-        },
-        slots: [
-          "Secondary Section"
+      %VariationGroup{
+        id: :sizes,
+        description: "Thickness variants",
+        variations: [
+          %Variation{id: :xs, attributes: %{size: "xs", variant: "secondary"}},
+          %Variation{id: :sm, attributes: %{size: "sm", variant: "primary"}, slots: ["Small"]},
+          %Variation{id: :lg, attributes: %{size: "lg", variant: "primary"}, slots: ["Large"]},
+          %Variation{id: :xl, attributes: %{size: "xl", variant: "secondary"}, slots: ["Extra Large"]}
         ]
       },
-      %Variation{
-        id: :light_divider,
-        description: "Light color variant",
-        attributes: %{
-          variant: "light"
-        },
-        slots: [
-          "Light Divider"
-        ]
-      },
-      %Variation{
-        id: :dark_divider,
-        description: "Dark color variant",
-        attributes: %{
-          variant: "dark"
-        },
-        slots: [
-          "Dark Divider"
-        ]
-      },
-      %Variation{
-        id: :dashed_variant,
-        description: "Dashed line style with primary color",
-        attributes: %{
-          style: "dashed",
-          variant: "primary"
-        },
-        slots: [
-          "Dashed Divider"
-        ]
-      },
-      %Variation{
-        id: :dotted_variant,
-        description: "Dotted line style with secondary color",
-        attributes: %{
-          style: "dotted",
-          variant: "secondary"
-        },
-        slots: [
-          "Dotted Divider"
-        ]
-      },
-      %Variation{
-        id: :small_divider,
-        description: "Extra-small thickness",
-        attributes: %{
-          size: "xs",
-          variant: "secondary"
-        }
-      },
-      %Variation{
-        id: :large_divider,
-        description: "Large thickness with text",
-        attributes: %{
-          size: "lg",
-          variant: "primary"
-        },
-        slots: [
-          "Large Divider"
-        ]
-      },
-      %Variation{
-        id: :settings_section,
-        description: "Dashed primary divider for section breaks",
-        attributes: %{
-          variant: "primary",
-          style: "dashed"
-        },
-        slots: [
-          "Settings"
-        ]
-      },
-      %Variation{
-        id: :vertical_with_color,
-        description: "Vertical with primary color",
-        attributes: %{
-          orientation: "vertical",
-          variant: "primary"
-        }
-      },
-      %Variation{
-        id: :vertical_large,
-        description: "Large vertical with dark color",
-        attributes: %{
-          orientation: "vertical",
-          size: "lg",
-          variant: "dark"
-        }
-      },
-      %Variation{
-        id: :size_sm,
-        description: "Small size with text",
-        attributes: %{
-          size: "sm",
-          variant: "primary"
-        },
-        slots: [
-          "Small"
-        ]
-      },
-      %Variation{
-        id: :size_xl,
-        description: "Extra-large size with text",
-        attributes: %{
-          size: "xl",
-          variant: "secondary"
-        },
-        slots: [
-          "Extra Large"
+      %VariationGroup{
+        id: :vertical,
+        description: "Vertical orientation variants",
+        variations: [
+          %Variation{id: :vertical_default, attributes: %{orientation: "vertical"}},
+          %Variation{id: :vertical_primary, attributes: %{orientation: "vertical", variant: "primary"}},
+          %Variation{id: :vertical_large, attributes: %{orientation: "vertical", size: "lg", variant: "dark"}}
         ]
       },
       %Variation{
         id: :gradient,
         description: "Gradient divider",
-        attributes: %{
-          variant: "primary",
-          gradient: true
-        }
+        attributes: %{variant: "primary", gradient: true}
       },
-      %Variation{
-        id: :inset_left,
-        description: "Left-inset divider",
-        attributes: %{
-          inset: "left"
-        },
-        slots: [
-          "Left Inset"
+      %VariationGroup{
+        id: :insets,
+        description: "Inset variants — margin from container edges",
+        variations: [
+          %Variation{id: :inset_left, attributes: %{inset: "left"}, slots: ["Left Inset"]},
+          %Variation{id: :inset_right, attributes: %{inset: "right"}, slots: ["Right Inset"]},
+          %Variation{id: :inset_both, attributes: %{inset: "both", variant: "secondary"}, slots: ["Both Inset"]}
         ]
       },
-      %Variation{
-        id: :inset_right,
-        description: "Right-inset divider",
-        attributes: %{
-          inset: "right"
-        },
-        slots: [
-          "Right Inset"
-        ]
-      },
-      %Variation{
-        id: :inset_both,
-        description: "Both-sides inset divider",
-        attributes: %{
-          inset: "both",
-          variant: "secondary"
-        },
-        slots: [
-          "Both Inset"
-        ]
-      },
-      %Variation{
-        id: :text_left,
-        description: "Left-aligned text",
-        attributes: %{
-          text_position: "left",
-          variant: "primary"
-        },
-        slots: [
-          "Left Text"
-        ]
-      },
-      %Variation{
-        id: :text_right,
-        description: "Right-aligned text",
-        attributes: %{
-          text_position: "right",
-          variant: "secondary"
-        },
-        slots: [
-          "Right Text"
+      %VariationGroup{
+        id: :text_positions,
+        description: "Text alignment within the divider",
+        variations: [
+          %Variation{id: :text_left, attributes: %{text_position: "left", variant: "primary"}, slots: ["Left"]},
+          %Variation{
+            id: :text_right,
+            attributes: %{text_position: "right", variant: "secondary"},
+            slots: ["Right"]
+          }
         ]
       }
     ]

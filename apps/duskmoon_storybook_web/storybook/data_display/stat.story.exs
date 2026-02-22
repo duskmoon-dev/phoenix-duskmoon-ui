@@ -13,7 +13,7 @@ defmodule Storybook.DataDisplay.Stat do
       },
       %Variation{
         id: :with_description,
-        description: "Stat with description",
+        description: "Stat with description text",
         attributes: %{
           title: "Revenue",
           value: "$45.6K",
@@ -21,81 +21,41 @@ defmodule Storybook.DataDisplay.Stat do
         }
       },
       %Variation{
-        id: :primary_color,
-        description: "Primary color",
-        attributes: %{title: "Active Sessions", value: "892", color: "primary"}
-      },
-      %Variation{
-        id: :secondary_color,
-        description: "Secondary color",
-        attributes: %{title: "Page Views", value: "15.2K", color: "secondary"}
-      },
-      %Variation{
-        id: :accent_color,
-        description: "Accent color",
-        attributes: %{title: "Bookmarks", value: "348", color: "accent"}
-      },
-      %Variation{
-        id: :info_color,
-        description: "Info color",
-        attributes: %{title: "Pending", value: "42", color: "info"}
-      },
-      %Variation{
-        id: :success_color,
-        description: "Success color with description",
-        attributes: %{
-          title: "Growth Rate",
-          value: "+24%",
-          color: "success",
-          description: "Up from 18% last quarter"
-        }
-      },
-      %Variation{
-        id: :warning_color,
-        description: "Warning color",
-        attributes: %{
-          title: "Response Time",
-          value: "450ms",
-          color: "warning",
-          description: "Above 300ms target"
-        }
-      },
-      %Variation{
-        id: :error_color,
-        description: "Error color",
-        attributes: %{
-          title: "Error Rate",
-          value: "3.2%",
-          color: "error",
-          description: "Above threshold"
-        }
-      },
-      %Variation{
-        id: :small_size,
-        description: "Small size",
-        attributes: %{title: "Uptime", value: "99.9%", size: "sm"}
-      },
-      %Variation{
-        id: :medium_size,
-        description: "Medium size (default)",
-        attributes: %{title: "CPU Usage", value: "67%", size: "md", color: "info"}
-      },
-      %Variation{
-        id: :large_size,
-        description: "Large size",
-        attributes: %{title: "Total Sales", value: "$1.2M", size: "lg", color: "primary"}
-      },
-      %Variation{
-        id: :tertiary_color,
-        description: "Tertiary color",
-        attributes: %{title: "Active Plans", value: "57", color: "tertiary"}
-      },
-      %Variation{
         id: :with_icon,
         description: "Stat with icon slot",
         attributes: %{title: "Downloads", value: "8.4K", color: "success"},
-        slots: [
-          ~s(<:icon>↓</:icon>)
+        slots: [~s(<:icon>↓</:icon>)]
+      },
+      %VariationGroup{
+        id: :colors,
+        description: "Color variants",
+        variations: [
+          %Variation{id: :primary, attributes: %{title: "Sessions", value: "892", color: "primary"}},
+          %Variation{id: :secondary, attributes: %{title: "Page Views", value: "15.2K", color: "secondary"}},
+          %Variation{id: :tertiary, attributes: %{title: "Plans", value: "57", color: "tertiary"}},
+          %Variation{id: :accent, attributes: %{title: "Bookmarks", value: "348", color: "accent"}},
+          %Variation{id: :info, attributes: %{title: "Pending", value: "42", color: "info"}},
+          %Variation{
+            id: :success,
+            attributes: %{title: "Growth", value: "+24%", color: "success", description: "Up from 18%"}
+          },
+          %Variation{
+            id: :warning,
+            attributes: %{title: "Response", value: "450ms", color: "warning", description: "Above target"}
+          },
+          %Variation{
+            id: :error,
+            attributes: %{title: "Errors", value: "3.2%", color: "error", description: "Above threshold"}
+          }
+        ]
+      },
+      %VariationGroup{
+        id: :sizes,
+        description: "Size variants",
+        variations: [
+          %Variation{id: :small, attributes: %{title: "Uptime", value: "99.9%", size: "sm"}},
+          %Variation{id: :medium, attributes: %{title: "CPU", value: "67%", size: "md", color: "info"}},
+          %Variation{id: :large, attributes: %{title: "Sales", value: "$1.2M", size: "lg", color: "primary"}}
         ]
       }
     ]
