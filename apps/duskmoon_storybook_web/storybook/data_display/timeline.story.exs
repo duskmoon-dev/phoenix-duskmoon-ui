@@ -47,6 +47,80 @@ defmodule Storybook.DataDisplay.Timeline do
           <:item title="Error" color="error">Failed</:item>
           """
         ]
+      },
+      %Variation{
+        id: :right_layout,
+        description: "Right-aligned layout",
+        attributes: %{
+          id: "tl-right",
+          layout: "right"
+        },
+        slots: [
+          """
+          <:item title="Step 1" completed={true}>Done</:item>
+          <:item title="Step 2" active={true}>Current</:item>
+          <:item title="Step 3">Pending</:item>
+          """
+        ]
+      },
+      %Variation{
+        id: :horizontal_layout,
+        description: "Horizontal timeline",
+        attributes: %{
+          id: "tl-horiz",
+          layout: "horizontal"
+        },
+        slots: [
+          """
+          <:item title="Start" completed={true}>Done</:item>
+          <:item title="Middle" active={true}>Now</:item>
+          <:item title="End">Pending</:item>
+          """
+        ]
+      },
+      %Variation{
+        id: :size_sm,
+        description: "Small timeline",
+        attributes: %{
+          id: "tl-sm",
+          size: "sm"
+        },
+        slots: [
+          """
+          <:item title="Created" completed={true}>Project created</:item>
+          <:item title="Updated" active={true}>In review</:item>
+          <:item title="Deployed">Pending</:item>
+          """
+        ]
+      },
+      %Variation{
+        id: :size_lg,
+        description: "Large timeline",
+        attributes: %{
+          id: "tl-lg",
+          size: "lg"
+        },
+        slots: [
+          """
+          <:item title="Design" completed={true}>Designs approved</:item>
+          <:item title="Development" active={true}>In progress</:item>
+          <:item title="Testing">Pending</:item>
+          """
+        ]
+      },
+      %Variation{
+        id: :with_loading,
+        description: "Timeline item with loading state",
+        attributes: %{
+          id: "tl-loading"
+        },
+        slots: [
+          """
+          <:item title="Uploaded" completed={true}>File received</:item>
+          <:item title="Processing" loading={true}>Analyzing data…</:item>
+          <:item title="Done">Pending</:item>
+          """
+        ]
       }
     ]
   end

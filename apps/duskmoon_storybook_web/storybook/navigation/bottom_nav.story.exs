@@ -31,6 +31,79 @@ defmodule Storybook.Navigation.BottomNav do
           color: "primary",
           position: "static"
         }
+      },
+      %VariationGroup{
+        id: :colors,
+        description: "Color variants for active item",
+        variations: [
+          %Variation{
+            id: :secondary,
+            attributes: %{
+              id: "bnav-sec",
+              color: "secondary",
+              position: "static",
+              items: [
+                %{icon: "home", label: "Home", active: true},
+                %{icon: "magnify", label: "Search"},
+                %{icon: "account", label: "Profile"}
+              ]
+            }
+          },
+          %Variation{
+            id: :success,
+            attributes: %{
+              id: "bnav-succ",
+              color: "success",
+              position: "static",
+              items: [
+                %{icon: "home", label: "Home", active: true},
+                %{icon: "magnify", label: "Search"},
+                %{icon: "account", label: "Profile"}
+              ]
+            }
+          },
+          %Variation{
+            id: :warning,
+            attributes: %{
+              id: "bnav-warn",
+              color: "warning",
+              position: "static",
+              items: [
+                %{icon: "home", label: "Home", active: true},
+                %{icon: "magnify", label: "Search"},
+                %{icon: "account", label: "Profile"}
+              ]
+            }
+          },
+          %Variation{
+            id: :error,
+            attributes: %{
+              id: "bnav-err",
+              color: "error",
+              position: "static",
+              items: [
+                %{icon: "home", label: "Home", active: true},
+                %{icon: "magnify", label: "Search"},
+                %{icon: "account", label: "Profile"}
+              ]
+            }
+          }
+        ]
+      },
+      %Variation{
+        id: :sticky_position,
+        description: "Sticky-positioned navigation",
+        attributes: %{
+          id: "bnav-sticky",
+          position: "sticky",
+          color: "primary",
+          items: [
+            %{icon: "home", label: "Home", active: true},
+            %{icon: "magnify", label: "Explore"},
+            %{icon: "bell", label: "Alerts"},
+            %{icon: "account", label: "Profile"}
+          ]
+        }
       }
     ]
   end
