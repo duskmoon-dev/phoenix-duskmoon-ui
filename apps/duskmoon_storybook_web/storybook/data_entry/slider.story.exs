@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.Slider do
     [
       %Variation{
         id: :default,
+        description: "Default range slider",
         attributes: %{
           id: "slider-default",
           name: "volume",
@@ -19,6 +20,7 @@ defmodule Storybook.DataEntry.Slider do
       },
       %Variation{
         id: :with_steps,
+        description: "Slider with discrete step increments",
         attributes: %{
           id: "slider-steps",
           name: "brightness",
@@ -59,6 +61,7 @@ defmodule Storybook.DataEntry.Slider do
       },
       %Variation{
         id: :vertical,
+        description: "Vertically oriented slider",
         attributes: %{
           id: "slider-vertical",
           name: "vertical",
@@ -71,6 +74,7 @@ defmodule Storybook.DataEntry.Slider do
       },
       %Variation{
         id: :no_value_label,
+        description: "Slider with hidden value label",
         attributes: %{
           id: "slider-no-label",
           name: "quality",

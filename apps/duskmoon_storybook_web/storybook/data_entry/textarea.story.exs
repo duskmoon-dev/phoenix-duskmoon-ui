@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.Textarea do
     [
       %Variation{
         id: :default,
+        description: "Default textarea with placeholder",
         attributes: %{
           id: "textarea-default",
           name: "description",
@@ -18,6 +19,7 @@ defmodule Storybook.DataEntry.Textarea do
       },
       %Variation{
         id: :with_value,
+        description: "Textarea with pre-filled content",
         attributes: %{
           id: "textarea-value",
           name: "notes",
@@ -28,6 +30,7 @@ defmodule Storybook.DataEntry.Textarea do
       },
       %Variation{
         id: :no_label,
+        description: "Textarea without a label",
         attributes: %{
           id: "textarea-no-label",
           name: "comment",
@@ -180,6 +183,7 @@ defmodule Storybook.DataEntry.Textarea do
       },
       %Variation{
         id: :with_constraints,
+        description: "Textarea with maxlength constraint",
         attributes: %{
           id: "textarea-constraints",
           name: "bio",

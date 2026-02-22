@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.Select do
     [
       %Variation{
         id: :default,
+        description: "Default select with placeholder prompt",
         attributes: %{
           id: "select-default",
           name: "country",
@@ -18,6 +19,7 @@ defmodule Storybook.DataEntry.Select do
       },
       %Variation{
         id: :with_value,
+        description: "Select with pre-selected value",
         attributes: %{
           id: "select-value",
           name: "priority",
@@ -28,6 +30,7 @@ defmodule Storybook.DataEntry.Select do
       },
       %Variation{
         id: :no_prompt,
+        description: "Select without placeholder prompt",
         attributes: %{
           id: "select-no-prompt",
           name: "status",
@@ -90,6 +93,7 @@ defmodule Storybook.DataEntry.Select do
       },
       %Variation{
         id: :disabled,
+        description: "Disabled select",
         attributes: %{
           id: "select-disabled",
           name: "disabled",
@@ -100,6 +104,7 @@ defmodule Storybook.DataEntry.Select do
       },
       %Variation{
         id: :multiple,
+        description: "Multi-select with pre-selected values",
         attributes: %{
           id: "select-multiple",
           name: "tags",
@@ -145,6 +150,7 @@ defmodule Storybook.DataEntry.Select do
       },
       %Variation{
         id: :many_options,
+        description: "Select with many options",
         attributes: %{
           id: "select-many",
           name: "timezone",

@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.Radio do
     [
       %Variation{
         id: :default,
+        description: "Default unselected radio button",
         attributes: %{
           id: "radio-default",
           name: "theme",
@@ -17,6 +18,7 @@ defmodule Storybook.DataEntry.Radio do
       },
       %Variation{
         id: :checked,
+        description: "Pre-selected radio button",
         attributes: %{
           id: "radio-checked",
           name: "theme",
@@ -90,6 +92,7 @@ defmodule Storybook.DataEntry.Radio do
       },
       %Variation{
         id: :disabled,
+        description: "Disabled radio button",
         attributes: %{
           id: "radio-disabled",
           name: "disabled",

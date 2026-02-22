@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.Switch do
     [
       %Variation{
         id: :default,
+        description: "Default unchecked switch",
         attributes: %{
           id: "switch-default",
           name: "notifications",
@@ -16,6 +17,7 @@ defmodule Storybook.DataEntry.Switch do
       },
       %Variation{
         id: :checked,
+        description: "Pre-checked switch",
         attributes: %{
           id: "switch-checked",
           name: "dark_mode",
@@ -25,6 +27,7 @@ defmodule Storybook.DataEntry.Switch do
       },
       %Variation{
         id: :with_color,
+        description: "Switch with success color",
         attributes: %{
           id: "switch-color",
           name: "auto_save",
@@ -56,6 +59,7 @@ defmodule Storybook.DataEntry.Switch do
       },
       %Variation{
         id: :disabled,
+        description: "Disabled switch",
         attributes: %{
           id: "switch-disabled",
           name: "disabled",

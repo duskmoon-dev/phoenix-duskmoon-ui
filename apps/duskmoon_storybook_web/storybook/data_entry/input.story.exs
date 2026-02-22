@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.Input do
     [
       %Variation{
         id: :default,
+        description: "Default text input",
         attributes: %{
           type: "text",
           label: "Username",
@@ -17,6 +18,7 @@ defmodule Storybook.DataEntry.Input do
       },
       %Variation{
         id: :password,
+        description: "Password input with masked characters",
         attributes: %{
           type: "password",
           label: "Password",
@@ -26,6 +28,7 @@ defmodule Storybook.DataEntry.Input do
       },
       %Variation{
         id: :email,
+        description: "Email input with small size class",
         attributes: %{
           type: "email",
           label: "Email",
@@ -36,6 +39,7 @@ defmodule Storybook.DataEntry.Input do
       },
       %Variation{
         id: :input_error,
+        description: "Search input with validation error",
         attributes: %{
           type: "search",
           label: "Search",
@@ -46,6 +50,7 @@ defmodule Storybook.DataEntry.Input do
       },
       %Variation{
         id: :checkbox,
+        description: "Checkbox input type",
         attributes: %{
           type: "checkbox",
           label: "Checkbox",
@@ -54,6 +59,7 @@ defmodule Storybook.DataEntry.Input do
       },
       %Variation{
         id: :toggle,
+        description: "Toggle switch input type",
         attributes: %{
           type: "toggle",
           label: "Auto",
@@ -63,6 +69,7 @@ defmodule Storybook.DataEntry.Input do
       },
       %Variation{
         id: :select,
+        description: "Select dropdown with grouped options",
         attributes: %{
           type: "select",
           label: "Location",
@@ -81,6 +88,7 @@ defmodule Storybook.DataEntry.Input do
       },
       %Variation{
         id: :select_multiple,
+        description: "Multi-select with grouped options",
         attributes: %{
           type: "select",
           label: "Favorite Cities",
@@ -100,6 +108,7 @@ defmodule Storybook.DataEntry.Input do
       },
       %Variation{
         id: :checkbox_group,
+        description: "Checkbox group for multiple selections",
         attributes: %{
           type: "checkbox_group",
           label: "Favorite countries",
@@ -116,6 +125,7 @@ defmodule Storybook.DataEntry.Input do
       },
       %Variation{
         id: :radio_group,
+        description: "Radio group for single selection",
         attributes: %{
           type: "radio_group",
           label: "Most visited country",
@@ -131,6 +141,7 @@ defmodule Storybook.DataEntry.Input do
       },
       %Variation{
         id: :ghost,
+        description: "Ghost variant — minimal styling",
         attributes: %{
           type: "text",
           label: "Ghost Input",
@@ -141,6 +152,7 @@ defmodule Storybook.DataEntry.Input do
       },
       %Variation{
         id: :filled,
+        description: "Filled variant — background fill",
         attributes: %{
           type: "text",
           label: "Filled Input",
@@ -151,6 +163,7 @@ defmodule Storybook.DataEntry.Input do
       },
       %Variation{
         id: :bordered,
+        description: "Bordered variant — visible border",
         attributes: %{
           type: "text",
           label: "Bordered Input",
@@ -161,6 +174,7 @@ defmodule Storybook.DataEntry.Input do
       },
       %Variation{
         id: :textarea,
+        description: "Multi-line textarea input",
         attributes: %{
           type: "textarea",
           label: "Story",
@@ -170,6 +184,7 @@ defmodule Storybook.DataEntry.Input do
       },
       %Variation{
         id: :file,
+        description: "File upload input",
         attributes: %{
           type: "file",
           label: "Attachment",
@@ -179,22 +194,27 @@ defmodule Storybook.DataEntry.Input do
       },
       %Variation{
         id: :number,
+        description: "Numeric input",
         attributes: %{type: "number", label: "Quantity", name: "quantity", value: nil}
       },
       %Variation{
         id: :date,
+        description: "Date picker input",
         attributes: %{type: "date", label: "Birth Date", name: "birth_date", value: nil}
       },
       %Variation{
         id: :range,
+        description: "Range slider input",
         attributes: %{type: "range", label: "Volume", name: "volume", value: nil}
       },
       %Variation{
         id: :color_picker,
+        description: "Color picker input",
         attributes: %{type: "color_picker", label: "Brand Color", name: "brand_color", value: nil}
       },
       %Variation{
         id: :range_slider,
+        description: "Dual-handle range slider",
         attributes: %{
           type: "range_slider",
           label: "Price Range",
@@ -206,18 +226,22 @@ defmodule Storybook.DataEntry.Input do
       },
       %Variation{
         id: :rating,
+        description: "Star rating input",
         attributes: %{type: "rating", label: "Rate this item", name: "rating", value: 3}
       },
       %Variation{
         id: :tags,
+        description: "Tag input with autocomplete",
         attributes: %{type: "tags", label: "Add Tags", name: "tags", value: nil}
       },
       %Variation{
         id: :password_strength,
+        description: "Password with strength indicator",
         attributes: %{type: "password_strength", label: "New Password", name: "new_password", value: nil}
       },
       %Variation{
         id: :search_with_suggestions,
+        description: "Search with autocomplete suggestions",
         attributes: %{
           type: "search_with_suggestions",
           label: "Search Users",

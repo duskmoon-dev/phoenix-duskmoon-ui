@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.Checkbox do
     [
       %Variation{
         id: :default,
+        description: "Default unchecked checkbox",
         attributes: %{
           id: "checkbox-default",
           name: "agree",
@@ -16,6 +17,7 @@ defmodule Storybook.DataEntry.Checkbox do
       },
       %Variation{
         id: :checked,
+        description: "Pre-checked checkbox",
         attributes: %{
           id: "checkbox-checked",
           name: "newsletter",
@@ -52,6 +54,7 @@ defmodule Storybook.DataEntry.Checkbox do
       },
       %Variation{
         id: :disabled,
+        description: "Disabled checkbox",
         attributes: %{
           id: "checkbox-disabled",
           name: "disabled",
@@ -61,6 +64,7 @@ defmodule Storybook.DataEntry.Checkbox do
       },
       %Variation{
         id: :indeterminate,
+        description: "Indeterminate (partial) state",
         attributes: %{
           id: "checkbox-indet",
           name: "indeterminate",
