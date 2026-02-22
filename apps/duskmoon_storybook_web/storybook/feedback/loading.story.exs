@@ -9,7 +9,6 @@ defmodule Storybook.Feedback.Loading do
       %Variation{
         id: :default,
         description: "Default particle loader (88 particles, 21em, 4s)",
-        slots: []
       },
       %Variation{
         id: :large_fast,
@@ -19,7 +18,6 @@ defmodule Storybook.Feedback.Loading do
           size: 44,
           speed: "2400ms"
         },
-        slots: []
       },
       %Variation{
         id: :small_slow,
@@ -29,7 +27,6 @@ defmodule Storybook.Feedback.Loading do
           size: 10,
           speed: "6s"
         },
-        slots: []
       }
     ]
   end

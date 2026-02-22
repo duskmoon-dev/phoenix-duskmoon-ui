@@ -18,7 +18,7 @@ defmodule Storybook.Action.Link do
         id: :colors,
         description: "Link color variants via CSS utility classes",
         variations:
-          for color <- ~w(primary secondary accent info success warning error) do
+          for color <- ~w(primary secondary accent tertiary info success warning error) do
             %Variation{
               id: String.to_atom(color),
               attributes: %{href: "/", class: "link-#{color}"},

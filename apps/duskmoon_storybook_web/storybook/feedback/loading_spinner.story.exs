@@ -31,7 +31,7 @@ defmodule Storybook.Feedback.LoadingSpinner do
         id: :colors,
         description: "Color variants",
         variations:
-          for variant <- ~w(primary secondary accent info success warning error) do
+          for variant <- ~w(primary secondary accent tertiary info success warning error) do
             %Variation{
               id: String.to_atom(variant),
               attributes: %{variant: variant, text: String.capitalize(variant)}
@@ -72,6 +72,7 @@ defmodule Storybook.Feedback.LoadingSpinner do
           {"primary", "Primary"},
           {"secondary", "Secondary"},
           {"accent", "Accent"},
+          {"tertiary", "Tertiary"},
           {"info", "Info"},
           {"success", "Success"},
           {"warning", "Warning"},
