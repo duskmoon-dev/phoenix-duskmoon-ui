@@ -1,6 +1,17 @@
 defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
   @moduledoc """
-  Duskmoon UI Table Component
+  Table component for displaying structured data.
+
+  Supports sorting, zebra striping, hover effects, bordered layout,
+  compact mode, and expandable row details.
+
+  ## Examples
+
+      <.dm_table data={@users}>
+        <:col :let={user} label="Name">{user.name}</:col>
+        <:col :let={user} label="Email">{user.email}</:col>
+      </.dm_table>
+
   """
   use Phoenix.Component
 

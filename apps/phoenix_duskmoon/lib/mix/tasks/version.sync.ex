@@ -65,10 +65,15 @@ defmodule Mix.Tasks.Version.Sync do
 
   defp update_package_json(version) do
     package_json_path =
-      if File.exists?("apps/phoenix_duskmoon/package.json") do
-        "apps/phoenix_duskmoon/package.json"
-      else
-        "package.json"
+      cond do
+        File.exists?("apps/phoenix_duskmoon/package.json") ->
+          "apps/phoenix_duskmoon/package.json"
+
+        File.exists?("../../apps/phoenix_duskmoon/package.json") ->
+          "../../apps/phoenix_duskmoon/package.json"
+
+        true ->
+          Mix.raise("Could not find apps/phoenix_duskmoon/package.json")
       end
 
     content = File.read!(package_json_path)
@@ -90,11 +95,16 @@ defmodule Mix.Tasks.Version.Sync do
 
   defp update_umbrella_mix(version) do
     umbrella_mix_path =
-      if File.exists?("mix.exs") and
-           not String.contains?(File.read!("mix.exs"), "PhoenixDuskmoon.Mixfile") do
-        "mix.exs"
-      else
-        "../../mix.exs"
+      cond do
+        File.exists?("mix.exs") and
+            not String.contains?(File.read!("mix.exs"), "PhoenixDuskmoon.Mixfile") ->
+          "mix.exs"
+
+        File.exists?("../../mix.exs") ->
+          "../../mix.exs"
+
+        true ->
+          Mix.raise("Could not find umbrella mix.exs")
       end
 
     content = File.read!(umbrella_mix_path)

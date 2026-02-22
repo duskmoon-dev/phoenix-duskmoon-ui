@@ -1,6 +1,17 @@
 defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
   @moduledoc """
-  Duskmoon UI PageHeader Component
+  Page header component with navigation, branding, and mobile menu.
+
+  Renders a sticky header bar with logo, navigation links, action buttons,
+  and a responsive mobile menu toggle with scroll-based opacity effects.
+
+  ## Examples
+
+      <.dm_page_header>
+        <:menu to="/docs">Documentation</:menu>
+        <:menu to="/about">About</:menu>
+      </.dm_page_header>
+
   """
   use Phoenix.Component
 

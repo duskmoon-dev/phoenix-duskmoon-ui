@@ -1,6 +1,16 @@
 defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
   @moduledoc """
-  Duskmoon UI PageFooter Component
+  Page footer component for site-wide footer navigation.
+
+  Renders a footer with multiple content sections using named slots.
+
+  ## Examples
+
+      <.dm_page_footer>
+        <:section>Copyright 2024</:section>
+        <:section>Links</:section>
+      </.dm_page_footer>
+
   """
   use Phoenix.Component
 
