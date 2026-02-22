@@ -88,6 +88,24 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AccordionTest do
     refute result =~ ~s(disabled)
   end
 
+  test "renders aria-disabled=true on disabled items" do
+    result =
+      render_component(&dm_accordion/1, %{
+        item: [item("d1", "Disabled", "Disabled content", disabled: true)]
+      })
+
+    assert result =~ ~s(aria-disabled="true")
+  end
+
+  test "no aria-disabled on enabled items" do
+    result =
+      render_component(&dm_accordion/1, %{
+        item: [item("e1", "Enabled", "Enabled content")]
+      })
+
+    refute result =~ "aria-disabled"
+  end
+
   test "renders with id attribute" do
     result =
       render_component(&dm_accordion/1, %{

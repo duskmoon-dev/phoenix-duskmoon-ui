@@ -397,6 +397,53 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CollapseTest do
 
       assert result =~ ~s(aria-hidden="true")
     end
+
+    test "trigger has aria-controls linked to content id" do
+      result =
+        render_component(&dm_collapse/1, %{
+          id: "faq-1",
+          trigger: basic_trigger(),
+          content: basic_content()
+        })
+
+      assert result =~ ~s(aria-controls="faq-1-content")
+    end
+
+    test "content panel has matching id for aria-controls" do
+      result =
+        render_component(&dm_collapse/1, %{
+          id: "faq-1",
+          trigger: basic_trigger(),
+          content: basic_content()
+        })
+
+      assert result =~ ~s(id="faq-1-content")
+    end
+
+    test "no aria-controls when id is nil" do
+      result =
+        render_component(&dm_collapse/1, %{trigger: basic_trigger(), content: basic_content()})
+
+      refute result =~ "aria-controls"
+    end
+
+    test "trigger has aria-disabled when disabled" do
+      result =
+        render_component(&dm_collapse/1, %{
+          disabled: true,
+          trigger: basic_trigger(),
+          content: basic_content()
+        })
+
+      assert result =~ ~s(aria-disabled="true")
+    end
+
+    test "no aria-disabled when not disabled" do
+      result =
+        render_component(&dm_collapse/1, %{trigger: basic_trigger(), content: basic_content()})
+
+      refute result =~ "aria-disabled"
+    end
   end
 
   describe "dm_collapse_group" do
