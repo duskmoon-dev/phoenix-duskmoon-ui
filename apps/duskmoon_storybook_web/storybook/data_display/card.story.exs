@@ -9,6 +9,7 @@ defmodule Storybook.DataDisplay.Card do
     [
       %Variation{
         id: :default,
+        description: "Default card with title and body text",
         slots: [
           """
           <:title>
@@ -77,6 +78,7 @@ defmodule Storybook.DataDisplay.Card do
       },
       %Variation{
         id: :shadow_sm,
+        description: "Small shadow elevation",
         attributes: %{
           shadow: "sm"
         },
@@ -89,6 +91,7 @@ defmodule Storybook.DataDisplay.Card do
       },
       %Variation{
         id: :shadow_xl,
+        description: "Extra-large shadow elevation",
         attributes: %{
           shadow: "xl"
         },
@@ -101,6 +104,7 @@ defmodule Storybook.DataDisplay.Card do
       },
       %Variation{
         id: :padding_none,
+        description: "No internal padding — full-bleed content",
         attributes: %{
           padding: "none"
         },
@@ -113,6 +117,7 @@ defmodule Storybook.DataDisplay.Card do
       },
       %Variation{
         id: :padding_lg,
+        description: "Large internal padding",
         attributes: %{
           padding: "lg"
         },

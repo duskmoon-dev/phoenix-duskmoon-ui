@@ -9,6 +9,7 @@ defmodule Storybook.DataDisplay.Pagination do
     [
       %Variation{
         id: :default,
+        description: "Event-driven pagination with update_event callback",
         attributes: %{
           total: 100,
           page_num: 5,
@@ -18,6 +19,7 @@ defmodule Storybook.DataDisplay.Pagination do
       },
       %Variation{
         id: :page_url,
+        description: "URL-based navigation mid-range in a large dataset",
         attributes: %{
           total: 1000,
           page_num: 35,
@@ -27,6 +29,7 @@ defmodule Storybook.DataDisplay.Pagination do
       },
       %Variation{
         id: :first_page,
+        description: "First page — previous button disabled",
         attributes: %{
           total: 1000,
           page_num: 1,
@@ -36,6 +39,7 @@ defmodule Storybook.DataDisplay.Pagination do
       },
       %Variation{
         id: :last_page,
+        description: "Last page — next button disabled",
         attributes: %{
           total: 1000,
           page_num: 67,
@@ -45,6 +49,7 @@ defmodule Storybook.DataDisplay.Pagination do
       },
       %Variation{
         id: :page_with_slot,
+        description: "Custom slot with page jumper form",
         attributes: %{
           total: 1000,
           page_num: 67,

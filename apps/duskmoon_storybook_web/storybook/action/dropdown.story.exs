@@ -13,6 +13,7 @@ defmodule Storybook.Action.Dropdown do
     [
       %Variation{
         id: :default,
+        description: "Basic dropdown with ghost trigger button",
         slots: [
           """
           <:trigger>
@@ -30,6 +31,7 @@ defmodule Storybook.Action.Dropdown do
       },
       %Variation{
         id: :right_position,
+        description: "Right-aligned dropdown with primary color",
         attributes: %{
           position: "right",
           color: "primary"
@@ -54,6 +56,7 @@ defmodule Storybook.Action.Dropdown do
       },
       %Variation{
         id: :with_icons,
+        description: "Menu items with leading icons",
         attributes: %{
           position: "right"
         },
@@ -77,6 +80,7 @@ defmodule Storybook.Action.Dropdown do
       },
       %Variation{
         id: :color_variants,
+        description: "Success color theme",
         attributes: %{
           color: "success"
         },
@@ -100,6 +104,7 @@ defmodule Storybook.Action.Dropdown do
       },
       %Variation{
         id: :warning_dropdown,
+        description: "Warning color with left-aligned position",
         attributes: %{
           color: "warning",
           position: "left"
@@ -124,6 +129,7 @@ defmodule Storybook.Action.Dropdown do
       },
       %Variation{
         id: :compact_menu,
+        description: "Compact icon-only trigger — kebab menu",
         attributes: %{
           position: "bottom"
         },
@@ -146,6 +152,7 @@ defmodule Storybook.Action.Dropdown do
       },
       %Variation{
         id: :navigation_menu,
+        description: "Navigation-style dropdown with info color",
         attributes: %{
           color: "info"
         },
@@ -170,6 +177,7 @@ defmodule Storybook.Action.Dropdown do
       },
       %Variation{
         id: :top_position,
+        description: "Top-positioned dropdown — opens upward",
         attributes: %{
           position: "top"
         },

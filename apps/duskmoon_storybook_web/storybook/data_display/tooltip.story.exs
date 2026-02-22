@@ -13,6 +13,7 @@ defmodule Storybook.DataDisplay.Tooltip do
     [
       %Variation{
         id: :default,
+        description: "Default top-positioned tooltip",
         attributes: %{
           content: "Click to save changes"
         },
@@ -24,6 +25,7 @@ defmodule Storybook.DataDisplay.Tooltip do
       },
       %Variation{
         id: :positions,
+        description: "Explicit top position",
         attributes: %{
           content: "This is a top tooltip"
         },
@@ -35,6 +37,7 @@ defmodule Storybook.DataDisplay.Tooltip do
       },
       %Variation{
         id: :bottom_position,
+        description: "Bottom-positioned tooltip",
         attributes: %{
           content: "This appears below",
           position: "bottom"
@@ -47,6 +50,7 @@ defmodule Storybook.DataDisplay.Tooltip do
       },
       %Variation{
         id: :left_position,
+        description: "Left-positioned tooltip",
         attributes: %{
           content: "Appears on the left",
           position: "left"
@@ -59,6 +63,7 @@ defmodule Storybook.DataDisplay.Tooltip do
       },
       %Variation{
         id: :right_position,
+        description: "Right-positioned tooltip",
         attributes: %{
           content: "Appears on the right",
           position: "right"
@@ -71,6 +76,7 @@ defmodule Storybook.DataDisplay.Tooltip do
       },
       %Variation{
         id: :color_variants,
+        description: "Warning color tooltip",
         attributes: %{
           content: "Warning message",
           color: "warning"
@@ -83,6 +89,7 @@ defmodule Storybook.DataDisplay.Tooltip do
       },
       %Variation{
         id: :error_tooltip,
+        description: "Error color at bottom position",
         attributes: %{
           content: "This action cannot be undone",
           color: "error",
@@ -96,6 +103,7 @@ defmodule Storybook.DataDisplay.Tooltip do
       },
       %Variation{
         id: :info_tooltip,
+        description: "Info color on an icon element",
         attributes: %{
           content: "Press Ctrl+S to save",
           color: "info",
@@ -109,6 +117,7 @@ defmodule Storybook.DataDisplay.Tooltip do
       },
       %Variation{
         id: :with_icon,
+        description: "Tooltip on an icon button",
         attributes: %{
           content: "Copy to clipboard",
           color: "success"
@@ -123,6 +132,7 @@ defmodule Storybook.DataDisplay.Tooltip do
       },
       %Variation{
         id: :always_open,
+        description: "Always visible — open=true",
         attributes: %{
           content: "This tooltip is always visible",
           color: "accent",
