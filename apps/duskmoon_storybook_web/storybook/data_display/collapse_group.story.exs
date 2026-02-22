@@ -3,8 +3,7 @@ defmodule Storybook.DataDisplay.CollapseGroup do
 
   def function, do: &PhoenixDuskmoon.Component.DataDisplay.Collapse.dm_collapse_group/1
 
-  def description,
-    do: "Container that groups multiple dm_collapse panels. Provides consistent spacing and styling."
+  def description, do: "Container that groups multiple dm_collapse panels with consistent spacing."
 
   def imports do
     [{PhoenixDuskmoon.Component.DataDisplay.Collapse, [dm_collapse: 1]}]

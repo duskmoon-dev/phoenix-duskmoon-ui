@@ -3,8 +3,7 @@ defmodule Storybook.Icon.Icons do
 
   def function, do: &PhoenixDuskmoon.Component.Icon.Icons.dm_mdi/1
 
-  def description,
-    do: "Inline SVG icons from Material Design Icons (7000+) and Bootstrap Icons (2000+)."
+  def description, do: "Inline SVG icons from Material Design Icons (7000+) and Bootstrap Icons (2000+)."
 
   def imports do
     [{PhoenixDuskmoon.Component.Icon.Icons, [dm_bsi: 1]}]
