@@ -59,6 +59,50 @@ defmodule Storybook.Navigation.Navbar do
           </:start_part>
           """
         ]
+      },
+      %Variation{
+        id: :with_section_classes,
+        description: "Custom CSS classes on start, center, and end containers",
+        attributes: %{
+          class: "shadow",
+          start_class: "gap-2",
+          center_class: "font-semibold",
+          end_class: "gap-4"
+        },
+        slots: [
+          """
+          <:start_part>
+            <span class="font-bold">Brand</span>
+          </:start_part>
+          <:center_part>
+            <a href="#">Docs</a>
+            <a href="#">Blog</a>
+          </:center_part>
+          <:end_part>
+            <button type="button" class="btn btn-sm btn-ghost">Login</button>
+            <button type="button" class="btn btn-sm btn-primary">Sign Up</button>
+          </:end_part>
+          """
+        ]
+      },
+      %Variation{
+        id: :with_nav_label,
+        description: "Custom accessible nav label for screen readers",
+        attributes: %{
+          class: "shadow",
+          nav_label: "Primary site navigation"
+        },
+        slots: [
+          """
+          <:start_part>
+            <span class="font-bold">App</span>
+          </:start_part>
+          <:center_part>
+            <a href="#">Home</a>
+            <a href="#">Features</a>
+          </:center_part>
+          """
+        ]
       }
     ]
   end

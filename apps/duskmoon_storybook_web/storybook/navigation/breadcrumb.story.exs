@@ -54,6 +54,36 @@ defmodule Storybook.Navigation.Breadcrumb do
           <:crumb>Breadcrumb</:crumb>
           """
         ]
+      },
+      %Variation{
+        id: :custom_separator,
+        description: "Breadcrumb with custom separator character",
+        attributes: %{
+          class: "shadow px-4",
+          separator: ">"
+        },
+        slots: [
+          """
+          <:crumb><a href="/">Home</a></:crumb>
+          <:crumb><a href="/products">Products</a></:crumb>
+          <:crumb>Detail</:crumb>
+          """
+        ]
+      },
+      %Variation{
+        id: :with_nav_label,
+        description: "Custom accessible nav label for screen readers",
+        attributes: %{
+          class: "shadow px-4",
+          nav_label: "Product navigation path"
+        },
+        slots: [
+          """
+          <:crumb><a href="/">Home</a></:crumb>
+          <:crumb><a href="/shop">Shop</a></:crumb>
+          <:crumb>Checkout</:crumb>
+          """
+        ]
       }
     ]
   end

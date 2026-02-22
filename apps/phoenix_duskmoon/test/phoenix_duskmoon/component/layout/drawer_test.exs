@@ -265,6 +265,36 @@ defmodule PhoenixDuskmoon.Component.Layout.DrawerTest do
     assert result =~ ~s(role="complementary")
   end
 
+  test "renders role=dialog when modal is true" do
+    result =
+      render_component(&dm_drawer/1, %{
+        modal: true,
+        inner_block: inner_block("Content")
+      })
+
+    assert result =~ ~s(role="dialog")
+    refute result =~ ~s(role="complementary")
+  end
+
+  test "renders aria-modal=true when modal is true" do
+    result =
+      render_component(&dm_drawer/1, %{
+        modal: true,
+        inner_block: inner_block("Content")
+      })
+
+    assert result =~ ~s(aria-modal="true")
+  end
+
+  test "no aria-modal when modal is false" do
+    result =
+      render_component(&dm_drawer/1, %{
+        inner_block: inner_block("Content")
+      })
+
+    refute result =~ "aria-modal"
+  end
+
   test "renders aria-label when label is set" do
     result =
       render_component(&dm_drawer/1, %{

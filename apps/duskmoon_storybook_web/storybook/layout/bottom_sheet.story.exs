@@ -46,6 +46,36 @@ defmodule Storybook.Layout.BottomSheet do
           <p>This sheet cannot be dismissed by clicking outside.</p>
           """
         ]
+      },
+      %Variation{
+        id: :snap_points,
+        description: "Sheet with snap point heights at 25%, 50%, and 100%",
+        attributes: %{
+          id: "bs-snap",
+          open: true,
+          snap_points: "25,50,100"
+        },
+        slots: [
+          """
+          <:header>Snap Points</:header>
+          <p>Drag to snap at 25%, 50%, or 100% height.</p>
+          """
+        ]
+      },
+      %Variation{
+        id: :with_label,
+        description: "Accessible sheet with aria-label for screen readers",
+        attributes: %{
+          id: "bs-a11y",
+          open: true,
+          label: "Action selection sheet"
+        },
+        slots: [
+          """
+          <:header>Accessible Sheet</:header>
+          <p>Inspect element to see aria-label on the sheet container.</p>
+          """
+        ]
       }
     ]
   end
