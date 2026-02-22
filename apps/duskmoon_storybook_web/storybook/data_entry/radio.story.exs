@@ -57,114 +57,36 @@ defmodule Storybook.DataEntry.Radio do
       %VariationGroup{
         id: :sizes,
         description: "Size variants",
-        variations: [
-          %Variation{
-            id: :xs,
-            attributes: %{id: "xs", name: "xs", value: "xs", label: "XS option", size: "xs"}
-          },
-          %Variation{
-            id: :sm,
-            attributes: %{id: "sm", name: "sm", value: "sm", label: "SM option", size: "sm"}
-          },
-          %Variation{
-            id: :md,
-            attributes: %{id: "md", name: "md", value: "md", label: "MD option", size: "md"}
-          },
-          %Variation{
-            id: :lg,
-            attributes: %{id: "lg", name: "lg", value: "lg", label: "LG option", size: "lg"}
-          },
-          %Variation{
-            id: :xl,
-            attributes: %{id: "xl", name: "xl", value: "xl", label: "XL option", size: "xl"}
-          }
-        ]
+        variations:
+          for size <- ~w(xs sm md lg xl) do
+            %Variation{
+              id: String.to_atom(size),
+              attributes: %{
+                id: size,
+                name: size,
+                value: size,
+                label: "#{String.upcase(size)} option",
+                size: size
+              }
+            }
+          end
       },
       %VariationGroup{
         id: :colors,
         description: "Color variants",
-        variations: [
-          %Variation{
-            id: :primary,
-            attributes: %{
-              id: "primary",
-              name: "primary",
-              value: "primary",
-              label: "Primary option",
-              color: "primary"
+        variations:
+          for color <- ~w(primary secondary accent success warning error tertiary info) do
+            %Variation{
+              id: String.to_atom(color),
+              attributes: %{
+                id: color,
+                name: color,
+                value: color,
+                label: "#{String.capitalize(color)} option",
+                color: color
+              }
             }
-          },
-          %Variation{
-            id: :secondary,
-            attributes: %{
-              id: "secondary",
-              name: "secondary",
-              value: "secondary",
-              label: "Secondary option",
-              color: "secondary"
-            }
-          },
-          %Variation{
-            id: :accent,
-            attributes: %{
-              id: "accent",
-              name: "accent",
-              value: "accent",
-              label: "Accent option",
-              color: "accent"
-            }
-          },
-          %Variation{
-            id: :success,
-            attributes: %{
-              id: "success",
-              name: "success",
-              value: "success",
-              label: "Success option",
-              color: "success"
-            }
-          },
-          %Variation{
-            id: :warning,
-            attributes: %{
-              id: "warning",
-              name: "warning",
-              value: "warning",
-              label: "Warning option",
-              color: "warning"
-            }
-          },
-          %Variation{
-            id: :error,
-            attributes: %{
-              id: "error",
-              name: "error",
-              value: "error",
-              label: "Error option",
-              color: "error"
-            }
-          },
-          %Variation{
-            id: :tertiary,
-            attributes: %{
-              id: "tertiary",
-              name: "tertiary",
-              value: "tertiary",
-              label: "Tertiary option",
-              color: "tertiary"
-            }
-          },
-          %Variation{
-            id: :info,
-            attributes: %{
-              id: "info",
-              name: "info",
-              value: "info",
-              label: "Info option",
-              color: "info"
-            }
-          }
-        ]
+          end
       },
       %Variation{
         id: :disabled,

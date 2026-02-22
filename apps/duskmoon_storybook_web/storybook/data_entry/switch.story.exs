@@ -35,71 +35,24 @@ defmodule Storybook.DataEntry.Switch do
       %VariationGroup{
         id: :sizes,
         description: "Size variants",
-        variations: [
-          %Variation{
-            id: :xs,
-            attributes: %{id: "xs", name: "xs", label: "XS switch", size: "xs"}
-          },
-          %Variation{
-            id: :sm,
-            attributes: %{id: "sm", name: "sm", label: "SM switch", size: "sm"}
-          },
-          %Variation{
-            id: :md,
-            attributes: %{id: "md", name: "md", label: "MD switch", size: "md"}
-          },
-          %Variation{
-            id: :lg,
-            attributes: %{id: "lg", name: "lg", label: "LG switch", size: "lg"}
-          },
-          %Variation{
-            id: :xl,
-            attributes: %{id: "xl", name: "xl", label: "XL switch", size: "xl"}
-          }
-        ]
+        variations:
+          for size <- ~w(xs sm md lg xl) do
+            %Variation{
+              id: String.to_atom(size),
+              attributes: %{id: size, name: size, label: "#{String.upcase(size)} switch", size: size}
+            }
+          end
       },
       %VariationGroup{
         id: :colors,
         description: "Color variants",
-        variations: [
-          %Variation{
-            id: :primary,
-            attributes: %{id: "primary", name: "primary", label: "Primary", color: "primary"}
-          },
-          %Variation{
-            id: :secondary,
-            attributes: %{
-              id: "secondary",
-              name: "secondary",
-              label: "Secondary",
-              color: "secondary"
+        variations:
+          for color <- ~w(primary secondary tertiary accent info success warning error) do
+            %Variation{
+              id: String.to_atom(color),
+              attributes: %{id: color, name: color, label: String.capitalize(color), color: color}
             }
-          },
-          %Variation{
-            id: :tertiary,
-            attributes: %{id: "tertiary", name: "tertiary", label: "Tertiary", color: "tertiary"}
-          },
-          %Variation{
-            id: :accent,
-            attributes: %{id: "accent", name: "accent", label: "Accent", color: "accent"}
-          },
-          %Variation{
-            id: :info,
-            attributes: %{id: "info", name: "info", label: "Info", color: "info"}
-          },
-          %Variation{
-            id: :success,
-            attributes: %{id: "success", name: "success", label: "Success", color: "success"}
-          },
-          %Variation{
-            id: :warning,
-            attributes: %{id: "warning", name: "warning", label: "Warning", color: "warning"}
-          },
-          %Variation{
-            id: :error,
-            attributes: %{id: "error", name: "error", label: "Error", color: "error"}
-          }
-        ]
+          end
       },
       %Variation{
         id: :disabled,

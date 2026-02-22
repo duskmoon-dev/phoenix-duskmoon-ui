@@ -38,185 +38,56 @@ defmodule Storybook.DataEntry.Textarea do
       %VariationGroup{
         id: :sizes,
         description: "Size variants",
-        variations: [
-          %Variation{
-            id: :xs,
-            attributes: %{
-              id: "xs",
-              name: "xs",
-              label: "XS Textarea",
-              size: "xs",
-              rows: "2",
-              placeholder: "XS textarea"
+        variations:
+          for size <- ~w(xs sm md lg) do
+            %Variation{
+              id: String.to_atom(size),
+              attributes: %{
+                id: size,
+                name: size,
+                label: "#{String.upcase(size)} Textarea",
+                size: size,
+                rows: "2",
+                placeholder: "#{String.upcase(size)} textarea"
+              }
             }
-          },
-          %Variation{
-            id: :sm,
-            attributes: %{
-              id: "sm",
-              name: "sm",
-              label: "SM Textarea",
-              size: "sm",
-              rows: "2",
-              placeholder: "SM textarea"
-            }
-          },
-          %Variation{
-            id: :md,
-            attributes: %{
-              id: "md",
-              name: "md",
-              label: "MD Textarea",
-              size: "md",
-              rows: "2",
-              placeholder: "MD textarea"
-            }
-          },
-          %Variation{
-            id: :lg,
-            attributes: %{
-              id: "lg",
-              name: "lg",
-              label: "LG Textarea",
-              size: "lg",
-              rows: "2",
-              placeholder: "LG textarea"
-            }
-          }
-        ]
+          end
       },
       %VariationGroup{
         id: :colors,
         description: "Color variants",
-        variations: [
-          %Variation{
-            id: :primary,
-            attributes: %{
-              id: "primary",
-              name: "primary",
-              label: "Primary",
-              color: "primary",
-              rows: "2",
-              placeholder: "Primary textarea"
+        variations:
+          for color <- ~w(primary secondary accent success warning error tertiary info) do
+            %Variation{
+              id: String.to_atom(color),
+              attributes: %{
+                id: color,
+                name: color,
+                label: String.capitalize(color),
+                color: color,
+                rows: "2",
+                placeholder: "#{String.capitalize(color)} textarea"
+              }
             }
-          },
-          %Variation{
-            id: :secondary,
-            attributes: %{
-              id: "secondary",
-              name: "secondary",
-              label: "Secondary",
-              color: "secondary",
-              rows: "2",
-              placeholder: "Secondary textarea"
-            }
-          },
-          %Variation{
-            id: :accent,
-            attributes: %{
-              id: "accent",
-              name: "accent",
-              label: "Accent",
-              color: "accent",
-              rows: "2",
-              placeholder: "Accent textarea"
-            }
-          },
-          %Variation{
-            id: :success,
-            attributes: %{
-              id: "success",
-              name: "success",
-              label: "Success",
-              color: "success",
-              rows: "2",
-              placeholder: "Success textarea"
-            }
-          },
-          %Variation{
-            id: :warning,
-            attributes: %{
-              id: "warning",
-              name: "warning",
-              label: "Warning",
-              color: "warning",
-              rows: "2",
-              placeholder: "Warning textarea"
-            }
-          },
-          %Variation{
-            id: :error,
-            attributes: %{
-              id: "error",
-              name: "error",
-              label: "Error",
-              color: "error",
-              rows: "2",
-              placeholder: "Error textarea"
-            }
-          },
-          %Variation{
-            id: :tertiary,
-            attributes: %{
-              id: "tertiary",
-              name: "tertiary",
-              label: "Tertiary",
-              color: "tertiary",
-              rows: "2",
-              placeholder: "Tertiary textarea"
-            }
-          },
-          %Variation{
-            id: :info,
-            attributes: %{
-              id: "info",
-              name: "info",
-              label: "Info",
-              color: "info",
-              rows: "2",
-              placeholder: "Info textarea"
-            }
-          }
-        ]
+          end
       },
       %VariationGroup{
         id: :variants,
         description: "Style variants",
-        variations: [
-          %Variation{
-            id: :ghost,
-            attributes: %{
-              id: "variant-ghost",
-              name: "variant_ghost",
-              label: "Ghost Variant",
-              variant: "ghost",
-              rows: "3",
-              placeholder: "Ghost style"
+        variations:
+          for variant <- ~w(ghost filled bordered) do
+            %Variation{
+              id: String.to_atom(variant),
+              attributes: %{
+                id: "variant-#{variant}",
+                name: "variant_#{variant}",
+                label: "#{String.capitalize(variant)} Variant",
+                variant: variant,
+                rows: "3",
+                placeholder: "#{String.capitalize(variant)} style"
+              }
             }
-          },
-          %Variation{
-            id: :filled,
-            attributes: %{
-              id: "variant-filled",
-              name: "variant_filled",
-              label: "Filled Variant",
-              variant: "filled",
-              rows: "3",
-              placeholder: "Filled style"
-            }
-          },
-          %Variation{
-            id: :bordered,
-            attributes: %{
-              id: "variant-bordered",
-              name: "variant_bordered",
-              label: "Bordered Variant",
-              variant: "bordered",
-              rows: "3",
-              placeholder: "Bordered style"
-            }
-          }
-        ]
+          end
       },
       %VariationGroup{
         id: :resize_options,

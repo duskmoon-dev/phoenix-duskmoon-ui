@@ -39,178 +39,54 @@ defmodule Storybook.DataEntry.Select do
       %VariationGroup{
         id: :sizes,
         description: "Size variants",
-        variations: [
-          %Variation{
-            id: :xs,
-            attributes: %{
-              id: "xs",
-              name: "xs",
-              label: "XS Select",
-              size: "xs",
-              options: [{"a", "Option A"}, {"b", "Option B"}]
+        variations:
+          for size <- ~w(xs sm md lg) do
+            %Variation{
+              id: String.to_atom(size),
+              attributes: %{
+                id: size,
+                name: size,
+                label: "#{String.upcase(size)} Select",
+                size: size,
+                options: [{"a", "Option A"}, {"b", "Option B"}]
+              }
             }
-          },
-          %Variation{
-            id: :sm,
-            attributes: %{
-              id: "sm",
-              name: "sm",
-              label: "SM Select",
-              size: "sm",
-              options: [{"a", "Option A"}, {"b", "Option B"}]
-            }
-          },
-          %Variation{
-            id: :md,
-            attributes: %{
-              id: "md",
-              name: "md",
-              label: "MD Select",
-              size: "md",
-              options: [{"a", "Option A"}, {"b", "Option B"}]
-            }
-          },
-          %Variation{
-            id: :lg,
-            attributes: %{
-              id: "lg",
-              name: "lg",
-              label: "LG Select",
-              size: "lg",
-              options: [{"a", "Option A"}, {"b", "Option B"}]
-            }
-          }
-        ]
+          end
       },
       %VariationGroup{
         id: :colors,
         description: "Color variants",
-        variations: [
-          %Variation{
-            id: :primary,
-            attributes: %{
-              id: "primary",
-              name: "primary",
-              label: "Primary",
-              color: "primary",
-              options: [{"a", "Option A"}, {"b", "Option B"}],
-              prompt: "Select primary"
+        variations:
+          for color <- ~w(primary secondary accent success warning error tertiary info) do
+            %Variation{
+              id: String.to_atom(color),
+              attributes: %{
+                id: color,
+                name: color,
+                label: String.capitalize(color),
+                color: color,
+                options: [{"a", "Option A"}, {"b", "Option B"}],
+                prompt: "Select #{color}"
+              }
             }
-          },
-          %Variation{
-            id: :secondary,
-            attributes: %{
-              id: "secondary",
-              name: "secondary",
-              label: "Secondary",
-              color: "secondary",
-              options: [{"a", "Option A"}, {"b", "Option B"}],
-              prompt: "Select secondary"
-            }
-          },
-          %Variation{
-            id: :accent,
-            attributes: %{
-              id: "accent",
-              name: "accent",
-              label: "Accent",
-              color: "accent",
-              options: [{"a", "Option A"}, {"b", "Option B"}],
-              prompt: "Select accent"
-            }
-          },
-          %Variation{
-            id: :success,
-            attributes: %{
-              id: "success",
-              name: "success",
-              label: "Success",
-              color: "success",
-              options: [{"a", "Option A"}, {"b", "Option B"}],
-              prompt: "Select success"
-            }
-          },
-          %Variation{
-            id: :warning,
-            attributes: %{
-              id: "warning",
-              name: "warning",
-              label: "Warning",
-              color: "warning",
-              options: [{"a", "Option A"}, {"b", "Option B"}],
-              prompt: "Select warning"
-            }
-          },
-          %Variation{
-            id: :error,
-            attributes: %{
-              id: "error",
-              name: "error",
-              label: "Error",
-              color: "error",
-              options: [{"a", "Option A"}, {"b", "Option B"}],
-              prompt: "Select error"
-            }
-          },
-          %Variation{
-            id: :tertiary,
-            attributes: %{
-              id: "tertiary",
-              name: "tertiary",
-              label: "Tertiary",
-              color: "tertiary",
-              options: [{"a", "Option A"}, {"b", "Option B"}],
-              prompt: "Select tertiary"
-            }
-          },
-          %Variation{
-            id: :info,
-            attributes: %{
-              id: "info",
-              name: "info",
-              label: "Info",
-              color: "info",
-              options: [{"a", "Option A"}, {"b", "Option B"}],
-              prompt: "Select info"
-            }
-          }
-        ]
+          end
       },
       %VariationGroup{
         id: :variants,
         description: "Style variants",
-        variations: [
-          %Variation{
-            id: :ghost,
-            attributes: %{
-              id: "variant-ghost",
-              name: "variant_ghost",
-              label: "Ghost Select",
-              variant: "ghost",
-              options: [{"a", "Option A"}, {"b", "Option B"}]
+        variations:
+          for variant <- ~w(ghost filled bordered) do
+            %Variation{
+              id: String.to_atom(variant),
+              attributes: %{
+                id: "variant-#{variant}",
+                name: "variant_#{variant}",
+                label: "#{String.capitalize(variant)} Select",
+                variant: variant,
+                options: [{"a", "Option A"}, {"b", "Option B"}]
+              }
             }
-          },
-          %Variation{
-            id: :filled,
-            attributes: %{
-              id: "variant-filled",
-              name: "variant_filled",
-              label: "Filled Select",
-              variant: "filled",
-              options: [{"a", "Option A"}, {"b", "Option B"}]
-            }
-          },
-          %Variation{
-            id: :bordered,
-            attributes: %{
-              id: "variant-bordered",
-              name: "variant_bordered",
-              label: "Bordered Select",
-              variant: "bordered",
-              options: [{"a", "Option A"}, {"b", "Option B"}]
-            }
-          }
-        ]
+          end
       },
       %Variation{
         id: :disabled,

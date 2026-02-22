@@ -229,58 +229,36 @@ defmodule Storybook.DataEntry.Input do
       %VariationGroup{
         id: :colors,
         description: "Color variants",
-        variations: [
-          %Variation{
-            id: :primary,
-            attributes: %{type: "text", label: "Primary", name: "c_primary", value: nil, color: "primary"}
-          },
-          %Variation{
-            id: :secondary,
-            attributes: %{type: "text", label: "Secondary", name: "c_secondary", value: nil, color: "secondary"}
-          },
-          %Variation{
-            id: :tertiary,
-            attributes: %{type: "text", label: "Tertiary", name: "c_tertiary", value: nil, color: "tertiary"}
-          },
-          %Variation{
-            id: :accent,
-            attributes: %{type: "text", label: "Accent", name: "c_accent", value: nil, color: "accent"}
-          },
-          %Variation{
-            id: :info,
-            attributes: %{type: "text", label: "Info", name: "c_info", value: nil, color: "info"}
-          },
-          %Variation{
-            id: :success,
-            attributes: %{type: "text", label: "Success", name: "c_success", value: nil, color: "success"}
-          },
-          %Variation{
-            id: :warning,
-            attributes: %{type: "text", label: "Warning", name: "c_warning", value: nil, color: "warning"}
-          },
-          %Variation{
-            id: :error,
-            attributes: %{type: "text", label: "Error", name: "c_error", value: nil, color: "error"}
-          }
-        ]
+        variations:
+          for color <- ~w(primary secondary tertiary accent info success warning error) do
+            %Variation{
+              id: String.to_atom(color),
+              attributes: %{
+                type: "text",
+                label: String.capitalize(color),
+                name: "c_#{color}",
+                value: nil,
+                color: color
+              }
+            }
+          end
       },
       %VariationGroup{
         id: :sizes,
         description: "Size variants",
-        variations: [
-          %Variation{
-            id: :xs,
-            attributes: %{type: "text", label: "XS Input", name: "s_xs", value: nil, size: "xs"}
-          },
-          %Variation{
-            id: :sm,
-            attributes: %{type: "text", label: "SM Input", name: "s_sm", value: nil, size: "sm"}
-          },
-          %Variation{
-            id: :lg,
-            attributes: %{type: "text", label: "LG Input", name: "s_lg", value: nil, size: "lg"}
-          }
-        ]
+        variations:
+          for size <- ~w(xs sm lg) do
+            %Variation{
+              id: String.to_atom(size),
+              attributes: %{
+                type: "text",
+                label: "#{String.upcase(size)} Input",
+                name: "s_#{size}",
+                value: nil,
+                size: size
+              }
+            }
+          end
       },
       %VariationGroup{
         id: :states,
