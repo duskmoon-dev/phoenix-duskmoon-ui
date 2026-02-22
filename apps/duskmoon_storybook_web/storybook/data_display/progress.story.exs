@@ -184,6 +184,34 @@ defmodule Storybook.DataDisplay.Progress do
           inline_label: true,
           striped: true
         }
+      },
+      %VariationGroup{
+        id: :label_customization,
+        description: "Custom label text and complete text",
+        variations: [
+          %Variation{
+            id: :custom_label_text,
+            description: "Custom progress label text",
+            attributes: %{
+              value: 3,
+              max: 5,
+              color: "primary",
+              show_label: true,
+              label_text: "Steps"
+            }
+          },
+          %Variation{
+            id: :custom_complete_text,
+            description: "Custom completion text appended to percentage",
+            attributes: %{
+              value: 100,
+              max: 100,
+              color: "success",
+              show_label: true,
+              complete_text: "Done"
+            }
+          }
+        ]
       }
     ]
   end
