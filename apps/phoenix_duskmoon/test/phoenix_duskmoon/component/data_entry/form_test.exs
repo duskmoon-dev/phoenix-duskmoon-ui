@@ -934,6 +934,26 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
       assert result =~ ~s[id="inline-1"]
       assert result =~ "gap-4"
     end
+
+    test "renders form inline with rest attrs" do
+      result =
+        render_component(&dm_form_inline/1, %{
+          "data-testid": "inline-search",
+          inner_block: inner_block("content")
+        })
+
+      assert result =~ ~s[data-testid="inline-search"]
+    end
+
+    test "renders as div element" do
+      result =
+        render_component(&dm_form_inline/1, %{
+          inner_block: inner_block("fields")
+        })
+
+      assert result =~ "<div"
+      assert result =~ "</div>"
+    end
   end
 
   describe "dm_form_hint/1" do
@@ -957,6 +977,25 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
 
       assert result =~ ~s[id="hint-1"]
       assert result =~ "text-xs"
+    end
+
+    test "renders form hint with rest attrs" do
+      result =
+        render_component(&dm_form_hint/1, %{
+          "data-testid": "email-hint",
+          inner_block: inner_block("hint text")
+        })
+
+      assert result =~ ~s[data-testid="email-hint"]
+    end
+
+    test "renders as span element" do
+      result =
+        render_component(&dm_form_hint/1, %{
+          inner_block: inner_block("hint")
+        })
+
+      assert result =~ "<span"
     end
   end
 
@@ -992,6 +1031,23 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
 
       assert result =~ ~s[id="counter-1"]
       assert result =~ "mt-1"
+    end
+
+    test "renders counter with rest attrs" do
+      result =
+        render_component(&dm_form_counter/1, %{
+          current: 25,
+          max: 100,
+          "data-testid": "bio-counter"
+        })
+
+      assert result =~ ~s[data-testid="bio-counter"]
+    end
+
+    test "renders counter at zero" do
+      result = render_component(&dm_form_counter/1, %{current: 0, max: 100})
+
+      assert result =~ "0/100"
     end
   end
 end

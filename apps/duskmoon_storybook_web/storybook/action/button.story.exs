@@ -204,6 +204,46 @@ defmodule Storybook.Action.Button do
         ]
       },
 
+      # ── Confirm Dialog Customization ───────────────────────────────
+      %VariationGroup{
+        id: :confirm_customization,
+        description: "Confirm dialog with custom button text, classes, and no-cancel option",
+        variations: [
+          %Variation{
+            id: :custom_button_text,
+            description: "Custom confirm and cancel button text",
+            attributes: %{
+              variant: "warning",
+              confirm: "This action cannot be undone.",
+              confirm_text: "Proceed",
+              cancel_text: "Go Back"
+            },
+            slots: ["Delete Account"]
+          },
+          %Variation{
+            id: :no_cancel_button,
+            description: "Confirm dialog without cancel button",
+            attributes: %{
+              variant: "success",
+              confirm: "Your changes have been saved.",
+              confirm_text: "OK",
+              show_cancel_action: false
+            },
+            slots: ["Save"]
+          },
+          %Variation{
+            id: :custom_dialog_label,
+            description: "Confirm dialog with custom accessible label",
+            attributes: %{
+              variant: "primary",
+              confirm: "Do you want to publish this post?",
+              confirm_dialog_label: "Publish confirmation"
+            },
+            slots: ["Publish"]
+          }
+        ]
+      },
+
       # ── Noise Effect ──────────────────────────────────────────────────
       %Variation{
         id: :with_noise,

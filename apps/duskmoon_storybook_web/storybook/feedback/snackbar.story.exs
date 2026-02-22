@@ -35,60 +35,53 @@ defmodule Storybook.Feedback.Snackbar do
       },
       %VariationGroup{
         id: :types,
-        description: "Snackbar type variants",
+        description: "Semantic type variants — info, success, warning, error",
         variations: [
           %Variation{
             id: :info,
-            attributes: %{
-              id: "s-info",
-              type: "info",
-              open: true
-            },
-            slots: [
-              """
-              <:message>Info snackbar</:message>
-              """
-            ]
+            attributes: %{id: "s-info", type: "info", open: true},
+            slots: ["<:message>Info snackbar</:message>"]
           },
           %Variation{
             id: :success,
-            attributes: %{
-              id: "s-success",
-              type: "success",
-              open: true
-            },
-            slots: [
-              """
-              <:message>Success snackbar</:message>
-              """
-            ]
+            attributes: %{id: "s-success", type: "success", open: true},
+            slots: ["<:message>Success snackbar</:message>"]
           },
           %Variation{
             id: :error,
-            attributes: %{
-              id: "s-error",
-              type: "error",
-              open: true
-            },
-            slots: [
-              """
-              <:message>Error snackbar</:message>
-              <:action>Retry</:action>
-              """
-            ]
+            attributes: %{id: "s-error", type: "error", open: true},
+            slots: ["<:message>Error snackbar</:message>\n<:action>Retry</:action>"]
           },
           %Variation{
             id: :warning,
-            attributes: %{
-              id: "s-warning",
-              type: "warning",
-              open: true
-            },
-            slots: [
-              """
-              <:message>Warning: disk space low</:message>
-              """
-            ]
+            attributes: %{id: "s-warning", type: "warning", open: true},
+            slots: ["<:message>Warning: disk space low</:message>"]
+          }
+        ]
+      },
+      %VariationGroup{
+        id: :color_types,
+        description: "Color type variants — primary, secondary, tertiary, dark",
+        variations: [
+          %Variation{
+            id: :primary,
+            attributes: %{id: "s-primary", type: "primary", open: true},
+            slots: ["<:message>Primary snackbar</:message>"]
+          },
+          %Variation{
+            id: :secondary,
+            attributes: %{id: "s-secondary", type: "secondary", open: true},
+            slots: ["<:message>Secondary snackbar</:message>"]
+          },
+          %Variation{
+            id: :tertiary,
+            attributes: %{id: "s-tertiary", type: "tertiary", open: true},
+            slots: ["<:message>Tertiary snackbar</:message>"]
+          },
+          %Variation{
+            id: :dark,
+            attributes: %{id: "s-dark", type: "dark", open: true},
+            slots: ["<:message>Dark snackbar</:message>"]
           }
         ]
       },

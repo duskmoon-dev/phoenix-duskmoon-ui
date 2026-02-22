@@ -209,6 +209,43 @@ defmodule PhoenixDuskmoon.Component.Navigation.NestedMenuTest do
       assert result =~ ~s[aria-disabled="true"]
       assert result =~ ~s[tabindex="-1"]
     end
+
+    test "passes through rest attributes" do
+      result =
+        render_component(&dm_nested_menu_item/1, %{
+          to: "/page",
+          "data-testid": "menu-item-1",
+          inner_block: [%{__slot__: :inner_block, inner_block: fn _, _ -> "Page" end}]
+        })
+
+      assert result =~ ~s[data-testid="menu-item-1"]
+    end
+
+    test "renders without link when to is nil" do
+      result =
+        render_component(&dm_nested_menu_item/1, %{
+          inner_block: [%{__slot__: :inner_block, inner_block: fn _, _ -> "Label" end}]
+        })
+
+      assert result =~ "<li"
+      assert result =~ "<a"
+      assert result =~ "Label"
+      refute result =~ "href="
+    end
+
+    test "does not add active or disabled classes by default" do
+      result =
+        render_component(&dm_nested_menu_item/1, %{
+          to: "/page",
+          inner_block: [%{__slot__: :inner_block, inner_block: fn _, _ -> "Page" end}]
+        })
+
+      refute result =~ "active"
+      refute result =~ "disabled"
+      refute result =~ "aria-current"
+      refute result =~ "aria-disabled"
+      refute result =~ "tabindex"
+    end
   end
 
   describe "dm_nested_menu combined" do
