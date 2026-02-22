@@ -66,6 +66,54 @@ defmodule Storybook.DataEntry.CompactInput do
              ]}
           ]
         }
+      },
+      %Variation{
+        id: :with_helper,
+        description: "Helper text below compact input",
+        attributes: %{
+          type: "text",
+          label: "API Key",
+          name: "api_key",
+          value: nil,
+          helper: "Find your API key in Settings > Developer."
+        }
+      },
+      %Variation{
+        id: :horizontal,
+        description: "Horizontal layout — label beside input",
+        attributes: %{
+          type: "text",
+          label: "Display Name",
+          name: "display_name",
+          value: nil,
+          horizontal: true
+        }
+      },
+      %VariationGroup{
+        id: :validation_states,
+        description: "Validation states",
+        variations: [
+          %Variation{
+            id: :success_state,
+            attributes: %{
+              type: "text",
+              label: "Username",
+              name: "ci_vs_success",
+              value: nil,
+              state: "success"
+            }
+          },
+          %Variation{
+            id: :warning_state,
+            attributes: %{
+              type: "text",
+              label: "Password",
+              name: "ci_vs_warning",
+              value: nil,
+              state: "warning"
+            }
+          }
+        ]
       }
     ]
   end

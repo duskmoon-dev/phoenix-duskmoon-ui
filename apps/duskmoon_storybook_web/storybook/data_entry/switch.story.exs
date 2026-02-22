@@ -109,6 +109,61 @@ defmodule Storybook.DataEntry.Switch do
           label: "Disabled switch",
           disabled: true
         }
+      },
+      %Variation{
+        id: :horizontal,
+        description: "Horizontal layout — label beside switch",
+        attributes: %{
+          id: "switch-horizontal",
+          name: "h_option",
+          label: "Horizontal layout",
+          horizontal: true
+        }
+      },
+      %Variation{
+        id: :with_helper,
+        description: "Helper text below switch",
+        attributes: %{
+          id: "switch-helper",
+          name: "auto_backup",
+          label: "Enable automatic backups",
+          helper: "Backups run every 24 hours when enabled."
+        }
+      },
+      %Variation{
+        id: :with_errors,
+        description: "Switch with error messages",
+        attributes: %{
+          id: "switch-errors",
+          name: "required_consent",
+          label: "I consent to data collection",
+          errors: ["Consent is required to proceed."]
+        }
+      },
+      %VariationGroup{
+        id: :validation_states,
+        description: "Validation states",
+        variations: [
+          %Variation{
+            id: :success_state,
+            attributes: %{
+              id: "sw-vs-success",
+              name: "vs_success",
+              label: "Verified (success)",
+              state: "success",
+              checked: true
+            }
+          },
+          %Variation{
+            id: :warning_state,
+            attributes: %{
+              id: "sw-vs-warning",
+              name: "vs_warning",
+              label: "Pending review (warning)",
+              state: "warning"
+            }
+          }
+        ]
       }
     ]
   end

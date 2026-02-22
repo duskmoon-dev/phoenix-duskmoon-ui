@@ -143,6 +143,45 @@ defmodule Storybook.DataDisplay.Tooltip do
           <.dm_btn variant="ghost">Always Open</.dm_btn>
           """
         ]
+      },
+      %Variation{
+        id: :primary_tooltip,
+        description: "Primary color (default)",
+        attributes: %{
+          content: "Primary styled tooltip",
+          color: "primary"
+        },
+        slots: [
+          """
+          <.dm_btn variant="primary">Primary</.dm_btn>
+          """
+        ]
+      },
+      %Variation{
+        id: :secondary_tooltip,
+        description: "Secondary color tooltip",
+        attributes: %{
+          content: "Secondary styled tooltip",
+          color: "secondary"
+        },
+        slots: [
+          """
+          <.dm_btn variant="secondary">Secondary</.dm_btn>
+          """
+        ]
+      },
+      %Variation{
+        id: :tertiary_tooltip,
+        description: "Tertiary color tooltip",
+        attributes: %{
+          content: "Tertiary styled tooltip",
+          color: "tertiary"
+        },
+        slots: [
+          """
+          <.dm_btn variant="ghost">Tertiary</.dm_btn>
+          """
+        ]
       }
     ]
   end

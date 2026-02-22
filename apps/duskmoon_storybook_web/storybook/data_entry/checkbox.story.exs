@@ -124,6 +124,61 @@ defmodule Storybook.DataEntry.Checkbox do
           label: "Indeterminate state",
           indeterminate: true
         }
+      },
+      %Variation{
+        id: :horizontal,
+        description: "Horizontal layout — label beside checkbox",
+        attributes: %{
+          id: "checkbox-horizontal",
+          name: "h_option",
+          label: "Horizontal layout",
+          horizontal: true
+        }
+      },
+      %Variation{
+        id: :with_helper,
+        description: "Helper text below checkbox",
+        attributes: %{
+          id: "checkbox-helper",
+          name: "terms",
+          label: "Accept terms of service",
+          helper: "You must accept the terms to create an account."
+        }
+      },
+      %Variation{
+        id: :with_errors,
+        description: "Checkbox with error messages",
+        attributes: %{
+          id: "checkbox-errors",
+          name: "required_agree",
+          label: "I agree to the privacy policy",
+          errors: ["This field is required."]
+        }
+      },
+      %VariationGroup{
+        id: :validation_states,
+        description: "Validation states",
+        variations: [
+          %Variation{
+            id: :success_state,
+            attributes: %{
+              id: "cb-vs-success",
+              name: "vs_success",
+              label: "Confirmed (success)",
+              state: "success",
+              checked: true
+            }
+          },
+          %Variation{
+            id: :warning_state,
+            attributes: %{
+              id: "cb-vs-warning",
+              name: "vs_warning",
+              label: "Needs review (warning)",
+              state: "warning"
+            }
+          }
+        ]
       }
     ]
   end

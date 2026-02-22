@@ -323,6 +323,17 @@ defmodule Storybook.DataEntry.Input do
           value: nil,
           helper: "We'll never share your email with anyone."
         }
+      },
+      %Variation{
+        id: :with_errors,
+        description: "Input with error messages",
+        attributes: %{
+          type: "email",
+          label: "Email",
+          name: "email_errors",
+          value: nil,
+          errors: ["is not a valid email address", "is required"]
+        }
       }
     ]
   end

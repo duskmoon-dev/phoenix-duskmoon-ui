@@ -1,0 +1,34 @@
+# Build artifacts
+/_build/
+/deps/
+/cover/
+/doc/
+
+# Node dependencies (rebuilt inside container)
+node_modules/
+
+# Development files
+/.devenv*
+/.loki/
+/.trees/
+/.playwright-mcp/
+/.claude/
+/tmp/
+
+# Git
+.git/
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+erl_crash.dump
+*.ez
+
+# Lock files (npm install recreates these)
+package-lock.json
+
+# Screenshots and temp images
+*.png
