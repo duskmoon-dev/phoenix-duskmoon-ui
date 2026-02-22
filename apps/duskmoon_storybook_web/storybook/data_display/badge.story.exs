@@ -14,14 +14,14 @@ defmodule Storybook.DataDisplay.Badge do
       %VariationGroup{
         id: :colors,
         description: "Color variants",
-        variations: [
-          %Variation{id: :success, attributes: %{variant: "success"}, slots: ["Active"]},
-          %Variation{id: :error, attributes: %{variant: "error"}, slots: ["Error"]},
-          %Variation{id: :warning, attributes: %{variant: "warning"}, slots: ["Warning"]},
-          %Variation{id: :info, attributes: %{variant: "info"}, slots: ["Info"]},
-          %Variation{id: :secondary, attributes: %{variant: "secondary"}, slots: ["Secondary"]},
-          %Variation{id: :accent, attributes: %{variant: "accent"}, slots: ["Accent"]}
-        ]
+        variations:
+          for color <- ~w(success error warning info secondary accent) do
+            %Variation{
+              id: String.to_atom(color),
+              attributes: %{variant: color},
+              slots: [String.capitalize(color)]
+            }
+          end
       },
       %VariationGroup{
         id: :sizes,
@@ -36,11 +36,14 @@ defmodule Storybook.DataDisplay.Badge do
       %VariationGroup{
         id: :outlines,
         description: "Outline style — transparent fill with colored border",
-        variations: [
-          %Variation{id: :outline_primary, attributes: %{variant: "primary", outline: true}, slots: ["Primary"]},
-          %Variation{id: :outline_success, attributes: %{variant: "success", outline: true}, slots: ["Complete"]},
-          %Variation{id: :outline_warning, attributes: %{variant: "warning", outline: true}, slots: ["Warning"]}
-        ]
+        variations:
+          for color <- ~w(primary success warning) do
+            %Variation{
+              id: String.to_atom("outline_#{color}"),
+              attributes: %{variant: color, outline: true},
+              slots: [String.capitalize(color)]
+            }
+          end
       },
       %Variation{
         id: :ghost_style,
@@ -51,11 +54,14 @@ defmodule Storybook.DataDisplay.Badge do
       %VariationGroup{
         id: :soft_variants,
         description: "Soft style — muted background with colored text",
-        variations: [
-          %Variation{id: :soft_primary, attributes: %{variant: "primary", soft: true}, slots: ["Soft"]},
-          %Variation{id: :soft_success, attributes: %{variant: "success", soft: true}, slots: ["Soft Success"]},
-          %Variation{id: :soft_error, attributes: %{variant: "error", soft: true}, slots: ["Soft Error"]}
-        ]
+        variations:
+          for color <- ~w(primary success error) do
+            %Variation{
+              id: String.to_atom("soft_#{color}"),
+              attributes: %{variant: color, soft: true},
+              slots: ["Soft #{String.capitalize(color)}"]
+            }
+          end
       },
       %VariationGroup{
         id: :pills,
@@ -68,11 +74,14 @@ defmodule Storybook.DataDisplay.Badge do
       %VariationGroup{
         id: :dots,
         description: "Dot indicator — small circle without text",
-        variations: [
-          %Variation{id: :dot_error, attributes: %{variant: "error", dot: true}, slots: [""]},
-          %Variation{id: :dot_success, attributes: %{variant: "success", dot: true}, slots: [""]},
-          %Variation{id: :dot_warning, attributes: %{variant: "warning", dot: true}, slots: [""]}
-        ]
+        variations:
+          for color <- ~w(error success warning) do
+            %Variation{
+              id: String.to_atom("dot_#{color}"),
+              attributes: %{variant: color, dot: true},
+              slots: [""]
+            }
+          end
       },
       %VariationGroup{
         id: :use_cases,

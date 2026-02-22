@@ -14,15 +14,14 @@ defmodule Storybook.DataDisplay.Chip do
       %VariationGroup{
         id: :colors,
         description: "Color variants",
-        variations: [
-          %Variation{id: :primary, attributes: %{color: "primary"}, slots: ["Primary"]},
-          %Variation{id: :secondary, attributes: %{color: "secondary"}, slots: ["Secondary"]},
-          %Variation{id: :tertiary, attributes: %{color: "tertiary"}, slots: ["Tertiary"]},
-          %Variation{id: :success, attributes: %{color: "success"}, slots: ["Success"]},
-          %Variation{id: :warning, attributes: %{color: "warning"}, slots: ["Warning"]},
-          %Variation{id: :error, attributes: %{color: "error"}, slots: ["Error"]},
-          %Variation{id: :info, attributes: %{color: "info"}, slots: ["Info"]}
-        ]
+        variations:
+          for color <- ~w(primary secondary tertiary success warning error info) do
+            %Variation{
+              id: String.to_atom(color),
+              attributes: %{color: color},
+              slots: [String.capitalize(color)]
+            }
+          end
       },
       %VariationGroup{
         id: :variants,
