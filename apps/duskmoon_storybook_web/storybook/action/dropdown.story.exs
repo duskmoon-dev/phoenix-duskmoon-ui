@@ -167,6 +167,26 @@ defmodule Storybook.Action.Dropdown do
           </:content>
           """
         ]
+      },
+      %Variation{
+        id: :top_position,
+        attributes: %{
+          position: "top"
+        },
+        slots: [
+          """
+          <:trigger>
+            <.dm_btn variant="secondary">Open Up</.dm_btn>
+          </:trigger>
+          """,
+          """
+          <:content>
+            <li><a>Option 1</a></li>
+            <li><a>Option 2</a></li>
+            <li><a>Option 3</a></li>
+          </:content>
+          """
+        ]
       }
     ]
   end

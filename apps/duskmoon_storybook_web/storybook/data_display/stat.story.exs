@@ -83,6 +83,19 @@ defmodule Storybook.DataDisplay.Stat do
         id: :large_size,
         description: "Large size",
         attributes: %{title: "Total Sales", value: "$1.2M", size: "lg", color: "primary"}
+      },
+      %Variation{
+        id: :tertiary_color,
+        description: "Tertiary color",
+        attributes: %{title: "Active Plans", value: "57", color: "tertiary"}
+      },
+      %Variation{
+        id: :with_icon,
+        description: "Stat with icon slot",
+        attributes: %{title: "Downloads", value: "8.4K", color: "success"},
+        slots: [
+          ~s(<:icon>↓</:icon>)
+        ]
       }
     ]
   end
