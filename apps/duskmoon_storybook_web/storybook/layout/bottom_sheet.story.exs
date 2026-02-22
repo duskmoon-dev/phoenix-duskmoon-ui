@@ -79,4 +79,27 @@ defmodule Storybook.Layout.BottomSheet do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :open,
+        label: "Open",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :modal,
+        label: "Modal",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :persistent,
+        label: "Persistent",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

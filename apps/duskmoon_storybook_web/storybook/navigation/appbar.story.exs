@@ -113,4 +113,15 @@ defmodule Storybook.Navigation.Appbar do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :sticky,
+        label: "Sticky",
+        type: :boolean,
+        default: true
+      }
+    ]
+  end
 end

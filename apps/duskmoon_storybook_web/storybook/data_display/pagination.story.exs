@@ -66,4 +66,40 @@ defmodule Storybook.DataDisplay.Pagination do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :el_size,
+        label: "Size",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"xs", "XS"},
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"}
+        ],
+        default: nil
+      },
+      %{
+        id: :el_color,
+        label: "Color",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"neutral", "Neutral"}
+        ],
+        default: nil
+      },
+      %{
+        id: :show_total,
+        label: "Show Total",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

@@ -82,4 +82,21 @@ defmodule Storybook.Navigation.LeftMenu do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {"xs", "XS"},
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"}
+        ],
+        default: "md"
+      }
+    ]
+  end
 end

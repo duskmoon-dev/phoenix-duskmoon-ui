@@ -100,4 +100,37 @@ defmodule Storybook.DataDisplay.Stat do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :color,
+        label: "Color",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"tertiary", "Tertiary"},
+          {"accent", "Accent"},
+          {"info", "Info"},
+          {"success", "Success"},
+          {"warning", "Warning"},
+          {"error", "Error"}
+        ],
+        default: nil
+      },
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"}
+        ],
+        default: "md"
+      }
+    ]
+  end
 end

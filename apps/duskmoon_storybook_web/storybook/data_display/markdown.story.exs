@@ -114,4 +114,25 @@ defmodule Storybook.DataDisplay.Markdown do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :theme,
+        label: "Theme",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"dark", "Dark"}
+        ],
+        default: nil
+      },
+      %{
+        id: :no_mermaid,
+        label: "No Mermaid",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

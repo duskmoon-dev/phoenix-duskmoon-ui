@@ -75,4 +75,44 @@ defmodule Storybook.DataEntry.FileUpload do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"}
+        ],
+        default: "md"
+      },
+      %{
+        id: :multiple,
+        label: "Multiple",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :show_preview,
+        label: "Show Preview",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :compact,
+        label: "Compact",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :disabled,
+        label: "Disabled",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

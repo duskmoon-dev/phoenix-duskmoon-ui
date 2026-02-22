@@ -72,4 +72,15 @@ defmodule Storybook.Action.Link do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :replace,
+        label: "Replace",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

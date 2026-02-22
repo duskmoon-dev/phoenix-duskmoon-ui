@@ -56,4 +56,67 @@ defmodule Storybook.DataEntry.TreeSelect do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"sm", "SM"},
+          {"lg", "LG"}
+        ],
+        default: nil
+      },
+      %{
+        id: :variant,
+        label: "Variant",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"outlined", "Outlined"},
+          {"filled", "Filled"}
+        ],
+        default: nil
+      },
+      %{
+        id: :multiple,
+        label: "Multiple",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :searchable,
+        label: "Searchable",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :clearable,
+        label: "Clearable",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :show_path,
+        label: "Show Path",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :disabled,
+        label: "Disabled",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :loading,
+        label: "Loading",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

@@ -89,4 +89,33 @@ defmodule Storybook.Navigation.NestedMenu do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"xs", "XS"},
+          {"sm", "SM"},
+          {"lg", "LG"}
+        ],
+        default: nil
+      },
+      %{
+        id: :bordered,
+        label: "Bordered",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :compact,
+        label: "Compact",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

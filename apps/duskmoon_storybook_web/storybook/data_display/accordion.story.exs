@@ -45,4 +45,15 @@ defmodule Storybook.DataDisplay.Accordion do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :multiple,
+        label: "Multiple",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

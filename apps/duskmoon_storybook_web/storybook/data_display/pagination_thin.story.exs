@@ -38,4 +38,27 @@ defmodule Storybook.DataDisplay.PaginationThin do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :show_total,
+        label: "Show Total",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :show_page_jumper,
+        label: "Show Page Jumper",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :loading,
+        label: "Loading",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

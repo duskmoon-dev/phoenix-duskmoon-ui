@@ -107,4 +107,33 @@ defmodule Storybook.Navigation.BottomNav do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :color,
+        label: "Color",
+        type: :select,
+        options: [
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"success", "Success"},
+          {"warning", "Warning"},
+          {"error", "Error"}
+        ],
+        default: "primary"
+      },
+      %{
+        id: :position,
+        label: "Position",
+        type: :select,
+        options: [
+          {"static", "Static"},
+          {"fixed", "Fixed"},
+          {"sticky", "Sticky"}
+        ],
+        default: "fixed"
+      }
+    ]
+  end
 end

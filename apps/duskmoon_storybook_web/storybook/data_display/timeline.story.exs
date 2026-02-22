@@ -124,4 +124,32 @@ defmodule Storybook.DataDisplay.Timeline do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :layout,
+        label: "Layout",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"alternate", "Alternate"},
+          {"right", "Right"},
+          {"horizontal", "Horizontal"}
+        ],
+        default: nil
+      },
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"sm", "SM"},
+          {"lg", "LG"}
+        ],
+        default: nil
+      }
+    ]
+  end
 end

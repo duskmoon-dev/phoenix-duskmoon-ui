@@ -68,4 +68,78 @@ defmodule Storybook.DataEntry.MultiSelect do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"sm", "SM"},
+          {"lg", "LG"}
+        ],
+        default: nil
+      },
+      %{
+        id: :variant,
+        label: "Variant",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"outlined", "Outlined"},
+          {"filled", "Filled"}
+        ],
+        default: nil
+      },
+      %{
+        id: :tag_variant,
+        label: "Tag Variant",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"primary", "Primary"},
+          {"outlined", "Outlined"}
+        ],
+        default: nil
+      },
+      %{
+        id: :searchable,
+        label: "Searchable",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :clearable,
+        label: "Clearable",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :show_counter,
+        label: "Show Counter",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :show_actions,
+        label: "Show Actions",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :disabled,
+        label: "Disabled",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :loading,
+        label: "Loading",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

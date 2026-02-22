@@ -131,4 +131,45 @@ defmodule Storybook.DataDisplay.List do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :bordered,
+        label: "Bordered",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :compact,
+        label: "Compact",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :dense,
+        label: "Dense",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :hoverable,
+        label: "Hoverable",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :two_line,
+        label: "Two Line",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :three_line,
+        label: "Three Line",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

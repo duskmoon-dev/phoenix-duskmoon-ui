@@ -47,4 +47,15 @@ defmodule Storybook.Navigation.LeftMenuGroup do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :open,
+        label: "Open",
+        type: :boolean,
+        default: true
+      }
+    ]
+  end
 end

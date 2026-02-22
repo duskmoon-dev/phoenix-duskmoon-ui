@@ -50,4 +50,44 @@ defmodule Storybook.DataEntry.Autocomplete do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"}
+        ],
+        default: "md"
+      },
+      %{
+        id: :multiple,
+        label: "Multiple",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :clearable,
+        label: "Clearable",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :disabled,
+        label: "Disabled",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :loading,
+        label: "Loading",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

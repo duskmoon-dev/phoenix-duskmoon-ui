@@ -164,4 +164,48 @@ defmodule Storybook.DataDisplay.Popover do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :trigger_mode,
+        label: "Trigger Mode",
+        type: :select,
+        options: [
+          {"click", "Click"},
+          {"hover", "Hover"},
+          {"focus", "Focus"}
+        ],
+        default: "click"
+      },
+      %{
+        id: :placement,
+        label: "Placement",
+        type: :select,
+        options: [
+          {"bottom", "Bottom"},
+          {"top", "Top"},
+          {"left", "Left"},
+          {"right", "Right"},
+          {"top-start", "Top Start"},
+          {"top-end", "Top End"},
+          {"bottom-start", "Bottom Start"},
+          {"bottom-end", "Bottom End"}
+        ],
+        default: "bottom"
+      },
+      %{
+        id: :arrow,
+        label: "Arrow",
+        type: :boolean,
+        default: true
+      },
+      %{
+        id: :open,
+        label: "Open",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end
