@@ -71,4 +71,20 @@ defmodule Storybook.DataEntry.Form do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :actions_align,
+        label: "Actions Align",
+        type: :select,
+        options: [
+          {"between", "Between"},
+          {"right", "Right"},
+          {"center", "Center"}
+        ],
+        default: "between"
+      }
+    ]
+  end
 end

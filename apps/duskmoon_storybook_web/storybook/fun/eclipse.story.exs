@@ -155,4 +155,20 @@ defmodule Storybook.Fun.Eclipse do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {"small", "Small"},
+          {"medium", "Medium"},
+          {"large", "Large"}
+        ],
+        default: "medium"
+      }
+    ]
+  end
 end

@@ -311,4 +311,20 @@ defmodule Storybook.Fun.ButtonNoise do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :color_scheme,
+        label: "Color Scheme",
+        type: :select,
+        options: [
+          {"default", "Default"},
+          {"electric", "Electric"},
+          {"neon", "Neon"}
+        ],
+        default: "default"
+      }
+    ]
+  end
 end

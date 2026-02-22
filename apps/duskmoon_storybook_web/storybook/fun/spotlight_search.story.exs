@@ -117,4 +117,15 @@ defmodule Storybook.Fun.SpotlightSearch do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :loading,
+        label: "Loading",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

@@ -230,4 +230,15 @@ defmodule Storybook.Fun.Snow do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :use_unicode,
+        label: "Unicode",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end
