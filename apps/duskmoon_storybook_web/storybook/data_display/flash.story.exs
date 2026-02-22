@@ -66,4 +66,25 @@ defmodule Storybook.DataDisplay.Flash do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :kind,
+        label: "Kind",
+        type: :select,
+        options: [
+          {:info, "Info"},
+          {:error, "Error"}
+        ],
+        default: :info
+      },
+      %{
+        id: :close,
+        label: "Close Button",
+        type: :boolean,
+        default: true
+      }
+    ]
+  end
 end

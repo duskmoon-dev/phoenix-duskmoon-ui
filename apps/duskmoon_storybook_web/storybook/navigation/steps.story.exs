@@ -161,4 +161,42 @@ defmodule Storybook.Navigation.Steps do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :orientation,
+        label: "Orientation",
+        type: :select,
+        options: [
+          {"horizontal", "Horizontal"},
+          {"vertical", "Vertical"}
+        ],
+        default: "horizontal"
+      },
+      %{
+        id: :color,
+        label: "Color",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"tertiary", "Tertiary"},
+          {"accent", "Accent"},
+          {"info", "Info"},
+          {"success", "Success"},
+          {"warning", "Warning"},
+          {"error", "Error"}
+        ],
+        default: nil
+      },
+      %{
+        id: :clickable,
+        label: "Clickable",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

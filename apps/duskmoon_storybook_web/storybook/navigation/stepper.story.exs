@@ -200,4 +200,56 @@ defmodule Storybook.Navigation.Stepper do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :variant,
+        label: "Variant",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"dots", "Dots"},
+          {"alt-labels", "Alt Labels"},
+          {"icons", "Icons"}
+        ],
+        default: nil
+      },
+      %{
+        id: :color,
+        label: "Color",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"secondary", "Secondary"},
+          {"tertiary", "Tertiary"},
+          {"accent", "Accent"}
+        ],
+        default: nil
+      },
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"sm", "SM"},
+          {"lg", "LG"}
+        ],
+        default: nil
+      },
+      %{
+        id: :vertical,
+        label: "Vertical",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :clickable,
+        label: "Clickable",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

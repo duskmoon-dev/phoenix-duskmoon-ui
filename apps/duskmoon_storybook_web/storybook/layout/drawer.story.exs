@@ -86,4 +86,31 @@ defmodule Storybook.Layout.Drawer do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :position,
+        label: "Position",
+        type: :select,
+        options: [
+          {"left", "Left"},
+          {"right", "Right"}
+        ],
+        default: "left"
+      },
+      %{
+        id: :modal,
+        label: "Modal",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :open,
+        label: "Open",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end
