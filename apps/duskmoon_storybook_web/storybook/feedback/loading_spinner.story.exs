@@ -16,38 +16,27 @@ defmodule Storybook.Feedback.LoadingSpinner do
         description: "Spinner with loading text",
         attributes: %{text: "Loading..."}
       },
-      %Variation{
+      %VariationGroup{
         id: :sizes,
-        description: "All size variants",
-        attributes: %{},
-        slots: [
-          """
-          <div class="flex items-end gap-6">
-            <.dm_loading_spinner size="xs" />
-            <.dm_loading_spinner size="sm" />
-            <.dm_loading_spinner size="md" />
-            <.dm_loading_spinner size="lg" />
-          </div>
-          """
-        ]
+        description: "Size variants",
+        variations:
+          for size <- ~w(xs sm md lg) do
+            %Variation{
+              id: String.to_atom(size),
+              attributes: %{size: size}
+            }
+          end
       },
-      %Variation{
+      %VariationGroup{
         id: :colors,
-        description: "All color variants",
-        attributes: %{},
-        slots: [
-          """
-          <div class="flex items-center gap-6">
-            <.dm_loading_spinner variant="primary" text="Primary" />
-            <.dm_loading_spinner variant="secondary" text="Secondary" />
-            <.dm_loading_spinner variant="accent" text="Accent" />
-            <.dm_loading_spinner variant="info" text="Info" />
-            <.dm_loading_spinner variant="success" text="Success" />
-            <.dm_loading_spinner variant="warning" text="Warning" />
-            <.dm_loading_spinner variant="error" text="Error" />
-          </div>
-          """
-        ]
+        description: "Color variants",
+        variations:
+          for variant <- ~w(primary secondary accent info success warning error) do
+            %Variation{
+              id: String.to_atom(variant),
+              attributes: %{variant: variant, text: String.capitalize(variant)}
+            }
+          end
       },
       %Variation{
         id: :large_success,

@@ -14,34 +14,27 @@ defmodule Storybook.DataEntry.Rating do
           value: 3
         }
       },
-      %Variation{
+      %VariationGroup{
         id: :sizes,
-        attributes: %{},
-        slots: [
-          """
-          <div class="space-y-4">
-            <.dm_rating id="xs" name="xs" value={3} size="xs" />
-            <.dm_rating id="sm" name="sm" value={3} size="sm" />
-            <.dm_rating id="def" name="def" value={3} />
-            <.dm_rating id="lg" name="lg" value={3} size="lg" />
-            <.dm_rating id="xl" name="xl" value={3} size="xl" />
-          </div>
-          """
-        ]
+        description: "Size variants",
+        variations:
+          for size <- ~w(xs sm lg xl) do
+            %Variation{
+              id: String.to_atom(size),
+              attributes: %{id: size, name: size, value: 3, size: size}
+            }
+          end
       },
-      %Variation{
+      %VariationGroup{
         id: :colors,
-        attributes: %{},
-        slots: [
-          """
-          <div class="space-y-4">
-            <.dm_rating id="primary" name="primary" value={4} color="primary" />
-            <.dm_rating id="secondary" name="secondary" value={4} color="secondary" />
-            <.dm_rating id="success" name="success" value={4} color="success" />
-            <.dm_rating id="error" name="error" value={4} color="error" />
-          </div>
-          """
-        ]
+        description: "Color variants",
+        variations:
+          for color <- ~w(primary secondary success error) do
+            %Variation{
+              id: String.to_atom(color),
+              attributes: %{id: color, name: color, value: 4, color: color}
+            }
+          end
       },
       %Variation{
         id: :readonly,
