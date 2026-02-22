@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.Rating do
     [
       %Variation{
         id: :default,
+        description: "Default 3-star rating",
         attributes: %{
           id: "rating-default",
           name: "rating",
@@ -38,6 +39,7 @@ defmodule Storybook.DataEntry.Rating do
       },
       %Variation{
         id: :readonly,
+        description: "Read-only rating display",
         attributes: %{
           id: "rating-readonly",
           name: "readonly",
@@ -47,6 +49,7 @@ defmodule Storybook.DataEntry.Rating do
       },
       %Variation{
         id: :disabled,
+        description: "Disabled rating input",
         attributes: %{
           id: "rating-disabled",
           name: "disabled",

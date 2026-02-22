@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.FormHint do
     [
       %Variation{
         id: :default,
+        description: "Standalone hint text",
         attributes: %{},
         slots: [
           "Must be at least 8 characters"
@@ -15,6 +16,7 @@ defmodule Storybook.DataEntry.FormHint do
       },
       %Variation{
         id: :with_field,
+        description: "Hint paired with a form field",
         attributes: %{},
         template: """
         <div class="form-group">

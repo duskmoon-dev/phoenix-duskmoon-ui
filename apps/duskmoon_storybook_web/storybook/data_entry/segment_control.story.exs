@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.SegmentControl do
     [
       %Variation{
         id: :default,
+        description: "Three-option segment control",
         attributes: %{
           id: "seg-default"
         },

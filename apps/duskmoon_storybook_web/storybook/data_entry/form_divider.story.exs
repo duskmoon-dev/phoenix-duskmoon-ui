@@ -8,16 +8,19 @@ defmodule Storybook.DataEntry.FormDivider do
     [
       %Variation{
         id: :plain,
+        description: "Plain divider line",
         attributes: %{}
       },
       %Variation{
         id: :with_text,
+        description: "Divider with centered text",
         attributes: %{
           text: "or"
         }
       },
       %Variation{
         id: :with_label,
+        description: "Divider with section label",
         attributes: %{
           text: "Additional Options"
         }

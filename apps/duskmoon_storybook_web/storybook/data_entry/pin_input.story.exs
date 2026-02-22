@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.PinInput do
     [
       %Variation{
         id: :default,
+        description: "Basic 4-digit PIN input",
         attributes: %{
           length: 4,
           label: "Enter PIN"
@@ -15,6 +16,7 @@ defmodule Storybook.DataEntry.PinInput do
       },
       %Variation{
         id: :circle,
+        description: "Circle-shaped PIN fields",
         attributes: %{
           length: 4,
           shape: "circle",
@@ -24,6 +26,7 @@ defmodule Storybook.DataEntry.PinInput do
       },
       %Variation{
         id: :shapes_and_variants,
+        description: "Shape, variant, and display mode showcase",
         attributes: %{},
         slots: [
           """
@@ -39,6 +42,7 @@ defmodule Storybook.DataEntry.PinInput do
       },
       %Variation{
         id: :states,
+        description: "Error, success, and disabled states",
         attributes: %{},
         slots: [
           """

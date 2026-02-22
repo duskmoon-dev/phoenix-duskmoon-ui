@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.FormInline do
     [
       %Variation{
         id: :default,
+        description: "Search field with action button",
         attributes: %{},
         slots: [
           """
@@ -21,6 +22,7 @@ defmodule Storybook.DataEntry.FormInline do
       },
       %Variation{
         id: :multiple_fields,
+        description: "Date range filter with two fields",
         attributes: %{},
         slots: [
           """

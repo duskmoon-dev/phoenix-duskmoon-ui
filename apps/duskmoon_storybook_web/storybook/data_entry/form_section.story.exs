@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.FormSection do
     [
       %Variation{
         id: :with_title,
+        description: "Section with title heading",
         attributes: %{
           title: "Contact Information"
         },
@@ -26,6 +27,7 @@ defmodule Storybook.DataEntry.FormSection do
       },
       %Variation{
         id: :with_description,
+        description: "Section with title and subtitle",
         attributes: %{
           title: "Account Settings",
           description: "Configure your account preferences and security options."
@@ -45,6 +47,7 @@ defmodule Storybook.DataEntry.FormSection do
       },
       %Variation{
         id: :no_title,
+        description: "Untitled content section",
         attributes: %{},
         slots: [
           """

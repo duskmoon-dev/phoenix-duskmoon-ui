@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.Cascader do
     [
       %Variation{
         id: :default,
+        description: "Default cascader with hierarchical options",
         attributes: %{
           id: "cas-default",
           placeholder: "Select location...",
@@ -28,6 +29,7 @@ defmodule Storybook.DataEntry.Cascader do
       },
       %Variation{
         id: :with_path,
+        description: "Cascader with pre-selected path",
         attributes: %{
           id: "cas-path",
           options: [
@@ -43,6 +45,7 @@ defmodule Storybook.DataEntry.Cascader do
       },
       %Variation{
         id: :open_panels,
+        description: "Cascader with expanded panels and clear button",
         attributes: %{
           id: "cas-open",
           options: [

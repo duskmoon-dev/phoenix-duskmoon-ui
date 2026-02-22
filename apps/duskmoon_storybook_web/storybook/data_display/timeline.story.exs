@@ -8,6 +8,7 @@ defmodule Storybook.DataDisplay.Timeline do
     [
       %Variation{
         id: :default,
+        description: "Default vertical timeline",
         attributes: %{
           id: "tl-default"
         },
@@ -22,6 +23,7 @@ defmodule Storybook.DataDisplay.Timeline do
       },
       %Variation{
         id: :alternate,
+        description: "Alternating left-right layout",
         attributes: %{
           id: "tl-alt",
           layout: "alternate"

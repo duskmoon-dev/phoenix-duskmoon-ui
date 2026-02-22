@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.Datepicker do
     [
       %Variation{
         id: :default,
+        description: "Default date picker",
         attributes: %{
           type: "datepicker",
           label: "Birth Date",
@@ -17,6 +18,7 @@ defmodule Storybook.DataEntry.Datepicker do
       },
       %Variation{
         id: :with_value,
+        description: "Date picker with pre-selected date",
         attributes: %{
           type: "datepicker",
           label: "Start Date",
@@ -26,6 +28,7 @@ defmodule Storybook.DataEntry.Datepicker do
       },
       %Variation{
         id: :with_color,
+        description: "Date picker with info color",
         attributes: %{
           type: "datepicker",
           label: "Event Date",
@@ -36,6 +39,7 @@ defmodule Storybook.DataEntry.Datepicker do
       },
       %Variation{
         id: :small_size,
+        description: "Small-sized date picker",
         attributes: %{
           type: "datepicker",
           label: "Deadline",
@@ -46,6 +50,7 @@ defmodule Storybook.DataEntry.Datepicker do
       },
       %Variation{
         id: :with_errors,
+        description: "Date picker with validation error",
         attributes: %{
           type: "datepicker",
           label: "Appointment",

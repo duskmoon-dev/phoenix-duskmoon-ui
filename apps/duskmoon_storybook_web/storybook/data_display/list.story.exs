@@ -8,6 +8,7 @@ defmodule Storybook.DataDisplay.List do
     [
       %Variation{
         id: :default,
+        description: "Basic list with icons",
         attributes: %{
           id: "list-default"
         },
@@ -21,6 +22,7 @@ defmodule Storybook.DataDisplay.List do
       },
       %Variation{
         id: :bordered,
+        description: "Bordered list with subheader",
         attributes: %{
           id: "list-bordered",
           bordered: true
@@ -36,6 +38,7 @@ defmodule Storybook.DataDisplay.List do
       },
       %Variation{
         id: :states,
+        description: "Active, normal, and disabled item states",
         attributes: %{
           id: "list-states",
           hoverable: true

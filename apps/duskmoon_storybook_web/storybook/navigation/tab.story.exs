@@ -8,6 +8,7 @@ defmodule Storybook.Navigation.Tab do
     [
       %Variation{
         id: :default,
+        description: "Default horizontal tabs",
         attributes: %{
           active_tab_name: "Luke"
         },
@@ -20,6 +21,7 @@ defmodule Storybook.Navigation.Tab do
       },
       %Variation{
         id: :vertical,
+        description: "Vertical orientation tabs",
         attributes: %{
           active_tab_name: "Anakin",
           orientation: "vertical"

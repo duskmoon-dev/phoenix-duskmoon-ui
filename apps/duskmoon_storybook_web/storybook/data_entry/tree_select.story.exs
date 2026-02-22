@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.TreeSelect do
     [
       %Variation{
         id: :default,
+        description: "Basic tree with collapsible groups",
         attributes: %{
           id: "ts-default",
           placeholder: "Select item...",
@@ -24,6 +25,7 @@ defmodule Storybook.DataEntry.TreeSelect do
       },
       %Variation{
         id: :expanded,
+        description: "Pre-expanded tree with selected item",
         attributes: %{
           id: "ts-expanded",
           options: [
@@ -43,6 +45,7 @@ defmodule Storybook.DataEntry.TreeSelect do
       },
       %Variation{
         id: :multiple,
+        description: "Multi-select mode with pre-selected items",
         attributes: %{
           id: "ts-multi",
           options: [

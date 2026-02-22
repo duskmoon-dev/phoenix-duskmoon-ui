@@ -8,12 +8,14 @@ defmodule Storybook.DataEntry.TimeInput do
     [
       %Variation{
         id: :default,
+        description: "Default hour and minute input",
         attributes: %{
           id: "time-default"
         }
       },
       %Variation{
         id: :with_seconds,
+        description: "Time input including seconds field",
         attributes: %{
           id: "time-seconds",
           show_seconds: true
@@ -21,6 +23,7 @@ defmodule Storybook.DataEntry.TimeInput do
       },
       %Variation{
         id: :with_period,
+        description: "Time input with AM/PM toggle",
         attributes: %{
           id: "time-period",
           show_period: true
@@ -28,6 +31,7 @@ defmodule Storybook.DataEntry.TimeInput do
       },
       %Variation{
         id: :variants,
+        description: "Size, variant, color, and error showcase",
         attributes: %{},
         slots: [
           """

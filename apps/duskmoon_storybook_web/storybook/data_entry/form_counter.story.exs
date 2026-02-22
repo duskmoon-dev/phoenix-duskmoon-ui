@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.FormCounter do
     [
       %Variation{
         id: :default,
+        description: "Counter well within limit",
         attributes: %{
           current: 42,
           max: 200
@@ -15,6 +16,7 @@ defmodule Storybook.DataEntry.FormCounter do
       },
       %Variation{
         id: :near_limit,
+        description: "Counter approaching the maximum",
         attributes: %{
           current: 195,
           max: 200
@@ -22,6 +24,7 @@ defmodule Storybook.DataEntry.FormCounter do
       },
       %Variation{
         id: :over_limit,
+        description: "Counter exceeding limit with error state",
         attributes: %{
           current: 215,
           max: 200,
@@ -30,6 +33,7 @@ defmodule Storybook.DataEntry.FormCounter do
       },
       %Variation{
         id: :with_field,
+        description: "Counter paired with a textarea field",
         attributes: %{},
         template: """
         <div class="form-group">

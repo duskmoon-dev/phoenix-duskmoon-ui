@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.CompactInput do
     [
       %Variation{
         id: :default,
+        description: "Default compact text input",
         attributes: %{
           type: "text",
           label: "Username",
@@ -17,6 +18,7 @@ defmodule Storybook.DataEntry.CompactInput do
       },
       %Variation{
         id: :password,
+        description: "Compact password input",
         attributes: %{
           type: "password",
           label: "Password",
@@ -26,6 +28,7 @@ defmodule Storybook.DataEntry.CompactInput do
       },
       %Variation{
         id: :email,
+        description: "Compact email with badge slot",
         attributes: %{
           type: "email",
           label: "Email",
@@ -41,6 +44,7 @@ defmodule Storybook.DataEntry.CompactInput do
       },
       %Variation{
         id: :input_error,
+        description: "Compact input with validation error",
         attributes: %{
           type: "search",
           label: "Search",
@@ -51,6 +55,7 @@ defmodule Storybook.DataEntry.CompactInput do
       },
       %Variation{
         id: :select,
+        description: "Compact select dropdown with groups",
         attributes: %{
           type: "select",
           label: "Location",

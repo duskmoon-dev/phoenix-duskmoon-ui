@@ -8,6 +8,7 @@ defmodule Storybook.Navigation.LeftMenuGroup do
     [
       %Variation{
         id: :default_group,
+        description: "Basic menu group with active item",
         attributes: %{
           class: "w-56",
           active: "profile"
@@ -21,6 +22,7 @@ defmodule Storybook.Navigation.LeftMenuGroup do
       },
       %Variation{
         id: :collapsible_group,
+        description: "Collapsible menu group",
         attributes: %{
           class: "w-56",
           collapsible: true,
@@ -35,6 +37,7 @@ defmodule Storybook.Navigation.LeftMenuGroup do
       },
       %Variation{
         id: :small_group,
+        description: "Small-sized menu group",
         attributes: %{
           class: "w-56",
           size: "sm"

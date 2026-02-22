@@ -8,12 +8,14 @@ defmodule Storybook.DataEntry.OtpInput do
     [
       %Variation{
         id: :default,
+        description: "Default 6-digit OTP input",
         attributes: %{
           length: 6
         }
       },
       %Variation{
         id: :with_label,
+        description: "Labeled OTP with helper text",
         attributes: %{
           length: 6,
           color: "primary",
@@ -23,6 +25,7 @@ defmodule Storybook.DataEntry.OtpInput do
       },
       %Variation{
         id: :masked,
+        description: "Masked PIN entry",
         attributes: %{
           length: 4,
           masked: true,
@@ -31,6 +34,7 @@ defmodule Storybook.DataEntry.OtpInput do
       },
       %Variation{
         id: :sizes,
+        description: "Small, default, and large size comparison",
         attributes: %{},
         slots: [
           """
@@ -44,6 +48,7 @@ defmodule Storybook.DataEntry.OtpInput do
       },
       %Variation{
         id: :states,
+        description: "Error, success, and disabled states",
         attributes: %{},
         slots: [
           """

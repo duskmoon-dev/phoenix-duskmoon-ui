@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.MultiSelect do
     [
       %Variation{
         id: :default,
+        description: "Basic multi-select with options",
         attributes: %{
           id: "ms-default",
           placeholder: "Select items...",
@@ -21,6 +22,7 @@ defmodule Storybook.DataEntry.MultiSelect do
       },
       %Variation{
         id: :with_selected,
+        description: "Pre-selected items with counter and clear button",
         attributes: %{
           id: "ms-selected",
           options: [
@@ -35,6 +37,7 @@ defmodule Storybook.DataEntry.MultiSelect do
       },
       %Variation{
         id: :open_dropdown,
+        description: "Expanded dropdown with grouped search",
         attributes: %{
           id: "ms-open",
           options: [
@@ -50,6 +53,7 @@ defmodule Storybook.DataEntry.MultiSelect do
       },
       %Variation{
         id: :states,
+        description: "Error, disabled, and loading states",
         attributes: %{},
         slots: [
           """

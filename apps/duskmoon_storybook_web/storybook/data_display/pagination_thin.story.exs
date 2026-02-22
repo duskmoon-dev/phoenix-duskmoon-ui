@@ -8,6 +8,7 @@ defmodule Storybook.DataDisplay.PaginationThin do
     [
       %Variation{
         id: :default,
+        description: "Default compact pagination",
         attributes: %{
           total: 100,
           page_num: 5,
@@ -17,6 +18,7 @@ defmodule Storybook.DataDisplay.PaginationThin do
       },
       %Variation{
         id: :show_total,
+        description: "Pagination with total count displayed",
         attributes: %{
           show_total: true,
           total: 1000,
@@ -27,6 +29,7 @@ defmodule Storybook.DataDisplay.PaginationThin do
       },
       %Variation{
         id: :show_page_jumper,
+        description: "Pagination with page jump input",
         attributes: %{
           class: "z-10",
           total: 10000,

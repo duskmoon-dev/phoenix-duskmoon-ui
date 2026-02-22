@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.FormRow do
     [
       %Variation{
         id: :default,
+        description: "Two-column name fields",
         attributes: %{},
         slots: [
           """
@@ -24,6 +25,7 @@ defmodule Storybook.DataEntry.FormRow do
       },
       %Variation{
         id: :three_fields,
+        description: "Three-column city/state/zip layout",
         attributes: %{},
         slots: [
           """

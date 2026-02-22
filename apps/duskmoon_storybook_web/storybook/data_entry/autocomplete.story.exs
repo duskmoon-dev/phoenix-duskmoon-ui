@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.Autocomplete do
     [
       %Variation{
         id: :default,
+        description: "Basic autocomplete with flat options",
         attributes: %{
           id: "auto-default",
           placeholder: "Search countries...",
@@ -22,6 +23,7 @@ defmodule Storybook.DataEntry.Autocomplete do
       },
       %Variation{
         id: :with_groups,
+        description: "Autocomplete with grouped options",
         attributes: %{
           id: "auto-groups",
           placeholder: "Select language...",
@@ -36,6 +38,7 @@ defmodule Storybook.DataEntry.Autocomplete do
       },
       %Variation{
         id: :multiple,
+        description: "Multi-select autocomplete with clear button",
         attributes: %{
           id: "auto-multiple",
           placeholder: "Select tags...",

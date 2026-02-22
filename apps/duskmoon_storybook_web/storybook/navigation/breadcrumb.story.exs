@@ -12,6 +12,7 @@ defmodule Storybook.Navigation.Breadcrumb do
     [
       %Variation{
         id: :default,
+        description: "Basic breadcrumb with home icon",
         attributes: %{
           class: "shadow px-8"
         },
@@ -29,6 +30,7 @@ defmodule Storybook.Navigation.Breadcrumb do
       },
       %Variation{
         id: :custom_icon,
+        description: "Breadcrumb without icons",
         attributes: %{
           class: "shadow w-full px-2"
         },
