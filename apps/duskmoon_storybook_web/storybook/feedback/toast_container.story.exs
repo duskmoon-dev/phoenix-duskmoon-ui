@@ -37,4 +37,23 @@ defmodule Storybook.Feedback.ToastContainer do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :position,
+        label: "Position",
+        type: :select,
+        options: [
+          {"top-right", "Top Right"},
+          {"top-left", "Top Left"},
+          {"top-center", "Top Center"},
+          {"bottom-right", "Bottom Right"},
+          {"bottom-left", "Bottom Left"},
+          {"bottom-center", "Bottom Center"}
+        ],
+        default: "top-right"
+      }
+    ]
+  end
 end

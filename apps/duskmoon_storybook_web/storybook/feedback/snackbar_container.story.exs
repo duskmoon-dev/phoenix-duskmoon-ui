@@ -37,4 +37,23 @@ defmodule Storybook.Feedback.SnackbarContainer do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :position,
+        label: "Position",
+        type: :select,
+        options: [
+          {"bottom", "Bottom"},
+          {"bottom-left", "Bottom Left"},
+          {"bottom-right", "Bottom Right"},
+          {"top", "Top"},
+          {"top-left", "Top Left"},
+          {"top-right", "Top Right"}
+        ],
+        default: "bottom"
+      }
+    ]
+  end
 end

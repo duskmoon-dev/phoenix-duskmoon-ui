@@ -28,4 +28,47 @@ defmodule Storybook.DataDisplay.Skeleton do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :variant,
+        label: "Variant",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"circle", "Circle"},
+          {"square", "Square"},
+          {"text", "Text"},
+          {"avatar", "Avatar"}
+        ],
+        default: nil
+      },
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"xs", "XS"},
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"},
+          {"xl", "XL"}
+        ],
+        default: nil
+      },
+      %{
+        id: :animation,
+        label: "Animation",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"wave", "Wave"},
+          {"bounce", "Bounce"}
+        ],
+        default: nil
+      }
+    ]
+  end
 end
