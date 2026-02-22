@@ -134,6 +134,25 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ChipTest do
     assert result =~ "disabled"
   end
 
+  test "renders aria-disabled=true when disabled" do
+    result =
+      render_component(&dm_chip/1, %{
+        disabled: true,
+        inner_block: inner_block()
+      })
+
+    assert result =~ ~s(aria-disabled="true")
+  end
+
+  test "no aria-disabled when not disabled" do
+    result =
+      render_component(&dm_chip/1, %{
+        inner_block: inner_block()
+      })
+
+    refute result =~ "aria-disabled"
+  end
+
   test "renders inner block content" do
     result =
       render_component(&dm_chip/1, %{

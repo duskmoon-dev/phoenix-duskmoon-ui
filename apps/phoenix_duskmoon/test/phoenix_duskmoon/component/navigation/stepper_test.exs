@@ -240,6 +240,24 @@ defmodule PhoenixDuskmoon.Component.Navigation.StepperTest do
       refute result =~ "aria-current"
     end
 
+    test "disabled step has aria-disabled=true" do
+      steps = [
+        %{__slot__: :step, label: "Step 1", disabled: true, inner_block: fn _, _ -> "" end}
+      ]
+
+      result = render_component(&dm_stepper/1, %{step: steps})
+      assert result =~ ~s(aria-disabled="true")
+    end
+
+    test "non-disabled steps do not have aria-disabled" do
+      steps = [
+        %{__slot__: :step, label: "Step 1", inner_block: fn _, _ -> "" end}
+      ]
+
+      result = render_component(&dm_stepper/1, %{step: steps})
+      refute result =~ "aria-disabled"
+    end
+
     test "stepper container has role list" do
       result = render_component(&dm_stepper/1, %{step: basic_steps()})
       assert result =~ ~s(role="list")

@@ -218,6 +218,16 @@ defmodule PhoenixDuskmoon.Component.Layout.BottomSheetTest do
       result = render_component(&dm_bottom_sheet/1, %{})
       refute result =~ "aria-label"
     end
+
+    test "renders aria-modal=true when modal is true" do
+      result = render_component(&dm_bottom_sheet/1, %{modal: true})
+      assert result =~ ~s(aria-modal="true")
+    end
+
+    test "no aria-modal when modal is false" do
+      result = render_component(&dm_bottom_sheet/1, %{})
+      refute result =~ "aria-modal"
+    end
   end
 
   describe "dm_bottom_sheet combined attrs" do
