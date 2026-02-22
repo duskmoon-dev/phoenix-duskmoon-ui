@@ -884,12 +884,43 @@ Added `def modifiers` sections to 27 stories, enabling interactive attribute tog
 
 **Total stories with modifiers**: 37 (was 10, added 27)
 
-### 13e. Regression Results
+### 13e. Storybook Interactive Modifiers — Batch 2 (22 stories)
+
+Added `def modifiers` to 22 more stories:
+
+| Story | Modifiers Added |
+|-------|----------------|
+| `action/link` | replace |
+| `data_display/accordion` | multiple |
+| `data_display/list` | bordered, compact, dense, hoverable, two_line, three_line |
+| `data_display/markdown` | theme, no_mermaid |
+| `data_display/pagination` | el_size, el_color, show_total |
+| `data_display/pagination_thin` | show_total, show_page_jumper, loading |
+| `data_display/popover` | trigger_mode, placement, arrow, open |
+| `data_display/stat` | color, size |
+| `data_display/timeline` | layout, size |
+| `data_entry/autocomplete` | size, multiple, clearable, disabled, loading |
+| `data_entry/cascader` | size, variant, searchable, clearable, disabled, loading |
+| `data_entry/datepicker` | size, color |
+| `data_entry/file_upload` | size, multiple, show_preview, compact, disabled |
+| `data_entry/multi_select` | size, variant, tag_variant, searchable, clearable, show_counter, show_actions, disabled, loading |
+| `data_entry/time_input` | size, color, variant, show_seconds, show_period, disabled, error |
+| `data_entry/tree_select` | size, variant, multiple, searchable, clearable, show_path, disabled, loading |
+| `layout/bottom_sheet` | open, modal, persistent |
+| `navigation/appbar` | sticky |
+| `navigation/bottom_nav` | color, position |
+| `navigation/left_menu` | size |
+| `navigation/left_menu_group` | open |
+| `navigation/nested_menu` | size, bordered, compact |
+
+**Total stories with modifiers**: 59 / 84 (~70%)
+
+### 13f. Regression Results
 ```
 mix compile --warnings-as-errors  → 0 warnings
 mix format --check-formatted      → clean
 mix test                          → 3207 tests, 0 failures (unchanged)
 Storybook stories                 → 84 (unchanged count, expanded variations + modifiers)
-Stories with modifiers             → 37 / 84 (~44%)
+Stories with modifiers             → 59 / 84 (~70%)
 Demo routes                       → 42 (unchanged)
 ```
