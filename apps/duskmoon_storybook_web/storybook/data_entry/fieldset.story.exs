@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.Fieldset do
     [
       %Variation{
         id: :default,
+        description: "Default fieldset with legend",
         attributes: %{
           legend: "Personal Information"
         },
@@ -28,6 +29,7 @@ defmodule Storybook.DataEntry.Fieldset do
       },
       %Variation{
         id: :filled,
+        description: "Filled background variant",
         attributes: %{
           legend: "Filled Variant",
           variant: "filled"
@@ -43,6 +45,7 @@ defmodule Storybook.DataEntry.Fieldset do
       },
       %Variation{
         id: :borderless,
+        description: "Borderless minimal variant",
         attributes: %{
           legend: "Borderless Variant",
           variant: "borderless"
@@ -58,6 +61,7 @@ defmodule Storybook.DataEntry.Fieldset do
       },
       %Variation{
         id: :card,
+        description: "Card-style elevated variant",
         attributes: %{
           legend: "Card Variant",
           variant: "card"
@@ -73,6 +77,7 @@ defmodule Storybook.DataEntry.Fieldset do
       },
       %Variation{
         id: :no_legend,
+        description: "Fieldset without legend text",
         attributes: %{},
         slots: [
           """

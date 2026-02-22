@@ -8,6 +8,7 @@ defmodule Storybook.DataEntry.FormGrid do
     [
       %Variation{
         id: :two_columns,
+        description: "Two-column grid layout",
         attributes: %{cols: 2},
         slots: [
           """
@@ -32,6 +33,7 @@ defmodule Storybook.DataEntry.FormGrid do
       },
       %Variation{
         id: :three_columns,
+        description: "Three-column grid layout",
         attributes: %{cols: 3},
         slots: [
           """
@@ -52,6 +54,7 @@ defmodule Storybook.DataEntry.FormGrid do
       },
       %Variation{
         id: :four_columns,
+        description: "Four-column grid layout",
         attributes: %{cols: 4},
         slots: [
           """
