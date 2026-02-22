@@ -120,6 +120,35 @@ defmodule Storybook.DataDisplay.Table do
     ]
   end
 
+  def modifiers do
+    [
+      %{
+        id: :border,
+        label: "Border",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :zebra,
+        label: "Zebra",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :hover,
+        label: "Hover",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :compact,
+        label: "Compact",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
+
   defp table_data() do
     [
       %{

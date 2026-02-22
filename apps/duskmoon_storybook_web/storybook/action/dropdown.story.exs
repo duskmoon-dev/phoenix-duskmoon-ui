@@ -198,4 +198,37 @@ defmodule Storybook.Action.Dropdown do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :position,
+        label: "Position",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"left", "Left"},
+          {"right", "Right"},
+          {"top", "Top"},
+          {"bottom", "Bottom"}
+        ],
+        default: nil
+      },
+      %{
+        id: :color,
+        label: "Color",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"tertiary", "Tertiary"},
+          {"success", "Success"},
+          {"warning", "Warning"},
+          {"info", "Info"}
+        ],
+        default: nil
+      }
+    ]
+  end
 end

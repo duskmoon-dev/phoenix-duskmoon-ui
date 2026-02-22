@@ -193,4 +193,63 @@ defmodule Storybook.Action.Toggle do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :variant,
+        label: "Variant",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"segmented", "Segmented"},
+          {"outlined", "Outlined"},
+          {"filled", "Filled"},
+          {"chip", "Chip"}
+        ],
+        default: nil
+      },
+      %{
+        id: :color,
+        label: "Color",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"secondary", "Secondary"},
+          {"tertiary", "Tertiary"},
+          {"accent", "Accent"}
+        ],
+        default: nil
+      },
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"sm", "SM"},
+          {"lg", "LG"}
+        ],
+        default: nil
+      },
+      %{
+        id: :vertical,
+        label: "Vertical",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :exclusive,
+        label: "Exclusive",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :full,
+        label: "Full Width",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

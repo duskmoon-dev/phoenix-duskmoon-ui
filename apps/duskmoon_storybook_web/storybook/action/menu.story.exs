@@ -86,4 +86,29 @@ defmodule Storybook.Action.Menu do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :placement,
+        label: "Placement",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"top", "Top"},
+          {"bottom", "Bottom"},
+          {"left", "Left"},
+          {"right", "Right"},
+          {"bottom-end", "Bottom End"}
+        ],
+        default: nil
+      },
+      %{
+        id: :open,
+        label: "Open",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end
