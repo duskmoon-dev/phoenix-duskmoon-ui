@@ -10,99 +10,42 @@ defmodule Storybook.Action.Button do
       %VariationGroup{
         id: :color_variants,
         description: "All color variants — primary, secondary, tertiary, accent and semantic",
-        variations: [
-          %Variation{
-            id: :primary,
-            attributes: %{variant: "primary"},
-            slots: ["Primary"]
-          },
-          %Variation{
-            id: :secondary,
-            attributes: %{variant: "secondary"},
-            slots: ["Secondary"]
-          },
-          %Variation{
-            id: :tertiary,
-            attributes: %{variant: "tertiary"},
-            slots: ["Tertiary"]
-          },
-          %Variation{
-            id: :accent,
-            attributes: %{variant: "accent"},
-            slots: ["Accent"]
-          },
-          %Variation{
-            id: :info,
-            attributes: %{variant: "info"},
-            slots: ["Info"]
-          },
-          %Variation{
-            id: :success,
-            attributes: %{variant: "success"},
-            slots: ["Success"]
-          },
-          %Variation{
-            id: :warning,
-            attributes: %{variant: "warning"},
-            slots: ["Warning"]
-          },
-          %Variation{
-            id: :error,
-            attributes: %{variant: "error"},
-            slots: ["Error"]
-          }
-        ]
+        variations:
+          for color <- ~w(primary secondary tertiary accent info success warning error) do
+            %Variation{
+              id: String.to_atom(color),
+              attributes: %{variant: color},
+              slots: [String.capitalize(color)]
+            }
+          end
       },
 
       # ── Style Variants ────────────────────────────────────────────────
       %VariationGroup{
         id: :style_variants,
         description: "Ghost, outline, and link style variants",
-        variations: [
-          %Variation{
-            id: :ghost,
-            attributes: %{variant: "ghost"},
-            slots: ["Ghost"]
-          },
-          %Variation{
-            id: :outline,
-            attributes: %{variant: "outline"},
-            slots: ["Outline"]
-          },
-          %Variation{
-            id: :link,
-            attributes: %{variant: "link"},
-            slots: ["Link"]
-          }
-        ]
+        variations:
+          for style <- ~w(ghost outline link) do
+            %Variation{
+              id: String.to_atom(style),
+              attributes: %{variant: style},
+              slots: [String.capitalize(style)]
+            }
+          end
       },
 
       # ── Sizes ─────────────────────────────────────────────────────────
       %VariationGroup{
         id: :sizes,
         description: "All size variants — xs, sm, md, lg",
-        variations: [
-          %Variation{
-            id: :xs,
-            attributes: %{variant: "primary", size: "xs"},
-            slots: ["Extra Small"]
-          },
-          %Variation{
-            id: :sm,
-            attributes: %{variant: "primary", size: "sm"},
-            slots: ["Small"]
-          },
-          %Variation{
-            id: :md,
-            attributes: %{variant: "primary", size: "md"},
-            slots: ["Medium"]
-          },
-          %Variation{
-            id: :lg,
-            attributes: %{variant: "primary", size: "lg"},
-            slots: ["Large"]
-          }
-        ]
+        variations:
+          for {size, label} <- [{"xs", "Extra Small"}, {"sm", "Small"}, {"md", "Medium"}, {"lg", "Large"}] do
+            %Variation{
+              id: String.to_atom(size),
+              attributes: %{variant: "primary", size: size},
+              slots: [label]
+            }
+          end
       },
 
       # ── Shapes ────────────────────────────────────────────────────────

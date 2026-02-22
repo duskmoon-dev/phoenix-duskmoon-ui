@@ -64,28 +64,14 @@ defmodule Storybook.Feedback.Snackbar do
       %VariationGroup{
         id: :color_types,
         description: "Color type variants — primary, secondary, tertiary, dark",
-        variations: [
-          %Variation{
-            id: :primary,
-            attributes: %{id: "s-primary", type: "primary", open: true},
-            slots: ["<:message>Primary snackbar</:message>"]
-          },
-          %Variation{
-            id: :secondary,
-            attributes: %{id: "s-secondary", type: "secondary", open: true},
-            slots: ["<:message>Secondary snackbar</:message>"]
-          },
-          %Variation{
-            id: :tertiary,
-            attributes: %{id: "s-tertiary", type: "tertiary", open: true},
-            slots: ["<:message>Tertiary snackbar</:message>"]
-          },
-          %Variation{
-            id: :dark,
-            attributes: %{id: "s-dark", type: "dark", open: true},
-            slots: ["<:message>Dark snackbar</:message>"]
-          }
-        ]
+        variations:
+          for type <- ~w(primary secondary tertiary dark) do
+            %Variation{
+              id: String.to_atom(type),
+              attributes: %{id: "s-#{type}", type: type, open: true},
+              slots: ["<:message>#{String.capitalize(type)} snackbar</:message>"]
+            }
+          end
       },
       %Variation{
         id: :multiline,
