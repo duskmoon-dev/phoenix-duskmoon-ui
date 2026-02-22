@@ -758,11 +758,25 @@ Achieved **100% description coverage** across all 84 story files:
 2. **Missing descriptions**: Added `def description` to 9 stories that had none (chip, stat, 5 fun components, tab)
 3. **Variation descriptions**: Added descriptions to 49+ variations across pagination (5), card (5), tooltip (10), dropdown (8), avatar (21), popover (5)
 
-### 11g. Final Regression Results
+### 11g. Attr Coverage Tests (Session 2)
+
+Added tests for 2 previously untested component attrs:
+| Component | Attr | What's Tested |
+|-----------|------|---------------|
+| `data_entry/form` | `:as` | Server-side parameter grouping |
+| `navigation/appbar` | `:title_to` | Renders title as link when set, plain div when nil |
+
+### 11h. Storybook Story Expansions (Session 2)
+
+- **Snackbar**: Added warning type, multiline layout, top-right position variations
+- **Toast**: Added title, icon, show_close variations; restructured types as VariationGroup
+- **Form grid / Fieldset**: Added variation descriptions
+
+### 11i. Final Regression Results (Session 2)
 ```
 mix compile --warnings-as-errors  → 0 warnings
 mix format --check-formatted      → clean
-mix test                          → 3192 tests, 0 failures
+mix test                          → 3195 tests, 0 failures
 Storybook stories                 → 84 (100% with descriptions)
 Demo routes                       → 42 (unchanged)
 Console errors (our code)         → 0
