@@ -86,4 +86,55 @@ defmodule Storybook.DataEntry.SegmentControl do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"sm", "SM"},
+          {"lg", "LG"}
+        ],
+        default: nil
+      },
+      %{
+        id: :color,
+        label: "Color",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"tertiary", "Tertiary"},
+          {"accent", "Accent"},
+          {"info", "Info"},
+          {"success", "Success"},
+          {"warning", "Warning"},
+          {"error", "Error"}
+        ],
+        default: nil
+      },
+      %{
+        id: :full,
+        label: "Full Width",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :icon_only,
+        label: "Icon Only",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :multi,
+        label: "Multi Select",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

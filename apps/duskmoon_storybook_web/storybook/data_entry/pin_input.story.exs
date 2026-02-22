@@ -52,4 +52,47 @@ defmodule Storybook.DataEntry.PinInput do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :shape,
+        label: "Shape",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"circle", "Circle"}
+        ],
+        default: nil
+      },
+      %{
+        id: :variant,
+        label: "Variant",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"filled", "Filled"}
+        ],
+        default: nil
+      },
+      %{
+        id: :compact,
+        label: "Compact",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :dots,
+        label: "Dots",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :disabled,
+        label: "Disabled",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

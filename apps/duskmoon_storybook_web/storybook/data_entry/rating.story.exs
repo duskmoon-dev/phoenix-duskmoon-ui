@@ -63,4 +63,57 @@ defmodule Storybook.DataEntry.Rating do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"xs", "XS"},
+          {"sm", "SM"},
+          {"lg", "LG"},
+          {"xl", "XL"}
+        ],
+        default: nil
+      },
+      %{
+        id: :color,
+        label: "Color",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"tertiary", "Tertiary"},
+          {"accent", "Accent"},
+          {"info", "Info"},
+          {"success", "Success"},
+          {"warning", "Warning"},
+          {"error", "Error"}
+        ],
+        default: nil
+      },
+      %{
+        id: :readonly,
+        label: "Readonly",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :disabled,
+        label: "Disabled",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :compact,
+        label: "Compact",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end
