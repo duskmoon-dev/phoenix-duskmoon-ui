@@ -389,4 +389,20 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooterTest do
 
     assert result =~ ~s[data-testid="footer-test"]
   end
+
+  test "renders footer with aria-label when label is provided" do
+    result =
+      render_component(&dm_page_footer/1, %{
+        inner_block: [],
+        label: "Site footer"
+      })
+
+    assert result =~ ~s[aria-label="Site footer"]
+  end
+
+  test "renders footer without aria-label by default" do
+    result = render_component(&dm_page_footer/1, %{inner_block: []})
+
+    refute result =~ "aria-label"
+  end
 end

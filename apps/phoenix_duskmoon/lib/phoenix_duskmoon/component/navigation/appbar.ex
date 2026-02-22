@@ -43,6 +43,12 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
   attr(:title, :string, default: "", doc: "Appbar title")
   attr(:title_to, :string, default: nil, doc: "Navigation path for brand area (logo + title)")
   attr(:sticky, :boolean, default: true, doc: "Whether the appbar is sticky")
+
+  attr(:nav_label, :string,
+    default: "Main navigation",
+    doc: "Accessible label for the navigation landmark (i18n)"
+  )
+
   attr(:rest, :global)
 
   slot(:menu, required: false, doc: "Appbar navigation menus") do
@@ -70,14 +76,16 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
         <span class="appbar-title">{@title}</span>
       </div>
       <div class="appbar-trailing">
-        <.dm_link
-          :for={menu <- @menu}
-          navigate={menu[:to]}
-          class={["appbar-action w-auto px-3 rounded-md whitespace-nowrap", menu[:class]]}
-          aria-current={menu[:active] && "page"}
-        >
-          {render_slot(menu)}
-        </.dm_link>
+        <nav :if={@menu != []} aria-label={@nav_label}>
+          <.dm_link
+            :for={menu <- @menu}
+            navigate={menu[:to]}
+            class={["appbar-action w-auto px-3 rounded-md whitespace-nowrap", menu[:class]]}
+            aria-current={menu[:active] && "page"}
+          >
+            {render_slot(menu)}
+          </.dm_link>
+        </nav>
         {render_slot(@user_profile)}
       </div>
     </header>

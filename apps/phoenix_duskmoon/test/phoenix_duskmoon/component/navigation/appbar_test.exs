@@ -496,4 +496,34 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
       refute result =~ ~s(aria-label="Main navigation")
     end
   end
+
+  describe "dm_appbar nav landmark" do
+    test "wraps menu links in nav element with default aria-label" do
+      result =
+        render_component(&dm_appbar/1, %{
+          title: "App",
+          menu: [%{to: "/home", inner_block: fn _, _ -> "Home" end}]
+        })
+
+      assert result =~ "<nav"
+      assert result =~ ~s(aria-label="Main navigation")
+    end
+
+    test "custom nav_label on dm_appbar" do
+      result =
+        render_component(&dm_appbar/1, %{
+          title: "App",
+          nav_label: "Navigation du site",
+          menu: [%{to: "/home", inner_block: fn _, _ -> "Home" end}]
+        })
+
+      assert result =~ ~s(aria-label="Navigation du site")
+    end
+
+    test "no nav element when menu is empty" do
+      result = render_component(&dm_appbar/1, %{title: "App", menu: []})
+
+      refute result =~ "<nav"
+    end
+  end
 end

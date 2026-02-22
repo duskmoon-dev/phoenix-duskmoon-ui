@@ -71,6 +71,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
     """
   )
 
+  attr(:label, :string, default: nil, doc: "Accessible label for the footer (aria-label)")
   attr(:rest, :global, doc: "additional HTML attributes for the footer element")
 
   def dm_page_footer(assigns) do
@@ -81,7 +82,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageFooter do
       "flex flex-col",
       "py-20",
       @class
-    ]} {@rest}>
+    ]} aria-label={@label} {@rest}>
       {render_slot(@inner_block)}
       <div class={[
         "container mx-auto px-4",

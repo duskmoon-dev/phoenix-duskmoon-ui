@@ -472,3 +472,51 @@ mix test                          → 3171 tests, 0 failures
 
 #### 6g. Phase 6 Commit
 - `7b9741a6` — fix: resolve 20 storybook story 500 errors and add value defaults to select/textarea
+
+---
+
+## 7. Iteration 6 — Accessibility Audit & Improvements
+
+### 7a. Full Accessibility Audit (62 components)
+
+| Category | Components Audited | No Issues | Minor (Fixed) | Upstream |
+|----------|-------------------|-----------|---------------|----------|
+| Action | 5 | 5 | 0 | 0 |
+| Data Display | 14 | 12 | 0 | 2 (badge, popover) |
+| Data Entry | 18 | 18 | 0 | 0 |
+| Feedback | 5 | 5 | 0 | 0 |
+| Navigation | 11 | 8 | 2 (appbar, footer) | 1 (bottom_nav) |
+| Layout | 5 | 5 | 0 | 0 |
+| Icon | 2 | 2 | 0 | 0 |
+| Fun | 2 | 2 | 0 | 0 |
+| **Total** | **62** | **57** | **2** | **3** |
+
+### 7b. Fixes Applied
+
+1. **dm_appbar**: Added `<nav aria-label={@nav_label}>` wrapper around menu links (consistent with `dm_simple_appbar`)
+2. **dm_page_footer**: Added optional `label` attr for `aria-label` on `<footer>` element
+
+### 7c. Upstream Issues Identified
+
+| Component | Custom Element | Missing ARIA | Priority |
+|-----------|---------------|-------------|----------|
+| dm_accordion | el-dm-accordion | aria-expanded, aria-controls, role="region" | High |
+| dm_bottom_nav | el-dm-bottom-navigation | role="navigation", aria-label | High |
+| dm_badge | el-dm-badge | role="status", aria-label | Medium |
+| dm_popover | el-dm-popover | aria-expanded, aria-haspopup | Medium |
+| dm_chip | el-dm-chip | role="option" (in selection context) | Low |
+| dm_card | el-dm-card | role="article" (when interactive) | Low |
+
+### 7d. assign_new Pitfall Verification
+
+All 16 form components verified:
+- 7 components with `assign_new(:name, ...)`: use `attr(:name, :any)` (no default) → **correct**
+- 9 components with `assign(:name, field.name)`: use `attr(:name, :string, default: nil)` → **correct**
+- **No instances of the assign_new + default: nil pitfall found**
+
+### 7e. Regression Results
+```
+mix compile --warnings-as-errors  → 0 warnings
+mix format --check-formatted      → clean
+mix test                          → 3179 tests, 0 failures (+5 new accessibility tests)
+```
