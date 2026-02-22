@@ -87,4 +87,40 @@ defmodule Storybook.Feedback.Toast do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :type,
+        label: "Type",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"info", "Info"},
+          {"success", "Success"},
+          {"warning", "Warning"},
+          {"error", "Error"}
+        ],
+        default: nil
+      },
+      %{
+        id: :filled,
+        label: "Filled",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :open,
+        label: "Open",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :show_close,
+        label: "Show Close",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

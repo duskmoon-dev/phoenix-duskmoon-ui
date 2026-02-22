@@ -203,4 +203,64 @@ defmodule Storybook.Layout.Divider do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :orientation,
+        label: "Orientation",
+        type: :select,
+        options: [
+          {"horizontal", "Horizontal"},
+          {"vertical", "Vertical"}
+        ],
+        default: "horizontal"
+      },
+      %{
+        id: :variant,
+        label: "Variant",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"base", "Base"},
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"light", "Light"},
+          {"dark", "Dark"}
+        ],
+        default: nil
+      },
+      %{
+        id: :style,
+        label: "Style",
+        type: :select,
+        options: [
+          {"solid", "Solid"},
+          {"dashed", "Dashed"},
+          {"dotted", "Dotted"}
+        ],
+        default: "solid"
+      },
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"xs", "XS"},
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"},
+          {"xl", "XL"}
+        ],
+        default: nil
+      },
+      %{
+        id: :gradient,
+        label: "Gradient",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

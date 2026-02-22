@@ -210,4 +210,69 @@ defmodule Storybook.DataDisplay.Collapse do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :variant,
+        label: "Variant",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"card", "Card"},
+          {"bordered", "Bordered"},
+          {"ghost", "Ghost"},
+          {"divider", "Divider"}
+        ],
+        default: nil
+      },
+      %{
+        id: :color,
+        label: "Color",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"tertiary", "Tertiary"},
+          {"accent", "Accent"}
+        ],
+        default: nil
+      },
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"sm", "SM"},
+          {"lg", "LG"}
+        ],
+        default: nil
+      },
+      %{
+        id: :animation,
+        label: "Animation",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"fade", "Fade"},
+          {"slide", "Slide"}
+        ],
+        default: nil
+      },
+      %{
+        id: :open,
+        label: "Open",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :disabled,
+        label: "Disabled",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end
