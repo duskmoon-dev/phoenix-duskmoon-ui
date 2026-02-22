@@ -848,13 +848,16 @@ Refactored `PhoenixDuskmoon.Component.Navigation.PageHeader`:
 - Replaced 2 fully-qualified `<PhoenixDuskmoon.Component.Icon.Icons.dm_mdi ...>` calls with shorthand `<.dm_mdi ...>`
 - Now consistent with Appbar, Pagination, and other icon-importing components
 
-### 13d. Storybook Interactive Modifiers (15 stories)
+### 13d. Storybook Interactive Modifiers (27 stories)
 
-Added `def modifiers` sections to 15 stories, enabling interactive attribute toggling in the storybook UI:
+Added `def modifiers` sections to 27 stories, enabling interactive attribute toggling in the storybook UI:
 
 | Story | Modifiers Added |
 |-------|----------------|
 | `action/button` | variant, size, shape, loading, disabled |
+| `action/toggle` | variant, color, size, vertical, exclusive, full |
+| `action/dropdown` | position, color |
+| `action/menu` | placement, open |
 | `data_display/badge` | variant, size, outline, soft, pill, dot |
 | `data_display/chip` | variant, color, size, deletable, selected, disabled |
 | `data_display/tooltip` | position, color, open |
@@ -862,15 +865,24 @@ Added `def modifiers` sections to 15 stories, enabling interactive attribute tog
 | `data_display/avatar` | size, shape, color, ring, online, offline |
 | `data_display/card` | variant, shadow, padding, interactive |
 | `data_display/collapse` | variant, color, size, animation, open, disabled |
+| `data_display/table` | border, zebra, hover, compact |
+| `data_display/flash` | kind, close |
 | `data_entry/input` | size, color, variant, horizontal |
 | `data_entry/compact_input` | size, color, variant, disabled, horizontal |
+| `data_entry/rating` | size, color, readonly, disabled, compact |
+| `data_entry/pin_input` | shape, variant, compact, dots, disabled |
+| `data_entry/segment_control` | size, color, full, icon_only, multi |
+| `data_entry/otp_input` | size, color, masked, disabled |
 | `navigation/tab` | variant, size, orientation |
+| `navigation/stepper` | variant, color, size, vertical, clickable |
+| `navigation/steps` | orientation, color, clickable |
 | `layout/divider` | orientation, variant, style, size, gradient |
+| `layout/drawer` | position, modal, open |
 | `feedback/dialog` | size, position, backdrop, no_backdrop, responsive, hide_close |
 | `feedback/snackbar` | type, open, multiline |
 | `feedback/toast` | type, filled, open, show_close |
 
-**Total stories with modifiers**: 25 (was 10, added 15)
+**Total stories with modifiers**: 37 (was 10, added 27)
 
 ### 13e. Regression Results
 ```
@@ -878,6 +890,6 @@ mix compile --warnings-as-errors  → 0 warnings
 mix format --check-formatted      → clean
 mix test                          → 3207 tests, 0 failures (unchanged)
 Storybook stories                 → 84 (unchanged count, expanded variations + modifiers)
-Stories with modifiers             → 25 / 84 (~30%)
+Stories with modifiers             → 37 / 84 (~44%)
 Demo routes                       → 42 (unchanged)
 ```
