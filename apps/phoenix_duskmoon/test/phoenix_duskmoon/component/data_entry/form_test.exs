@@ -63,6 +63,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.FormTest do
 
       assert result =~ "<form"
     end
+
+    test "passes as attribute to underlying form" do
+      result =
+        render_component(&dm_form/1, %{
+          for: %{},
+          as: "user",
+          inner_block: inner_block()
+        })
+
+      assert result =~ "<form"
+    end
   end
 
   describe "dm_label/1" do

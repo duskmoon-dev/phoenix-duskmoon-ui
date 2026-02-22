@@ -526,4 +526,27 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
       refute result =~ "<nav"
     end
   end
+
+  describe "dm_appbar title_to" do
+    test "renders title as link when title_to is set" do
+      result =
+        render_component(&dm_appbar/1, %{
+          title: "MyApp",
+          title_to: "/dashboard"
+        })
+
+      assert result =~ ~s(href="/dashboard")
+      assert result =~ "MyApp"
+    end
+
+    test "renders title as plain div when title_to is nil" do
+      result =
+        render_component(&dm_appbar/1, %{
+          title: "MyApp"
+        })
+
+      refute result =~ ~s(href=)
+      assert result =~ "MyApp"
+    end
+  end
 end
