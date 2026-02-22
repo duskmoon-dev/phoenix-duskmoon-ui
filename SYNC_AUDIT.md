@@ -688,3 +688,51 @@ Full scan of **75 storybook routes** using HTTP response body analysis:
 mix compile --warnings-as-errors  → 0 warnings
 mix format --check-formatted      → clean
 ```
+
+---
+
+## 11. Iteration 8 (continued) — Functional Attr Coverage & Secondary Function Stories
+
+### 11a. Route Health Scan (expanded)
+
+Full scan of **122 routes** (80 storybook + 42 demo):
+- ✅ 122/122 routes PASS
+- ❌ 0 failures
+
+### 11b. Stories Expanded (functional attrs)
+
+| Story | Before | After | Key Additions |
+|-------|--------|-------|---------------|
+| `action/link` | 3 | 7 | Color variant group, navigate, patch, replace, method_delete, external |
+| `data_display/markdown` | 3 | 6 | no_mermaid, dark theme, rich content |
+| `data_display/flash` | 3 | 5 | custom_close_label, no_title |
+| `data_display/table` | 3 | 5 | hover_zebra combo, minimal |
+| `navigation/appbar` | 3 | 6 | active_menu, non_sticky, title_link, nav_label |
+| `navigation/page_header` | 2 | 4 | active_menu, nav_label |
+| `navigation/page_footer` | 3 | 5 | label (a11y), multi_section |
+| `navigation/nested_menu` | 2 | 4 | sizes group, nav_label |
+| `layout/drawer` | 4 | 6 | label (a11y), right_modal |
+| `layout/bottom_sheet` | 3 | 5 | snap_points, label (a11y) |
+| `navigation/breadcrumb` | 3 | 5 | custom_separator, nav_label |
+| `navigation/navbar` | 3 | 5 | section_classes, nav_label |
+
+### 11c. New Stories Created (secondary functions)
+
+| Story | Component Function | Variations |
+|-------|-------------------|------------|
+| `navigation/simple_appbar` | `dm_simple_appbar` | 4 (default, active_menu, minimal, nav_label) |
+| `feedback/snackbar_container` | `dm_snackbar_container` | 3 (bottom, top-right, bottom-left) |
+| `feedback/toast_container` | `dm_toast_container` | 3 (top-right, bottom-center, top-left) |
+| `data_display/collapse_group` | `dm_collapse_group` | 2 (default, with_class) |
+
+### 11d. Test Coverage Additions
+
+- Drawer: added 3 tests for `role="dialog"` when modal=true, `aria-modal="true"` when modal=true, no `aria-modal` when modal=false
+
+### 11e. Regression Results
+```
+mix compile --warnings-as-errors  → 0 warnings
+mix format --check-formatted      → clean
+mix test                          → 3179 tests, 0 failures
+Storybook routes                  → 84 stories (was 80)
+```
