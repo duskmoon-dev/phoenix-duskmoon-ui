@@ -818,3 +818,66 @@ mix test                          → 3207 tests, 0 failures (+12 from iteration
 Storybook stories                 → 84 (unchanged count, expanded variations)
 Demo routes                       → 42 (unchanged)
 ```
+
+---
+
+## 13. Iteration 10 — Docker Optimization, Storybook Modifiers & Code Quality
+
+### 13a. Docker Context Optimization
+
+Created `.dockerignore` to reduce Docker build context from ~960MB to <10MB:
+- Excluded: `_build/`, `deps/`, `node_modules/`, `.git/`, `.devenv*`, `.loki/`, `.trees/`, `.claude/`
+- Also excluded: `*.png` screenshots, `package-lock.json`, `erl_crash.dump`
+
+### 13b. Storybook Form-Integration Variations
+
+Filled gaps where form-related storybook variations were missing:
+
+| Story | Variations Added | Attrs Demonstrated |
+|-------|-----------------|-------------------|
+| `data_entry/checkbox` | 5 (horizontal, with_helper, with_errors, validation_states group) | `horizontal`, `helper`, `errors`, `state` |
+| `data_entry/switch` | 5 (horizontal, with_helper, with_errors, validation_states group) | `horizontal`, `helper`, `errors`, `state` |
+| `data_display/tooltip` | 3 (primary, secondary, tertiary) | `color` variants |
+| `data_entry/compact_input` | 4 (with_helper, horizontal, validation_states group) | `helper`, `horizontal`, `state` |
+| `data_entry/input` | 1 (with_errors) | `errors` list display |
+
+### 13c. Code Quality — PageHeader Import Fix
+
+Refactored `PhoenixDuskmoon.Component.Navigation.PageHeader`:
+- Added `import PhoenixDuskmoon.Component.Icon.Icons` at module top
+- Replaced 2 fully-qualified `<PhoenixDuskmoon.Component.Icon.Icons.dm_mdi ...>` calls with shorthand `<.dm_mdi ...>`
+- Now consistent with Appbar, Pagination, and other icon-importing components
+
+### 13d. Storybook Interactive Modifiers (15 stories)
+
+Added `def modifiers` sections to 15 stories, enabling interactive attribute toggling in the storybook UI:
+
+| Story | Modifiers Added |
+|-------|----------------|
+| `action/button` | variant, size, shape, loading, disabled |
+| `data_display/badge` | variant, size, outline, soft, pill, dot |
+| `data_display/chip` | variant, color, size, deletable, selected, disabled |
+| `data_display/tooltip` | position, color, open |
+| `data_display/progress` | type, color, size, striped, animated, indeterminate, show_label |
+| `data_display/avatar` | size, shape, color, ring, online, offline |
+| `data_display/card` | variant, shadow, padding, interactive |
+| `data_display/collapse` | variant, color, size, animation, open, disabled |
+| `data_entry/input` | size, color, variant, horizontal |
+| `data_entry/compact_input` | size, color, variant, disabled, horizontal |
+| `navigation/tab` | variant, size, orientation |
+| `layout/divider` | orientation, variant, style, size, gradient |
+| `feedback/dialog` | size, position, backdrop, no_backdrop, responsive, hide_close |
+| `feedback/snackbar` | type, open, multiline |
+| `feedback/toast` | type, filled, open, show_close |
+
+**Total stories with modifiers**: 25 (was 10, added 15)
+
+### 13e. Regression Results
+```
+mix compile --warnings-as-errors  → 0 warnings
+mix format --check-formatted      → clean
+mix test                          → 3207 tests, 0 failures (unchanged)
+Storybook stories                 → 84 (unchanged count, expanded variations + modifiers)
+Stories with modifiers             → 25 / 84 (~30%)
+Demo routes                       → 42 (unchanged)
+```
