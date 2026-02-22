@@ -602,3 +602,89 @@ mix compile --warnings-as-errors  → 0 warnings
 mix format --check-formatted      → clean
 mix test                          → 3179 tests, 0 failures
 ```
+
+---
+
+## 10. Iteration 9 — PRD Browser Verification via Chrome DevTools MCP
+
+### 10a. Theme Toggle Verification (PRD §4d)
+
+Verified on `/storybook/action/button`:
+
+| Token | Sunshine | Moonlight |
+|-------|----------|-----------|
+| `--color-primary` | `oklch(72% 0.17 75)` | `oklch(85.45% 0 0)` |
+| `--color-surface` | `oklch(100% 0 0)` | `oklch(20% 0.02 260)` |
+| `--color-on-surface` | `oklch(27% 0.02 260)` | `oklch(95% 0.01 260)` |
+
+Shadow DOM inherited correctly: `el-dm-button` `shadowBg = oklch(0.8545 0 0)` matched `--color-primary` in moonlight ✅
+
+Theme restored to sunshine: tokens matched baseline ✅
+
+### 10b. Color Token Inventory (PRD §1.7)
+
+Resolved on `document.documentElement` (sunshine theme):
+
+| Token | Value |
+|-------|-------|
+| `--color-primary` | `oklch(72% 0.17 75)` |
+| `--color-secondary` | `oklch(62% 0.19 20)` |
+| `--color-tertiary` | `oklch(80% 0.085 235)` |
+| `--color-accent` | `oklch(85.23% 0.14 327)` |
+| `--color-info` | `oklch(41.94% 0.114 254.39)` |
+| `--color-success` | `oklch(67.21% 0.19 133.55)` |
+| `--color-warning` | `oklch(68.19% 0.203 42.44)` |
+| `--color-error` | `oklch(61.17% 0.237 28.15)` |
+| `--color-neutral` | `oklch(0% 0 0)` |
+| `--color-surface` | `oklch(100% 0 0)` |
+| `--color-surface-container` | `oklch(97% 0.01 85)` |
+| `--color-on-surface` | `oklch(27% 0.02 260)` |
+| `--color-on-primary` | `oklch(1 0 0)` |
+| `--color-on-secondary` | `oklch(1 0 0)` |
+| `--color-on-tertiary` | `oklch(1 0 0)` |
+| `--color-on-error` | `oklch(1 0 0)` |
+| `--color-shadow` | `oklch(0% 0 0)` |
+| `--color-primary-container` | `oklch(95% 0.035 95.91)` |
+| `--color-secondary-container` | `oklch(94% 0.05 87.01)` |
+| `--color-tertiary-container` | `oklch(95% 0.035 235)` |
+| `--color-on-primary-container` | `oklch(25% 0.03 95.91)` |
+| `--color-on-secondary-container` | `oklch(25% 0.05 87.01)` |
+| `--color-on-tertiary-container` | `oklch(22% 0.012 235)` |
+
+Not defined (not in core): `--color-on-accent`, `--color-on-info`, `--color-on-success`, `--color-on-warning`, `--color-border`, `--color-divider`, `--color-disabled`
+
+### 10c. DOM Inspection Findings (PRD §4c)
+
+| Route | Custom Elements | Shadow DOM | Notes |
+|-------|----------------|------------|-------|
+| `/storybook/action/button` | `el-dm-button`, `el-dm-dialog` (28 total) | ✅ | Shadow: `<button class="btn btn-primary" part="button">` |
+| `/storybook/data_display/card` | `el-dm-card` (10 total) | ✅ | Shadow: `<div class="card" part="card">` with header/body/footer slots |
+| `/storybook/feedback/dialog` | `el-dm-dialog`, `el-dm-button` | ✅ | |
+| `/storybook/navigation/tab` | `el-dm-tabs` | ✅ | |
+| `/storybook/layout/bottom_sheet` | `el-dm-bottom-sheet` | ✅ | |
+| `/storybook/data_display/popover` | `el-dm-popover` | ✅ | |
+| `/storybook/data_entry/input` | none (raw HTML) | N/A | Form elements use raw HTML + CSS classes by design |
+| `/storybook/navigation/appbar` | none (raw HTML) | N/A | Uses `@duskmoon-dev/core` CSS classes directly |
+
+### 10d. Console Audit (PRD §4b)
+
+All pages: 2 pre-existing errors from PhoenixStorybook's LiveView bundle (`js-c70cba293ecc4b549eeb24312f2b2720`):
+```
+Uncaught TypeError: Cannot read properties of undefined (reading 'CustomEvent')
+```
+Source: PhoenixStorybook internal bundle — NOT our `app.js`. Not actionable.
+
+### 10e. Route Health Scan
+
+Full scan of **75 storybook routes** using HTTP response body analysis:
+- ✅ 75/75 routes PASS (no `Exception`, `ArgumentError`, `KeyError`, `UndefinedFunctionError`)
+- ❌ 0 failures
+
+**One bug found and fixed during scan:**
+- `/storybook/data_display/card` — `interactive_with_image` variation used `<:actions>` (plural) but component declares `slot(:action)` (singular). Fixed to `<:action>`.
+
+### 10f. Regression Results
+```
+mix compile --warnings-as-errors  → 0 warnings
+mix format --check-formatted      → clean
+```

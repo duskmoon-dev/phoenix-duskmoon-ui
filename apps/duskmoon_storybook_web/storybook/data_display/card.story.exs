@@ -136,9 +136,9 @@ defmodule Storybook.DataDisplay.Card do
           """
           <:title>Interactive Card</:title>
           Click this card to see the hover effect.
-          <:actions>
+          <:action>
             <button type="button" class="btn btn-primary btn-sm">Learn More</button>
-          </:actions>
+          </:action>
           """
         ]
       }
