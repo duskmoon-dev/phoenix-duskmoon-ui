@@ -45,6 +45,20 @@ defmodule Storybook.Navigation.Navbar do
           </:end_part>
           """
         ]
+      },
+      %Variation{
+        id: :start_only,
+        description: "Minimal navbar with start part only",
+        attributes: %{
+          class: "shadow"
+        },
+        slots: [
+          """
+          <:start_part>
+            <span class="font-bold text-xl">Duskmoon UI</span>
+          </:start_part>
+          """
+        ]
       }
     ]
   end

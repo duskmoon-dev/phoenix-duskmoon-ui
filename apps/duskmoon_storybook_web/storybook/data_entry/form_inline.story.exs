@@ -35,6 +35,22 @@ defmodule Storybook.DataEntry.FormInline do
           <button type="button" class="btn btn-primary">Filter</button>
           """
         ]
+      },
+      %Variation{
+        id: :with_class,
+        description: "Inline layout with custom gap",
+        attributes: %{
+          class: "gap-6"
+        },
+        slots: [
+          """
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="input" placeholder="user@example.com" />
+          </div>
+          <button type="button" class="btn btn-primary">Subscribe</button>
+          """
+        ]
       }
     ]
   end

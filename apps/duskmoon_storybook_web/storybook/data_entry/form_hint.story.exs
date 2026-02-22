@@ -23,6 +23,16 @@ defmodule Storybook.DataEntry.FormHint do
           <input type="password" class="input" placeholder="Enter password" />
         </div>
         """
+      },
+      %Variation{
+        id: :with_class,
+        description: "Hint with custom styling",
+        attributes: %{
+          class: "text-warning"
+        },
+        slots: [
+          "This field will be publicly visible"
+        ]
       }
     ]
   end

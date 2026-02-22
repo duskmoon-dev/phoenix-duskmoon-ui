@@ -36,6 +36,25 @@ defmodule Storybook.DataDisplay.Card do
           </div>
           """
         ]
+      },
+      %Variation{
+        id: :interactive_with_image,
+        description: "Interactive card with image and actions",
+        attributes: %{
+          interactive: true,
+          shadow: "lg",
+          image: "https://picsum.photos/seed/duskmoon/400/200",
+          image_alt: "Placeholder landscape"
+        },
+        slots: [
+          """
+          <:title>Interactive Card</:title>
+          Click this card to see the hover effect.
+          <:actions>
+            <button type="button" class="btn btn-primary btn-sm">Learn More</button>
+          </:actions>
+          """
+        ]
       }
     ]
   end

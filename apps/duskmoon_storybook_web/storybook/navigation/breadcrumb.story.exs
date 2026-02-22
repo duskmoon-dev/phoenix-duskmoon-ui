@@ -39,6 +39,21 @@ defmodule Storybook.Navigation.Breadcrumb do
           </:crumb>
           """
         ]
+      },
+      %Variation{
+        id: :deep_path,
+        description: "Breadcrumb with many levels",
+        attributes: %{
+          class: "shadow px-4"
+        },
+        slots: [
+          """
+          <:crumb><a href="/">Home</a></:crumb>
+          <:crumb><a href="/docs">Documentation</a></:crumb>
+          <:crumb><a href="/docs/components">Components</a></:crumb>
+          <:crumb>Breadcrumb</:crumb>
+          """
+        ]
       }
     ]
   end

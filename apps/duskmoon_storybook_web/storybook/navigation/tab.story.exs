@@ -29,6 +29,22 @@ defmodule Storybook.Navigation.Tab do
           ~s(<:tab_content name="Luke">Luke Skywalker, brother of Prince Leia Organa</:tab_content>),
           ~s(<:tab_content name="Anakin">Anakin Skywalker, aka. Darth Vador</:tab_content>)
         ]
+      },
+      %Variation{
+        id: :three_tabs,
+        description: "Tabs with three items and variant styling",
+        attributes: %{
+          active_tab_name: "Settings",
+          variant: "boxed"
+        },
+        slots: [
+          ~s(<:tab name="Profile">Profile</:tab>),
+          ~s(<:tab name="Settings">Settings</:tab>),
+          ~s(<:tab name="Notifications">Notifications</:tab>),
+          ~s(<:tab_content name="Profile">Manage your profile information</:tab_content>),
+          ~s(<:tab_content name="Settings">Application preferences</:tab_content>),
+          ~s(<:tab_content name="Notifications">Notification settings</:tab_content>)
+        ]
       }
     ]
   end

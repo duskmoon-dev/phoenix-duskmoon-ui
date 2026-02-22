@@ -53,7 +53,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
 
   """
   @doc type: :component
-  attr(:id, :any, required: false, doc: "HTML id attribute")
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:class, :any, default: nil, doc: "Additional CSS classes")
 
   attr(:variant, :string,

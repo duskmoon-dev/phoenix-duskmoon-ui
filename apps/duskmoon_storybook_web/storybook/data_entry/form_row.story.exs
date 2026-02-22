@@ -41,6 +41,25 @@ defmodule Storybook.DataEntry.FormRow do
           </div>
           """
         ]
+      },
+      %Variation{
+        id: :with_class,
+        description: "Row with custom class",
+        attributes: %{
+          class: "gap-6"
+        },
+        slots: [
+          """
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input type="tel" class="input" placeholder="+1 (555) 000-0000" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Extension</label>
+            <input type="text" class="input" placeholder="1234" />
+          </div>
+          """
+        ]
       }
     ]
   end
