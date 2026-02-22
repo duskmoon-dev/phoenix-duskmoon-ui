@@ -1,5 +1,4 @@
 defmodule Storybook.DataEntry.CompactInput do
-  # :live_component or :page are also available
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataEntry.CompactInput.dm_compact_input/1

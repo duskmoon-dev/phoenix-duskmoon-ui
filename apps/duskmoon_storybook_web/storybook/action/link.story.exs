@@ -1,5 +1,4 @@
 defmodule Storybook.Action.Link do
-  # :live_component or :page are also available
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.Action.Link.dm_link/1

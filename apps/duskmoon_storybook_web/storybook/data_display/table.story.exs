@@ -1,5 +1,4 @@
 defmodule Storybook.DataDisplay.Table do
-  # :live_component or :page are also available
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataDisplay.Table.dm_table/1

@@ -1,5 +1,4 @@
 defmodule Storybook.DataEntry.Form do
-  # :live_component or :page are also available
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataEntry.Form.dm_form/1

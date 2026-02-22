@@ -1,5 +1,4 @@
 defmodule Storybook.DataDisplay.Markdown do
-  # :live_component or :page are also available
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataDisplay.Markdown.dm_markdown/1

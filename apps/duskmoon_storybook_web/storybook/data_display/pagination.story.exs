@@ -1,5 +1,4 @@
 defmodule Storybook.DataDisplay.Pagination do
-  # :live_component or :page are also available
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataDisplay.Pagination.dm_pagination/1

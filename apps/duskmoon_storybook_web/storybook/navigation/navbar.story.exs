@@ -1,5 +1,4 @@
 defmodule Storybook.Navigation.Navbar do
-  # :live_component or :page are also available
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.Navigation.Navbar.dm_navbar/1

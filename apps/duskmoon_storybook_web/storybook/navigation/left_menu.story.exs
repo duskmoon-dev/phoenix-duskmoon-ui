@@ -1,5 +1,4 @@
 defmodule Storybook.Navigation.LeftMenu do
-  # :live_component or :page are also available
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.Navigation.LeftMenu.dm_left_menu/1
