@@ -60,6 +60,144 @@ defmodule Storybook.Feedback.Dialog do
           </:body>
           """
         ]
+      },
+      %Variation{
+        id: :size_xs,
+        description: "Extra small modal",
+        attributes: %{
+          id: "dialog-xs",
+          size: "xs"
+        },
+        slots: [
+          """
+          <:title>XS Dialog</:title>
+          <:body><p>Extra small modal.</p></:body>
+          """
+        ]
+      },
+      %Variation{
+        id: :size_lg,
+        description: "Large modal",
+        attributes: %{
+          id: "dialog-lg",
+          size: "lg"
+        },
+        slots: [
+          """
+          <:title>Large Dialog</:title>
+          <:body>
+            <p>This large modal provides more space for complex content.</p>
+          </:body>
+          <:footer>
+            <.dm_btn variant="ghost">Cancel</.dm_btn>
+            <.dm_btn variant="primary">Save</.dm_btn>
+          </:footer>
+          """
+        ]
+      },
+      %Variation{
+        id: :size_xl,
+        description: "Extra large modal",
+        attributes: %{
+          id: "dialog-xl",
+          size: "xl"
+        },
+        slots: [
+          """
+          <:title>XL Dialog</:title>
+          <:body><p>Extra large modal for wide content.</p></:body>
+          """
+        ]
+      },
+      %Variation{
+        id: :position_top,
+        description: "Top-positioned modal",
+        attributes: %{
+          id: "dialog-top",
+          position: "top"
+        },
+        slots: [
+          """
+          <:title>Top Position</:title>
+          <:body><p>Modal anchored to the top of the viewport.</p></:body>
+          """
+        ]
+      },
+      %Variation{
+        id: :position_middle,
+        description: "Middle-positioned modal (explicit)",
+        attributes: %{
+          id: "dialog-middle",
+          position: "middle"
+        },
+        slots: [
+          """
+          <:title>Middle Position</:title>
+          <:body><p>Modal centered vertically in the viewport.</p></:body>
+          """
+        ]
+      },
+      %Variation{
+        id: :position_bottom,
+        description: "Bottom-positioned modal",
+        attributes: %{
+          id: "dialog-bottom",
+          position: "bottom"
+        },
+        slots: [
+          """
+          <:title>Bottom Position</:title>
+          <:body><p>Modal anchored to the bottom of the viewport.</p></:body>
+          """
+        ]
+      },
+      %Variation{
+        id: :with_backdrop_blur,
+        description: "Modal with backdrop blur effect",
+        attributes: %{
+          id: "dialog-blur",
+          backdrop: true
+        },
+        slots: [
+          """
+          <:title>Backdrop Blur</:title>
+          <:body><p>Background is blurred behind the modal.</p></:body>
+          """
+        ]
+      },
+      %Variation{
+        id: :hide_close_button,
+        description: "Modal without close button",
+        attributes: %{
+          id: "dialog-no-close",
+          hide_close: true
+        },
+        slots: [
+          """
+          <:title>No Close Button</:title>
+          <:body><p>The X close button is hidden.</p></:body>
+          <:footer>
+            <.dm_btn variant="primary">OK</.dm_btn>
+          </:footer>
+          """
+        ]
+      },
+      %Variation{
+        id: :responsive,
+        description: "Responsive modal (full-screen on mobile)",
+        attributes: %{
+          id: "dialog-responsive",
+          responsive: true
+        },
+        slots: [
+          """
+          <:title>Responsive Modal</:title>
+          <:body><p>This modal is full-screen on small viewports.</p></:body>
+          <:footer>
+            <.dm_btn variant="ghost">Close</.dm_btn>
+          </:footer>
+          """
+        ]
       }
     ]
   end
