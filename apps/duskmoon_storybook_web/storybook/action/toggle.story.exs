@@ -77,6 +77,119 @@ defmodule Storybook.Action.Toggle do
             ]
           }
         ]
+      },
+      %VariationGroup{
+        id: :colors,
+        description: "Color variants",
+        variations: [
+          %Variation{
+            id: :secondary,
+            attributes: %{id: "tg-sec", variant: "filled", color: "secondary"},
+            slots: [
+              """
+              <:item active={true}>A</:item>
+              <:item>B</:item>
+              <:item>C</:item>
+              """
+            ]
+          },
+          %Variation{
+            id: :tertiary,
+            attributes: %{id: "tg-tert", variant: "filled", color: "tertiary"},
+            slots: [
+              """
+              <:item active={true}>A</:item>
+              <:item>B</:item>
+              <:item>C</:item>
+              """
+            ]
+          },
+          %Variation{
+            id: :accent,
+            attributes: %{id: "tg-acc", variant: "filled", color: "accent"},
+            slots: [
+              """
+              <:item active={true}>A</:item>
+              <:item>B</:item>
+              <:item>C</:item>
+              """
+            ]
+          }
+        ]
+      },
+      %VariationGroup{
+        id: :sizes,
+        description: "Size variants",
+        variations: [
+          %Variation{
+            id: :small,
+            attributes: %{id: "tg-sm", size: "sm"},
+            slots: [
+              """
+              <:item active={true}>S</:item>
+              <:item>M</:item>
+              <:item>L</:item>
+              """
+            ]
+          },
+          %Variation{
+            id: :large,
+            attributes: %{id: "tg-lg", size: "lg"},
+            slots: [
+              """
+              <:item active={true}>Small</:item>
+              <:item>Medium</:item>
+              <:item>Large</:item>
+              """
+            ]
+          }
+        ]
+      },
+      %Variation{
+        id: :vertical,
+        description: "Vertical orientation",
+        attributes: %{
+          id: "tg-vert",
+          vertical: true
+        },
+        slots: [
+          """
+          <:item active={true}>Top</:item>
+          <:item>Middle</:item>
+          <:item>Bottom</:item>
+          """
+        ]
+      },
+      %Variation{
+        id: :exclusive,
+        description: "Exclusive (radio-like) selection",
+        attributes: %{
+          id: "tg-excl",
+          exclusive: true
+        },
+        slots: [
+          """
+          <:item active={true}>Day</:item>
+          <:item>Week</:item>
+          <:item>Month</:item>
+          """
+        ]
+      },
+      %Variation{
+        id: :full_width,
+        description: "Full-width toggle group",
+        attributes: %{
+          id: "tg-full",
+          full: true,
+          variant: "segmented"
+        },
+        slots: [
+          """
+          <:item active={true}>Left</:item>
+          <:item>Center</:item>
+          <:item>Right</:item>
+          """
+        ]
       }
     ]
   end

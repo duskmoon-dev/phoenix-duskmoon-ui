@@ -119,6 +119,87 @@ defmodule Storybook.Layout.Divider do
           size: "lg",
           variant: "dark"
         }
+      },
+      %Variation{
+        id: :size_sm,
+        attributes: %{
+          size: "sm",
+          variant: "primary"
+        },
+        slots: [
+          "Small"
+        ]
+      },
+      %Variation{
+        id: :size_xl,
+        attributes: %{
+          size: "xl",
+          variant: "secondary"
+        },
+        slots: [
+          "Extra Large"
+        ]
+      },
+      %Variation{
+        id: :gradient,
+        description: "Gradient divider",
+        attributes: %{
+          variant: "primary",
+          gradient: true
+        }
+      },
+      %Variation{
+        id: :inset_left,
+        description: "Left-inset divider",
+        attributes: %{
+          inset: "left"
+        },
+        slots: [
+          "Left Inset"
+        ]
+      },
+      %Variation{
+        id: :inset_right,
+        description: "Right-inset divider",
+        attributes: %{
+          inset: "right"
+        },
+        slots: [
+          "Right Inset"
+        ]
+      },
+      %Variation{
+        id: :inset_both,
+        description: "Both-sides inset divider",
+        attributes: %{
+          inset: "both",
+          variant: "secondary"
+        },
+        slots: [
+          "Both Inset"
+        ]
+      },
+      %Variation{
+        id: :text_left,
+        description: "Left-aligned text",
+        attributes: %{
+          text_position: "left",
+          variant: "primary"
+        },
+        slots: [
+          "Left Text"
+        ]
+      },
+      %Variation{
+        id: :text_right,
+        description: "Right-aligned text",
+        attributes: %{
+          text_position: "right",
+          variant: "secondary"
+        },
+        slots: [
+          "Right Text"
+        ]
       }
     ]
   end

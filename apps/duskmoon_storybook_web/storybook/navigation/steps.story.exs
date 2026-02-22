@@ -145,6 +145,19 @@ defmodule Storybook.Navigation.Steps do
             %{label: "Security"}
           ]
         }
+      },
+      %Variation{
+        id: :accent_color,
+        description: "Accent color",
+        attributes: %{
+          current: 1,
+          color: "accent",
+          steps: [
+            %{label: "Init"},
+            %{label: "Build"},
+            %{label: "Ship"}
+          ]
+        }
       }
     ]
   end
