@@ -8,6 +8,7 @@ defmodule Storybook.Navigation.Stepper do
     [
       %Variation{
         id: :default,
+        description: "Horizontal stepper with completed, active, and pending steps",
         attributes: %{
           id: "stepper-default"
         },
@@ -22,6 +23,7 @@ defmodule Storybook.Navigation.Stepper do
       },
       %Variation{
         id: :with_descriptions,
+        description: "Steps with sub-description text",
         attributes: %{
           id: "stepper-desc"
         },
@@ -35,6 +37,7 @@ defmodule Storybook.Navigation.Stepper do
       },
       %Variation{
         id: :vertical,
+        description: "Vertical layout orientation",
         attributes: %{
           id: "stepper-vert",
           vertical: true
@@ -49,6 +52,7 @@ defmodule Storybook.Navigation.Stepper do
       },
       %Variation{
         id: :error_state,
+        description: "Step with error state indicator",
         attributes: %{
           id: "stepper-error"
         },
