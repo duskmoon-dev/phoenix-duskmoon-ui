@@ -10,7 +10,7 @@ defmodule Storybook.Navigation.Appbar do
     [
       %Variation{
         id: :default,
-        description: "Basic appbar with title and menus",
+        description: "Basic appbar with logo, title, menus, and user profile",
         attributes: %{
           title: "MyApp"
         },
@@ -29,33 +29,82 @@ defmodule Storybook.Navigation.Appbar do
       },
       %Variation{
         id: :minimal,
-        description: "Appbar with title only",
+        description: "Appbar with logo and title only (no menus)",
         attributes: %{
           title: "Duskmoon UI"
         },
         slots: [
           """
           <:logo>
-            <span class="text-xl">🌙</span>
+            <span class="text-xl font-bold">DM</span>
           </:logo>
           """
         ]
       },
       %Variation{
-        id: :with_class,
-        description: "Appbar with custom styling",
+        id: :with_active_menu,
+        description: "Menu item with active state",
         attributes: %{
-          title: "Styled App",
-          class: "shadow-lg"
+          title: "Active Menu"
         },
         slots: [
           """
           <:logo>
-            <span class="text-2xl">⭐</span>
+            <span class="text-xl font-bold">DM</span>
           </:logo>
-          <:menu to="/home">Home</:menu>
-          <:menu to="/about">About</:menu>
-          <:menu to="/contact">Contact</:menu>
+          <:menu to="#" active={true}>Dashboard</:menu>
+          <:menu to="#">Settings</:menu>
+          <:menu to="#">Reports</:menu>
+          """
+        ]
+      },
+      %Variation{
+        id: :non_sticky,
+        description: "Non-sticky appbar (scrolls with page content)",
+        attributes: %{
+          title: "Scrollable",
+          sticky: false
+        },
+        slots: [
+          """
+          <:logo>
+            <span class="text-xl font-bold">DM</span>
+          </:logo>
+          <:menu to="#">Page 1</:menu>
+          <:menu to="#">Page 2</:menu>
+          """
+        ]
+      },
+      %Variation{
+        id: :with_title_link,
+        description: "Brand area (logo + title) links to a URL",
+        attributes: %{
+          title: "Linked Brand",
+          title_to: "/"
+        },
+        slots: [
+          """
+          <:logo>
+            <span class="text-2xl font-bold">DM</span>
+          </:logo>
+          <:menu to="#">Docs</:menu>
+          """
+        ]
+      },
+      %Variation{
+        id: :with_nav_label,
+        description: "Custom accessible nav label for screen readers",
+        attributes: %{
+          title: "Accessible App",
+          nav_label: "Main application navigation"
+        },
+        slots: [
+          """
+          <:logo>
+            <span class="text-xl font-bold">DM</span>
+          </:logo>
+          <:menu to="#">Home</:menu>
+          <:menu to="#">About</:menu>
           <:user_profile>
             <button type="button" class="btn btn-sm btn-ghost">Login</button>
           </:user_profile>

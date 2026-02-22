@@ -54,6 +54,35 @@ defmodule Storybook.Layout.Drawer do
           ~s(<:header>Wide Drawer</:header>),
           "This drawer is 400px wide."
         ]
+      },
+      %Variation{
+        id: :with_label,
+        description: "Accessible drawer with aria-label for screen readers",
+        attributes: %{
+          id: "drawer-a11y",
+          open: true,
+          label: "Navigation sidebar"
+        },
+        slots: [
+          ~s(<:header>Accessible Drawer</:header>),
+          "Inspect element to see aria-label on the drawer container."
+        ]
+      },
+      %Variation{
+        id: :right_modal,
+        description: "Right-side modal drawer with footer actions",
+        attributes: %{
+          id: "drawer-right-modal",
+          open: true,
+          position: "right",
+          modal: true,
+          width: "320px"
+        },
+        slots: [
+          ~s(<:header>Filters</:header>),
+          "Apply filters to narrow your results.",
+          ~s(<:footer><button type="button" class="btn btn-primary btn-sm">Apply</button></:footer>)
+        ]
       }
     ]
   end

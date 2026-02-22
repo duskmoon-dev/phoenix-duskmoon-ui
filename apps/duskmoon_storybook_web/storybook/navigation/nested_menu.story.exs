@@ -12,6 +12,7 @@ defmodule Storybook.Navigation.NestedMenu do
     [
       %Variation{
         id: :default,
+        description: "Menu with title, items, and collapsible groups",
         attributes: %{
           id: "nmenu-default"
         },
@@ -31,7 +32,8 @@ defmodule Storybook.Navigation.NestedMenu do
         ]
       },
       %Variation{
-        id: :bordered,
+        id: :bordered_compact,
+        description: "Bordered panel with compact padding and disabled item",
         attributes: %{
           id: "nmenu-bordered",
           bordered: true,
@@ -42,6 +44,46 @@ defmodule Storybook.Navigation.NestedMenu do
           <:item to="#" active={true}>Home</:item>
           <:item to="#">About</:item>
           <:item to="#" disabled={true}>Disabled</:item>
+          """
+        ]
+      },
+      %VariationGroup{
+        id: :sizes,
+        description: "Size variants",
+        variations:
+          for size <- ~w(sm md lg) do
+            %Variation{
+              id: String.to_atom(size),
+              attributes: %{
+                id: "nmenu-#{size}",
+                size: size
+              },
+              slots: [
+                """
+                <:title>#{String.upcase(size)} Menu</:title>
+                <:item to="#" active={true}>Item A</:item>
+                <:item to="#">Item B</:item>
+                """
+              ]
+            }
+          end
+      },
+      %Variation{
+        id: :with_nav_label,
+        description: "Accessible nav label for screen readers",
+        attributes: %{
+          id: "nmenu-a11y",
+          nav_label: "Sidebar navigation"
+        },
+        slots: [
+          """
+          <:title>Sidebar</:title>
+          <:item to="#" active={true}>Overview</:item>
+          <:item to="#">Reports</:item>
+          <:group title="Tools" open={true}>
+            <.dm_nested_menu_item to="#">Editor</.dm_nested_menu_item>
+            <.dm_nested_menu_item to="#">Console</.dm_nested_menu_item>
+          </:group>
           """
         ]
       }

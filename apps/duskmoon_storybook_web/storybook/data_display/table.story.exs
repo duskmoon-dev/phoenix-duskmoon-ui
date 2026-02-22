@@ -78,6 +78,45 @@ defmodule Storybook.DataDisplay.Table do
           </:col>
           """
         ]
+      },
+      %Variation{
+        id: :hover_zebra,
+        description: "Combined hover + zebra styling",
+        attributes: %{
+          class: "w-full",
+          hover: true,
+          zebra: true,
+          border: true,
+          data: table_data()
+        },
+        slots: [
+          """
+          <:col :let={r} label="Name">
+            {r.name}
+          </:col>
+          <:col :let={r} label="Portrayal">
+            {r.portrayal}
+          </:col>
+          """
+        ]
+      },
+      %Variation{
+        id: :minimal,
+        description: "Plain table with no border, hover, or zebra",
+        attributes: %{
+          class: "w-full",
+          data: table_data()
+        },
+        slots: [
+          """
+          <:col :let={r} label="Name">
+            {r.name}
+          </:col>
+          <:col :let={r} label="Portrayal">
+            {r.portrayal}
+          </:col>
+          """
+        ]
       }
     ]
   end

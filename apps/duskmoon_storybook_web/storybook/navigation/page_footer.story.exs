@@ -41,7 +41,7 @@ defmodule Storybook.Navigation.PageFooter do
       },
       %Variation{
         id: :with_class,
-        description: "Styled footer",
+        description: "Styled footer with colored section titles",
         attributes: %{
           class: "bg-surface-container"
         },
@@ -57,6 +57,51 @@ defmodule Storybook.Navigation.PageFooter do
           </:section>
           <:copyright title="Built with Phoenix">
             <p class="text-xs opacity-60">Powered by Elixir</p>
+          </:copyright>
+          """
+        ]
+      },
+      %Variation{
+        id: :with_label,
+        description: "Accessible footer with aria-label for screen readers",
+        attributes: %{
+          label: "Site footer navigation"
+        },
+        slots: [
+          """
+          <:section title="Help">
+            <a href="#" class="hover:underline">FAQ</a>
+            <a href="#" class="hover:underline">Support</a>
+          </:section>
+          <:copyright>
+            <p class="text-sm opacity-70">Inspect element to see aria-label on footer</p>
+          </:copyright>
+          """
+        ]
+      },
+      %Variation{
+        id: :multi_section,
+        description: "Footer with many sections and body_class customization",
+        slots: [
+          """
+          <:section title="Product" body_class="gap-1">
+            <a href="#" class="hover:underline text-sm">Features</a>
+            <a href="#" class="hover:underline text-sm">Pricing</a>
+            <a href="#" class="hover:underline text-sm">Integrations</a>
+            <a href="#" class="hover:underline text-sm">Enterprise</a>
+          </:section>
+          <:section title="Developers" body_class="gap-1">
+            <a href="#" class="hover:underline text-sm">Documentation</a>
+            <a href="#" class="hover:underline text-sm">API Reference</a>
+            <a href="#" class="hover:underline text-sm">SDKs</a>
+          </:section>
+          <:section title="Company" body_class="gap-1">
+            <a href="#" class="hover:underline text-sm">About</a>
+            <a href="#" class="hover:underline text-sm">Blog</a>
+            <a href="#" class="hover:underline text-sm">Careers</a>
+          </:section>
+          <:copyright title="Duskmoon UI" title_class="text-lg font-bold">
+            <p class="text-xs opacity-60">2026 All rights reserved. MIT License.</p>
           </:copyright>
           """
         ]
