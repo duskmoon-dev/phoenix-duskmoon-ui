@@ -33,4 +33,33 @@ defmodule Storybook.Feedback.Loading do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :item_count,
+        label: "Particles",
+        type: :number,
+        default: 88
+      },
+      %{
+        id: :size,
+        label: "Size (em)",
+        type: :number,
+        default: 21
+      },
+      %{
+        id: :speed,
+        label: "Speed",
+        type: :select,
+        options: [
+          {"2s", "Fast (2s)"},
+          {"4s", "Normal (4s)"},
+          {"6s", "Slow (6s)"},
+          {"8s", "Very Slow (8s)"}
+        ],
+        default: "4s"
+      }
+    ]
+  end
 end

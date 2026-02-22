@@ -93,4 +93,21 @@ defmodule Storybook.Icon.Icons do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :name,
+        label: "Icon Name",
+        type: :text,
+        default: "home"
+      },
+      %{
+        id: :color,
+        label: "Color",
+        type: :text,
+        default: "currentcolor"
+      }
+    ]
+  end
 end

@@ -9,22 +9,22 @@ defmodule Storybook.DataDisplay.Skeleton do
       %Variation{
         id: :default,
         description: "Basic skeleton loader",
-        attributes: %{class: " h-16 w-16"}
+        attributes: %{size: "lg"}
       },
       %Variation{
         id: :circle,
         description: "Circle skeleton (avatar placeholder)",
-        attributes: %{class: "skeleton h-16 w-16 shrink-0 rounded-full"}
+        attributes: %{variant: "circle", size: "lg"}
       },
       %Variation{
         id: :text,
         description: "Text skeleton placeholder",
-        attributes: %{class:  "h-16 w-16"}
+        attributes: %{variant: "text", size: "lg"}
       },
       %Variation{
         id: :rectangle,
         description: "Rectangle skeleton (image placeholder)",
-        attributes: %{class: "h-16 w-16 rounded-lg"}
+        attributes: %{variant: "square", size: "lg"}
       }
     ]
   end
