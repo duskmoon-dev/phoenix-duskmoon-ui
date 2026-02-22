@@ -8,36 +8,82 @@ defmodule Storybook.Feedback.Toast do
     [
       %Variation{
         id: :default,
+        description: "Default toast with no type",
         attributes: %{
-          id: "toast-default"
+          id: "toast-default",
+          open: true
         },
         slots: ["Default toast message"]
       },
-      %Variation{
+      %VariationGroup{
         id: :types,
-        attributes: %{},
-        slots: [
-          """
-          <div class="space-y-4">
-            <.dm_toast id="t-info" type="info">Info message</.dm_toast>
-            <.dm_toast id="t-success" type="success">Success message</.dm_toast>
-            <.dm_toast id="t-warning" type="warning">Warning message</.dm_toast>
-            <.dm_toast id="t-error" type="error">Error message</.dm_toast>
-          </div>
-          """
+        description: "Type color variants",
+        variations: [
+          %Variation{
+            id: :info,
+            attributes: %{id: "t-info", type: "info", open: true},
+            slots: ["Info message"]
+          },
+          %Variation{
+            id: :success,
+            attributes: %{id: "t-success", type: "success", open: true},
+            slots: ["Success message"]
+          },
+          %Variation{
+            id: :warning,
+            attributes: %{id: "t-warning", type: "warning", open: true},
+            slots: ["Warning message"]
+          },
+          %Variation{
+            id: :error,
+            attributes: %{id: "t-error", type: "error", open: true},
+            slots: ["Error message"]
+          }
         ]
       },
       %Variation{
         id: :filled,
-        attributes: %{},
-        slots: [
-          """
-          <div class="space-y-4">
-            <.dm_toast id="tf-info" type="info" filled={true}>Filled info</.dm_toast>
-            <.dm_toast id="tf-success" type="success" filled={true}>Filled success</.dm_toast>
-          </div>
-          """
-        ]
+        description: "Filled background style",
+        attributes: %{
+          id: "toast-filled",
+          type: "info",
+          filled: true,
+          open: true
+        },
+        slots: ["Filled info toast"]
+      },
+      %Variation{
+        id: :with_title,
+        description: "Toast with title text",
+        attributes: %{
+          id: "toast-title",
+          type: "success",
+          title: "Upload Complete",
+          open: true
+        },
+        slots: ["Your file has been uploaded successfully."]
+      },
+      %Variation{
+        id: :with_icon,
+        description: "Toast with custom MDI icon",
+        attributes: %{
+          id: "toast-icon",
+          type: "warning",
+          icon: "alert-circle",
+          open: true
+        },
+        slots: ["Disk space running low."]
+      },
+      %Variation{
+        id: :with_close,
+        description: "Toast with close button",
+        attributes: %{
+          id: "toast-close",
+          type: "error",
+          show_close: true,
+          open: true
+        },
+        slots: ["Connection lost. Check your network."]
       }
     ]
   end

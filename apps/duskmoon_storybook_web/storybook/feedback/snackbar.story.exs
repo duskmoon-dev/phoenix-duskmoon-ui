@@ -76,7 +76,52 @@ defmodule Storybook.Feedback.Snackbar do
               <:action>Retry</:action>
               """
             ]
+          },
+          %Variation{
+            id: :warning,
+            attributes: %{
+              id: "s-warning",
+              type: "warning",
+              open: true
+            },
+            slots: [
+              """
+              <:message>Warning: disk space low</:message>
+              """
+            ]
           }
+        ]
+      },
+      %Variation{
+        id: :multiline,
+        description: "Multi-line message layout",
+        attributes: %{
+          id: "snack-multiline",
+          open: true,
+          type: "info",
+          multiline: true
+        },
+        slots: [
+          """
+          <:message>This is a longer notification message that wraps to multiple lines for extra context.</:message>
+          <:action>Details</:action>
+          <:close />
+          """
+        ]
+      },
+      %Variation{
+        id: :top_right,
+        description: "Top-right positioned snackbar",
+        attributes: %{
+          id: "snack-top-right",
+          open: true,
+          type: "success",
+          position: "top-right"
+        },
+        slots: [
+          """
+          <:message>Saved to cloud</:message>
+          """
         ]
       }
     ]
