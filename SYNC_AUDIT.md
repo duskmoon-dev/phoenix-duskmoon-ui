@@ -167,7 +167,7 @@
 | Registered el-* packages | 28 (all) |
 | Demo routes | 42 |
 | Storybook stories | 44 |
-| Tests | 1869 (all passing) |
+| Tests | 3174 (all passing) |
 | Compilation warnings | 0 |
 
 ---
@@ -399,5 +399,19 @@ See `.loki/logs/screenshots/` and `.loki/audit/screenshots/` for baseline screen
 - **Demo page improved**: Added modal drawer example with backdrop
 - **Accessibility fixes**: Flash aria-live/atomic, Loading aria-live, Dropdown aria-expanded/controls, Rating aria-pressed, Password strength role=progressbar
 - **Total tests**: 1841, 0 failures
+- **Compilation warnings**: 0
+- **Formatting**: Clean
+
+### Iteration 5 Progress
+
+- **Critical fix**: All custom elements now render with Shadow DOM (were previously inert)
+  - Root cause: Stale `app.js.gz` from a past `mix phx.digest` run was served by `Plug.Static` with `gzip: true`. The old gzipped bundle predated all `el-dm-*` registrations.
+  - Fix: Set `gzip: Mix.env() == :prod` in endpoint.ex; cleaned stale artifacts with `mix phx.digest.clean --all`
+- **DevTools verified**: All 24 custom elements register correctly (`customElements.get()` returns class)
+- **Shadow DOM verified**: Every `<el-dm-*>` on demo pages has `shadowRoot` with child nodes
+- **Theme switching verified**: Sunshine ↔ Moonlight propagates into Shadow DOM (computed style changes confirmed)
+- **Console errors**: 1 non-fatal D3/mermaid `CustomEvent` error (upstream in el-dm-markdown)
+- **Orphan cleanup**: Removed stale `@gsmlg/lit` from node_modules (not a dependency)
+- **Total tests**: 3174 (3171 + 3), 0 failures
 - **Compilation warnings**: 0
 - **Formatting**: Clean
