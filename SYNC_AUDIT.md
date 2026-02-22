@@ -561,3 +561,44 @@ mix compile --warnings-as-errors  → 0 warnings
 mix format --check-formatted      → clean
 mix test                          → 3179 tests, 0 failures
 ```
+
+---
+
+## 9. Iteration 8 — Comprehensive Storybook Coverage Expansion
+
+### 9a. Scope
+
+Systematic coverage audit of all storybook stories against component `attr` declarations. Identified stories with missing `values:` demonstrations and uncovered boolean attrs.
+
+### 9b. Stories Expanded (8 commits)
+
+| Story | Key Additions |
+|-------|--------------|
+| `badge` | `pill` shape, `dot` indicator |
+| `card` | `compact`, `side`, `bordered`, `glass` variants; `shadow` (sm/xl); `padding` (none/lg) |
+| `progress` | `striped`, `striped+animated`, `inline_label` |
+| `tab` | `lifted`, `bordered` variants; `xs`, `sm`, `lg` sizes |
+| `dropdown` | `position: "top"` |
+| `stat` | `tertiary` color; `icon` slot |
+| `dialog` | `position` (top/middle/bottom); `size` (xs/lg/xl); `backdrop`, `hide_close`, `responsive` |
+| `collapse` | `color` (secondary/tertiary/accent); `size` (sm/lg); `animation` (fade/slide/fast/slow); `nested`, `disabled` |
+| `stepper` | `variant` (dots/alt-labels/icons); `color` (secondary/tertiary/accent); `size` (sm/lg); `clickable`; `disabled`/`optional` step states |
+| `switch` | `xl` size; `tertiary`, `info` colors |
+| `checkbox` | `xl` size; `tertiary`, `info` colors; `indeterminate` |
+| `bottom_nav` | All 4 remaining colors (secondary/success/warning/error); `sticky` position |
+| `popover` | `focus` trigger; `open` state; cardinal placements (top/left/right); start/end aligned placements |
+| `timeline` | `right`, `horizontal` layouts; `sm`, `lg` sizes; `loading` item state |
+| `toggle` | `color` (secondary/tertiary/accent); `size` (sm/lg); `vertical`; `exclusive`; `full` |
+| `divider` | `sm`, `xl` sizes; `gradient`; `inset` (left/right/both); `text_position` (left/right) |
+| `steps` | `accent` color |
+| `list` | `compact`, `dense`, `two_line`, `three_line` |
+| `bottom_sheet` | `persistent` |
+| `left_menu` | Remove invalid `horizontal` attr; `xs`, `sm`, `lg` size group |
+| `menu` | `placement` group (top/bottom/right/bottom-end) |
+
+### 9c. Regression Results
+```
+mix compile --warnings-as-errors  → 0 warnings
+mix format --check-formatted      → clean
+mix test                          → 3179 tests, 0 failures
+```
