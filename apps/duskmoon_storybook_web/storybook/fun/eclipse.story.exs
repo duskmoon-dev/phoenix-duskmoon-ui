@@ -8,6 +8,7 @@ defmodule Storybook.Fun.Eclipse do
     [
       %Variation{
         id: :default,
+        description: "Default medium eclipse",
         attributes: %{
           id: "eclipse-default",
           size: "medium"
@@ -15,6 +16,7 @@ defmodule Storybook.Fun.Eclipse do
       },
       %Variation{
         id: :small,
+        description: "Small eclipse",
         attributes: %{
           id: "eclipse-small",
           size: "small"
@@ -22,6 +24,7 @@ defmodule Storybook.Fun.Eclipse do
       },
       %Variation{
         id: :large,
+        description: "Large eclipse",
         attributes: %{
           id: "eclipse-large",
           size: "large"
@@ -29,6 +32,7 @@ defmodule Storybook.Fun.Eclipse do
       },
       %Variation{
         id: :dark_space,
+        description: "Pure black background",
         attributes: %{
           id: "eclipse-dark",
           size: "medium",
@@ -42,6 +46,7 @@ defmodule Storybook.Fun.Eclipse do
       },
       %Variation{
         id: :deep_space,
+        description: "Deep gray background",
         attributes: %{
           id: "eclipse-deep",
           size: "medium",
@@ -55,6 +60,7 @@ defmodule Storybook.Fun.Eclipse do
       },
       %Variation{
         id: :purple_nebula,
+        description: "Purple nebula background",
         attributes: %{
           id: "eclipse-purple",
           size: "medium",
@@ -68,6 +74,7 @@ defmodule Storybook.Fun.Eclipse do
       },
       %Variation{
         id: :slow_animation,
+        description: "Half-speed animation (0.5x)",
         attributes: %{
           id: "eclipse-slow",
           size: "medium",
@@ -76,6 +83,7 @@ defmodule Storybook.Fun.Eclipse do
       },
       %Variation{
         id: :fast_animation,
+        description: "Double-speed animation (2x)",
         attributes: %{
           id: "eclipse-fast",
           size: "medium",
@@ -84,6 +92,7 @@ defmodule Storybook.Fun.Eclipse do
       },
       %Variation{
         id: :cosmic_showcase,
+        description: "Large eclipse on cosmic gradient background",
         template: """
         <div class="bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 p-8 rounded-lg overflow-hidden">
           <div class="text-center mb-6">
@@ -98,6 +107,7 @@ defmodule Storybook.Fun.Eclipse do
       },
       %Variation{
         id: :size_comparison,
+        description: "All three sizes stacked for comparison",
         template: """
         <div class="bg-slate-950 p-8 rounded-lg overflow-hidden">
           <div class="space-y-8">
@@ -125,6 +135,7 @@ defmodule Storybook.Fun.Eclipse do
       },
       %Variation{
         id: :animation_speeds,
+        description: "Slow, normal, and fast animation side by side",
         template: """
         <div class="bg-slate-900 p-8 rounded-lg overflow-hidden">
           <div class="text-center mb-6">

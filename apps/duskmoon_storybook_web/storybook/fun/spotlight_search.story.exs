@@ -8,6 +8,7 @@ defmodule Storybook.Fun.SpotlightSearch do
     [
       %Variation{
         id: :default,
+        description: "Search overlay with three suggestion items",
         attributes: %{
           id: "spotlight-default",
           placeholder: "Search for anything..."
@@ -26,6 +27,7 @@ defmodule Storybook.Fun.SpotlightSearch do
       },
       %Variation{
         id: :simple,
+        description: "Minimal search bar without suggestions",
         attributes: %{
           id: "spotlight-simple",
           placeholder: "Quick search..."
@@ -34,6 +36,7 @@ defmodule Storybook.Fun.SpotlightSearch do
       },
       %Variation{
         id: :with_shortcut,
+        description: "Search with keyboard shortcut hint and four suggestions",
         attributes: %{
           id: "spotlight-shortcut",
           placeholder: "Type to search...",
@@ -56,6 +59,7 @@ defmodule Storybook.Fun.SpotlightSearch do
       },
       %Variation{
         id: :loading_state,
+        description: "Loading spinner while fetching results",
         attributes: %{
           id: "spotlight-loading",
           placeholder: "Searching...",
@@ -69,6 +73,7 @@ defmodule Storybook.Fun.SpotlightSearch do
       },
       %Variation{
         id: :navigation_focused,
+        description: "Navigation-oriented suggestions (explore, bookmarks, recent)",
         attributes: %{
           id: "spotlight-nav",
           placeholder: "Navigate to..."
@@ -93,6 +98,7 @@ defmodule Storybook.Fun.SpotlightSearch do
       },
       %Variation{
         id: :action_oriented,
+        description: "Action command palette (create, upload, share, export, delete)",
         attributes: %{
           id: "spotlight-actions",
           placeholder: "What would you like to do?"

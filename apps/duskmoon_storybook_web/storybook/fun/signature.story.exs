@@ -8,6 +8,7 @@ defmodule Storybook.Fun.Signature do
     [
       %Variation{
         id: :default,
+        description: "Simple single-letter signature",
         attributes: %{
           id: "signature-default",
           content: "A"
@@ -21,6 +22,7 @@ defmodule Storybook.Fun.Signature do
       },
       %Variation{
         id: :approved,
+        description: "Blue approval stamp on a purchase order",
         attributes: %{
           id: "signature-approved",
           content: "Approved",
@@ -38,6 +40,7 @@ defmodule Storybook.Fun.Signature do
       },
       %Variation{
         id: :verified,
+        description: "Green checkmark verification seal",
         attributes: %{
           id: "signature-verified",
           content: "✓",
@@ -55,6 +58,7 @@ defmodule Storybook.Fun.Signature do
       },
       %Variation{
         id: :star_seal,
+        description: "Gold star quality seal",
         attributes: %{
           id: "signature-star",
           content: "★",
@@ -72,6 +76,7 @@ defmodule Storybook.Fun.Signature do
       },
       %Variation{
         id: :rejected,
+        description: "Red rejection stamp at 45 degrees",
         attributes: %{
           id: "signature-rejected",
           content: "REJECTED",
@@ -90,6 +95,7 @@ defmodule Storybook.Fun.Signature do
       },
       %Variation{
         id: :confidential,
+        description: "Purple confidential watermark with reduced opacity",
         attributes: %{
           id: "signature-confidential",
           content: "CONFIDENTIAL",
@@ -108,6 +114,7 @@ defmodule Storybook.Fun.Signature do
       },
       %Variation{
         id: :watermark,
+        description: "Faint centered DRAFT watermark overlay",
         attributes: %{
           id: "signature-watermark",
           content: "DRAFT",
@@ -129,6 +136,7 @@ defmodule Storybook.Fun.Signature do
       },
       %Variation{
         id: :priority,
+        description: "Orange urgent priority stamp",
         attributes: %{
           id: "signature-priority",
           content: "URGENT",
@@ -147,6 +155,7 @@ defmodule Storybook.Fun.Signature do
       },
       %Variation{
         id: :custom_placement,
+        description: "Small initial positioned at top-right corner",
         attributes: %{
           id: "signature-custom",
           content: "Initial",
@@ -166,6 +175,7 @@ defmodule Storybook.Fun.Signature do
       },
       %Variation{
         id: :multiple_signatures,
+        description: "Three overlapping signatures on a multi-party agreement",
         template: """
         <div class="bg-white border-2 border-gray-200 rounded-lg p-8 relative h-64">
           <p class="text-gray-600 text-sm mb-4">Multi-Party Agreement</p>
@@ -208,6 +218,7 @@ defmodule Storybook.Fun.Signature do
       },
       %Variation{
         id: :size_comparison,
+        description: "Small, medium, and large signatures side by side",
         template: """
         <div class="bg-gray-50 border-2 border-gray-200 rounded-lg p-8 relative h-64">
           <p class="text-gray-600 text-sm mb-4">Signature Size Comparison</p>
@@ -249,6 +260,7 @@ defmodule Storybook.Fun.Signature do
       },
       %Variation{
         id: :diploma_example,
+        description: "Certificate of excellence with gold star seal",
         template: """
         <div class="bg-gradient-to-br from-amber-50 to-yellow-100 border-4 border-amber-300 rounded-lg p-8 relative h-64">
           <div class="text-center mb-4">

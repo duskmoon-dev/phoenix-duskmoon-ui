@@ -8,6 +8,7 @@ defmodule Storybook.Fun.Snow do
     [
       %Variation{
         id: :default,
+        description: "Default 30-flake snowfall",
         attributes: %{
           id: "snow-default",
           count: 30
@@ -15,6 +16,7 @@ defmodule Storybook.Fun.Snow do
       },
       %Variation{
         id: :light_snow,
+        description: "Light snowfall with 15 flakes",
         attributes: %{
           id: "snow-light",
           count: 15
@@ -32,6 +34,7 @@ defmodule Storybook.Fun.Snow do
       },
       %Variation{
         id: :heavy_snow,
+        description: "Heavy snowstorm with 100 flakes",
         attributes: %{
           id: "snow-heavy",
           count: 100
@@ -49,6 +52,7 @@ defmodule Storybook.Fun.Snow do
       },
       %Variation{
         id: :unicode_snowflakes,
+        description: "Unicode snowflake characters instead of CSS shapes",
         attributes: %{
           id: "snow-unicode",
           count: 25,
@@ -67,6 +71,7 @@ defmodule Storybook.Fun.Snow do
       },
       %Variation{
         id: :colored_snow,
+        description: "Blue-tinted flakes on dark background",
         attributes: %{
           id: "snow-blue",
           count: 40,
@@ -85,6 +90,7 @@ defmodule Storybook.Fun.Snow do
       },
       %Variation{
         id: :golden_snow,
+        description: "Golden flakes on purple gradient",
         attributes: %{
           id: "snow-gold",
           count: 35,
@@ -103,6 +109,7 @@ defmodule Storybook.Fun.Snow do
       },
       %Variation{
         id: :small_flakes,
+        description: "Tiny flakes (2-8px) for fine snow effect",
         attributes: %{
           id: "snow-small",
           count: 50,
@@ -121,6 +128,7 @@ defmodule Storybook.Fun.Snow do
       },
       %Variation{
         id: :large_flakes,
+        description: "Large flakes (15-30px) for dramatic effect",
         attributes: %{
           id: "snow-large",
           count: 20,
@@ -139,6 +147,7 @@ defmodule Storybook.Fun.Snow do
       },
       %Variation{
         id: :fast_fall,
+        description: "Fast falling snow (2-5s animation)",
         attributes: %{
           id: "snow-fast",
           count: 40,
@@ -157,6 +166,7 @@ defmodule Storybook.Fun.Snow do
       },
       %Variation{
         id: :slow_drift,
+        description: "Slow drifting snow (15-30s animation)",
         attributes: %{
           id: "snow-slow",
           count: 30,
@@ -175,6 +185,7 @@ defmodule Storybook.Fun.Snow do
       },
       %Variation{
         id: :winter_scene,
+        description: "Complete winter scene with trees and ground snow",
         template: """
         <div class="bg-gradient-to-b from-slate-400 via-slate-300 to-white h-96 rounded-lg relative overflow-hidden">
           <!-- Winter trees silhouette -->
@@ -205,6 +216,7 @@ defmodule Storybook.Fun.Snow do
       },
       %Variation{
         id: :night_snow,
+        description: "Night sky with moon, stars, and snow",
         template: """
         <div class="bg-gradient-to-b from-indigo-950 via-blue-900 to-slate-800 h-96 rounded-lg relative overflow-hidden">
           <!-- Moon -->

@@ -8,6 +8,7 @@ defmodule Storybook.Fun.PlasmaBall do
     [
       %Variation{
         id: :default,
+        description: "Default medium plasma ball",
         attributes: %{
           id: "plasma-default",
           size: "medium"
@@ -15,6 +16,7 @@ defmodule Storybook.Fun.PlasmaBall do
       },
       %Variation{
         id: :small,
+        description: "Small plasma ball",
         attributes: %{
           id: "plasma-small",
           size: "small"
@@ -22,6 +24,7 @@ defmodule Storybook.Fun.PlasmaBall do
       },
       %Variation{
         id: :large,
+        description: "Large plasma ball",
         attributes: %{
           id: "plasma-large",
           size: "large"
@@ -29,6 +32,7 @@ defmodule Storybook.Fun.PlasmaBall do
       },
       %Variation{
         id: :dark_theme,
+        description: "Black base color on dark background",
         attributes: %{
           id: "plasma-dark",
           size: "medium",
@@ -42,6 +46,7 @@ defmodule Storybook.Fun.PlasmaBall do
       },
       %Variation{
         id: :purple_theme,
+        description: "Purple base color on deep purple background",
         attributes: %{
           id: "plasma-purple",
           size: "medium",
@@ -55,6 +60,7 @@ defmodule Storybook.Fun.PlasmaBall do
       },
       %Variation{
         id: :blue_theme,
+        description: "Blue base color on deep blue background",
         attributes: %{
           id: "plasma-blue",
           size: "medium",
@@ -68,6 +74,7 @@ defmodule Storybook.Fun.PlasmaBall do
       },
       %Variation{
         id: :no_electrode,
+        description: "Plasma ball without center electrode",
         attributes: %{
           id: "plasma-no-electrode",
           size: "medium",
@@ -76,6 +83,7 @@ defmodule Storybook.Fun.PlasmaBall do
       },
       %Variation{
         id: :interactive_demo,
+        description: "Clickable plasma ball with instructional text",
         attributes: %{
           id: "plasma-interactive",
           size: "medium"
@@ -91,6 +99,7 @@ defmodule Storybook.Fun.PlasmaBall do
       },
       %Variation{
         id: :size_comparison,
+        description: "All three sizes side by side",
         template: """
         <div class="bg-slate-900 p-8 rounded-lg">
           <div class="grid grid-cols-3 gap-8 items-center">
@@ -118,6 +127,7 @@ defmodule Storybook.Fun.PlasmaBall do
       },
       %Variation{
         id: :color_variations,
+        description: "Six different base colors showcased",
         template: """
         <div class="p-8 bg-gradient-to-br from-gray-900 to-black rounded-lg">
           <div class="grid grid-cols-2 md:grid-cols-3 gap-6">

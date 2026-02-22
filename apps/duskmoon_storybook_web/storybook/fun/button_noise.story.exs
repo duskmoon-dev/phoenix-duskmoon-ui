@@ -8,6 +8,7 @@ defmodule Storybook.Fun.ButtonNoise do
     [
       %Variation{
         id: :default,
+        description: "Default noise button",
         attributes: %{
           id: "noise-default",
           content: "Click Me"
@@ -15,6 +16,7 @@ defmodule Storybook.Fun.ButtonNoise do
       },
       %Variation{
         id: :submit_button,
+        description: "Submit-style button text",
         attributes: %{
           id: "noise-submit",
           content: "Submit"
@@ -22,6 +24,7 @@ defmodule Storybook.Fun.ButtonNoise do
       },
       %Variation{
         id: :electric_theme,
+        description: "Electric blue-green color scheme on dark background",
         attributes: %{
           id: "noise-electric",
           content: "Power Up",
@@ -35,6 +38,7 @@ defmodule Storybook.Fun.ButtonNoise do
       },
       %Variation{
         id: :neon_theme,
+        description: "Neon pink-yellow color scheme on dark background",
         attributes: %{
           id: "noise-neon",
           content: "Neon Glow",
@@ -48,6 +52,7 @@ defmodule Storybook.Fun.ButtonNoise do
       },
       %Variation{
         id: :custom_typography,
+        description: "Custom font family and size",
         attributes: %{
           id: "noise-custom-font",
           content: "Custom Style",
@@ -57,6 +62,7 @@ defmodule Storybook.Fun.ButtonNoise do
       },
       %Variation{
         id: :large_button,
+        description: "Large 32px serif button",
         attributes: %{
           id: "noise-large",
           content: "Large Button",
@@ -66,6 +72,7 @@ defmodule Storybook.Fun.ButtonNoise do
       },
       %Variation{
         id: :small_button,
+        description: "Small 16px monospace button",
         attributes: %{
           id: "noise-small",
           content: "Small",
@@ -75,6 +82,7 @@ defmodule Storybook.Fun.ButtonNoise do
       },
       %Variation{
         id: :action_buttons,
+        description: "Multiple action buttons with different color schemes",
         template: """
         <div class="bg-slate-800 p-8 rounded-lg">
           <div class="space-y-4">
@@ -92,6 +100,7 @@ defmodule Storybook.Fun.ButtonNoise do
       },
       %Variation{
         id: :interactive_showcase,
+        description: "All three color schemes side by side",
         template: """
         <div class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-8 rounded-lg">
           <div class="text-center mb-6">
@@ -120,6 +129,7 @@ defmodule Storybook.Fun.ButtonNoise do
       },
       %Variation{
         id: :typography_variations,
+        description: "Font family comparison (sans, serif, mono, display)",
         template: """
         <div class="bg-gray-100 p-8 rounded-lg">
           <h3 class="text-gray-800 text-lg font-semibold mb-4">Typography Variations</h3>
@@ -170,6 +180,7 @@ defmodule Storybook.Fun.ButtonNoise do
       },
       %Variation{
         id: :size_comparison,
+        description: "Font size comparison from XS to XL",
         template: """
         <div class="bg-gray-900 p-8 rounded-lg">
           <h3 class="text-white text-lg font-semibold mb-6">Size Comparison</h3>
@@ -230,6 +241,7 @@ defmodule Storybook.Fun.ButtonNoise do
       },
       %Variation{
         id: :color_showcase,
+        description: "All color schemes with labeled backgrounds",
         template: """
         <div class="bg-black p-8 rounded-lg">
           <h3 class="text-white text-lg font-semibold mb-6 text-center">Color Scheme Showcase</h3>
@@ -276,6 +288,7 @@ defmodule Storybook.Fun.ButtonNoise do
       },
       %Variation{
         id: :interactive_demo,
+        description: "Full showcase with primary and secondary action groups",
         template: """
         <div class="bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 p-8 rounded-lg">
           <div class="text-center mb-8">
