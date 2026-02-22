@@ -31,6 +31,21 @@ defmodule Storybook.Layout.BottomSheet do
           <p>This sheet is open by default with modal backdrop.</p>
           """
         ]
+      },
+      %Variation{
+        id: :persistent,
+        description: "Persistent sheet — cannot be dismissed by clicking backdrop",
+        attributes: %{
+          id: "bs-persistent",
+          open: true,
+          persistent: true
+        },
+        slots: [
+          """
+          <:header>Persistent Sheet</:header>
+          <p>This sheet cannot be dismissed by clicking outside.</p>
+          """
+        ]
       }
     ]
   end

@@ -45,29 +45,40 @@ defmodule Storybook.Navigation.LeftMenu do
           "<:menu>Another Enabled Item</:menu>"
         ]
       },
-      %Variation{
+      %VariationGroup{
         id: :sizes,
-        attributes: %{
-          size: "sm",
-          class: "w-56"
-        },
-        slots: [
-          "<:title>Small Menu</:title>",
-          "<:menu>Small Item 1</:menu>",
-          "<:menu>Small Item 2</:menu>"
-        ]
-      },
-      %Variation{
-        id: :horizontal,
-        attributes: %{
-          horizontal: true,
-          class: "w-full"
-        },
-        slots: [
-          "<:menu>Home</:menu>",
-          "<:menu>Components</:menu>",
-          "<:menu>Documentation</:menu>",
-          "<:menu>About</:menu>"
+        description: "Size variants",
+        variations: [
+          %Variation{
+            id: :xs,
+            attributes: %{size: "xs", class: "w-48"},
+            slots: [
+              "<:title>XS Menu</:title>",
+              "<:menu>Item A</:menu>",
+              "<:menu>Item B</:menu>",
+              "<:menu>Item C</:menu>"
+            ]
+          },
+          %Variation{
+            id: :sm,
+            attributes: %{size: "sm", class: "w-52"},
+            slots: [
+              "<:title>Small Menu</:title>",
+              "<:menu>Item A</:menu>",
+              "<:menu>Item B</:menu>",
+              "<:menu>Item C</:menu>"
+            ]
+          },
+          %Variation{
+            id: :lg,
+            attributes: %{size: "lg", class: "w-64"},
+            slots: [
+              "<:title>Large Menu</:title>",
+              "<:menu>Item A</:menu>",
+              "<:menu>Item B</:menu>",
+              "<:menu>Item C</:menu>"
+            ]
+          }
         ]
       }
     ]

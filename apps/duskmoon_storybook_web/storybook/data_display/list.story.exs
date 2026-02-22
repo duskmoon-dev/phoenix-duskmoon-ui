@@ -62,6 +62,72 @@ defmodule Storybook.DataDisplay.List do
           <:item title="Settings" icon="cog" interactive={true}>Configure app</:item>
           """
         ]
+      },
+      %Variation{
+        id: :compact,
+        description: "Compact layout with reduced spacing",
+        attributes: %{
+          id: "list-compact",
+          compact: true,
+          bordered: true
+        },
+        slots: [
+          """
+          <:item title="Item One" icon="chevron-right">First item</:item>
+          <:item title="Item Two" icon="chevron-right">Second item</:item>
+          <:item title="Item Three" icon="chevron-right">Third item</:item>
+          """
+        ]
+      },
+      %Variation{
+        id: :dense,
+        description: "Dense layout with minimal padding",
+        attributes: %{
+          id: "list-dense",
+          dense: true
+        },
+        slots: [
+          """
+          <:item>Dense item one</:item>
+          <:item>Dense item two</:item>
+          <:item>Dense item three</:item>
+          <:item>Dense item four</:item>
+          """
+        ]
+      },
+      %Variation{
+        id: :two_line,
+        description: "Two-line list with title and subtitle",
+        attributes: %{
+          id: "list-two-line",
+          two_line: true,
+          bordered: true
+        },
+        slots: [
+          """
+          <:item title="John Doe" icon="account">john@example.com</:item>
+          <:item title="Jane Smith" icon="account">jane@example.com</:item>
+          <:item title="Bob Wilson" icon="account">bob@example.com</:item>
+          """
+        ]
+      },
+      %Variation{
+        id: :three_line,
+        description: "Three-line list with title, subtitle, and body",
+        attributes: %{
+          id: "list-three-line",
+          three_line: true
+        },
+        slots: [
+          """
+          <:item title="Meeting Notes" icon="file-document">
+            Review action items from today's standup — see full notes in Confluence
+          </:item>
+          <:item title="Design Review" icon="palette">
+            Feedback on the new dashboard UI — mockups ready for final approval
+          </:item>
+          """
+        ]
       }
     ]
   end

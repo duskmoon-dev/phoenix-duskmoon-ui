@@ -37,6 +37,52 @@ defmodule Storybook.Action.Menu do
           <.dm_menu_item value="delete" icon="delete" disabled={true}>Delete</.dm_menu_item>
           """
         ]
+      },
+      %VariationGroup{
+        id: :placements,
+        description: "Placement variants",
+        variations: [
+          %Variation{
+            id: :top,
+            attributes: %{id: "menu-top", open: true, placement: "top"},
+            slots: [
+              """
+              <.dm_menu_item value="a">Option A</.dm_menu_item>
+              <.dm_menu_item value="b">Option B</.dm_menu_item>
+              """
+            ]
+          },
+          %Variation{
+            id: :bottom,
+            attributes: %{id: "menu-bot", open: true, placement: "bottom"},
+            slots: [
+              """
+              <.dm_menu_item value="a">Option A</.dm_menu_item>
+              <.dm_menu_item value="b">Option B</.dm_menu_item>
+              """
+            ]
+          },
+          %Variation{
+            id: :right,
+            attributes: %{id: "menu-right", open: true, placement: "right"},
+            slots: [
+              """
+              <.dm_menu_item value="a">Option A</.dm_menu_item>
+              <.dm_menu_item value="b">Option B</.dm_menu_item>
+              """
+            ]
+          },
+          %Variation{
+            id: :bottom_end,
+            attributes: %{id: "menu-bend", open: true, placement: "bottom-end"},
+            slots: [
+              """
+              <.dm_menu_item value="a">Option A</.dm_menu_item>
+              <.dm_menu_item value="b">Option B</.dm_menu_item>
+              """
+            ]
+          }
+        ]
       }
     ]
   end
