@@ -520,3 +520,44 @@ mix compile --warnings-as-errors  → 0 warnings
 mix format --check-formatted      → clean
 mix test                          → 3179 tests, 0 failures (+5 new accessibility tests)
 ```
+
+---
+
+## 8. Iteration 7 — Upstream Accessibility Issues & Storybook Completeness
+
+### 8a. Upstream Accessibility Issues Filed
+
+All 6 upstream accessibility issues from the iteration 6 audit have been filed on `duskmoon-dev/duskmoon-elements`:
+
+| # | GitHub Issue | Component | Missing ARIA | Priority |
+|---|-------------|-----------|-------------|----------|
+| #9 | [el-dm-accordion: ARIA attributes](https://github.com/duskmoon-dev/duskmoon-elements/issues/9) | dm_accordion | aria-expanded, aria-controls, role="region" | High |
+| #10 | [el-dm-bottom-navigation: navigation role](https://github.com/duskmoon-dev/duskmoon-elements/issues/10) | dm_bottom_nav | role="navigation", aria-label | High |
+| #11 | [el-dm-badge: status role](https://github.com/duskmoon-dev/duskmoon-elements/issues/11) | dm_badge | role="status", aria-label | Medium |
+| #12 | [el-dm-popover: ARIA state attrs](https://github.com/duskmoon-dev/duskmoon-elements/issues/12) | dm_popover | aria-expanded, aria-haspopup | Medium |
+| #13 | [el-dm-chip: option role](https://github.com/duskmoon-dev/duskmoon-elements/issues/13) | dm_chip | role="option" (selection context) | Low |
+| #14 | [el-dm-card: article role](https://github.com/duskmoon-dev/duskmoon-elements/issues/14) | dm_card | role="article" (when interactive) | Low |
+
+Previously filed migration-blocker issues (#3–8) remain open.
+
+### 8b. Button Storybook Expanded
+
+The button storybook now covers all PRD-required variants (Section 4b requirement: "Story must show all color variants, all sizes, all style variants, disabled/loading states"):
+
+| Group | Variations Added |
+|-------|-----------------|
+| Color variants | primary, secondary, **tertiary**, accent, info, success, warning, error |
+| Style variants | ghost, outline, link |
+| Sizes | xs, sm, md, lg (all four sizes now shown) |
+| Shapes | square, circle |
+| States | loading, disabled |
+| Slots | prefix, suffix |
+| Confirm dialog | basic, custom action |
+| Noise | decorative noise button |
+
+### 8c. Regression Results
+```
+mix compile --warnings-as-errors  → 0 warnings
+mix format --check-formatted      → clean
+mix test                          → 3179 tests, 0 failures
+```
