@@ -725,14 +725,37 @@ Full scan of **122 routes** (80 storybook + 42 demo):
 | `feedback/toast_container` | `dm_toast_container` | 3 (top-right, bottom-center, top-left) |
 | `data_display/collapse_group` | `dm_collapse_group` | 2 (default, with_class) |
 
-### 11d. Test Coverage Additions
+### 11d. Test Coverage Additions (ARIA Accessibility)
 
-- Drawer: added 3 tests for `role="dialog"` when modal=true, `aria-modal="true"` when modal=true, no `aria-modal` when modal=false
+| Component | Tests Added | What's Tested |
+|-----------|-------------|---------------|
+| `layout/drawer` | 3 | `role="dialog"` when modal, `aria-modal="true"` when modal, no `aria-modal` when not |
+| `data_display/chip` | 2 | `aria-disabled="true"` when disabled, absent when not |
+| `layout/bottom_sheet` | 2 | `aria-modal="true"` when modal, absent when not |
+| `navigation/stepper` | 2 | `aria-disabled="true"` on disabled steps, absent otherwise |
+| `data_display/accordion` | 2 | `aria-disabled="true"` on disabled items, absent on enabled |
+| `data_display/collapse` | 4 | `aria-controls` linked to content id, absent when no id, `aria-disabled` when disabled/not |
 
-### 11e. Regression Results
+### 11e. Console Error Verification (Chrome DevTools MCP)
+
+Routes verified with zero additional errors:
+- `/storybook/navigation/simple_appbar` — 2 pre-existing PhoenixStorybook errors only
+- `/storybook/feedback/toast_container` — 2 pre-existing PhoenixStorybook errors only
+- `/storybook/feedback/snackbar_container` — 2 pre-existing PhoenixStorybook errors only
+- `/storybook/data_display/collapse_group` — 2 pre-existing PhoenixStorybook errors only
+- `/storybook/layout/bottom_sheet` — 2 pre-existing PhoenixStorybook errors only
+
+Pre-existing errors (PhoenixStorybook internal bundle, NOT our code):
+```
+Uncaught TypeError: Cannot read properties of undefined (reading 'CustomEvent')
+```
+
+### 11f. Final Regression Results
 ```
 mix compile --warnings-as-errors  → 0 warnings
 mix format --check-formatted      → clean
-mix test                          → 3179 tests, 0 failures
+mix test                          → 3192 tests, 0 failures
 Storybook routes                  → 84 stories (was 80)
+Demo routes                       → 42 (unchanged)
+Console errors (our code)         → 0
 ```
