@@ -2,6 +2,7 @@ FROM ghcr.io/gsmlg-dev/phoenix:alpine AS builder
 
 ARG MIX_ENV=prod
 ARG RELEASE_VERSION=1.0.0
+ARG SECRET_KEY_BASE=build-time-placeholder-replaced-at-runtime
 
 COPY . /build
 WORKDIR /build
@@ -19,7 +20,7 @@ sed -i "$MATCH_STRING" apps/duskmoon_storybook_web/mix.exs;
 sed -i "$MATCH_STRING" apps/duskmoon_storybook/mix.exs;
 sed -i "$MATCH_STRING" apps/phoenix_duskmoon/mix.exs;
 cd /build/apps/duskmoon_storybook_web
-mix tailwind.install https://github.com/tailwindlabs/tailwindcss/releases/download/v4.0.3/tailwindcss-linux-x64-musl
+mix tailwind.install https://github.com/tailwindlabs/tailwindcss/releases/download/v4.1.11/tailwindcss-linux-x64-musl
 mix assets.deploy
 cd /build
 mix release storybook --version "${RELEASE_VERSION}"
