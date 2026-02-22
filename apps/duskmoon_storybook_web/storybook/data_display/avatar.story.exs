@@ -8,6 +8,7 @@ defmodule Storybook.DataDisplay.Avatar do
     [
       %Variation{
         id: :default,
+        description: "Image avatar with default size",
         attributes: %{
           src: "https://picsum.photos/seed/user1/100/100.jpg",
           alt: "User Avatar"
@@ -15,6 +16,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :with_ring,
+        description: "Avatar with ring border",
         attributes: %{
           src: "https://picsum.photos/seed/user2/100/100.jpg",
           alt: "User Avatar",
@@ -23,6 +25,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :online_status,
+        description: "Online indicator with ring",
         attributes: %{
           src: "https://picsum.photos/seed/user3/100/100.jpg",
           alt: "User Avatar",
@@ -32,6 +35,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :offline_status,
+        description: "Offline indicator with ring",
         attributes: %{
           src: "https://picsum.photos/seed/user4/100/100.jpg",
           alt: "User Avatar",
@@ -41,6 +45,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :text_based,
+        description: "Text initials with primary color",
         attributes: %{
           name: "John Doe",
           color: "primary"
@@ -48,6 +53,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :text_based_colored,
+        description: "Text initials with success color",
         attributes: %{
           name: "Jane Smith",
           color: "success"
@@ -55,6 +61,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :size_variants,
+        description: "Extra-small (xs) size",
         attributes: %{
           src: "https://picsum.photos/seed/user5/100/100.jpg",
           alt: "User Avatar",
@@ -63,6 +70,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :small_avatar,
+        description: "Small (sm) size",
         attributes: %{
           src: "https://picsum.photos/seed/user6/100/100.jpg",
           alt: "User Avatar",
@@ -71,6 +79,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :large_avatar,
+        description: "Large (lg) size with ring",
         attributes: %{
           src: "https://picsum.photos/seed/user7/100/100.jpg",
           alt: "User Avatar",
@@ -80,6 +89,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :extra_large_avatar,
+        description: "Extra-large (xl) size with ring and online status",
         attributes: %{
           src: "https://picsum.photos/seed/user8/100/100.jpg",
           alt: "User Avatar",
@@ -90,6 +100,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :square_shape,
+        description: "Square shape with ring",
         attributes: %{
           src: "https://picsum.photos/seed/user9/100/100.jpg",
           alt: "User Avatar",
@@ -99,6 +110,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :rounded_shape,
+        description: "Rounded-square shape",
         attributes: %{
           src: "https://picsum.photos/seed/user10/100/100.jpg",
           alt: "User Avatar",
@@ -107,6 +119,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :ring_primary,
+        description: "Primary-colored ring",
         attributes: %{
           name: "Ring",
           ring: true,
@@ -115,6 +128,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :ring_secondary,
+        description: "Secondary-colored ring",
         attributes: %{
           name: "Ring",
           ring: true,
@@ -123,6 +137,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :different_colors,
+        description: "Accent background color",
         attributes: %{
           name: "Alex Johnson",
           color: "accent"
@@ -130,6 +145,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :warning_color,
+        description: "Warning background color",
         attributes: %{
           name: "Warning User",
           color: "warning"
@@ -137,6 +153,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :error_color,
+        description: "Error background color",
         attributes: %{
           name: "Error User",
           color: "error"
@@ -144,6 +161,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :info_color,
+        description: "Info background color",
         attributes: %{
           name: "Info User",
           color: "info"
@@ -151,6 +169,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :short_name,
+        description: "Single character name",
         attributes: %{
           name: "A",
           color: "secondary"
@@ -158,6 +177,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :two_initials,
+        description: "Two-word name — shows initials",
         attributes: %{
           name: "John Smith",
           color: "primary"
@@ -165,6 +185,7 @@ defmodule Storybook.DataDisplay.Avatar do
       },
       %Variation{
         id: :without_name,
+        description: "No name or image — placeholder fallback",
         attributes: %{
           color: "info"
         }

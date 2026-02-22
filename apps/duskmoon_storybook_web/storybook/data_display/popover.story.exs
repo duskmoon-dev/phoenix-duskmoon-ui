@@ -8,6 +8,7 @@ defmodule Storybook.DataDisplay.Popover do
     [
       %Variation{
         id: :default,
+        description: "Click-triggered popover",
         attributes: %{
           id: "pop-default",
           trigger_mode: "click"
@@ -21,6 +22,7 @@ defmodule Storybook.DataDisplay.Popover do
       },
       %Variation{
         id: :hover,
+        description: "Hover-triggered with top placement",
         attributes: %{
           id: "pop-hover",
           trigger_mode: "hover",
@@ -35,6 +37,7 @@ defmodule Storybook.DataDisplay.Popover do
       },
       %Variation{
         id: :with_arrow,
+        description: "Arrow pointing to trigger element",
         attributes: %{
           id: "pop-arrow",
           trigger_mode: "click",
@@ -50,6 +53,7 @@ defmodule Storybook.DataDisplay.Popover do
       },
       %Variation{
         id: :focus_trigger,
+        description: "Focus-triggered from an input element",
         attributes: %{
           id: "pop-focus",
           trigger_mode: "focus"
@@ -63,6 +67,7 @@ defmodule Storybook.DataDisplay.Popover do
       },
       %Variation{
         id: :open_by_default,
+        description: "Initially open popover",
         attributes: %{
           id: "pop-open",
           trigger_mode: "click",
