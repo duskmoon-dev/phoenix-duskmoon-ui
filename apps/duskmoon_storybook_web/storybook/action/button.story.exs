@@ -1,9 +1,8 @@
 defmodule Storybook.Action.Button do
-  # :live_component or :page are also available
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.Action.Button.dm_btn/1
-  def description, do: "Recreate Phoenix.Component.Button with confirm."
+  def description, do: "Button component wrapping el-dm-button with color/style variants, sizes, shapes, loading/disabled states, prefix/suffix slots, confirm dialog, and noise effect."
 
   def variations do
     [
