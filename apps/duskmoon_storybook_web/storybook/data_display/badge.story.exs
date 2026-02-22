@@ -202,6 +202,56 @@ defmodule Storybook.DataDisplay.Badge do
         slots: [
           "5"
         ]
+      },
+      %Variation{
+        id: :pill_shape,
+        attributes: %{
+          variant: "primary",
+          pill: true
+        },
+        slots: [
+          "Pill"
+        ]
+      },
+      %Variation{
+        id: :pill_success,
+        attributes: %{
+          variant: "success",
+          pill: true
+        },
+        slots: [
+          "Done"
+        ]
+      },
+      %Variation{
+        id: :dot_indicator,
+        attributes: %{
+          variant: "error",
+          dot: true
+        },
+        slots: [
+          ""
+        ]
+      },
+      %Variation{
+        id: :dot_success,
+        attributes: %{
+          variant: "success",
+          dot: true
+        },
+        slots: [
+          ""
+        ]
+      },
+      %Variation{
+        id: :dot_warning,
+        attributes: %{
+          variant: "warning",
+          dot: true
+        },
+        slots: [
+          ""
+        ]
       }
     ]
   end

@@ -146,6 +146,44 @@ defmodule Storybook.DataDisplay.Progress do
           size: "lg",
           show_label: true
         }
+      },
+      %Variation{
+        id: :striped_progress,
+        attributes: %{
+          value: 65,
+          max: 100,
+          color: "primary",
+          striped: true
+        }
+      },
+      %Variation{
+        id: :striped_animated,
+        attributes: %{
+          value: 55,
+          max: 100,
+          color: "success",
+          striped: true,
+          animated: true
+        }
+      },
+      %Variation{
+        id: :inline_label,
+        attributes: %{
+          value: 72,
+          max: 100,
+          color: "accent",
+          inline_label: true
+        }
+      },
+      %Variation{
+        id: :inline_label_striped,
+        attributes: %{
+          value: 80,
+          max: 100,
+          color: "info",
+          inline_label: true,
+          striped: true
+        }
       }
     ]
   end
