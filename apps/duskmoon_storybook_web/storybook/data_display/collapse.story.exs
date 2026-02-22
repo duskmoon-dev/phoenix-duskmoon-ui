@@ -8,6 +8,7 @@ defmodule Storybook.DataDisplay.Collapse do
     [
       %Variation{
         id: :default,
+        description: "Basic collapsible panel",
         attributes: %{
           id: "col-default"
         },
@@ -20,6 +21,7 @@ defmodule Storybook.DataDisplay.Collapse do
       },
       %Variation{
         id: :card_variant,
+        description: "Card-styled collapse panel",
         attributes: %{
           id: "col-card",
           variant: "card"
@@ -33,6 +35,7 @@ defmodule Storybook.DataDisplay.Collapse do
       },
       %Variation{
         id: :open,
+        description: "Pre-expanded with primary color border",
         attributes: %{
           id: "col-open",
           open: true,

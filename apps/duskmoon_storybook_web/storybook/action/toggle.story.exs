@@ -8,6 +8,7 @@ defmodule Storybook.Action.Toggle do
     [
       %Variation{
         id: :default,
+        description: "Default toggle group with text items",
         attributes: %{
           id: "toggle-default"
         },
@@ -21,6 +22,7 @@ defmodule Storybook.Action.Toggle do
       },
       %Variation{
         id: :with_icons,
+        description: "Icon-only toggle items for text formatting",
         attributes: %{
           id: "toggle-icons"
         },

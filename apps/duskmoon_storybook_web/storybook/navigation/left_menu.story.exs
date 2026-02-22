@@ -8,6 +8,7 @@ defmodule Storybook.Navigation.LeftMenu do
     [
       %Variation{
         id: :default,
+        description: "Basic left menu with active item",
         attributes: %{
           class: "w-56",
           active: "dashboard"
@@ -21,6 +22,7 @@ defmodule Storybook.Navigation.LeftMenu do
       },
       %Variation{
         id: :with_active_state,
+        description: "Menu highlighting the middle item as active",
         attributes: %{
           class: "w-56",
           active: "components"
@@ -34,6 +36,7 @@ defmodule Storybook.Navigation.LeftMenu do
       },
       %Variation{
         id: :with_disabled_items,
+        description: "Menu with enabled and disabled items",
         attributes: %{
           class: "w-56"
         },

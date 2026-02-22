@@ -8,6 +8,7 @@ defmodule Storybook.Feedback.Snackbar do
     [
       %Variation{
         id: :default,
+        description: "Plain snackbar with message only",
         attributes: %{
           id: "snack-default",
           open: true
@@ -20,6 +21,7 @@ defmodule Storybook.Feedback.Snackbar do
       },
       %Variation{
         id: :with_action,
+        description: "Snackbar with action button and close icon",
         attributes: %{
           id: "snack-action",
           open: true,

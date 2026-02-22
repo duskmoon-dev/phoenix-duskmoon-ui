@@ -8,6 +8,7 @@ defmodule Storybook.Navigation.BottomNav do
     [
       %Variation{
         id: :default,
+        description: "Basic bottom nav with four icon items",
         attributes: %{
           id: "bnav-default",
           items: [
@@ -21,6 +22,7 @@ defmodule Storybook.Navigation.BottomNav do
       },
       %Variation{
         id: :colored,
+        description: "Primary colored bottom nav",
         attributes: %{
           id: "bnav-color",
           items: [

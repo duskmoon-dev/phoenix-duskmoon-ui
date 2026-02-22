@@ -8,6 +8,7 @@ defmodule Storybook.DataDisplay.Accordion do
     [
       %Variation{
         id: :default,
+        description: "Single-open FAQ accordion",
         slots: [
           ~s(<:item value="s1" header="What is Phoenix Duskmoon UI?">A comprehensive component library for Phoenix LiveView applications.</:item>),
           ~s(<:item value="s2" header="How do I install it?">Add phoenix_duskmoon to your mix.exs dependencies.</:item>),
@@ -16,6 +17,7 @@ defmodule Storybook.DataDisplay.Accordion do
       },
       %Variation{
         id: :multiple_open,
+        description: "Multiple sections open simultaneously",
         attributes: %{
           multiple: true,
           value: "s1,s3"
@@ -28,6 +30,7 @@ defmodule Storybook.DataDisplay.Accordion do
       },
       %Variation{
         id: :with_disabled,
+        description: "Accordion with a disabled item that cannot be toggled",
         slots: [
           ~s(<:item value="active" header="Active Item">This item can be toggled.</:item>),
           ~s(<:item value="disabled" header="Disabled Item" disabled>This item cannot be toggled.</:item>)
@@ -35,6 +38,7 @@ defmodule Storybook.DataDisplay.Accordion do
       },
       %Variation{
         id: :initially_open,
+        description: "Pre-expanded section on load via value attr",
         attributes: %{
           value: "faq1"
         },

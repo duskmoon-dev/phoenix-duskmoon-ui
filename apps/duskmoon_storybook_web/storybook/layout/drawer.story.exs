@@ -8,6 +8,7 @@ defmodule Storybook.Layout.Drawer do
     [
       %Variation{
         id: :default_left,
+        description: "Left-side drawer with header, content, and footer",
         attributes: %{
           id: "drawer-left",
           open: true,
@@ -21,6 +22,7 @@ defmodule Storybook.Layout.Drawer do
       },
       %Variation{
         id: :right_position,
+        description: "Right-side drawer for settings panels",
         attributes: %{
           id: "drawer-right",
           open: true,
@@ -33,6 +35,7 @@ defmodule Storybook.Layout.Drawer do
       },
       %Variation{
         id: :modal_drawer,
+        description: "Modal drawer with backdrop overlay",
         attributes: %{
           id: "drawer-modal",
           open: true,
@@ -45,6 +48,7 @@ defmodule Storybook.Layout.Drawer do
       },
       %Variation{
         id: :custom_width,
+        description: "Custom 400px width drawer",
         attributes: %{
           id: "drawer-wide",
           open: true,

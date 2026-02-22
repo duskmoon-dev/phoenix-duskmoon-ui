@@ -8,6 +8,7 @@ defmodule Storybook.Layout.BottomSheet do
     [
       %Variation{
         id: :default,
+        description: "Closed bottom sheet with header and content",
         attributes: %{
           id: "bs-default"
         },
@@ -20,6 +21,7 @@ defmodule Storybook.Layout.BottomSheet do
       },
       %Variation{
         id: :open,
+        description: "Open modal bottom sheet with backdrop",
         attributes: %{
           id: "bs-open",
           open: true,

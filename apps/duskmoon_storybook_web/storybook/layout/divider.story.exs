@@ -8,22 +8,26 @@ defmodule Storybook.Layout.Divider do
     [
       %Variation{
         id: :default,
+        description: "Plain horizontal divider",
         attributes: %{}
       },
       %Variation{
         id: :with_text,
+        description: "Divider with centered text label",
         slots: [
           "Section Title"
         ]
       },
       %Variation{
         id: :vertical_divider,
+        description: "Vertical orientation",
         attributes: %{
           orientation: "vertical"
         }
       },
       %Variation{
         id: :primary_color,
+        description: "Primary color variant with text",
         attributes: %{
           variant: "primary"
         },
@@ -33,6 +37,7 @@ defmodule Storybook.Layout.Divider do
       },
       %Variation{
         id: :secondary_colored,
+        description: "Secondary color variant with text",
         attributes: %{
           variant: "secondary"
         },
@@ -42,6 +47,7 @@ defmodule Storybook.Layout.Divider do
       },
       %Variation{
         id: :light_divider,
+        description: "Light color variant",
         attributes: %{
           variant: "light"
         },
@@ -51,6 +57,7 @@ defmodule Storybook.Layout.Divider do
       },
       %Variation{
         id: :dark_divider,
+        description: "Dark color variant",
         attributes: %{
           variant: "dark"
         },
@@ -60,6 +67,7 @@ defmodule Storybook.Layout.Divider do
       },
       %Variation{
         id: :dashed_variant,
+        description: "Dashed line style with primary color",
         attributes: %{
           style: "dashed",
           variant: "primary"
@@ -70,6 +78,7 @@ defmodule Storybook.Layout.Divider do
       },
       %Variation{
         id: :dotted_variant,
+        description: "Dotted line style with secondary color",
         attributes: %{
           style: "dotted",
           variant: "secondary"
@@ -80,6 +89,7 @@ defmodule Storybook.Layout.Divider do
       },
       %Variation{
         id: :small_divider,
+        description: "Extra-small thickness",
         attributes: %{
           size: "xs",
           variant: "secondary"
@@ -87,6 +97,7 @@ defmodule Storybook.Layout.Divider do
       },
       %Variation{
         id: :large_divider,
+        description: "Large thickness with text",
         attributes: %{
           size: "lg",
           variant: "primary"
@@ -97,6 +108,7 @@ defmodule Storybook.Layout.Divider do
       },
       %Variation{
         id: :settings_section,
+        description: "Dashed primary divider for section breaks",
         attributes: %{
           variant: "primary",
           style: "dashed"
@@ -107,6 +119,7 @@ defmodule Storybook.Layout.Divider do
       },
       %Variation{
         id: :vertical_with_color,
+        description: "Vertical with primary color",
         attributes: %{
           orientation: "vertical",
           variant: "primary"
@@ -114,6 +127,7 @@ defmodule Storybook.Layout.Divider do
       },
       %Variation{
         id: :vertical_large,
+        description: "Large vertical with dark color",
         attributes: %{
           orientation: "vertical",
           size: "lg",
@@ -122,6 +136,7 @@ defmodule Storybook.Layout.Divider do
       },
       %Variation{
         id: :size_sm,
+        description: "Small size with text",
         attributes: %{
           size: "sm",
           variant: "primary"
@@ -132,6 +147,7 @@ defmodule Storybook.Layout.Divider do
       },
       %Variation{
         id: :size_xl,
+        description: "Extra-large size with text",
         attributes: %{
           size: "xl",
           variant: "secondary"

@@ -12,6 +12,7 @@ defmodule Storybook.Action.Menu do
     [
       %Variation{
         id: :default,
+        description: "Basic context menu with text-only items",
         attributes: %{
           id: "menu-default",
           open: true
@@ -26,6 +27,7 @@ defmodule Storybook.Action.Menu do
       },
       %Variation{
         id: :with_icons,
+        description: "Menu items with icons and a disabled item",
         attributes: %{
           id: "menu-icons",
           open: true
