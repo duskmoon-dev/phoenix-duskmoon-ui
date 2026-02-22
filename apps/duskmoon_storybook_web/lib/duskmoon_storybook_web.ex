@@ -39,7 +39,6 @@ defmodule DuskmoonStorybookWeb do
   def controller do
     quote do
       use Phoenix.Controller,
-        namespace: DuskmoonStorybookWeb,
         formats: [:html, :json],
         layouts: [html: DuskmoonStorybookWeb.Layouts]
 

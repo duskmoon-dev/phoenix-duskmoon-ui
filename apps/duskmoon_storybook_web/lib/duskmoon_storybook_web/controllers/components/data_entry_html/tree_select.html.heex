@@ -33,15 +33,23 @@
   <.dm_markdown content={md_content} />
 
   <% tree_options = [
-    %{value: "fruits", label: "Fruits", children: [
-      %{value: "apple", label: "Apple"},
-      %{value: "banana", label: "Banana"},
-      %{value: "cherry", label: "Cherry"}
-    ]},
-    %{value: "vegs", label: "Vegetables", children: [
-      %{value: "carrot", label: "Carrot"},
-      %{value: "broccoli", label: "Broccoli"}
-    ]},
+    %{
+      value: "fruits",
+      label: "Fruits",
+      children: [
+        %{value: "apple", label: "Apple"},
+        %{value: "banana", label: "Banana"},
+        %{value: "cherry", label: "Cherry"}
+      ]
+    },
+    %{
+      value: "vegs",
+      label: "Vegetables",
+      children: [
+        %{value: "carrot", label: "Carrot"},
+        %{value: "broccoli", label: "Broccoli"}
+      ]
+    },
     %{value: "grains", label: "Grains"}
   ] %>
 

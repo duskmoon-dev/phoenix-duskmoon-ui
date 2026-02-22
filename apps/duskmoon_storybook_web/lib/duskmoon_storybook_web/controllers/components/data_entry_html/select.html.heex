@@ -24,26 +24,85 @@
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Basic Select</h3>
   <div class="flex flex-col gap-4 max-w-md">
-    <.dm_select name="sel-basic" label="Favorite Fruit" value="" prompt="Choose a fruit" options={[{"apple", "Apple"}, {"banana", "Banana"}, {"cherry", "Cherry"}, {"mango", "Mango"}]} />
+    <.dm_select
+      name="sel-basic"
+      label="Favorite Fruit"
+      value=""
+      prompt="Choose a fruit"
+      options={[
+        {"apple", "Apple"},
+        {"banana", "Banana"},
+        {"cherry", "Cherry"},
+        {"mango", "Mango"}
+      ]}
+    />
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Colors</h3>
   <div class="flex flex-col gap-4 max-w-md">
-    <.dm_select name="sel-primary" label="Primary" value="" color="primary" options={[{"a", "Option A"}, {"b", "Option B"}]} />
-    <.dm_select name="sel-success" label="Success" value="" color="success" options={[{"a", "Option A"}, {"b", "Option B"}]} />
-    <.dm_select name="sel-error" label="Error" value="" color="error" options={[{"a", "Option A"}, {"b", "Option B"}]} />
+    <.dm_select
+      name="sel-primary"
+      label="Primary"
+      value=""
+      color="primary"
+      options={[{"a", "Option A"}, {"b", "Option B"}]}
+    />
+    <.dm_select
+      name="sel-success"
+      label="Success"
+      value=""
+      color="success"
+      options={[{"a", "Option A"}, {"b", "Option B"}]}
+    />
+    <.dm_select
+      name="sel-error"
+      label="Error"
+      value=""
+      color="error"
+      options={[{"a", "Option A"}, {"b", "Option B"}]}
+    />
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
   <div class="flex flex-col gap-4 max-w-md">
-    <.dm_select name="sel-xs" label="Extra Small" value="" size="xs" options={[{"a", "Option A"}, {"b", "Option B"}]} />
-    <.dm_select name="sel-sm" label="Small" value="" size="sm" options={[{"a", "Option A"}, {"b", "Option B"}]} />
-    <.dm_select name="sel-md" label="Medium" value="" size="md" options={[{"a", "Option A"}, {"b", "Option B"}]} />
-    <.dm_select name="sel-lg" label="Large" value="" size="lg" options={[{"a", "Option A"}, {"b", "Option B"}]} />
+    <.dm_select
+      name="sel-xs"
+      label="Extra Small"
+      value=""
+      size="xs"
+      options={[{"a", "Option A"}, {"b", "Option B"}]}
+    />
+    <.dm_select
+      name="sel-sm"
+      label="Small"
+      value=""
+      size="sm"
+      options={[{"a", "Option A"}, {"b", "Option B"}]}
+    />
+    <.dm_select
+      name="sel-md"
+      label="Medium"
+      value=""
+      size="md"
+      options={[{"a", "Option A"}, {"b", "Option B"}]}
+    />
+    <.dm_select
+      name="sel-lg"
+      label="Large"
+      value=""
+      size="lg"
+      options={[{"a", "Option A"}, {"b", "Option B"}]}
+    />
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Disabled</h3>
   <div class="flex flex-col gap-4 max-w-md">
-    <.dm_select name="sel-disabled" label="Disabled" value="" disabled={true} options={[{"a", "Option A"}]} />
+    <.dm_select
+      name="sel-disabled"
+      label="Disabled"
+      value=""
+      disabled={true}
+      options={[{"a", "Option A"}]}
+    />
   </div>
 </.dm_card>

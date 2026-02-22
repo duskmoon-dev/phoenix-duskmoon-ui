@@ -170,5 +170,4 @@ defmodule PhoenixDuskmoon.Component.DataEntry.OtpInput do
     </div>
     """
   end
-
 end

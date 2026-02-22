@@ -25,7 +25,13 @@
   <div class="flex flex-col gap-4 max-w-md">
     <.dm_input name="inp-text" label="Text" type="text" value="" placeholder="Enter text" />
     <.dm_input name="inp-email" label="Email" type="email" value="" placeholder="Enter email" />
-    <.dm_input name="inp-password" label="Password" type="password" value="" placeholder="Enter password" />
+    <.dm_input
+      name="inp-password"
+      label="Password"
+      type="password"
+      value=""
+      placeholder="Enter password"
+    />
     <.dm_input name="inp-number" label="Number" type="number" value="" placeholder="0" />
     <.dm_input name="inp-search" label="Search" type="search" value="" placeholder="Search..." />
   </div>
@@ -48,19 +54,49 @@
   <h3 class="text-xl font-semibold mt-8 mb-4">Style Variants</h3>
   <div class="flex flex-col gap-4 max-w-md">
     <.dm_input name="inp-ghost" label="Ghost" value="" variant="ghost" placeholder="Ghost input" />
-    <.dm_input name="inp-filled" label="Filled" value="" variant="filled" placeholder="Filled input" />
-    <.dm_input name="inp-bordered" label="Bordered" value="" variant="bordered" placeholder="Bordered input" />
-    <.dm_input name="inp-default" label="Default (no variant)" value="" placeholder="Default input" />
+    <.dm_input
+      name="inp-filled"
+      label="Filled"
+      value=""
+      variant="filled"
+      placeholder="Filled input"
+    />
+    <.dm_input
+      name="inp-bordered"
+      label="Bordered"
+      value=""
+      variant="bordered"
+      placeholder="Bordered input"
+    />
+    <.dm_input
+      name="inp-default"
+      label="Default (no variant)"
+      value=""
+      placeholder="Default input"
+    />
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Select</h3>
   <div class="flex flex-col gap-4 max-w-md">
-    <.dm_input name="inp-select" label="Role" type="select" value="" options={[{"admin", "Admin"}, {"editor", "Editor"}, {"viewer", "Viewer"}]} prompt="Choose a role" />
+    <.dm_input
+      name="inp-select"
+      label="Role"
+      type="select"
+      value=""
+      options={[{"admin", "Admin"}, {"editor", "Editor"}, {"viewer", "Viewer"}]}
+      prompt="Choose a role"
+    />
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Textarea</h3>
   <div class="flex flex-col gap-4 max-w-md">
-    <.dm_input name="inp-textarea" label="Message" type="textarea" value="" placeholder="Enter your message..." />
+    <.dm_input
+      name="inp-textarea"
+      label="Message"
+      type="textarea"
+      value=""
+      placeholder="Enter your message..."
+    />
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Toggle</h3>
@@ -70,6 +106,14 @@
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Range Slider</h3>
   <div class="flex flex-col gap-4 max-w-md">
-    <.dm_input name="inp-range" label="Volume" type="range_slider" value="50" min="0" max="100" step="1" />
+    <.dm_input
+      name="inp-range"
+      label="Volume"
+      type="range_slider"
+      value="50"
+      min="0"
+      max="100"
+      step="1"
+    />
   </div>
 </.dm_card>

@@ -23,12 +23,22 @@
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Info Flash</h3>
   <div class="flex flex-col gap-4 mb-4">
-    <.dm_flash kind={:info} title="Success" flash={%{"info" => "Your changes have been saved."}} autoshow={false} />
+    <.dm_flash
+      kind={:info}
+      title="Success"
+      flash={%{"info" => "Your changes have been saved."}}
+      autoshow={false}
+    />
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Error Flash</h3>
   <div class="flex flex-col gap-4 mb-4">
-    <.dm_flash kind={:error} title="Error" flash={%{"error" => "Could not save your changes. Please try again."}} autoshow={false} />
+    <.dm_flash
+      kind={:error}
+      title="Error"
+      flash={%{"error" => "Could not save your changes. Please try again."}}
+      autoshow={false}
+    />
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Flash with Custom Inner Block</h3>
@@ -40,7 +50,13 @@
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Flash without Close Button</h3>
   <div class="flex flex-col gap-4 mb-4">
-    <.dm_flash kind={:info} title="Persistent" flash={%{"info" => "This flash cannot be dismissed by the user."}} close={false} autoshow={false} />
+    <.dm_flash
+      kind={:info}
+      title="Persistent"
+      flash={%{"info" => "This flash cannot be dismissed by the user."}}
+      close={false}
+      autoshow={false}
+    />
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Alert Component Variants</h3>
@@ -53,7 +69,9 @@
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Filled Alerts</h3>
   <div class="flex flex-col gap-4 mb-4">
-    <.dm_alert variant="info" filled title="Info">Filled info alert with stronger emphasis.</.dm_alert>
+    <.dm_alert variant="info" filled title="Info">
+      Filled info alert with stronger emphasis.
+    </.dm_alert>
     <.dm_alert variant="success" filled title="Success">Filled success alert.</.dm_alert>
     <.dm_alert variant="error" filled title="Error">Filled error alert.</.dm_alert>
   </div>

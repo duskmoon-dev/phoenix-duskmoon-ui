@@ -55,7 +55,12 @@
   <h3 class="text-xl font-semibold mt-8 mb-4">Color Variants</h3>
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
     <.dm_stat title="Primary" value="100" color="primary" class="bg-surface-container rounded-lg" />
-    <.dm_stat title="Secondary" value="200" color="secondary" class="bg-surface-container rounded-lg" />
+    <.dm_stat
+      title="Secondary"
+      value="200"
+      color="secondary"
+      class="bg-surface-container rounded-lg"
+    />
     <.dm_stat title="Success" value="300" color="success" class="bg-surface-container rounded-lg" />
     <.dm_stat title="Error" value="400" color="error" class="bg-surface-container rounded-lg" />
   </div>
@@ -72,10 +77,22 @@
     <.dm_stat title="Users" value="2,345" color="primary" class="bg-surface-container rounded-lg">
       <:icon><.dm_mdi name="account-group" class="w-8 h-8" /></:icon>
     </.dm_stat>
-    <.dm_stat title="Revenue" value="$45.6K" color="success" description="+12.3%" class="bg-surface-container rounded-lg">
+    <.dm_stat
+      title="Revenue"
+      value="$45.6K"
+      color="success"
+      description="+12.3%"
+      class="bg-surface-container rounded-lg"
+    >
       <:icon><.dm_mdi name="cash-multiple" class="w-8 h-8" /></:icon>
     </.dm_stat>
-    <.dm_stat title="Alerts" value="7" color="error" description="3 critical" class="bg-surface-container rounded-lg">
+    <.dm_stat
+      title="Alerts"
+      value="7"
+      color="error"
+      description="3 critical"
+      class="bg-surface-container rounded-lg"
+    >
       <:icon><.dm_mdi name="alert-circle" class="w-8 h-8" /></:icon>
     </.dm_stat>
   </div>

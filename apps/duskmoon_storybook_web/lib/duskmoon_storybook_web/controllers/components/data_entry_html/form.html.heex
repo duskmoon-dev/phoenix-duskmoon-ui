@@ -6,7 +6,9 @@
 <.dm_card class="w-full h-full overflow-auto" body_class="p-4">
   <:title class="flex flex-row justify-center items-center gap-3">
     <span class="text-4xl text-primary">Form</span>
-    <span class="text-sm opacity-60">dm_form, dm_label, dm_error, dm_alert, dm_fieldset, dm_form_row, dm_form_grid, dm_form_section, dm_form_divider, dm_form_inline, dm_form_hint, dm_form_counter</span>
+    <span class="text-sm opacity-60">
+      dm_form, dm_label, dm_error, dm_alert, dm_fieldset, dm_form_row, dm_form_grid, dm_form_section, dm_form_divider, dm_form_inline, dm_form_hint, dm_form_counter
+    </span>
   </:title>
 
   <% md_content = """
@@ -46,7 +48,9 @@
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Alerts — Filled</h3>
   <div class="flex flex-col gap-4">
-    <.dm_alert variant="info" filled title="Info">Filled info alert with solid background.</.dm_alert>
+    <.dm_alert variant="info" filled title="Info">
+      Filled info alert with solid background.
+    </.dm_alert>
     <.dm_alert variant="success" filled title="Success">Filled success alert.</.dm_alert>
     <.dm_alert variant="warning" filled title="Warning">Filled warning alert.</.dm_alert>
     <.dm_alert variant="error" filled title="Error">Filled error alert.</.dm_alert>
@@ -54,7 +58,9 @@
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Alerts — Outlined</h3>
   <div class="flex flex-col gap-4">
-    <.dm_alert variant="info" outlined title="Info">Outlined info alert with border emphasis.</.dm_alert>
+    <.dm_alert variant="info" outlined title="Info">
+      Outlined info alert with border emphasis.
+    </.dm_alert>
     <.dm_alert variant="success" outlined title="Success">Outlined success alert.</.dm_alert>
     <.dm_alert variant="warning" outlined title="Warning">Outlined warning alert.</.dm_alert>
     <.dm_alert variant="error" outlined title="Error">Outlined error alert.</.dm_alert>
@@ -64,8 +70,12 @@
   <div class="flex flex-col gap-4">
     <.dm_alert variant="info" compact>Compact info alert without title.</.dm_alert>
     <.dm_alert variant="success" filled compact>Compact filled success alert.</.dm_alert>
-    <.dm_alert variant="warning" dismissible title="Dismissible">Click the close button to dismiss.</.dm_alert>
-    <.dm_alert variant="error" outlined dismissible compact>Compact outlined dismissible error.</.dm_alert>
+    <.dm_alert variant="warning" dismissible title="Dismissible">
+      Click the close button to dismiss.
+    </.dm_alert>
+    <.dm_alert variant="error" outlined dismissible compact>
+      Compact outlined dismissible error.
+    </.dm_alert>
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Fieldset</h3>
@@ -114,7 +124,13 @@
     <.dm_form_section title="Account" description="Your login credentials.">
       <div class="flex flex-col gap-2">
         <.dm_input name="sec-user" value="" placeholder="Username" label="Username" />
-        <.dm_input name="sec-pass" type="password" value="" placeholder="Password" label="Password" />
+        <.dm_input
+          name="sec-pass"
+          type="password"
+          value=""
+          placeholder="Password"
+          label="Password"
+        />
       </div>
     </.dm_form_section>
   </div>

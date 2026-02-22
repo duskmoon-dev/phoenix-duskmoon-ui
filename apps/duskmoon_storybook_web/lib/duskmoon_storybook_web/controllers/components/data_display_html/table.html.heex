@@ -35,34 +35,44 @@
   </.dm_table>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Zebra Striping</h3>
-  <.dm_table zebra={true} data={[
-    %{id: 1, product: "Widget A", price: "$10.00"},
-    %{id: 2, product: "Widget B", price: "$20.00"},
-    %{id: 3, product: "Widget C", price: "$15.00"},
-    %{id: 4, product: "Widget D", price: "$25.00"}
-  ]}>
+  <.dm_table
+    zebra={true}
+    data={[
+      %{id: 1, product: "Widget A", price: "$10.00"},
+      %{id: 2, product: "Widget B", price: "$20.00"},
+      %{id: 3, product: "Widget C", price: "$15.00"},
+      %{id: 4, product: "Widget D", price: "$25.00"}
+    ]}
+  >
     <:col :let={row} label="ID">{row.id}</:col>
     <:col :let={row} label="Product">{row.product}</:col>
     <:col :let={row} label="Price">{row.price}</:col>
   </.dm_table>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Hover Effect</h3>
-  <.dm_table hover={true} data={[
-    %{name: "Alice", role: "Admin", status: "Active"},
-    %{name: "Bob", role: "Editor", status: "Active"},
-    %{name: "Charlie", role: "Viewer", status: "Inactive"}
-  ]}>
+  <.dm_table
+    hover={true}
+    data={[
+      %{name: "Alice", role: "Admin", status: "Active"},
+      %{name: "Bob", role: "Editor", status: "Active"},
+      %{name: "Charlie", role: "Viewer", status: "Inactive"}
+    ]}
+  >
     <:col :let={row} label="Name">{row.name}</:col>
     <:col :let={row} label="Role">{row.role}</:col>
     <:col :let={row} label="Status">{row.status}</:col>
   </.dm_table>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Bordered & Compact</h3>
-  <.dm_table border={true} compact={true} data={[
-    %{key: "API_KEY", value: "sk-***", env: "production"},
-    %{key: "DB_HOST", value: "localhost", env: "development"},
-    %{key: "PORT", value: "4000", env: "all"}
-  ]}>
+  <.dm_table
+    border={true}
+    compact={true}
+    data={[
+      %{key: "API_KEY", value: "sk-***", env: "production"},
+      %{key: "DB_HOST", value: "localhost", env: "development"},
+      %{key: "PORT", value: "4000", env: "all"}
+    ]}
+  >
     <:col :let={row} label="Key">{row.key}</:col>
     <:col :let={row} label="Value">{row.value}</:col>
     <:col :let={row} label="Environment">{row.env}</:col>

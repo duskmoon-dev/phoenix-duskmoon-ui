@@ -174,5 +174,4 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
     </div>
     """
   end
-
 end

@@ -33,33 +33,61 @@
   <.dm_markdown content={md_content} />
 
   <% cascader_options = [
-    %{value: "asia", label: "Asia", children: [
-      %{value: "cn", label: "China", children: [
-        %{value: "bj", label: "Beijing"},
-        %{value: "sh", label: "Shanghai"},
-        %{value: "gz", label: "Guangzhou"}
-      ]},
-      %{value: "jp", label: "Japan", children: [
-        %{value: "tk", label: "Tokyo"},
-        %{value: "os", label: "Osaka"}
-      ]},
-      %{value: "kr", label: "South Korea"}
-    ]},
-    %{value: "eu", label: "Europe", children: [
-      %{value: "uk", label: "United Kingdom", children: [
-        %{value: "ldn", label: "London"},
-        %{value: "mnc", label: "Manchester"}
-      ]},
-      %{value: "de", label: "Germany", children: [
-        %{value: "ber", label: "Berlin"},
-        %{value: "mun", label: "Munich"}
-      ]},
-      %{value: "fr", label: "France"}
-    ]},
-    %{value: "na", label: "North America", children: [
-      %{value: "us", label: "United States"},
-      %{value: "ca", label: "Canada"}
-    ]}
+    %{
+      value: "asia",
+      label: "Asia",
+      children: [
+        %{
+          value: "cn",
+          label: "China",
+          children: [
+            %{value: "bj", label: "Beijing"},
+            %{value: "sh", label: "Shanghai"},
+            %{value: "gz", label: "Guangzhou"}
+          ]
+        },
+        %{
+          value: "jp",
+          label: "Japan",
+          children: [
+            %{value: "tk", label: "Tokyo"},
+            %{value: "os", label: "Osaka"}
+          ]
+        },
+        %{value: "kr", label: "South Korea"}
+      ]
+    },
+    %{
+      value: "eu",
+      label: "Europe",
+      children: [
+        %{
+          value: "uk",
+          label: "United Kingdom",
+          children: [
+            %{value: "ldn", label: "London"},
+            %{value: "mnc", label: "Manchester"}
+          ]
+        },
+        %{
+          value: "de",
+          label: "Germany",
+          children: [
+            %{value: "ber", label: "Berlin"},
+            %{value: "mun", label: "Munich"}
+          ]
+        },
+        %{value: "fr", label: "France"}
+      ]
+    },
+    %{
+      value: "na",
+      label: "North America",
+      children: [
+        %{value: "us", label: "United States"},
+        %{value: "ca", label: "Canada"}
+      ]
+    }
   ] %>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Basic Cascader</h3>

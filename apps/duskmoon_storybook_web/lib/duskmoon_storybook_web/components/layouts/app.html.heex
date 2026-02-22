@@ -6,7 +6,7 @@
   <:menu to={~p"/storybook"}>Storybook</:menu>
   <:user_profile>
     <.dm_theme_switcher />
-    <.dm_link href={"https://github.com/duskmoon-dev/phoenix-duskmoon-ui"} class="appbar-action">
+    <.dm_link href="https://github.com/duskmoon-dev/phoenix-duskmoon-ui" class="appbar-action">
       <.dm_mdi name="github" class="w-8 h-8" />
     </.dm_link>
   </:user_profile>
@@ -29,24 +29,19 @@
       <.dm_left_menu_group active={assigns[:active_menu]}>
         <:title>Action</:title>
         <:menu id="action-button" to={~p"/components/action/button"}>
-          <.dm_mdi name={"button-pointer"} class="w-4 h-4" />
-          Button
+          <.dm_mdi name="button-pointer" class="w-4 h-4" /> Button
         </:menu>
         <:menu id="action-link" to={~p"/components/action/link"}>
-          <.dm_bsi name={"link"} class="w-4 h-4" />
-          Link
+          <.dm_bsi name="link" class="w-4 h-4" /> Link
         </:menu>
         <:menu id="action-dropdown" to={~p"/components/action/dropdown"}>
-          <.dm_mdi name={"menu-down"} class="w-4 h-4" />
-          Dropdown
+          <.dm_mdi name="menu-down" class="w-4 h-4" /> Dropdown
         </:menu>
         <:menu id="action-menu" to={~p"/components/action/menu"}>
-          <.dm_mdi name={"menu"} class="w-4 h-4" />
-          Menu
+          <.dm_mdi name="menu" class="w-4 h-4" /> Menu
         </:menu>
         <:menu id="action-toggle" to={~p"/components/action/toggle"}>
-          <.dm_mdi name={"toggle-switch-off-outline"} class="w-4 h-4" />
-          Toggle
+          <.dm_mdi name="toggle-switch-off-outline" class="w-4 h-4" /> Toggle
         </:menu>
       </.dm_left_menu_group>
     </:menu>
@@ -54,72 +49,55 @@
       <.dm_left_menu_group active={assigns[:active_menu]}>
         <:title>Data Display</:title>
         <:menu id="data-display-accordion" to={~p"/components/data-display/accordion"}>
-          <.dm_mdi name={"chevron-down"} class="w-4 h-4" />
-          Accordion
+          <.dm_mdi name="chevron-down" class="w-4 h-4" /> Accordion
         </:menu>
         <:menu id="data-display-avatar" to={~p"/components/data-display/avatar"}>
-          <.dm_mdi name={"account-circle"} class="w-4 h-4" />
-          Avatar
+          <.dm_mdi name="account-circle" class="w-4 h-4" /> Avatar
         </:menu>
         <:menu id="data-display-badge" to={~p"/components/data-display/badge"}>
-          <.dm_bsi name={"badge-tm"} class="w-4 h-4" />
-          Badge
+          <.dm_bsi name="badge-tm" class="w-4 h-4" /> Badge
         </:menu>
         <:menu id="data-display-card" to={~p"/components/data-display/card"}>
-          <.dm_bsi name={"card-text"} class="w-4 h-4" />
-          Card
+          <.dm_bsi name="card-text" class="w-4 h-4" /> Card
         </:menu>
         <:menu id="data-display-chip" to={~p"/components/data-display/chip"}>
-          <.dm_mdi name={"label"} class="w-4 h-4" />
-          Chip
+          <.dm_mdi name="label" class="w-4 h-4" /> Chip
         </:menu>
         <:menu id="data-display-flash" to={~p"/components/data-display/flash"}>
-          <.dm_mdi name={"flash"} class="w-4 h-4" />
-          Flash
+          <.dm_mdi name="flash" class="w-4 h-4" /> Flash
         </:menu>
         <:menu id="data-display-markdown" to={~p"/components/data-display/markdown"}>
-          <.dm_bsi name={"markdown"} class="w-4 h-4" />
-          Markdown
+          <.dm_bsi name="markdown" class="w-4 h-4" /> Markdown
         </:menu>
         <:menu id="data-display-pagination" to={~p"/components/data-display/pagination"}>
-          <.dm_mdi name={"book-open-page-variant-outline"} class="w-4 h-4" />
-          Pagination
+          <.dm_mdi name="book-open-page-variant-outline" class="w-4 h-4" /> Pagination
         </:menu>
         <:menu id="data-display-progress" to={~p"/components/data-display/progress"}>
-          <.dm_mdi name={"progress-check"} class="w-4 h-4" />
-          Progress
+          <.dm_mdi name="progress-check" class="w-4 h-4" /> Progress
         </:menu>
         <:menu id="data-display-skeleton" to={~p"/components/data-display/skeleton"}>
-          <.dm_mdi name={"rectangle-outline"} class="w-4 h-4" />
-          Skeleton
+          <.dm_mdi name="rectangle-outline" class="w-4 h-4" /> Skeleton
         </:menu>
         <:menu id="data-display-stat" to={~p"/components/data-display/stat"}>
-          <.dm_mdi name={"chart-box-outline"} class="w-4 h-4" />
-          Stat
+          <.dm_mdi name="chart-box-outline" class="w-4 h-4" /> Stat
         </:menu>
         <:menu id="data-display-table" to={~p"/components/data-display/table"}>
-          <.dm_mdi name={"table"} class="w-4 h-4" />
-          Table
+          <.dm_mdi name="table" class="w-4 h-4" /> Table
         </:menu>
         <:menu id="data-display-timeline" to={~p"/components/data-display/timeline"}>
-          <.dm_mdi name={"timeline-outline"} class="w-4 h-4" />
-          Timeline
+          <.dm_mdi name="timeline-outline" class="w-4 h-4" /> Timeline
         </:menu>
         <:menu id="data-display-tooltip" to={~p"/components/data-display/tooltip"}>
-          <.dm_mdi name={"tooltip-text"} class="w-4 h-4" />
-          Tooltip
+          <.dm_mdi name="tooltip-text" class="w-4 h-4" /> Tooltip
         </:menu>
         <:menu id="data-display-popover" to={~p"/components/data-display/popover"}>
-          <.dm_mdi name={"tooltip-text-outline"} class="w-4 h-4" />
-          Popover
+          <.dm_mdi name="tooltip-text-outline" class="w-4 h-4" /> Popover
         </:menu>
         <:menu id="data-display-list" to={~p"/components/data-display/list"}>
-          <.dm_mdi name={"format-list-bulleted"} class="w-4 h-4" />
-          List
+          <.dm_mdi name="format-list-bulleted" class="w-4 h-4" /> List
         </:menu>
         <:menu id="data-display-collapse" to={~p"/components/data-display/collapse"}>
-          <.dm_mdi name={"arrow-collapse-vertical"} class="w-4 h-4" />
-          Collapse
+          <.dm_mdi name="arrow-collapse-vertical" class="w-4 h-4" /> Collapse
         </:menu>
       </.dm_left_menu_group>
     </:menu>
@@ -127,80 +105,61 @@
       <.dm_left_menu_group active={assigns[:active_menu]}>
         <:title>Data Entry</:title>
         <:menu id="data-entry-autocomplete" to={~p"/components/data-entry/autocomplete"}>
-          <.dm_mdi name={"text-search"} class="w-4 h-4" />
-          Autocomplete
+          <.dm_mdi name="text-search" class="w-4 h-4" /> Autocomplete
         </:menu>
         <:menu id="data-entry-checkbox" to={~p"/components/data-entry/checkbox"}>
-          <.dm_mdi name={"checkbox-marked"} class="w-4 h-4" />
-          Checkbox
+          <.dm_mdi name="checkbox-marked" class="w-4 h-4" /> Checkbox
         </:menu>
         <:menu id="data-entry-compact-input" to={~p"/components/data-entry/compact-input"}>
-          <.dm_mdi name={"form-textbox"} class="w-4 h-4" />
-          Compact Input
+          <.dm_mdi name="form-textbox" class="w-4 h-4" /> Compact Input
         </:menu>
         <:menu id="data-entry-file-upload" to={~p"/components/data-entry/file-upload"}>
-          <.dm_mdi name={"file-upload"} class="w-4 h-4" />
-          File Upload
+          <.dm_mdi name="file-upload" class="w-4 h-4" /> File Upload
         </:menu>
         <:menu id="data-entry-form" to={~p"/components/data-entry/form"}>
-          <.dm_mdi name={"format-list-checks"} class="w-4 h-4" />
-          Form
+          <.dm_mdi name="format-list-checks" class="w-4 h-4" /> Form
         </:menu>
         <:menu id="data-entry-input" to={~p"/components/data-entry/input"}>
-          <.dm_mdi name={"form-textbox"} class="w-4 h-4" />
-          Input
+          <.dm_mdi name="form-textbox" class="w-4 h-4" /> Input
         </:menu>
         <:menu id="data-entry-otp-input" to={~p"/components/data-entry/otp-input"}>
-          <.dm_mdi name={"numeric"} class="w-4 h-4" />
-          OTP Input
+          <.dm_mdi name="numeric" class="w-4 h-4" /> OTP Input
         </:menu>
         <:menu id="data-entry-pin-input" to={~p"/components/data-entry/pin-input"}>
-          <.dm_mdi name={"form-textbox-password"} class="w-4 h-4" />
-          Pin Input
+          <.dm_mdi name="form-textbox-password" class="w-4 h-4" /> Pin Input
         </:menu>
         <:menu id="data-entry-multi-select" to={~p"/components/data-entry/multi-select"}>
-          <.dm_mdi name={"format-list-checks"} class="w-4 h-4" />
-          Multi Select
+          <.dm_mdi name="format-list-checks" class="w-4 h-4" /> Multi Select
         </:menu>
         <:menu id="data-entry-tree-select" to={~p"/components/data-entry/tree-select"}>
-          <.dm_mdi name={"file-tree"} class="w-4 h-4" />
-          Tree Select
+          <.dm_mdi name="file-tree" class="w-4 h-4" /> Tree Select
         </:menu>
         <:menu id="data-entry-cascader" to={~p"/components/data-entry/cascader"}>
-          <.dm_mdi name={"view-sequential"} class="w-4 h-4" />
-          Cascader
+          <.dm_mdi name="view-sequential" class="w-4 h-4" /> Cascader
         </:menu>
         <:menu id="data-entry-rating" to={~p"/components/data-entry/rating"}>
-          <.dm_mdi name={"star"} class="w-4 h-4" />
-          Rating
+          <.dm_mdi name="star" class="w-4 h-4" /> Rating
         </:menu>
         <:menu id="data-entry-radio" to={~p"/components/data-entry/radio"}>
-          <.dm_mdi name={"radiobox-marked"} class="w-4 h-4" />
-          Radio
+          <.dm_mdi name="radiobox-marked" class="w-4 h-4" /> Radio
         </:menu>
         <:menu id="data-entry-segment-control" to={~p"/components/data-entry/segment-control"}>
-          <.dm_mdi name={"toggle-switch-outline"} class="w-4 h-4" />
-          Segment Control
+          <.dm_mdi name="toggle-switch-outline" class="w-4 h-4" /> Segment Control
         </:menu>
         <:menu id="data-entry-select" to={~p"/components/data-entry/select"}>
-          <.dm_mdi name={"form-dropdown"} class="w-4 h-4" />
-          Select
+          <.dm_mdi name="form-dropdown" class="w-4 h-4" /> Select
         </:menu>
         <:menu id="data-entry-slider" to={~p"/components/data-entry/slider"}>
-          <.dm_mdi name={"tune-vertical"} class="w-4 h-4" />
-          Slider
+          <.dm_mdi name="tune-vertical" class="w-4 h-4" /> Slider
         </:menu>
         <:menu id="data-entry-switch" to={~p"/components/data-entry/switch"}>
-          <.dm_mdi name={"toggle-switch"} class="w-4 h-4" />
-          Switch
+          <.dm_mdi name="toggle-switch" class="w-4 h-4" /> Switch
         </:menu>
         <:menu id="data-entry-textarea" to={~p"/components/data-entry/textarea"}>
-          <.dm_mdi name={"text-box"} class="w-4 h-4" />
-          Textarea
+          <.dm_mdi name="text-box" class="w-4 h-4" /> Textarea
         </:menu>
         <:menu id="data-entry-time-input" to={~p"/components/data-entry/time-input"}>
-          <.dm_mdi name={"clock-outline"} class="w-4 h-4" />
-          Time Input
+          <.dm_mdi name="clock-outline" class="w-4 h-4" /> Time Input
         </:menu>
       </.dm_left_menu_group>
     </:menu>
@@ -208,20 +167,16 @@
       <.dm_left_menu_group active={assigns[:active_menu]}>
         <:title>Feedback</:title>
         <:menu id="feedback-dialog" to={~p"/components/feedback/dialog"}>
-          <.dm_bsi name={"chat-square"} class="w-4 h-4" />
-          Dialog
+          <.dm_bsi name="chat-square" class="w-4 h-4" /> Dialog
         </:menu>
         <:menu id="feedback-loading" to={~p"/components/feedback/loading"}>
-          <.dm_mdi name={"loading"} class="w-4 h-4 animate-spin" />
-          Loading
+          <.dm_mdi name="loading" class="w-4 h-4 animate-spin" /> Loading
         </:menu>
         <:menu id="feedback-toast" to={~p"/components/feedback/toast"}>
-          <.dm_mdi name={"message-alert"} class="w-4 h-4" />
-          Toast
+          <.dm_mdi name="message-alert" class="w-4 h-4" /> Toast
         </:menu>
         <:menu id="feedback-snackbar" to={~p"/components/feedback/snackbar"}>
-          <.dm_mdi name={"message-text"} class="w-4 h-4" />
-          Snackbar
+          <.dm_mdi name="message-text" class="w-4 h-4" /> Snackbar
         </:menu>
       </.dm_left_menu_group>
     </:menu>
@@ -229,52 +184,40 @@
       <.dm_left_menu_group active={assigns[:active_menu]}>
         <:title>Navigation</:title>
         <:menu id="navigation-actionbar" to={~p"/components/navigation/actionbar"}>
-          <.dm_bsi name={"tools"} class="w-4 h-4" />
-          Actionbar
+          <.dm_bsi name="tools" class="w-4 h-4" /> Actionbar
         </:menu>
         <:menu id="navigation-appbar" to={~p"/components/navigation/appbar"}>
-          <.dm_mdi name={"dock-top"} class="w-4 h-4" />
-          Appbar
+          <.dm_mdi name="dock-top" class="w-4 h-4" /> Appbar
         </:menu>
         <:menu id="navigation-bottom-nav" to={~p"/components/navigation/bottom-nav"}>
-          <.dm_mdi name={"dock-bottom"} class="w-4 h-4" />
-          Bottom Nav
+          <.dm_mdi name="dock-bottom" class="w-4 h-4" /> Bottom Nav
         </:menu>
         <:menu id="navigation-breadcrumb" to={~p"/components/navigation/breadcrumb"}>
-          <.dm_bsi name={"segmented-nav"} class="w-4 h-4" />
-          Breadcrumb
+          <.dm_bsi name="segmented-nav" class="w-4 h-4" /> Breadcrumb
         </:menu>
         <:menu id="navigation-left-menu" to={~p"/components/navigation/left-menu"}>
-          <.dm_bsi name={"layout-sidebar"} class="w-4 h-4" />
-          Left Menu
+          <.dm_bsi name="layout-sidebar" class="w-4 h-4" /> Left Menu
         </:menu>
         <:menu id="navigation-navbar" to={~p"/components/navigation/navbar"}>
-          <.dm_mdi name={"page-layout-header"} class="w-4 h-4" />
-          Navbar
+          <.dm_mdi name="page-layout-header" class="w-4 h-4" /> Navbar
         </:menu>
         <:menu id="navigation-page-footer" to={~p"/components/navigation/page-footer"}>
-          <.dm_mdi name={"page-layout-footer"} class="w-4 h-4" />
-          Page Footer
+          <.dm_mdi name="page-layout-footer" class="w-4 h-4" /> Page Footer
         </:menu>
         <:menu id="navigation-page-header" to={~p"/components/navigation/page-header"}>
-          <.dm_mdi name={"page-layout-header"} class="w-4 h-4" />
-          Page Header
+          <.dm_mdi name="page-layout-header" class="w-4 h-4" /> Page Header
         </:menu>
         <:menu id="navigation-steps" to={~p"/components/navigation/steps"}>
-          <.dm_mdi name={"step-forward"} class="w-4 h-4" />
-          Steps
+          <.dm_mdi name="step-forward" class="w-4 h-4" /> Steps
         </:menu>
         <:menu id="navigation-tab" to={~p"/components/navigation/tab"}>
-          <.dm_mdi name={"tab-minus"} class="w-4 h-4" />
-          Tab
+          <.dm_mdi name="tab-minus" class="w-4 h-4" /> Tab
         </:menu>
         <:menu id="navigation-stepper" to={~p"/components/navigation/stepper"}>
-          <.dm_mdi name={"progress-check"} class="w-4 h-4" />
-          Stepper
+          <.dm_mdi name="progress-check" class="w-4 h-4" /> Stepper
         </:menu>
         <:menu id="navigation-nested-menu" to={~p"/components/navigation/nested-menu"}>
-          <.dm_mdi name={"file-tree"} class="w-4 h-4" />
-          Nested Menu
+          <.dm_mdi name="file-tree" class="w-4 h-4" /> Nested Menu
         </:menu>
       </.dm_left_menu_group>
     </:menu>
@@ -282,20 +225,16 @@
       <.dm_left_menu_group active={assigns[:active_menu]}>
         <:title>Layout</:title>
         <:menu id="layout-bottom-sheet" to={~p"/components/layout/bottom-sheet"}>
-          <.dm_mdi name={"dock-bottom"} class="w-4 h-4" />
-          Bottom Sheet
+          <.dm_mdi name="dock-bottom" class="w-4 h-4" /> Bottom Sheet
         </:menu>
         <:menu id="layout-divider" to={~p"/components/layout/divider"}>
-          <.dm_mdi name={"minus"} class="w-4 h-4" />
-          Divider
+          <.dm_mdi name="minus" class="w-4 h-4" /> Divider
         </:menu>
         <:menu id="layout-drawer" to={~p"/components/layout/drawer"}>
-          <.dm_mdi name={"dock-left"} class="w-4 h-4" />
-          Drawer
+          <.dm_mdi name="dock-left" class="w-4 h-4" /> Drawer
         </:menu>
         <:menu id="layout-theme-switcher" to={~p"/components/layout/theme-switcher"}>
-          <.dm_mdi name={"theme-light-dark"} class="w-4 h-4" />
-          Theme Switcher
+          <.dm_mdi name="theme-light-dark" class="w-4 h-4" /> Theme Switcher
         </:menu>
       </.dm_left_menu_group>
     </:menu>
@@ -303,8 +242,7 @@
       <.dm_left_menu_group active={assigns[:active_menu]}>
         <:title>Icon</:title>
         <:menu id="icon-icons" to={~p"/components/icon/icons"}>
-          <.dm_mdi name={"shape"} class="w-4 h-4" />
-          Icons
+          <.dm_mdi name="shape" class="w-4 h-4" /> Icons
         </:menu>
       </.dm_left_menu_group>
     </:menu>
@@ -312,41 +250,33 @@
       <.dm_left_menu_group active={assigns[:active_menu]}>
         <:title>Fun</:title>
         <:menu id="fun-button-noise" to={~p"/components/fun/button-noise"}>
-          <.dm_mdi name={"blur"} class="w-4 h-4" />
-          Button Noise
+          <.dm_mdi name="blur" class="w-4 h-4" /> Button Noise
         </:menu>
         <:menu id="fun-eclipse" to={~p"/components/fun/eclipse"}>
-          <.dm_mdi name={"moon-waning-crescent"} class="w-4 h-4" />
-          Eclipse
+          <.dm_mdi name="moon-waning-crescent" class="w-4 h-4" /> Eclipse
         </:menu>
         <:menu id="fun-plasma-ball" to={~p"/components/fun/plasma-ball"}>
-          <.dm_mdi name={"flash"} class="w-4 h-4" />
-          Plasma Ball
+          <.dm_mdi name="flash" class="w-4 h-4" /> Plasma Ball
         </:menu>
         <:menu id="fun-signature" to={~p"/components/fun/signature"}>
-          <.dm_mdi name={"stamper"} class="w-4 h-4" />
-          Signature
+          <.dm_mdi name="stamper" class="w-4 h-4" /> Signature
         </:menu>
         <:menu id="fun-snow" to={~p"/components/fun/snow"}>
-          <.dm_mdi name={"snowflake"} class="w-4 h-4" />
-          Snow
+          <.dm_mdi name="snowflake" class="w-4 h-4" /> Snow
         </:menu>
         <:menu id="fun-spotlight-search" to={~p"/components/fun/spotlight-search"}>
-          <.dm_mdi name={"magnify"} class="w-4 h-4" />
-          Spotlight Search
+          <.dm_mdi name="magnify" class="w-4 h-4" /> Spotlight Search
         </:menu>
       </.dm_left_menu_group>
     </:menu>
   </.dm_left_menu>
 
   <div class="flex flex-col flex-auto">
-    <%= @inner_content %>
+    {@inner_content}
   </div>
 </main>
 
-<.dm_page_footer
-  class={["bg-primary text-primary-content"]}
->
+<.dm_page_footer class={["bg-primary text-primary-content"]}>
   <:section title="Web Sites" body_class="text-primary-content/70">
     <.link href="https://github.com/duskmoon-dev">Github Repos</.link>
     <.link href="https://gsmlg.org/blogs">Blog</.link>
