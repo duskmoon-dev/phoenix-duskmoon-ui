@@ -119,4 +119,38 @@ defmodule Storybook.Feedback.Snackbar do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :type,
+        label: "Type",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"info", "Info"},
+          {"success", "Success"},
+          {"warning", "Warning"},
+          {"error", "Error"},
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"tertiary", "Tertiary"},
+          {"dark", "Dark"}
+        ],
+        default: nil
+      },
+      %{
+        id: :open,
+        label: "Open",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :multiline,
+        label: "Multiline",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

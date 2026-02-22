@@ -201,4 +201,59 @@ defmodule Storybook.Feedback.Dialog do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"xs", "XS"},
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"},
+          {"xl", "XL"}
+        ],
+        default: nil
+      },
+      %{
+        id: :position,
+        label: "Position",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"top", "Top"},
+          {"middle", "Middle"},
+          {"bottom", "Bottom"}
+        ],
+        default: nil
+      },
+      %{
+        id: :backdrop,
+        label: "Backdrop",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :no_backdrop,
+        label: "No Backdrop",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :responsive,
+        label: "Responsive",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :hide_close,
+        label: "Hide Close",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

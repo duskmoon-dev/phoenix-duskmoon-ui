@@ -148,4 +148,56 @@ defmodule Storybook.DataDisplay.Card do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :variant,
+        label: "Variant",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"compact", "Compact"},
+          {"side", "Side"},
+          {"bordered", "Bordered"},
+          {"glass", "Glass"}
+        ],
+        default: nil
+      },
+      %{
+        id: :shadow,
+        label: "Shadow",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"none", "None"},
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"},
+          {"xl", "XL"},
+          {"2xl", "2XL"}
+        ],
+        default: nil
+      },
+      %{
+        id: :padding,
+        label: "Padding",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"none", "None"},
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"}
+        ],
+        default: nil
+      },
+      %{
+        id: :interactive,
+        label: "Interactive",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

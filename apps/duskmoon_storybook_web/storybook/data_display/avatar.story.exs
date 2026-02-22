@@ -192,4 +192,67 @@ defmodule Storybook.DataDisplay.Avatar do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {"xs", "XS"},
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"},
+          {"xl", "XL"}
+        ],
+        default: "md"
+      },
+      %{
+        id: :shape,
+        label: "Shape",
+        type: :select,
+        options: [
+          {"circle", "Circle"},
+          {"square", "Square"},
+          {"rounded", "Rounded"}
+        ],
+        default: "circle"
+      },
+      %{
+        id: :color,
+        label: "Color",
+        type: :select,
+        options: [
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"tertiary", "Tertiary"},
+          {"accent", "Accent"},
+          {"info", "Info"},
+          {"success", "Success"},
+          {"warning", "Warning"},
+          {"error", "Error"}
+        ],
+        default: "primary"
+      },
+      %{
+        id: :ring,
+        label: "Ring",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :online,
+        label: "Online",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :offline,
+        label: "Offline",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end
