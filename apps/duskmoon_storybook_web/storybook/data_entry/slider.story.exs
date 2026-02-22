@@ -29,46 +29,92 @@ defmodule Storybook.DataEntry.Slider do
           value: 5
         }
       },
-      %Variation{
+      %VariationGroup{
         id: :sizes,
-        attributes: %{},
-        slots: [
-          """
-          <div class="space-y-8">
-            <div>
-              <label class="text-xs text-base-content/70">XS Size</label>
-              <.dm_slider id="xs" name="xs" label="XS slider" size="xs" value="50" />
-            </div>
-            <div>
-              <label class="text-xs text-base-content/70">SM Size</label>
-              <.dm_slider id="sm" name="sm" label="SM slider" size="sm" value="50" />
-            </div>
-            <div>
-              <label class="text-xs text-base-content/70">MD Size</label>
-              <.dm_slider id="md" name="md" label="MD slider" size="md" value="50" />
-            </div>
-            <div>
-              <label class="text-xs text-base-content/70">LG Size</label>
-              <.dm_slider id="lg" name="lg" label="LG slider" size="lg" value="50" />
-            </div>
-          </div>
-          """
+        description: "Size variants",
+        variations: [
+          %Variation{
+            id: :xs,
+            attributes: %{id: "xs", name: "xs", label: "XS slider", size: "xs", value: "50"}
+          },
+          %Variation{
+            id: :sm,
+            attributes: %{id: "sm", name: "sm", label: "SM slider", size: "sm", value: "50"}
+          },
+          %Variation{
+            id: :md,
+            attributes: %{id: "md", name: "md", label: "MD slider", size: "md", value: "50"}
+          },
+          %Variation{
+            id: :lg,
+            attributes: %{id: "lg", name: "lg", label: "LG slider", size: "lg", value: "50"}
+          }
         ]
       },
-      %Variation{
+      %VariationGroup{
         id: :colors,
-        attributes: %{},
-        slots: [
-          """
-          <div class="space-y-4">
-            <.dm_slider id="primary" name="primary" label="Primary" color="primary" value="60" />
-            <.dm_slider id="secondary" name="secondary" label="Secondary" color="secondary" value="60" />
-            <.dm_slider id="accent" name="accent" label="Accent" color="accent" value="60" />
-            <.dm_slider id="success" name="success" label="Success" color="success" value="60" />
-            <.dm_slider id="warning" name="warning" label="Warning" color="warning" value="60" />
-            <.dm_slider id="error" name="error" label="Error" color="error" value="60" />
-          </div>
-          """
+        description: "Color variants",
+        variations: [
+          %Variation{
+            id: :primary,
+            attributes: %{
+              id: "primary",
+              name: "primary",
+              label: "Primary",
+              color: "primary",
+              value: "60"
+            }
+          },
+          %Variation{
+            id: :secondary,
+            attributes: %{
+              id: "secondary",
+              name: "secondary",
+              label: "Secondary",
+              color: "secondary",
+              value: "60"
+            }
+          },
+          %Variation{
+            id: :accent,
+            attributes: %{
+              id: "accent",
+              name: "accent",
+              label: "Accent",
+              color: "accent",
+              value: "60"
+            }
+          },
+          %Variation{
+            id: :success,
+            attributes: %{
+              id: "success",
+              name: "success",
+              label: "Success",
+              color: "success",
+              value: "60"
+            }
+          },
+          %Variation{
+            id: :warning,
+            attributes: %{
+              id: "warning",
+              name: "warning",
+              label: "Warning",
+              color: "warning",
+              value: "60"
+            }
+          },
+          %Variation{
+            id: :error,
+            attributes: %{
+              id: "error",
+              name: "error",
+              label: "Error",
+              color: "error",
+              value: "60"
+            }
+          }
         ]
       },
       %Variation{

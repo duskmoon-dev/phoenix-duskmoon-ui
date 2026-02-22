@@ -36,46 +36,122 @@ defmodule Storybook.DataEntry.Select do
           value: "active"
         }
       },
-      %Variation{
+      %VariationGroup{
         id: :sizes,
-        attributes: %{},
-        slots: [
-          """
-          <div class="space-y-4">
-            <div>
-              <label class="text-xs text-base-content/70">XS Size</label>
-              <.dm_select id="xs" name="xs" label="XS Select" size="xs" options={[{"a", "Option A"}, {"b", "Option B"}]} />
-            </div>
-            <div>
-              <label class="text-xs text-base-content/70">SM Size</label>
-              <.dm_select id="sm" name="sm" label="SM Select" size="sm" options={[{"a", "Option A"}, {"b", "Option B"}]} />
-            </div>
-            <div>
-              <label class="text-xs text-base-content/70">MD Size</label>
-              <.dm_select id="md" name="md" label="MD Select" size="md" options={[{"a", "Option A"}, {"b", "Option B"}]} />
-            </div>
-            <div>
-              <label class="text-xs text-base-content/70">LG Size</label>
-              <.dm_select id="lg" name="lg" label="LG Select" size="lg" options={[{"a", "Option A"}, {"b", "Option B"}]} />
-            </div>
-          </div>
-          """
+        description: "Size variants",
+        variations: [
+          %Variation{
+            id: :xs,
+            attributes: %{
+              id: "xs",
+              name: "xs",
+              label: "XS Select",
+              size: "xs",
+              options: [{"a", "Option A"}, {"b", "Option B"}]
+            }
+          },
+          %Variation{
+            id: :sm,
+            attributes: %{
+              id: "sm",
+              name: "sm",
+              label: "SM Select",
+              size: "sm",
+              options: [{"a", "Option A"}, {"b", "Option B"}]
+            }
+          },
+          %Variation{
+            id: :md,
+            attributes: %{
+              id: "md",
+              name: "md",
+              label: "MD Select",
+              size: "md",
+              options: [{"a", "Option A"}, {"b", "Option B"}]
+            }
+          },
+          %Variation{
+            id: :lg,
+            attributes: %{
+              id: "lg",
+              name: "lg",
+              label: "LG Select",
+              size: "lg",
+              options: [{"a", "Option A"}, {"b", "Option B"}]
+            }
+          }
         ]
       },
-      %Variation{
+      %VariationGroup{
         id: :colors,
-        attributes: %{},
-        slots: [
-          """
-          <div class="space-y-4">
-            <.dm_select id="primary" name="primary" label="Primary" color="primary" options={[{"a", "Option A"}, {"b", "Option B"}]} prompt="Select primary" />
-            <.dm_select id="secondary" name="secondary" label="Secondary" color="secondary" options={[{"a", "Option A"}, {"b", "Option B"}]} prompt="Select secondary" />
-            <.dm_select id="accent" name="accent" label="Accent" color="accent" options={[{"a", "Option A"}, {"b", "Option B"}]} prompt="Select accent" />
-            <.dm_select id="success" name="success" label="Success" color="success" options={[{"a", "Option A"}, {"b", "Option B"}]} prompt="Select success" />
-            <.dm_select id="warning" name="warning" label="Warning" color="warning" options={[{"a", "Option A"}, {"b", "Option B"}]} prompt="Select warning" />
-            <.dm_select id="error" name="error" label="Error" color="error" options={[{"a", "Option A"}, {"b", "Option B"}]} prompt="Select error" />
-          </div>
-          """
+        description: "Color variants",
+        variations: [
+          %Variation{
+            id: :primary,
+            attributes: %{
+              id: "primary",
+              name: "primary",
+              label: "Primary",
+              color: "primary",
+              options: [{"a", "Option A"}, {"b", "Option B"}],
+              prompt: "Select primary"
+            }
+          },
+          %Variation{
+            id: :secondary,
+            attributes: %{
+              id: "secondary",
+              name: "secondary",
+              label: "Secondary",
+              color: "secondary",
+              options: [{"a", "Option A"}, {"b", "Option B"}],
+              prompt: "Select secondary"
+            }
+          },
+          %Variation{
+            id: :accent,
+            attributes: %{
+              id: "accent",
+              name: "accent",
+              label: "Accent",
+              color: "accent",
+              options: [{"a", "Option A"}, {"b", "Option B"}],
+              prompt: "Select accent"
+            }
+          },
+          %Variation{
+            id: :success,
+            attributes: %{
+              id: "success",
+              name: "success",
+              label: "Success",
+              color: "success",
+              options: [{"a", "Option A"}, {"b", "Option B"}],
+              prompt: "Select success"
+            }
+          },
+          %Variation{
+            id: :warning,
+            attributes: %{
+              id: "warning",
+              name: "warning",
+              label: "Warning",
+              color: "warning",
+              options: [{"a", "Option A"}, {"b", "Option B"}],
+              prompt: "Select warning"
+            }
+          },
+          %Variation{
+            id: :error,
+            attributes: %{
+              id: "error",
+              name: "error",
+              label: "Error",
+              color: "error",
+              options: [{"a", "Option A"}, {"b", "Option B"}],
+              prompt: "Select error"
+            }
+          }
         ]
       },
       %Variation{
@@ -94,36 +170,42 @@ defmodule Storybook.DataEntry.Select do
           id: "select-multiple",
           name: "tags",
           label: "Tags (Multiple)",
-          options: [{"tech", "Technology"}, {"design", "Design"}, {"business", "Business"}, {"marketing", "Marketing"}],
+          options: [
+            {"tech", "Technology"},
+            {"design", "Design"},
+            {"business", "Business"},
+            {"marketing", "Marketing"}
+          ],
           multiple: true,
           value: ["tech", "design"]
         }
       },
       %Variation{
         id: :option_groups,
-        attributes: %{},
+        description: "Select with option groups using inner_block slot",
+        attributes: %{
+          id: "groups",
+          name: "category",
+          label: "Category"
+        },
         slots: [
           """
-          <div class="w-full max-w-xs">
-            <.dm_select id="groups" name="category" label="Category">
-              <option value="">Select a category</option>
-              <optgroup label="Fruits">
-                <option value="apple">Apple</option>
-                <option value="orange">Orange</option>
-                <option value="banana">Banana</option>
-              </optgroup>
-              <optgroup label="Vegetables">
-                <option value="carrot">Carrot</option>
-                <option value="broccoli">Broccoli</option>
-                <option value="spinach">Spinach</option>
-              </optgroup>
-              <optgroup label="Grains">
-                <option value="wheat">Wheat</option>
-                <option value="rice">Rice</option>
-                <option value="corn">Corn</option>
-              </optgroup>
-            </.dm_select>
-          </div>
+          <option value="">Select a category</option>
+          <optgroup label="Fruits">
+            <option value="apple">Apple</option>
+            <option value="orange">Orange</option>
+            <option value="banana">Banana</option>
+          </optgroup>
+          <optgroup label="Vegetables">
+            <option value="carrot">Carrot</option>
+            <option value="broccoli">Broccoli</option>
+            <option value="spinach">Spinach</option>
+          </optgroup>
+          <optgroup label="Grains">
+            <option value="wheat">Wheat</option>
+            <option value="rice">Rice</option>
+            <option value="corn">Corn</option>
+          </optgroup>
           """
         ]
       },

@@ -35,7 +35,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:name, :any, doc: "HTML name attribute for form submission")
-  attr(:value, :any, doc: "the currently selected value")
+  attr(:value, :any, default: nil, doc: "the currently selected value")
   attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
   attr(:label, :string, default: nil, doc: "text label displayed above the select")
   attr(:options, :list, default: nil, doc: "list of {value, label} tuples for options")
@@ -82,7 +82,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
     assigns
     |> assign(field: nil, id: assigns.id || field.id)
     |> assign_new(:name, fn -> if assigns.multiple, do: field.name <> "[]", else: field.name end)
-    |> assign_new(:value, fn -> field.value end)
+    |> assign(:value, field.value)
     |> dm_select()
   end
 

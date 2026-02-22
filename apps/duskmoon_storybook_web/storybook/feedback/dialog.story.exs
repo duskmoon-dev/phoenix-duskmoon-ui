@@ -4,6 +4,10 @@ defmodule Storybook.Feedback.Dialog do
   def function, do: &PhoenixDuskmoon.Component.Feedback.Dialog.dm_modal/1
   def description, do: "Modal dialog for alerts, confirmations, and custom content."
 
+  def imports do
+    [{PhoenixDuskmoon.Component.Action.Button, [dm_btn: 1]}]
+  end
+
   def variations do
     [
       %Variation{

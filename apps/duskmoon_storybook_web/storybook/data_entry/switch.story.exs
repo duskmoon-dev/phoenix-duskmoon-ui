@@ -32,50 +32,61 @@ defmodule Storybook.DataEntry.Switch do
           color: "success"
         }
       },
-      %Variation{
+      %VariationGroup{
         id: :sizes,
-        attributes: %{
-          id: "switch-sizes",
-          name: "size_example",
-          label: "Size examples"
-        },
-        slots: [
-          """
-          <div class="space-y-4">
-            <div>
-              <label class="text-xs text-base-content/70">XS Size</label>
-              <.dm_switch id="xs" name="xs" label="XS switch" size="xs" />
-            </div>
-            <div>
-              <label class="text-xs text-base-content/70">SM Size</label>
-              <.dm_switch id="sm" name="sm" label="SM switch" size="sm" />
-            </div>
-            <div>
-              <label class="text-xs text-base-content/70">MD Size</label>
-              <.dm_switch id="md" name="md" label="MD switch" size="md" />
-            </div>
-            <div>
-              <label class="text-xs text-base-content/70">LG Size</label>
-              <.dm_switch id="lg" name="lg" label="LG switch" size="lg" />
-            </div>
-          </div>
-          """
+        description: "Size variants",
+        variations: [
+          %Variation{
+            id: :xs,
+            attributes: %{id: "xs", name: "xs", label: "XS switch", size: "xs"}
+          },
+          %Variation{
+            id: :sm,
+            attributes: %{id: "sm", name: "sm", label: "SM switch", size: "sm"}
+          },
+          %Variation{
+            id: :md,
+            attributes: %{id: "md", name: "md", label: "MD switch", size: "md"}
+          },
+          %Variation{
+            id: :lg,
+            attributes: %{id: "lg", name: "lg", label: "LG switch", size: "lg"}
+          }
         ]
       },
-      %Variation{
+      %VariationGroup{
         id: :colors,
-        attributes: %{},
-        slots: [
-          """
-          <div class="space-y-4">
-            <.dm_switch id="primary" name="primary" label="Primary" color="primary" />
-            <.dm_switch id="secondary" name="secondary" label="Secondary" color="secondary" />
-            <.dm_switch id="accent" name="accent" label="Accent" color="accent" />
-            <.dm_switch id="success" name="success" label="Success" color="success" />
-            <.dm_switch id="warning" name="warning" label="Warning" color="warning" />
-            <.dm_switch id="error" name="error" label="Error" color="error" />
-          </div>
-          """
+        description: "Color variants",
+        variations: [
+          %Variation{
+            id: :primary,
+            attributes: %{id: "primary", name: "primary", label: "Primary", color: "primary"}
+          },
+          %Variation{
+            id: :secondary,
+            attributes: %{
+              id: "secondary",
+              name: "secondary",
+              label: "Secondary",
+              color: "secondary"
+            }
+          },
+          %Variation{
+            id: :accent,
+            attributes: %{id: "accent", name: "accent", label: "Accent", color: "accent"}
+          },
+          %Variation{
+            id: :success,
+            attributes: %{id: "success", name: "success", label: "Success", color: "success"}
+          },
+          %Variation{
+            id: :warning,
+            attributes: %{id: "warning", name: "warning", label: "Warning", color: "warning"}
+          },
+          %Variation{
+            id: :error,
+            attributes: %{id: "error", name: "error", label: "Error", color: "error"}
+          }
         ]
       },
       %Variation{

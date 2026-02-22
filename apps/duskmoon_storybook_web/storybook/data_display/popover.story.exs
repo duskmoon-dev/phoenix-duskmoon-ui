@@ -15,7 +15,7 @@ defmodule Storybook.DataDisplay.Popover do
         slots: [
           """
           <:trigger>Click me</:trigger>
-          <:content>Popover content here</:content>
+          Popover content here
           """
         ]
       },
@@ -29,7 +29,7 @@ defmodule Storybook.DataDisplay.Popover do
         slots: [
           """
           <:trigger>Hover me</:trigger>
-          <:content>Appears on hover</:content>
+          Appears on hover
           """
         ]
       },
@@ -44,7 +44,7 @@ defmodule Storybook.DataDisplay.Popover do
         slots: [
           """
           <:trigger>With arrow</:trigger>
-          <:content>This popover has an arrow pointing to the trigger.</:content>
+          This popover has an arrow pointing to the trigger.
           """
         ]
       }

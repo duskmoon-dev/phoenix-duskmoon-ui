@@ -5,6 +5,10 @@ defmodule Storybook.DataEntry.Form do
   def function, do: &PhoenixDuskmoon.Component.DataEntry.Form.dm_form/1
   def description, do: "A form container with optional actions slot."
 
+  def imports do
+    [{PhoenixDuskmoon.Component.Action.Button, [dm_btn: 1]}]
+  end
+
   def variations do
     [
       %Variation{

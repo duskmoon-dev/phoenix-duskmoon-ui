@@ -46,22 +46,36 @@ defmodule Storybook.DataDisplay.Collapse do
           """
         ]
       },
-      %Variation{
+      %VariationGroup{
         id: :variants,
-        attributes: %{},
-        slots: [
-          """
-          <div class="space-y-4">
-            <.dm_collapse id="c-ghost" variant="ghost">
+        description: "Style variants",
+        variations: [
+          %Variation{
+            id: :ghost,
+            attributes: %{
+              id: "c-ghost",
+              variant: "ghost"
+            },
+            slots: [
+              """
               <:trigger>Ghost variant</:trigger>
               <:content>Ghost content</:content>
-            </.dm_collapse>
-            <.dm_collapse id="c-divider" variant="divider">
+              """
+            ]
+          },
+          %Variation{
+            id: :divider,
+            attributes: %{
+              id: "c-divider",
+              variant: "divider"
+            },
+            slots: [
+              """
               <:trigger>Divider variant</:trigger>
               <:content>Divider content</:content>
-            </.dm_collapse>
-          </div>
-          """
+              """
+            ]
+          }
         ]
       }
     ]

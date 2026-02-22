@@ -6,6 +6,10 @@ defmodule Storybook.Icon.Icons do
   def description,
     do: "Inline SVG icons from Material Design Icons (7000+) and Bootstrap Icons (2000+)."
 
+  def imports do
+    [{PhoenixDuskmoon.Component.Icon.Icons, [dm_bsi: 1]}]
+  end
+
   def variations do
     [
       %Variation{

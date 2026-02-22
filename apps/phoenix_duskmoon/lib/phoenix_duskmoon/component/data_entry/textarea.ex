@@ -28,7 +28,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:name, :any, doc: "HTML name attribute for form submission")
-  attr(:value, :any, doc: "the textarea content")
+  attr(:value, :any, default: nil, doc: "the textarea content")
   attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
   attr(:label, :string, default: nil, doc: "text label displayed above the textarea")
   attr(:placeholder, :string, default: nil, doc: "placeholder text shown when empty")
@@ -82,7 +82,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
     assigns
     |> assign(field: nil, id: assigns.id || field.id)
     |> assign_new(:name, fn -> field.name end)
-    |> assign_new(:value, fn -> field.value end)
+    |> assign(:value, field.value)
     |> dm_textarea()
   end
 

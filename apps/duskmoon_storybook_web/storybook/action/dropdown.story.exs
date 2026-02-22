@@ -4,6 +4,11 @@ defmodule Storybook.Action.Dropdown do
   def function, do: &PhoenixDuskmoon.Component.Action.Dropdown.dm_dropdown/1
   def description, do: "Dropdown menu component for action menus and navigation."
 
+  def imports do
+    [{PhoenixDuskmoon.Component.Action.Button, [dm_btn: 1]},
+     {PhoenixDuskmoon.Component.Icon.Icons, [dm_mdi: 1]}]
+  end
+
   def variations do
     [
       %Variation{

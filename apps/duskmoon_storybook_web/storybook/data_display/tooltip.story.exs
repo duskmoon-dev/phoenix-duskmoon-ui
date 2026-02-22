@@ -4,6 +4,11 @@ defmodule Storybook.DataDisplay.Tooltip do
   def function, do: &PhoenixDuskmoon.Component.DataDisplay.Tooltip.dm_tooltip/1
   def description, do: "Tooltip component for displaying additional information on hover."
 
+  def imports do
+    [{PhoenixDuskmoon.Component.Action.Button, [dm_btn: 1]},
+     {PhoenixDuskmoon.Component.Icon.Icons, [dm_mdi: 1]}]
+  end
+
   def variations do
     [
       %Variation{

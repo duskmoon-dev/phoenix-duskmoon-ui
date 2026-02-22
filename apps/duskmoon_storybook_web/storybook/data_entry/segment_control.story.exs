@@ -19,41 +19,69 @@ defmodule Storybook.DataEntry.SegmentControl do
           """
         ]
       },
-      %Variation{
+      %VariationGroup{
         id: :colors,
-        attributes: %{},
-        slots: [
-          """
-          <div class="space-y-4">
-            <.dm_segment_control id="seg-primary" color="primary">
+        description: "Color variants",
+        variations: [
+          %Variation{
+            id: :primary,
+            attributes: %{
+              id: "seg-primary",
+              color: "primary"
+            },
+            slots: [
+              """
               <:item active={true}>One</:item>
               <:item>Two</:item>
               <:item>Three</:item>
-            </.dm_segment_control>
-            <.dm_segment_control id="seg-secondary" color="secondary">
+              """
+            ]
+          },
+          %Variation{
+            id: :secondary,
+            attributes: %{
+              id: "seg-secondary",
+              color: "secondary"
+            },
+            slots: [
+              """
               <:item active={true}>One</:item>
               <:item>Two</:item>
-            </.dm_segment_control>
-          </div>
-          """
+              """
+            ]
+          }
         ]
       },
-      %Variation{
+      %VariationGroup{
         id: :sizes,
-        attributes: %{},
-        slots: [
-          """
-          <div class="space-y-4">
-            <.dm_segment_control id="seg-sm" size="sm">
+        description: "Size variants",
+        variations: [
+          %Variation{
+            id: :sm,
+            attributes: %{
+              id: "seg-sm",
+              size: "sm"
+            },
+            slots: [
+              """
               <:item active={true}>Small</:item>
               <:item>Options</:item>
-            </.dm_segment_control>
-            <.dm_segment_control id="seg-lg" size="lg">
+              """
+            ]
+          },
+          %Variation{
+            id: :lg,
+            attributes: %{
+              id: "seg-lg",
+              size: "lg"
+            },
+            slots: [
+              """
               <:item active={true}>Large</:item>
               <:item>Options</:item>
-            </.dm_segment_control>
-          </div>
-          """
+              """
+            ]
+          }
         ]
       }
     ]

@@ -23,46 +23,71 @@ defmodule Storybook.DataEntry.Checkbox do
           checked: true
         }
       },
-      %Variation{
+      %VariationGroup{
         id: :sizes,
-        attributes: %{},
-        slots: [
-          """
-          <div class="space-y-4">
-            <div>
-              <label class="text-xs text-base-content/70">XS Size</label>
-              <.dm_checkbox id="xs" name="xs" label="XS checkbox" size="xs" />
-            </div>
-            <div>
-              <label class="text-xs text-base-content/70">SM Size</label>
-              <.dm_checkbox id="sm" name="sm" label="SM checkbox" size="sm" />
-            </div>
-            <div>
-              <label class="text-xs text-base-content/70">MD Size</label>
-              <.dm_checkbox id="md" name="md" label="MD checkbox" size="md" />
-            </div>
-            <div>
-              <label class="text-xs text-base-content/70">LG Size</label>
-              <.dm_checkbox id="lg" name="lg" label="LG checkbox" size="lg" />
-            </div>
-          </div>
-          """
+        description: "Size variants",
+        variations: [
+          %Variation{
+            id: :xs,
+            attributes: %{id: "xs", name: "xs", label: "XS checkbox", size: "xs"}
+          },
+          %Variation{
+            id: :sm,
+            attributes: %{id: "sm", name: "sm", label: "SM checkbox", size: "sm"}
+          },
+          %Variation{
+            id: :md,
+            attributes: %{id: "md", name: "md", label: "MD checkbox", size: "md"}
+          },
+          %Variation{
+            id: :lg,
+            attributes: %{id: "lg", name: "lg", label: "LG checkbox", size: "lg"}
+          }
         ]
       },
-      %Variation{
+      %VariationGroup{
         id: :colors,
-        attributes: %{},
-        slots: [
-          """
-          <div class="space-y-4">
-            <.dm_checkbox id="primary" name="primary" label="Primary option" color="primary" />
-            <.dm_checkbox id="secondary" name="secondary" label="Secondary option" color="secondary" />
-            <.dm_checkbox id="accent" name="accent" label="Accent option" color="accent" />
-            <.dm_checkbox id="success" name="success" label="Success option" color="success" />
-            <.dm_checkbox id="warning" name="warning" label="Warning option" color="warning" />
-            <.dm_checkbox id="error" name="error" label="Error option" color="error" />
-          </div>
-          """
+        description: "Color variants",
+        variations: [
+          %Variation{
+            id: :primary,
+            attributes: %{id: "primary", name: "primary", label: "Primary option", color: "primary"}
+          },
+          %Variation{
+            id: :secondary,
+            attributes: %{
+              id: "secondary",
+              name: "secondary",
+              label: "Secondary option",
+              color: "secondary"
+            }
+          },
+          %Variation{
+            id: :accent,
+            attributes: %{id: "accent", name: "accent", label: "Accent option", color: "accent"}
+          },
+          %Variation{
+            id: :success,
+            attributes: %{
+              id: "success",
+              name: "success",
+              label: "Success option",
+              color: "success"
+            }
+          },
+          %Variation{
+            id: :warning,
+            attributes: %{
+              id: "warning",
+              name: "warning",
+              label: "Warning option",
+              color: "warning"
+            }
+          },
+          %Variation{
+            id: :error,
+            attributes: %{id: "error", name: "error", label: "Error option", color: "error"}
+          }
         ]
       },
       %Variation{

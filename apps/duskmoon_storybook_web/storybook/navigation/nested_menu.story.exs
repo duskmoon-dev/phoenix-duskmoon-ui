@@ -4,6 +4,10 @@ defmodule Storybook.Navigation.NestedMenu do
   def function, do: &PhoenixDuskmoon.Component.Navigation.NestedMenu.dm_nested_menu/1
   def description, do: "Vertical navigation menu with collapsible sub-menus."
 
+  def imports do
+    [{PhoenixDuskmoon.Component.Navigation.NestedMenu, [dm_nested_menu_item: 1]}]
+  end
+
   def variations do
     [
       %Variation{

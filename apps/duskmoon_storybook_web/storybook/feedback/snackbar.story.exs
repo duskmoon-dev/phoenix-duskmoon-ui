@@ -33,24 +33,50 @@ defmodule Storybook.Feedback.Snackbar do
           """
         ]
       },
-      %Variation{
+      %VariationGroup{
         id: :types,
-        attributes: %{},
-        slots: [
-          """
-          <div class="space-y-4">
-            <.dm_snackbar id="s-info" type="info" open={true}>
+        description: "Snackbar type variants",
+        variations: [
+          %Variation{
+            id: :info,
+            attributes: %{
+              id: "s-info",
+              type: "info",
+              open: true
+            },
+            slots: [
+              """
               <:message>Info snackbar</:message>
-            </.dm_snackbar>
-            <.dm_snackbar id="s-success" type="success" open={true}>
+              """
+            ]
+          },
+          %Variation{
+            id: :success,
+            attributes: %{
+              id: "s-success",
+              type: "success",
+              open: true
+            },
+            slots: [
+              """
               <:message>Success snackbar</:message>
-            </.dm_snackbar>
-            <.dm_snackbar id="s-error" type="error" open={true}>
+              """
+            ]
+          },
+          %Variation{
+            id: :error,
+            attributes: %{
+              id: "s-error",
+              type: "error",
+              open: true
+            },
+            slots: [
+              """
               <:message>Error snackbar</:message>
               <:action>Retry</:action>
-            </.dm_snackbar>
-          </div>
-          """
+              """
+            ]
+          }
         ]
       }
     ]

@@ -32,30 +32,50 @@ defmodule Storybook.Action.Toggle do
           """
         ]
       },
-      %Variation{
+      %VariationGroup{
         id: :variants,
-        attributes: %{},
-        slots: [
-          """
-          <div class="space-y-4">
-            <.dm_toggle_group id="seg" variant="segmented">
+        description: "Style variants",
+        variations: [
+          %Variation{
+            id: :segmented,
+            attributes: %{id: "seg", variant: "segmented"},
+            slots: [
+              """
               <:item active={true}>Segmented</:item>
               <:item>Style</:item>
-            </.dm_toggle_group>
-            <.dm_toggle_group id="out" variant="outlined">
+              """
+            ]
+          },
+          %Variation{
+            id: :outlined,
+            attributes: %{id: "out", variant: "outlined"},
+            slots: [
+              """
               <:item active={true}>Outlined</:item>
               <:item>Style</:item>
-            </.dm_toggle_group>
-            <.dm_toggle_group id="fill" variant="filled">
+              """
+            ]
+          },
+          %Variation{
+            id: :filled,
+            attributes: %{id: "fill", variant: "filled"},
+            slots: [
+              """
               <:item active={true}>Filled</:item>
               <:item>Style</:item>
-            </.dm_toggle_group>
-            <.dm_toggle_group id="chip" variant="chip">
+              """
+            ]
+          },
+          %Variation{
+            id: :chip,
+            attributes: %{id: "chip", variant: "chip"},
+            slots: [
+              """
               <:item active={true}>Chip</:item>
               <:item>Style</:item>
-            </.dm_toggle_group>
-          </div>
-          """
+              """
+            ]
+          }
         ]
       }
     ]

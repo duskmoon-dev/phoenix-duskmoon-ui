@@ -36,14 +36,15 @@ defmodule Storybook.DataDisplay.Timeline do
       },
       %Variation{
         id: :colored,
-        attributes: %{},
+        description: "Colored timeline items",
+        attributes: %{
+          id: "tl-color"
+        },
         slots: [
           """
-          <.dm_timeline id="tl-color">
-            <:item title="Success" color="success" completed={true}>Completed</:item>
-            <:item title="Warning" color="warning" active={true}>In progress</:item>
-            <:item title="Error" color="error">Failed</:item>
-          </.dm_timeline>
+          <:item title="Success" color="success" completed={true}>Completed</:item>
+          <:item title="Warning" color="warning" active={true}>In progress</:item>
+          <:item title="Error" color="error">Failed</:item>
           """
         ]
       }
