@@ -255,4 +255,63 @@ defmodule Storybook.DataDisplay.Badge do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :variant,
+        label: "Variant",
+        type: :select,
+        options: [
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"tertiary", "Tertiary"},
+          {"accent", "Accent"},
+          {"info", "Info"},
+          {"success", "Success"},
+          {"warning", "Warning"},
+          {"error", "Error"},
+          {"ghost", "Ghost"},
+          {"neutral", "Neutral"}
+        ],
+        default: "primary"
+      },
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {"xs", "XS"},
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"}
+        ],
+        default: "md"
+      },
+      %{
+        id: :outline,
+        label: "Outline",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :soft,
+        label: "Soft",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :pill,
+        label: "Pill",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :dot,
+        label: "Dot",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

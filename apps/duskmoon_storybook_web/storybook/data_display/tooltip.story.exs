@@ -185,4 +185,43 @@ defmodule Storybook.DataDisplay.Tooltip do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :position,
+        label: "Position",
+        type: :select,
+        options: [
+          {"top", "Top"},
+          {"bottom", "Bottom"},
+          {"left", "Left"},
+          {"right", "Right"}
+        ],
+        default: "top"
+      },
+      %{
+        id: :color,
+        label: "Color",
+        type: :select,
+        options: [
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"tertiary", "Tertiary"},
+          {"accent", "Accent"},
+          {"info", "Info"},
+          {"success", "Success"},
+          {"warning", "Warning"},
+          {"error", "Error"}
+        ],
+        default: "primary"
+      },
+      %{
+        id: :open,
+        label: "Always Open",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

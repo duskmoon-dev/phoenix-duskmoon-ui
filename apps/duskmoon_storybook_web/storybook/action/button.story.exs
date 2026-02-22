@@ -255,4 +255,64 @@ defmodule Storybook.Action.Button do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :variant,
+        label: "Variant",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"accent", "Accent"},
+          {"info", "Info"},
+          {"success", "Success"},
+          {"warning", "Warning"},
+          {"error", "Error"},
+          {"ghost", "Ghost"},
+          {"link", "Link"},
+          {"outline", "Outline"}
+        ],
+        default: nil
+      },
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"xs", "XS"},
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"}
+        ],
+        default: nil
+      },
+      %{
+        id: :shape,
+        label: "Shape",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"square", "Square"},
+          {"circle", "Circle"}
+        ],
+        default: nil
+      },
+      %{
+        id: :loading,
+        label: "Loading",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :disabled,
+        label: "Disabled",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

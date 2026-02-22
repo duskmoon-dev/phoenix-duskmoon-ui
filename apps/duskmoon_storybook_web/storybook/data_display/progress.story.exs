@@ -215,4 +215,72 @@ defmodule Storybook.DataDisplay.Progress do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :type,
+        label: "Type",
+        type: :select,
+        options: [
+          {"linear", "Linear"},
+          {"circular", "Circular"}
+        ],
+        default: "linear"
+      },
+      %{
+        id: :color,
+        label: "Color",
+        type: :select,
+        options: [
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"tertiary", "Tertiary"},
+          {"accent", "Accent"},
+          {"info", "Info"},
+          {"success", "Success"},
+          {"warning", "Warning"},
+          {"error", "Error"}
+        ],
+        default: "primary"
+      },
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {"xs", "XS"},
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"},
+          {"xl", "XL"}
+        ],
+        default: "md"
+      },
+      %{
+        id: :striped,
+        label: "Striped",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :animated,
+        label: "Animated",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :indeterminate,
+        label: "Indeterminate",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :show_label,
+        label: "Show Label",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

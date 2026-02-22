@@ -103,4 +103,65 @@ defmodule Storybook.DataDisplay.Chip do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :variant,
+        label: "Variant",
+        type: :select,
+        options: [
+          {"filled", "Filled"},
+          {"outlined", "Outlined"},
+          {"soft", "Soft"}
+        ],
+        default: "filled"
+      },
+      %{
+        id: :color,
+        label: "Color",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"tertiary", "Tertiary"},
+          {"success", "Success"},
+          {"warning", "Warning"},
+          {"error", "Error"},
+          {"info", "Info"}
+        ],
+        default: nil
+      },
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"}
+        ],
+        default: "md"
+      },
+      %{
+        id: :deletable,
+        label: "Deletable",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :selected,
+        label: "Selected",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :disabled,
+        label: "Disabled",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end

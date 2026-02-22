@@ -120,4 +120,44 @@ defmodule Storybook.Navigation.Tab do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :variant,
+        label: "Variant",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"lifted", "Lifted"},
+          {"bordered", "Bordered"},
+          {"boxed", "Boxed"}
+        ],
+        default: nil
+      },
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"xs", "XS"},
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"}
+        ],
+        default: nil
+      },
+      %{
+        id: :orientation,
+        label: "Orientation",
+        type: :select,
+        options: [
+          {"horizontal", "Horizontal"},
+          {"vertical", "Vertical"}
+        ],
+        default: "horizontal"
+      }
+    ]
+  end
 end

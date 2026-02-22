@@ -117,4 +117,61 @@ defmodule Storybook.DataEntry.CompactInput do
       }
     ]
   end
+
+  def modifiers do
+    [
+      %{
+        id: :size,
+        label: "Size",
+        type: :select,
+        options: [
+          {"xs", "XS"},
+          {"sm", "SM"},
+          {"md", "MD"},
+          {"lg", "LG"}
+        ],
+        default: "md"
+      },
+      %{
+        id: :color,
+        label: "Color",
+        type: :select,
+        options: [
+          {"primary", "Primary"},
+          {"secondary", "Secondary"},
+          {"tertiary", "Tertiary"},
+          {"accent", "Accent"},
+          {"info", "Info"},
+          {"success", "Success"},
+          {"warning", "Warning"},
+          {"error", "Error"}
+        ],
+        default: "primary"
+      },
+      %{
+        id: :variant,
+        label: "Variant",
+        type: :select,
+        options: [
+          {nil, "Default"},
+          {"ghost", "Ghost"},
+          {"filled", "Filled"},
+          {"bordered", "Bordered"}
+        ],
+        default: nil
+      },
+      %{
+        id: :disabled,
+        label: "Disabled",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :horizontal,
+        label: "Horizontal",
+        type: :boolean,
+        default: false
+      }
+    ]
+  end
 end
