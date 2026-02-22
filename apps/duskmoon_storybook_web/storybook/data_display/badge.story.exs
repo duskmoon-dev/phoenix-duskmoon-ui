@@ -8,249 +8,80 @@ defmodule Storybook.DataDisplay.Badge do
     [
       %Variation{
         id: :default,
-        slots: [
-          "New"
+        description: "Default badge with no variant",
+        slots: ["New"]
+      },
+      %VariationGroup{
+        id: :colors,
+        description: "Color variants",
+        variations: [
+          %Variation{id: :success, attributes: %{variant: "success"}, slots: ["Active"]},
+          %Variation{id: :error, attributes: %{variant: "error"}, slots: ["Error"]},
+          %Variation{id: :warning, attributes: %{variant: "warning"}, slots: ["Warning"]},
+          %Variation{id: :info, attributes: %{variant: "info"}, slots: ["Info"]},
+          %Variation{id: :secondary, attributes: %{variant: "secondary"}, slots: ["Secondary"]},
+          %Variation{id: :accent, attributes: %{variant: "accent"}, slots: ["Accent"]}
         ]
       },
-      %Variation{
-        id: :color_variants,
-        attributes: %{
-          variant: "success"
-        },
-        slots: [
-          "Active"
+      %VariationGroup{
+        id: :sizes,
+        description: "Size variants",
+        variations: [
+          %Variation{id: :xs, attributes: %{size: "xs"}, slots: ["Tiny"]},
+          %Variation{id: :sm, attributes: %{size: "sm", variant: "success"}, slots: ["Small"]},
+          %Variation{id: :md, attributes: %{size: "md", variant: "primary"}, slots: ["Medium"]},
+          %Variation{id: :lg, attributes: %{size: "lg", variant: "error"}, slots: ["Large"]}
         ]
       },
-      %Variation{
-        id: :error_badge,
-        attributes: %{
-          variant: "error"
-        },
-        slots: [
-          "Error"
-        ]
-      },
-      %Variation{
-        id: :warning_badge,
-        attributes: %{
-          variant: "warning"
-        },
-        slots: [
-          "Warning"
-        ]
-      },
-      %Variation{
-        id: :info_badge,
-        attributes: %{
-          variant: "info"
-        },
-        slots: [
-          "Info"
-        ]
-      },
-      %Variation{
-        id: :secondary_badge,
-        attributes: %{
-          variant: "secondary"
-        },
-        slots: [
-          "Secondary"
-        ]
-      },
-      %Variation{
-        id: :accent_badge,
-        attributes: %{
-          variant: "accent"
-        },
-        slots: [
-          "Accent"
-        ]
-      },
-      %Variation{
-        id: :size_variants,
-        attributes: %{
-          size: "xs"
-        },
-        slots: [
-          "Tiny"
-        ]
-      },
-      %Variation{
-        id: :small_badge,
-        attributes: %{
-          size: "sm",
-          variant: "success"
-        },
-        slots: [
-          "Small"
-        ]
-      },
-      %Variation{
-        id: :large_badge,
-        attributes: %{
-          size: "lg",
-          variant: "error"
-        },
-        slots: [
-          "Large"
-        ]
-      },
-      %Variation{
-        id: :outline_style,
-        attributes: %{
-          variant: "primary",
-          outline: true
-        },
-        slots: [
-          "Outline"
-        ]
-      },
-      %Variation{
-        id: :outline_warning,
-        attributes: %{
-          variant: "warning",
-          outline: true
-        },
-        slots: [
-          "Warning"
+      %VariationGroup{
+        id: :outlines,
+        description: "Outline style — transparent fill with colored border",
+        variations: [
+          %Variation{id: :outline_primary, attributes: %{variant: "primary", outline: true}, slots: ["Primary"]},
+          %Variation{id: :outline_success, attributes: %{variant: "success", outline: true}, slots: ["Complete"]},
+          %Variation{id: :outline_warning, attributes: %{variant: "warning", outline: true}, slots: ["Warning"]}
         ]
       },
       %Variation{
         id: :ghost_style,
-        attributes: %{
-          variant: "ghost"
-        },
-        slots: [
-          "Ghost"
+        description: "Ghost variant with subtle styling",
+        attributes: %{variant: "ghost"},
+        slots: ["Ghost"]
+      },
+      %VariationGroup{
+        id: :soft_variants,
+        description: "Soft style — muted background with colored text",
+        variations: [
+          %Variation{id: :soft_primary, attributes: %{variant: "primary", soft: true}, slots: ["Soft"]},
+          %Variation{id: :soft_success, attributes: %{variant: "success", soft: true}, slots: ["Soft Success"]},
+          %Variation{id: :soft_error, attributes: %{variant: "error", soft: true}, slots: ["Soft Error"]}
         ]
       },
-      %Variation{
-        id: :soft_style,
-        attributes: %{
-          variant: "primary",
-          soft: true
-        },
-        slots: [
-          "Soft"
+      %VariationGroup{
+        id: :pills,
+        description: "Pill shape — fully rounded corners",
+        variations: [
+          %Variation{id: :pill_primary, attributes: %{variant: "primary", pill: true}, slots: ["Pill"]},
+          %Variation{id: :pill_success, attributes: %{variant: "success", pill: true}, slots: ["Done"]}
         ]
       },
-      %Variation{
-        id: :soft_success,
-        attributes: %{
-          variant: "success",
-          soft: true
-        },
-        slots: [
-          "Soft Success"
+      %VariationGroup{
+        id: :dots,
+        description: "Dot indicator — small circle without text",
+        variations: [
+          %Variation{id: :dot_error, attributes: %{variant: "error", dot: true}, slots: [""]},
+          %Variation{id: :dot_success, attributes: %{variant: "success", dot: true}, slots: [""]},
+          %Variation{id: :dot_warning, attributes: %{variant: "warning", dot: true}, slots: [""]}
         ]
       },
-      %Variation{
-        id: :soft_error,
-        attributes: %{
-          variant: "error",
-          soft: true
-        },
-        slots: [
-          "Soft Error"
-        ]
-      },
-      %Variation{
-        id: :outline_success,
-        attributes: %{
-          variant: "success",
-          outline: true
-        },
-        slots: [
-          "Complete"
-        ]
-      },
-      %Variation{
-        id: :status_indicators,
-        attributes: %{
-          variant: "success",
-          size: "sm"
-        },
-        slots: [
-          "✓ Online"
-        ]
-      },
-      %Variation{
-        id: :status_offline,
-        attributes: %{
-          variant: "error",
-          size: "sm"
-        },
-        slots: [
-          "✗ Offline"
-        ]
-      },
-      %Variation{
-        id: :count_badge,
-        attributes: %{
-          variant: "accent"
-        },
-        slots: [
-          "42"
-        ]
-      },
-      %Variation{
-        id: :notification_badge,
-        attributes: %{
-          variant: "error",
-          size: "xs"
-        },
-        slots: [
-          "5"
-        ]
-      },
-      %Variation{
-        id: :pill_shape,
-        attributes: %{
-          variant: "primary",
-          pill: true
-        },
-        slots: [
-          "Pill"
-        ]
-      },
-      %Variation{
-        id: :pill_success,
-        attributes: %{
-          variant: "success",
-          pill: true
-        },
-        slots: [
-          "Done"
-        ]
-      },
-      %Variation{
-        id: :dot_indicator,
-        attributes: %{
-          variant: "error",
-          dot: true
-        },
-        slots: [
-          ""
-        ]
-      },
-      %Variation{
-        id: :dot_success,
-        attributes: %{
-          variant: "success",
-          dot: true
-        },
-        slots: [
-          ""
-        ]
-      },
-      %Variation{
-        id: :dot_warning,
-        attributes: %{
-          variant: "warning",
-          dot: true
-        },
-        slots: [
-          ""
+      %VariationGroup{
+        id: :use_cases,
+        description: "Real-world use cases",
+        variations: [
+          %Variation{id: :status_online, attributes: %{variant: "success", size: "sm"}, slots: ["✓ Online"]},
+          %Variation{id: :status_offline, attributes: %{variant: "error", size: "sm"}, slots: ["✗ Offline"]},
+          %Variation{id: :count, attributes: %{variant: "accent"}, slots: ["42"]},
+          %Variation{id: :notification, attributes: %{variant: "error", size: "xs"}, slots: ["5"]}
         ]
       }
     ]
