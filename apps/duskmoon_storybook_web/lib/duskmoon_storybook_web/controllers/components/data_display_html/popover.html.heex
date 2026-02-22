@@ -20,7 +20,7 @@
   ```elixir
   <.dm_popover>
     <:trigger>
-      <button type="button" class="btn btn-primary">Click me</button>
+      <.dm_btn variant="primary">Click me</.dm_btn>
     </:trigger>
     <p>Popover content here.</p>
   </.dm_popover>
@@ -32,7 +32,7 @@
   <div class="flex gap-4 mb-4">
     <.dm_popover>
       <:trigger>
-        <button type="button" class="btn btn-primary">Click me</button>
+        <.dm_btn variant="primary">Click me</.dm_btn>
       </:trigger>
       <p class="p-3">This popover opens on click.</p>
     </.dm_popover>
@@ -42,7 +42,7 @@
   <div class="flex gap-4 mb-4">
     <.dm_popover trigger_mode="hover">
       <:trigger>
-        <button type="button" class="btn btn-secondary">Hover me</button>
+        <.dm_btn variant="secondary">Hover me</.dm_btn>
       </:trigger>
       <p class="p-3">This popover opens on hover.</p>
     </.dm_popover>
@@ -62,28 +62,28 @@
   <div class="flex flex-wrap gap-4 mb-4">
     <.dm_popover placement="top">
       <:trigger>
-        <button type="button" class="btn btn-outline">Top</button>
+        <.dm_btn variant="outline">Top</.dm_btn>
       </:trigger>
       <p class="p-3">Placed on top</p>
     </.dm_popover>
 
     <.dm_popover placement="bottom">
       <:trigger>
-        <button type="button" class="btn btn-outline">Bottom</button>
+        <.dm_btn variant="outline">Bottom</.dm_btn>
       </:trigger>
       <p class="p-3">Placed on bottom</p>
     </.dm_popover>
 
     <.dm_popover placement="left">
       <:trigger>
-        <button type="button" class="btn btn-outline">Left</button>
+        <.dm_btn variant="outline">Left</.dm_btn>
       </:trigger>
       <p class="p-3">Placed on left</p>
     </.dm_popover>
 
     <.dm_popover placement="right">
       <:trigger>
-        <button type="button" class="btn btn-outline">Right</button>
+        <.dm_btn variant="outline">Right</.dm_btn>
       </:trigger>
       <p class="p-3">Placed on right</p>
     </.dm_popover>
@@ -93,14 +93,14 @@
   <div class="flex gap-4 mb-4">
     <.dm_popover offset={0}>
       <:trigger>
-        <button type="button" class="btn btn-info">Offset 0</button>
+        <.dm_btn variant="info">Offset 0</.dm_btn>
       </:trigger>
       <p class="p-3">No gap between trigger and popover.</p>
     </.dm_popover>
 
     <.dm_popover offset={20}>
       <:trigger>
-        <button type="button" class="btn btn-info">Offset 20</button>
+        <.dm_btn variant="info">Offset 20</.dm_btn>
       </:trigger>
       <p class="p-3">20px gap between trigger and popover.</p>
     </.dm_popover>
@@ -110,7 +110,7 @@
   <div class="flex gap-4 mb-4">
     <.dm_popover arrow={false}>
       <:trigger>
-        <button type="button" class="btn btn-warning">No Arrow</button>
+        <.dm_btn variant="warning">No Arrow</.dm_btn>
       </:trigger>
       <p class="p-3">This popover has no arrow indicator.</p>
     </.dm_popover>
@@ -120,7 +120,7 @@
   <div class="flex gap-4 mb-4">
     <.dm_popover open placement="right">
       <:trigger>
-        <button type="button" class="btn btn-info">Already Open</button>
+        <.dm_btn variant="info">Already Open</.dm_btn>
       </:trigger>
       <p class="p-3">This popover starts open.</p>
     </.dm_popover>
