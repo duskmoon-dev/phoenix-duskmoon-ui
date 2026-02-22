@@ -415,3 +415,60 @@ See `.loki/logs/screenshots/` and `.loki/audit/screenshots/` for baseline screen
 - **Total tests**: 3174 (3171 + 3), 0 failures
 - **Compilation warnings**: 0
 - **Formatting**: Clean
+
+### Phase 6 Regression (Iteration 5, continued — 2026-02-22)
+
+#### 6a. Demo Routes — 39/39 Pass
+All demo routes at `/components/{category}/{component}` return HTTP 200.
+Custom elements render with Shadow DOM on all pages tested:
+- Button: 21 el-dm-button (all Shadow DOM)
+- Card: 9 el-dm-card (all Shadow DOM)
+- Form: 16 alerts/cards/buttons (all Shadow DOM)
+- Badge: 23 el-dm-badge (all Shadow DOM)
+- Dialog: 5 el-dm-dialog + 11 el-dm-button (all Shadow DOM)
+- Markdown: el-dm-markdown (Shadow DOM)
+- Tab: 4 el-dm-tab (Shadow DOM)
+- Pagination: el-dm-pagination (Shadow DOM)
+
+#### 6b. Storybook Routes — 80/80 Pass (after fixes)
+20 stories were returning 500 errors. Root causes and fixes:
+
+| Category | Count | Root Cause | Fix Applied |
+|----------|-------|-----------|-------------|
+| Cross-module imports | 8 | Slot templates called dm_btn/dm_mdi/dm_bsi/dm_menu_item/dm_nested_menu_item without imports/0 | Added `def imports` callbacks |
+| Wrong slot names | 2 | menu used `:item` slot (doesn't exist), popover used `:content` (doesn't exist) | Rewrote to match component slot API |
+| Self-referencing imports | 11 | Stories imported their own function, conflicting with PhoenixStorybook auto-bind | Converted to `%VariationGroup{}` structs |
+| Missing attr default | 2 | select.ex and textarea.ex: `attr(:value, :any)` without `default: nil` | Added default, changed `assign_new` to `assign` in FormField clause |
+
+#### 6c. Console Errors
+Only known upstream error on all pages:
+```
+Uncaught TypeError: Cannot read properties of undefined (reading 'CustomEvent')
+```
+D3/mermaid library — non-fatal, no functional impact.
+**Zero CSS errors. Zero component JS errors.**
+
+#### 6d. Theme Toggle Stress Test
+Tested on button and card pages:
+- Sunshine → Moonlight → Auto → Sunshine: all transitions immediate
+- `data-theme` attribute and `localStorage` update correctly
+- Auto mode removes `data-theme` attribute (correct)
+- All custom elements retain Shadow DOM through rapid theme switching
+- Theme persists across page navigation (localStorage)
+
+#### 6e. Custom Element Registration
+19 elements registered at startup:
+el-dm-button, el-dm-card, el-dm-badge, el-dm-chip, el-dm-alert,
+el-dm-dialog, el-dm-drawer, el-dm-dropdown, el-dm-input, el-dm-loading,
+el-dm-markdown, el-dm-menu, el-dm-pagination, el-dm-popover,
+el-dm-progress, el-dm-rating, el-dm-select, el-dm-tab, el-dm-tooltip
+
+#### 6f. Automated Tests
+```
+mix compile --warnings-as-errors  → 0 warnings
+mix format --check-formatted      → clean
+mix test                          → 3171 tests, 0 failures
+```
+
+#### 6g. Phase 6 Commit
+- `7b9741a6` — fix: resolve 20 storybook story 500 errors and add value defaults to select/textarea
