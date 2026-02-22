@@ -8,6 +8,7 @@ defmodule Storybook.Navigation.Steps do
     [
       %Variation{
         id: :default,
+        description: "Basic horizontal steps",
         attributes: %{
           current: 1,
           steps: [
@@ -20,6 +21,7 @@ defmodule Storybook.Navigation.Steps do
       },
       %Variation{
         id: :with_descriptions,
+        description: "Steps with sub-labels for extra context",
         attributes: %{
           current: 2,
           steps: [
@@ -32,6 +34,7 @@ defmodule Storybook.Navigation.Steps do
       },
       %Variation{
         id: :vertical,
+        description: "Vertical orientation",
         attributes: %{
           current: 1,
           orientation: "vertical",
@@ -43,98 +46,8 @@ defmodule Storybook.Navigation.Steps do
         }
       },
       %Variation{
-        id: :primary_color,
-        description: "Primary color (default)",
-        attributes: %{
-          current: 1,
-          color: "primary",
-          steps: [
-            %{label: "Plan"},
-            %{label: "Build"},
-            %{label: "Deploy"}
-          ]
-        }
-      },
-      %Variation{
-        id: :secondary_color,
-        description: "Secondary color",
-        attributes: %{
-          current: 1,
-          color: "secondary",
-          steps: [
-            %{label: "Draft"},
-            %{label: "Review"},
-            %{label: "Publish"}
-          ]
-        }
-      },
-      %Variation{
-        id: :tertiary_color,
-        description: "Tertiary color",
-        attributes: %{
-          current: 2,
-          color: "tertiary",
-          steps: [
-            %{label: "Input"},
-            %{label: "Process"},
-            %{label: "Output"}
-          ]
-        }
-      },
-      %Variation{
-        id: :success_color,
-        attributes: %{
-          current: 2,
-          color: "success",
-          steps: [
-            %{label: "Order Placed"},
-            %{label: "Processing"},
-            %{label: "Shipped"},
-            %{label: "Delivered"}
-          ]
-        }
-      },
-      %Variation{
-        id: :warning_color,
-        description: "Warning color",
-        attributes: %{
-          current: 1,
-          color: "warning",
-          steps: [
-            %{label: "Check"},
-            %{label: "Review"},
-            %{label: "Approve"}
-          ]
-        }
-      },
-      %Variation{
-        id: :error_color,
-        description: "Error color",
-        attributes: %{
-          current: 0,
-          color: "error",
-          steps: [
-            %{label: "Detect"},
-            %{label: "Diagnose"},
-            %{label: "Fix"}
-          ]
-        }
-      },
-      %Variation{
-        id: :info_color,
-        description: "Info color",
-        attributes: %{
-          current: 2,
-          color: "info",
-          steps: [
-            %{label: "Welcome"},
-            %{label: "Tutorial"},
-            %{label: "Complete"}
-          ]
-        }
-      },
-      %Variation{
         id: :clickable,
+        description: "Clickable steps for navigation",
         attributes: %{
           current: 0,
           clickable: true,
@@ -146,18 +59,24 @@ defmodule Storybook.Navigation.Steps do
           ]
         }
       },
-      %Variation{
-        id: :accent_color,
-        description: "Accent color",
-        attributes: %{
-          current: 1,
-          color: "accent",
-          steps: [
-            %{label: "Init"},
-            %{label: "Build"},
-            %{label: "Ship"}
-          ]
-        }
+      %VariationGroup{
+        id: :colors,
+        description: "Color variants",
+        variations:
+          for color <- ~w(primary secondary tertiary accent info success warning error) do
+            %Variation{
+              id: String.to_atom(color),
+              attributes: %{
+                current: 1,
+                color: color,
+                steps: [
+                  %{label: "Plan"},
+                  %{label: "Build"},
+                  %{label: "Deploy"}
+                ]
+              }
+            }
+          end
       }
     ]
   end

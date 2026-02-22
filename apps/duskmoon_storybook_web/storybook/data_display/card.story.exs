@@ -11,119 +11,11 @@ defmodule Storybook.DataDisplay.Card do
         description: "Default card with title and body text",
         slots: [
           """
-          <:title>
-          Star Wars
-          </:title>
+          <:title>Star Wars</:title>
           Star Wars is an American epic space opera multimedia
           franchise created by George Lucas,
           which began with the eponymous 1977 film and
           quickly became a worldwide pop-culture phenomenon.
-          """
-        ]
-      },
-      %Variation{
-        id: :compact_variant,
-        description: "Compact layout — reduced padding",
-        attributes: %{
-          variant: "compact"
-        },
-        slots: [
-          """
-          <:title>Compact Card</:title>
-          Compact layout with reduced internal spacing.
-          """
-        ]
-      },
-      %Variation{
-        id: :side_variant,
-        description: "Side layout — image and content side by side",
-        attributes: %{
-          variant: "side",
-          image: "https://picsum.photos/seed/side/120/120",
-          image_alt: "Side image"
-        },
-        slots: [
-          """
-          <:title>Side Card</:title>
-          Content laid out beside the image.
-          """
-        ]
-      },
-      %Variation{
-        id: :bordered_variant,
-        description: "Bordered style",
-        attributes: %{
-          variant: "bordered"
-        },
-        slots: [
-          """
-          <:title>Bordered Card</:title>
-          Card with a visible border outline.
-          """
-        ]
-      },
-      %Variation{
-        id: :glass_variant,
-        description: "Glass morphism effect",
-        attributes: %{
-          variant: "glass"
-        },
-        slots: [
-          """
-          <:title>Glass Card</:title>
-          Translucent glass morphism style.
-          """
-        ]
-      },
-      %Variation{
-        id: :shadow_sm,
-        description: "Small shadow elevation",
-        attributes: %{
-          shadow: "sm"
-        },
-        slots: [
-          """
-          <:title>Small Shadow</:title>
-          Card with a small shadow.
-          """
-        ]
-      },
-      %Variation{
-        id: :shadow_xl,
-        description: "Extra-large shadow elevation",
-        attributes: %{
-          shadow: "xl"
-        },
-        slots: [
-          """
-          <:title>XL Shadow</:title>
-          Card with an extra-large shadow.
-          """
-        ]
-      },
-      %Variation{
-        id: :padding_none,
-        description: "No internal padding — full-bleed content",
-        attributes: %{
-          padding: "none"
-        },
-        slots: [
-          """
-          <:title>No Padding</:title>
-          Card with no internal padding.
-          """
-        ]
-      },
-      %Variation{
-        id: :padding_lg,
-        description: "Large internal padding",
-        attributes: %{
-          padding: "lg"
-        },
-        slots: [
-          """
-          <:title>Large Padding</:title>
-          Card with generous internal padding.
           """
         ]
       },
@@ -145,6 +37,60 @@ defmodule Storybook.DataDisplay.Card do
           </:action>
           """
         ]
+      },
+      %VariationGroup{
+        id: :variants,
+        description: "Layout and style variants",
+        variations: [
+          %Variation{
+            id: :compact,
+            attributes: %{variant: "compact"},
+            slots: ["<:title>Compact</:title>Reduced internal spacing."]
+          },
+          %Variation{
+            id: :side,
+            attributes: %{
+              variant: "side",
+              image: "https://picsum.photos/seed/side/120/120",
+              image_alt: "Side image"
+            },
+            slots: ["<:title>Side</:title>Content beside the image."]
+          },
+          %Variation{
+            id: :bordered,
+            attributes: %{variant: "bordered"},
+            slots: ["<:title>Bordered</:title>Visible border outline."]
+          },
+          %Variation{
+            id: :glass,
+            attributes: %{variant: "glass"},
+            slots: ["<:title>Glass</:title>Translucent glass morphism."]
+          }
+        ]
+      },
+      %VariationGroup{
+        id: :shadows,
+        description: "Shadow elevation levels",
+        variations:
+          for shadow <- ~w(sm md lg xl) do
+            %Variation{
+              id: String.to_atom("shadow_#{shadow}"),
+              attributes: %{shadow: shadow},
+              slots: ["<:title>#{String.upcase(shadow)} Shadow</:title>Shadow elevation demo."]
+            }
+          end
+      },
+      %VariationGroup{
+        id: :paddings,
+        description: "Internal padding options",
+        variations:
+          for {padding, label} <- [{"none", "None"}, {"sm", "SM"}, {"md", "MD"}, {"lg", "LG"}] do
+            %Variation{
+              id: String.to_atom("padding_#{padding}"),
+              attributes: %{padding: padding},
+              slots: ["<:title>#{label} Padding</:title>Padding level demo."]
+            }
+          end
       }
     ]
   end

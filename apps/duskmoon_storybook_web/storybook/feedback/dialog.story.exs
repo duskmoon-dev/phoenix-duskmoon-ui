@@ -30,22 +30,6 @@ defmodule Storybook.Feedback.Dialog do
         ]
       },
       %Variation{
-        id: :small,
-        description: "Small sized modal",
-        attributes: %{
-          id: "dialog-small",
-          size: "sm"
-        },
-        slots: [
-          """
-          <:title>Small Dialog</:title>
-          <:body>
-            <p>This is a small modal.</p>
-          </:body>
-          """
-        ]
-      },
-      %Variation{
         id: :no_backdrop,
         description: "Modal without backdrop overlay",
         attributes: %{
@@ -55,99 +39,7 @@ defmodule Storybook.Feedback.Dialog do
         slots: [
           """
           <:title>No Backdrop</:title>
-          <:body>
-            <p>This modal has no backdrop overlay.</p>
-          </:body>
-          """
-        ]
-      },
-      %Variation{
-        id: :size_xs,
-        description: "Extra small modal",
-        attributes: %{
-          id: "dialog-xs",
-          size: "xs"
-        },
-        slots: [
-          """
-          <:title>XS Dialog</:title>
-          <:body><p>Extra small modal.</p></:body>
-          """
-        ]
-      },
-      %Variation{
-        id: :size_lg,
-        description: "Large modal",
-        attributes: %{
-          id: "dialog-lg",
-          size: "lg"
-        },
-        slots: [
-          """
-          <:title>Large Dialog</:title>
-          <:body>
-            <p>This large modal provides more space for complex content.</p>
-          </:body>
-          <:footer>
-            <.dm_btn variant="ghost">Cancel</.dm_btn>
-            <.dm_btn variant="primary">Save</.dm_btn>
-          </:footer>
-          """
-        ]
-      },
-      %Variation{
-        id: :size_xl,
-        description: "Extra large modal",
-        attributes: %{
-          id: "dialog-xl",
-          size: "xl"
-        },
-        slots: [
-          """
-          <:title>XL Dialog</:title>
-          <:body><p>Extra large modal for wide content.</p></:body>
-          """
-        ]
-      },
-      %Variation{
-        id: :position_top,
-        description: "Top-positioned modal",
-        attributes: %{
-          id: "dialog-top",
-          position: "top"
-        },
-        slots: [
-          """
-          <:title>Top Position</:title>
-          <:body><p>Modal anchored to the top of the viewport.</p></:body>
-          """
-        ]
-      },
-      %Variation{
-        id: :position_middle,
-        description: "Middle-positioned modal (explicit)",
-        attributes: %{
-          id: "dialog-middle",
-          position: "middle"
-        },
-        slots: [
-          """
-          <:title>Middle Position</:title>
-          <:body><p>Modal centered vertically in the viewport.</p></:body>
-          """
-        ]
-      },
-      %Variation{
-        id: :position_bottom,
-        description: "Bottom-positioned modal",
-        attributes: %{
-          id: "dialog-bottom",
-          position: "bottom"
-        },
-        slots: [
-          """
-          <:title>Bottom Position</:title>
-          <:body><p>Modal anchored to the bottom of the viewport.</p></:body>
+          <:body><p>This modal has no backdrop overlay.</p></:body>
           """
         ]
       },
@@ -198,6 +90,40 @@ defmodule Storybook.Feedback.Dialog do
           </:footer>
           """
         ]
+      },
+      %VariationGroup{
+        id: :sizes,
+        description: "Size variants",
+        variations:
+          for {size, label} <- [{"xs", "XS"}, {"sm", "SM"}, {"lg", "LG"}, {"xl", "XL"}] do
+            %Variation{
+              id: String.to_atom("size_#{size}"),
+              attributes: %{id: "dialog-#{size}", size: size},
+              slots: [
+                """
+                <:title>#{label} Dialog</:title>
+                <:body><p>#{label} sized modal.</p></:body>
+                """
+              ]
+            }
+          end
+      },
+      %VariationGroup{
+        id: :positions,
+        description: "Position variants",
+        variations:
+          for position <- ~w(top middle bottom) do
+            %Variation{
+              id: String.to_atom(position),
+              attributes: %{id: "dialog-#{position}", position: position},
+              slots: [
+                """
+                <:title>#{String.capitalize(position)} Position</:title>
+                <:body><p>Modal anchored to the #{position} of the viewport.</p></:body>
+                """
+              ]
+            }
+          end
       }
     ]
   end
