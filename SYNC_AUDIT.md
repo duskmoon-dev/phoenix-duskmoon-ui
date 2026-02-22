@@ -924,3 +924,51 @@ Storybook stories                 → 84 (unchanged count, expanded variations +
 Stories with modifiers             → 59 / 84 (~70%)
 Demo routes                       → 42 (unchanged)
 ```
+
+---
+
+## Iteration 10 — Batch 3: Storybook Quality Pass
+
+### 13g. Fun Component & Form Modifiers (7 stories)
+
+| Story | Modifiers Added |
+|-------|----------------|
+| `fun/snow` | use_unicode |
+| `fun/eclipse` | size |
+| `fun/plasma_ball` | size, show_electrode |
+| `fun/button_noise` | color_scheme |
+| `fun/signature` | size |
+| `fun/spotlight_search` | loading |
+| `data_entry/form` | actions_align |
+
+**Total stories with modifiers**: 66 / 84 (~79%)
+
+### 13h. Code Quality Improvements
+
+1. **Fully-qualified path cleanup** — 3 stories (`pagination`, `breadcrumb`, `collapse_group`) replaced verbose module-qualified component paths with shorthand `<.dm_*>` calls + `def imports`
+
+2. **Missing variation descriptions** — Added descriptions to 35+ variations across 10 stories: accordion, divider, menu, drawer, snackbar, toggle, collapse, bottom_sheet, left_menu, bottom_nav
+
+3. **VariationGroup consolidation** — Restructured 8 stories from flat `%Variation{}` lists into labeled `%VariationGroup{}` clusters:
+
+| Story | Before (flat) | After (groups) | Net Lines |
+|-------|--------------|----------------|-----------|
+| `badge` | 26 flat, 0 groups | 2 standalone + 8 groups | -169 |
+| `chip` | 16 flat, 0 groups | 1 standalone + 4 groups | -30 |
+| `stat` | 14 flat, 0 groups | 3 standalone + 2 groups | -40 |
+| `progress` | 22 flat, 1 group | 2 standalone + 7 groups | -60 |
+| `avatar` | 21 flat, 0 groups | 1 standalone + 6 groups | -80 |
+| `divider` | 22 flat, 0 groups | 2 standalone + 6 groups | -59 |
+| `tooltip` | 13 flat, 0 groups | 3 standalone + 2 groups | -87 |
+| `stepper` | (descriptions only) | +4 descriptions | +4 |
+
+### 13i. Regression Results
+```
+mix compile --warnings-as-errors  → 0 warnings
+mix format --check-formatted      → clean
+mix test                          → 3207 tests, 0 failures (unchanged)
+Storybook stories                 → 84 (unchanged count)
+Stories with modifiers             → 66 / 84 (~79%)
+Net storybook lines removed        → ~525 lines
+Demo routes                       → 42 (unchanged)
+```
