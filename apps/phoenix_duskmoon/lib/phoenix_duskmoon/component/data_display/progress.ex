@@ -163,7 +163,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Progress do
         aria-label={if(!@show_label, do: @label_text)}
         {@rest}
       >
-        <svg viewBox="0 0 36 36">
+        <svg viewBox="0 0 36 36" aria-hidden="true">
           <circle class="progress-circular-track" cx="18" cy="18" r="16" />
           <circle
             class="progress-circular-bar"

@@ -26,7 +26,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@duskmoon-dev/core": ">=1.0.0",
+    "@duskmoon-dev/core": ">=1.11.0",
     "@duskmoon-dev/elements": ">=0.5.0"
   },
   "devDependencies": {
@@ -35,6 +35,5 @@
     "bootstrap-icons": "^1.11.3",
     "postcss": "^8.5.3"
   },
-  "peerDependencies": {
-  }
+  "peerDependencies": {}
 }

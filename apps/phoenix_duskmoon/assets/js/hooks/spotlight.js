@@ -14,6 +14,7 @@ export const Spotlight = {
     if ((evt.metaKey || evt.ctrlKey) && evt.code === 'KeyK') {
       evt.preventDefault();
       this.el.showModal();
+      window.removeEventListener('keydown', this.handleEscape);
       window.addEventListener('keydown', this.handleEscape);
     }
   },

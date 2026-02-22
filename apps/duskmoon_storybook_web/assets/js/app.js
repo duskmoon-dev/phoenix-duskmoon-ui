@@ -1,4 +1,8 @@
 import "phoenix_html";
+import * as DuskmoonHooks from "phoenix_duskmoon/hooks";
+
+// Make Duskmoon hooks available in PhoenixStorybook LiveView iframes
+window.storybook = { Hooks: DuskmoonHooks };
 
 // Register custom elements individually
 import "@duskmoon-dev/el-accordion/register";
@@ -73,8 +77,7 @@ function fallbackCopyTextToClipboard(text) {
 
   try {
     var successful = document.execCommand('copy');
-    var msg = successful ? 'successful' : 'unsuccessful';
-    console.log('Fallback: Copying text command was ' + msg);
+    // fallback execCommand is deprecated but acceptable for old browsers
   } catch (err) {
     console.error('Fallback: Oops, unable to copy', err);
   }
