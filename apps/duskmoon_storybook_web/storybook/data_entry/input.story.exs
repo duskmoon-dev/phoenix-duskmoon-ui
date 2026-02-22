@@ -177,6 +177,153 @@ defmodule Storybook.DataEntry.Input do
           name: "attachment",
           value: nil
         }
+      },
+      %Variation{
+        id: :number,
+        attributes: %{type: "number", label: "Quantity", name: "quantity", value: nil}
+      },
+      %Variation{
+        id: :date,
+        attributes: %{type: "date", label: "Birth Date", name: "birth_date", value: nil}
+      },
+      %Variation{
+        id: :range,
+        attributes: %{type: "range", label: "Volume", name: "volume", value: nil}
+      },
+      %Variation{
+        id: :color_picker,
+        attributes: %{type: "color_picker", label: "Brand Color", name: "brand_color", value: nil}
+      },
+      %Variation{
+        id: :range_slider,
+        attributes: %{
+          type: "range_slider",
+          label: "Price Range",
+          name: "price_range",
+          value: nil,
+          min: 0,
+          max: 100
+        }
+      },
+      %Variation{
+        id: :rating,
+        attributes: %{type: "rating", label: "Rate this item", name: "rating", value: 3}
+      },
+      %Variation{
+        id: :tags,
+        attributes: %{type: "tags", label: "Add Tags", name: "tags", value: nil}
+      },
+      %Variation{
+        id: :password_strength,
+        attributes: %{type: "password_strength", label: "New Password", name: "new_password", value: nil}
+      },
+      %Variation{
+        id: :search_with_suggestions,
+        attributes: %{
+          type: "search_with_suggestions",
+          label: "Search Users",
+          name: "user_search",
+          value: nil,
+          suggestions: ["Alice", "Bob", "Carol", "Dave"]
+        }
+      },
+      %VariationGroup{
+        id: :colors,
+        description: "Color variants",
+        variations: [
+          %Variation{
+            id: :primary,
+            attributes: %{type: "text", label: "Primary", name: "c_primary", value: nil, color: "primary"}
+          },
+          %Variation{
+            id: :secondary,
+            attributes: %{type: "text", label: "Secondary", name: "c_secondary", value: nil, color: "secondary"}
+          },
+          %Variation{
+            id: :tertiary,
+            attributes: %{type: "text", label: "Tertiary", name: "c_tertiary", value: nil, color: "tertiary"}
+          },
+          %Variation{
+            id: :accent,
+            attributes: %{type: "text", label: "Accent", name: "c_accent", value: nil, color: "accent"}
+          },
+          %Variation{
+            id: :info,
+            attributes: %{type: "text", label: "Info", name: "c_info", value: nil, color: "info"}
+          },
+          %Variation{
+            id: :success,
+            attributes: %{type: "text", label: "Success", name: "c_success", value: nil, color: "success"}
+          },
+          %Variation{
+            id: :warning,
+            attributes: %{type: "text", label: "Warning", name: "c_warning", value: nil, color: "warning"}
+          },
+          %Variation{
+            id: :error,
+            attributes: %{type: "text", label: "Error", name: "c_error", value: nil, color: "error"}
+          }
+        ]
+      },
+      %VariationGroup{
+        id: :sizes,
+        description: "Size variants",
+        variations: [
+          %Variation{
+            id: :xs,
+            attributes: %{type: "text", label: "XS Input", name: "s_xs", value: nil, size: "xs"}
+          },
+          %Variation{
+            id: :sm,
+            attributes: %{type: "text", label: "SM Input", name: "s_sm", value: nil, size: "sm"}
+          },
+          %Variation{
+            id: :lg,
+            attributes: %{type: "text", label: "LG Input", name: "s_lg", value: nil, size: "lg"}
+          }
+        ]
+      },
+      %VariationGroup{
+        id: :states,
+        description: "Validation states",
+        variations: [
+          %Variation{
+            id: :success_state,
+            attributes: %{
+              type: "text",
+              label: "Valid Email",
+              name: "state_success",
+              value: nil,
+              state: "success"
+            }
+          },
+          %Variation{
+            id: :warning_state,
+            attributes: %{
+              type: "text",
+              label: "Weak Password",
+              name: "state_warning",
+              value: nil,
+              state: "warning"
+            }
+          }
+        ]
+      },
+      %Variation{
+        id: :horizontal,
+        description: "Horizontal layout — label beside input",
+        attributes: %{type: "text", label: "Username", name: "h_username", value: nil, horizontal: true}
+      },
+      %Variation{
+        id: :with_helper,
+        description: "Helper text below input",
+        attributes: %{
+          type: "email",
+          label: "Email Address",
+          name: "email_helper",
+          value: nil,
+          helper: "We'll never share your email with anyone."
+        }
       }
     ]
   end

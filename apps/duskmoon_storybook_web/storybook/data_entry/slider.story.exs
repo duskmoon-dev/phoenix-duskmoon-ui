@@ -114,6 +114,14 @@ defmodule Storybook.DataEntry.Slider do
               color: "error",
               value: "60"
             }
+          },
+          %Variation{
+            id: :tertiary,
+            attributes: %{id: "tertiary", name: "tertiary", label: "Tertiary", color: "tertiary", value: "60"}
+          },
+          %Variation{
+            id: :info,
+            attributes: %{id: "info", name: "info", label: "Info", color: "info", value: "60"}
           }
         ]
       },
@@ -139,6 +147,71 @@ defmodule Storybook.DataEntry.Slider do
           max: 100,
           value: 80,
           show_value: false
+        }
+      },
+      %Variation{
+        id: :disabled,
+        description: "Disabled slider",
+        attributes: %{
+          id: "slider-disabled",
+          name: "slider_disabled",
+          label: "Disabled Slider",
+          min: 0,
+          max: 100,
+          value: 50,
+          disabled: true
+        }
+      },
+      %VariationGroup{
+        id: :validation_states,
+        description: "Validation states",
+        variations: [
+          %Variation{
+            id: :success_state,
+            attributes: %{
+              id: "sl-vs-success",
+              name: "sl_vs_success",
+              label: "Valid Range",
+              state: "success",
+              value: 75
+            }
+          },
+          %Variation{
+            id: :warning_state,
+            attributes: %{
+              id: "sl-vs-warning",
+              name: "sl_vs_warning",
+              label: "Review Range",
+              state: "warning",
+              value: 25
+            }
+          }
+        ]
+      },
+      %Variation{
+        id: :with_helper,
+        description: "Helper text below slider",
+        attributes: %{
+          id: "slider-helper",
+          name: "slider_helper",
+          label: "Opacity",
+          helper: "Adjust the opacity level (0–100%)",
+          min: 0,
+          max: 100,
+          value: 80
+        }
+      },
+      %Variation{
+        id: :with_errors,
+        description: "Slider with error messages",
+        attributes: %{
+          id: "slider-errors",
+          name: "slider_errors",
+          label: "Priority",
+          errors: ["Value must be between 10 and 90."],
+          min: 0,
+          max: 100,
+          value: 50
         }
       }
     ]

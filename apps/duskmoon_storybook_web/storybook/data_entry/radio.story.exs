@@ -73,6 +73,10 @@ defmodule Storybook.DataEntry.Radio do
           %Variation{
             id: :lg,
             attributes: %{id: "lg", name: "lg", value: "lg", label: "LG option", size: "lg"}
+          },
+          %Variation{
+            id: :xl,
+            attributes: %{id: "xl", name: "xl", value: "xl", label: "XL option", size: "xl"}
           }
         ]
       },
@@ -139,6 +143,26 @@ defmodule Storybook.DataEntry.Radio do
               label: "Error option",
               color: "error"
             }
+          },
+          %Variation{
+            id: :tertiary,
+            attributes: %{
+              id: "tertiary",
+              name: "tertiary",
+              value: "tertiary",
+              label: "Tertiary option",
+              color: "tertiary"
+            }
+          },
+          %Variation{
+            id: :info,
+            attributes: %{
+              id: "info",
+              name: "info",
+              value: "info",
+              label: "Info option",
+              color: "info"
+            }
           }
         ]
       },
@@ -187,6 +211,66 @@ defmodule Storybook.DataEntry.Radio do
             }
           }
         ]
+      },
+      %VariationGroup{
+        id: :validation_states,
+        description: "Validation states",
+        variations: [
+          %Variation{
+            id: :success_state,
+            attributes: %{
+              id: "radio-vs-success",
+              name: "vs_success",
+              value: "yes",
+              label: "Confirmed (success)",
+              state: "success",
+              checked: true
+            }
+          },
+          %Variation{
+            id: :warning_state,
+            attributes: %{
+              id: "radio-vs-warning",
+              name: "vs_warning",
+              value: "maybe",
+              label: "Uncertain (warning)",
+              state: "warning"
+            }
+          }
+        ]
+      },
+      %Variation{
+        id: :horizontal,
+        description: "Horizontal layout — label beside radio",
+        attributes: %{
+          id: "radio-horizontal",
+          name: "h_option",
+          value: "h_value",
+          label: "Horizontal layout",
+          horizontal: true
+        }
+      },
+      %Variation{
+        id: :with_helper,
+        description: "Helper text below radio",
+        attributes: %{
+          id: "radio-helper",
+          name: "terms",
+          value: "agree",
+          label: "I agree to the terms",
+          helper: "You must agree to the terms of service to continue."
+        }
+      },
+      %Variation{
+        id: :with_errors,
+        description: "Radio with error messages",
+        attributes: %{
+          id: "radio-errors",
+          name: "required_choice",
+          value: "option_a",
+          label: "Option A",
+          errors: ["Please select an option to continue."]
+        }
       }
     ]
   end

@@ -154,6 +154,67 @@ defmodule Storybook.DataEntry.Textarea do
               rows: "2",
               placeholder: "Error textarea"
             }
+          },
+          %Variation{
+            id: :tertiary,
+            attributes: %{
+              id: "tertiary",
+              name: "tertiary",
+              label: "Tertiary",
+              color: "tertiary",
+              rows: "2",
+              placeholder: "Tertiary textarea"
+            }
+          },
+          %Variation{
+            id: :info,
+            attributes: %{
+              id: "info",
+              name: "info",
+              label: "Info",
+              color: "info",
+              rows: "2",
+              placeholder: "Info textarea"
+            }
+          }
+        ]
+      },
+      %VariationGroup{
+        id: :variants,
+        description: "Style variants",
+        variations: [
+          %Variation{
+            id: :ghost,
+            attributes: %{
+              id: "variant-ghost",
+              name: "variant_ghost",
+              label: "Ghost Variant",
+              variant: "ghost",
+              rows: "3",
+              placeholder: "Ghost style"
+            }
+          },
+          %Variation{
+            id: :filled,
+            attributes: %{
+              id: "variant-filled",
+              name: "variant_filled",
+              label: "Filled Variant",
+              variant: "filled",
+              rows: "3",
+              placeholder: "Filled style"
+            }
+          },
+          %Variation{
+            id: :bordered,
+            attributes: %{
+              id: "variant-bordered",
+              name: "variant_bordered",
+              label: "Bordered Variant",
+              variant: "bordered",
+              rows: "3",
+              placeholder: "Bordered style"
+            }
           }
         ]
       },
@@ -292,6 +353,70 @@ defmodule Storybook.DataEntry.Textarea do
             }
           }
         ]
+      },
+      %VariationGroup{
+        id: :validation_states,
+        description: "Validation states (success / warning)",
+        variations: [
+          %Variation{
+            id: :success_state,
+            attributes: %{
+              id: "ta-vs-success",
+              name: "ta_vs_success",
+              label: "Valid Content",
+              state: "success",
+              rows: "3",
+              placeholder: "Looks good!"
+            }
+          },
+          %Variation{
+            id: :warning_state,
+            attributes: %{
+              id: "ta-vs-warning",
+              name: "ta_vs_warning",
+              label: "Review Required",
+              state: "warning",
+              rows: "3",
+              placeholder: "Please review your input"
+            }
+          }
+        ]
+      },
+      %Variation{
+        id: :horizontal,
+        description: "Horizontal layout — label beside textarea",
+        attributes: %{
+          id: "ta-horizontal",
+          name: "ta_horizontal",
+          label: "Notes",
+          horizontal: true,
+          rows: "3",
+          placeholder: "Enter notes here"
+        }
+      },
+      %Variation{
+        id: :with_helper,
+        description: "Helper text below textarea",
+        attributes: %{
+          id: "ta-helper",
+          name: "ta_helper",
+          label: "Bio",
+          helper: "Tell us a bit about yourself (up to 200 characters).",
+          rows: "3",
+          placeholder: "Your bio..."
+        }
+      },
+      %Variation{
+        id: :with_errors,
+        description: "Textarea with error messages",
+        attributes: %{
+          id: "ta-errors",
+          name: "ta_errors",
+          label: "Description",
+          errors: ["This field is required.", "Must be at least 20 characters."],
+          rows: "3",
+          placeholder: "Enter a description"
+        }
       }
     ]
   end

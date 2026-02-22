@@ -151,6 +151,64 @@ defmodule Storybook.DataEntry.Select do
               options: [{"a", "Option A"}, {"b", "Option B"}],
               prompt: "Select error"
             }
+          },
+          %Variation{
+            id: :tertiary,
+            attributes: %{
+              id: "tertiary",
+              name: "tertiary",
+              label: "Tertiary",
+              color: "tertiary",
+              options: [{"a", "Option A"}, {"b", "Option B"}],
+              prompt: "Select tertiary"
+            }
+          },
+          %Variation{
+            id: :info,
+            attributes: %{
+              id: "info",
+              name: "info",
+              label: "Info",
+              color: "info",
+              options: [{"a", "Option A"}, {"b", "Option B"}],
+              prompt: "Select info"
+            }
+          }
+        ]
+      },
+      %VariationGroup{
+        id: :variants,
+        description: "Style variants",
+        variations: [
+          %Variation{
+            id: :ghost,
+            attributes: %{
+              id: "variant-ghost",
+              name: "variant_ghost",
+              label: "Ghost Select",
+              variant: "ghost",
+              options: [{"a", "Option A"}, {"b", "Option B"}]
+            }
+          },
+          %Variation{
+            id: :filled,
+            attributes: %{
+              id: "variant-filled",
+              name: "variant_filled",
+              label: "Filled Select",
+              variant: "filled",
+              options: [{"a", "Option A"}, {"b", "Option B"}]
+            }
+          },
+          %Variation{
+            id: :bordered,
+            attributes: %{
+              id: "variant-bordered",
+              name: "variant_bordered",
+              label: "Bordered Select",
+              variant: "bordered",
+              options: [{"a", "Option A"}, {"b", "Option B"}]
+            }
           }
         ]
       },
@@ -225,6 +283,68 @@ defmodule Storybook.DataEntry.Select do
             {"hst", "Hawaii Time"}
           ],
           prompt: "Select timezone"
+        }
+      },
+      %VariationGroup{
+        id: :validation_states,
+        description: "Validation states",
+        variations: [
+          %Variation{
+            id: :success_state,
+            attributes: %{
+              id: "sel-vs-success",
+              name: "sel_vs_success",
+              label: "Status (success)",
+              state: "success",
+              options: [{"active", "Active"}, {"inactive", "Inactive"}],
+              value: "active"
+            }
+          },
+          %Variation{
+            id: :warning_state,
+            attributes: %{
+              id: "sel-vs-warning",
+              name: "sel_vs_warning",
+              label: "Category (warning)",
+              state: "warning",
+              options: [{"a", "Option A"}, {"b", "Option B"}],
+              prompt: "Select a category"
+            }
+          }
+        ]
+      },
+      %Variation{
+        id: :horizontal,
+        description: "Horizontal layout — label beside select",
+        attributes: %{
+          id: "sel-horizontal",
+          name: "sel_horizontal",
+          label: "Role",
+          horizontal: true,
+          options: [{"admin", "Admin"}, {"editor", "Editor"}, {"viewer", "Viewer"}]
+        }
+      },
+      %Variation{
+        id: :with_helper,
+        description: "Helper text below select",
+        attributes: %{
+          id: "sel-helper",
+          name: "sel_helper",
+          label: "Plan",
+          helper: "You can change your plan at any time.",
+          options: [{"free", "Free"}, {"pro", "Pro"}, {"enterprise", "Enterprise"}]
+        }
+      },
+      %Variation{
+        id: :with_errors,
+        description: "Select with error messages",
+        attributes: %{
+          id: "sel-errors",
+          name: "sel_errors",
+          label: "Country",
+          errors: ["Please select a country."],
+          options: [{"us", "United States"}, {"ca", "Canada"}],
+          prompt: "Select country"
         }
       }
     ]
