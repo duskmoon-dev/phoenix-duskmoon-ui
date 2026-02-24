@@ -80,7 +80,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CollapseTest do
       result =
         render_component(&dm_collapse/1, %{trigger: basic_trigger(), content: basic_content()})
 
-      refute result =~ "collapse-open"
+      refute result =~ ~s(class="collapse collapse-open)
     end
 
     test "renders open state" do

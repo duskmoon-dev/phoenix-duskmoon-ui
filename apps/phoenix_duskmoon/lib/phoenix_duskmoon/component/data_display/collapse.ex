@@ -104,6 +104,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Collapse do
         aria-disabled={@disabled && "true"}
         aria-expanded={to_string(@open)}
         aria-controls={@id && "#{@id}-content"}
+        onclick="var p=this.parentElement;p.classList.toggle('collapse-open');this.setAttribute('aria-expanded',p.classList.contains('collapse-open'))"
       >
         {render_slot(@trigger)}
         <span class="collapse-icon" aria-hidden="true"></span>
