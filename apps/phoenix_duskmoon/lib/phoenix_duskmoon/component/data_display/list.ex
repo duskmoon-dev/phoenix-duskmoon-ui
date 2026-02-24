@@ -95,7 +95,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.List do
         <div class="list-item-content">
           <div :if={item[:title]} class="list-item-title">{item[:title]}</div>
           <div :if={item[:subtitle]} class="list-item-subtitle">{item[:subtitle]}</div>
-          {render_slot(item)}
+          {if item.inner_block, do: render_slot(item)}
         </div>
       </li>
     </ul>
