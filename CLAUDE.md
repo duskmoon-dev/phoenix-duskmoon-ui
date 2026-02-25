@@ -142,9 +142,7 @@ Each `el-*` element must be explicitly imported for its custom element tag to be
 
 ### Version Management
 
-**Automated Releases**: This project uses [semantic-release](https://github.com/semantic-release/semantic-release) for fully automated version management and package publishing.
-
-**Version Files**:
+**Version Files** (all three must stay in sync):
 - `apps/phoenix_duskmoon/mix.exs` - Source of truth (@version)
 - `apps/phoenix_duskmoon/package.json` - npm package version
 - `mix.exs` (umbrella root) - Tracks phoenix_duskmoon version
@@ -152,24 +150,17 @@ Each `el-*` element must be explicitly imported for its custom element tag to be
 **Commands**:
 - `mix version.sync` - Sync all version files (run after pulling main branch)
 
-**How it works**:
-1. Commits to `main` branch trigger CI workflow
-2. Semantic-release analyzes commits using conventional commits format
-3. Determines next version based on commit types (feat, fix, etc.)
-4. Automatically updates all three version files
-5. Publishes to Hex.pm and npm registry
-6. Commits version changes back with `[skip ci]` tag
-7. Creates GitHub release with changelog
-
-**Important Notes**:
-- **Never manually edit** version numbers - let semantic-release handle it
-- Use conventional commit format: `feat:`, `fix:`, `docs:`, etc.
-- `BREAKING CHANGE:` in commit body triggers major version bump
-- After pulling from main, run `mix version.sync` to sync local files
-- Configuration in `apps/phoenix_duskmoon/.releaserc.yaml`
-
 ### Publishing
-- Publishing is automated via semantic-release (see Version Management above)
+
+Releases are triggered manually via GitHub Actions `workflow_dispatch` or by pushing a version tag (`v*.*.*`).
+
+**How it works**:
+1. Run the Release workflow from GitHub Actions (or push a `v*.*.*` tag)
+2. CI sets the version in all three version files
+3. Runs `mix prepublish` to build CSS/JS assets
+4. Publishes to Hex.pm and npm
+5. Builds and pushes Docker demo image
+6. Creates GitHub Release with links to published packages
 - `mix prepublish` - Prepare package manually (copies README, builds CSS/JS)
 - Only needed for local testing or manual publishing
 
