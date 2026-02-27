@@ -2,7 +2,6 @@ FROM ghcr.io/gsmlg-dev/phoenix:alpine AS builder
 
 ARG MIX_ENV=prod
 ARG RELEASE_VERSION=1.0.0
-ARG SECRET_KEY_BASE=build-time-placeholder-replaced-at-runtime
 
 COPY . /build
 WORKDIR /build
