@@ -64,6 +64,7 @@ See the [Getting Started](getting-started.md) guide for full setup instructions.
 ## Guides
 
 - [Getting Started](getting-started.md) — Installation, view helpers, CSS and JS setup
+- [Migrating to v9](migrating-to-v9.md) — Upgrade guide from v6/v7/v8 (DaisyUI to @duskmoon-dev/core)
 - [Theming](theming.md) — Sunshine/moonlight themes, CSS custom properties, custom colors
 - [Hooks](hooks.md) — JavaScript hooks reference for LiveView integration
 

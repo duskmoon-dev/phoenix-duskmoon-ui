@@ -29,6 +29,7 @@ defmodule PhoenixDuskmoon.Mixfile do
           "guides/getting-started.md",
           "guides/theming.md",
           "guides/hooks.md",
+          "guides/migrating-to-v9.md",
           "CHANGELOG.md"
         ],
         groups_for_extras: [
