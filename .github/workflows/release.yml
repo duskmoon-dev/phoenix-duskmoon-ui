@@ -70,7 +70,7 @@ jobs:
           mix prepublish
 
       - name: Publish to hex.pm
-        run: mix hex.publish --yes
+        run: mix hex.publish --yes --replace
         working-directory: apps/phoenix_duskmoon
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
