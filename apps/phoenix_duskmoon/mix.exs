@@ -21,10 +21,116 @@ defmodule PhoenixDuskmoon.Mixfile do
       package: package(),
       aliases: aliases(),
       docs: [
-        extras: ["CHANGELOG.md"],
+        main: "home",
         source_url: @source_url,
         source_ref: "v#{@version}",
-        main: "PhoenixDuskmoon",
+        extras: [
+          "guides/home.md",
+          "guides/getting-started.md",
+          "guides/theming.md",
+          "guides/hooks.md",
+          "CHANGELOG.md"
+        ],
+        groups_for_extras: [
+          Guides: ~r/guides\/.*/,
+          Changelog: ["CHANGELOG.md"]
+        ],
+        groups_for_modules: [
+          Action: [
+            PhoenixDuskmoon.Component.Action.Button,
+            PhoenixDuskmoon.Component.Action.Dropdown,
+            PhoenixDuskmoon.Component.Action.Link,
+            PhoenixDuskmoon.Component.Action.Menu,
+            PhoenixDuskmoon.Component.Action.Toggle
+          ],
+          "Data Display": [
+            PhoenixDuskmoon.Component.DataDisplay.Accordion,
+            PhoenixDuskmoon.Component.DataDisplay.Avatar,
+            PhoenixDuskmoon.Component.DataDisplay.Badge,
+            PhoenixDuskmoon.Component.DataDisplay.Card,
+            PhoenixDuskmoon.Component.DataDisplay.Chip,
+            PhoenixDuskmoon.Component.DataDisplay.Collapse,
+            PhoenixDuskmoon.Component.DataDisplay.Flash,
+            PhoenixDuskmoon.Component.DataDisplay.List,
+            PhoenixDuskmoon.Component.DataDisplay.Markdown,
+            PhoenixDuskmoon.Component.DataDisplay.Pagination,
+            PhoenixDuskmoon.Component.DataDisplay.Popover,
+            PhoenixDuskmoon.Component.DataDisplay.Progress,
+            PhoenixDuskmoon.Component.DataDisplay.Skeleton,
+            PhoenixDuskmoon.Component.DataDisplay.Stat,
+            PhoenixDuskmoon.Component.DataDisplay.Table,
+            PhoenixDuskmoon.Component.DataDisplay.Timeline,
+            PhoenixDuskmoon.Component.DataDisplay.Tooltip
+          ],
+          "Data Entry": [
+            PhoenixDuskmoon.Component.DataEntry.Autocomplete,
+            PhoenixDuskmoon.Component.DataEntry.Cascader,
+            PhoenixDuskmoon.Component.DataEntry.Checkbox,
+            PhoenixDuskmoon.Component.DataEntry.CompactInput,
+            PhoenixDuskmoon.Component.DataEntry.FileUpload,
+            PhoenixDuskmoon.Component.DataEntry.Form,
+            PhoenixDuskmoon.Component.DataEntry.Input,
+            PhoenixDuskmoon.Component.DataEntry.MultiSelect,
+            PhoenixDuskmoon.Component.DataEntry.OtpInput,
+            PhoenixDuskmoon.Component.DataEntry.PinInput,
+            PhoenixDuskmoon.Component.DataEntry.Radio,
+            PhoenixDuskmoon.Component.DataEntry.Rating,
+            PhoenixDuskmoon.Component.DataEntry.SegmentControl,
+            PhoenixDuskmoon.Component.DataEntry.Select,
+            PhoenixDuskmoon.Component.DataEntry.Slider,
+            PhoenixDuskmoon.Component.DataEntry.Switch,
+            PhoenixDuskmoon.Component.DataEntry.Textarea,
+            PhoenixDuskmoon.Component.DataEntry.TimeInput,
+            PhoenixDuskmoon.Component.DataEntry.TreeSelect
+          ],
+          Feedback: [
+            PhoenixDuskmoon.Component.Feedback.Dialog,
+            PhoenixDuskmoon.Component.Feedback.Loading,
+            PhoenixDuskmoon.Component.Feedback.Snackbar,
+            PhoenixDuskmoon.Component.Feedback.Toast
+          ],
+          Navigation: [
+            PhoenixDuskmoon.Component.Navigation.Actionbar,
+            PhoenixDuskmoon.Component.Navigation.Appbar,
+            PhoenixDuskmoon.Component.Navigation.BottomNav,
+            PhoenixDuskmoon.Component.Navigation.Breadcrumb,
+            PhoenixDuskmoon.Component.Navigation.LeftMenu,
+            PhoenixDuskmoon.Component.Navigation.Navbar,
+            PhoenixDuskmoon.Component.Navigation.NestedMenu,
+            PhoenixDuskmoon.Component.Navigation.PageFooter,
+            PhoenixDuskmoon.Component.Navigation.PageHeader,
+            PhoenixDuskmoon.Component.Navigation.Stepper,
+            PhoenixDuskmoon.Component.Navigation.Steps,
+            PhoenixDuskmoon.Component.Navigation.Tab
+          ],
+          Layout: [
+            PhoenixDuskmoon.Component.Layout.BottomSheet,
+            PhoenixDuskmoon.Component.Layout.Divider,
+            PhoenixDuskmoon.Component.Layout.Drawer,
+            PhoenixDuskmoon.Component.Layout.ThemeSwitcher
+          ],
+          Icon: [
+            PhoenixDuskmoon.Component.Icon.Icons
+          ],
+          "CSS Art": [
+            PhoenixDuskmoon.CssArt.ButtonNoise,
+            PhoenixDuskmoon.CssArt.Eclipse,
+            PhoenixDuskmoon.CssArt.PlasmaBall,
+            PhoenixDuskmoon.CssArt.Signature,
+            PhoenixDuskmoon.CssArt.Snow,
+            PhoenixDuskmoon.CssArt.SpotlightSearch
+          ]
+        ],
+        nest_modules_by_prefix: [
+          PhoenixDuskmoon.Component.Action,
+          PhoenixDuskmoon.Component.DataDisplay,
+          PhoenixDuskmoon.Component.DataEntry,
+          PhoenixDuskmoon.Component.Feedback,
+          PhoenixDuskmoon.Component.Navigation,
+          PhoenixDuskmoon.Component.Layout,
+          PhoenixDuskmoon.Component.Icon,
+          PhoenixDuskmoon.CssArt
+        ],
         skip_undefined_reference_warnings_on: ["CHANGELOG.md"]
       ]
     ]
@@ -54,7 +160,7 @@ defmodule PhoenixDuskmoon.Mixfile do
     [
       maintainers: ["Jonathan Gao"],
       licenses: ["MIT"],
-      files: ~w(lib priv CHANGELOG.md LICENSE mix.exs package.json assets README.md),
+      files: ~w(lib priv guides CHANGELOG.md LICENSE mix.exs package.json assets README.md),
       links: %{
         Changelog: "https://hexdocs.pm/phoenix_duskmoon/changelog.html",
         GitHub: @source_url

@@ -1,3 +1,181 @@
+# [9.0.0-rc.1](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v9.0.0-rc.0...v9.0.0-rc.1) (2026-02-28)
+
+
+### Bug Fixes
+
+* **ci**: use `--replace` for idempotent hex.pm publish
+* **ci**: write `.npmrc` to home dir for bun publish auth
+* **ci**: use npm publish with explicit `.npmrc` for npm registry auth
+* **build**: guard `SECRET_KEY_BASE` behind `PHX_SERVER` in `runtime.exs`
+* **build**: replace npm with bun throughout project
+
+
+# [9.0.0-rc.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v8.0.0...v9.0.0-rc.0) (2026-02-26)
+
+This is a major release candidate representing a near-complete rewrite of the component library. Components now render as HTML Custom Elements (`<el-dm-*>`) backed by `@duskmoon-dev/elements`, with all styling provided by the `@duskmoon-dev/core` design system.
+
+### BREAKING CHANGES
+
+* **Custom Elements architecture**: All components now render as `<el-dm-*>` HTML Custom Elements instead of plain HTML. Each element must be explicitly imported/registered in `app.js`
+* **CSS system**: Removed DaisyUI and all legacy CSS. Now exclusively uses `@duskmoon-dev/core` with Tailwind v4 `@plugin` directive
+* **Module reorganization**: Components moved to `PhoenixDuskmoon.Component.{Category}.{Component}` namespace (8 categories: Action, DataDisplay, DataEntry, Feedback, Navigation, Layout, Icon, CssArt)
+* **Fun components**: Migrated to `PhoenixDuskmoon.CssArt` namespace
+* **Removed**: `@gsmlg/lit` dependency, neumorphic theme, backward-compatible shim files
+* **Appbar**: Fully rewritten to use `@duskmoon-dev/core` CSS classes
+* **Dropdown**: Migrated to native popover API with `@duskmoon-dev/core` CSS
+* **Theme switcher**: Migrated to `theme-controller` CSS
+* **Left menu**: Migrated to `nested-menu` CSS
+* **Markdown**: Migrated from `remark-element` to `el-dm-markdown`
+* **Class attr type**: Standardized from `:string` to `:any` across all components
+* **Elixir version**: Constraint tightened from `~> 1.12` to `~> 1.15`
+* **CSS class renames**: BEM naming applied throughout (`dm-component--variant`). Divider, rating, and form disabled/error classes renamed to match upstream
+
+### Features
+
+#### New Components (20+)
+
+* `dm_autocomplete` — Autocomplete with search suggestions
+* `dm_cascader` — Hierarchical cascading select
+* `dm_tree_select` — Tree-structured select
+* `dm_multi_select` — Multi-value select with tags
+* `dm_otp_input` — One-time password input
+* `dm_pin_input` — PIN code input
+* `dm_time_input` — Time picker
+* `dm_file_upload` — File upload with drag-and-drop
+* `dm_rating` — Star/icon rating
+* `dm_segment_control` — Segmented button group
+* `dm_toggle` — Toggle button group
+* `dm_menu` / `dm_menu_item` — Menu with nested items
+* `dm_nested_menu` — Nested navigation menu
+* `dm_popover` — Popover content overlay
+* `dm_collapse` — Collapsible content panel
+* `dm_list` — Interactive list component
+* `dm_bottom_sheet` — Bottom sheet modal
+* `dm_bottom_nav` — Bottom navigation bar
+* `dm_toast` / `dm_toast_container` — Toast notifications
+* `dm_snackbar` — Snackbar notifications
+* `dm_stepper` — Step wizard
+* `dm_timeline` — Chronological event display
+* `dm_stat` — Metric/statistic display
+* `dm_chip` — Compact information chip
+* `dm_accordion` — Expandable content sections
+* `dm_drawer` — Slide-out panel
+* `dm_steps` — Step indicator
+* Form layout: `dm_fieldset`, `dm_form_row`, `dm_form_grid`, `dm_form_section`, `dm_form_divider`, `dm_form_inline`, `dm_form_hint`, `dm_form_counter`
+
+#### Component API Enhancements
+
+* `Phoenix.HTML.FormField` support — direct `field={@form[:name]}` binding on data entry components
+* Helper text (`helper_text` attr) added to input, select, textarea, and complex select components
+* Error list and `phx-feedback-for` added to autocomplete, file_upload, rating, time_input, OTP/PIN input, multi_select, tree_select, cascader
+* Horizontal layout and validation `state` attrs on input, compact_input, select, textarea, slider, checkbox, radio, switch
+* Style variants (ghost, filled, bordered) on input, select, textarea
+* Size variants expanded: `xl` on checkbox, radio, switch, progress, divider
+* Circular and indeterminate progress variants
+* Vertical slider orientation
+* Gradient, inset, text position, and light/dark variants on divider
+* Ring support on avatar
+* `aria-current="page"` support on appbar and page_header menu items
+* Soft style variant on badge
+
+#### I18n / Configurable Labels
+
+* Hardcoded `aria-label` strings made configurable across all interactive components
+* Configurable labels on dialog, button, pin_input, otp_input, rating, time_input, appbar, multi_select, tree_select, cascader, avatar, spotlight, flash, theme_switcher, pagination, loading
+* Password strength level labels configurable for i18n
+* `search_text`, `clear_label`, `overflow_text` attrs for i18n
+
+#### LiveView Hooks
+
+* `WebComponentHook` — Universal LiveView ↔ Custom Element bridge with automatic event mapping
+* `FormElementHook` — Form-aware hook with `phx-feedback-for` support via MutationObserver
+* `ThemeSwitcher` — Theme toggle with localStorage persistence
+* `Spotlight` — Keyboard shortcut (Cmd/Ctrl+K) handler
+* `PageHeader` — Intersection observer for scroll-based effects
+
+### Bug Fixes
+
+* Pagination: spurious ellipsis with exactly 7 pages
+* Loading: random values stabilized across re-renders; size_factor guarded against zero
+* Skeleton: ranges guarded against zero values
+* Generated IDs use `System.unique_integer` for collision-free generation
+* Duplicate HTML IDs fixed in slider_range and dialog
+* Empty slot truthiness check corrected
+* Invalid HTML nesting fixed in tree_select, multi_select, stat (div inside button, nested buttons)
+* Progress correctly omits `value` attr in indeterminate mode
+* Table stream body ID interpolated correctly
+* Correct upstream CSS classes used (skeleton-wave, btn variants)
+* Dead CSS imports removed
+* render_slot calls guarded against self-closing slot entries
+* CssArt component rendering issues fixed (signature, plasma_ball, snow, eclipse)
+* Version sync supports pre-release formats and has hardened error handling
+* Storybook: 20+ story 500 errors resolved; gzip static serving disabled in dev
+
+### Accessibility
+
+* `aria-modal` on bottom sheet, drawer, spotlight
+* `aria-hidden` on decorative icons across 20+ components
+* `aria-disabled` on all disabled interactive elements
+* `aria-busy` on button loading state, skeleton, autocomplete, pagination
+* `aria-invalid` and `aria-describedby` on all input types for screen reader error state
+* `aria-controls` on cascader, multi_select, tree_select triggers
+* `aria-expanded` on dropdown, appbar mobile menu
+* `aria-live="assertive"` on toast and snackbar
+* `aria-labelledby` on OTP/PIN input groups
+* `role=list`/`role=listitem` on timeline and stepper
+* `role=switch` on switch input, `role=toolbar` on actionbar, `role=group` on checkbox/radio groups
+* `role=tooltip` with `aria-describedby` linking on tooltips
+* `scope=col` on table column headers
+* `nav` landmark on appbar, `aria-label` on page_footer
+* Keyboard accessibility on spotlight suggestions and page_header mobile menu
+* `type=button` on non-submit buttons (pagination, tab, dropdown) to prevent accidental form submission
+* Hidden false inputs on checkbox/switch for correct form submission
+* Memory leaks fixed in Spotlight, ThemeSwitcher, FormElementHook hooks
+* `rel=noopener` on external links
+
+### Refactoring
+
+* Components reorganized into 8 category directories
+* Shared `Helpers` module extracted (`split_value/2`, `css_color/1`, `format_label/2`)
+* EEx for-loops converted to `:for` HEEX attribute throughout
+* EEx syntax normalized to HEEX across 17 component files
+* `if/else nil` patterns simplified to `&&` in HEEX attributes
+* `Map.get` replaced with bracket notation for slot attribute access
+* Attr defaults standardized to `nil` across all components
+
+### CI/CD
+
+* Workflows split into separate `ci`, `test`, and `release` pipelines
+* Bun-based publishing replaces npm
+* Idempotent hex.pm publish with `--replace`
+* Dockerfile hardened with `SECRET_KEY_BASE` build arg
+* Tailwind version pinned in CI
+
+
+# [8.0.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.2.1...v8.0.0) (2026-01-12)
+
+
+### BREAKING CHANGES
+
+* **security**: Removed critical XSS vulnerabilities from inline scripts
+
+### Features
+
+* Moonlight theme colors enhanced
+* Graceful error handling for missing icon files in `dm_mdi` and `dm_bsi`
+* `@duskmoon-dev/core` updated to `1.11.0`
+
+### Bug Fixes
+
+* CSS classes corrected for select, radio, and textarea inputs
+* Version numbers synchronized; version management automated
+* Icon component syntax corrected in storybook and docs
+
+### Tests
+
+* Comprehensive test coverage added for `dm_table`, pagination, and 10 input types
+
+
 ## [7.2.1](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v7.2.0...v7.2.1) (2025-11-04)
 
 
