@@ -20,6 +20,7 @@ env:
   ELIXIR_VERSION: '1.18'
   OTP_VERSION: '28'
   MIX_ENV: 'prod'
+  TAILWIND_VERSION: '4.1.11'
 
 permissions:
   contents: write
@@ -60,7 +61,12 @@ jobs:
           mix deps.get
           bun install
 
+      - name: Install Tailwind CLI
+        run: bun add --dev tailwindcss@${{ env.TAILWIND_VERSION }}
+
       - name: Set version and prepare package
+        env:
+          TAILWIND_PATH: node_modules/.bin/tailwindcss
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           echo "Releasing version: ${VERSION}"
