@@ -8,7 +8,7 @@ This guide provides comprehensive instructions for integrating Phoenix Duskmoon 
 - **Phoenix**: ~> 1.8.1
 - **Phoenix LiveView**: ~> 1.1.0
 - **TailwindCSS**: >= 4.0
-- **Node.js**: For frontend asset management
+- **Bun**: For frontend asset management
 
 ## Installation
 
@@ -50,16 +50,12 @@ end
 
 ### 3. Configure CSS/Assets
 
-#### Using npm/yarn (Recommended)
+#### Using bun (Recommended)
 
-Install the required npm packages:
+Install the required frontend packages:
 
 ```bash
-npm install tailwindcss @duskmoon-dev/core duskmoon-elements
-# or
-yarn add tailwindcss @duskmoon-dev/core duskmoon-elements
-# or
-bun add tailwindcss @duskmoon-dev/core duskmoon-elements
+bun add tailwindcss @duskmoon-dev/core @duskmoon-dev/elements
 ```
 
 > **Note (v9)**: Phoenix Duskmoon UI v9 uses `@duskmoon-dev/core` instead of `duskmoonui` (daisyui).

@@ -22,9 +22,7 @@ HTML Custom Elements (`<el-dm-*>`) styled by `@duskmoon-dev/core`.
 ```
 
 ```bash
-# Install frontend dependencies
-npm install @duskmoon-dev/core @duskmoon-dev/elements
-# or: bun add @duskmoon-dev/core @duskmoon-dev/elements
+bun add @duskmoon-dev/core @duskmoon-dev/elements
 ```
 
 ## Setup
@@ -286,7 +284,7 @@ For full component catalog with all attributes and slots, see
 </.dm_modal>
 ```
 
-## npm Package Exports
+## Package Exports
 
 | Import path | File |
 |---|---|

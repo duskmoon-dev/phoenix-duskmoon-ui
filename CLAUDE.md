@@ -37,7 +37,7 @@ Phoenix Duskmoon UI is an umbrella project providing Duskmoon UI components for 
 
 ## Architecture
 
-This is an Elixir umbrella project with Phoenix LiveView components and a Node.js workspace:
+This is an Elixir umbrella project with Phoenix LiveView components and a Bun workspace:
 
 - **Umbrella Structure**: Run commands from root directory - they cascade to `apps/*` subdirectories
 - **Component Library**: Phoenix LiveView HEEX components wrapping HTML Custom Elements with `@doc type: :component`
@@ -137,7 +137,7 @@ Each `el-*` element must be explicitly imported for its custom element tag to be
 
 ### Package Management
 - `mix deps.get` - Install Elixir dependencies
-- `bun install` - Install Node.js dependencies (in workspaces)
+- `bun install` - Install frontend dependencies (in workspaces)
 - `mix cmd mix deps.get` - Run command in all umbrella apps
 
 ### Version Management

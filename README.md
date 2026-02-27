@@ -18,11 +18,9 @@ Add deps in `mix.exs`
     {:phoenix_duskmoon, "~> 9.0"},
 ```
 
-Install npm packages:
+Install frontend packages:
 ```bash
-npm install @duskmoon-dev/core duskmoon-elements
-# or
-bun add @duskmoon-dev/core duskmoon-elements
+bun add @duskmoon-dev/core @duskmoon-dev/elements
 ```
 
 Include in phoenix view helpers

@@ -7,13 +7,11 @@ ARG SECRET_KEY_BASE=build-time-placeholder-replaced-at-runtime
 COPY . /build
 WORKDIR /build
 
-ARG NODE_PATH="/build/apps:/build/deps"
-
 RUN <<EOF
 set -ex
 apk update
 mix deps.get
-npm install
+bun install
 export MATCH_STRING="s%@version \"[^\"]\+\"%@version \"${RELEASE_VERSION}\"%"
 sed -i "$MATCH_STRING" mix.exs;
 sed -i "$MATCH_STRING" apps/duskmoon_storybook_web/mix.exs;

@@ -16,7 +16,7 @@ defmodule PhoenixDuskmoon.Component.Icon.Icons do
             |> Enum.sort(:asc)
 
   @doc """
-  Return all names of available Material Design Icons (from `npm` `@mdi/svg`).
+  Return all names of available Material Design Icons (from `@mdi/svg` package).
 
   Can be found at [Material Design Icons](https://duskmoon-storybook.gsmlg.dev/mdi)
 
@@ -102,7 +102,7 @@ defmodule PhoenixDuskmoon.Component.Icon.Icons do
             |> Enum.sort(:asc)
 
   @doc """
-  Return all names of available Bootstrap Icons (from `npm` `bootstrap-icons`).
+  Return all names of available Bootstrap Icons (from `bootstrap-icons` package).
 
   Can be found at [Bootstrap Icons](https://duskmoon-storybook.gsmlg.dev/bsi)
 

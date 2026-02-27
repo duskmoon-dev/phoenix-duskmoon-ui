@@ -22,7 +22,7 @@
 - Umbrella project: run commands from root, they cascade to apps/* subdirectories
 
 ## Frontend Dependencies & Styling
-- This project uses the `duskmoonui` npm package as the Tailwind CSS theme
-- `duskmoonui` extends `daisyui` with additional tertiary color support
-- The theme provides custom component styles and color variants for the Phoenix Duskmoon UI components
-- When working with styles, reference the duskmoonui documentation for available utility classes and component modifiers
+- This project uses `@duskmoon-dev/core` as the CSS design system (Tailwind v4 plugin)
+- Uses `@duskmoon-dev/elements` for HTML Custom Elements (`<el-dm-*>` tags)
+- Use `bun` for all frontend package management (not npm/yarn)
+- The theme provides custom component styles and color variants via CSS custom properties

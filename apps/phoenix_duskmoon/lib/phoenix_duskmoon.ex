@@ -12,9 +12,9 @@ defmodule PhoenixDuskmoon do
 
       {:phoenix_duskmoon, "~> 9.0"}
 
-  Install npm packages:
+  Install frontend packages:
 
-      npm install @duskmoon-dev/core @duskmoon-dev/elements
+      bun add @duskmoon-dev/core @duskmoon-dev/elements
 
   ## Setup in `Phoenix` project
 
