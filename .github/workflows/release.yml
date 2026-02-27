@@ -76,7 +76,9 @@ jobs:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
 
       - name: Publish to npm
-        run: bun publish --access public
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+          bun publish --access public
         working-directory: apps/phoenix_duskmoon
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
