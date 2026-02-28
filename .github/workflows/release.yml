@@ -67,7 +67,7 @@ jobs:
 
       - name: Set version and prepare package
         env:
-          TAILWIND_PATH: node_modules/.bin/tailwindcss
+          TAILWIND_PATH: ${{ github.workspace }}/node_modules/.bin/tailwindcss
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           echo "Releasing version: ${VERSION}"
