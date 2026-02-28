@@ -116,12 +116,21 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/v${{ steps.version.outputs.version }}',
-              sha: context.sha
-            })
+            const tag = 'refs/tags/v${{ steps.version.outputs.version }}';
+            try {
+              await github.rest.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: tag,
+                sha: context.sha
+              });
+            } catch (e) {
+              if (e.status === 422) {
+                core.warning(`Tag ${tag} already exists`);
+              } else {
+                throw e;
+              }
+            }
 
   build-demo:
     name: Build Demo Docker Image
