@@ -77,10 +77,13 @@ jobs:
           mix prepublish
 
       - name: Publish to hex.pm
-        run: mix hex.publish --yes --replace
         working-directory: apps/phoenix_duskmoon
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
+        run: |
+          mix hex.publish --yes --replace || {
+            echo "::warning::hex.pm publish failed (version may already exist beyond replace window)"
+          }
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
