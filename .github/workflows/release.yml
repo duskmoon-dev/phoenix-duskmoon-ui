@@ -156,7 +156,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build and push to DockerHub
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -168,10 +168,23 @@ jobs:
           tags: |
             docker.io/gsmlg/duskmoon-storybook:v${{ steps.version.outputs.version }}
             docker.io/gsmlg/duskmoon-storybook:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Push to GitHub Container Registry
+        continue-on-error: true
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64
+          push: true
+          build-args: |
+            RELEASE_VERSION=${{ steps.version.outputs.version }}
+          tags: |
             ghcr.io/duskmoon-dev/duskmoon-storybook:v${{ steps.version.outputs.version }}
             ghcr.io/duskmoon-dev/duskmoon-storybook:latest
           cache-from: type=gha
-          cache-to: type=gha,mode=max
 
   create-release:
     name: Create GitHub Release
