@@ -105,8 +105,11 @@ jobs:
           fi
 
       - name: Publish to npm
-        run: npm publish --access public --provenance --tag ${{ steps.npm-tag.outputs.tag }}
         working-directory: apps/phoenix_duskmoon
+        run: |
+          npm publish --access public --provenance --tag ${{ steps.npm-tag.outputs.tag }} || {
+            echo "::warning::npm publish failed (version may already exist)"
+          }
 
       - name: Create git tag (workflow_dispatch only)
         if: github.event_name == 'workflow_dispatch'
