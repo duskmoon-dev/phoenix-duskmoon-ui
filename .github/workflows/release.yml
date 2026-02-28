@@ -91,8 +91,18 @@ jobs:
       - name: Upgrade npm for Trusted Publishers OIDC support
         run: npm install -g npm@latest
 
+      - name: Determine npm tag
+        id: npm-tag
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if echo "$VERSION" | grep -qE '[-]'; then
+            echo "tag=next" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Publish to npm
-        run: npm publish --access public --provenance
+        run: npm publish --access public --provenance --tag ${{ steps.npm-tag.outputs.tag }}
         working-directory: apps/phoenix_duskmoon
 
       - name: Create git tag (workflow_dispatch only)
