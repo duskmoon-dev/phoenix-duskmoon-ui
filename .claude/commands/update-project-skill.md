@@ -1,6 +1,6 @@
 # Update Project Skill
 
-Re-analyze the phoenix_duskmoon project and regenerate `docs/phoenix-duskmoon-ui/SKILL.md` and `docs/phoenix-duskmoon-ui/references/components.md`.
+Re-analyze the phoenix_duskmoon project and regenerate `skills/phoenix-duskmoon-ui/SKILL.md` and `skills/phoenix-duskmoon-ui/references/components.md`.
 
 ## Steps
 
@@ -27,7 +27,7 @@ Read these files for integration details:
 
 ### 3. Regenerate SKILL.md
 
-Update `docs/phoenix-duskmoon-ui/SKILL.md` with:
+Update `skills/phoenix-duskmoon-ui/SKILL.md` with:
 - Current version number from mix.exs
 - Installation instructions (Hex + npm)
 - Setup steps (Elixir imports, CSS, JS hooks, element registration)
@@ -42,7 +42,7 @@ Keep SKILL.md under 500 lines — put detailed reference in the components file.
 
 ### 4. Regenerate components.md
 
-Update `docs/phoenix-duskmoon-ui/references/components.md` with the full attribute and slot reference for every component, organized by category.
+Update `skills/phoenix-duskmoon-ui/references/components.md` with the full attribute and slot reference for every component, organized by category.
 
 ### 5. Verify accuracy
 
