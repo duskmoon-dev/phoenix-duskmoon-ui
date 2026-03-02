@@ -110,27 +110,6 @@
 </style>
 
 <div class="dm-home w-full">
-  <%!-- ═══ APPBAR ═══ --%>
-  <.dm_appbar
-    title="Duskmoon UI"
-    class="appbar-transparent appbar-blur appbar-elevated z-50"
-    sticky={true}
-  >
-    <:logo>
-      <span style="color: var(--gold)">
-        <.dm_mdi name="moon-waning-crescent" class="w-7 h-7" />
-      </span>
-    </:logo>
-    <:menu to={~p"/components/action/button"}>Components</:menu>
-    <:menu to={~p"/storybook"}>Storybook</:menu>
-    <:user_profile>
-      <.dm_theme_switcher />
-      <.dm_link href="https://github.com/duskmoon-dev/phoenix-duskmoon-ui" class="appbar-action">
-        <.dm_mdi name="github" class="w-7 h-7" />
-      </.dm_link>
-    </:user_profile>
-  </.dm_appbar>
-
   <%!-- ═══ HERO ═══ --%>
   <section
     class="relative w-full min-h-[92vh] flex flex-col items-center justify-center overflow-hidden"

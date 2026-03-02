@@ -76,7 +76,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
         <span class="appbar-title">{@title}</span>
       </div>
       <div class="appbar-trailing">
-        <nav :if={@menu != []} aria-label={@nav_label}>
+        <nav :if={@menu != []} class="appbar-actions" aria-label={@nav_label}>
           <.dm_link
             :for={menu <- @menu}
             navigate={menu[:to]}

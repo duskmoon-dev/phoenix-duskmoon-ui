@@ -12,6 +12,20 @@
   <body class={[
     "flex flex-col items-center"
   ]}>
+    <div class="rainbow"></div>
+    <.dm_appbar title="Duskmoon UI" title_to={~p"/"} class="appbar-primary appbar-elevated z-50 w-full">
+      <:logo>
+        <.dm_mdi name="moon-waning-crescent" class="w-8 h-8" />
+      </:logo>
+      <:menu to={~p"/components/action/button"}>Components</:menu>
+      <:menu to={~p"/storybook"}>Storybook</:menu>
+      <:user_profile>
+        <.dm_theme_switcher />
+        <.dm_link href="https://github.com/duskmoon-dev/phoenix-duskmoon-ui" class="appbar-action">
+          <.dm_mdi name="github" class="w-8 h-8" />
+        </.dm_link>
+      </:user_profile>
+    </.dm_appbar>
     {@inner_content}
   </body>
 </html>

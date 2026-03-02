@@ -8,6 +8,7 @@ config :duskmoon_storybook_web,
   generators: [context_app: :duskmoon_storybook]
 
 config :duskmoon_storybook_web, DuskmoonStorybookWeb.Endpoint,
+  adapter: Bandit.PhoenixAdapter,
   url: [host: "localhost"],
   render_errors: [
     formats: [html: DuskmoonStorybookWeb.ErrorHTML, json: DuskmoonStorybookWeb.ErrorJSON],
