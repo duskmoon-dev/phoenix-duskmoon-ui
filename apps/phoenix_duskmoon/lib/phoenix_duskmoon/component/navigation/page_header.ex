@@ -272,6 +272,30 @@ defmodule PhoenixDuskmoon.Component.Navigation.PageHeader do
         {render_slot(@inner_block)}
       </div>
     </header>
+    <script>
+    (function() {
+      var header = document.currentScript.previousElementSibling;
+      var navId = header && header.dataset.navId;
+      var nav = navId && document.getElementById(navId);
+      if (!header || !nav) return;
+      if (header._dmPageHeaderObserved) return;
+      header._dmPageHeaderObserved = true;
+      var thresholds = [];
+      for (var i = 0; i <= 10; i++) thresholds.push(i / 10);
+      new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.intersectionRatio <= 0.5) {
+            nav.classList.remove('hidden');
+            nav.setAttribute('aria-hidden', 'false');
+            nav.style.opacity = 1 - entry.intersectionRatio;
+          } else {
+            nav.classList.add('hidden');
+            nav.setAttribute('aria-hidden', 'true');
+          }
+        });
+      }, {root: null, rootMargin: '0px', threshold: thresholds}).observe(header);
+    })();
+    </script>
     """
   end
 end

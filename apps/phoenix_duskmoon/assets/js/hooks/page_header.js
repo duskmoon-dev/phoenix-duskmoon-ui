@@ -4,6 +4,10 @@
  */
 export const PageHeader = {
   mounted() {
+    // Skip if the inline script already set up the observer
+    if (this.el._dmPageHeaderObserved) return;
+    this.el._dmPageHeaderObserved = true;
+
     const navId = this.el.dataset.navId;
     const navEl = document.getElementById(navId);
 
