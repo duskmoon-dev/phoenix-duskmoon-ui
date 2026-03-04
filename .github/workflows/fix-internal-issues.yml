@@ -1,0 +1,45 @@
+name: Fix Internal Issues
+
+on:
+  issues:
+    types: [labeled]
+  workflow_dispatch:
+
+jobs:
+  fix-issues:
+    # Only run when "internal request" label is added (skip "unable to resolve")
+    if: >
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event.label.name == 'internal request' &&
+       !contains(toJSON(github.event.issue.labels.*.name), 'unable to resolve'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Fix internal issues
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            Read the workflow described in .claude/commands/fix-internal-issues.md and execute it
+            for issue #${{ github.event.issue.number }} in owner "duskmoon-dev" repo "phoenix-duskmoon-ui".
+
+            Skip step 1 (listing issues) — the triggering issue is already identified above.
+            Start directly from step 2 (fix the issue).
+          claude_args: "--max-turns 50"
