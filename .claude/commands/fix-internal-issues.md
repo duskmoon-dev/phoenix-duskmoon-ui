@@ -1,6 +1,6 @@
 # Fix Internal Request Issues
 
-Find all open GitHub issues labeled `internal request`, then fix each one in an isolated git worktree and open a PR.
+Find all open GitHub issues labeled `internal request` and **without** the label `unable to resolve`, then fix each one in an isolated git worktree and open a PR.
 
 ## Execution Flow
 
@@ -15,7 +15,9 @@ labels: ["internal request"]
 state: open
 ```
 
-If no issues are found, report "No open internal request issues" and stop.
+Filter out any issues that also have the label `unable to resolve`.
+
+If no actionable issues remain, report "No open internal request issues" and stop.
 
 Print a summary table of all found issues (number, title, labels).
 
@@ -99,7 +101,15 @@ Skipped: 0
 Failed: 0
 ```
 
-If any issue could not be fixed automatically (too complex, unclear requirements), report it as skipped with a reason.
+If any issue could not be fixed automatically (too complex, unclear requirements, outside this repo's scope):
+1. Add the label `unable to resolve` to the issue
+2. Post a comment explaining why the issue could not be resolved automatically
+3. Report it as skipped in the summary with the reason
+
+Ensure the label `unable to resolve` exists. If it doesn't, create it first:
+```bash
+gh label create "unable to resolve" --color "e4e669" --description "Cannot be resolved automatically"
+```
 
 ## Important Notes
 
