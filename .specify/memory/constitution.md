@@ -1,18 +1,21 @@
 <!--
 Sync Impact Report
 ==================
-Version change: 0.0.0 → 1.0.0 (MAJOR - initial ratification)
-Modified principles: N/A (initial version)
+Version change: 1.0.0 → 1.1.0 (MINOR - new principle + naming expansion + stack correction)
+Modified principles:
+  - I. Component-First Design: added CSS Art (dm_art_) prefix rule
+  - VI. Simplicity: unchanged
 Added sections:
-  - Core Principles (6 principles)
-  - Development Standards
-  - Quality Gates
-  - Governance
+  - Principle VII. Color Policy (new)
+  - Development Standards: Technology Stack corrected (removed daisyui, added @duskmoon-dev/elements)
+  - Development Standards: Component Naming table now includes CSS Art row
+  - Development Standards: v9 Architecture sub-section added
 Removed sections: N/A
 Templates requiring updates:
-  - .specify/templates/plan-template.md: ✅ compatible (Constitution Check section exists)
-  - .specify/templates/spec-template.md: ✅ compatible (testing/requirements aligned)
-  - .specify/templates/tasks-template.md: ✅ compatible (test-encouraged philosophy aligned)
+  - .specify/templates/plan-template.md: ✅ compatible (Constitution Check section exists; no principle references broken)
+  - .specify/templates/spec-template.md: ✅ compatible (no principle-specific references)
+  - .specify/templates/tasks-template.md: ✅ compatible (task categories unaffected)
+  - .specify/templates/commands/: ✅ N/A (no command files exist)
 Follow-up TODOs: None
 -->
 
@@ -27,11 +30,14 @@ Every UI element MUST be implemented as a reusable Phoenix LiveView component wi
 - Components MUST be self-contained and independently usable
 - Components MUST use `attr/3` and `slot/2` for LiveView HEEX definitions
 - Components MUST have `@doc type: :component` annotation
-- Components MUST follow the `dm_` prefix convention (e.g., `dm_btn`, `dm_card`)
-- Fun/interactive components MUST use the `dm_fun_` prefix
+- Standard components MUST follow the `dm_` prefix convention (e.g., `dm_btn`, `dm_card`)
+- CSS Art / decorative components MUST follow the `dm_art_` prefix convention (e.g., `dm_art_snow`, `dm_art_plasma_ball`)
+- Fun/interactive components MUST follow the `dm_fun_` prefix convention
+- CSS Art components MUST reside in the `PhoenixDuskmoon.CssArt.*` namespace
 - Form components MUST reside in `PhoenixDuskmoon.Component.Form.*` namespace
 
-**Rationale**: Self-contained components enable independent testing, clear documentation, and predictable behavior for library consumers.
+**Rationale**: Self-contained components with clear naming conventions enable independent testing, clear
+documentation, and predictable behavior for library consumers.
 
 ### II. API Stability
 
@@ -56,7 +62,8 @@ All interactive components MUST support accessible usage patterns.
 - ARIA attributes SHOULD be used where native HTML semantics are insufficient
 - Screen reader compatibility SHOULD be verified for complex components
 
-**Rationale**: Accessible components expand the user base and ensure compliance with legal requirements in many jurisdictions.
+**Rationale**: Accessible components expand the user base and ensure compliance with legal requirements
+in many jurisdictions.
 
 ### IV. Documentation Standards
 
@@ -82,7 +89,8 @@ Tests are encouraged for all components; critical paths and complex logic MUST b
 - Tests MUST NOT depend on exact HTML output; use partial matching (`=~`) for assertions
 - CI MUST pass before merging: `mix format --check-formatted`, `mix compile --warnings-as-errors`, `mix test`
 
-**Rationale**: Tests provide confidence during refactoring and catch regressions early, while avoiding TDD overhead allows faster iteration for exploratory UI work.
+**Rationale**: Tests provide confidence during refactoring and catch regressions early, while avoiding TDD
+overhead allows faster iteration for exploratory UI work.
 
 ### VI. Simplicity
 
@@ -96,14 +104,43 @@ Prefer minimal, focused implementations over feature-rich complexity.
 
 **Rationale**: Simple components are easier to understand, maintain, test, and extend.
 
+### VII. Color Policy
+
+All colors MUST originate from theme CSS custom properties; hardcoded color values are forbidden.
+
+- Hardcoded hex, rgb, hsl, or named color values MUST NOT appear in component markup or stylesheets
+- Components MUST reference existing `@duskmoon-dev/core` theme variables
+  (e.g., `var(--color-primary)`, `var(--color-surface)`, `var(--color-on-surface)`)
+- If a required color has no existing theme variable, a new CSS custom property MUST be defined in
+  the theme variable system and referenced via `var(--color-your-name)`
+- This rule ensures components adapt correctly across all themes (sunshine/moonlight/auto/custom)
+
+**Rationale**: Hardcoded colors break theme switching and violate the design-token contract; consistency
+in theming is a first-class requirement for a design-system library.
+
 ## Development Standards
 
 ### Technology Stack
 
 - **Language**: Elixir 1.12+ with Phoenix 1.8+, Phoenix LiveView 1.1+
-- **Frontend**: TailwindCSS 4.0+, duskmoonui 5.0+ (extends daisyui)
-- **Package Manager**: Mix for Elixir, Bun for Node.js workspace
+- **CSS / Theming**: `@duskmoon-dev/core` — design tokens, CSS utility classes, TailwindCSS v4 plugin
+- **Custom Elements**: `@duskmoon-dev/elements` (`@duskmoon-dev/el-*` packages) — HTML Custom Elements
+- **Package Manager**: Mix for Elixir; Bun for Node.js workspace
 - **Documentation**: HexDocs, PhoenixStorybook for live component showcase
+
+### v9 Architecture
+
+Components render through a two-layer stack:
+
+```
+Phoenix LiveView (HEEX)  →  HTML Custom Elements  →  @duskmoon-dev/core CSS tokens
+dm_btn / dm_card / ...      <el-dm-button>             var(--color-primary) etc.
+```
+
+- Custom elements (`el-dm-*`) MUST be explicitly registered via their
+  `@duskmoon-dev/el-*/register` import in `assets/js/app.js`
+- CSS/layout-only patterns (e.g., appbar) MAY use `@duskmoon-dev/core` utility classes
+  directly without a custom element when appropriate
 
 ### Code Style
 
@@ -114,11 +151,12 @@ Prefer minimal, focused implementations over feature-rich complexity.
 
 ### Component Naming
 
-| Category | Prefix | Namespace |
-|----------|--------|-----------|
-| Standard UI | `dm_` | `PhoenixDuskmoon.Component.*` |
-| Form inputs | `dm_` | `PhoenixDuskmoon.Component.Form.*` |
-| Fun/animated | `dm_fun_` | `PhoenixDuskmoon.Component.Fun.*` |
+| Category      | Prefix      | Namespace                              |
+|---------------|-------------|----------------------------------------|
+| Standard UI   | `dm_`       | `PhoenixDuskmoon.Component.*`          |
+| Form inputs   | `dm_`       | `PhoenixDuskmoon.Component.Form.*`     |
+| Fun/animated  | `dm_fun_`   | `PhoenixDuskmoon.Component.Fun.*`      |
+| CSS Art       | `dm_art_`   | `PhoenixDuskmoon.CssArt.*`             |
 
 ## Quality Gates
 
@@ -129,6 +167,7 @@ Prefer minimal, focused implementations over feature-rich complexity.
 - [ ] `mix test` passes (if tests exist for modified components)
 - [ ] Storybook story exists for new public components
 - [ ] `@doc` and `@moduledoc` present for public modules
+- [ ] No hardcoded color values introduced (Principle VII)
 
 ### Pre-Release Checklist
 
@@ -158,6 +197,7 @@ This constitution defines the non-negotiable standards for Phoenix Duskmoon UI d
 - All pull requests SHOULD demonstrate awareness of relevant principles
 - Code reviews MAY cite constitution principles when requesting changes
 - Complexity additions MUST be justified against Principle VI (Simplicity)
+- Color usage MUST be validated against Principle VII (Color Policy)
 - Runtime development guidance is maintained in `CLAUDE.md`
 
-**Version**: 1.0.0 | **Ratified**: 2025-12-16 | **Last Amended**: 2025-12-16
+**Version**: 1.1.0 | **Ratified**: 2025-12-16 | **Last Amended**: 2026-03-09
