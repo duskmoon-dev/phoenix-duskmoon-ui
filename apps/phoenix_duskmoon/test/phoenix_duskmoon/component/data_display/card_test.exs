@@ -372,13 +372,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CardTest do
     refute result =~ ~s[slot="image"]
   end
 
-  test "renders card body in template when body_class is nil" do
+  test "renders card body directly when body_class is nil" do
     result =
       render_component(&dm_card/1, %{
         inner_block: %{inner_block: fn _, _ -> "Unwrapped" end}
       })
 
-    assert result =~ "<template>"
+    refute result =~ "<template>"
     assert result =~ "Unwrapped"
   end
 
@@ -534,14 +534,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.CardTest do
       assert result =~ "Heading"
     end
 
-    test "renders async card without body_class uses template" do
+    test "renders async card without body_class renders content directly" do
       result =
         render_component(&dm_async_card/1, %{
           assign: %Phoenix.LiveView.AsyncResult{ok?: true, result: nil},
           inner_block: %{inner_block: fn _, _ -> "Unwrapped" end}
         })
 
-      assert result =~ "<template>"
+      refute result =~ "<template>"
       assert result =~ "Unwrapped"
     end
   end

@@ -104,12 +104,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
       >
         {render_slot(title)}
       </span>
-      <div :if={@body_class} class={@body_class}>
+      <%= if @body_class do %>
+        <div class={@body_class}>
+          {render_slot(@inner_block)}
+        </div>
+      <% else %>
         {render_slot(@inner_block)}
-      </div>
-      <template :if={!@body_class}>
-        {render_slot(@inner_block)}
-      </template>
+      <% end %>
       <span
         :for={action <- @action}
         slot="footer"
@@ -215,12 +216,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
         <span :for={title <- @title} slot="header" id={title[:id]} class={title[:class]}>
           {render_slot(title)}
         </span>
-        <div :if={@body_class} class={@body_class}>
+        <%= if @body_class do %>
+          <div class={@body_class}>
+            {render_slot(@inner_block, Map.get(@assign, :result))}
+          </div>
+        <% else %>
           {render_slot(@inner_block, Map.get(@assign, :result))}
-        </div>
-        <template :if={!@body_class}>
-          {render_slot(@inner_block, Map.get(@assign, :result))}
-        </template>
+        <% end %>
         <span :for={action <- @action} slot="footer" id={action[:id]} class={action[:class]}>
           {render_slot(action, Map.get(@assign, :result))}
         </span>
