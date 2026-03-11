@@ -19,6 +19,7 @@ import "@duskmoon-dev/el-dialog/register";
 import "@duskmoon-dev/el-drawer/register";
 import "@duskmoon-dev/el-file-upload/register";
 import "@duskmoon-dev/el-markdown/register";
+import "@duskmoon-dev/el-markdown-input/register";
 import "@duskmoon-dev/el-menu/register";
 import "@duskmoon-dev/el-pagination/register";
 import "@duskmoon-dev/el-popover/register";

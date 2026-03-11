@@ -36,6 +36,7 @@
         "@duskmoon-dev/el-form": "0.7.0",
         "@duskmoon-dev/el-input": "0.7.0",
         "@duskmoon-dev/el-markdown": "0.7.0",
+        "@duskmoon-dev/el-markdown-input": "0.8.2",
         "@duskmoon-dev/el-menu": "0.7.0",
         "@duskmoon-dev/el-navbar": "0.7.0",
         "@duskmoon-dev/el-pagination": "0.7.0",
@@ -47,6 +48,6 @@
         "@duskmoon-dev/el-table": "0.7.0",
         "@duskmoon-dev/el-tabs": "0.7.0",
         "@duskmoon-dev/el-tooltip": "0.7.0",
-        "@duskmoon-dev/elements": "^0.5.0"
+        "@duskmoon-dev/elements": "^0.8.1"
     }
 }

@@ -1,0 +1,116 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/markdown-input"}>Data Display</:crumb>
+  <:crumb>Markdown Input</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4 flex flex-col gap-8">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Markdown Input</span>
+    <span class="text-sm opacity-60">dm_markdown_input</span>
+  </:title>
+
+  <% docs = """
+  ## Overview
+
+  A rich markdown editor using the `<el-dm-markdown-input>` custom element.
+  Provides a split Write/Preview interface with syntax highlighting and optional
+  Mermaid diagram support.
+
+  Requires `@duskmoon-dev/el-markdown-input` registered in your app:
+
+  ```js
+  import "@duskmoon-dev/el-markdown-input/register";
+  ```
+
+  ## Usage
+
+  ```elixir
+  # Standalone
+  <.dm_markdown_input name="body" value={@body} />
+
+  # With Phoenix form field
+  <.dm_markdown_input field={@form[:body]} placeholder="Write markdown here…" />
+
+  # With theme and options
+  <.dm_markdown_input
+    field={@form[:content]}
+    theme="atom-one-dark"
+    no_mermaid={true}
+    class="h-96"
+  />
+  ```
+
+  ## Attributes
+
+  | Attribute | Type | Default | Description |
+  |-----------|------|---------|-------------|
+  | `field` | `FormField` | — | Phoenix form field (sets id/name/value automatically) |
+  | `name` | `string` | `nil` | HTML name for form submission |
+  | `value` | `any` | `nil` | Markdown content |
+  | `id` | `any` | `nil` | HTML id |
+  | `placeholder` | `string` | `nil` | Placeholder text |
+  | `theme` | `string` | `nil` | Syntax theme: `github`, `atom-one-dark`, `atom-one-light`, `auto` |
+  | `no_mermaid` | `boolean` | `false` | Disable Mermaid diagram rendering |
+  | `disabled` | `boolean` | `false` | Disable the editor |
+  | `readonly` | `boolean` | `false` | Make the editor read-only |
+  | `class` | `any` | `nil` | Additional CSS classes |
+  """ %>
+  <.dm_markdown content={docs} />
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">Basic Editor</h2>
+    <.dm_markdown_input
+      id="basic-editor"
+      name="body"
+      value={"# Hello\n\nStart writing **markdown** here.\n\n- Item one\n- Item two\n"}
+    />
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">With Placeholder</h2>
+    <.dm_markdown_input
+      id="placeholder-editor"
+      name="content"
+      placeholder="Write your markdown here…"
+    />
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">Dark Theme</h2>
+    <.dm_markdown_input
+      id="dark-editor"
+      name="body_dark"
+      theme="atom-one-dark"
+      value={"# Dark Theme\n\n```elixir\ndefmodule Example do\n  def hello, do: :world\nend\n```\n"}
+    />
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">Mermaid Diagram</h2>
+    <.dm_markdown_input
+      id="mermaid-editor"
+      name="body_mermaid"
+      value={"# Mermaid Support\n\n```mermaid\ngraph LR;\n  A-->B;\n  A-->C;\n  B-->D;\n  C-->D;\n```\n"}
+    />
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">Disabled</h2>
+    <.dm_markdown_input
+      id="disabled-editor"
+      name="body_disabled"
+      disabled={true}
+      value={"This editor is **disabled**."}
+    />
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">Read-only</h2>
+    <.dm_markdown_input
+      id="readonly-editor"
+      name="body_readonly"
+      readonly={true}
+      value={"# Read-only content\n\nThis editor is **read-only**.\n"}
+    />
+  </section>
+</.dm_card>
