@@ -674,13 +674,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
       assert result =~ "input-bordered"
     end
 
-    test "renders compact input without variant class by default" do
+    test "renders compact input with bordered variant by default" do
       result =
         render_component(&dm_compact_input/1, %{name: "user", label: "User", value: nil})
 
       refute result =~ "input-ghost"
       refute result =~ "input-filled"
-      refute result =~ "input-bordered"
+      assert result =~ "input-bordered"
     end
 
     test "renders compact select with ghost variant" do
@@ -711,7 +711,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
       assert result =~ "select-filled"
     end
 
-    test "renders compact select without variant class by default" do
+    test "renders compact select with bordered variant by default" do
       result =
         render_component(&dm_compact_input/1, %{
           name: "opt",
@@ -723,7 +723,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInputTest do
 
       refute result =~ "select-ghost"
       refute result =~ "select-filled"
-      refute result =~ "select-bordered"
+      assert result =~ "select-bordered"
     end
 
     test "renders compact input with variant and color combined" do

@@ -48,7 +48,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
   attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "select size")
 
   attr(:variant, :string,
-    default: nil,
+    default: "bordered",
     values: ["ghost", "filled", "bordered", nil],
     doc: "the select style variant (ghost, filled, bordered)"
   )

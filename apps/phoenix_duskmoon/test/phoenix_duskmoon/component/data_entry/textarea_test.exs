@@ -352,7 +352,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
       assert result =~ "textarea-bordered"
     end
 
-    test "renders textarea without variant class by default" do
+    test "renders textarea with bordered variant by default" do
       result =
         render_component(&dm_textarea/1, %{
           name: "notes",
@@ -361,7 +361,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
 
       refute result =~ "textarea-ghost"
       refute result =~ "textarea-filled"
-      refute result =~ "textarea-bordered"
+      assert result =~ "textarea-bordered"
     end
 
     test "renders textarea with filled variant and color combined" do

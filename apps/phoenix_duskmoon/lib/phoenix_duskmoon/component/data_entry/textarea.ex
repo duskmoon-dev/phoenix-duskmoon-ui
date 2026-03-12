@@ -37,7 +37,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
   attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg"], doc: "textarea size")
 
   attr(:variant, :string,
-    default: nil,
+    default: "bordered",
     values: ["ghost", "filled", "bordered", nil],
     doc: "the textarea style variant (ghost, filled, bordered)"
   )

@@ -54,7 +54,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CompactInput do
   )
 
   attr(:variant, :string,
-    default: nil,
+    default: "bordered",
     values: ["ghost", "filled", "bordered", nil],
     doc: "the input style variant (ghost, filled, bordered)"
   )

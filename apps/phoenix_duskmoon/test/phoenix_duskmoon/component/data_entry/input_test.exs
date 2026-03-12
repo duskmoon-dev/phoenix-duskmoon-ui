@@ -3487,7 +3487,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
       assert result =~ "input-bordered"
     end
 
-    test "renders text input without variant class by default" do
+    test "renders text input with bordered variant by default" do
       result =
         render_component(&dm_input/1, %{
           type: "text",
@@ -3498,7 +3498,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
 
       refute result =~ "input-ghost"
       refute result =~ "input-filled"
-      refute result =~ "input-bordered"
+      assert result =~ "input-bordered"
     end
 
     test "renders ghost variant with color" do

@@ -453,7 +453,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
       assert result =~ "select-bordered"
     end
 
-    test "renders select without variant class by default" do
+    test "renders select with bordered variant by default" do
       result =
         render_component(&dm_select/1, %{
           name: "opt",
@@ -463,7 +463,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
 
       refute result =~ "select-ghost"
       refute result =~ "select-filled"
-      refute result =~ "select-bordered"
+      assert result =~ "select-bordered"
     end
 
     test "renders select with ghost variant and color combined" do
