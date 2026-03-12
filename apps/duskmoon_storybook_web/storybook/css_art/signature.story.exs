@@ -1,4 +1,4 @@
-defmodule Storybook.Fun.Signature do
+defmodule Storybook.CssArt.Signature do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.CssArt.Signature.dm_art_signature/1

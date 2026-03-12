@@ -1,4 +1,4 @@
-defmodule Storybook.Fun.PlasmaBall do
+defmodule Storybook.CssArt.PlasmaBall do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.CssArt.PlasmaBall.dm_art_plasma_ball/1

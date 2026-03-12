@@ -1,0 +1,104 @@
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">CSS Art</span>
+    <span class="text-sm opacity-60">PhoenixDuskmoon.CssArt</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  Pure CSS animated visual effects. These are decorative components from the `PhoenixDuskmoon.CssArt` module
+  and are separate from the standard UI component library.
+
+  ## Setup
+
+  ```elixir
+  # In your view helper or live_view:
+  use PhoenixDuskmoon.CssArt
+  ```
+  """} />
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+    <.dm_card>
+      <:title>
+        <.link navigate={~p"/css-art/button-noise"} class="text-primary hover:underline">
+          Button Noise
+        </.link>
+      </:title>
+      <p class="text-sm opacity-70">Animated button with light-bar noise effect on hover.</p>
+      <:action>
+        <.link navigate={~p"/css-art/button-noise"}>
+          <.dm_btn variant="ghost" size="sm">View</.dm_btn>
+        </.link>
+      </:action>
+    </.dm_card>
+
+    <.dm_card>
+      <:title>
+        <.link navigate={~p"/css-art/eclipse"} class="text-primary hover:underline">
+          Eclipse
+        </.link>
+      </:title>
+      <p class="text-sm opacity-70">Animated celestial eclipse with 6 rotating layers.</p>
+      <:action>
+        <.link navigate={~p"/css-art/eclipse"}>
+          <.dm_btn variant="ghost" size="sm">View</.dm_btn>
+        </.link>
+      </:action>
+    </.dm_card>
+
+    <.dm_card>
+      <:title>
+        <.link navigate={~p"/css-art/plasma-ball"} class="text-primary hover:underline">
+          Plasma Ball
+        </.link>
+      </:title>
+      <p class="text-sm opacity-70">Interactive plasma ball with electricity effects. Click to toggle.</p>
+      <:action>
+        <.link navigate={~p"/css-art/plasma-ball"}>
+          <.dm_btn variant="ghost" size="sm">View</.dm_btn>
+        </.link>
+      </:action>
+    </.dm_card>
+
+    <.dm_card>
+      <:title>
+        <.link navigate={~p"/css-art/signature"} class="text-primary hover:underline">
+          Signature
+        </.link>
+      </:title>
+      <p class="text-sm opacity-70">Decorative seal/watermark stamp, positioned absolutely.</p>
+      <:action>
+        <.link navigate={~p"/css-art/signature"}>
+          <.dm_btn variant="ghost" size="sm">View</.dm_btn>
+        </.link>
+      </:action>
+    </.dm_card>
+
+    <.dm_card>
+      <:title>
+        <.link navigate={~p"/css-art/snow"} class="text-primary hover:underline">
+          Snow
+        </.link>
+      </:title>
+      <p class="text-sm opacity-70">Animated falling snowflakes with customizable count and color.</p>
+      <:action>
+        <.link navigate={~p"/css-art/snow"}>
+          <.dm_btn variant="ghost" size="sm">View</.dm_btn>
+        </.link>
+      </:action>
+    </.dm_card>
+
+    <.dm_card>
+      <:title>
+        <.link navigate={~p"/css-art/spotlight-search"} class="text-primary hover:underline">
+          Spotlight Search
+        </.link>
+      </:title>
+      <p class="text-sm opacity-70">macOS-style spotlight search dialog with keyboard shortcut support.</p>
+      <:action>
+        <.link navigate={~p"/css-art/spotlight-search"}>
+          <.dm_btn variant="ghost" size="sm">View</.dm_btn>
+        </.link>
+      </:action>
+    </.dm_card>
+  </div>
+</.dm_card>

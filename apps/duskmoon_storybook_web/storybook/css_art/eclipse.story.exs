@@ -1,4 +1,4 @@
-defmodule Storybook.Fun.Eclipse do
+defmodule Storybook.CssArt.Eclipse do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.CssArt.Eclipse.dm_art_eclipse/1

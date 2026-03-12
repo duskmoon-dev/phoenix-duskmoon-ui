@@ -102,13 +102,17 @@ defmodule DuskmoonStorybookWeb.Router do
 
     # Icon
     get "/icon/icons", IconController, :icons
+  end
 
-    # Fun
-    get "/fun/button-noise", FunComponentController, :button_noise
-    get "/fun/eclipse", FunComponentController, :eclipse
-    get "/fun/plasma-ball", FunComponentController, :plasma_ball
-    get "/fun/signature", FunComponentController, :signature
-    get "/fun/snow", FunComponentController, :snow
-    get "/fun/spotlight-search", FunComponentController, :spotlight_search
+  scope "/css-art", DuskmoonStorybookWeb do
+    pipe_through :browser
+
+    get "/", CssArtController, :index
+    get "/button-noise", CssArtController, :button_noise
+    get "/eclipse", CssArtController, :eclipse
+    get "/plasma-ball", CssArtController, :plasma_ball
+    get "/signature", CssArtController, :signature
+    get "/snow", CssArtController, :snow
+    get "/spotlight-search", CssArtController, :spotlight_search
   end
 end

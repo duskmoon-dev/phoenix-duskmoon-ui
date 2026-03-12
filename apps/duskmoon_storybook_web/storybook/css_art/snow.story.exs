@@ -1,4 +1,4 @@
-defmodule Storybook.Fun.Snow do
+defmodule Storybook.CssArt.Snow do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.CssArt.Snow.dm_art_snow/1

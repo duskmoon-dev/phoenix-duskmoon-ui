@@ -100,7 +100,7 @@ Components are organized into three main categories:
 - When using templates, **always use explicit component calls** - the `.variation` helper is not available in template contexts
 
 **Demo pages** (standalone controller-based pages) live under `apps/duskmoon_storybook_web/lib/duskmoon_storybook_web/controllers/components/`:
-- 8 controllers (one per category): ActionController, DataDisplayController, DataEntryController, FeedbackController, NavigationController, LayoutController, IconController, FunComponentController
+- 8 controllers (one per category): ActionController, DataDisplayController, DataEntryController, FeedbackController, NavigationController, LayoutController, IconController, CssArtController
 - Each controller has a matching HTML module and HEEX templates directory
 - Routes are scoped under `/components/{category}/{component}` in `router.ex`
 - The sidebar in `app.html.heex` links to all demo pages
@@ -183,7 +183,7 @@ Releases are triggered manually via GitHub Actions `workflow_dispatch` or by pus
 - All components must have `@doc type: :component`
 - Component naming: prefix with `dm_` (e.g., `dm_btn`, `dm_mdi`)
 - Form components go in `PhoenixDuskmoon.Component.Form.*` namespace
-- Fun/interactive components go in `PhoenixDuskmoon.Component.Fun.*` namespace
+- CSS Art components go in `PhoenixDuskmoon.CssArt.*` namespace
 - Use `render_component/2` for component tests
 
 ### Frontend/Styling

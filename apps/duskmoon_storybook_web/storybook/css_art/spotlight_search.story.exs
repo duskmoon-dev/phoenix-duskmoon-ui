@@ -1,4 +1,4 @@
-defmodule Storybook.Fun.SpotlightSearch do
+defmodule Storybook.CssArt.SpotlightSearch do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.CssArt.SpotlightSearch.dm_art_spotlight_search/1

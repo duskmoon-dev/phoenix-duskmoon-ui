@@ -1,4 +1,4 @@
-defmodule Storybook.Fun.ButtonNoise do
+defmodule Storybook.CssArt.ButtonNoise do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.CssArt.ButtonNoise.dm_art_button_noise/1

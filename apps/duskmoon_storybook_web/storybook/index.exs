@@ -494,44 +494,44 @@
   },
   %{
     kind: :folder,
-    name: "Fun",
-    path: "/fun",
+    name: "CSS Art",
+    path: "/css_art",
     entries: [
       %{
         kind: :story,
         name: "Button Noise",
-        path: "/fun/button_noise",
-        module: Storybook.Fun.ButtonNoise
+        path: "/css_art/button_noise",
+        module: Storybook.CssArt.ButtonNoise
       },
       %{
         kind: :story,
         name: "Eclipse",
-        path: "/fun/eclipse",
-        module: Storybook.Fun.Eclipse
+        path: "/css_art/eclipse",
+        module: Storybook.CssArt.Eclipse
       },
       %{
         kind: :story,
         name: "Plasma Ball",
-        path: "/fun/plasma_ball",
-        module: Storybook.Fun.PlasmaBall
+        path: "/css_art/plasma_ball",
+        module: Storybook.CssArt.PlasmaBall
       },
       %{
         kind: :story,
         name: "Signature",
-        path: "/fun/signature",
-        module: Storybook.Fun.Signature
+        path: "/css_art/signature",
+        module: Storybook.CssArt.Signature
       },
       %{
         kind: :story,
         name: "Snow",
-        path: "/fun/snow",
-        module: Storybook.Fun.Snow
+        path: "/css_art/snow",
+        module: Storybook.CssArt.Snow
       },
       %{
         kind: :story,
         name: "Spotlight Search",
-        path: "/fun/spotlight_search",
-        module: Storybook.Fun.SpotlightSearch
+        path: "/css_art/spotlight_search",
+        module: Storybook.CssArt.SpotlightSearch
       }
     ]
   }
