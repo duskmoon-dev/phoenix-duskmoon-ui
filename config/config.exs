@@ -51,7 +51,7 @@ config :bun,
     env: %{"NODE_PATH" => "#{Path.expand("../apps", __DIR__)}:#{Path.expand("../deps", __DIR__)}"}
   ],
   storybook: [
-    args: ~w(build assets/js/app.js --bundle --outdir=priv/static/assets),
+    args: ~w(build assets/js/app.js --bundle --format=iife --outdir=priv/static/assets),
     cd: Path.expand("../apps/duskmoon_storybook_web", __DIR__),
     env: %{"NODE_PATH" => "#{Path.expand("../deps", __DIR__)}:#{Path.expand("../apps", __DIR__)}"}
   ]
