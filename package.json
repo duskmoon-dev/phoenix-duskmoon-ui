@@ -18,7 +18,7 @@
     },
     "workspaces": ["apps/duskmoon_storybook_web", "apps/phoenix_duskmoon"],
     "dependencies": {
-        "@duskmoon-dev/core": "1.11.1",
+        "@duskmoon-dev/core": "1.12.0",
         "@duskmoon-dev/el-accordion": "0.7.0",
         "@duskmoon-dev/el-alert": "0.7.0",
         "@duskmoon-dev/el-autocomplete": "0.7.0",
@@ -48,6 +48,6 @@
         "@duskmoon-dev/el-table": "0.7.0",
         "@duskmoon-dev/el-tabs": "0.7.0",
         "@duskmoon-dev/el-tooltip": "0.7.0",
-        "@duskmoon-dev/elements": "^0.8.1"
+        "@duskmoon-dev/elements": "^0.8.2"
     }
 }
