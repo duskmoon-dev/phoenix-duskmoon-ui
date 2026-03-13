@@ -1,5 +1,5 @@
 ---
-description: Update @duskmoon-dev/core and @duskmoon-dev/elements packages, sync theme bridge + storybook registrations, rebuild assets, and verify.
+description: Update @duskmoon-dev/core, @duskmoon-dev/elements, and @duskmoon-dev/css-art packages, sync theme bridge + storybook registrations + CSS art imports, rebuild assets, and verify.
 ---
 
 ## User Input
@@ -13,10 +13,14 @@ If the user input is "dry-run" or "--dry-run", only perform Steps 1-2 and report
 ## Step 1: Update @duskmoon-dev/* packages
 
 1. Record the **before** versions by reading `bun.lock` entries for `@duskmoon-dev/*`.
-2. Run: `bun update --latest @duskmoon-dev/core @duskmoon-dev/elements`
+2. Check if `@duskmoon-dev/css-art` is in `package.json` dependencies. If it is missing, add it by running:
+   ```bash
+   bun add @duskmoon-dev/css-art
+   ```
+3. Run: `bun update --latest @duskmoon-dev/core @duskmoon-dev/elements @duskmoon-dev/css-art`
    - This will also update all transitive `@duskmoon-dev/el-*` sub-packages.
-3. Record the **after** versions from `bun.lock`.
-4. Print a before/after version diff table. If nothing changed, inform the user and ask whether to continue with the remaining steps anyway.
+4. Record the **after** versions from `bun.lock`.
+5. Print a before/after version diff table. If nothing changed, inform the user and ask whether to continue with the remaining steps anyway.
 
 ## Step 2: Detect new custom elements
 
@@ -30,7 +34,17 @@ If the user input is "dry-run" or "--dry-run", only perform Steps 1-2 and report
    - **New elements**: in upstream `elements/package.json` but missing from bridge CSS or app.js
    - **Removed elements**: in bridge CSS or app.js but no longer in upstream (report only, do not auto-remove)
 
-If this is a dry-run, stop here and report findings.
+## Step 2b: Detect new CSS art components
+
+1. List all files in `node_modules/@duskmoon-dev/css-art/dist/art/` (excluding `index.css`). Each file name (without `.css`) is an art component slug, e.g. `button-noise`, `eclipse`, `plasma-ball`.
+2. Read `apps/phoenix_duskmoon/assets/css/phoenix_duskmoon.css` and extract all CSS art import lines — both local (`./css_art/*.css`) and upstream (`@duskmoon-dev/css-art/dist/art/*.css`) — to build the current art slug list.
+   - Local import `./css_art/button-noise.css` → slug `button-noise`
+   - Upstream import `@duskmoon-dev/css-art/dist/art/button-noise.css` → slug `button-noise`
+3. Compare and report:
+   - **New art components**: in upstream `dist/art/` but no matching slug in `phoenix_duskmoon.css`
+   - **Removed art components**: slug in `phoenix_duskmoon.css` but no longer in upstream (report only, do not auto-remove)
+
+If this is a dry-run, stop here and report all findings from Steps 2 and 2b.
 
 ## Step 3: Update element-theme-bridge.css
 
@@ -39,6 +53,14 @@ If new `el-dm-*` elements were found in Step 2:
 1. Read `apps/phoenix_duskmoon/assets/css/element-theme-bridge.css`.
 2. Add the new element tag selectors to the comma-separated selector list (before the opening `{`), maintaining alphabetical order among the `el-dm-*` selectors.
 3. Write the updated file. Do NOT change the CSS property block — only the selector list.
+
+## Step 3b: Update phoenix_duskmoon.css CSS art imports
+
+If new CSS art components were found in Step 2b:
+
+1. Read `apps/phoenix_duskmoon/assets/css/phoenix_duskmoon.css`.
+2. For each new art slug, add an import line `@import "@duskmoon-dev/css-art/dist/art/<slug>.css";` in the CSS Art section (after the existing art imports), maintaining alphabetical order by slug.
+3. Write the updated file. Do NOT change any other section.
 
 ## Step 4: Update storybook app.js registrations
 
@@ -73,5 +95,6 @@ After all steps, print a summary:
 
 - Packages updated (with version changes)
 - New elements added (if any)
+- New CSS art components added (if any)
 - Build status
 - Test status
