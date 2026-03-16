@@ -104,7 +104,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/icon/icons", IconController, :icons
   end
 
-  scope "/css-art", DuskmoonStorybookWeb do
+  scope "/art-component", DuskmoonStorybookWeb do
     pipe_through :browser
 
     get "/", ArtComponentController, :index
