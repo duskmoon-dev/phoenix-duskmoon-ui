@@ -15,15 +15,33 @@
 
   ## Usage
   ```elixir
-  <.dm_art_snow id="my-snow" />
+  <.dm_art_snow id="my-snow" fall />
+  <.dm_art_snow id="my-snow-unicode" unicode />
+  <.dm_art_snow id="my-snow-static" />
   ```
   """} />
 
-  <h3 class="text-xl font-semibold mt-8 mb-4">Default</h3>
+  <h3 class="text-xl font-semibold mt-8 mb-4">Static</h3>
   <div
     class="bg-gradient-to-b from-slate-700 to-slate-900 rounded-lg overflow-hidden"
     style="height: 300px;"
   >
-    <.dm_art_snow id="snow-default" />
+    <.dm_art_snow id="snow-static" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Unicode Snowflake</h3>
+  <div
+    class="bg-gradient-to-b from-slate-700 to-slate-900 rounded-lg overflow-hidden"
+    style="height: 300px;"
+  >
+    <.dm_art_snow id="snow-unicode" unicode />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Fall</h3>
+  <div
+    class="bg-gradient-to-b from-slate-700 to-slate-900 rounded-lg overflow-hidden"
+    style="height: 300px;"
+  >
+    <.dm_art_snow id="snow-fall" fall />
   </div>
 </.dm_card>

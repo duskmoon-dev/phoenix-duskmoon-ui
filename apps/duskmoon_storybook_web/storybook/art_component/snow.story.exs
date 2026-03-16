@@ -7,10 +7,26 @@ defmodule Storybook.ArtComponent.Snow do
   def variations do
     [
       %Variation{
-        id: :default,
-        description: "Default snow",
+        id: :static,
+        description: "Static snowflakes (no animation)",
         attributes: %{
-          id: "snow-default"
+          id: "snow-static"
+        }
+      },
+      %Variation{
+        id: :unicode,
+        description: "Unicode snowflake character variant",
+        attributes: %{
+          id: "snow-unicode",
+          unicode: true
+        }
+      },
+      %Variation{
+        id: :fall,
+        description: "Animated falling snowflakes",
+        attributes: %{
+          id: "snow-fall",
+          fall: true
         }
       }
     ]
