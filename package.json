@@ -17,8 +17,13 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "workspaces": ["apps/duskmoon_storybook_web", "apps/phoenix_duskmoon"],
+    "overrides": {
+        "@duskmoon-dev/el-art-flower-animation": "0.9.0"
+    },
     "dependencies": {
+        "@duskmoon-dev/art-elements": "0.9.0",
         "@duskmoon-dev/core": "1.12.0",
+        "@duskmoon-dev/css-art": "1.12.4",
         "@duskmoon-dev/el-accordion": "0.7.0",
         "@duskmoon-dev/el-alert": "0.7.0",
         "@duskmoon-dev/el-autocomplete": "0.7.0",

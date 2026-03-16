@@ -18,3 +18,13 @@
 @import "./css_art/signature.css";
 @import "./css_art/snow.css";
 @import "./css_art/spotlight-search.css";
+@import "@duskmoon-dev/css-art/dist/art/atom.css";
+@import "@duskmoon-dev/css-art/dist/art/cat-stargazer.css";
+@import "@duskmoon-dev/css-art/dist/art/circular-gallery.css";
+@import "@duskmoon-dev/css-art/dist/art/color-spin.css";
+@import "@duskmoon-dev/css-art/dist/art/flower-animation.css";
+@import "@duskmoon-dev/css-art/dist/art/gemini-input.css";
+@import "@duskmoon-dev/css-art/dist/art/moon.css";
+@import "@duskmoon-dev/css-art/dist/art/mountain.css";
+@import "@duskmoon-dev/css-art/dist/art/sun.css";
+@import "@duskmoon-dev/css-art/dist/art/synthwave-starfield.css";
