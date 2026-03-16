@@ -8,9 +8,17 @@ defmodule Storybook.ArtComponent.PlasmaBall do
     [
       %Variation{
         id: :default,
-        description: "Default plasma ball",
+        description: "Default plasma ball with base",
         attributes: %{
           id: "plasma-default"
+        }
+      },
+      %Variation{
+        id: :no_base,
+        description: "Plasma ball without base",
+        attributes: %{
+          id: "plasma-no-base",
+          "no-base": true
         }
       }
     ]
