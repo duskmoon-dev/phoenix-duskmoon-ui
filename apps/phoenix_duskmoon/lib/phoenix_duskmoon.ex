@@ -25,8 +25,8 @@ defmodule PhoenixDuskmoon do
         quote do
           # import all duskmoon ui component
           use PhoenixDuskmoon.Component
-          # import all duskmoon ui css art component
-          use PhoenixDuskmoon.CssArt
+          # import all duskmoon ui art components
+          use PhoenixDuskmoon.ArtComponent
           ...
         end
       end

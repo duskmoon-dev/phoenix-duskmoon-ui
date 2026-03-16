@@ -107,12 +107,21 @@ defmodule DuskmoonStorybookWeb.Router do
   scope "/css-art", DuskmoonStorybookWeb do
     pipe_through :browser
 
-    get "/", CssArtController, :index
-    get "/button-noise", CssArtController, :button_noise
-    get "/eclipse", CssArtController, :eclipse
-    get "/plasma-ball", CssArtController, :plasma_ball
-    get "/signature", CssArtController, :signature
-    get "/snow", CssArtController, :snow
-    get "/spotlight-search", CssArtController, :spotlight_search
+    get "/", ArtComponentController, :index
+    get "/atom", ArtComponentController, :atom
+    get "/cat-stargazer", ArtComponentController, :cat_stargazer
+    get "/circular-gallery", ArtComponentController, :circular_gallery
+    get "/color-spin", ArtComponentController, :color_spin
+    get "/eclipse", ArtComponentController, :eclipse
+    get "/flower-animation", ArtComponentController, :flower_animation
+    get "/moon", ArtComponentController, :moon
+    get "/mountain", ArtComponentController, :mountain
+    get "/plasma-ball", ArtComponentController, :plasma_ball
+    get "/snow", ArtComponentController, :snow
+    get "/sun", ArtComponentController, :sun
+    get "/synthwave-starfield", ArtComponentController, :synthwave_starfield
+    get "/button-noise", ArtComponentController, :button_noise
+    get "/signature", ArtComponentController, :signature
+    get "/spotlight-search", ArtComponentController, :spotlight_search
   end
 end

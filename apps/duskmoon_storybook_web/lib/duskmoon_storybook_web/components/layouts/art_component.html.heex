@@ -1,0 +1,80 @@
+<main class="container flex flex-row justify-start items-start relative">
+  <.flash_group flash={@flash} />
+  <.dm_left_menu
+    class={[
+      "sticky top-0",
+      "w-64 my-2 rounded min-h-[calc(100vh-56px)]",
+      "bg-base-300/30"
+    ]}
+    active={assigns[:active_menu]}
+  >
+    <:title class="text-on-surface-variant font-bold">
+      Art Components
+    </:title>
+    <:menu>
+      <.dm_left_menu_group active={assigns[:active_menu]}>
+        <:title>Components</:title>
+        <:menu id="art-index" to={~p"/css-art"}>
+          <.dm_mdi name="view-grid" class="w-4 h-4" /> Overview
+        </:menu>
+        <:menu id="art-atom" to={~p"/css-art/atom"}>
+          <.dm_mdi name="atom" class="w-4 h-4" /> Atom
+        </:menu>
+        <:menu id="art-cat-stargazer" to={~p"/css-art/cat-stargazer"}>
+          <.dm_mdi name="cat" class="w-4 h-4" /> Cat Stargazer
+        </:menu>
+        <:menu id="art-circular-gallery" to={~p"/css-art/circular-gallery"}>
+          <.dm_mdi name="image-multiple" class="w-4 h-4" /> Circular Gallery
+        </:menu>
+        <:menu id="art-color-spin" to={~p"/css-art/color-spin"}>
+          <.dm_mdi name="palette" class="w-4 h-4" /> Color Spin
+        </:menu>
+        <:menu id="art-eclipse" to={~p"/css-art/eclipse"}>
+          <.dm_mdi name="moon-waning-crescent" class="w-4 h-4" /> Eclipse
+        </:menu>
+        <:menu id="art-flower-animation" to={~p"/css-art/flower-animation"}>
+          <.dm_mdi name="flower" class="w-4 h-4" /> Flower Animation
+        </:menu>
+        <:menu id="art-moon" to={~p"/css-art/moon"}>
+          <.dm_mdi name="moon-full" class="w-4 h-4" /> Moon
+        </:menu>
+        <:menu id="art-mountain" to={~p"/css-art/mountain"}>
+          <.dm_mdi name="image-filter-hdr" class="w-4 h-4" /> Mountain
+        </:menu>
+        <:menu id="art-plasma-ball" to={~p"/css-art/plasma-ball"}>
+          <.dm_mdi name="flash" class="w-4 h-4" /> Plasma Ball
+        </:menu>
+        <:menu id="art-snow" to={~p"/css-art/snow"}>
+          <.dm_mdi name="snowflake" class="w-4 h-4" /> Snow
+        </:menu>
+        <:menu id="art-sun" to={~p"/css-art/sun"}>
+          <.dm_mdi name="white-balance-sunny" class="w-4 h-4" /> Sun
+        </:menu>
+        <:menu id="art-synthwave-starfield" to={~p"/css-art/synthwave-starfield"}>
+          <.dm_mdi name="star-four-points" class="w-4 h-4" /> Synthwave Starfield
+        </:menu>
+      </.dm_left_menu_group>
+    </:menu>
+  </.dm_left_menu>
+
+  <div class="flex flex-col flex-auto">
+    {@inner_content}
+  </div>
+</main>
+
+<.dm_page_footer class={["bg-primary text-primary-content"]}>
+  <:section title="Web Sites" body_class="text-primary-content/70">
+    <.link href="https://github.com/duskmoon-dev">Github Repos</.link>
+    <.link href="https://gsmlg.org/blogs">Blog</.link>
+    <.link href="https://gsmlg.org/tools">Tools</.link>
+  </:section>
+  <:section title="Other Libraries" body_class="text-primary-content/70">
+    <.link href="https://gsmlg-dev.github.io/yew-duskmoon-ui/">Yew Duskmoon UI</.link>
+    <.link href="https://gsmlg-dev.github.io/lit">Web Component</.link>
+    <.link href="https://gsmlg-dev.github.io/react">React Component</.link>
+    <.link href="https://gsmlg-dev.github.io/three-fiber">3D Component</.link>
+  </:section>
+  <:copyright title="Copyright - GSMLG.dev">
+    Made with ❤️ for building a better Web.
+  </:copyright>
+</.dm_page_footer>

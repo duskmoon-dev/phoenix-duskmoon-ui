@@ -1,0 +1,19 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/css-art"}>Art Components</:crumb>
+  <:crumb>Button Noise</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Button Noise</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Notice
+
+  The `dm_art_button_noise` component has been removed.
+  Art components now use `@duskmoon-dev/art-elements` custom elements.
+
+  For animated button effects, please use `@duskmoon-dev/css-art` CSS classes directly.
+  """} />
+</.dm_card>

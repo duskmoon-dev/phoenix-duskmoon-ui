@@ -1,0 +1,26 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/css-art"}>Art Components</:crumb>
+  <:crumb>Cat Stargazer</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Cat Stargazer</span>
+    <span class="text-sm opacity-60">dm_art_cat_stargazer</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Animated cat stargazer using the `<el-dm-art-cat-stargazer>` custom element.
+
+  ## Usage
+  ```elixir
+  <.dm_art_cat_stargazer id="my-cat" />
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Default</h3>
+  <div class="flex justify-center p-8 bg-base-200 rounded-lg">
+    <.dm_art_cat_stargazer id="cat-default" />
+  </div>
+</.dm_card>

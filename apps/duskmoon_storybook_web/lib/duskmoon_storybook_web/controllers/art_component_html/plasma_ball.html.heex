@@ -1,0 +1,26 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/css-art"}>Art Components</:crumb>
+  <:crumb>Plasma Ball</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Plasma Ball</span>
+    <span class="text-sm opacity-60">dm_art_plasma_ball</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Interactive plasma ball using the `<el-dm-art-plasma-ball>` custom element.
+
+  ## Usage
+  ```elixir
+  <.dm_art_plasma_ball id="my-plasma" />
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Default</h3>
+  <div class="flex justify-center p-8 bg-base-200 rounded-lg">
+    <.dm_art_plasma_ball id="plasma-default" />
+  </div>
+</.dm_card>

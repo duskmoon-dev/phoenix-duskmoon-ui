@@ -11,20 +11,17 @@
 @import "@duskmoon-dev/core/components";
 @import "./element-theme-bridge.css";
 
-/* CSS Art — decorative/animated visual effects */
-@import "./css_art/button-noise.css";
-@import "./css_art/eclipse.css";
-@import "./css_art/plasma-ball.css";
-@import "./css_art/signature.css";
-@import "./css_art/snow.css";
-@import "./css_art/spotlight-search.css";
+/* CSS Art — decorative/animated visual effects from @duskmoon-dev/css-art */
 @import "@duskmoon-dev/css-art/dist/art/atom.css";
 @import "@duskmoon-dev/css-art/dist/art/cat-stargazer.css";
 @import "@duskmoon-dev/css-art/dist/art/circular-gallery.css";
 @import "@duskmoon-dev/css-art/dist/art/color-spin.css";
+@import "@duskmoon-dev/css-art/dist/art/eclipse.css";
 @import "@duskmoon-dev/css-art/dist/art/flower-animation.css";
 @import "@duskmoon-dev/css-art/dist/art/gemini-input.css";
 @import "@duskmoon-dev/css-art/dist/art/moon.css";
 @import "@duskmoon-dev/css-art/dist/art/mountain.css";
+@import "@duskmoon-dev/css-art/dist/art/plasma-ball.css";
+@import "@duskmoon-dev/css-art/dist/art/snow.css";
 @import "@duskmoon-dev/css-art/dist/art/sun.css";
 @import "@duskmoon-dev/css-art/dist/art/synthwave-starfield.css";

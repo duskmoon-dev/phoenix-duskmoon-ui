@@ -128,13 +128,19 @@ defmodule PhoenixDuskmoon.Component do
       # Icon components
       import PhoenixDuskmoon.Component.Icon.Icons
 
-      # CSS Art components
-      import PhoenixDuskmoon.CssArt.ButtonNoise
-      import PhoenixDuskmoon.CssArt.Eclipse
-      import PhoenixDuskmoon.CssArt.PlasmaBall
-      import PhoenixDuskmoon.CssArt.Signature
-      import PhoenixDuskmoon.CssArt.Snow
-      import PhoenixDuskmoon.CssArt.SpotlightSearch
+      # Art components
+      import PhoenixDuskmoon.ArtComponent.Atom
+      import PhoenixDuskmoon.ArtComponent.CatStargazer
+      import PhoenixDuskmoon.ArtComponent.CircularGallery
+      import PhoenixDuskmoon.ArtComponent.ColorSpin
+      import PhoenixDuskmoon.ArtComponent.Eclipse
+      import PhoenixDuskmoon.ArtComponent.FlowerAnimation
+      import PhoenixDuskmoon.ArtComponent.Moon
+      import PhoenixDuskmoon.ArtComponent.Mountain
+      import PhoenixDuskmoon.ArtComponent.PlasmaBall
+      import PhoenixDuskmoon.ArtComponent.Snow
+      import PhoenixDuskmoon.ArtComponent.Sun
+      import PhoenixDuskmoon.ArtComponent.SynthwaveStarfield
     end
   end
 

@@ -1,0 +1,92 @@
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Art Components</span>
+    <span class="text-sm opacity-60">PhoenixDuskmoon.ArtComponent</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  Decorative and animated visual effects powered by `@duskmoon-dev/art-elements` custom elements
+  and `@duskmoon-dev/css-art`.
+
+  ## Setup
+
+  ```elixir
+  # In your view helper or live_view:
+  use PhoenixDuskmoon.ArtComponent
+  ```
+  """} />
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+    <.dm_card>
+      <:title><.link navigate={~p"/css-art/atom"} class="text-primary hover:underline">Atom</.link></:title>
+      <p class="text-sm opacity-70">Atom with orbiting electrons — `el-dm-art-atom`.</p>
+      <:action><.link navigate={~p"/css-art/atom"}><.dm_btn variant="ghost" size="sm">View</.dm_btn></.link></:action>
+    </.dm_card>
+
+    <.dm_card>
+      <:title><.link navigate={~p"/css-art/cat-stargazer"} class="text-primary hover:underline">Cat Stargazer</.link></:title>
+      <p class="text-sm opacity-70">Animated cat stargazer — `el-dm-art-cat-stargazer`.</p>
+      <:action><.link navigate={~p"/css-art/cat-stargazer"}><.dm_btn variant="ghost" size="sm">View</.dm_btn></.link></:action>
+    </.dm_card>
+
+    <.dm_card>
+      <:title><.link navigate={~p"/css-art/circular-gallery"} class="text-primary hover:underline">Circular Gallery</.link></:title>
+      <p class="text-sm opacity-70">Circular gallery — `el-dm-art-circular-gallery`.</p>
+      <:action><.link navigate={~p"/css-art/circular-gallery"}><.dm_btn variant="ghost" size="sm">View</.dm_btn></.link></:action>
+    </.dm_card>
+
+    <.dm_card>
+      <:title><.link navigate={~p"/css-art/color-spin"} class="text-primary hover:underline">Color Spin</.link></:title>
+      <p class="text-sm opacity-70">Spinning color animation — `el-dm-art-color-spin`.</p>
+      <:action><.link navigate={~p"/css-art/color-spin"}><.dm_btn variant="ghost" size="sm">View</.dm_btn></.link></:action>
+    </.dm_card>
+
+    <.dm_card>
+      <:title><.link navigate={~p"/css-art/eclipse"} class="text-primary hover:underline">Eclipse</.link></:title>
+      <p class="text-sm opacity-70">Animated celestial eclipse — `el-dm-art-eclipse`.</p>
+      <:action><.link navigate={~p"/css-art/eclipse"}><.dm_btn variant="ghost" size="sm">View</.dm_btn></.link></:action>
+    </.dm_card>
+
+    <.dm_card>
+      <:title><.link navigate={~p"/css-art/flower-animation"} class="text-primary hover:underline">Flower Animation</.link></:title>
+      <p class="text-sm opacity-70">Blooming flower animation — `el-dm-art-flower-animation`.</p>
+      <:action><.link navigate={~p"/css-art/flower-animation"}><.dm_btn variant="ghost" size="sm">View</.dm_btn></.link></:action>
+    </.dm_card>
+
+    <.dm_card>
+      <:title><.link navigate={~p"/css-art/moon"} class="text-primary hover:underline">Moon</.link></:title>
+      <p class="text-sm opacity-70">Moon with craters and glow — `el-dm-art-moon`.</p>
+      <:action><.link navigate={~p"/css-art/moon"}><.dm_btn variant="ghost" size="sm">View</.dm_btn></.link></:action>
+    </.dm_card>
+
+    <.dm_card>
+      <:title><.link navigate={~p"/css-art/mountain"} class="text-primary hover:underline">Mountain</.link></:title>
+      <p class="text-sm opacity-70">Mountain landscape — `el-dm-art-mountain`.</p>
+      <:action><.link navigate={~p"/css-art/mountain"}><.dm_btn variant="ghost" size="sm">View</.dm_btn></.link></:action>
+    </.dm_card>
+
+    <.dm_card>
+      <:title><.link navigate={~p"/css-art/plasma-ball"} class="text-primary hover:underline">Plasma Ball</.link></:title>
+      <p class="text-sm opacity-70">Interactive plasma ball — `el-dm-art-plasma-ball`.</p>
+      <:action><.link navigate={~p"/css-art/plasma-ball"}><.dm_btn variant="ghost" size="sm">View</.dm_btn></.link></:action>
+    </.dm_card>
+
+    <.dm_card>
+      <:title><.link navigate={~p"/css-art/snow"} class="text-primary hover:underline">Snow</.link></:title>
+      <p class="text-sm opacity-70">Falling snow animation — `el-dm-art-snow`.</p>
+      <:action><.link navigate={~p"/css-art/snow"}><.dm_btn variant="ghost" size="sm">View</.dm_btn></.link></:action>
+    </.dm_card>
+
+    <.dm_card>
+      <:title><.link navigate={~p"/css-art/sun"} class="text-primary hover:underline">Sun</.link></:title>
+      <p class="text-sm opacity-70">Sun with spinning rays — `el-dm-art-sun`.</p>
+      <:action><.link navigate={~p"/css-art/sun"}><.dm_btn variant="ghost" size="sm">View</.dm_btn></.link></:action>
+    </.dm_card>
+
+    <.dm_card>
+      <:title><.link navigate={~p"/css-art/synthwave-starfield"} class="text-primary hover:underline">Synthwave Starfield</.link></:title>
+      <p class="text-sm opacity-70">Synthwave starfield — `el-dm-art-synthwave-starfield`.</p>
+      <:action><.link navigate={~p"/css-art/synthwave-starfield"}><.dm_btn variant="ghost" size="sm">View</.dm_btn></.link></:action>
+    </.dm_card>
+  </div>
+</.dm_card>

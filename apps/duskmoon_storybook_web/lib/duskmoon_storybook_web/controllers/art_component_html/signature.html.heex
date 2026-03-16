@@ -1,0 +1,17 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/css-art"}>Art Components</:crumb>
+  <:crumb>Signature</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Signature</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Notice
+
+  The `dm_art_signature` component has been removed.
+  Art components now use `@duskmoon-dev/art-elements` custom elements.
+  """} />
+</.dm_card>

@@ -494,44 +494,80 @@
   },
   %{
     kind: :folder,
-    name: "CSS Art",
-    path: "/css_art",
+    name: "Art Component",
+    path: "/art_component",
     entries: [
       %{
         kind: :story,
-        name: "Button Noise",
-        path: "/css_art/button_noise",
-        module: Storybook.CssArt.ButtonNoise
+        name: "Atom",
+        path: "/art_component/atom",
+        module: Storybook.ArtComponent.Atom
+      },
+      %{
+        kind: :story,
+        name: "Cat Stargazer",
+        path: "/art_component/cat_stargazer",
+        module: Storybook.ArtComponent.CatStargazer
+      },
+      %{
+        kind: :story,
+        name: "Circular Gallery",
+        path: "/art_component/circular_gallery",
+        module: Storybook.ArtComponent.CircularGallery
+      },
+      %{
+        kind: :story,
+        name: "Color Spin",
+        path: "/art_component/color_spin",
+        module: Storybook.ArtComponent.ColorSpin
       },
       %{
         kind: :story,
         name: "Eclipse",
-        path: "/css_art/eclipse",
-        module: Storybook.CssArt.Eclipse
+        path: "/art_component/eclipse",
+        module: Storybook.ArtComponent.Eclipse
+      },
+      %{
+        kind: :story,
+        name: "Flower Animation",
+        path: "/art_component/flower_animation",
+        module: Storybook.ArtComponent.FlowerAnimation
+      },
+      %{
+        kind: :story,
+        name: "Moon",
+        path: "/art_component/moon",
+        module: Storybook.ArtComponent.Moon
+      },
+      %{
+        kind: :story,
+        name: "Mountain",
+        path: "/art_component/mountain",
+        module: Storybook.ArtComponent.Mountain
       },
       %{
         kind: :story,
         name: "Plasma Ball",
-        path: "/css_art/plasma_ball",
-        module: Storybook.CssArt.PlasmaBall
-      },
-      %{
-        kind: :story,
-        name: "Signature",
-        path: "/css_art/signature",
-        module: Storybook.CssArt.Signature
+        path: "/art_component/plasma_ball",
+        module: Storybook.ArtComponent.PlasmaBall
       },
       %{
         kind: :story,
         name: "Snow",
-        path: "/css_art/snow",
-        module: Storybook.CssArt.Snow
+        path: "/art_component/snow",
+        module: Storybook.ArtComponent.Snow
       },
       %{
         kind: :story,
-        name: "Spotlight Search",
-        path: "/css_art/spotlight_search",
-        module: Storybook.CssArt.SpotlightSearch
+        name: "Sun",
+        path: "/art_component/sun",
+        module: Storybook.ArtComponent.Sun
+      },
+      %{
+        kind: :story,
+        name: "Synthwave Starfield",
+        path: "/art_component/synthwave_starfield",
+        module: Storybook.ArtComponent.SynthwaveStarfield
       }
     ]
   }

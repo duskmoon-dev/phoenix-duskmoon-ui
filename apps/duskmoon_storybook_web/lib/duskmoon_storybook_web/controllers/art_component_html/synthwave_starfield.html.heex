@@ -1,0 +1,26 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/css-art"}>Art Components</:crumb>
+  <:crumb>Synthwave Starfield</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Synthwave Starfield</span>
+    <span class="text-sm opacity-60">dm_art_synthwave_starfield</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Synthwave starfield animation using the `<el-dm-art-synthwave-starfield>` custom element.
+
+  ## Usage
+  ```elixir
+  <.dm_art_synthwave_starfield id="my-starfield" />
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Default</h3>
+  <div class="flex justify-center p-4 bg-zinc-950 rounded-lg" style="height: 300px;">
+    <.dm_art_synthwave_starfield id="starfield-default" />
+  </div>
+</.dm_card>
