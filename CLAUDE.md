@@ -20,11 +20,13 @@ Phoenix Duskmoon UI is an umbrella project providing Duskmoon UI components for 
 
 ## Upstream Dependencies Policy
 
-**This project ONLY uses `@duskmoon-dev/core` and `@duskmoon-dev/elements` for styling and custom elements.** Do NOT use `@gsmlg/lit` or other UI libraries.
+**This project uses the following `@duskmoon-dev/*` packages.** Do NOT use `@gsmlg/lit` or other UI libraries.
 
 - **CSS/Theming**: Use `@duskmoon-dev/core` CSS classes. Read `.claude/skills/duskmoon-dev-core/SKILL.md` for the full API.
-- **Custom Elements**: Use `@duskmoon-dev/el-*` packages. Read `.claude/skills/duskmoon-elements/SKILL.md` and its `references/` for the full API.
-- **Missing features**: If `@duskmoon-dev/core` or `@duskmoon-dev/elements` is missing a needed CSS class, component, or feature, file a GitHub issue as a feature request to the upstream repo instead of working around it with other libraries.
+- **Custom Elements**: Use `@duskmoon-dev/el-*` packages from `@duskmoon-dev/elements`. Read `.claude/skills/duskmoon-elements/SKILL.md` and its `references/` for the full API.
+- **CSS Art**: Use `@duskmoon-dev/css-art` for pure-CSS decorative components. Read `.claude/skills/duskmoon-dev-css-art/SKILL.md` for the full API.
+- **Art Custom Elements**: Use `@duskmoon-dev/el-art-*` packages from `@duskmoon-dev/art-elements` for animated/interactive art custom elements.
+- **Missing features**: If any upstream package is missing a needed feature, file a GitHub issue as a feature request to the upstream repo instead of working around it with other libraries.
 
 ### Upstream GitHub Repos for Issues
 
@@ -41,7 +43,7 @@ This is an Elixir umbrella project with Phoenix LiveView components and a Bun wo
 
 - **Umbrella Structure**: Run commands from root directory - they cascade to `apps/*` subdirectories
 - **Component Library**: Phoenix LiveView HEEX components wrapping HTML Custom Elements with `@doc type: :component`
-- **Frontend Dependencies**: Uses `@duskmoon-dev/core` (CSS design system) and `@duskmoon-dev/elements` (custom elements)
+- **Frontend Dependencies**: Uses `@duskmoon-dev/core` (CSS design system), `@duskmoon-dev/elements` (custom elements), `@duskmoon-dev/css-art` (CSS art), and `@duskmoon-dev/art-elements` (art custom elements)
 - **Storybook**: Live component showcase for development and documentation
 
 ### v9 Architecture (Custom Elements)

@@ -1,5 +1,5 @@
 ---
-description: Update @duskmoon-dev/core, @duskmoon-dev/elements, and @duskmoon-dev/css-art packages, sync theme bridge + storybook registrations + CSS art imports, rebuild assets, and verify.
+description: Update @duskmoon-dev/core, @duskmoon-dev/elements, @duskmoon-dev/css-art, and @duskmoon-dev/art-elements packages, sync theme bridge + storybook registrations + CSS art imports, rebuild assets, and verify.
 ---
 
 ## User Input
@@ -17,21 +17,22 @@ If the user input is "dry-run" or "--dry-run", only perform Steps 1-2 and report
    ```bash
    bun add @duskmoon-dev/css-art
    ```
-3. Run: `bun update --latest @duskmoon-dev/core @duskmoon-dev/elements @duskmoon-dev/css-art`
-   - This will also update all transitive `@duskmoon-dev/el-*` sub-packages.
+3. Run: `bun update --latest @duskmoon-dev/core @duskmoon-dev/elements @duskmoon-dev/css-art @duskmoon-dev/art-elements`
+   - This will also update all transitive `@duskmoon-dev/el-*` and `@duskmoon-dev/el-art-*` sub-packages.
 4. Record the **after** versions from `bun.lock`.
 5. Print a before/after version diff table. If nothing changed, inform the user and ask whether to continue with the remaining steps anyway.
 
 ## Step 2: Detect new custom elements
 
-1. Read `node_modules/@duskmoon-dev/elements/package.json` and extract all `@duskmoon-dev/el-*` package names from its `dependencies` field.
+1. Read `node_modules/@duskmoon-dev/elements/package.json` **and** `node_modules/@duskmoon-dev/art-elements/package.json` and extract all `@duskmoon-dev/el-*` package names from their `dependencies` fields.
 2. Read `apps/phoenix_duskmoon/assets/css/element-theme-bridge.css` and extract the current list of `el-dm-*` tag selectors from the selector block (lines before the opening `{`).
 3. Read `apps/duskmoon_storybook_web/assets/js/app.js` and extract the current list of `@duskmoon-dev/el-*/register` import lines.
 4. Derive the canonical element tag name for each `el-*` package:
    - Package `@duskmoon-dev/el-button` → tag `el-dm-button`, import `@duskmoon-dev/el-button/register`
+   - Package `@duskmoon-dev/el-art-moon` → tag `el-dm-art-moon`, import `@duskmoon-dev/el-art-moon/register`
    - Package `@duskmoon-dev/el-foo-bar` → tag `el-dm-foo-bar`, import `@duskmoon-dev/el-foo-bar/register`
 5. Compare and report:
-   - **New elements**: in upstream `elements/package.json` but missing from bridge CSS or app.js
+   - **New elements**: in upstream `elements/package.json` or `art-elements/package.json` but missing from bridge CSS or app.js
    - **Removed elements**: in bridge CSS or app.js but no longer in upstream (report only, do not auto-remove)
 
 ## Step 2b: Detect new CSS art components
