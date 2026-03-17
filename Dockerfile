@@ -1,4 +1,4 @@
-FROM ghcr.io/gsmlg-dev/phoenix:alpine AS builder
+FROM elixir:1.18-alpine AS builder
 
 ARG MIX_ENV=prod
 ARG RELEASE_VERSION=1.0.0
@@ -9,6 +9,12 @@ WORKDIR /build
 RUN <<EOF
 set -ex
 apk update
+apk add --no-cache curl unzip bash
+# Install bun
+curl -fsSL https://bun.sh/install | bash
+export PATH="/root/.bun/bin:$PATH"
+mix local.hex --force
+mix local.rebar --force
 mix deps.get
 bun install
 export MATCH_STRING="s%@version \"[^\"]\+\"%@version \"${RELEASE_VERSION}\"%"
@@ -24,7 +30,7 @@ mix release storybook --version "${RELEASE_VERSION}"
 cp -r _build/prod/rel/storybook /app
 EOF
 
-FROM ghcr.io/gsmlg-dev/alpine:latest
+FROM alpine:latest
 
 ARG RELEASE_VERSION=1.0.0
 
@@ -34,6 +40,8 @@ LABEL RELEASE_VERSION="${RELEASE_VERSION}"
 LABEL org.opencontainers.image.source="https://github.com/duskmoon-dev/phoenix-duskmoon-ui"
 LABEL org.opencontainers.image.description="Duskmoon UI Demo and Storybook"
 LABEL org.opencontainers.image.licenses=MIT
+
+RUN apk add --no-cache openssl ncurses-libs libstdc++ libgcc
 
 ENV PORT=80
 ENV REPLACE_OS_VARS=true
