@@ -23,7 +23,7 @@ defmodule PhoenixDuskmoon.ArtComponent.Snow do
   @doc type: :component
   attr(:id, :string, required: true)
   attr(:class, :any, default: nil)
-  attr(:rest, :global)
+  attr(:rest, :global, include: ~w[unicode fall])
 
   def dm_art_snow(assigns) do
     ~H"""

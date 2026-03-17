@@ -23,7 +23,7 @@ defmodule PhoenixDuskmoon.ArtComponent.PlasmaBall do
   @doc type: :component
   attr(:id, :string, required: true)
   attr(:class, :any, default: nil)
-  attr(:rest, :global)
+  attr(:rest, :global, include: ~w[no-base])
 
   def dm_art_plasma_ball(assigns) do
     ~H"""
