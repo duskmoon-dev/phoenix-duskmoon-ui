@@ -1,6 +1,10 @@
 # PhoenixDuskmoon
 
-[![release](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/actions/workflows/test-and-release.yml/badge.svg)](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/actions/workflows/test-and-release.yml)
+[![CI](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/actions/workflows/ci.yml)
+[![Release](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/actions/workflows/release.yml/badge.svg)](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/actions/workflows/release.yml)
+[![Hex.pm](https://img.shields.io/hexpm/v/phoenix_duskmoon.svg)](https://hex.pm/packages/phoenix_duskmoon)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/phoenix_duskmoon/)
+[![npm](https://img.shields.io/npm/v/phoenix_duskmoon.svg)](https://www.npmjs.com/package/phoenix_duskmoon)
 
 Duskmoon UI component library for Phoenix LiveView applications.
 
