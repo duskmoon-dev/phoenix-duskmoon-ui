@@ -59,6 +59,7 @@ jobs:
           context: .
           file: Dockerfile
           platforms: linux/amd64
+          pull: true
           push: true
           build-args: |
             RELEASE_VERSION=${{ steps.version.outputs.version }}
@@ -74,6 +75,7 @@ jobs:
           context: .
           file: Dockerfile
           platforms: linux/amd64
+          pull: true
           push: true
           build-args: |
             RELEASE_VERSION=${{ steps.version.outputs.version }}
