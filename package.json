@@ -26,6 +26,7 @@
         "@duskmoon-dev/css-art": "1.12.4",
         "@duskmoon-dev/el-accordion": "0.7.0",
         "@duskmoon-dev/el-alert": "0.7.0",
+        "@duskmoon-dev/el-art-gemini-input": "^0.11.0",
         "@duskmoon-dev/el-autocomplete": "0.7.0",
         "@duskmoon-dev/el-badge": "0.7.0",
         "@duskmoon-dev/el-bottom-navigation": "0.7.0",
