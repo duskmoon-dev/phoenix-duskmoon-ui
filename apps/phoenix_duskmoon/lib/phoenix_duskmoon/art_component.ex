@@ -25,6 +25,7 @@ defmodule PhoenixDuskmoon.ArtComponent do
     quote do
       import PhoenixDuskmoon.ArtComponent.Atom
       import PhoenixDuskmoon.ArtComponent.CatStargazer
+      import PhoenixDuskmoon.ArtComponent.GeminiInput
       import PhoenixDuskmoon.ArtComponent.CircularGallery
       import PhoenixDuskmoon.ArtComponent.ColorSpin
       import PhoenixDuskmoon.ArtComponent.Eclipse

@@ -1,0 +1,49 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/art-component"}>Art Components</:crumb>
+  <:crumb>Gemini Input</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Gemini Input</span>
+    <span class="text-sm opacity-60">dm_art_gemini_input</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Gemini-style animated gradient input using the `<el-dm-art-gemini-input>` custom element.
+  The border uses a rotating conic-gradient with CSS Houdini `@property` for smooth animation.
+
+  ## Usage
+  ```elixir
+  <!-- Default -->
+  <.dm_art_gemini_input id="gemini" />
+
+  <!-- Small -->
+  <.dm_art_gemini_input id="gemini-sm" size="sm" />
+
+  <!-- Large with custom placeholder -->
+  <.dm_art_gemini_input id="gemini-lg" size="lg" placeholder="Search or ask anything..." />
+  ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Default (md)</h3>
+  <div class="flex justify-center p-8 bg-base-200 rounded-lg">
+    <.dm_art_gemini_input id="gemini-demo-default" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Small</h3>
+  <div class="flex justify-center p-8 bg-base-200 rounded-lg">
+    <.dm_art_gemini_input id="gemini-demo-sm" size="sm" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Large</h3>
+  <div class="flex justify-center p-8 bg-base-200 rounded-lg">
+    <.dm_art_gemini_input id="gemini-demo-lg" size="lg" />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Custom Placeholder</h3>
+  <div class="flex justify-center p-8 bg-base-200 rounded-lg">
+    <.dm_art_gemini_input id="gemini-demo-placeholder" placeholder="Search or ask anything..." />
+  </div>
+</.dm_card>

@@ -8,6 +8,7 @@ window.storybook = { Hooks: DuskmoonHooks };
 import "@duskmoon-dev/el-accordion/register";
 import "@duskmoon-dev/el-art-atom/register";
 import "@duskmoon-dev/el-art-cat-stargazer/register";
+import "@duskmoon-dev/el-art-gemini-input/register";
 import "@duskmoon-dev/el-art-circular-gallery/register";
 import "@duskmoon-dev/el-art-color-spin/register";
 import "@duskmoon-dev/el-art-eclipse/register";

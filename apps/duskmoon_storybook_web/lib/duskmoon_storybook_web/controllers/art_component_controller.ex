@@ -27,6 +27,10 @@ defmodule DuskmoonStorybookWeb.ArtComponentController do
     render(conn, :eclipse, active_menu: "art-eclipse")
   end
 
+  def gemini_input(conn, _params) do
+    render(conn, :gemini_input, active_menu: "art-gemini-input")
+  end
+
   def flower_animation(conn, _params) do
     render(conn, :flower_animation, active_menu: "art-flower-animation")
   end

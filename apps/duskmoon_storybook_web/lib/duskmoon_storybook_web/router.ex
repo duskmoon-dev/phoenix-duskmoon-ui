@@ -114,6 +114,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/color-spin", ArtComponentController, :color_spin
     get "/eclipse", ArtComponentController, :eclipse
     get "/flower-animation", ArtComponentController, :flower_animation
+    get "/gemini-input", ArtComponentController, :gemini_input
     get "/moon", ArtComponentController, :moon
     get "/mountain", ArtComponentController, :mountain
     get "/plasma-ball", ArtComponentController, :plasma_ball
