@@ -10,7 +10,11 @@
     "./svg/bsi/*.svg": "./priv/bsi/svg/*.svg"
   },
   "scripts": {
-    "build": "mix tailwind default && mix esbuild default"
+    "build": "mix tailwind duskmoon && mix bun duskmoon",
+    "format": "bunx --bun @biomejs/biome format --write",
+    "lint": "bunx --bun @biomejs/biome lint --write",
+    "check": "bunx --bun @biomejs/biome check --write",
+    "test": "bun test"
   },
   "files": [
     "README.md",
@@ -33,7 +37,7 @@
     "@duskmoon-dev/art-elements": ">=0.9.0",
     "@duskmoon-dev/core": ">=1.11.0",
     "@duskmoon-dev/css-art": ">=1.12.0",
-    "@duskmoon-dev/elements": ">=0.5.0"
+    "@duskmoon-dev/elements": ">=0.8.0"
   },
   "devDependencies": {
     "@mdi/svg": "^7.4.47",
@@ -41,5 +45,7 @@
     "bootstrap-icons": "^1.11.3",
     "postcss": "^8.5.3"
   },
-  "peerDependencies": {}
+  "peerDependencies": {
+    "tailwindcss": "^4.0.0"
+  }
 }

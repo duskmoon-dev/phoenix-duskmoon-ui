@@ -684,7 +684,7 @@ Helper: `PhoenixDuskmoon.Component.Icon.Icons.bsi_icons/0` — returns all avail
 ## CSS Art
 
 All CSS art components require an `id` attr and use `aria-hidden="true"`.
-Import via `use PhoenixDuskmoon.CssArt`.
+Import via `use PhoenixDuskmoon.ArtComponent`.
 
 ### `dm_art_button_noise/1`
 

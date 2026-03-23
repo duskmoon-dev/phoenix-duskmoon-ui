@@ -33,7 +33,7 @@ Every UI element MUST be implemented as a reusable Phoenix LiveView component wi
 - Standard components MUST follow the `dm_` prefix convention (e.g., `dm_btn`, `dm_card`)
 - CSS Art / decorative components MUST follow the `dm_art_` prefix convention (e.g., `dm_art_snow`, `dm_art_plasma_ball`)
 - Fun/interactive components MUST follow the `dm_fun_` prefix convention
-- CSS Art components MUST reside in the `PhoenixDuskmoon.CssArt.*` namespace
+- CSS Art components MUST reside in the `PhoenixDuskmoon.ArtComponent.*` namespace
 - Form components MUST reside in `PhoenixDuskmoon.Component.Form.*` namespace
 
 **Rationale**: Self-contained components with clear naming conventions enable independent testing, clear
@@ -156,7 +156,7 @@ dm_btn / dm_card / ...      <el-dm-button>             var(--color-primary) etc.
 | Standard UI   | `dm_`       | `PhoenixDuskmoon.Component.*`          |
 | Form inputs   | `dm_`       | `PhoenixDuskmoon.Component.Form.*`     |
 | Fun/animated  | `dm_fun_`   | `PhoenixDuskmoon.Component.Fun.*`      |
-| CSS Art       | `dm_art_`   | `PhoenixDuskmoon.CssArt.*`             |
+| CSS Art       | `dm_art_`   | `PhoenixDuskmoon.ArtComponent.*`       |
 
 ## Quality Gates
 

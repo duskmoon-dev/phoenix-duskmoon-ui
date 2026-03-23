@@ -90,9 +90,9 @@ Components are organized into three main categories:
    - The main Form module provides form container, labels, and error handling
    - **Important**: Never use `<.variation />` in storybook templates - it's undefined. Use actual component calls like `<.dm_art_snow id="..." />`
 
-3. **CSS Art Components** (`PhoenixDuskmoon.CssArt.*`): Decorative/animated visual effects
+3. **CSS Art Components** (`PhoenixDuskmoon.ArtComponent.*`): Decorative/animated visual effects
    - ButtonNoise, Eclipse, PlasmaBall, Signature, Snow, SpotlightSearch
-   - Imported via `use PhoenixDuskmoon.CssArt` in view helpers
+   - Imported via `use PhoenixDuskmoon.ArtComponent` in view helpers
    - Use `dm_art_` prefix (e.g., `dm_art_snow`, `dm_art_plasma_ball`)
 
 ### Storybook Architecture
@@ -185,7 +185,7 @@ Releases are triggered manually via GitHub Actions `workflow_dispatch` or by pus
 - All components must have `@doc type: :component`
 - Component naming: prefix with `dm_` (e.g., `dm_btn`, `dm_mdi`)
 - Form components go in `PhoenixDuskmoon.Component.Form.*` namespace
-- CSS Art components go in `PhoenixDuskmoon.CssArt.*` namespace
+- CSS Art components go in `PhoenixDuskmoon.ArtComponent.*` namespace
 - Use `render_component/2` for component tests
 
 ### Frontend/Styling
@@ -235,7 +235,7 @@ When working on Phoenix projects that use the Phoenix Duskmoon UI library:
 
 ### Component Usage Pattern
 - All components are prefixed with `dm_` (e.g., `<.dm_btn>`, `<.dm_card>`, `<.dm_mdi>`)
-- Components require `use PhoenixDuskmoon.Component` and `use PhoenixDuskmoon.CssArt` in view helpers
+- Components require `use PhoenixDuskmoon.Component` and `use PhoenixDuskmoon.ArtComponent` in view helpers
 - **v9 Note**: Components render as HTML Custom Elements (e.g., `<el-dm-button>`, `<el-dm-card>`)
 - Common component patterns:
   ```elixir

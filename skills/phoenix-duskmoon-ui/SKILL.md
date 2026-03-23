@@ -33,7 +33,7 @@ bun add @duskmoon-dev/core @duskmoon-dev/elements
 defp html_helpers do
   quote do
     use PhoenixDuskmoon.Component   # all dm_* UI components
-    use PhoenixDuskmoon.CssArt      # all dm_art_* decorative components
+    use PhoenixDuskmoon.ArtComponent      # all dm_art_* decorative components
   end
 end
 ```

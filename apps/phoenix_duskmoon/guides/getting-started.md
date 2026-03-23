@@ -48,7 +48,7 @@ defp html_helpers do
     use PhoenixDuskmoon.Component
 
     # Import CSS art components (dm_art_snow, dm_art_plasma_ball, etc.)
-    use PhoenixDuskmoon.CssArt
+    use PhoenixDuskmoon.ArtComponent
 
     # ... your other imports
   end

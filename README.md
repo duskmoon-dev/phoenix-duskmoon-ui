@@ -45,7 +45,7 @@ defp html_helpers do
     # Standard UI components (buttons, cards, forms, navigation, etc.)
     use PhoenixDuskmoon.Component
     # CSS Art decorative components (snow, plasma ball, eclipse, etc.)
-    use PhoenixDuskmoon.CssArt
+    use PhoenixDuskmoon.ArtComponent
   end
 end
 ```

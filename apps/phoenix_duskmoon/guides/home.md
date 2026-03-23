@@ -59,7 +59,7 @@ See the [Getting Started](getting-started.md) guide for full setup instructions.
 | [Navigation](`PhoenixDuskmoon.Component.Navigation.Appbar`) | Appbar, Breadcrumb, Tab, Stepper, PageHeader | 12 |
 | [Layout](`PhoenixDuskmoon.Component.Layout.Divider`) | Divider, Drawer, BottomSheet, ThemeSwitcher | 4 |
 | [Icon](`PhoenixDuskmoon.Component.Icon.Icons`) | Material Design Icons, Bootstrap Icons | 1 |
-| [CSS Art](`PhoenixDuskmoon.CssArt.Snow`) | Snow, Eclipse, PlasmaBall, Signature, SpotlightSearch | 6 |
+| [CSS Art](`PhoenixDuskmoon.ArtComponent.Snow`) | Snow, Eclipse, PlasmaBall, Signature, SpotlightSearch | 6 |
 
 ## Guides
 

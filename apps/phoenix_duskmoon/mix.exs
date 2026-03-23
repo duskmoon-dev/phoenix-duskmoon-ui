@@ -114,12 +114,12 @@ defmodule PhoenixDuskmoon.Mixfile do
             PhoenixDuskmoon.Component.Icon.Icons
           ],
           "CSS Art": [
-            PhoenixDuskmoon.CssArt.ButtonNoise,
-            PhoenixDuskmoon.CssArt.Eclipse,
-            PhoenixDuskmoon.CssArt.PlasmaBall,
-            PhoenixDuskmoon.CssArt.Signature,
-            PhoenixDuskmoon.CssArt.Snow,
-            PhoenixDuskmoon.CssArt.SpotlightSearch
+            PhoenixDuskmoon.ArtComponent.ButtonNoise,
+            PhoenixDuskmoon.ArtComponent.Eclipse,
+            PhoenixDuskmoon.ArtComponent.PlasmaBall,
+            PhoenixDuskmoon.ArtComponent.Signature,
+            PhoenixDuskmoon.ArtComponent.Snow,
+            PhoenixDuskmoon.ArtComponent.SpotlightSearch
           ]
         ],
         nest_modules_by_prefix: [
@@ -130,7 +130,7 @@ defmodule PhoenixDuskmoon.Mixfile do
           PhoenixDuskmoon.Component.Navigation,
           PhoenixDuskmoon.Component.Layout,
           PhoenixDuskmoon.Component.Icon,
-          PhoenixDuskmoon.CssArt
+          PhoenixDuskmoon.ArtComponent
         ],
         skip_undefined_reference_warnings_on: ["CHANGELOG.md"]
       ]
@@ -146,14 +146,14 @@ defmodule PhoenixDuskmoon.Mixfile do
 
   defp deps do
     [
-      {:phoenix, "~> 1.8.1"},
+      {:phoenix, "~> 1.8"},
       {:phoenix_html, "~> 4.0"},
-      {:phoenix_live_view, "~> 1.1.0"},
+      {:phoenix_live_view, "~> 1.1"},
       {:plug, "~> 1.14", optional: true},
       {:bun, "~> 1.4", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
       {:jason, "~> 1.2", only: :test},
-      {:ex_doc, ">= 0.0.0", only: :prod, runtime: false}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 
