@@ -5,7 +5,7 @@ let
   pkgs-unstable = import inputs.nixpkgs-unstable { system = pkgs.stdenv.system; };
 in
 {
-  env.GREET = "Phoenix Duskmoon UI";
+  env.GREET = "Phoenix Duskmoon";
 
   packages = with pkgs-stable; [
     git
