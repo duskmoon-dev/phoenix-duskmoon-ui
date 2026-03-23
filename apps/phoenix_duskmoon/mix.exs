@@ -161,7 +161,8 @@ defmodule PhoenixDuskmoon.Mixfile do
     [
       maintainers: ["Jonathan Gao"],
       licenses: ["MIT"],
-      files: ~w(lib priv guides CHANGELOG.md LICENSE mix.exs package.json assets README.md),
+      files:
+        ~w(lib priv/static guides CHANGELOG.md LICENSE mix.exs package.json assets README.md),
       links: %{
         Changelog: "https://hexdocs.pm/phoenix_duskmoon/changelog.html",
         GitHub: @source_url
@@ -174,7 +175,8 @@ defmodule PhoenixDuskmoon.Mixfile do
       prepublish: [
         "cmd cp #{Path.expand("../../README.md", __DIR__)} #{Path.expand("README.md", __DIR__)}",
         "tailwind duskmoon",
-        "bun duskmoon"
+        "bun duskmoon",
+        "icons.bundle"
       ]
     ]
   end

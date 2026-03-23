@@ -93,19 +93,12 @@ defmodule PhoenixDuskmoon.Component.Navigation.BottomNav do
   end
 
   defp icon_svg(name) when is_binary(name) do
-    icon_path = Application.app_dir(:phoenix_duskmoon, "priv/mdi/svg/#{name}.svg")
-
-    case File.read(icon_path) do
-      {:ok, content} ->
-        inner =
-          content
-          |> String.replace(~r/<svg[^>]+>/, "")
-          |> String.replace("</svg>", "")
-
-        ~s(<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">#{inner}</svg>)
-
-      {:error, _} ->
+    case PhoenixDuskmoon.Component.Icon.Icons.get_mdi_svg(name) do
+      nil ->
         ""
+
+      inner ->
+        ~s(<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">#{inner}</svg>)
     end
   end
 end

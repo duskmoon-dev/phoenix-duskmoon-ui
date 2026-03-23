@@ -29,3 +29,6 @@ package-lock.json
 /.devenv*
 
 /.playwright-mcp/
+
+# Generated icon bundles (built by mix icons.bundle)
+*.etf.gz
