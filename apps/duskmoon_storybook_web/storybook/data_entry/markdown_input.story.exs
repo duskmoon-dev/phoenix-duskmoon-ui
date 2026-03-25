@@ -1,8 +1,8 @@
-defmodule Storybook.DataDisplay.MarkdownInput do
+defmodule Storybook.DataEntry.MarkdownInput do
   use PhoenixStorybook.Story, :component
 
   def function,
-    do: &PhoenixDuskmoon.Component.DataDisplay.MarkdownInput.dm_markdown_input/1
+    do: &PhoenixDuskmoon.Component.DataEntry.MarkdownInput.dm_markdown_input/1
 
   def description,
     do:

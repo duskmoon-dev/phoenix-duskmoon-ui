@@ -1,9 +1,9 @@
-defmodule PhoenixDuskmoon.Component.DataDisplay.MarkdownInputTest do
+defmodule PhoenixDuskmoon.Component.DataEntry.MarkdownInputTest do
   use ExUnit.Case, async: true
 
   require Phoenix.LiveViewTest
   import Phoenix.LiveViewTest
-  import PhoenixDuskmoon.Component.DataDisplay.MarkdownInput
+  import PhoenixDuskmoon.Component.DataEntry.MarkdownInput
 
   test "renders el-dm-markdown-input element" do
     result = render_component(&dm_markdown_input/1, %{})

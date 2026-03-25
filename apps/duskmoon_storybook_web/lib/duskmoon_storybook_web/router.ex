@@ -41,7 +41,6 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/data-display/chip", DataDisplayController, :chip
     get "/data-display/flash", DataDisplayController, :flash
     get "/data-display/markdown", DataDisplayController, :markdown
-    get "/data-display/markdown-input", DataDisplayController, :markdown_input
     get "/data-display/pagination", DataDisplayController, :pagination
     get "/data-display/progress", DataDisplayController, :progress
     get "/data-display/skeleton", DataDisplayController, :skeleton
@@ -73,6 +72,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/data-entry/multi-select", DataEntryController, :multi_select
     get "/data-entry/tree-select", DataEntryController, :tree_select
     get "/data-entry/cascader", DataEntryController, :cascader
+    get "/data-entry/markdown-input", DataEntryController, :markdown_input
 
     # Feedback
     get "/feedback/dialog", FeedbackController, :dialog

@@ -16,6 +16,7 @@
 @import "@duskmoon-dev/css-art/dist/art/cat-stargazer.css";
 @import "@duskmoon-dev/css-art/dist/art/circular-gallery.css";
 @import "@duskmoon-dev/css-art/dist/art/color-spin.css";
+@import "@duskmoon-dev/css-art/dist/art/csswitch.css";
 @import "@duskmoon-dev/css-art/dist/art/eclipse.css";
 @import "@duskmoon-dev/css-art/dist/art/flower-animation.css";
 @import "@duskmoon-dev/css-art/dist/art/gemini-input.css";
@@ -23,5 +24,6 @@
 @import "@duskmoon-dev/css-art/dist/art/mountain.css";
 @import "@duskmoon-dev/css-art/dist/art/plasma-ball.css";
 @import "@duskmoon-dev/css-art/dist/art/snow.css";
+@import "@duskmoon-dev/css-art/dist/art/snowball-preloader.css";
 @import "@duskmoon-dev/css-art/dist/art/sun.css";
 @import "@duskmoon-dev/css-art/dist/art/synthwave-starfield.css";

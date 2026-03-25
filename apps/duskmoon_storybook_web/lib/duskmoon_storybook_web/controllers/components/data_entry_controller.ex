@@ -76,4 +76,8 @@ defmodule DuskmoonStorybookWeb.Components.DataEntryController do
   def cascader(conn, _params) do
     render(conn, :cascader, active_menu: "data-entry-cascader")
   end
+
+  def markdown_input(conn, _params) do
+    render(conn, :markdown_input, active_menu: "data-entry-markdown-input")
+  end
 end

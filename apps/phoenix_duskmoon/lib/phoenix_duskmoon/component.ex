@@ -69,7 +69,7 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.DataDisplay.Flash
       import PhoenixDuskmoon.Component.DataDisplay.List
       import PhoenixDuskmoon.Component.DataDisplay.Markdown
-      import PhoenixDuskmoon.Component.DataDisplay.MarkdownInput
+      import PhoenixDuskmoon.Component.DataEntry.MarkdownInput
       import PhoenixDuskmoon.Component.DataDisplay.Pagination
       import PhoenixDuskmoon.Component.DataDisplay.Popover
       import PhoenixDuskmoon.Component.DataDisplay.Progress

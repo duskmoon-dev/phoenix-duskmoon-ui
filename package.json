@@ -22,8 +22,8 @@
     },
     "dependencies": {
         "@duskmoon-dev/art-elements": "0.9.0",
-        "@duskmoon-dev/core": "1.12.0",
-        "@duskmoon-dev/css-art": "1.12.4",
+        "@duskmoon-dev/core": "1.14.1",
+        "@duskmoon-dev/css-art": "1.14.1",
         "@duskmoon-dev/el-accordion": "0.7.0",
         "@duskmoon-dev/el-alert": "0.7.0",
         "@duskmoon-dev/el-art-gemini-input": "^0.11.0",
@@ -54,6 +54,6 @@
         "@duskmoon-dev/el-table": "0.7.0",
         "@duskmoon-dev/el-tabs": "0.7.0",
         "@duskmoon-dev/el-tooltip": "0.7.0",
-        "@duskmoon-dev/elements": "^0.8.2"
+        "@duskmoon-dev/elements": "^0.11.1"
     }
 }

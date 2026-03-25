@@ -1,4 +1,4 @@
-defmodule PhoenixDuskmoon.Component.DataDisplay.MarkdownInput do
+defmodule PhoenixDuskmoon.Component.DataEntry.MarkdownInput do
   @moduledoc """
   Duskmoon UI Markdown Input Component
 
