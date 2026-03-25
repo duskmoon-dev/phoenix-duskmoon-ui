@@ -6,7 +6,6 @@
     "phoenix_duskmoon": "file:../phoenix_duskmoon"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.16",
-    "postcss": "^8.5.3"
+    "postcss": "^8.5.8"
   }
 }

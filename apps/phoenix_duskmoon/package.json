@@ -34,16 +34,15 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@duskmoon-dev/art-elements": ">=0.9.0",
-    "@duskmoon-dev/core": ">=1.11.0",
-    "@duskmoon-dev/css-art": ">=1.12.0",
-    "@duskmoon-dev/elements": ">=0.8.0"
+    "@duskmoon-dev/art-elements": ">=0.11.2",
+    "@duskmoon-dev/core": ">=1.14.1",
+    "@duskmoon-dev/css-art": ">=1.14.1",
+    "@duskmoon-dev/elements": ">=0.11.2"
   },
   "devDependencies": {
     "@mdi/svg": "^7.4.47",
-    "@tailwindcss/typography": "^0.5.16",
-    "bootstrap-icons": "^1.11.3",
-    "postcss": "^8.5.3"
+    "bootstrap-icons": "^1.13.1",
+    "postcss": "^8.5.8"
   },
   "peerDependencies": {
     "tailwindcss": "^4.0.0"

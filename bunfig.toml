@@ -1,0 +1,5 @@
+[install]
+registry = "https://npm.gsmlg.dev/"
+
+[workspaces]
+packages = ["apps/*"]
