@@ -4,9 +4,9 @@
     "": {
       "name": "phoenix-duskmoon-ui",
       "dependencies": {
-        "@duskmoon-dev/art-elements": "0.11.2",
-        "@duskmoon-dev/core": "1.14.1",
-        "@duskmoon-dev/css-art": "1.14.1",
+        "@duskmoon-dev/art-elements": "0.12.0",
+        "@duskmoon-dev/core": "1.15.0",
+        "@duskmoon-dev/css-art": "1.15.0",
         "@duskmoon-dev/el-accordion": "0.11.2",
         "@duskmoon-dev/el-alert": "0.11.2",
         "@duskmoon-dev/el-art-gemini-input": "^0.11.2",
@@ -37,7 +37,7 @@
         "@duskmoon-dev/el-table": "0.11.2",
         "@duskmoon-dev/el-tabs": "0.11.2",
         "@duskmoon-dev/el-tooltip": "0.11.2",
-        "@duskmoon-dev/elements": "^0.11.2",
+        "@duskmoon-dev/elements": "^0.12.0",
       },
     },
     "apps/duskmoon_storybook_web": {
@@ -87,11 +87,11 @@
 
     "@chevrotain/utils": ["@chevrotain/utils@11.1.1", "", {}, "sha512-71eTYMzYXYSFPrbg/ZwftSaSDld7UYlS8OQa3lNnn9jzNtpFbaReRRyghzqS7rI3CDaorqpPJJcXGHK+FE1TVQ=="],
 
-    "@duskmoon-dev/art-elements": ["@duskmoon-dev/art-elements@0.11.2", "", { "dependencies": { "@duskmoon-dev/el-art-atom": "0.11.2", "@duskmoon-dev/el-art-cat-stargazer": "0.11.2", "@duskmoon-dev/el-art-circular-gallery": "0.11.2", "@duskmoon-dev/el-art-color-spin": "0.11.2", "@duskmoon-dev/el-art-csswitch": "0.11.2", "@duskmoon-dev/el-art-eclipse": "0.11.2", "@duskmoon-dev/el-art-flower-animation": "0.11.2", "@duskmoon-dev/el-art-gemini-input": "0.11.2", "@duskmoon-dev/el-art-moon": "0.11.2", "@duskmoon-dev/el-art-mountain": "0.11.2", "@duskmoon-dev/el-art-plasma-ball": "0.11.2", "@duskmoon-dev/el-art-snow": "0.11.2", "@duskmoon-dev/el-art-snowball-preloader": "0.11.2", "@duskmoon-dev/el-art-sun": "0.11.2", "@duskmoon-dev/el-art-synthwave-starfield": "0.11.2", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-QYSQYawha4ORiOizYAPOrtAfQfdSPwZcTAF+GyT4W5iO0ZIY9VsL4/46iJi2R5rRu8gLO5+tY2ZpHtIeTzVP8Q=="],
+    "@duskmoon-dev/art-elements": ["@duskmoon-dev/art-elements@0.12.0", "", { "dependencies": { "@duskmoon-dev/el-art-atom": "0.11.2", "@duskmoon-dev/el-art-cat-stargazer": "0.11.2", "@duskmoon-dev/el-art-circular-gallery": "0.11.2", "@duskmoon-dev/el-art-color-spin": "0.11.2", "@duskmoon-dev/el-art-csswitch": "0.11.2", "@duskmoon-dev/el-art-eclipse": "0.11.2", "@duskmoon-dev/el-art-flower-animation": "0.11.2", "@duskmoon-dev/el-art-gemini-input": "0.11.2", "@duskmoon-dev/el-art-moon": "0.11.2", "@duskmoon-dev/el-art-mountain": "0.11.2", "@duskmoon-dev/el-art-plasma-ball": "0.11.2", "@duskmoon-dev/el-art-snow": "0.11.2", "@duskmoon-dev/el-art-snowball-preloader": "0.11.2", "@duskmoon-dev/el-art-sun": "0.11.2", "@duskmoon-dev/el-art-synthwave-starfield": "0.11.2", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-s8LGlxp7H4PRFkI+CRiR/e71zr+/893QCfhgfYu4aCx8GDpNKAVJW6kfQhFBWMkYpHq8nnCLIHo0r/9QUomayA=="],
 
-    "@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+    "@duskmoon-dev/core": ["@duskmoon-dev/core@1.15.0", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-VHTAxBQhxL+rrm5Nkj9xQrEX7pa0gFRAYvSw3XatUwZKcGmBDcpVSxXDy2RVlmMoj/7Xls7DGmAdczS0VO8Kpw=="],
 
-    "@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.14.1", "", {}, "sha512-ApkQEXUSS7O9uPOtCSJaTQiKjb/63QrP2X3exk9IJqioH8BdII+osrKjbA5CRqLFi5Edl+MX7MCe+Aas+jzQeg=="],
+    "@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.15.0", "", {}, "sha512-sfAEAYJFypt+7AQlBhBxrbODpltko8rH5weqqSYglaZKbQ+4DdSOhLSetDt1B7Sxl3PVTybTepwAKCtGfBrR4A=="],
 
     "@duskmoon-dev/el-accordion": ["@duskmoon-dev/el-accordion@0.11.2", "", { "dependencies": { "@duskmoon-dev/core": "^1.14.1", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-fzoppXd/iHd2o8jUBwkjsSQDWhdXS8R+Xcjmf8XsAYBuCBqCvQiiDvjSUFFNgp8zXtmrTXU2RdHjhGO0myCa6g=="],
 
@@ -191,7 +191,7 @@
 
     "@duskmoon-dev/el-tooltip": ["@duskmoon-dev/el-tooltip@0.11.2", "", { "dependencies": { "@duskmoon-dev/core": "^1.14.1", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-WTsr1eQifeIKDl1N+2YoNog00XCQQYPtvdNT6vGxOnJlaFTKDT+4UwFr8l+4OC5p8ec5n01ocCFhMloU51jobQ=="],
 
-    "@duskmoon-dev/elements": ["@duskmoon-dev/elements@0.11.2", "", { "dependencies": { "@duskmoon-dev/el-accordion": "0.11.2", "@duskmoon-dev/el-alert": "0.11.2", "@duskmoon-dev/el-autocomplete": "0.11.2", "@duskmoon-dev/el-badge": "0.11.2", "@duskmoon-dev/el-base": "0.11.2", "@duskmoon-dev/el-bottom-navigation": "0.11.2", "@duskmoon-dev/el-bottom-sheet": "0.11.2", "@duskmoon-dev/el-breadcrumbs": "0.11.2", "@duskmoon-dev/el-button": "0.11.2", "@duskmoon-dev/el-card": "0.11.2", "@duskmoon-dev/el-cascader": "0.11.2", "@duskmoon-dev/el-chip": "0.11.2", "@duskmoon-dev/el-code-block": "0.11.2", "@duskmoon-dev/el-datepicker": "0.11.2", "@duskmoon-dev/el-dialog": "0.11.2", "@duskmoon-dev/el-drawer": "0.11.2", "@duskmoon-dev/el-file-upload": "0.11.2", "@duskmoon-dev/el-form": "0.11.2", "@duskmoon-dev/el-input": "0.11.2", "@duskmoon-dev/el-markdown": "0.11.2", "@duskmoon-dev/el-markdown-input": "0.11.2", "@duskmoon-dev/el-menu": "0.11.2", "@duskmoon-dev/el-navbar": "0.11.2", "@duskmoon-dev/el-pagination": "0.11.2", "@duskmoon-dev/el-popover": "0.11.2", "@duskmoon-dev/el-pro-data-grid": "0.11.2", "@duskmoon-dev/el-progress": "0.11.2", "@duskmoon-dev/el-select": "0.11.2", "@duskmoon-dev/el-slider": "0.11.2", "@duskmoon-dev/el-stepper": "0.11.2", "@duskmoon-dev/el-switch": "0.11.2", "@duskmoon-dev/el-table": "0.11.2", "@duskmoon-dev/el-tabs": "0.11.2", "@duskmoon-dev/el-tooltip": "0.11.2" }, "peerDependencies": { "mermaid": ">=10.0.0" }, "optionalPeers": ["mermaid"] }, "sha512-pFWcnAEG5pSg/VUO18bgoKjlcU29RfJATr8BetHtWqXqdudQqT/i7uPPiSwu8CHf1TwZYQOefLC/WViC1R0W+Q=="],
+    "@duskmoon-dev/elements": ["@duskmoon-dev/elements@0.12.0", "", { "dependencies": { "@duskmoon-dev/el-accordion": "0.11.2", "@duskmoon-dev/el-alert": "0.11.2", "@duskmoon-dev/el-autocomplete": "0.11.2", "@duskmoon-dev/el-badge": "0.11.2", "@duskmoon-dev/el-base": "0.11.2", "@duskmoon-dev/el-bottom-navigation": "0.11.2", "@duskmoon-dev/el-bottom-sheet": "0.11.2", "@duskmoon-dev/el-breadcrumbs": "0.11.2", "@duskmoon-dev/el-button": "0.11.2", "@duskmoon-dev/el-card": "0.11.2", "@duskmoon-dev/el-cascader": "0.11.2", "@duskmoon-dev/el-chip": "0.11.2", "@duskmoon-dev/el-code-block": "0.11.2", "@duskmoon-dev/el-datepicker": "0.11.2", "@duskmoon-dev/el-dialog": "0.11.2", "@duskmoon-dev/el-drawer": "0.11.2", "@duskmoon-dev/el-file-upload": "0.11.2", "@duskmoon-dev/el-form": "0.11.2", "@duskmoon-dev/el-input": "0.11.2", "@duskmoon-dev/el-markdown": "0.11.2", "@duskmoon-dev/el-markdown-input": "0.11.2", "@duskmoon-dev/el-menu": "0.11.2", "@duskmoon-dev/el-navbar": "0.11.2", "@duskmoon-dev/el-pagination": "0.11.2", "@duskmoon-dev/el-popover": "0.11.2", "@duskmoon-dev/el-pro-data-grid": "0.11.2", "@duskmoon-dev/el-progress": "0.11.2", "@duskmoon-dev/el-select": "0.11.2", "@duskmoon-dev/el-slider": "0.11.2", "@duskmoon-dev/el-stepper": "0.11.2", "@duskmoon-dev/el-switch": "0.11.2", "@duskmoon-dev/el-table": "0.11.2", "@duskmoon-dev/el-tabs": "0.11.2", "@duskmoon-dev/el-tooltip": "0.11.2" }, "peerDependencies": { "mermaid": ">=10.0.0" }, "optionalPeers": ["mermaid"] }, "sha512-/ndPMhbd8qbcfroWqSohhncAJVyD/KovNneMnGCZpPQSLXa5OzRHG9pOOKYfL4WZhzO/+ronbAVd8XCDpQvxYw=="],
 
     "@iconify/types": ["@iconify/types@2.0.0", "", {}, "sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg=="],
 
@@ -679,9 +679,101 @@
 
     "zwitch": ["zwitch@2.0.4", "", {}, "sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A=="],
 
+    "@duskmoon-dev/el-accordion/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-alert/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-art-atom/@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.14.1", "", {}, "sha512-ApkQEXUSS7O9uPOtCSJaTQiKjb/63QrP2X3exk9IJqioH8BdII+osrKjbA5CRqLFi5Edl+MX7MCe+Aas+jzQeg=="],
+
+    "@duskmoon-dev/el-art-cat-stargazer/@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.14.1", "", {}, "sha512-ApkQEXUSS7O9uPOtCSJaTQiKjb/63QrP2X3exk9IJqioH8BdII+osrKjbA5CRqLFi5Edl+MX7MCe+Aas+jzQeg=="],
+
+    "@duskmoon-dev/el-art-circular-gallery/@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.14.1", "", {}, "sha512-ApkQEXUSS7O9uPOtCSJaTQiKjb/63QrP2X3exk9IJqioH8BdII+osrKjbA5CRqLFi5Edl+MX7MCe+Aas+jzQeg=="],
+
+    "@duskmoon-dev/el-art-color-spin/@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.14.1", "", {}, "sha512-ApkQEXUSS7O9uPOtCSJaTQiKjb/63QrP2X3exk9IJqioH8BdII+osrKjbA5CRqLFi5Edl+MX7MCe+Aas+jzQeg=="],
+
+    "@duskmoon-dev/el-art-csswitch/@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.14.1", "", {}, "sha512-ApkQEXUSS7O9uPOtCSJaTQiKjb/63QrP2X3exk9IJqioH8BdII+osrKjbA5CRqLFi5Edl+MX7MCe+Aas+jzQeg=="],
+
+    "@duskmoon-dev/el-art-eclipse/@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.14.1", "", {}, "sha512-ApkQEXUSS7O9uPOtCSJaTQiKjb/63QrP2X3exk9IJqioH8BdII+osrKjbA5CRqLFi5Edl+MX7MCe+Aas+jzQeg=="],
+
     "@duskmoon-dev/el-art-flower-animation/@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@0.3.0", "", {}, "sha512-k6rsGGvDaqZoRVC512E1PuZfjVYHNh95Ua/0QV/FbFor8QN0OZWIzZnnF9lev3KJxgg4Fpwx1X150cRm1SQtJQ=="],
 
     "@duskmoon-dev/el-art-flower-animation/@duskmoon-dev/el-base": ["@duskmoon-dev/el-base@0.8.3", "", {}, "sha512-/eYX3cRnaBtjaazloPG9K7b9BrwuntJDbHS31nfZY2dvEJIfOqjJ1EZpEWlD/g5E+Eqa9Qi9QPmUUn9tZmSt1A=="],
+
+    "@duskmoon-dev/el-art-gemini-input/@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.14.1", "", {}, "sha512-ApkQEXUSS7O9uPOtCSJaTQiKjb/63QrP2X3exk9IJqioH8BdII+osrKjbA5CRqLFi5Edl+MX7MCe+Aas+jzQeg=="],
+
+    "@duskmoon-dev/el-art-moon/@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.14.1", "", {}, "sha512-ApkQEXUSS7O9uPOtCSJaTQiKjb/63QrP2X3exk9IJqioH8BdII+osrKjbA5CRqLFi5Edl+MX7MCe+Aas+jzQeg=="],
+
+    "@duskmoon-dev/el-art-mountain/@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.14.1", "", {}, "sha512-ApkQEXUSS7O9uPOtCSJaTQiKjb/63QrP2X3exk9IJqioH8BdII+osrKjbA5CRqLFi5Edl+MX7MCe+Aas+jzQeg=="],
+
+    "@duskmoon-dev/el-art-plasma-ball/@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.14.1", "", {}, "sha512-ApkQEXUSS7O9uPOtCSJaTQiKjb/63QrP2X3exk9IJqioH8BdII+osrKjbA5CRqLFi5Edl+MX7MCe+Aas+jzQeg=="],
+
+    "@duskmoon-dev/el-art-snow/@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.14.1", "", {}, "sha512-ApkQEXUSS7O9uPOtCSJaTQiKjb/63QrP2X3exk9IJqioH8BdII+osrKjbA5CRqLFi5Edl+MX7MCe+Aas+jzQeg=="],
+
+    "@duskmoon-dev/el-art-snowball-preloader/@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.14.1", "", {}, "sha512-ApkQEXUSS7O9uPOtCSJaTQiKjb/63QrP2X3exk9IJqioH8BdII+osrKjbA5CRqLFi5Edl+MX7MCe+Aas+jzQeg=="],
+
+    "@duskmoon-dev/el-art-sun/@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.14.1", "", {}, "sha512-ApkQEXUSS7O9uPOtCSJaTQiKjb/63QrP2X3exk9IJqioH8BdII+osrKjbA5CRqLFi5Edl+MX7MCe+Aas+jzQeg=="],
+
+    "@duskmoon-dev/el-art-synthwave-starfield/@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.14.1", "", {}, "sha512-ApkQEXUSS7O9uPOtCSJaTQiKjb/63QrP2X3exk9IJqioH8BdII+osrKjbA5CRqLFi5Edl+MX7MCe+Aas+jzQeg=="],
+
+    "@duskmoon-dev/el-autocomplete/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-badge/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-bottom-navigation/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-bottom-sheet/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-breadcrumbs/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-button/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-card/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-cascader/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-chip/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-code-block/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-datepicker/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-dialog/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-drawer/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-file-upload/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-form/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-input/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-markdown/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-markdown-input/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-menu/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-navbar/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-pagination/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-popover/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-progress/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-select/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-slider/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-stepper/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-switch/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-table/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-tabs/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "@duskmoon-dev/el-tooltip/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
 
     "chevrotain-allstar/lodash-es": ["lodash-es@4.17.22", "", {}, "sha512-XEawp1t0gxSi9x01glktRZ5HDy0HXqrM0x5pXQM98EaI0NxO6jVM7omDOxsuEo5UIASAnm2bRp1Jt/e0a2XU8Q=="],
 
@@ -710,5 +802,13 @@
     "d3-sankey/d3-array/internmap": ["internmap@1.0.1", "", {}, "sha512-lDB5YccMydFBtasVtxnZ3MRBHuaoE8GKsppq+EchKL2U4nK/DmEpPHNH8MZe5HkMtpSiTSOZwfN0tzYjO/lJEw=="],
 
     "d3-sankey/d3-shape/d3-path": ["d3-path@1.0.9", "", {}, "sha512-VLaYcn81dtHVTjEHd8B+pbe9yHWpXKZUC87PzoFmsFrJqgFwDe/qxfp5MlfsfM1V5E/iVt0MmEbWQ7FVIXh/bg=="],
+
+    "duskmoon_storybook_web/phoenix_duskmoon/@duskmoon-dev/art-elements": ["@duskmoon-dev/art-elements@0.11.2", "", { "dependencies": { "@duskmoon-dev/el-art-atom": "0.11.2", "@duskmoon-dev/el-art-cat-stargazer": "0.11.2", "@duskmoon-dev/el-art-circular-gallery": "0.11.2", "@duskmoon-dev/el-art-color-spin": "0.11.2", "@duskmoon-dev/el-art-csswitch": "0.11.2", "@duskmoon-dev/el-art-eclipse": "0.11.2", "@duskmoon-dev/el-art-flower-animation": "0.11.2", "@duskmoon-dev/el-art-gemini-input": "0.11.2", "@duskmoon-dev/el-art-moon": "0.11.2", "@duskmoon-dev/el-art-mountain": "0.11.2", "@duskmoon-dev/el-art-plasma-ball": "0.11.2", "@duskmoon-dev/el-art-snow": "0.11.2", "@duskmoon-dev/el-art-snowball-preloader": "0.11.2", "@duskmoon-dev/el-art-sun": "0.11.2", "@duskmoon-dev/el-art-synthwave-starfield": "0.11.2", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-QYSQYawha4ORiOizYAPOrtAfQfdSPwZcTAF+GyT4W5iO0ZIY9VsL4/46iJi2R5rRu8gLO5+tY2ZpHtIeTzVP8Q=="],
+
+    "duskmoon_storybook_web/phoenix_duskmoon/@duskmoon-dev/core": ["@duskmoon-dev/core@1.14.1", "", { "peerDependencies": { "tailwindcss": "^4.0.0" } }, "sha512-ajWPDkJ8h4Ya7ywPrguakxiVcQ+N5ViRzr5E8b2eqcFXlgvSUPVZoKrwtbkO0ixq/+gvxByL1J0euz2d5EgxcA=="],
+
+    "duskmoon_storybook_web/phoenix_duskmoon/@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.14.1", "", {}, "sha512-ApkQEXUSS7O9uPOtCSJaTQiKjb/63QrP2X3exk9IJqioH8BdII+osrKjbA5CRqLFi5Edl+MX7MCe+Aas+jzQeg=="],
+
+    "duskmoon_storybook_web/phoenix_duskmoon/@duskmoon-dev/elements": ["@duskmoon-dev/elements@0.11.2", "", { "dependencies": { "@duskmoon-dev/el-accordion": "0.11.2", "@duskmoon-dev/el-alert": "0.11.2", "@duskmoon-dev/el-autocomplete": "0.11.2", "@duskmoon-dev/el-badge": "0.11.2", "@duskmoon-dev/el-base": "0.11.2", "@duskmoon-dev/el-bottom-navigation": "0.11.2", "@duskmoon-dev/el-bottom-sheet": "0.11.2", "@duskmoon-dev/el-breadcrumbs": "0.11.2", "@duskmoon-dev/el-button": "0.11.2", "@duskmoon-dev/el-card": "0.11.2", "@duskmoon-dev/el-cascader": "0.11.2", "@duskmoon-dev/el-chip": "0.11.2", "@duskmoon-dev/el-code-block": "0.11.2", "@duskmoon-dev/el-datepicker": "0.11.2", "@duskmoon-dev/el-dialog": "0.11.2", "@duskmoon-dev/el-drawer": "0.11.2", "@duskmoon-dev/el-file-upload": "0.11.2", "@duskmoon-dev/el-form": "0.11.2", "@duskmoon-dev/el-input": "0.11.2", "@duskmoon-dev/el-markdown": "0.11.2", "@duskmoon-dev/el-markdown-input": "0.11.2", "@duskmoon-dev/el-menu": "0.11.2", "@duskmoon-dev/el-navbar": "0.11.2", "@duskmoon-dev/el-pagination": "0.11.2", "@duskmoon-dev/el-popover": "0.11.2", "@duskmoon-dev/el-pro-data-grid": "0.11.2", "@duskmoon-dev/el-progress": "0.11.2", "@duskmoon-dev/el-select": "0.11.2", "@duskmoon-dev/el-slider": "0.11.2", "@duskmoon-dev/el-stepper": "0.11.2", "@duskmoon-dev/el-switch": "0.11.2", "@duskmoon-dev/el-table": "0.11.2", "@duskmoon-dev/el-tabs": "0.11.2", "@duskmoon-dev/el-tooltip": "0.11.2" }, "peerDependencies": { "mermaid": ">=10.0.0" }, "optionalPeers": ["mermaid"] }, "sha512-pFWcnAEG5pSg/VUO18bgoKjlcU29RfJATr8BetHtWqXqdudQqT/i7uPPiSwu8CHf1TwZYQOefLC/WViC1R0W+Q=="],
   }
 }
