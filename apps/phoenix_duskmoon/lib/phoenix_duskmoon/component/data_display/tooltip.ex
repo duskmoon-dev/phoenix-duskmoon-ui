@@ -85,12 +85,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
         @open && "tooltip-open",
         @class
       ]}
-      data-tip={@content}
       aria-describedby={@tooltip_id}
       {@rest}
     >
       {render_slot(@inner_block)}
-      <span id={@tooltip_id} class="sr-only" role="tooltip">{@content}</span>
+      <span id={@tooltip_id} class="tooltip-content" role="tooltip">{@content}</span>
     </div>
     """
   end

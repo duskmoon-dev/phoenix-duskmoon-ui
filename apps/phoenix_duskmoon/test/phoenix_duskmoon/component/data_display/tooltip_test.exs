@@ -7,7 +7,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
 
   defp inner_block, do: %{inner_block: fn _, _ -> "Hover me" end}
 
-  test "renders basic tooltip with data-tip attribute" do
+  test "renders basic tooltip with tooltip-content element" do
     result =
       render_component(&dm_tooltip/1, %{
         content: "Help text",
@@ -15,7 +15,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
       })
 
     assert result =~ "tooltip"
-    assert result =~ ~s[data-tip="Help text"]
+    assert result =~ "tooltip-content"
+    assert result =~ "Help text"
   end
 
   test "renders default position top" do
@@ -136,7 +137,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
         inner_block: inner_block()
       })
 
-    assert result =~ ~s[data-tip="Press Ctrl+S to save"]
+    assert result =~ "tooltip-content"
+    assert result =~ "Press Ctrl+S to save"
   end
 
   test "renders tooltip with rest attributes" do
@@ -163,7 +165,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
 
     assert result =~ "tooltip-bottom"
     assert result =~ "tooltip-warning"
-    assert result =~ ~s[data-tip="Combined"]
+    assert result =~ "Combined"
   end
 
   test "renders tooltip with all options combined" do
@@ -181,7 +183,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
     assert result =~ "tooltip-error"
     assert result =~ "tooltip-open"
     assert result =~ "extra-class"
-    assert result =~ ~s[data-tip="Full options"]
+    assert result =~ "Full options"
   end
 
   test "renders tooltip with HTML entities in content" do
@@ -191,8 +193,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
         inner_block: inner_block()
       })
 
-    # Phoenix escapes HTML entities in attributes
-    assert result =~ "data-tip="
+    assert result =~ "tooltip-content"
     assert result =~ "&lt;"
     assert result =~ "&gt;"
   end
@@ -206,7 +207,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
         inner_block: inner_block()
       })
 
-    assert result =~ "data-tip="
+    assert result =~ "tooltip-content"
+    assert result =~ "word"
   end
 
   test "renders tooltip with all positions in loop" do
@@ -265,7 +267,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
         inner_block: inner_block()
       })
 
-    assert result =~ ~s[data-tip=""]
+    assert result =~ ~s[class="tooltip-content"]
   end
 
   test "renders tooltip without custom class by default" do
@@ -299,7 +301,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
       })
 
     assert result =~ "tooltip-secondary"
-    assert result =~ ~s[data-tip="Secondary tip"]
+    assert result =~ "Secondary tip"
   end
 
   test "renders tooltip with accent color variant" do
@@ -358,14 +360,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
     assert result =~ ~s[role="tooltip"]
   end
 
-  test "renders visually hidden span with tooltip content for screen readers" do
+  test "renders tooltip-content span with tooltip text" do
     result =
       render_component(&dm_tooltip/1, %{
         content: "Screen reader text",
         inner_block: inner_block()
       })
 
-    assert result =~ ~s[class="sr-only"]
+    assert result =~ ~s[class="tooltip-content"]
     assert result =~ ~s[role="tooltip"]
     assert result =~ "Screen reader text"
   end
@@ -382,7 +384,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
     assert result =~ ~s[id="my-tip-tooltip"]
   end
 
-  test "role=tooltip is on hidden span, not on wrapper div" do
+  test "role=tooltip is on tooltip-content span, not on wrapper div" do
     result =
       render_component(&dm_tooltip/1, %{
         content: "Tooltip text",
@@ -390,8 +392,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
       })
 
     # The wrapper div should NOT have role="tooltip"
-    # role="tooltip" should only be on the sr-only span
-    [wrapper | _] = String.split(result, "class=\"sr-only\"")
+    # role="tooltip" should only be on the tooltip-content span
+    [wrapper | _] = String.split(result, "class=\"tooltip-content\"")
     refute wrapper =~ ~s[role="tooltip"]
   end
 end
