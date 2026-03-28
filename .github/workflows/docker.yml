@@ -9,8 +9,9 @@ on:
         default: 'main'
         type: string
       version:
-        description: 'Image version tag (e.g., 9.0.0). Defaults to git-ref.'
-        required: false
+        description: 'Image version tag (e.g., 9.0.0).'
+        required: true
+        default: "9.0.0"
         type: string
 
 permissions:
@@ -51,7 +52,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build and push to DockerHub
         uses: docker/build-push-action@v6
@@ -65,20 +66,8 @@ jobs:
             RELEASE_VERSION=${{ steps.version.outputs.version }}
           tags: |
             docker.io/gsmlg/duskmoon-storybook:${{ steps.version.outputs.version }}
+            docker.io/gsmlg/duskmoon-storybook:latest
+            ghcr.io/duskmoon-dev/duskmoon-storybook:${{ steps.version.outputs.version }}
+            ghcr.io/duskmoon-dev/duskmoon-storybook:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      - name: Push to GitHub Container Registry
-        continue-on-error: true
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: Dockerfile
-          platforms: linux/amd64
-          pull: true
-          push: true
-          build-args: |
-            RELEASE_VERSION=${{ steps.version.outputs.version }}
-          tags: |
-            ghcr.io/duskmoon-dev/duskmoon-storybook:${{ steps.version.outputs.version }}
-          cache-from: type=gha
