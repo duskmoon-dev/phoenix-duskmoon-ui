@@ -1,6 +1,6 @@
 defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
   @moduledoc """
-  Cascader component using CSS classes from `@duskmoon-dev/core`.
+  Cascader component using `el-dm-cascader` custom element.
 
   Renders a cascading multi-panel select where each panel shows one
   level of hierarchy. Selecting a parent reveals a child panel to the
@@ -27,7 +27,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
   """
   use Phoenix.Component
   import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
-  import PhoenixDuskmoon.Component.Icon.Icons
 
   @doc """
   Renders a cascader with horizontal multi-panel navigation.
@@ -57,18 +56,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
   )
 
   attr(:placeholder, :string, default: nil, doc: "placeholder text")
-  attr(:open, :boolean, default: false, doc: "whether the dropdown is open")
 
   attr(:size, :string,
-    default: nil,
-    values: [nil, "sm", "lg"],
+    default: "md",
+    values: ["sm", "md", "lg"],
     doc: "size variant"
-  )
-
-  attr(:variant, :string,
-    default: nil,
-    values: [nil, "outlined", "filled"],
-    doc: "visual style variant"
   )
 
   attr(:error, :boolean, default: false, doc: "show error state")
@@ -78,21 +70,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
   attr(:searchable, :boolean, default: false, doc: "show search input")
   attr(:clearable, :boolean, default: false, doc: "show clear button")
   attr(:separator, :string, default: " / ", doc: "path separator in display")
-  attr(:empty_text, :string, default: "No options available", doc: "text when no options")
+  attr(:multiple, :boolean, default: false, doc: "enable multi-path selection")
+  attr(:change_on_select, :boolean, default: false, doc: "emit change on each level")
 
-  attr(:search_placeholder, :string,
-    default: "Search...",
-    doc: "placeholder text for the search input"
-  )
-
-  attr(:search_label, :string,
-    default: "Search options",
-    doc: "accessible label for the search input"
-  )
-
-  attr(:clear_label, :string,
-    default: "Clear selection",
-    doc: "accessible label for the clear button (i18n)"
+  attr(:expand_trigger, :string,
+    default: "click",
+    values: ["click", "hover"],
+    doc: "how to expand panels"
   )
 
   attr(:helper, :string, default: nil, doc: "helper text displayed below the component")
@@ -107,173 +91,54 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Cascader do
   end
 
   def dm_cascader(assigns) do
-    selected_set = MapSet.new(assigns.selected_path)
-    panels = build_panels(assigns.options, assigns.selected_path)
-    path_labels = build_path_labels(assigns.options, assigns.selected_path)
+    options_json = Jason.encode!(assigns.options)
+    value_json = Jason.encode!(assigns.selected_path)
 
     assigns =
       assigns
-      |> assign(:selected_set, selected_set)
-      |> assign(:panels, panels)
-      |> assign(:path_labels, path_labels)
+      |> assign(:options_json, options_json)
+      |> assign(:value_json, value_json)
 
     ~H"""
-    <div
-      id={@id}
-      class={[
-        "cascader",
-        @size && "cascader-#{@size}",
-        @variant && "cascader-#{@variant}",
-        @open && "cascader-open",
-        (@error || @errors != []) && "cascader-error",
-        @disabled && "cascader-disabled",
-        @loading && "cascader-loading",
-        @class
-      ]}
-      aria-busy={@loading && "true"}
-      phx-feedback-for={@name}
-      {@rest}
-    >
-      <button
-        id={@id && "#{@id}-trigger"}
-        type="button"
-        class="cascader-trigger"
-        disabled={@disabled}
-        aria-disabled={@disabled && "true"}
-        aria-expanded={to_string(@open)}
-        aria-haspopup="listbox"
-        aria-controls={@id && "#{@id}-dropdown"}
+    <div phx-feedback-for={@name}>
+      <el-dm-cascader
+        id={@id}
+        options={@options_json}
+        value={@value_json}
+        placeholder={@placeholder}
+        separator={@separator}
+        size={@size}
+        disabled={@disabled || nil}
+        searchable={@searchable || nil}
+        clearable={@clearable || nil}
+        loading={@loading || nil}
+        multiple={@multiple || nil}
+        change-on-select={@change_on_select || nil}
+        expand-trigger={@expand_trigger}
+        validation-state={(@error || @errors != []) && "invalid" || nil}
+        class={@class}
+        aria-busy={@loading && "true"}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={
           (@errors != [] && @id && "#{@id}-errors") ||
             (@helper && @errors == [] && @id && "#{@id}-helper")
         }
+        {@rest}
       >
-        <span class="cascader-value">
-          <span :if={@path_labels != []} class="cascader-path">
-            <%= for {label, idx} <- Enum.with_index(@path_labels) do %>
-              <span :if={idx > 0} class="cascader-path-separator">{@separator}</span>
-              <span>{label}</span>
-            <% end %>
-          </span>
-          <span :if={@path_labels == [] && @placeholder} class="cascader-placeholder">{@placeholder}</span>
-        </span>
-        <span
-          :if={@clearable && @selected_path != []}
-          role="button"
-          tabindex="0"
-          class="cascader-clear"
-          aria-label={@clear_label}
-        >
-          <.dm_mdi name="close" class="w-3 h-3" />
-        </span>
-        <span class="cascader-arrow" aria-hidden="true"></span>
-      </button>
-
-      <div id={@id && "#{@id}-dropdown"} class="cascader-dropdown">
-        <div :if={@searchable} class="cascader-search">
-          <input
-            type="text"
-            class="cascader-search-input"
-            placeholder={@search_placeholder}
-            autocomplete="off"
-            aria-label={@search_label}
-          />
-        </div>
-
-        <div class="cascader-panels">
-          <div :if={@options == []} class="cascader-empty">{@empty_text}</div>
-          <div :for={panel <- @panels} class="cascader-panel">
-            <div :if={panel[:header]} class="cascader-panel-header">{panel[:header]}</div>
-            <div class="cascader-options" role="listbox" aria-labelledby={@id && "#{@id}-trigger"}>
-              <div
-                :for={opt <- panel.options}
-                class={[
-                  "cascader-option",
-                  opt[:selected] && "cascader-option-selected",
-                  opt[:active] && "cascader-option-active",
-                  opt[:disabled] && "cascader-option-disabled"
-                ]}
-                role="option"
-                aria-selected={to_string(opt[:selected] || false)}
-                data-value={opt[:value]}
-              >
-                <span class="cascader-option-label">{opt[:label]}</span>
-                <span :if={opt[:has_children]} class="cascader-option-arrow" aria-hidden="true"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      </el-dm-cascader>
       <input
         :if={@name && @selected_path != []}
         type="hidden"
         name={@name}
         value={List.last(@selected_path)}
       />
-      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">{@helper}</span>
+      <span :if={@helper && @errors == []} id={@id && "#{@id}-helper"} class="helper-text">
+        {@helper}
+      </span>
       <div :if={@errors != []} id={@id && "#{@id}-errors"}>
         <.dm_error :for={msg <- @errors}>{msg}</.dm_error>
       </div>
     </div>
     """
-  end
-
-  defp build_panels(options, selected_path) do
-    build_panels_recursive(options, selected_path, [])
-  end
-
-  defp build_panels_recursive(options, selected_path, acc) do
-    current_value = List.first(selected_path)
-    remaining_path = if selected_path != [], do: tl(selected_path), else: []
-
-    panel_options =
-      Enum.map(options, fn opt ->
-        has_children = is_list(opt[:children]) and opt[:children] != []
-        selected = opt[:value] == current_value
-
-        %{
-          value: opt[:value],
-          label: opt[:label],
-          disabled: opt[:disabled],
-          has_children: has_children,
-          selected: selected,
-          active: selected
-        }
-      end)
-
-    panel = %{options: panel_options, header: nil}
-    acc = acc ++ [panel]
-
-    selected_opt = Enum.find(options, fn opt -> opt[:value] == current_value end)
-
-    if selected_opt && is_list(selected_opt[:children]) && selected_opt[:children] != [] do
-      build_panels_recursive(selected_opt[:children], remaining_path, acc)
-    else
-      acc
-    end
-  end
-
-  defp build_path_labels(options, selected_path) do
-    build_labels_recursive(options, selected_path, [])
-  end
-
-  defp build_labels_recursive(_options, [], acc), do: acc
-
-  defp build_labels_recursive(options, [current | rest], acc) do
-    case Enum.find(options, fn opt -> opt[:value] == current end) do
-      nil ->
-        acc
-
-      opt ->
-        new_acc = acc ++ [opt[:label]]
-
-        if is_list(opt[:children]) do
-          build_labels_recursive(opt[:children], rest, new_acc)
-        else
-          new_acc
-        end
-    end
   end
 end

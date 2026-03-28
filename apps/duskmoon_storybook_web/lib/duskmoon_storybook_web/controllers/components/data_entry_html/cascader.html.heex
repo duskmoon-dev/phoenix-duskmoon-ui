@@ -111,7 +111,6 @@
     <.dm_cascader
       options={cascader_options}
       selected_path={["eu", "uk"]}
-      open
     />
   </div>
 
@@ -138,12 +137,12 @@
     <.dm_cascader
       options={cascader_options}
       selected_path={["asia"]}
-      variant="outlined"
+      class="cascader-outlined"
     />
     <.dm_cascader
       options={cascader_options}
       selected_path={["asia"]}
-      variant="filled"
+      class="cascader-filled"
     />
   </div>
 
@@ -180,12 +179,11 @@
     />
   </div>
 
-  <h3 class="text-xl font-semibold mt-8 mb-4">Deep Panels (Open)</h3>
+  <h3 class="text-xl font-semibold mt-8 mb-4">Deep Panels (Searchable)</h3>
   <div class="mb-4" style="min-height: 250px">
     <.dm_cascader
       options={cascader_options}
       selected_path={["asia", "cn", "bj"]}
-      open
       searchable
     />
   </div>
