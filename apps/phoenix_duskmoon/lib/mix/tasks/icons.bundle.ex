@@ -56,6 +56,7 @@ defmodule Mix.Tasks.Icons.Bundle do
     compressed = :zlib.gzip(data)
 
     for path <- [src_path, build_path] do
+      path |> Path.dirname() |> File.mkdir_p!()
       File.write!(path, compressed)
     end
 
