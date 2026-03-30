@@ -14,6 +14,8 @@ description: >
 Elixir component library providing 80+ LiveView HEEX components that render as
 HTML Custom Elements (`<el-dm-*>`) styled by `@duskmoon-dev/core`.
 
+**Version: 9.0.1**
+
 ## Installation
 
 ```elixir
@@ -22,7 +24,7 @@ HTML Custom Elements (`<el-dm-*>`) styled by `@duskmoon-dev/core`.
 ```
 
 ```bash
-bun add @duskmoon-dev/core @duskmoon-dev/elements
+bun add @duskmoon-dev/core @duskmoon-dev/elements @duskmoon-dev/css-art @duskmoon-dev/art-elements
 ```
 
 ## Setup
@@ -32,8 +34,8 @@ bun add @duskmoon-dev/core @duskmoon-dev/elements
 ```elixir
 defp html_helpers do
   quote do
-    use PhoenixDuskmoon.Component   # all dm_* UI components
-    use PhoenixDuskmoon.ArtComponent      # all dm_art_* decorative components
+    use PhoenixDuskmoon.Component    # all dm_* UI components
+    use PhoenixDuskmoon.ArtComponent # all dm_art_* decorative components
   end
 end
 ```
@@ -50,6 +52,13 @@ end
 
 For custom elements to inherit theme colors, include the element-theme-bridge
 (ships with the package or copy from the repo's `assets/css/element-theme-bridge.css`).
+
+For CSS art effects, import each CSS art stylesheet you need:
+```css
+@import "@duskmoon-dev/css-art/eclipse.css";
+@import "@duskmoon-dev/css-art/snow.css";
+/* ... etc */
+```
 
 ### 3. JavaScript hooks (`assets/js/app.js`)
 
@@ -79,9 +88,9 @@ Without registration, `<el-dm-*>` content is invisible.
 
 ```
 HEEX Components (dm_btn, dm_card)
-       ↓
+       |
 Custom Elements (<el-dm-button>, <el-dm-card>)
-       ↓
+       |
 @duskmoon-dev/core (CSS variables, design tokens)
 ```
 
@@ -96,7 +105,7 @@ Custom Elements (<el-dm-button>, <el-dm-card>)
 | `WebComponentHook` | Any `el-dm-*` with `phx-*` events | Bridges custom element events to LiveView |
 | `FormElementHook` | Form `el-dm-*` inputs | Adds `phx-feedback-for` support |
 | `ThemeSwitcher` | `dm_theme_switcher` | Theme toggle + localStorage persistence |
-| `Spotlight` | `dm_art_spotlight_search` | Cmd/Ctrl+K keyboard shortcut |
+| `Spotlight` | Spotlight search component | Cmd/Ctrl+K keyboard shortcut |
 | `PageHeader` | `dm_page_header` | IntersectionObserver for scroll-based nav |
 
 ## Component Quick Reference
@@ -168,6 +177,7 @@ For full component catalog with all attributes and slots, see
 | `dm_time_input` | DataEntry.TimeInput | Time picker |
 | `dm_cascader` | DataEntry.Cascader | Cascading select |
 | `dm_tree_select` | DataEntry.TreeSelect | Tree-structured select |
+| `dm_markdown_input` | DataEntry.MarkdownInput | Markdown editor with preview |
 
 ### Feedback
 
@@ -199,10 +209,10 @@ For full component catalog with all attributes and slots, see
 
 | Function | Module | Description |
 |----------|--------|-------------|
+| `dm_bottom_sheet` | Layout.BottomSheet | Bottom sheet overlay |
 | `dm_divider` | Layout.Divider | Horizontal/vertical divider |
 | `dm_drawer` | Layout.Drawer | Slide-out drawer panel |
 | `dm_theme_switcher` | Layout.ThemeSwitcher | Theme toggle (needs hook) |
-| `dm_bottom_sheet` | Layout.BottomSheet | Bottom sheet overlay |
 
 ### Icon
 
@@ -213,14 +223,24 @@ For full component catalog with all attributes and slots, see
 
 ### CSS Art (decorative)
 
+All art components require `id` (required string) and accept `class` + `rest` global attrs.
+Import via `use PhoenixDuskmoon.ArtComponent`.
+
 | Function | Module | Description |
 |----------|--------|-------------|
-| `dm_art_button_noise` | CssArt.ButtonNoise | Animated noise button |
-| `dm_art_eclipse` | CssArt.Eclipse | Animated eclipse |
-| `dm_art_plasma_ball` | CssArt.PlasmaBall | Interactive plasma ball |
-| `dm_art_signature` | CssArt.Signature | Decorative seal stamp |
-| `dm_art_snow` | CssArt.Snow | Falling snowflakes |
-| `dm_art_spotlight_search` | CssArt.SpotlightSearch | Spotlight search (needs hook) |
+| `dm_art_atom` | ArtComponent.Atom | Animated atom |
+| `dm_art_cat_stargazer` | ArtComponent.CatStargazer | Cat stargazer scene |
+| `dm_art_circular_gallery` | ArtComponent.CircularGallery | Circular gallery |
+| `dm_art_color_spin` | ArtComponent.ColorSpin | Color spin effect |
+| `dm_art_eclipse` | ArtComponent.Eclipse | Animated eclipse |
+| `dm_art_flower_animation` | ArtComponent.FlowerAnimation | Flower animation |
+| `dm_art_gemini_input` | ArtComponent.GeminiInput | Gemini-style input (size, placeholder) |
+| `dm_art_moon` | ArtComponent.Moon | Moon scene |
+| `dm_art_mountain` | ArtComponent.Mountain | Mountain landscape |
+| `dm_art_plasma_ball` | ArtComponent.PlasmaBall | Interactive plasma ball |
+| `dm_art_snow` | ArtComponent.Snow | Falling snowflakes (unicode, fall) |
+| `dm_art_sun` | ArtComponent.Sun | Sun scene |
+| `dm_art_synthwave_starfield` | ArtComponent.SynthwaveStarfield | Synthwave starfield |
 
 ## Usage Examples
 
@@ -282,6 +302,11 @@ For full component catalog with all attributes and slots, see
   <:body>Are you sure?</:body>
   <:footer><.dm_btn variant="primary" phx-click="confirm">Yes</.dm_btn></:footer>
 </.dm_modal>
+
+<%!-- Art components --%>
+<.dm_art_snow id="snow-1" />
+<.dm_art_eclipse id="eclipse-1" />
+<.dm_art_gemini_input id="ai-input" size="lg" placeholder="Ask anything..." />
 ```
 
 ## Package Exports
