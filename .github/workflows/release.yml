@@ -81,8 +81,10 @@ jobs:
         working-directory: apps/phoenix_duskmoon
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
+          MIX_ENV: dev
         run: |
-          mix hex.publish --yes --replace || {
+          mix deps.get
+          mix hex.publish package --yes --replace || {
             echo "::warning::hex.pm publish failed (version may already exist beyond replace window)"
           }
 
