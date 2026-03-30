@@ -84,9 +84,7 @@ jobs:
           MIX_ENV: dev
         run: |
           mix deps.get
-          mix hex.publish package --yes --replace || {
-            echo "::warning::hex.pm publish failed (version may already exist beyond replace window)"
-          }
+          mix hex.publish package --yes --replace
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
