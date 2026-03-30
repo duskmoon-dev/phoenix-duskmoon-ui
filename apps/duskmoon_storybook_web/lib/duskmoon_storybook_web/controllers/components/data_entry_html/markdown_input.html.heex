@@ -57,6 +57,8 @@
   """ %>
   <.dm_markdown content={docs} />
 
+  <%!-- NOTE: Use value={"..."} (Elixir expression) not value="..." for multiline content.
+       Plain HEEX attrs treat \n as literal backslash-n; only Elixir strings process escape sequences. --%>
   <section>
     <h2 class="text-lg font-semibold mb-3">Basic Editor</h2>
     <.dm_markdown_input
