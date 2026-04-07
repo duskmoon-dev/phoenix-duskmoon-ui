@@ -12,15 +12,25 @@ If the user input is "dry-run" or "--dry-run", only perform Steps 1-2 and report
 
 ## Step 1: Update @duskmoon-dev/* packages
 
-1. Record the **before** versions by reading `bun.lock` entries for `@duskmoon-dev/*`.
-2. Check if `@duskmoon-dev/css-art` is in `package.json` dependencies. If it is missing, add it by running:
+1. Record the **before** versions by reading all `package.json` files for `@duskmoon-dev/*` entries:
+   - `package.json` (root workspace)
+   - `apps/phoenix_duskmoon/package.json`
+   - `apps/duskmoon_storybook_web/package.json`
+2. Check if `@duskmoon-dev/css-art` is in the root `package.json` dependencies. If it is missing, add it by running:
    ```bash
    bun add @duskmoon-dev/css-art
    ```
-3. Run: `bun update --latest @duskmoon-dev/core @duskmoon-dev/elements @duskmoon-dev/css-art @duskmoon-dev/art-elements`
-   - This will also update all transitive `@duskmoon-dev/el-*` and `@duskmoon-dev/el-art-*` sub-packages.
-4. Record the **after** versions from `bun.lock`.
-5. Print a before/after version diff table. If nothing changed, inform the user and ask whether to continue with the remaining steps anyway.
+3. Run `bunx npm-check-updates -u --removeRange --filter '@duskmoon-dev/*'` on each `package.json` that contains `@duskmoon-dev/*` dependencies:
+   ```bash
+   bunx npm-check-updates -u --removeRange --filter '@duskmoon-dev/*' --packageFile package.json
+   bunx npm-check-updates -u --removeRange --filter '@duskmoon-dev/*' --packageFile apps/phoenix_duskmoon/package.json
+   bunx npm-check-updates -u --removeRange --filter '@duskmoon-dev/*' --packageFile apps/duskmoon_storybook_web/package.json
+   ```
+   - This updates version strings in `package.json` to exact latest versions (removes `^`, `>=`, `~` ranges).
+   - Skip any `package.json` that has no `@duskmoon-dev/*` dependencies.
+4. Run `bun install` to update the lockfile.
+5. Record the **after** versions from the updated `package.json` files.
+6. Print a before/after version diff table. If nothing changed, inform the user and ask whether to continue with the remaining steps anyway.
 
 ## Step 2: Detect new custom elements
 
