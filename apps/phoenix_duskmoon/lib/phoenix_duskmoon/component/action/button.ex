@@ -152,7 +152,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       aria-busy={@loading && "true"}
       class={@class}
       style={@el_style}
-      onclick={"document.getElementById('confirm-dialog-#{@id}').showModal()"}
+      onclick={"document.getElementById('confirm-dialog-#{@id}').show()"}
     >
       <span :for={prefix <- @prefix} slot="prefix">{render_slot(prefix)}</span>
       {render_slot(@inner_block)}

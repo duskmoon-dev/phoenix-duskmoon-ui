@@ -17,7 +17,7 @@
   ```elixir
   <.dm_modal id="my-modal">
     <:trigger :let={dialog_id}>
-      <.dm_btn variant="primary" onclick={"document.getElementById('\#{dialog_id}').showModal()"}>Open</.dm_btn>
+      <.dm_btn variant="primary" onclick={"document.getElementById('\#{dialog_id}').show()"}>Open</.dm_btn>
     </:trigger>
     <:title>Modal Title</:title>
     <:body>Modal content here</:body>
@@ -30,7 +30,7 @@
   <h3 class="text-xl font-semibold mt-8 mb-4">Basic Modal</h3>
   <.dm_modal id="demo-modal-basic">
     <:trigger :let={dialog_id}>
-      <.dm_btn variant="primary" onclick={"document.getElementById('#{dialog_id}').showModal()"}>
+      <.dm_btn variant="primary" onclick={"document.getElementById('#{dialog_id}').show()"}>
         Open Modal
       </.dm_btn>
     </:trigger>
@@ -47,7 +47,7 @@
   <div class="flex flex-wrap gap-4">
     <.dm_modal id="demo-modal-sm" size="sm">
       <:trigger :let={dialog_id}>
-        <.dm_btn variant="outline" onclick={"document.getElementById('#{dialog_id}').showModal()"}>
+        <.dm_btn variant="outline" onclick={"document.getElementById('#{dialog_id}').show()"}>
           Small
         </.dm_btn>
       </:trigger>
@@ -59,7 +59,7 @@
 
     <.dm_modal id="demo-modal-md" size="md">
       <:trigger :let={dialog_id}>
-        <.dm_btn variant="outline" onclick={"document.getElementById('#{dialog_id}').showModal()"}>
+        <.dm_btn variant="outline" onclick={"document.getElementById('#{dialog_id}').show()"}>
           Medium
         </.dm_btn>
       </:trigger>
@@ -71,7 +71,7 @@
 
     <.dm_modal id="demo-modal-lg" size="lg">
       <:trigger :let={dialog_id}>
-        <.dm_btn variant="outline" onclick={"document.getElementById('#{dialog_id}').showModal()"}>
+        <.dm_btn variant="outline" onclick={"document.getElementById('#{dialog_id}').show()"}>
           Large
         </.dm_btn>
       </:trigger>
@@ -85,7 +85,7 @@
   <h3 class="text-xl font-semibold mt-8 mb-4">With Backdrop</h3>
   <.dm_modal id="demo-modal-backdrop" backdrop={true}>
     <:trigger :let={dialog_id}>
-      <.dm_btn variant="accent" onclick={"document.getElementById('#{dialog_id}').showModal()"}>
+      <.dm_btn variant="accent" onclick={"document.getElementById('#{dialog_id}').show()"}>
         Backdrop Blur
       </.dm_btn>
     </:trigger>
