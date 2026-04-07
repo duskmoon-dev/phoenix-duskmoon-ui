@@ -39,7 +39,7 @@ Three clauses: standard, confirm dialog, noise effect.
 | `confirm_class` | any | nil | |
 | `cancel_class` | any | nil | |
 | `show_cancel_action` | boolean | true | |
-| `confirm_dialog_label` | string | "Confirmation" | |
+| `confirm_dialog_label` | string | "Confirmation" | Accessible fallback label for confirm dialog when no title is set |
 
 Slots: `inner_block` (required), `prefix`, `suffix`, `confirm_action`
 
@@ -199,7 +199,7 @@ Slots: `inner_block` (required), `icon`
 | `size` | string | nil | nil, sm, lg |
 | `animation` | string | nil | nil, fade, slide |
 | `speed` | string | nil | nil, fast, slow |
-| `nested` | boolean | false | |
+| `nested` | boolean | false | Nested with indent and left border |
 
 Slots: `trigger` (required), `content` (required)
 
@@ -214,7 +214,7 @@ Slots: `inner_block` (required)
 | `id` | string | "flash" |
 | `flash` | map | %{} |
 | `title` | string | nil |
-| `kind` | atom | — | values: :info, :error |
+| `kind` | atom | — | Values: :info, :error |
 | `autoshow` | boolean | true |
 | `close` | boolean | true |
 | `close_label` | string | "Close" |
@@ -248,11 +248,11 @@ Slots: `item` (required, attrs: `title`, `subtitle`, `icon`, `active`, `disabled
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `content` | string | "" | Markdown text |
-| `src` | string | nil | URL to fetch |
 | `debug` | boolean | false | |
+| `content` | string | "" | Markdown content (inline) |
+| `src` | string | nil | URL to fetch markdown |
 | `theme` | string | nil | nil, github, atom-one-dark, atom-one-light, auto |
-| `no_mermaid` | boolean | false | |
+| `no_mermaid` | boolean | false | Disable mermaid diagrams |
 
 ### `dm_pagination/1`
 
@@ -262,9 +262,9 @@ Slots: `item` (required, attrs: `title`, `subtitle`, `icon`, `active`, `disabled
 | `page_num` | integer | 1 | |
 | `total` | integer | 0 | |
 | `show_total` | boolean | false | |
-| `update_event` | string | "update_current_page" | |
-| `page_url` | any | nil | URL template |
-| `page_url_marker` | string | "{page}" | |
+| `update_event` | string | "update_current_page" | LiveView event name |
+| `page_url` | any | nil | URL pattern for page links |
+| `page_url_marker` | string | "{page}" | Marker to replace with page number |
 | `page_link_type` | string | "patch" | patch, navigate, href |
 | `el_size` | string | nil | nil, xs, sm, md, lg |
 | `el_color` | string | nil | nil, primary, secondary, neutral |
@@ -293,7 +293,7 @@ Accessibility attrs: `prev_label`, `next_label`, `pagination_label`, `prev_page_
 |------|------|---------|--------|
 | `open` | boolean | false | |
 | `trigger_mode` | string | "click" | click, hover, focus |
-| `placement` | string | "bottom" | top, bottom, left, right + -start/-end |
+| `placement` | string | "bottom" | top, bottom, left, right, top-start, top-end, bottom-start, bottom-end, left-start, left-end, right-start, right-end |
 | `offset` | integer | 8 | |
 | `arrow` | boolean | true | |
 
@@ -309,27 +309,93 @@ Slots: `trigger` (required), `inner_block`
 | `color` | string | "primary" | primary, secondary, tertiary, accent, info, success, warning, error |
 | `size` | string | "md" | xs, sm, md, lg, xl |
 | `show_label` | boolean | false | |
-| `inline_label` | boolean | false | |
-| `striped` | boolean | false | |
-| `animated` | boolean | false | |
+| `inline_label` | boolean | false | Linear only |
+| `striped` | boolean | false | Linear only |
+| `animated` | boolean | false | Implies striped, linear only |
 | `indeterminate` | boolean | false | |
 | `label_class` | any | nil | |
 | `progress_class` | any | nil | |
+| `label_text` | string | "Progress" | |
+| `complete_text` | string | "Complete" | |
 
-Accessibility attrs: `label_text`, `complete_text`
+### `dm_skeleton/1` — Base Skeleton
 
-### `dm_skeleton_*`
+| Attr | Type | Default |
+|------|------|---------|
+| `variant` | string | nil | circle, square, text, avatar |
+| `size` | string | nil | xs, sm, md, lg, xl |
+| `animation` | string | nil | wave, bounce |
+| `width` | string | nil | e.g., "w-32", "w-full" |
+| `height` | string | nil | e.g., "h-4", "h-8" |
+| `loading_label` | string | "Loading" | |
 
-8 skeleton variants. All share `id`, `class`, `animation`, `loading_label`, `rest`.
+### `dm_skeleton_text/1`
 
-- **`dm_skeleton`**: `variant`, `size`, `width`, `height`
-- **`dm_skeleton_text`**: `lines` (3), `line_height` ("h-4"), `last_line_width` ("w-full")
-- **`dm_skeleton_avatar`**: `size` ("md")
-- **`dm_skeleton_card`**: `show_avatar` (false), `avatar_size` ("md"), `lines` (3), `show_action` (false)
-- **`dm_skeleton_table`**: `rows` (5), `columns` (4), `show_header` (true)
-- **`dm_skeleton_list`**: `items` (5), `show_avatar` (false), `avatar_size` ("sm"), `lines_per_item` (1)
-- **`dm_skeleton_form`**: `fields` (4), `field_types` (nil), `show_submit` (true)
-- **`dm_skeleton_comment`**: `show_replies` (0)
+| Attr | Type | Default |
+|------|------|---------|
+| `lines` | integer | 3 |
+| `line_height` | string | "h-4" |
+| `last_line_width` | string | "w-full" |
+| `animation` | string | nil |
+| `loading_label` | string | "Loading content" |
+
+### `dm_skeleton_avatar/1`
+
+| Attr | Type | Default |
+|------|------|---------|
+| `size` | string | "md" |
+| `animation` | string | nil |
+| `loading_label` | string | "Loading avatar" |
+
+### `dm_skeleton_card/1`
+
+| Attr | Type | Default |
+|------|------|---------|
+| `show_avatar` | boolean | false |
+| `avatar_size` | string | "md" |
+| `lines` | integer | 3 |
+| `show_action` | boolean | false |
+| `animation` | string | nil |
+| `loading_label` | string | "Loading card" |
+
+### `dm_skeleton_table/1`
+
+| Attr | Type | Default |
+|------|------|---------|
+| `rows` | integer | 5 |
+| `columns` | integer | 4 |
+| `show_header` | boolean | true |
+| `animation` | string | nil |
+| `loading_label` | string | "Loading table" |
+
+### `dm_skeleton_list/1`
+
+| Attr | Type | Default |
+|------|------|---------|
+| `items` | integer | 5 |
+| `show_avatar` | boolean | false |
+| `avatar_size` | string | "sm" |
+| `lines_per_item` | integer | 1 |
+| `animation` | string | nil |
+| `loading_label` | string | "Loading list" |
+
+### `dm_skeleton_form/1`
+
+| Attr | Type | Default |
+|------|------|---------|
+| `fields` | integer | 4 |
+| `field_types` | list | nil | List of: text, select, textarea, checkbox |
+| `show_submit` | boolean | true |
+| `animation` | string | nil |
+| `loading_label` | string | "Loading form" |
+
+### `dm_skeleton_comment/1`
+
+| Attr | Type | Default |
+|------|------|---------|
+| `show_replies` | integer | 0 |
+| `animation` | string | nil |
+| `loading_label` | string | "Loading comments" |
 
 ### `dm_stat/1`
 
@@ -347,12 +413,12 @@ Slots: `icon`
 
 | Attr | Type | Default |
 |------|------|---------|
-| `data` | list | [] |
-| `stream` | boolean | false |
 | `border` | boolean | false |
 | `zebra` | boolean | false |
 | `hover` | boolean | false |
 | `compact` | boolean | false |
+| `data` | list | [] |
+| `stream` | boolean | false |
 
 Slots: `caption` (attrs: `id`, `class`), `col` (attrs: `label`, `label_class`, `class`), `expand` (attrs: `id`, `class`)
 
@@ -369,7 +435,7 @@ Slots: `item` (required, attrs: `title`, `time`, `icon`, `color`, `completed`, `
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `content` | string | required | Tooltip text |
+| `content` | string | required | |
 | `position` | string | "top" | top, bottom, left, right |
 | `color` | string | "primary" | primary, secondary, tertiary, accent, info, success, warning, error |
 | `open` | boolean | false | |
@@ -380,31 +446,26 @@ Slots: `inner_block` (required)
 
 ## Data Entry
 
-All data entry components share a common pattern:
-- `field` (Phoenix.HTML.FormField) — use with `@form[:field_name]`
-- `name`, `value`, `id` — manual overrides when not using a form
-- `errors` — list of error strings
-- `helper` — helper text
-- `disabled`, `horizontal`, `state` (nil/success/warning)
-
 ### `dm_form/1`
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `for` | any | nil | |
+| `for` | any | nil | Phoenix.HTML.Form struct |
 | `as` | any | nil | |
-| `actions_align` | string | nil | between, right, center |
+| `actions_align` | string | nil | nil, between, right, center |
 
 Slots: `inner_block` (required), `actions`
 
+Global attrs: passed through to `<form>`.
+
 ### `dm_label/1`
 
-| Attr | Type | Default |
-|------|------|---------|
-| `for` | string | nil |
-| `required` | boolean | false |
-| `optional` | boolean | false |
-| `size` | string | nil |
+| Attr | Type | Default | Values |
+|------|------|---------|--------|
+| `for` | string | nil | |
+| `required` | boolean | false | |
+| `optional` | boolean | false | |
+| `size` | string | nil | nil, sm, lg |
 
 Slots: `inner_block` (required)
 
@@ -416,7 +477,7 @@ Slots: `inner_block` (required)
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `variant` | string | nil | |
+| `variant` | string | nil | nil, info, success, warning, error |
 | `icon` | string | nil | |
 | `title` | string | nil | |
 | `dismissible` | boolean | false | |
@@ -424,153 +485,255 @@ Slots: `inner_block` (required)
 | `filled` | boolean | false | |
 | `outlined` | boolean | false | |
 
-Slots: `inner_block`
+Slots: `inner_block` (required)
 
 ### `dm_fieldset/1`
 
-| Attr | Type | Default |
-|------|------|---------|
-| `legend` | string | nil |
-| `variant` | string | nil |
+| Attr | Type | Default | Values |
+|------|------|---------|--------|
+| `legend` | string | nil | |
+| `variant` | string | nil | nil, filled, borderless, card |
 
 Slots: `inner_block` (required)
 
-### Form Layout Helpers
-
-- **`dm_form_row`**, **`dm_form_inline`**, **`dm_form_hint`** — `id`, `class`, `rest`; slot: `inner_block`
-- **`dm_form_grid`** — `cols` (integer, default: 2, values: 2/3/4); slot: `inner_block`
-- **`dm_form_section`** — `title`, `description`; slot: `inner_block`
-- **`dm_form_divider`** — `text`; no slots
-- **`dm_form_counter`** — `current`, `max`, `error`; no slots
-
-### `dm_input/1` — Universal Input
-
-Dispatches based on `type` attr. Supports 30+ types including:
-text, checkbox, color, date, datetime-local, email, file, hidden, month,
-number, password, range, radio, search, select, tel, textarea, time, url, week,
-checkbox_group, radio_group, toggle, range_slider, rating, datepicker,
-timepicker, color_picker, switch, search_with_suggestions, file_upload,
-rich_text, tags, slider_range, password_strength.
+### `dm_form_grid/1`
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `type` | string | "text" | (see above) |
-| `variant` | string | "bordered" | ghost, filled, bordered, nil |
-| `color` | string | nil | nil + 8 standard colors |
-| `size` | string | nil | |
-| `label` | string | nil | |
-| `classic` | boolean | — | |
-| `swatches` | list | nil | Color picker swatches |
-| `suggestions` | list | [] | Search suggestions |
+| `cols` | integer | 2 | 2, 3, 4 |
 
-Additional password strength labels and form integration attrs available.
+Slots: `inner_block` (required)
+
+### `dm_form_section/1`
+
+| Attr | Type | Default |
+|------|------|---------|
+| `title` | string | nil |
+| `description` | string | nil |
+
+Slots: `inner_block` (required)
+
+### `dm_form_divider/1`
+
+| Attr | Type | Default |
+|------|------|---------|
+| `text` | string | nil |
+
+### `dm_form_counter/1`
+
+| Attr | Type | Default |
+|------|------|---------|
+| `current` | integer | required |
+| `max` | integer | required |
+| `error` | boolean | false |
+
+### `dm_form_row/1`, `dm_form_inline/1`, `dm_form_hint/1`
+
+Layout wrappers. Slots: `inner_block` (required).
+
+### `dm_input/1`
+
+Universal input with 30+ types. Key attributes:
+
+| Attr | Type | Default | Values |
+|------|------|---------|--------|
+| `type` | string | "text" | checkbox, color, date, datetime-local, email, file, hidden, month, number, password, range, rating, rich-text, search, select, slider, switch, tel, text, textarea, time, url, week, ... |
+| `field` | Phoenix.HTML.FormField | nil | |
+| `label` | string | nil | |
+| `value` | any | nil | |
+| `name` | string | nil | |
+| `color` | string | nil | |
+| `size` | string | nil | |
+| `variant` | string | nil | ghost, filled, bordered |
+| `classic` | boolean | false | Use classic HTML inputs |
+| `helper` | string | nil | |
+| `errors` | list | [] | |
+| `state` | string | nil | nil, success, warning |
+| `options` | list | [] | For select type |
+| `prompt` | string | nil | For select type |
+| `multiple` | boolean | false | For select type |
+| `horizontal` | boolean | false | |
+| `checked` | boolean | false | For checkbox type |
+| `suggestions` | list | nil | Datalist suggestions |
+| `swatches` | list | nil | Color swatches |
+
+Accessibility attrs: `drop_text`, `choose_files_text`, `add_tag_placeholder`, `password_hint_weak`, `password_hint_medium`, `password_hint_strong`, `password_strength_label`, `strength_label_weak`, `strength_label_medium`, `strength_label_strong`, `remove_file_label`, `toolbar_label`, `bold_label`, `italic_label`, `underline_label`, `bulleted_list_label`, `numbered_list_label`, `insert_link_label`, `toggle_password_label`, `rating_group_label`, `rating_item_label`, `remove_tag_label`, `select_color_label`, `tags_group_label`
 
 ### `dm_compact_input/1`
 
-Compact variant of `dm_input` with similar attrs.
-
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `type` | string | "text" | text, email, number, password, tel, url, search, date, time, datetime-local, hidden |
-| `variant` | string | "bordered" | ghost, filled, bordered, nil |
-| `color` | string | "primary" | 8 standard colors |
-| `size` | string | "md" | xs, sm, md, lg |
-
-Slots: `inner_block`
-
-### `dm_select/1`
-
-| Attr | Type | Default | Values |
-|------|------|---------|--------|
-| `options` | list | nil | List of `{value, label}` tuples |
-| `prompt` | string | nil | Placeholder option |
-| `variant` | string | "bordered" | ghost, filled, bordered, nil |
-| `color` | string | "primary" | 8 standard colors |
-| `size` | string | "md" | xs, sm, md, lg |
-| `multiple` | boolean | false | |
+| `type` | string | "text" | color, date, datetime-local, email, file, month, number, password, search, select, tel, text, time, url, week |
+| `field` | FormField | nil | |
 | `label` | string | nil | |
+| `size` | string | nil | xs, sm, md, lg |
+| `color` | string | nil | primary, secondary, tertiary, accent, info, success, warning, error |
+| `variant` | string | nil | ghost, filled, bordered |
+| `helper` | string | nil | |
+| `errors` | list | [] | |
+| `state` | string | nil | nil, success, warning |
+| `disabled` | boolean | false | |
+| `options` | list | [] | |
+| `prompt` | string | nil | |
+| `multiple` | boolean | false | |
+| `horizontal` | boolean | false | |
 
-Slots: `inner_block` (optional, for custom options)
+Slots: `inner_block` (optional)
 
 ### `dm_checkbox/1`
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `checked` | boolean | false | |
+| `field` | FormField | nil | |
 | `label` | string | nil | |
-| `size` | string | "md" | xs, sm, md, lg, xl |
-| `color` | string | "primary" | 8 standard colors |
+| `checked` | boolean | false | |
+| `size` | string | nil | xs, sm, md, lg, xl |
+| `color` | string | nil | primary, secondary, tertiary, accent, info, success, warning, error |
+| `helper` | string | nil | |
+| `errors` | list | [] | |
+| `disabled` | boolean | false | |
 | `indeterminate` | boolean | false | |
+| `horizontal` | boolean | false | |
+| `state` | string | nil | nil, success, warning |
 | `multiple` | boolean | false | |
+| `label_class` | any | nil | |
+| `checkbox_class` | any | nil | |
 
 ### `dm_radio/1`
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `checked` | boolean | false | |
+| `field` | FormField | nil | |
 | `label` | string | nil | |
-| `size` | string | "md" | xs, sm, md, lg, xl |
-| `color` | string | "primary" | 8 standard colors |
+| `checked` | boolean | false | |
+| `size` | string | nil | xs, sm, md, lg, xl |
+| `color` | string | nil | primary, secondary, tertiary, accent, info, success, warning, error |
+| `helper` | string | nil | |
+| `errors` | list | [] | |
+| `disabled` | boolean | false | |
+| `horizontal` | boolean | false | |
+| `state` | string | nil | nil, success, warning |
+| `label_class` | any | nil | |
+| `radio_class` | any | nil | |
+
+### `dm_select/1`
+
+| Attr | Type | Default | Values |
+|------|------|---------|--------|
+| `field` | FormField | nil | |
+| `label` | string | nil | |
+| `options` | list | nil | |
+| `prompt` | string | nil | |
+| `value` | any | nil | |
+| `size` | string | nil | xs, sm, md, lg |
+| `variant` | string | nil | ghost, filled, bordered |
+| `color` | string | nil | primary, secondary, tertiary, accent, info, success, warning, error |
+| `helper` | string | nil | |
+| `errors` | list | [] | |
+| `disabled` | boolean | false | |
+| `horizontal` | boolean | false | |
+| `state` | string | nil | nil, success, warning |
+| `multiple` | boolean | false | |
+| `label_class` | any | nil | |
+| `select_class` | any | nil | |
+
+Slots: `inner_block` (optional)
 
 ### `dm_switch/1`
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `checked` | boolean | false | |
+| `field` | FormField | nil | |
 | `label` | string | nil | |
-| `size` | string | "md" | xs, sm, md, lg, xl |
-| `color` | string | "primary" | 8 standard colors |
+| `checked` | boolean | false | |
+| `size` | string | nil | xs, sm, md, lg, xl |
+| `color` | string | nil | primary, secondary, tertiary, accent, info, success, warning, error |
+| `helper` | string | nil | |
+| `errors` | list | [] | |
+| `disabled` | boolean | false | |
+| `horizontal` | boolean | false | |
+| `state` | string | nil | nil, success, warning |
 | `multiple` | boolean | false | |
+| `label_class` | any | nil | |
+| `switch_class` | any | nil | |
 
 ### `dm_slider/1`
 
-| Attr | Type | Default |
-|------|------|---------|
-| `min` | any | — |
-| `max` | any | — |
-| `step` | any | — |
-| `size` | string | "md" (xs, sm, md, lg) |
-| `color` | string | "primary" |
-| `show_value` | boolean | — |
-| `vertical` | boolean | — |
+| Attr | Type | Default | Values |
+|------|------|---------|--------|
+| `field` | FormField | nil | |
+| `label` | string | nil | |
+| `min` | integer | 0 | |
+| `max` | integer | 100 | |
+| `step` | integer | 1 | |
+| `color` | string | nil | primary, secondary, tertiary, accent, info, success, warning, error |
+| `size` | string | nil | xs, sm, md, lg |
+| `helper` | string | nil | |
+| `errors` | list | [] | |
+| `disabled` | boolean | false | |
+| `horizontal` | boolean | false | |
+| `state` | string | nil | nil, success, warning |
+| `vertical` | boolean | false | |
+| `show_value` | boolean | true | |
+| `label_class` | any | nil | |
+| `slider_class` | any | nil | |
 
 ### `dm_textarea/1`
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `rows` | any | — | |
-| `cols` | any | — | |
-| `resize` | string | "vertical" | none, vertical, horizontal, both |
-| `variant` | string | "bordered" | ghost, filled, bordered, nil |
-| `color` | string | "primary" | 8 standard colors |
-| `size` | string | "md" | xs, sm, md, lg |
-| `readonly` | boolean | — | |
-| `required` | boolean | — | |
-| `maxlength` | any | — | |
+| `field` | FormField | nil | |
+| `label` | string | nil | |
+| `placeholder` | string | nil | |
+| `value` | any | nil | |
+| `rows` | integer | 3 | |
+| `cols` | integer | nil | |
+| `size` | string | nil | xs, sm, md, lg |
+| `variant` | string | nil | ghost, filled, bordered |
+| `color` | string | nil | primary, secondary, tertiary, accent, info, success, warning, error |
+| `resize` | string | nil | none, vertical, horizontal, both |
+| `helper` | string | nil | |
+| `errors` | list | [] | |
+| `disabled` | boolean | false | |
+| `horizontal` | boolean | false | |
+| `state` | string | nil | nil, success, warning |
+| `readonly` | boolean | false | |
+| `required` | boolean | false | |
+| `maxlength` | integer | nil | |
+| `label_class` | any | nil | |
+| `textarea_class` | any | nil | |
 
 ### `dm_rating/1`
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
+| `field` | FormField | nil | |
+| `value` | integer | 0 | |
 | `max` | integer | 5 | |
 | `size` | string | nil | nil, xs, sm, lg, xl |
-| `color` | string | nil | 9 standard colors |
+| `color` | string | nil | nil, primary, secondary, tertiary, accent, info, success, warning, error |
+| `readonly` | boolean | false | |
+| `disabled` | boolean | false | |
+| `animated` | boolean | false | |
+| `compact` | boolean | false | |
 | `icon` | string | "star" | |
-| `readonly` | boolean | — | |
-| `animated` | boolean | — | |
-| `compact` | boolean | — | |
+| `error` | boolean | false | |
+| `errors` | list | [] | |
+| `helper` | string | nil | |
+| `group_label` | string | nil | |
+| `item_label` | string | nil | |
 
 ### `dm_segment_control/1`
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
 | `size` | string | nil | nil, sm, lg |
-| `color` | string | nil | 9 standard colors |
+| `color` | string | nil | nil, primary, secondary, tertiary, accent, info, success, warning, error |
 | `variant` | string | nil | nil, outlined, ghost |
-| `full` | boolean | — | |
-| `icon_only` | boolean | — | |
-| `multi` | boolean | — | |
-| `label` | string | nil | |
+| `full` | boolean | false | |
+| `icon_only` | boolean | false | |
+| `multi` | boolean | false | |
+| `label` | string | nil | aria-label |
 
 Slots: `item` (required, attrs: `active`, `disabled`, `icon`, `value`, `class`, `label`)
 
@@ -578,18 +741,24 @@ Slots: `item` (required, attrs: `active`, `disabled`, `icon`, `value`, `class`, 
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
+| `field` | FormField | nil | |
 | `options` | list | [] | |
 | `selected` | list | [] | |
-| `placeholder` | string | — | |
+| `placeholder` | string | nil | |
 | `open` | boolean | false | |
 | `size` | string | nil | nil, sm, lg |
 | `variant` | string | nil | nil, outlined, filled |
+| `error` | boolean | false | |
+| `errors` | list | [] | |
+| `disabled` | boolean | false | |
+| `loading` | boolean | false | |
 | `searchable` | boolean | false | |
+| `show_actions` | boolean | false | |
+| `show_counter` | boolean | false | |
 | `clearable` | boolean | false | |
-| `show_actions` | boolean | — | |
-| `show_counter` | boolean | — | |
-| `max_tags` | any | — | |
-| `tag_variant` | any | — | |
+| `tag_variant` | string | nil | nil, primary, outlined |
+| `max_tags` | integer | nil | |
+| `helper` | string | nil | |
 
 Accessibility attrs: `empty_text`, `search_placeholder`, `search_label`, `clear_label`, `select_all_text`, `deselect_all_text`, `overflow_text`, `remove_tag_label`
 
@@ -597,63 +766,101 @@ Accessibility attrs: `empty_text`, `search_placeholder`, `search_label`, `clear_
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
+| `field` | FormField | nil | |
 | `options` | list | [] | |
+| `value` | any | nil | |
 | `multiple` | boolean | false | |
+| `disabled` | boolean | false | |
 | `clearable` | boolean | false | |
 | `placeholder` | string | nil | |
 | `loading` | boolean | false | |
-| `no_results_text` | string | "No results found" | |
-| `size` | string | "md" | sm, md, lg |
+| `no_results_text` | string | nil | |
+| `size` | string | nil | sm, md, lg |
+| `error` | boolean | false | |
+| `errors` | list | [] | |
+| `helper` | string | nil | |
 
 ### `dm_otp_input/1`
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
+| `field` | FormField | nil | |
 | `length` | integer | 6 | |
 | `size` | string | nil | nil, sm, lg |
-| `color` | string | nil | 9 standard colors |
+| `color` | string | nil | nil, primary, secondary, tertiary, accent, info, success, warning, error |
 | `variant` | string | nil | nil, filled, underline |
 | `gap` | string | nil | nil, compact, wide |
-| `masked` | boolean | — | |
-| `success` | boolean | — | |
+| `masked` | boolean | false | |
+| `disabled` | boolean | false | |
+| `error` | boolean | false | |
+| `errors` | list | [] | |
+| `success` | boolean | false | |
+| `label` | string | nil | |
+| `label_class` | any | nil | |
+| `helper` | string | nil | |
+| `error_message` | string | nil | |
+| `group_label` | string | nil | |
+| `digit_label` | string | nil | |
 
 ### `dm_pin_input/1`
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
+| `field` | FormField | nil | |
 | `length` | integer | 4 | |
-| `size` | string | — | |
-| `color` | string | — | |
-| `variant` | string | — | |
-| `shape` | string | — | |
-| `compact` | boolean | — | |
-| `dots` | boolean | — | |
-| `visible` | boolean | — | |
-| `success` | boolean | — | |
+| `size` | string | nil | nil, sm, lg |
+| `color` | string | nil | nil, primary, secondary, tertiary, accent, info, success, warning, error |
+| `variant` | string | nil | nil, filled |
+| `shape` | string | nil | nil, circle |
+| `compact` | boolean | false | |
+| `dots` | boolean | false | |
+| `visible` | boolean | true | |
+| `disabled` | boolean | false | |
+| `error` | boolean | false | |
+| `errors` | list | [] | |
+| `success` | boolean | false | |
+| `label` | string | nil | |
+| `label_class` | any | nil | |
+| `helper` | string | nil | |
+| `error_message` | string | nil | |
+| `group_label` | string | nil | |
+| `digit_label` | string | nil | |
 
 ### `dm_file_upload/1`
 
-| Attr | Type | Default |
-|------|------|---------|
-| `accept` | any | — |
-| `multiple` | boolean | — |
-| `max_size` | any | — |
-| `max_files` | any | — |
-| `show_preview` | boolean | — |
-| `compact` | boolean | — |
-| `size` | string | "md" (sm, md, lg) |
+| Attr | Type | Default | Values |
+|------|------|---------|--------|
+| `field` | FormField | nil | |
+| `accept` | string | nil | |
+| `multiple` | boolean | false | |
+| `disabled` | boolean | false | |
+| `max_size` | integer | nil | |
+| `max_files` | integer | nil | |
+| `show_preview` | boolean | false | |
+| `compact` | boolean | false | |
+| `size` | string | nil | sm, md, lg |
+| `error` | boolean | false | |
+| `errors` | list | [] | |
+| `helper` | string | nil | |
 
-Slots: `inner_block` (for custom dropzone content)
+Slots: `inner_block` (custom dropzone content)
 
 ### `dm_time_input/1`
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
+| `field` | FormField | nil | |
+| `value` | any | nil | |
+| `disabled` | boolean | false | |
 | `size` | string | nil | nil, sm, lg |
-| `color` | string | nil | 9 standard colors |
+| `color` | string | nil | nil, primary, secondary, tertiary, accent, info, success, warning, error |
 | `variant` | string | nil | nil, filled |
-| `show_seconds` | boolean | — | |
-| `show_period` | boolean | — | |
+| `error` | boolean | false | |
+| `errors` | list | [] | |
+| `helper` | string | nil | |
+| `show_seconds` | boolean | false | |
+| `show_period` | boolean | false | |
+| `label` | string | nil | |
 
 Accessibility attrs: `am_label`, `pm_label`, `hours_label`, `minutes_label`, `seconds_label`
 
@@ -661,29 +868,44 @@ Accessibility attrs: `am_label`, `pm_label`, `hours_label`, `minutes_label`, `se
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `options` | list | [] | Tree of maps with :value, :label, opt :children, :disabled |
+| `field` | FormField | nil | |
+| `options` | list | [] | |
 | `selected_path` | list | [] | |
-| `size` | string | "md" | sm, md, lg |
+| `placeholder` | string | nil | |
+| `size` | string | nil | sm, md, lg |
+| `error` | boolean | false | |
+| `errors` | list | [] | |
+| `disabled` | boolean | false | |
+| `loading` | boolean | false | |
 | `searchable` | boolean | false | |
 | `clearable` | boolean | false | |
-| `separator` | string | " / " | |
+| `separator` | string | nil | |
 | `multiple` | boolean | false | |
 | `change_on_select` | boolean | false | |
 | `expand_trigger` | string | "click" | click, hover |
+| `helper` | string | nil | |
 
 ### `dm_tree_select/1`
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `options` | list | [] | Tree of maps |
+| `field` | FormField | nil | |
+| `options` | list | [] | |
 | `selected` | list | [] | |
 | `expanded` | list | [] | |
+| `placeholder` | string | nil | |
+| `open` | boolean | false | |
 | `multiple` | boolean | false | |
 | `size` | string | nil | nil, sm, lg |
 | `variant` | string | nil | nil, outlined, filled |
+| `error` | boolean | false | |
+| `errors` | list | [] | |
+| `disabled` | boolean | false | |
+| `loading` | boolean | false | |
 | `searchable` | boolean | false | |
 | `clearable` | boolean | false | |
-| `show_path` | boolean | — | |
+| `show_path` | boolean | false | |
+| `helper` | string | nil | |
 
 Accessibility attrs: `empty_text`, `search_placeholder`, `search_label`, `clear_label`, `toggle_node_label`, `remove_tag_label`
 
@@ -691,10 +913,12 @@ Accessibility attrs: `empty_text`, `search_placeholder`, `search_label`, `clear_
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `label` | string | — | |
-| `placeholder` | string | — | |
-| `disabled` | boolean | — | |
-| `readonly` | boolean | — | |
+| `field` | FormField | nil | |
+| `label` | string | nil | |
+| `value` | any | nil | |
+| `placeholder` | string | nil | |
+| `disabled` | boolean | false | |
+| `readonly` | boolean | false | |
 | `theme` | string | nil | nil, github, atom-one-dark, atom-one-light, auto |
 | `no_mermaid` | boolean | false | |
 
@@ -702,21 +926,20 @@ Accessibility attrs: `empty_text`, `search_placeholder`, `search_label`, `clear_
 
 ## Feedback
 
-### `dm_modal/1`
+### `dm_modal/1` — Dialog
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `id` | any | required | |
 | `hide_close` | boolean | false | |
 | `position` | string | nil | nil, top, middle, bottom |
 | `backdrop` | boolean | false | |
 | `size` | string | nil | nil, xs, sm, md, lg, xl |
 | `responsive` | boolean | false | |
 | `no_backdrop` | boolean | false | |
+| `close_label` | string | "Close" | |
+| `dialog_label` | string | "Dialog" | |
 
-Accessibility attrs: `close_label`, `dialog_label`
-
-Slots: `trigger` (receives `dialog_id` via `:let`), `title`, `body` (required), `footer`
+Slots: `trigger` (attrs: `class`), `title` (attrs: `class`), `body` (required, attrs: `class`), `footer` (attrs: `class`)
 
 ### `dm_loading_spinner/1`
 
@@ -736,6 +959,14 @@ Slots: `trigger` (receives `dialog_id` via `:let`), `title`, `body` (required), 
 | `size` | integer | 21 |
 | `loading_label` | string | "Loading" |
 
+### `dm_toast_container/1`
+
+| Attr | Type | Default | Values |
+|------|------|---------|--------|
+| `position` | string | "top-right" | top-right, top-left, top-center, bottom-right, bottom-left, bottom-center |
+
+Slots: `inner_block` (required)
+
 ### `dm_toast/1`
 
 | Attr | Type | Default | Values |
@@ -749,14 +980,6 @@ Slots: `trigger` (receives `dialog_id` via `:let`), `title`, `body` (required), 
 | `close_label` | string | "Close" | |
 
 Slots: `inner_block`
-
-### `dm_toast_container/1`
-
-| Attr | Type | Default | Values |
-|------|------|---------|--------|
-| `position` | string | "top-right" | top-right, top-left, top-center, bottom-right, bottom-left, bottom-center |
-
-Slots: `inner_block` (required)
 
 ### `dm_snackbar/1`
 
@@ -782,6 +1005,16 @@ Slots: `inner_block` (required)
 
 ## Navigation
 
+### `dm_actionbar/1`
+
+| Attr | Type | Default |
+|------|------|---------|
+| `left_class` | any | nil |
+| `right_class` | any | nil |
+| `toolbar_label` | string | "Actions" |
+
+Slots: `left` (attrs: `id`, `class`), `right` (attrs: `id`, `class`)
+
 ### `dm_appbar/1`
 
 | Attr | Type | Default |
@@ -803,26 +1036,14 @@ Slots: `menu` (attrs: `class`, `to`, `active`), `logo`, `user_profile`
 
 Slots: `menu` (attrs: `class`, `to`, `active`), `logo`, `user_profile`
 
-### `dm_actionbar/1`
+### `dm_bottom_nav/1`
 
-| Attr | Type | Default |
-|------|------|---------|
-| `left_class` | any | nil |
-| `right_class` | any | nil |
-| `toolbar_label` | string | "Actions" |
-
-Slots: `left` (attrs: `id`, `class`), `right` (attrs: `id`, `class`)
-
-### `dm_navbar/1`
-
-| Attr | Type | Default |
-|------|------|---------|
-| `start_class` | any | nil |
-| `center_class` | any | nil |
-| `end_class` | any | nil |
-| `nav_label` | string | "Main navigation" |
-
-Slots: `start_part`, `center_part`, `end_part`
+| Attr | Type | Default | Values |
+|------|------|---------|--------|
+| `value` | string | nil | |
+| `color` | string | "primary" | primary, secondary, success, warning, error |
+| `position` | string | "fixed" | fixed, static, sticky |
+| `items` | list | required | Each: `:value`, `:label`, `:icon`, `:disabled`, `:href` |
 
 ### `dm_breadcrumb/1`
 
@@ -852,6 +1073,17 @@ Slots: `title` (attrs: `class`), `menu`
 
 Slots: `title` (required, attrs: `class`), `menu` (attrs: `id`, `class`, `to`, `disabled`)
 
+### `dm_navbar/1`
+
+| Attr | Type | Default |
+|------|------|---------|
+| `start_class` | any | nil |
+| `center_class` | any | nil |
+| `end_class` | any | nil |
+| `nav_label` | string | "Main navigation" |
+
+Slots: `start_part`, `center_part`, `end_part`
+
 ### `dm_nested_menu/1`
 
 | Attr | Type | Default | Values |
@@ -873,23 +1105,17 @@ Slots: `title`, `item` (attrs: `to`, `active`, `disabled`), `group` (attrs: `tit
 
 Slots: `inner_block` (required)
 
-### `dm_tab/1`
+### `dm_page_footer/1`
 
-| Attr | Type | Default | Values |
-|------|------|---------|--------|
-| `orientation` | string | "horizontal" | horizontal, vertical |
-| `active_tab_index` | integer | 0 | |
-| `active_tab_name` | string | "" | |
-| `variant` | string | nil | nil, lifted, bordered, boxed |
-| `size` | string | nil | nil, xs, sm, md, lg |
-| `header_class` | any | nil | |
-| `content_class` | any | nil | |
+| Attr | Type | Default |
+|------|------|---------|
+| `label` | string | nil |
 
-Slots: `tab` (attrs: `id`, `class`, `name`, `phx_click`), `tab_content` (attrs: `id`, `class`, `name`)
+Slots: `section` (attrs: `class`, `title`, `title_class`, `body_class`), `copyright` (attrs: `class`, `title`, `title_class`, `body_class`), `inner_block`
 
 ### `dm_page_header/1`
 
-**Requires `PageHeader` hook.** Uses `phx-hook="PageHeader"`.
+Requires `PageHeader` hook.
 
 | Attr | Type | Default |
 |------|------|---------|
@@ -900,14 +1126,6 @@ Slots: `tab` (attrs: `id`, `class`, `name`, `phx_click`), `tab_content` (attrs: 
 | `toggle_menu_label` | string | "Toggle mobile menu" |
 
 Slots: `menu` (attrs: `class`, `to`, `active`), `user_profile` (attrs: `class`), `inner_block`
-
-### `dm_page_footer/1`
-
-| Attr | Type | Default |
-|------|------|---------|
-| `label` | string | nil |
-
-Slots: `section` (attrs: `class`, `title`, `title_class`, `body_class`), `copyright` (same attrs), `inner_block`
 
 ### `dm_stepper/1`
 
@@ -925,24 +1143,41 @@ Slots: `step` (required, attrs: `label` required, `description`, `active`, `comp
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `current` | integer | 0 | 0-based index |
+| `current` | integer | 0 | |
 | `orientation` | string | "horizontal" | horizontal, vertical |
 | `color` | string | "primary" | primary, secondary, tertiary, accent, success, warning, error, info |
 | `clickable` | boolean | false | |
-| `steps` | list | required | Maps with :label, opt :description, :icon |
+| `steps` | list | required | Each: `:label`, `:description`, `:icon` |
 
-### `dm_bottom_nav/1`
+### `dm_tab/1`
 
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `value` | string | nil | Selected item value |
-| `color` | string | "primary" | primary, secondary, success, warning, error |
-| `position` | string | "fixed" | fixed, static, sticky |
-| `items` | list | required | Maps with :value, :label, opt :icon, :disabled, :href |
+| `header_class` | any | nil | |
+| `orientation` | string | "horizontal" | horizontal, vertical |
+| `active_tab_index` | integer | 0 | |
+| `active_tab_name` | string | "" | |
+| `variant` | string | nil | nil, lifted, bordered, boxed |
+| `size` | string | nil | nil, xs, sm, md, lg |
+| `content_class` | any | nil | |
+
+Slots: `tab` (attrs: `id`, `class`, `name`, `phx_click`), `tab_content` (attrs: `id`, `class`, `name`)
 
 ---
 
 ## Layout
+
+### `dm_bottom_sheet/1`
+
+| Attr | Type | Default |
+|------|------|---------|
+| `open` | boolean | false |
+| `modal` | boolean | false |
+| `persistent` | boolean | false |
+| `snap_points` | string | nil |
+| `label` | string | nil |
+
+Slots: `header`, `inner_block`
 
 ### `dm_divider/1`
 
@@ -956,7 +1191,7 @@ Slots: `step` (required, attrs: `label` required, `description`, `active`, `comp
 | `inset` | string | nil | nil, left, right, both |
 | `text_position` | string | nil | nil, left, right |
 
-Slots: `inner_block` (label text)
+Slots: `inner_block`
 
 ### `dm_drawer/1`
 
@@ -965,32 +1200,20 @@ Slots: `inner_block` (label text)
 | `open` | boolean | false | |
 | `position` | string | "left" | left, right |
 | `modal` | boolean | false | |
-| `width` | string | nil | CSS width |
+| `width` | string | nil | |
 | `label` | string | nil | |
 
 Slots: `header`, `inner_block` (required), `footer`
 
-### `dm_bottom_sheet/1`
-
-| Attr | Type | Default |
-|------|------|---------|
-| `open` | boolean | false |
-| `modal` | boolean | false |
-| `persistent` | boolean | false |
-| `snap_points` | string | nil |
-| `label` | string | nil |
-
-Slots: `header`, `inner_block` (required)
-
 ### `dm_theme_switcher/1`
 
-**Requires `ThemeSwitcher` hook.** Uses `phx-hook="ThemeSwitcher"`.
+Requires `ThemeSwitcher` hook.
 
 | Attr | Type | Default |
 |------|------|---------|
 | `theme` | string | "" |
-| `button_text` | string | "Theme" |
 | `select_theme_label` | string | "Select theme" |
+| `button_text` | string | "Theme" |
 | `auto_label` | string | "Auto" |
 | `light_label` | string | "Sunshine" |
 | `dark_label` | string | "Moonlight" |
@@ -1006,8 +1229,6 @@ Slots: `header`, `inner_block` (required)
 | `name` | string | required |
 | `color` | string | "currentcolor" |
 
-Helper: `PhoenixDuskmoon.Component.Icon.Icons.mdi_icons/0` — returns all available names.
-
 ### `dm_bsi/1` — Bootstrap Icons
 
 | Attr | Type | Default |
@@ -1015,67 +1236,48 @@ Helper: `PhoenixDuskmoon.Component.Icon.Icons.mdi_icons/0` — returns all avail
 | `name` | string | required |
 | `color` | string | "currentcolor" |
 
-Helper: `PhoenixDuskmoon.Component.Icon.Icons.bsi_icons/0` — returns all available names.
-
 ---
 
 ## CSS Art
 
-All CSS art components require `id` (required string) and accept `class` + `rest` global attrs.
+All art components require `id` (required string) and accept `class` + `rest` global attrs.
 Import via `use PhoenixDuskmoon.ArtComponent`.
-Module namespace: `PhoenixDuskmoon.ArtComponent.*`
 
 ### `dm_art_atom/1`
-
-No additional attrs beyond `id`, `class`, `rest`.
+Animated atom. Attrs: `id` (required), `class`, `rest`.
 
 ### `dm_art_cat_stargazer/1`
-
-No additional attrs beyond `id`, `class`, `rest`.
+Cat stargazer scene. Attrs: `id` (required), `class`, `rest`.
 
 ### `dm_art_circular_gallery/1`
-
-No additional attrs beyond `id`, `class`, `rest`.
+Circular gallery. Attrs: `id` (required), `class`, `rest`.
 
 ### `dm_art_color_spin/1`
-
-No additional attrs beyond `id`, `class`, `rest`.
+Color spin effect. Attrs: `id` (required), `class`, `rest`.
 
 ### `dm_art_eclipse/1`
-
-No additional attrs beyond `id`, `class`, `rest`.
+Animated eclipse. Attrs: `id` (required), `class`, `rest`.
 
 ### `dm_art_flower_animation/1`
-
-No additional attrs beyond `id`, `class`, `rest`.
+Flower animation. Attrs: `id` (required), `class`, `rest`.
 
 ### `dm_art_gemini_input/1`
-
-| Attr | Type | Default | Values |
-|------|------|---------|--------|
-| `size` | string | nil | nil, sm, md, lg |
-| `placeholder` | string | nil | |
+Gemini-style input. Attrs: `id` (required), `class`, `size` (nil, sm, md, lg), `placeholder`, `rest`.
 
 ### `dm_art_moon/1`
-
-No additional attrs beyond `id`, `class`, `rest`.
+Moon scene. Attrs: `id` (required), `class`, `rest`.
 
 ### `dm_art_mountain/1`
-
-No additional attrs beyond `id`, `class`, `rest`.
+Mountain landscape. Attrs: `id` (required), `class`, `rest`.
 
 ### `dm_art_plasma_ball/1`
-
-Global attrs include: `no-base`
+Interactive plasma ball. Attrs: `id` (required), `class`, `rest` (includes `no-base`).
 
 ### `dm_art_snow/1`
-
-Global attrs include: `unicode`, `fall`
+Falling snowflakes. Attrs: `id` (required), `class`, `rest` (includes `unicode`, `fall`).
 
 ### `dm_art_sun/1`
-
-No additional attrs beyond `id`, `class`, `rest`.
+Sun scene. Attrs: `id` (required), `class`, `rest`.
 
 ### `dm_art_synthwave_starfield/1`
-
-No additional attrs beyond `id`, `class`, `rest`.
+Synthwave starfield. Attrs: `id` (required), `class`, `rest`.
