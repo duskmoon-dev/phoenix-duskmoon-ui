@@ -7,12 +7,15 @@
  * like [data-theme="sunshine"] activate the correct theme.
  */
 
+const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+function resolveAutoTheme() {
+  return darkQuery.matches ? "moonlight" : "sunshine";
+}
+
 function applyTheme(theme) {
-  if (theme && theme !== "default") {
-    document.documentElement.setAttribute("data-theme", theme);
-  } else {
-    document.documentElement.removeAttribute("data-theme");
-  }
+  const resolved = (!theme || theme === "default") ? resolveAutoTheme() : theme;
+  document.documentElement.setAttribute("data-theme", resolved);
 }
 
 export const ThemeSwitcher = {
@@ -29,6 +32,13 @@ export const ThemeSwitcher = {
     themeInputs.forEach(input => {
       input.checked = theme === input.value;
     });
+
+    // Re-apply when OS color scheme changes (only matters in auto mode)
+    this._mediaListener = () => {
+      const current = localStorage.getItem("theme") || "default";
+      if (current === "default") applyTheme("default");
+    };
+    darkQuery.addEventListener("change", this._mediaListener);
 
     // Handle theme changes — store references for cleanup
     this._changeListeners = [];
@@ -66,6 +76,10 @@ export const ThemeSwitcher = {
         element.removeEventListener("change", listener);
       });
       this._changeListeners = null;
+    }
+    if (this._mediaListener) {
+      darkQuery.removeEventListener("change", this._mediaListener);
+      this._mediaListener = null;
     }
   }
 };

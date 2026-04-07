@@ -67,19 +67,28 @@ import "@duskmoon-dev/el-tooltip/register";
 // Theme switcher (standalone — no LiveView required)
 // Mirrors the ThemeSwitcher hook logic for controller-rendered pages.
 (function initThemeSwitcher() {
+  var darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+  function resolveAutoTheme() {
+    return darkQuery.matches ? "moonlight" : "sunshine";
+  }
+
   function applyTheme(theme) {
-    if (theme && theme !== "default") {
-      document.documentElement.setAttribute("data-theme", theme);
-    } else {
-      document.documentElement.removeAttribute("data-theme");
-    }
+    var resolved = (!theme || theme === "default") ? resolveAutoTheme() : theme;
+    document.documentElement.setAttribute("data-theme", resolved);
   }
 
   function setup() {
-    const saved = localStorage.getItem("theme") || "default";
+    var saved = localStorage.getItem("theme") || "default";
     applyTheme(saved);
 
-    const radios = document.querySelectorAll(".theme-controller-item");
+    // Re-apply when OS color scheme changes (only matters in auto mode)
+    darkQuery.addEventListener("change", function() {
+      var current = localStorage.getItem("theme") || "default";
+      if (current === "default") applyTheme("default");
+    });
+
+    var radios = document.querySelectorAll(".theme-controller-item");
     radios.forEach(function(radio) {
       radio.checked = radio.value === saved;
       radio.addEventListener("change", function(e) {
