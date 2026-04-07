@@ -34,10 +34,10 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@duskmoon-dev/art-elements": ">=1.0.0",
-    "@duskmoon-dev/core": ">=1.15.0",
-    "@duskmoon-dev/css-art": ">=1.15.0",
-    "@duskmoon-dev/elements": ">=1.0.0"
+    "@duskmoon-dev/art-elements": "1.1.0",
+    "@duskmoon-dev/core": "1.16.0",
+    "@duskmoon-dev/css-art": "1.16.0",
+    "@duskmoon-dev/elements": "1.1.0"
   },
   "devDependencies": {
     "@mdi/svg": "^7.4.47",
