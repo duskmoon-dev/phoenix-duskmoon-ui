@@ -60,6 +60,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MarkdownInput do
     doc: "disable Mermaid diagram rendering in the preview pane"
   )
 
+  attr(:no_preview, :boolean,
+    default: false,
+    doc: "hide the preview tab and toolbar; write-only mode"
+  )
+
   attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:rest, :global)
 
@@ -82,6 +87,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MarkdownInput do
       readonly={@readonly}
       theme={@theme}
       no-mermaid={@no_mermaid}
+      no-preview={@no_preview}
       class={@class}
       {@rest}
     ></el-dm-markdown-input>

@@ -5,54 +5,54 @@
     "": {
       "name": "phoenix-duskmoon-ui",
       "dependencies": {
-        "@duskmoon-dev/art-elements": "1.1.1",
+        "@duskmoon-dev/art-elements": "1.1.2",
         "@duskmoon-dev/core": "1.16.0",
         "@duskmoon-dev/css-art": "1.16.0",
-        "@duskmoon-dev/el-accordion": "1.1.1",
-        "@duskmoon-dev/el-alert": "1.1.1",
-        "@duskmoon-dev/el-art-gemini-input": "1.1.1",
-        "@duskmoon-dev/el-autocomplete": "1.1.1",
-        "@duskmoon-dev/el-badge": "1.1.1",
-        "@duskmoon-dev/el-bottom-navigation": "1.1.1",
-        "@duskmoon-dev/el-bottom-sheet": "1.1.1",
-        "@duskmoon-dev/el-breadcrumbs": "1.1.1",
-        "@duskmoon-dev/el-button": "1.1.1",
-        "@duskmoon-dev/el-card": "1.1.1",
-        "@duskmoon-dev/el-cascader": "1.1.1",
-        "@duskmoon-dev/el-chip": "1.1.1",
-        "@duskmoon-dev/el-circle-menu": "1.1.1",
-        "@duskmoon-dev/el-code-block": "1.1.1",
-        "@duskmoon-dev/el-code-engine": "1.1.1",
-        "@duskmoon-dev/el-datepicker": "1.1.1",
-        "@duskmoon-dev/el-dialog": "1.1.1",
-        "@duskmoon-dev/el-drawer": "1.1.1",
-        "@duskmoon-dev/el-file-upload": "1.1.1",
-        "@duskmoon-dev/el-form": "1.1.1",
-        "@duskmoon-dev/el-form-group": "1.1.1",
-        "@duskmoon-dev/el-input": "1.1.1",
-        "@duskmoon-dev/el-markdown": "1.1.1",
-        "@duskmoon-dev/el-markdown-input": "1.1.1",
-        "@duskmoon-dev/el-menu": "1.1.1",
-        "@duskmoon-dev/el-navbar": "1.1.1",
-        "@duskmoon-dev/el-navigation": "1.1.1",
-        "@duskmoon-dev/el-nested-menu": "1.1.1",
-        "@duskmoon-dev/el-otp-input": "1.1.1",
-        "@duskmoon-dev/el-pagination": "1.1.1",
-        "@duskmoon-dev/el-pin-input": "1.1.1",
-        "@duskmoon-dev/el-popover": "1.1.1",
-        "@duskmoon-dev/el-pro-data-grid": "1.1.1",
-        "@duskmoon-dev/el-progress": "1.1.1",
-        "@duskmoon-dev/el-segment-control": "1.1.1",
-        "@duskmoon-dev/el-select": "1.1.1",
-        "@duskmoon-dev/el-slider": "1.1.1",
-        "@duskmoon-dev/el-stepper": "1.1.1",
-        "@duskmoon-dev/el-switch": "1.1.1",
-        "@duskmoon-dev/el-table": "1.1.1",
-        "@duskmoon-dev/el-tabs": "1.1.1",
-        "@duskmoon-dev/el-theme-controller": "1.1.1",
-        "@duskmoon-dev/el-time-input": "1.1.1",
-        "@duskmoon-dev/el-tooltip": "1.1.1",
-        "@duskmoon-dev/elements": "1.1.1",
+        "@duskmoon-dev/el-accordion": "1.1.2",
+        "@duskmoon-dev/el-alert": "1.1.2",
+        "@duskmoon-dev/el-art-gemini-input": "1.1.2",
+        "@duskmoon-dev/el-autocomplete": "1.1.2",
+        "@duskmoon-dev/el-badge": "1.1.2",
+        "@duskmoon-dev/el-bottom-navigation": "1.1.2",
+        "@duskmoon-dev/el-bottom-sheet": "1.1.2",
+        "@duskmoon-dev/el-breadcrumbs": "1.1.2",
+        "@duskmoon-dev/el-button": "1.1.2",
+        "@duskmoon-dev/el-card": "1.1.2",
+        "@duskmoon-dev/el-cascader": "1.1.2",
+        "@duskmoon-dev/el-chip": "1.1.2",
+        "@duskmoon-dev/el-circle-menu": "1.1.2",
+        "@duskmoon-dev/el-code-block": "1.1.2",
+        "@duskmoon-dev/el-code-engine": "1.1.2",
+        "@duskmoon-dev/el-datepicker": "1.1.2",
+        "@duskmoon-dev/el-dialog": "1.1.2",
+        "@duskmoon-dev/el-drawer": "1.1.2",
+        "@duskmoon-dev/el-file-upload": "1.1.2",
+        "@duskmoon-dev/el-form": "1.1.2",
+        "@duskmoon-dev/el-form-group": "1.1.2",
+        "@duskmoon-dev/el-input": "1.1.2",
+        "@duskmoon-dev/el-markdown": "1.1.2",
+        "@duskmoon-dev/el-markdown-input": "1.1.2",
+        "@duskmoon-dev/el-menu": "1.1.2",
+        "@duskmoon-dev/el-navbar": "1.1.2",
+        "@duskmoon-dev/el-navigation": "1.1.2",
+        "@duskmoon-dev/el-nested-menu": "1.1.2",
+        "@duskmoon-dev/el-otp-input": "1.1.2",
+        "@duskmoon-dev/el-pagination": "1.1.2",
+        "@duskmoon-dev/el-pin-input": "1.1.2",
+        "@duskmoon-dev/el-popover": "1.1.2",
+        "@duskmoon-dev/el-pro-data-grid": "1.1.2",
+        "@duskmoon-dev/el-progress": "1.1.2",
+        "@duskmoon-dev/el-segment-control": "1.1.2",
+        "@duskmoon-dev/el-select": "1.1.2",
+        "@duskmoon-dev/el-slider": "1.1.2",
+        "@duskmoon-dev/el-stepper": "1.1.2",
+        "@duskmoon-dev/el-switch": "1.1.2",
+        "@duskmoon-dev/el-table": "1.1.2",
+        "@duskmoon-dev/el-tabs": "1.1.2",
+        "@duskmoon-dev/el-theme-controller": "1.1.2",
+        "@duskmoon-dev/el-time-input": "1.1.2",
+        "@duskmoon-dev/el-tooltip": "1.1.2",
+        "@duskmoon-dev/elements": "1.1.2",
       },
     },
     "apps/duskmoon_storybook_web": {
@@ -62,22 +62,22 @@
         "phoenix_html": "file:../../deps/phoenix_html",
       },
       "devDependencies": {
-        "postcss": "^8.5.8",
+        "postcss": "8.5.9",
       },
     },
     "apps/phoenix_duskmoon": {
       "name": "phoenix_duskmoon",
       "version": "9.0.1",
       "dependencies": {
-        "@duskmoon-dev/art-elements": "1.1.1",
+        "@duskmoon-dev/art-elements": "1.1.2",
         "@duskmoon-dev/core": "1.16.0",
         "@duskmoon-dev/css-art": "1.16.0",
-        "@duskmoon-dev/elements": "1.1.1",
+        "@duskmoon-dev/elements": "1.1.2",
       },
       "devDependencies": {
         "@mdi/svg": "^7.4.47",
         "bootstrap-icons": "^1.13.1",
-        "postcss": "^8.5.8",
+        "postcss": "8.5.9",
       },
       "peerDependencies": {
         "tailwindcss": "^4.0.0",
@@ -86,7 +86,7 @@
   },
   "overrides": {
     "@duskmoon-dev/el-art-flower-animation": "0.9.0",
-    "@duskmoon-dev/el-circle-menu": "1.1.1",
+    "@duskmoon-dev/el-circle-menu": "1.1.2",
   },
   "packages": {
     "@antfu/install-pkg": ["@antfu/install-pkg@1.1.0", "", { "dependencies": { "package-manager-detector": "^1.3.0", "tinyexec": "^1.0.1" } }, "sha512-MGQsmw10ZyI+EJo45CdSER4zEb+p31LpDAFp2Z3gkSd1yqVZGi0Ebx++YTEMonJy4oChEMLsxZ64j8FH6sSqtQ=="],
@@ -103,7 +103,7 @@
 
     "@chevrotain/utils": ["@chevrotain/utils@11.1.1", "", {}, "sha512-71eTYMzYXYSFPrbg/ZwftSaSDld7UYlS8OQa3lNnn9jzNtpFbaReRRyghzqS7rI3CDaorqpPJJcXGHK+FE1TVQ=="],
 
-    "@duskmoon-dev/art-elements": ["@duskmoon-dev/art-elements@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/art-elements/-/art-elements-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/el-art-atom": "0.11.2", "@duskmoon-dev/el-art-cat-stargazer": "0.11.2", "@duskmoon-dev/el-art-circular-gallery": "0.11.2", "@duskmoon-dev/el-art-color-spin": "0.11.2", "@duskmoon-dev/el-art-csswitch": "0.11.2", "@duskmoon-dev/el-art-eclipse": "0.11.2", "@duskmoon-dev/el-art-flower-animation": "0.11.2", "@duskmoon-dev/el-art-gemini-input": "0.11.2", "@duskmoon-dev/el-art-moon": "0.11.2", "@duskmoon-dev/el-art-mountain": "0.11.2", "@duskmoon-dev/el-art-plasma-ball": "0.11.2", "@duskmoon-dev/el-art-snow": "0.11.2", "@duskmoon-dev/el-art-snowball-preloader": "0.11.2", "@duskmoon-dev/el-art-sun": "0.11.2", "@duskmoon-dev/el-art-synthwave-starfield": "0.11.2", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-SmtkvS4NpDTYpk2PVijYfhSwGkvVYU5ncnb9oBv5W6Z0eiBTQpLNRNaXULfJJdB9Wnqm+vdzOOqrfsvHSkDuJw=="],
+    "@duskmoon-dev/art-elements": ["@duskmoon-dev/art-elements@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/art-elements/-/art-elements-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/el-art-atom": "0.11.2", "@duskmoon-dev/el-art-cat-stargazer": "0.11.2", "@duskmoon-dev/el-art-circular-gallery": "0.11.2", "@duskmoon-dev/el-art-color-spin": "0.11.2", "@duskmoon-dev/el-art-csswitch": "0.11.2", "@duskmoon-dev/el-art-eclipse": "0.11.2", "@duskmoon-dev/el-art-flower-animation": "0.11.2", "@duskmoon-dev/el-art-gemini-input": "0.11.2", "@duskmoon-dev/el-art-moon": "0.11.2", "@duskmoon-dev/el-art-mountain": "0.11.2", "@duskmoon-dev/el-art-plasma-ball": "0.11.2", "@duskmoon-dev/el-art-snow": "0.11.2", "@duskmoon-dev/el-art-snowball-preloader": "0.11.2", "@duskmoon-dev/el-art-sun": "0.11.2", "@duskmoon-dev/el-art-synthwave-starfield": "0.11.2", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-FFjTRnCvvv1XCYmmcu9EN79K2Cm8k9xQEFeZrqX6pAep0VOP5Lyps0qHAuNgQtJZNNJQQibeM/1vryHcGSbfqQ=="],
 
     "@duskmoon-dev/code-engine": ["@duskmoon-dev/code-engine@0.3.0", "", {}, "sha512-XISK4ryunvSC+Hv5WRqU6IGTWjpHErBdvr9sqMKWmXLsqCHCEel2ujeVWvP1ZcUcv3SlI63XnJ2RgP+Eq73tyw=="],
 
@@ -111,9 +111,9 @@
 
     "@duskmoon-dev/css-art": ["@duskmoon-dev/css-art@1.16.0", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/css-art/-/css-art-1.16.0.tgz", {}, "sha512-3w20KF5lmNs3XpUJAtQ/ljANhFXprEFezNZnLy20N7kcZ2zc9J/7sxfvQJzelQL3r11NH1ZKyZ8qSkwHWYQ7vw=="],
 
-    "@duskmoon-dev/el-accordion": ["@duskmoon-dev/el-accordion@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-accordion/-/el-accordion-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-XLgxtx4UOQkYWVlh15QeBv5rLbuShl4pvJyTZGjy9pe1uFASZ3qkA6F/4DRv8zI8b1JS6C+sPF/cNlnG9H//JQ=="],
+    "@duskmoon-dev/el-accordion": ["@duskmoon-dev/el-accordion@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-accordion/-/el-accordion-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-K14W2M0cWXdvn/DdQKk4+/HtnwZiBoee06uSE+Lff6A4bt6BuQ9Mjuv+UXS+YPUSO2kPpE1q8EsqJoGPhYLAMQ=="],
 
-    "@duskmoon-dev/el-alert": ["@duskmoon-dev/el-alert@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-alert/-/el-alert-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-evDd5klDl3n2hYzO8krRU+VbLZbgb7DNY0tKLHJoUKj/p2A0SIiPEOq0dbov3iJwPWPZq4vknFBDj/BZ3sQRbQ=="],
+    "@duskmoon-dev/el-alert": ["@duskmoon-dev/el-alert@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-alert/-/el-alert-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-Q4wWZoignpaIbxuR2Edg6iRMPCmmUBD56kXVcYC1v7byZl2vPdjRjtas4uGGMDXIi8TqYLrtdKAOVyCBCwHH3g=="],
 
     "@duskmoon-dev/el-art-atom": ["@duskmoon-dev/el-art-atom@0.11.2", "", { "dependencies": { "@duskmoon-dev/css-art": "^1.14.1", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-MH/lUpLx/7V2Wno8X0fGjn33NnFIAotW4GAbvRmQYk4t4uQV2yxCToXoOWpc/gtlbaM4w+MLf0XMKpMvpOZdEg=="],
 
@@ -129,7 +129,7 @@
 
     "@duskmoon-dev/el-art-flower-animation": ["@duskmoon-dev/el-art-flower-animation@0.9.0", "", { "dependencies": { "@duskmoon-dev/css-art": "^0.3.0", "@duskmoon-dev/el-base": "0.8.3" } }, "sha512-jIMR59G0b4VgZSsHujO4cqYqb6siBvylg1zilZcFMeRs+lcqQNkH8srrwo0ES3gNZGnDGma7aXx7iZPqCEoHyg=="],
 
-    "@duskmoon-dev/el-art-gemini-input": ["@duskmoon-dev/el-art-gemini-input@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-art-gemini-input/-/el-art-gemini-input-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/css-art": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-lIN0LEcxt/wOHriX19LHOevbsxo075lRkQIJZEBJBxIVHQF/4TyA2Vrlyr/CxzubFiMuKCoLgG5Xzima3jflSA=="],
+    "@duskmoon-dev/el-art-gemini-input": ["@duskmoon-dev/el-art-gemini-input@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-art-gemini-input/-/el-art-gemini-input-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/css-art": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-wGKk3v6whwR/iXtYQAHVYWaV3kcYnS6dMnAcXvRSmO5OfvgyqyTJjGLtj5V/hAMhDjVNTxteDU2s4mHUz1AquQ=="],
 
     "@duskmoon-dev/el-art-moon": ["@duskmoon-dev/el-art-moon@0.11.2", "", { "dependencies": { "@duskmoon-dev/css-art": "^1.14.1", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-CQkn45IwsM338U2G87JJgwXU/7QFHGz6XcJ2U1U9i8hu7unvtWjMAsvWJl78pe0Wl6nWI/of/O8Fc2WVPPmL+w=="],
 
@@ -145,91 +145,91 @@
 
     "@duskmoon-dev/el-art-synthwave-starfield": ["@duskmoon-dev/el-art-synthwave-starfield@0.11.2", "", { "dependencies": { "@duskmoon-dev/css-art": "^1.14.1", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-chnojlVdx13a6Lb5j/FDtwhpQTtmiKgaAYhZDcG/JUJlu1CgK+DoZkrQeXPHVGJNh/K1adpNk49sjzppixt9yA=="],
 
-    "@duskmoon-dev/el-autocomplete": ["@duskmoon-dev/el-autocomplete@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-autocomplete/-/el-autocomplete-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-9t81WvcK74n9YmJhJ9gW86I0PhEdXgHpwnupTsL/RXMibVYcw4zWX5TOvPVn8U8Y4QTf+x3+Fy3rfjPKSg+lvA=="],
+    "@duskmoon-dev/el-autocomplete": ["@duskmoon-dev/el-autocomplete@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-autocomplete/-/el-autocomplete-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-jJN4qyjUTMNgCo8a/bB33j3MthRZ863zseKJMAVgClgVk/LMfGEsr9I6toIgsgsOMz+/23QkYsc/F2hguzsliw=="],
 
-    "@duskmoon-dev/el-badge": ["@duskmoon-dev/el-badge@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-badge/-/el-badge-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-KFB0AWFEW08cmkc4FWu8+mTmilsqyiP9NWJ5sgV2V9lByhcS7lB/sYbfDpTexYPVfJdApFfwMPFhL9y+gTPGHg=="],
+    "@duskmoon-dev/el-badge": ["@duskmoon-dev/el-badge@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-badge/-/el-badge-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-epYafIutbdUo9bS2JAhfWFMfa1Bmaz6LEscPledrg9CqJfvDawPtOn//uIFrtMXvHIor065aVwfYQFzB21+0Jg=="],
 
     "@duskmoon-dev/el-base": ["@duskmoon-dev/el-base@0.11.2", "", {}, "sha512-5IP6y8ZLLuF/Niu55ybAoHgZgfWo45a8Vx2fFoI1LRucpVw3yIatgRGKzOKnFx8BIth761YZxkxUCuLDISOsXQ=="],
 
-    "@duskmoon-dev/el-bottom-navigation": ["@duskmoon-dev/el-bottom-navigation@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-bottom-navigation/-/el-bottom-navigation-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-+sWBfsZ8bX0wqZ+0os97O+ReQO9jeqvJYvJQMQq4PpC1xiEiga5T0Csom82QALl54KBW5tWr8rL9sc6DzswlCA=="],
+    "@duskmoon-dev/el-bottom-navigation": ["@duskmoon-dev/el-bottom-navigation@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-bottom-navigation/-/el-bottom-navigation-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-4SxUR0GaN9XgCXvjsjupWVcs4Rv9e+YunzgPndKnSSG+TFCPWQkSFSEvbWXqjKwTb4VXagUs3dN+0puftuGUjA=="],
 
-    "@duskmoon-dev/el-bottom-sheet": ["@duskmoon-dev/el-bottom-sheet@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-bottom-sheet/-/el-bottom-sheet-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-RfWF0ZoQkftKzfkcabD2zcfm5FfMtJazUUzTvZnW7xS1tKYtbgubkyKV5YTQiJP7miA2v/C/cbaTqNXaBvl5Aw=="],
+    "@duskmoon-dev/el-bottom-sheet": ["@duskmoon-dev/el-bottom-sheet@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-bottom-sheet/-/el-bottom-sheet-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-KLevW1Whkmv1WugaQdFVrdTyLN1FFu4725vcVnIoTScDF01YS3wo+3QYlH5FX62OVZmVz6oWvFMJzBYwY9XXhQ=="],
 
-    "@duskmoon-dev/el-breadcrumbs": ["@duskmoon-dev/el-breadcrumbs@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-breadcrumbs/-/el-breadcrumbs-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-cK+58NBHS7B0FvniDND22CN0EiA6ICzTU3hus0T20PI5V44SSwWkNSJ7o53nVgQy3UjtQ1ECHIDRqjb4OJsG6g=="],
+    "@duskmoon-dev/el-breadcrumbs": ["@duskmoon-dev/el-breadcrumbs@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-breadcrumbs/-/el-breadcrumbs-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-nIMNHHT+SWmp9pFsPFAWpL0tIzdLVnsUGNj3HN6p1T3F+dqpCnDKfZPoEbmk2d4oDHrOyknxFvyfw9PZbEAUGA=="],
 
-    "@duskmoon-dev/el-button": ["@duskmoon-dev/el-button@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-button/-/el-button-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-x/Q7v4C8l/c0xX64s2bKCorkniaWyb+HO9q2uGcUaLQ5vawSu96g6fXg99iG0JFur7cLDrUZJteTpj2c9iXX3g=="],
+    "@duskmoon-dev/el-button": ["@duskmoon-dev/el-button@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-button/-/el-button-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-riWNj/T9/sE9ZbsyGgvheIJicNCU6e6DhzUZJEtIkM8h1a7k730WK0MvEmdBa2DLCKcWZ3k0hQE0HYYp7nVcUg=="],
 
-    "@duskmoon-dev/el-card": ["@duskmoon-dev/el-card@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-card/-/el-card-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-t53fXI/9/pBoB61YQsAhj4bvskzBtrsemyhEDW81crP7qcUCryoVg3W5VR2lG7XF8WT7r3SCDKNm6GMZ+pdsjA=="],
+    "@duskmoon-dev/el-card": ["@duskmoon-dev/el-card@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-card/-/el-card-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-lPqP4ifJViLiHfnJgG+tNTH7gr+WWaAd9dUgcCCP8kzWa+CMLEfWG5PJhhlmIoKwY7QVndwkftQ8sKaS/MQcsQ=="],
 
-    "@duskmoon-dev/el-cascader": ["@duskmoon-dev/el-cascader@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-cascader/-/el-cascader-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-joWUB++hWzD5rMQ7+4b+pIau/HMHpB5hhHB/PFeXEjkqZg0uNfKun1icUrJPbraI8EZbWJ5FEgLTxy8+pxXTQA=="],
+    "@duskmoon-dev/el-cascader": ["@duskmoon-dev/el-cascader@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-cascader/-/el-cascader-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-BrBYRGPRo484u9BeySW4prXyPbR7Biu0AxCZVULmjC/gVvJexAqIsFknf3yvsSHPkjg8HvI+bb9A6nOkNsrVCw=="],
 
-    "@duskmoon-dev/el-chip": ["@duskmoon-dev/el-chip@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-chip/-/el-chip-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-FgnngTtY0FRxJqAFOASbLTvlRl76CI4vkKd/iqFlIIrtl8PyN3jJQMo0NX72u4gu3Mc6x5euRIEDyzkDDNheTA=="],
+    "@duskmoon-dev/el-chip": ["@duskmoon-dev/el-chip@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-chip/-/el-chip-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-wkhOYoZ7pG7n1uH/a/9K/wOdquDzcB7v2XUy0t9p7flAAAgMnqAgUOjhUpThp0zCluAv45PEk+AfwmocevQaHA=="],
 
-    "@duskmoon-dev/el-circle-menu": ["@duskmoon-dev/el-circle-menu@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-circle-menu/-/el-circle-menu-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "1.1.0" } }, "sha512-vcjWQRF3jX0/HEjd7WLcVFmzBReE+u8qZaOJf6Bg7Evp2PYxitnnD+pop9AVQu/9dD7Ow2JL8AOLlmRP3dGpiA=="],
+    "@duskmoon-dev/el-circle-menu": ["@duskmoon-dev/el-circle-menu@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-circle-menu/-/el-circle-menu-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "1.1.0" } }, "sha512-q/Dc5T9RRWTnPLXoA0HJE5jirAKhFL4ECK/pAE4OxUd60mMfZNlXhRJk7bXoTJx9A6pUCBWKXBvMu8trQcqRug=="],
 
-    "@duskmoon-dev/el-code-block": ["@duskmoon-dev/el-code-block@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-code-block/-/el-code-block-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-9/78NdY2LYAAip3pUfjj9C7UxOwudmW2AII7AVRNXvPaV3nwcFKP0plpvdHFWDk92K1KgylaqhFuRQ8ONpLmNg=="],
+    "@duskmoon-dev/el-code-block": ["@duskmoon-dev/el-code-block@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-code-block/-/el-code-block-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-NFgWdNd2V4Zv0rqkKgz68sypZgGhpdd7txXu141x2pqeF2z+l49FtNkFeWrCHm/nqcNXV+9oLaS21ZEr9rvd8w=="],
 
-    "@duskmoon-dev/el-code-engine": ["@duskmoon-dev/el-code-engine@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-code-engine/-/el-code-engine-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/code-engine": "^0.3.0", "@duskmoon-dev/el-base": "1.0.0" } }, "sha512-vyMIoKZfkv38DvbCPg7EWLEoFlrU8FDYpv87Ldsci/iqByhWxJIXkqzoEs0VxK0JAfpWZrlekpJmx/culAFfnw=="],
+    "@duskmoon-dev/el-code-engine": ["@duskmoon-dev/el-code-engine@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-code-engine/-/el-code-engine-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/code-engine": "^0.3.0", "@duskmoon-dev/el-base": "1.0.0" } }, "sha512-FIBN4DlmPY14GmE9u5Y1cw1EUGtkvi7T2eKOOdhrP9wfWS2g10BiZeT4RrwRZ+0z7ivKdYNgYFJwl2HZF7/ECg=="],
 
-    "@duskmoon-dev/el-datepicker": ["@duskmoon-dev/el-datepicker@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-datepicker/-/el-datepicker-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-mPic07mX3QZbXOM7kGVdetJQWCgznbxNXXvKTus7iFZwFlmvIJkxpBfr4Uz4y/mjIPcCt3qeHuFBvtyc8B99qw=="],
+    "@duskmoon-dev/el-datepicker": ["@duskmoon-dev/el-datepicker@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-datepicker/-/el-datepicker-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-G9rwLHSFxkDhe3uZZDwwsKMQMCprg/2p/7MUEvc8tU1fZn0hOkj984mYvtng/rN4DXzD6SArVkXiCSIwtMoNkg=="],
 
-    "@duskmoon-dev/el-dialog": ["@duskmoon-dev/el-dialog@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-dialog/-/el-dialog-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-HFGyiE4lwEwqhqa1qoift4Ls5/5saNuNaI4AkV+t3ZPMRt9fxPlIO6lvLAEj+wna1Jy3+pXhkVFmE0U+jDBuCQ=="],
+    "@duskmoon-dev/el-dialog": ["@duskmoon-dev/el-dialog@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-dialog/-/el-dialog-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-SsNnukkXg43ad9dnNa40SeCPxAbrg6UPGX1Tq48bPdIDCat3YHbj58qm5lv5JD46R4U/UFOp4d4tSKTqGQF3sQ=="],
 
-    "@duskmoon-dev/el-drawer": ["@duskmoon-dev/el-drawer@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-drawer/-/el-drawer-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-pQ1mSJdPbMMmacfMdpu6WOX0vXCSylRJMkAHVVYs8H+SIPZgQfr9yE6+pVhVjUxHjGg5UiWm2dk1cPGC4G5BGQ=="],
+    "@duskmoon-dev/el-drawer": ["@duskmoon-dev/el-drawer@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-drawer/-/el-drawer-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-kj2o+AAiBjcVJ3/29Ct7dGtUpGnmloDKtcsNTlGm2/oc/cK+evycURuUEi7nNOoNZaGtdf8i2YI5H1/I8ww3lQ=="],
 
-    "@duskmoon-dev/el-file-upload": ["@duskmoon-dev/el-file-upload@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-file-upload/-/el-file-upload-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-SJYQ7tDcJDCxYRYnNPJCXOIol8zMc8qrtj5hAR6HRkF/gi8Z3M3daMNJm4wUkQdimJUQ14dwA/Nzqkg1aQZiyA=="],
+    "@duskmoon-dev/el-file-upload": ["@duskmoon-dev/el-file-upload@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-file-upload/-/el-file-upload-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-+K+eLwkPyDl0Sadu0iV7N38BnCt+tvVuZACm+OxpYnEsxs79fzp+ZJa5gR4CIKoxxzas6MEZNZXxPKBAZT+lbg=="],
 
-    "@duskmoon-dev/el-form": ["@duskmoon-dev/el-form@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-form/-/el-form-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-n7F0rlhCOMOzkID9fiLwJGcngIdBcSNXzoboWV2WCZhAqafABiKoIz+Ye+yC1o/CCBd4NT70njuEgN1UEW1u8g=="],
+    "@duskmoon-dev/el-form": ["@duskmoon-dev/el-form@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-form/-/el-form-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-mFztZXryV9+bnsUbnF0ATTuWAe1cacuDYhoY9aeWC7xP2D8zRPp/r6DW4BqWK5CTz8jfs7kZ8SWw4eR8ziAe/w=="],
 
-    "@duskmoon-dev/el-form-group": ["@duskmoon-dev/el-form-group@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-form-group/-/el-form-group-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-RHH/Rlcz9CqIBEI5wJGqVyQFaV8pKQTG746+IqbzDG+6hTuC+wApZIn/yoYl0OhBY6vWrE20L0xy7hAzN3/Vxw=="],
+    "@duskmoon-dev/el-form-group": ["@duskmoon-dev/el-form-group@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-form-group/-/el-form-group-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-m69qXD+n3f/TEIDvFizgCR2+bEgQ2QpmI1yOrQfCg+BblT7ARjUS1+2aa0v0y2zW06W/Mr4LKgzF1cBTIpcxMw=="],
 
-    "@duskmoon-dev/el-input": ["@duskmoon-dev/el-input@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-input/-/el-input-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-DvYpSvtdiDlzDA41RCtn6/2pN7fnRobkZnLg4YKGNzVbatTA3e1Kp8TYiY+7qgzDWQjLAeKV9y9y7kiHtslh7g=="],
+    "@duskmoon-dev/el-input": ["@duskmoon-dev/el-input@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-input/-/el-input-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-eeIs1COcKVqgUPynR/A4GBwoSg4sLlnNVnc2+Goyb/y3eZ6+H0PfshJ5wyJmkpM4eK3itDlr5/PwnAmd2pQZ6g=="],
 
-    "@duskmoon-dev/el-markdown": ["@duskmoon-dev/el-markdown@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-markdown/-/el-markdown-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2", "highlight.js": "11.11.1", "marked": "17.0.5", "marked-highlight": "2.2.3" }, "peerDependencies": { "mermaid": ">=10.0.0" }, "optionalPeers": ["mermaid"] }, "sha512-OApIvaEqFvOfY5i0Wdrh6N5cbyteZVYKWv/r+19xBK84Y76iC0rKEojlkwQuTNvwfPdLP4bGtbkLHIjx3NzVVg=="],
+    "@duskmoon-dev/el-markdown": ["@duskmoon-dev/el-markdown@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-markdown/-/el-markdown-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2", "highlight.js": "11.11.1", "marked": "17.0.5", "marked-highlight": "2.2.3" }, "peerDependencies": { "mermaid": ">=10.0.0" }, "optionalPeers": ["mermaid"] }, "sha512-1kDDfz2Rg6FXqtxmNvkoWAONAWhp/4Biy7EtrXsmdtrnp/83s8npbnqv+Y+9MAZFCQItSDf7wKeaM1co2xriCw=="],
 
-    "@duskmoon-dev/el-markdown-input": ["@duskmoon-dev/el-markdown-input@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-markdown-input/-/el-markdown-input-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2", "hast-util-sanitize": "5.0.2", "rehype-katex": "7.0.1", "rehype-prism-plus": "2.0.2", "rehype-sanitize": "6.0.0", "rehype-stringify": "10.0.1", "remark-gfm": "4.0.1", "remark-math": "6.0.0", "remark-parse": "11.0.0", "remark-rehype": "11.1.2", "unified": "11.0.5" }, "optionalDependencies": { "mermaid": "11.13.0" } }, "sha512-Jr88PqzXWjg3v7Yg0B0ghiTVWhxA9ns4WNqLkA+CsYuNrEpn1ds/5+M27fVRsH8rn7FCCCQSSJ1Kid8OaLGsbA=="],
+    "@duskmoon-dev/el-markdown-input": ["@duskmoon-dev/el-markdown-input@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-markdown-input/-/el-markdown-input-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2", "hast-util-sanitize": "5.0.2", "rehype-katex": "7.0.1", "rehype-prism-plus": "2.0.2", "rehype-sanitize": "6.0.0", "rehype-stringify": "10.0.1", "remark-gfm": "4.0.1", "remark-math": "6.0.0", "remark-parse": "11.0.0", "remark-rehype": "11.1.2", "unified": "11.0.5" }, "optionalDependencies": { "mermaid": "11.13.0" } }, "sha512-RcHyEuC2eKuEb9NipFPMpglPurba+yxNarJ9Vl3QM3VhSz2/IP6oeJBcDAdyUeU7YxWOnvJbwlWaihGMJalInw=="],
 
-    "@duskmoon-dev/el-menu": ["@duskmoon-dev/el-menu@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-menu/-/el-menu-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-4CKY44fC7N3IH/9GYZKvfKbX5IoRiKQEIfsxxiwQa+ryY9DMHgawTIwXWq6qlv6f4+Uj8WL0yz0Kg0GiW+4m4w=="],
+    "@duskmoon-dev/el-menu": ["@duskmoon-dev/el-menu@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-menu/-/el-menu-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-ZHW9WUzSa82Ati8t3T3N1iuPGywfTimTdODG2A1mw/rIXZ2Z3sciA7V/yEH+Ytx/YE3KPeiDBavMVr9GUPJb2Q=="],
 
-    "@duskmoon-dev/el-navbar": ["@duskmoon-dev/el-navbar@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-navbar/-/el-navbar-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-i8oPI3t63YQiQI9gexFUJeB71xppG9mw/hEQTqzMYQXt3T+NLOhutZDQLlBIPBfE5NbDxg1aHlgW4GGHAiK0ig=="],
+    "@duskmoon-dev/el-navbar": ["@duskmoon-dev/el-navbar@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-navbar/-/el-navbar-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-1paRNDAXJ2bb+i5dfS3n4vrDRZJBs226R+uo5DuIsUcoxZHMYeBJCopFW26K9qooO10wLhGwyrD2J3Kao05ILA=="],
 
-    "@duskmoon-dev/el-navigation": ["@duskmoon-dev/el-navigation@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-navigation/-/el-navigation-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-SY/HGhssjqovnetr322XyzCQprVSTzBaTD9NBGDbYlkFZOSOS9+DCKSLDXCVBKXZJgvPKLwNiNuS9uDkr+wdIw=="],
+    "@duskmoon-dev/el-navigation": ["@duskmoon-dev/el-navigation@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-navigation/-/el-navigation-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-l2W8ybutfKJqGxbjpJ8xmFYPaPuwZA93YVyt59AKqkkoKLAfvLUTNScvMX5twQjwrNAPQdtGQ5J+QCcxye48sg=="],
 
-    "@duskmoon-dev/el-nested-menu": ["@duskmoon-dev/el-nested-menu@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-nested-menu/-/el-nested-menu-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-+mh9irI6EDuKVcETgFoy6jaBGtDCnn8fy7nI37x+0HXLLS/pqAaSNUSa5SUuJ/i1SdHnCdJbIieHE+bjEE2OHA=="],
+    "@duskmoon-dev/el-nested-menu": ["@duskmoon-dev/el-nested-menu@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-nested-menu/-/el-nested-menu-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-WEfp/MgueTZFghEJ21H33OAURTVckdbfLCu/CxDls4oqz6HBV0XzJ142J+UWfsowVve8az8v52JvSiWFi9CzqQ=="],
 
-    "@duskmoon-dev/el-otp-input": ["@duskmoon-dev/el-otp-input@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-otp-input/-/el-otp-input-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-bKI0sOmG4w1NJcyo+8FZ4q/peVjyLlRC546Ku3IUELMkX3h5rke0bZAKHOLtCTfxaCFxFxHIAGF5gjs5CGbdHw=="],
+    "@duskmoon-dev/el-otp-input": ["@duskmoon-dev/el-otp-input@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-otp-input/-/el-otp-input-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-831fZBOZq8Xoc5o+VoYbC9vzaFlzaYjzs5gxmwnA4L+IY9qN3i0q+88JUnE+gt9K7TrqbqmKcmHtL7CyeQflJw=="],
 
-    "@duskmoon-dev/el-pagination": ["@duskmoon-dev/el-pagination@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-pagination/-/el-pagination-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-EqPVQCjJekVXP/pF8QoWV+9XCuQ7sWBm2OBTyvXQzoVAJAUwUs426DVXmDltFc3O9lrT6i2XsGVI7lnGS5W2uA=="],
+    "@duskmoon-dev/el-pagination": ["@duskmoon-dev/el-pagination@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-pagination/-/el-pagination-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-z95qE/6qUW/alwYm6FKFKJ72vwWKT0xfCF762i2qz2UDuhFzr0FiPNxLvnSC5vT5ScmmF6a2d6KQvrHfGTcBvg=="],
 
-    "@duskmoon-dev/el-pin-input": ["@duskmoon-dev/el-pin-input@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-pin-input/-/el-pin-input-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-U95pntG+v+OwftJvuDPNSUUWa6IFpu0A6ilhlXufUj8qRkT6Ycp3YRTCjpM89tVWrUSe1xmO63sdcl1d6ip/oA=="],
+    "@duskmoon-dev/el-pin-input": ["@duskmoon-dev/el-pin-input@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-pin-input/-/el-pin-input-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-C3+r4ltqdFSwYuzRjJW3ubnPoYukfNY2AY0rGq1xPmxU+p22ir58nDzDKb5yOvcPxIJzJflQvw+kC6+7K73tyw=="],
 
-    "@duskmoon-dev/el-popover": ["@duskmoon-dev/el-popover@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-popover/-/el-popover-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-M8bUNvlQbOKktqrTsOzDI4hFH8Z064+4kLJqsvY7BItlkakEsQHgyZsc5BOSYIHLCPsRHoqDFTmLOFx0EqGa2g=="],
+    "@duskmoon-dev/el-popover": ["@duskmoon-dev/el-popover@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-popover/-/el-popover-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-IIyKOIVZwiXqnrqqiTxoTGrqu9vpIRjE4Q8jdcLO2x2en2qowdbtPtbRytWb60YeHnqB8RS7UnTV0nbcdg6YXQ=="],
 
-    "@duskmoon-dev/el-pro-data-grid": ["@duskmoon-dev/el-pro-data-grid@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-pro-data-grid/-/el-pro-data-grid-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-UOo1sq12Ki1coH9b4oS/rcL8IxEv9kICYDA1B3Eti7J1L41s/QLDA7RJma8eQW8pCGvnEF9ntZQi4Tt8Ve2S+g=="],
+    "@duskmoon-dev/el-pro-data-grid": ["@duskmoon-dev/el-pro-data-grid@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-pro-data-grid/-/el-pro-data-grid-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-oSf4no/hzN3MZ7OtdBYr19Tl/hEHXQnP03eYE/BfGu2i9Z2G/xfFbfcSnlsMA/asJ2lmB0+eqJ8lEDRAz0fKRA=="],
 
-    "@duskmoon-dev/el-progress": ["@duskmoon-dev/el-progress@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-progress/-/el-progress-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-s8dwLaFnQUkx0AXnQb/0IYhcszUbMlHPEBL42h8XbwfHOmj0z0VFllYZ/wh+Efu3i20KuBw1PJMOK3/Fe5w2iA=="],
+    "@duskmoon-dev/el-progress": ["@duskmoon-dev/el-progress@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-progress/-/el-progress-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-ZBF6f/RchtYr35RI8+8+6wek4GxU76b9S5HXLHNE1VdIljvefTPYLgIZBcEMaoctcUihf/QManAnW6Am3MXm5Q=="],
 
-    "@duskmoon-dev/el-segment-control": ["@duskmoon-dev/el-segment-control@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-segment-control/-/el-segment-control-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-lYka5+XtlRyl6FroWENu42kpaVGuxnsDn00fifYy33YJH/ti1rwpeTPiFoR7THH2B7eYUySdlqK+V6+xg1BNmg=="],
+    "@duskmoon-dev/el-segment-control": ["@duskmoon-dev/el-segment-control@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-segment-control/-/el-segment-control-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-K2YkHLDfmlm8FAnmQmpNxG/k+Yge2/ytEsxP8JxVXjZtIbTTZyW+L0E3liTqhAXyavDj6Aht1eDYZ7PHB449Tw=="],
 
-    "@duskmoon-dev/el-select": ["@duskmoon-dev/el-select@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-select/-/el-select-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-p6PXOI3RxyIi953rFopbRu8QbUdNdCbXlR6bDI7AkDsZDs4WprusX4/COxUVVS0Y2loI3/uJt10h0G1i9Tn4AA=="],
+    "@duskmoon-dev/el-select": ["@duskmoon-dev/el-select@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-select/-/el-select-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-OXO61f2Fgt6MpG28qLaZZSF1fiWHxccVVBQl+O/Hr4wLiO41MH2Yx6tycP0dMVaSA2xjmlNnK7TX/Uk5o26WEw=="],
 
-    "@duskmoon-dev/el-slider": ["@duskmoon-dev/el-slider@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-slider/-/el-slider-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-vzHQNYoQK36WcSPzuFuKRwmvg3MnUHuIDX6oXnp19n6zSOSuxrdfLDxKmgK+gUHJWyjRvA8X/1GVRvIiVoIzrw=="],
+    "@duskmoon-dev/el-slider": ["@duskmoon-dev/el-slider@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-slider/-/el-slider-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-O1Y3VYbbqBOul9yn7yM/jnRLF0HVo04zpeG/VtxsmftxJI2r+YauKFBywUJNkXRPiCaZwNdXfT+dthgEfTKCDQ=="],
 
-    "@duskmoon-dev/el-stepper": ["@duskmoon-dev/el-stepper@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-stepper/-/el-stepper-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-DXq0UYk/nGm3/vhj3+wtVAHo/0tG/V/C1caR2PbCWZ0mQ5clWiaf+o4N7+dvdUAdSUNeI2+uIR7dawp0WnV+qQ=="],
+    "@duskmoon-dev/el-stepper": ["@duskmoon-dev/el-stepper@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-stepper/-/el-stepper-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-iUYLR7eVfLpcZiCOcDl96f3z6ecF7wFomhO6k6YXLDGFWQ/DvUgXgdQLjE+AQxbPZTE9dZdHlu9WTCXPXpkcrQ=="],
 
-    "@duskmoon-dev/el-switch": ["@duskmoon-dev/el-switch@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-switch/-/el-switch-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-3ZoOCkoOUPbUPcvfhpyLfWCTOsyn7YmeHGNRlwWZrBYt1Vr9TSad69rW9O5CodSh+yNVItAAQPEthb3Pnff/6g=="],
+    "@duskmoon-dev/el-switch": ["@duskmoon-dev/el-switch@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-switch/-/el-switch-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-fAKUptMqvShzPJrbpHcgJd3sVk7b8xCwpmA8/wgx2+AmYDhUOwQTGm5YUCs3nu2HWhdJZu4SD4i9m05N54FlqQ=="],
 
-    "@duskmoon-dev/el-table": ["@duskmoon-dev/el-table@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-table/-/el-table-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-pLvOKtXgVvShExTBVNkcEBj83iw8JIK8DaHAWgAUlF+CwCcKnx9T9R2REaCgPIX79Nwqe2Khha9i+++P/2m4eg=="],
+    "@duskmoon-dev/el-table": ["@duskmoon-dev/el-table@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-table/-/el-table-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-w02iUz7OgTm1uCOgtnYElmvSAKNGVrYGY2hExVJqi9govTYNe30G4YMdRdRVTILbHMbFngHvpw8jA3pxPXWPFg=="],
 
-    "@duskmoon-dev/el-tabs": ["@duskmoon-dev/el-tabs@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-tabs/-/el-tabs-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-QYYNHyPXqwyfEdmQSaGzbnVr8iDVvHDig7oylrqz+Ki0I3jcvjc0diFLwq03mwbyc+Y9l1u4HAfO1PlHsv2CSA=="],
+    "@duskmoon-dev/el-tabs": ["@duskmoon-dev/el-tabs@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-tabs/-/el-tabs-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-EHI1yK/wm5okLpjV26GfIPqlGiuXCcNqFyvJqs5PUDagsJ015Fvp90yNQp09LpM+p2biKRltuZUKNKRrq5bt9Q=="],
 
-    "@duskmoon-dev/el-theme-controller": ["@duskmoon-dev/el-theme-controller@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-theme-controller/-/el-theme-controller-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-kG85LZCn53/yXT45pJQPwJR6cYI/XtcqDRRWVRwwYWkWMIbJX3SIDytOVt/0Fn2pX+oLThDreuURMN1KBfymFA=="],
+    "@duskmoon-dev/el-theme-controller": ["@duskmoon-dev/el-theme-controller@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-theme-controller/-/el-theme-controller-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-BdlCx/2U7Ow5WXCy9V7Lbmgxn7iclWFgpI+bQuzHVDCuKguJWgaImaa6yb5oJ2EIVmvr/YomxZ5fol7tFm+YBQ=="],
 
-    "@duskmoon-dev/el-time-input": ["@duskmoon-dev/el-time-input@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-time-input/-/el-time-input-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-G5GjrdRVD8PHf/P6g+FFCbPmczp9K294DfwppEI7mDmARqmp/aXOb8tplcUx3ROF/B6HVWbrJ0JzffWdRIv9jA=="],
+    "@duskmoon-dev/el-time-input": ["@duskmoon-dev/el-time-input@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-time-input/-/el-time-input-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-ahVpXAtLAQ2+5sqySNOFmAHlamAG6m9xKwfzsfsA0zefeXcpZ9MiLwTP9ZFZukbjZbVRdF08PQ+4bNrQfJ+Dxw=="],
 
-    "@duskmoon-dev/el-tooltip": ["@duskmoon-dev/el-tooltip@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-tooltip/-/el-tooltip-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-cP8907hiv8orHMU2HwFGqvbN8hlqIUXEMtVtnJwHLzmjzyppQ1khIeHxzH5LikZVEQOzZdqFT1AWH5FwsbM4Eg=="],
+    "@duskmoon-dev/el-tooltip": ["@duskmoon-dev/el-tooltip@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-tooltip/-/el-tooltip-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/core": "^1.16.0", "@duskmoon-dev/el-base": "0.11.2" } }, "sha512-sMU9i9ErD/Z5Oq3VuPSS478OfoZh6lQdKLNEX0wwBJRWEaSTgr8/Surv/u5uNkegiD27BpwsUAZT2GnD2yWO2w=="],
 
-    "@duskmoon-dev/elements": ["@duskmoon-dev/elements@1.1.1", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/elements/-/elements-1.1.1.tgz", { "dependencies": { "@duskmoon-dev/el-accordion": "0.11.2", "@duskmoon-dev/el-alert": "0.11.2", "@duskmoon-dev/el-autocomplete": "0.11.2", "@duskmoon-dev/el-badge": "0.11.2", "@duskmoon-dev/el-base": "0.11.2", "@duskmoon-dev/el-bottom-navigation": "0.11.2", "@duskmoon-dev/el-bottom-sheet": "0.11.2", "@duskmoon-dev/el-breadcrumbs": "0.11.2", "@duskmoon-dev/el-button": "0.11.2", "@duskmoon-dev/el-card": "0.11.2", "@duskmoon-dev/el-cascader": "0.11.2", "@duskmoon-dev/el-chip": "0.11.2", "@duskmoon-dev/el-circle-menu": "1.1.1", "@duskmoon-dev/el-code-block": "0.11.2", "@duskmoon-dev/el-code-engine": "1.0.0", "@duskmoon-dev/el-datepicker": "0.11.2", "@duskmoon-dev/el-dialog": "0.11.2", "@duskmoon-dev/el-drawer": "0.11.2", "@duskmoon-dev/el-file-upload": "0.11.2", "@duskmoon-dev/el-form": "0.11.2", "@duskmoon-dev/el-form-group": "1.0.0", "@duskmoon-dev/el-input": "0.11.2", "@duskmoon-dev/el-markdown": "0.11.2", "@duskmoon-dev/el-markdown-input": "0.11.2", "@duskmoon-dev/el-menu": "0.11.2", "@duskmoon-dev/el-navbar": "0.11.2", "@duskmoon-dev/el-navigation": "1.0.0", "@duskmoon-dev/el-nested-menu": "1.0.0", "@duskmoon-dev/el-otp-input": "1.0.0", "@duskmoon-dev/el-pagination": "0.11.2", "@duskmoon-dev/el-pin-input": "1.0.0", "@duskmoon-dev/el-popover": "0.11.2", "@duskmoon-dev/el-pro-data-grid": "0.11.2", "@duskmoon-dev/el-progress": "0.11.2", "@duskmoon-dev/el-segment-control": "1.0.0", "@duskmoon-dev/el-select": "0.11.2", "@duskmoon-dev/el-slider": "0.11.2", "@duskmoon-dev/el-stepper": "0.11.2", "@duskmoon-dev/el-switch": "0.11.2", "@duskmoon-dev/el-table": "0.11.2", "@duskmoon-dev/el-tabs": "0.11.2", "@duskmoon-dev/el-theme-controller": "1.0.0", "@duskmoon-dev/el-time-input": "1.0.0", "@duskmoon-dev/el-tooltip": "0.11.2" }, "peerDependencies": { "mermaid": ">=10.0.0" }, "optionalPeers": ["mermaid"] }, "sha512-3BK9ssudYE50hlT4fXU61FPBtOnJr0oLIbgJiTxO+9FTYZ1Z0KXvR27cA9KXRzoKWhbrd64tAgyv/DHNi5o89A=="],
+    "@duskmoon-dev/elements": ["@duskmoon-dev/elements@1.1.2", "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/elements/-/elements-1.1.2.tgz", { "dependencies": { "@duskmoon-dev/el-accordion": "0.11.2", "@duskmoon-dev/el-alert": "0.11.2", "@duskmoon-dev/el-autocomplete": "0.11.2", "@duskmoon-dev/el-badge": "0.11.2", "@duskmoon-dev/el-base": "0.11.2", "@duskmoon-dev/el-bottom-navigation": "0.11.2", "@duskmoon-dev/el-bottom-sheet": "0.11.2", "@duskmoon-dev/el-breadcrumbs": "0.11.2", "@duskmoon-dev/el-button": "0.11.2", "@duskmoon-dev/el-card": "0.11.2", "@duskmoon-dev/el-cascader": "0.11.2", "@duskmoon-dev/el-chip": "0.11.2", "@duskmoon-dev/el-circle-menu": "1.1.1", "@duskmoon-dev/el-code-block": "0.11.2", "@duskmoon-dev/el-code-engine": "1.0.0", "@duskmoon-dev/el-datepicker": "0.11.2", "@duskmoon-dev/el-dialog": "0.11.2", "@duskmoon-dev/el-drawer": "0.11.2", "@duskmoon-dev/el-file-upload": "0.11.2", "@duskmoon-dev/el-form": "0.11.2", "@duskmoon-dev/el-form-group": "1.0.0", "@duskmoon-dev/el-input": "0.11.2", "@duskmoon-dev/el-markdown": "0.11.2", "@duskmoon-dev/el-markdown-input": "0.11.2", "@duskmoon-dev/el-menu": "0.11.2", "@duskmoon-dev/el-navbar": "0.11.2", "@duskmoon-dev/el-navigation": "1.0.0", "@duskmoon-dev/el-nested-menu": "1.0.0", "@duskmoon-dev/el-otp-input": "1.0.0", "@duskmoon-dev/el-pagination": "0.11.2", "@duskmoon-dev/el-pin-input": "1.0.0", "@duskmoon-dev/el-popover": "0.11.2", "@duskmoon-dev/el-pro-data-grid": "0.11.2", "@duskmoon-dev/el-progress": "0.11.2", "@duskmoon-dev/el-segment-control": "1.0.0", "@duskmoon-dev/el-select": "0.11.2", "@duskmoon-dev/el-slider": "0.11.2", "@duskmoon-dev/el-stepper": "0.11.2", "@duskmoon-dev/el-switch": "0.11.2", "@duskmoon-dev/el-table": "0.11.2", "@duskmoon-dev/el-tabs": "0.11.2", "@duskmoon-dev/el-theme-controller": "1.0.0", "@duskmoon-dev/el-time-input": "1.0.0", "@duskmoon-dev/el-tooltip": "0.11.2" }, "peerDependencies": { "mermaid": ">=10.0.0" }, "optionalPeers": ["mermaid"] }, "sha512-zckF0zC3zqpX0270456bk/qJJj8wPUJZ9bhwcF640A+pf8PcATnBq4UaX+EqxhPGKcDMeFMAF17NovGwyFGb9A=="],
 
     "@iconify/types": ["@iconify/types@2.0.0", "", {}, "sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg=="],
 
@@ -621,7 +621,7 @@
 
     "points-on-path": ["points-on-path@0.2.1", "", { "dependencies": { "path-data-parser": "0.1.0", "points-on-curve": "0.2.0" } }, "sha512-25ClnWWuw7JbWZcgqY/gJ4FQWadKxGWk+3kR/7kD0tCaDtPPMj7oHu2ToLaVhfpnHrZzYby2w6tUA0eOIuUg8g=="],
 
-    "postcss": ["postcss@8.5.8", "", { "dependencies": { "nanoid": "^3.3.11", "picocolors": "^1.1.1", "source-map-js": "^1.2.1" } }, "sha512-OW/rX8O/jXnm82Ey1k44pObPtdblfiuWnrd8X7GJ7emImCOstunGbXUpp7HdBrFQX6rJzn3sPT397Wp5aCwCHg=="],
+    "postcss": ["postcss@8.5.9", "https://nexus.gsmlg.net/repository/npm/postcss/-/postcss-8.5.9.tgz", { "dependencies": { "nanoid": "^3.3.11", "picocolors": "^1.1.1", "source-map-js": "^1.2.1" } }, "sha512-7a70Nsot+EMX9fFU3064K/kdHWZqGVY+BADLyXc8Dfv+mTLLVl6JzJpPaCZ2kQL9gIJvKXSLMHhqdRRjwQeFtw=="],
 
     "property-information": ["property-information@7.1.0", "", {}, "sha512-TwEZ+X+yCJmYfL7TPUOcvBZ4QfoT5YenQiJuX//0th53DE6w0xxLEtfK3iyryQFddXuvkIk51EEgrJQ0WJkOmQ=="],
 

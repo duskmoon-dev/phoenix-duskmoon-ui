@@ -99,6 +99,18 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MarkdownInputTest do
     refute result =~ "no-mermaid"
   end
 
+  test "renders no-preview attribute" do
+    result = render_component(&dm_markdown_input/1, %{no_preview: true})
+
+    assert result =~ "no-preview"
+  end
+
+  test "does not render no-preview by default" do
+    result = render_component(&dm_markdown_input/1, %{})
+
+    refute result =~ "no-preview"
+  end
+
   test "renders with custom class" do
     result = render_component(&dm_markdown_input/1, %{class: "h-96 w-full"})
 
