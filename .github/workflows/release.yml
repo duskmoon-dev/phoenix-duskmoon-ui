@@ -62,15 +62,17 @@ jobs:
       - name: Install dependencies
         run: |
           mix deps.get
-          for attempt in 1 2 3; do
-            echo "bun install attempt $attempt..."
-            timeout 120 bun install && break
-            echo "::warning::bun install attempt $attempt failed, retrying..."
-            sleep 5
-          done
+          if ! timeout 120 bun install; then
+            echo "::warning::bun install timed out, falling back to npm install"
+            npm install --ignore-scripts
+          fi
 
       - name: Install Tailwind CLI
-        run: bun add --dev tailwindcss@${{ env.TAILWIND_VERSION }}
+        run: |
+          if ! timeout 60 bun add --dev tailwindcss@${{ env.TAILWIND_VERSION }}; then
+            echo "::warning::bun add timed out, falling back to npm install"
+            npm install --save-dev tailwindcss@${{ env.TAILWIND_VERSION }}
+          fi
 
       - name: Set version and prepare package
         env:
