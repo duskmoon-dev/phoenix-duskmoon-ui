@@ -100,9 +100,6 @@ jobs:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Upgrade npm for Trusted Publishers OIDC support
-        run: npm install -g npm@latest
-
       - name: Determine npm tag
         id: npm-tag
         run: |
