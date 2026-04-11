@@ -32,6 +32,7 @@ jobs:
   publish:
     name: Publish to hex.pm and npm
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout code
@@ -61,7 +62,12 @@ jobs:
       - name: Install dependencies
         run: |
           mix deps.get
-          bun install
+          for attempt in 1 2 3; do
+            echo "bun install attempt $attempt..."
+            timeout 120 bun install && break
+            echo "::warning::bun install attempt $attempt failed, retrying..."
+            sleep 5
+          done
 
       - name: Install Tailwind CLI
         run: bun add --dev tailwindcss@${{ env.TAILWIND_VERSION }}
