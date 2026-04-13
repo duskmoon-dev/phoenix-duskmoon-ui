@@ -53,7 +53,20 @@
   | `no_mermaid` | `boolean` | `false` | Disable Mermaid diagram rendering |
   | `disabled` | `boolean` | `false` | Disable the editor |
   | `readonly` | `boolean` | `false` | Make the editor read-only |
+  | `upload_url` | `string` | `nil` | POST endpoint for file uploads |
+  | `max_words` | `integer` | `nil` | Soft word cap shown in status bar |
+  | `resize` | `string` | `nil` | Resize behavior: `none`, `vertical`, `horizontal`, `both` |
+  | `live_preview` | `boolean` | `false` | Enable live preview rendering |
+  | `debounce` | `integer` | `nil` | Debounce delay (ms) for preview |
   | `class` | `any` | `nil` | Additional CSS classes |
+
+  ## Slots
+
+  | Slot | Description |
+  |------|-------------|
+  | `:bottom` | Replaces the entire bottom status bar |
+  | `:bottom_start` | Left section of the bottom bar (default: attach files button) |
+  | `:bottom_end` | Right section of the bottom bar (default: word/char count) |
   """ %>
   <.dm_markdown content={docs} />
 
@@ -62,7 +75,7 @@
     <.dm_markdown_input
       id="basic-editor"
       name="body"
-      value="# Hello\n\nStart writing **markdown** here.\n\n- Item one\n- Item two\n"
+      value={"# Hello\n\nStart writing **markdown** here.\n\n- Item one\n- Item two\n"}
     />
   </section>
 
@@ -81,7 +94,7 @@
       id="dark-editor"
       name="body_dark"
       theme="atom-one-dark"
-      value="# Dark Theme\n\n```elixir\ndefmodule Example do\n  def hello, do: :world\nend\n```\n"
+      value={"# Dark Theme\n\n```elixir\ndefmodule Example do\n  def hello, do: :world\nend\n```\n"}
     />
   </section>
 
@@ -90,7 +103,7 @@
     <.dm_markdown_input
       id="mermaid-editor"
       name="body_mermaid"
-      value="# Mermaid Support\n\n```mermaid\ngraph LR;\n  A-->B;\n  A-->C;\n  B-->D;\n  C-->D;\n```\n"
+      value={"# Mermaid Support\n\n```mermaid\ngraph LR;\n  A-->B;\n  A-->C;\n  B-->D;\n  C-->D;\n```\n"}
     />
   </section>
 
@@ -110,7 +123,89 @@
       id="readonly-editor"
       name="body_readonly"
       readonly={true}
-      value="# Read-only content\n\nThis editor is **read-only**.\n"
+      value={"# Read-only content\n\nThis editor is **read-only**.\n"}
     />
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">File Attachments</h2>
+    <p class="text-sm opacity-70 mb-3">
+      Drag-and-drop, paste, or click "Attach files" to add files.
+      Without an <code>upload_url</code>, files are stored locally and submitted
+      as <code>{"{name}_files"}</code> form fields.
+    </p>
+    <.dm_markdown_input
+      id="attach-editor"
+      name="body_attach"
+      value={"# File Attachments\n\nTry dragging a file onto this editor.\n"}
+    />
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">Word Limit</h2>
+    <p class="text-sm opacity-70 mb-3">
+      The status bar shows a word count with warning at 80% and error at 100% of the limit.
+    </p>
+    <.dm_markdown_input
+      id="wordlimit-editor"
+      name="body_wordlimit"
+      max_words={50}
+      value={"# Word Limit Demo\n\nThis editor has a 50-word limit. Try typing more to see the warning and error states.\n"}
+    />
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">Custom Bottom Bar</h2>
+    <p class="text-sm opacity-70 mb-3">
+      Use <code>:bottom_start</code> and <code>:bottom_end</code> slots to customize the status bar.
+    </p>
+    <.dm_markdown_input
+      id="custombottom-editor"
+      name="body_custombottom"
+      value={"# Custom Bottom Bar\n\nThe bottom bar has custom content in both left and right sections.\n"}
+    >
+      <:bottom_start>
+        <.dm_badge size="sm" variant="info">Draft</.dm_badge>
+      </:bottom_start>
+      <:bottom_end>
+        <span class="text-xs opacity-60">Auto-saved</span>
+      </:bottom_end>
+    </.dm_markdown_input>
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">Live Preview</h2>
+    <.dm_markdown_input
+      id="livepreview-editor"
+      name="body_livepreview"
+      live_preview={true}
+      value={"# Live Preview\n\nThis editor shows a live preview as you type.\n\n```elixir\nIO.puts(\"Hello!\")\n```\n"}
+    />
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">No Preview with Custom Footer</h2>
+    <p class="text-sm opacity-70 mb-3">
+      Write-only mode with <code>no_preview</code> hides the preview tab and toolbar.
+      The bottom bar is fully customized with a submit button and character info.
+    </p>
+    <.dm_markdown_input
+      id="nopreview-editor"
+      name="body_nopreview"
+      no_preview={true}
+      placeholder="Type a message…"
+    >
+      <:bottom_start>
+        <.dm_btn variant="ghost" size="sm" type="button">
+          <.dm_mdi name="paperclip" class="w-4 h-4" />
+        </.dm_btn>
+        <.dm_btn variant="ghost" size="sm" type="button">
+          <.dm_mdi name="emoticon-outline" class="w-4 h-4" />
+        </.dm_btn>
+      </:bottom_start>
+      <:bottom_end>
+        <.dm_btn variant="primary" size="sm" type="button">Send</.dm_btn>
+      </:bottom_end>
+    </.dm_markdown_input>
   </section>
 </.dm_card>

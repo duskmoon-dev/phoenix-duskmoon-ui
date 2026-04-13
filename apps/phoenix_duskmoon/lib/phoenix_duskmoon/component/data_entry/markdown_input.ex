@@ -21,6 +21,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MarkdownInput do
   Renders an `<el-dm-markdown-input>` custom element for markdown editing.
 
   Supports both standalone usage and Phoenix form field integration.
+  Files can be attached via drag-drop, paste, or the attach button in the
+  bottom bar. With `upload_url` files are POSTed immediately; without it
+  they are kept locally and submitted as `{name}_files` form fields.
 
   ## Examples
 
@@ -28,10 +31,15 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MarkdownInput do
 
       <.dm_markdown_input
         field={@form[:body]}
-        label="Content"
         placeholder="Write markdown here…"
-        theme="atom-one-dark"
+        upload_url="/api/uploads"
       />
+
+      <.dm_markdown_input name="notes" value="" max_words={500}>
+        <:bottom_start>
+          <button type="button">Custom Action</button>
+        </:bottom_start>
+      </.dm_markdown_input>
 
   """
   @doc type: :component
@@ -65,8 +73,46 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MarkdownInput do
     doc: "hide the preview tab and toolbar; write-only mode"
   )
 
+  attr(:upload_url, :string,
+    default: nil,
+    doc: "POST endpoint for file uploads; server must return {url: string}"
+  )
+
+  attr(:max_words, :integer,
+    default: nil,
+    doc: "soft word cap shown in status bar (warning at 80%, error at 100%)"
+  )
+
+  attr(:resize, :string,
+    default: nil,
+    values: [nil, "none", "vertical", "horizontal", "both"],
+    doc: "editor resize behavior"
+  )
+
+  attr(:live_preview, :boolean,
+    default: false,
+    doc: "enable live preview rendering"
+  )
+
+  attr(:debounce, :integer,
+    default: nil,
+    doc: "debounce delay (ms) for preview rendering"
+  )
+
   attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:rest, :global)
+
+  slot(:bottom, doc: "replaces the entire bottom status bar") do
+    attr(:class, :any, doc: "wrapper CSS classes")
+  end
+
+  slot(:bottom_start, doc: "left section of the bottom bar (default: attach files button)") do
+    attr(:class, :any, doc: "wrapper CSS classes")
+  end
+
+  slot(:bottom_end, doc: "right section of the bottom bar (default: word/char count)") do
+    attr(:class, :any, doc: "wrapper CSS classes")
+  end
 
   def dm_markdown_input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns
@@ -88,9 +134,36 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MarkdownInput do
       theme={@theme}
       no-mermaid={@no_mermaid}
       no-preview={@no_preview}
+      upload-url={@upload_url}
+      max-words={@max_words}
+      resize={@resize}
+      live-preview={@live_preview}
+      debounce={@debounce}
       class={@class}
       {@rest}
-    ></el-dm-markdown-input>
+    >
+      <div
+        :for={bottom <- @bottom}
+        slot="bottom"
+        class={bottom[:class]}
+      >
+        {render_slot(bottom)}
+      </div>
+      <div
+        :for={bottom_start <- @bottom_start}
+        slot="bottom-start"
+        class={bottom_start[:class]}
+      >
+        {render_slot(bottom_start)}
+      </div>
+      <div
+        :for={bottom_end <- @bottom_end}
+        slot="bottom-end"
+        class={bottom_end[:class]}
+      >
+        {render_slot(bottom_end)}
+      </div>
+    </el-dm-markdown-input>
     """
   end
 end
