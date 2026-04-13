@@ -21,6 +21,9 @@
       <:logo>
         <.dm_mdi name="moon-waning-crescent" class="w-8 h-8" />
       </:logo>
+      <:after_title>
+        <.dm_badge size="sm" variant="secondary" pill>v{Application.spec(:phoenix_duskmoon, :vsn)}</.dm_badge>
+      </:after_title>
       <:menu to={~p"/components/action/button"}>Components</:menu>
       <:menu to={~p"/art-component"}>Art Components</:menu>
       <:menu to={~p"/storybook"}>Storybook</:menu>

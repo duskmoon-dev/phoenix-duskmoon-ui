@@ -58,6 +58,12 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
   end
 
   slot(:logo, required: false, doc: "Appbar Logo (displayed in the brand area)")
+
+  slot(:after_title,
+    required: false,
+    doc: "Content rendered after the title, still in the left/brand area"
+  )
+
   slot(:user_profile, required: false, doc: "Appbar right side user profile / actions")
 
   def dm_appbar(assigns) do
@@ -75,6 +81,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
         {render_slot(@logo)}
         <span class="appbar-title">{@title}</span>
       </div>
+      {render_slot(@after_title)}
       <div class="appbar-trailing">
         <nav :if={@menu != []} class="appbar-actions" aria-label={@nav_label}>
           <.dm_link
