@@ -1,13 +1,10 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to release (e.g., 9.0.0)'
+        description: 'Version to release (e.g., 9.2.0)'
         required: true
         type: string
       git-ref:
@@ -29,8 +26,8 @@ permissions:
   actions: write
 
 jobs:
-  publish:
-    name: Publish to hex.pm and npm
+  release:
+    name: Release v${{ inputs.version }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -38,17 +35,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.git-ref || github.ref }}
-
-      - name: Determine version
-        id: version
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "version=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
-          else
-            # Strip 'v' prefix from tag
-            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
-          fi
+          ref: ${{ inputs.git-ref }}
 
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
@@ -74,17 +61,21 @@ jobs:
             npm install --save-dev tailwindcss@${{ env.TAILWIND_VERSION }}
           fi
 
-      - name: Set version and prepare package
-        env:
-          TAILWIND_PATH: ${{ github.workspace }}/node_modules/.bin/tailwindcss
+      # ── 1. Update version in all files ──────────────────────────────
+      - name: Update version
         run: |
-          VERSION="${{ steps.version.outputs.version }}"
+          VERSION="${{ inputs.version }}"
           echo "Releasing version: ${VERSION}"
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/phoenix_duskmoon/mix.exs
           sed -i "s%\"version\": \"[^\"]\+\"%\"version\": \"${VERSION}\"%" apps/phoenix_duskmoon/package.json
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" mix.exs
-          mix prepublish
 
+      - name: Prepare package assets
+        env:
+          TAILWIND_PATH: ${{ github.workspace }}/node_modules/.bin/tailwindcss
+        run: mix prepublish
+
+      # ── 2. Publish packages ─────────────────────────────────────────
       - name: Publish to hex.pm
         working-directory: apps/phoenix_duskmoon
         env:
@@ -103,7 +94,7 @@ jobs:
       - name: Determine npm tag
         id: npm-tag
         run: |
-          VERSION="${{ steps.version.outputs.version }}"
+          VERSION="${{ inputs.version }}"
           if echo "$VERSION" | grep -qE '[-]'; then
             echo "tag=next" >> "$GITHUB_OUTPUT"
           else
@@ -112,106 +103,53 @@ jobs:
 
       - name: Publish to npm
         working-directory: apps/phoenix_duskmoon
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --provenance --tag ${{ steps.npm-tag.outputs.tag }}
+
+      # ── 3. Commit version bump, tag, and push ──────────────────────
+      - name: Commit and tag
         run: |
-          npm publish --access public --provenance --tag ${{ steps.npm-tag.outputs.tag }} || {
-            echo "::warning::npm publish failed (version may already exist)"
-          }
+          VERSION="${{ inputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add apps/phoenix_duskmoon/mix.exs apps/phoenix_duskmoon/package.json mix.exs
+          git commit -m "chore(version): bump to ${VERSION}"
+          git tag "v${VERSION}"
+          git push origin HEAD:${{ inputs.git-ref }} --tags
 
-      - name: Create git tag (workflow_dispatch only)
-        if: github.event_name == 'workflow_dispatch'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const tag = 'refs/tags/v${{ steps.version.outputs.version }}';
-            try {
-              await github.rest.git.createRef({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                ref: tag,
-                sha: context.sha
-              });
-            } catch (e) {
-              if (e.status === 422) {
-                core.warning(`Tag ${tag} already exists`);
-              } else {
-                throw e;
-              }
-            }
-
-  create-release:
-    name: Create GitHub Release
-    runs-on: ubuntu-latest
-    needs: [ publish ]
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.git-ref || github.ref }}
-
-      - name: Determine version
-        id: version
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "version=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
-            echo "tag=v${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
-            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
-          fi
-
+      # ── 4. Create GitHub Release ────────────────────────────────────
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.version.outputs.tag }}
-          name: v${{ steps.version.outputs.version }}
-          body: |
-            ## Phoenix Duskmoon UI v${{ steps.version.outputs.version }}
-
-            ### Published Packages
-            - **Hex**: [`phoenix_duskmoon` v${{ steps.version.outputs.version }}](https://hex.pm/packages/phoenix_duskmoon/${{ steps.version.outputs.version }})
-            - **npm**: [`phoenix_duskmoon` v${{ steps.version.outputs.version }}](https://www.npmjs.com/package/phoenix_duskmoon/v/${{ steps.version.outputs.version }})
-
-            ### Docker Images
-            - `docker.io/gsmlg/duskmoon-storybook:v${{ steps.version.outputs.version }}`
-            - `ghcr.io/duskmoon-dev/duskmoon-storybook:v${{ steps.version.outputs.version }}`
-
-            ### Changes
-            See commit history for detailed changes.
+          tag_name: v${{ inputs.version }}
+          name: v${{ inputs.version }}
+          generate_release_notes: true
           draft: false
-          prerelease: ${{ contains(steps.version.outputs.version, '-') }}
+          prerelease: ${{ contains(inputs.version, '-') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Release summary
         run: |
-          echo "## Release Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Version**: v${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Published:" >> $GITHUB_STEP_SUMMARY
-          echo "- Hex.pm package" >> $GITHUB_STEP_SUMMARY
-          echo "- npm package" >> $GITHUB_STEP_SUMMARY
-          echo "- Docker images (DockerHub + GHCR)" >> $GITHUB_STEP_SUMMARY
-          echo "- GitHub Release" >> $GITHUB_STEP_SUMMARY
+          VERSION="${{ inputs.version }}"
+          cat >> "$GITHUB_STEP_SUMMARY" <<EOF
+          ## Release Summary
+
+          **Version**: v${VERSION}
+
+          ### Published:
+          - [Hex.pm](https://hex.pm/packages/phoenix_duskmoon/${VERSION})
+          - [npm](https://www.npmjs.com/package/phoenix_duskmoon/v/${VERSION})
+          - GitHub Release
+          EOF
 
   trigger-docker:
     name: Trigger Docker Build
     runs-on: ubuntu-latest
-    needs: [ create-release ]
+    needs: [ release ]
 
     steps:
-      - name: Determine version
-        id: version
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "version=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
-            echo "git-ref=v${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
-            echo "git-ref=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Trigger Docker workflow
         uses: actions/github-script@v7
         with:
@@ -222,8 +160,8 @@ jobs:
               workflow_id: 'docker.yml',
               ref: 'main',
               inputs: {
-                'git-ref': '${{ steps.version.outputs.git-ref }}',
-                'version': '${{ steps.version.outputs.version }}'
+                'git-ref': 'v${{ inputs.version }}',
+                'version': '${{ inputs.version }}'
               }
             });
-            console.log('Docker build workflow triggered for v${{ steps.version.outputs.version }}');
+            console.log('Docker build workflow triggered for v${{ inputs.version }}');
