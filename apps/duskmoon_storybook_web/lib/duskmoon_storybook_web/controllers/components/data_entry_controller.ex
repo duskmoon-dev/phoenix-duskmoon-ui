@@ -80,4 +80,8 @@ defmodule DuskmoonStorybookWeb.Components.DataEntryController do
   def markdown_input(conn, _params) do
     render(conn, :markdown_input, active_menu: "data-entry-markdown-input")
   end
+
+  def code_engine(conn, _params) do
+    render(conn, :code_engine, active_menu: "data-entry-code-engine")
+  end
 end

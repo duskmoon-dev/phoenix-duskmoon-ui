@@ -73,6 +73,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/data-entry/tree-select", DataEntryController, :tree_select
     get "/data-entry/cascader", DataEntryController, :cascader
     get "/data-entry/markdown-input", DataEntryController, :markdown_input
+    get "/data-entry/code-engine", DataEntryController, :code_engine
 
     # Feedback
     get "/feedback/dialog", FeedbackController, :dialog

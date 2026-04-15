@@ -1,0 +1,158 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-entry/code-engine"}>Data Entry</:crumb>
+  <:crumb>Code Engine</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4 flex flex-col gap-8">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Code Engine</span>
+    <span class="text-sm opacity-60">dm_code_engine</span>
+  </:title>
+
+  <% docs = """
+  ## Overview
+
+  A lightweight code editor using the `<el-dm-code-engine>` custom element,
+  backed by CodeMirror 6. Supports syntax highlighting for 25+ languages.
+
+  Requires `@duskmoon-dev/el-code-engine` registered in your app:
+
+  ```js
+  import "@duskmoon-dev/el-code-engine/register";
+  ```
+
+  ## Usage
+
+  ```elixir
+  # Standalone
+  <.dm_code_engine language="elixir" value={@code} />
+
+  # With Phoenix form field
+  <.dm_code_engine field={@form[:source]} language="javascript" />
+
+  # With topbar and theme
+  <.dm_code_engine
+    field={@form[:source]}
+    language="typescript"
+    theme="one-dark"
+    show_topbar
+    title="index.ts"
+  />
+  ```
+
+  ## Attributes
+
+  | Attribute | Type | Default | Description |
+  |-----------|------|---------|-------------|
+  | `field` | `FormField` | — | Phoenix form field (sets id/name/value automatically) |
+  | `name` | `string` | `nil` | HTML name for form submission |
+  | `value` | `any` | `nil` | Initial editor content |
+  | `id` | `any` | `nil` | HTML id |
+  | `language` | `string` | `nil` | Syntax highlighting language |
+  | `theme` | `string` | `nil` | Theme: `duskmoon`, `sunshine`, `moonlight`, `one-dark` |
+  | `readonly` | `boolean` | `false` | Make the editor read-only |
+  | `wrap` | `boolean` | `false` | Enable line wrapping |
+  | `show_topbar` | `boolean` | `false` | Show topbar with copy button and title |
+  | `show_bottombar` | `boolean` | `false` | Show bottombar |
+  | `title` | `string` | `nil` | Title shown in topbar (e.g. filename) |
+  | `class` | `any` | `nil` | Additional CSS classes |
+
+  ## Slots
+
+  | Slot | Description |
+  |------|-------------|
+  | `:topbar` | Custom topbar content (replaces default) |
+  | `:bottombar` | Custom bottombar content (replaces default) |
+
+  ## Supported Languages
+
+  javascript, typescript, css, html, json, python, markdown, xml, sql, rust, go,
+  java, cpp, php, yaml, sass, less, elixir, erlang, heex, dart, zig, vue, angular,
+  liquid, jinja, wast, lezer, caddyfile
+  """ %>
+  <.dm_markdown content={docs} />
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">Rust</h2>
+    <.dm_code_engine
+      id="rust-editor"
+      name="source_rust"
+      language="rust"
+      value={"fn fibonacci(n: u64) -> u64 {\n    match n {\n        0 => 0,\n        1 => 1,\n        _ => fibonacci(n - 1) + fibonacci(n - 2),\n    }\n}\n\nfn main() {\n    println!(\"{}\", fibonacci(10));\n}"}
+    />
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">Elixir</h2>
+    <.dm_code_engine
+      id="elixir-editor"
+      name="source_ex"
+      language="elixir"
+      value={"defmodule MyApp.Accounts do\n  alias MyApp.Repo\n  alias MyApp.Accounts.User\n\n  def list_users do\n    Repo.all(User)\n  end\n\n  def get_user!(id), do: Repo.get!(User, id)\nend"}
+    />
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">With Topbar</h2>
+    <.dm_code_engine
+      id="topbar-editor"
+      name="source_topbar"
+      language="go"
+      show_topbar
+      title="main.go"
+      value={"package main\n\nimport \"fmt\"\n\ntype User struct {\n\tID    int\n\tName  string\n\tEmail string\n}\n\nfunc greet(u User) string {\n\treturn fmt.Sprintf(\"Hello, %s!\", u.Name)\n}"}
+    />
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">One Dark Theme</h2>
+    <.dm_code_engine
+      id="dark-editor"
+      name="source_dark"
+      language="python"
+      theme="one-dark"
+      value={"from dataclasses import dataclass\n\n@dataclass\nclass Point:\n    x: float\n    y: float\n\n    def distance(self, other: 'Point') -> float:\n        return ((self.x - other.x)**2 + (self.y - other.y)**2) ** 0.5"}
+    />
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">Read-only</h2>
+    <.dm_code_engine
+      id="readonly-editor"
+      name="source_readonly"
+      language="yaml"
+      readonly
+      value={"name: phoenix_duskmoon\nversion: 9.1.4\ndescription: Duskmoon UI components for Phoenix\n\ndependencies:\n  elixir: \"~> 1.18\"\n  phoenix_live_view: \"~> 1.0\""}
+    />
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">Line Wrapping</h2>
+    <.dm_code_engine
+      id="wrap-editor"
+      name="source_wrap"
+      language="markdown"
+      wrap
+      value={"# Phoenix Duskmoon UI\n\nA comprehensive component library for Phoenix LiveView applications providing Material Design 3 inspired components with full theme support, custom elements, and CSS art animations.\n\n## Features\n\n- **25+ UI components** — buttons, cards, forms, navigation, data display, feedback, and layout\n- **CSS Art components** — decorative animations like plasma ball, eclipse, snow, and synthwave starfield\n- **Theme system** — sunshine (light) and moonlight (dark) themes with full CSS custom property support"}
+    />
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">With Custom Bottombar</h2>
+    <.dm_code_engine
+      id="bottombar-editor"
+      name="source_bottombar"
+      language="sql"
+      show_bottombar
+      value={"SELECT u.name, u.email, COUNT(p.id) AS post_count\nFROM users u\nLEFT JOIN posts p ON p.user_id = u.id\nWHERE u.active = true\nGROUP BY u.id\nORDER BY post_count DESC\nLIMIT 10;"}
+    >
+      <:bottombar>
+        <div class="flex items-center gap-2 px-2 text-xs opacity-60">
+          <span>SQL</span>
+          <span>|</span>
+          <span>UTF-8</span>
+        </div>
+      </:bottombar>
+    </.dm_code_engine>
+  </section>
+</.dm_card>
