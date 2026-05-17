@@ -44,6 +44,14 @@ defmodule PhoenixDuskmoon.Component.Icon.IconsTest do
     assert result =~ ~s[<svg xmlns="http://www.w3.org/2000/svg"]
   end
 
+  test "renders Material Design Icon with intrinsic dimensions" do
+    result = render_component(&dm_mdi/1, %{name: "account", class: "w-6 h-6"})
+
+    assert result =~ ~s[width="1em"]
+    assert result =~ ~s[height="1em"]
+    assert result =~ ~s[class="w-6 h-6"]
+  end
+
   test "renders Material Design Icon with custom color" do
     result = render_component(&dm_mdi/1, %{name: "account", color: "#ff0000"})
 

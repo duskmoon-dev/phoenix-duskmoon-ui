@@ -161,6 +161,20 @@ defmodule PhoenixDuskmoon.Component.Icon.Icons do
     """
   )
 
+  attr(:width, :any,
+    default: "1em",
+    doc: """
+    intrinsic SVG width
+    """
+  )
+
+  attr(:height, :any,
+    default: "1em",
+    doc: """
+    intrinsic SVG height
+    """
+  )
+
   attr(:rest, :global, doc: "additional HTML attributes for the SVG element")
 
   def dm_mdi(assigns) do
@@ -176,7 +190,7 @@ defmodule PhoenixDuskmoon.Component.Icon.Icons do
     assigns = assigns |> assign(:inner_svg, inner_svg)
 
     ~H"""
-    <svg xmlns="http://www.w3.org/2000/svg" id={@id} class={@class} fill={@color} viewBox="0 0 24 24" aria-hidden="true" {@rest}>
+    <svg xmlns="http://www.w3.org/2000/svg" id={@id} class={@class} fill={@color} width={@width} height={@height} viewBox="0 0 24 24" aria-hidden="true" {@rest}>
       {raw(@inner_svg)}
     </svg>
     """
