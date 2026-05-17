@@ -136,7 +136,8 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   def dm_btn(%{confirm: confirm} = assigns) when confirm != "" do
     assigns =
       assigns
-      |> assign_new(:id, fn -> "btn-#{System.unique_integer([:positive])}" end)
+      |> assign(:id, assigns.id || "btn-#{System.unique_integer([:positive])}")
+      |> assign(:confirm_rest, Map.put(assigns.rest, "type", "submit"))
       |> assign(:el_variant, map_variant(assigns.variant))
       |> assign(:el_style, variant_style(assigns.variant))
 
@@ -174,7 +175,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
           {render_slot(@confirm_action)}
         </template>
         <form :if={@confirm_action == []} method="dialog">
-          <el-dm-button variant="primary" class={@confirm_class} {@rest}>
+          <el-dm-button variant="primary" class={@confirm_class} {@confirm_rest}>
             {@confirm_text}
           </el-dm-button>
         </form>
