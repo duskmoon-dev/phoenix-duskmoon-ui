@@ -69,6 +69,6 @@
         "@duskmoon-dev/el-time-input": "1.2.0",
         "@duskmoon-dev/el-tabs": "1.2.0",
         "@duskmoon-dev/el-tooltip": "1.2.0",
-        "@duskmoon-dev/elements": "1.2.0"
+        "@duskmoon-dev/elements": "1.4.0"
     }
 }
