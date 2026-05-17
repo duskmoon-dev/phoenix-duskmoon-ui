@@ -150,8 +150,10 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ ~s[<el-dm-button]
     assert result =~ ~s[onclick="document.getElementById(&#39;confirm-dialog-]
     assert result =~ ~s[<el-dm-dialog id="confirm-dialog-]
+    refute result =~ ~s[id="confirm-dialog-"]
     assert result =~ ~s[Are you sure?]
     assert result =~ ~s[<el-dm-button variant="primary"]
+    assert result =~ ~s[type="submit"]
     assert result =~ ~s[Yes]
     assert result =~ ~s[<el-dm-button variant="ghost"]
     assert result =~ ~s[Cancel]
@@ -474,6 +476,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
 
     # The phx-click should be on the Yes button inside the dialog
     assert result =~ ~s[phx-click="delete"]
+    assert result =~ ~s[type="submit"]
   end
 
   test "renders button without confirm when confirm is empty string" do
