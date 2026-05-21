@@ -49,6 +49,8 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
 
       <.dm_btn variant="primary" size="lg">Primary Button</.dm_btn>
 
+      <.dm_btn navigate="/dashboard" variant="ghost">Dashboard</.dm_btn>
+
       <.dm_btn confirm="Are you sure?" confirm_title="Confirm Action">Delete</.dm_btn>
 
   """
@@ -88,6 +90,26 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
 
   attr(:loading, :boolean, default: false, doc: "Show loading state")
   attr(:disabled, :boolean, default: false, doc: "Disable the button")
+
+  attr(:navigate, :string,
+    default: nil,
+    doc: "Navigates from a LiveView to a new LiveView"
+  )
+
+  attr(:patch, :string,
+    default: nil,
+    doc: "Patches the current LiveView"
+  )
+
+  attr(:href, :any,
+    default: nil,
+    doc: "Uses traditional browser navigation to the new location"
+  )
+
+  attr(:replace, :boolean,
+    default: false,
+    doc: "Replace browser history when using navigate or patch"
+  )
 
   # Noise button attributes
   attr(:noise, :boolean, default: false, doc: "Use noise effect button style")
@@ -138,8 +160,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       assigns
       |> assign(:id, assigns.id || "btn-#{System.unique_integer([:positive])}")
       |> assign(:confirm_rest, Map.put(assigns.rest, "type", "submit"))
-      |> assign(:el_variant, map_variant(assigns.variant))
-      |> assign(:el_style, variant_style(assigns.variant))
+      |> assign_button_element()
 
     ~H"""
     <el-dm-button
@@ -211,12 +232,46 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   end
 
   def dm_btn(%{} = assigns) do
-    assigns =
-      assigns
-      |> assign_new(:id, fn -> nil end)
-      |> assign(:el_variant, map_variant(assigns.variant))
-      |> assign(:el_style, variant_style(assigns.variant))
+    assigns = assign_button_element(assigns)
 
+    ~H"""
+    <.button_link :if={is_binary(@navigate)} navigate={@navigate} replace={@replace}>
+      <.button_element {assigns} />
+    </.button_link>
+    <.button_link :if={!is_binary(@navigate) && is_binary(@patch)} patch={@patch} replace={@replace}>
+      <.button_element {assigns} />
+    </.button_link>
+    <.button_link
+      :if={!is_binary(@navigate) && !is_binary(@patch) && !is_nil(@href) && @href != "#"}
+      href={@href}
+    >
+      <.button_element {assigns} />
+    </.button_link>
+    <.button_element :if={!is_binary(@navigate) && !is_binary(@patch) && (is_nil(@href) || @href == "#")} {assigns} />
+    """
+  end
+
+  defp assign_button_element(assigns) do
+    assigns
+    |> assign_new(:id, fn -> nil end)
+    |> assign(:el_variant, map_variant(assigns.variant))
+    |> assign(:el_style, variant_style(assigns.variant))
+  end
+
+  attr(:id, :any, default: nil)
+  attr(:el_variant, :string, default: nil)
+  attr(:size, :string, default: nil)
+  attr(:shape, :string, default: nil)
+  attr(:loading, :boolean, default: false)
+  attr(:disabled, :boolean, default: false)
+  attr(:class, :any, default: nil)
+  attr(:el_style, :string, default: nil)
+  attr(:rest, :global)
+  slot(:inner_block)
+  slot(:prefix)
+  slot(:suffix)
+
+  defp button_element(assigns) do
     ~H"""
     <el-dm-button
       id={@id}
@@ -236,6 +291,30 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       {render_slot(@inner_block)}
       <span :for={suffix <- @suffix} slot="suffix">{render_slot(suffix)}</span>
     </el-dm-button>
+    """
+  end
+
+  attr(:navigate, :string, default: nil)
+  attr(:patch, :string, default: nil)
+  attr(:href, :any, default: nil)
+  attr(:replace, :boolean, default: false)
+  slot(:inner_block, required: true)
+
+  defp button_link(%{navigate: to} = assigns) when is_binary(to) do
+    ~H"""
+    <.link navigate={@navigate} replace={@replace}>{render_slot(@inner_block)}</.link>
+    """
+  end
+
+  defp button_link(%{patch: to} = assigns) when is_binary(to) do
+    ~H"""
+    <.link patch={@patch} replace={@replace}>{render_slot(@inner_block)}</.link>
+    """
+  end
+
+  defp button_link(%{href: href} = assigns) when not is_nil(href) and href != "#" do
+    ~H"""
+    <.link href={@href}>{render_slot(@inner_block)}</.link>
     """
   end
 end

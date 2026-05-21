@@ -115,6 +115,57 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     refute result =~ "aria-disabled"
   end
 
+  test "renders navigate button as link with button styling" do
+    result =
+      render_component(&dm_btn/1, %{
+        navigate: "/dashboard",
+        variant: "ghost",
+        inner_block: %{inner_block: fn _, _ -> "Dashboard" end}
+      })
+
+    assert result =~ ~s[<a]
+    assert result =~ ~s[href="/dashboard"]
+    assert result =~ ~s[data-phx-link="redirect"]
+    assert result =~ ~s[data-phx-link-state="push"]
+    assert result =~ ~s[<el-dm-button]
+    assert result =~ ~s[variant="ghost"]
+    assert result =~ "Dashboard"
+  end
+
+  test "renders patch button as link with replace state" do
+    result =
+      render_component(&dm_btn/1, %{
+        patch: "/settings?tab=profile",
+        replace: true,
+        variant: "outline",
+        inner_block: %{inner_block: fn _, _ -> "Profile" end}
+      })
+
+    assert result =~ ~s[href="/settings?tab=profile"]
+    assert result =~ ~s[data-phx-link="patch"]
+    assert result =~ ~s[data-phx-link-state="replace"]
+    assert result =~ ~s[variant="outline"]
+  end
+
+  test "renders href button as link with styling attributes" do
+    result =
+      render_component(&dm_btn/1, %{
+        href: "https://example.com",
+        variant: "error",
+        size: "lg",
+        class: "external-action",
+        inner_block: %{inner_block: fn _, _ -> "External" end}
+      })
+
+    assert result =~ ~s[<a]
+    assert result =~ ~s[href="https://example.com"]
+    assert result =~ ~s[variant="primary"]
+    assert result =~ "--color-primary: var(--color-error)"
+    assert result =~ ~s[size="lg"]
+    assert result =~ "external-action"
+    assert result =~ "External"
+  end
+
   test "renders button with noise effect" do
     result =
       render_component(&dm_btn/1, %{
