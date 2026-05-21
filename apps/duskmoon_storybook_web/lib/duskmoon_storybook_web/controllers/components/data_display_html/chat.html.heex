@@ -1,0 +1,66 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/chat"}>Data Display</:crumb>
+  <:crumb>Chat</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold">Chat</h1>
+    <span class="text-sm opacity-60">dm_chat</span>
+  </div>
+
+  <.dm_markdown content={"""
+  Chat primitives built on `@duskmoon-dev/el-chat` for LLM-oriented message timelines, reasoning blocks, tool calls, typing states, and markdown input.
+
+  ```heex
+  <.dm_chat author="Assistant" avatar="AI" color="primary" content="Hello." />
+  <.dm_chat_input name="message" duskmoon-send-send="send_message" />
+  ```
+  """} />
+
+  <section class="mt-8 space-y-4 max-w-3xl">
+    <.dm_chat
+      author="Assistant"
+      avatar="AI"
+      time="09:41"
+      status="Streaming"
+      color="primary"
+      actions="Copy, Regenerate"
+      content="I can summarize logs, call tools, and render **markdown** inside the chat bubble."
+    />
+
+    <.dm_chat align="end" author="You" avatar="JG" time="09:42" variant="filled" color="secondary">
+      Show the reasoning and tool-call states.
+    </.dm_chat>
+
+    <.dm_chat author="Assistant" avatar="AI" color="tertiary" size="lg">
+      <.dm_chat_reasoning summary="Reasoning" open>
+        I need to inspect the package API before wrapping the custom element.
+        <:tool>
+          <.dm_chat_tool name="npm view @duskmoon-dev/el-chat" status="success" open>
+            <:call>Read custom element metadata</:call>
+            <:result>Found chat, bubble, input, reasoning, tool, and typing elements.</:result>
+          </.dm_chat_tool>
+        </:tool>
+      </.dm_chat_reasoning>
+      The wrapper now exposes all chat primitives.
+    </.dm_chat>
+
+    <.dm_chat_bubble
+      color="info"
+      content="A standalone bubble can be used for compact timelines."
+    />
+
+    <.dm_chat author="Assistant" avatar="AI" streaming>
+      <.dm_chat_typing />
+    </.dm_chat>
+
+    <.dm_chat_input
+      name="message"
+      placeholder="Send a message..."
+      send_label="Send"
+      clear_on_send
+      duskmoon-send-send="send_message"
+    />
+  </section>
+</.dm_card>

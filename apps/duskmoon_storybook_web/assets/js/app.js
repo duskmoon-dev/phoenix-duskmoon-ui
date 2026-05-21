@@ -30,6 +30,7 @@ import "@duskmoon-dev/el-breadcrumbs/register";
 import "@duskmoon-dev/el-button/register";
 import "@duskmoon-dev/el-card/register";
 import "@duskmoon-dev/el-cascader/register";
+import "@duskmoon-dev/el-chat/register";
 import "@duskmoon-dev/el-chip/register";
 import "@duskmoon-dev/el-circle-menu/register";
 import "@duskmoon-dev/el-code-block/register";

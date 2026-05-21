@@ -17,6 +17,10 @@ defmodule DuskmoonStorybookWeb.Components.DataDisplayController do
     render(conn, :card, active_menu: "data-display-card")
   end
 
+  def chat(conn, _params) do
+    render(conn, :chat, active_menu: "data-display-chat")
+  end
+
   def chip(conn, _params) do
     render(conn, :chip, active_menu: "data-display-chip")
   end

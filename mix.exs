@@ -10,6 +10,7 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
       version: @version,
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      listeners: [Phoenix.CodeReloader],
       releases: [
         storybook: [
           applications: [duskmoon_storybook_web: :permanent]

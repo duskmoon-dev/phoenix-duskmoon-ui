@@ -41,20 +41,20 @@ defmodule DuskmoonStorybookWeb.MixProject do
     [
       {:phoenix, "~> 1.8"},
       {:phoenix_html, "~> 4.0"},
-      {:phoenix_live_reload, "~> 1.4", only: :dev},
+      {:phoenix_live_reload, "~> 1.6", only: :dev},
       {:phoenix_live_view, "~> 1.1"},
-      {:phoenix_storybook, "~> 0.9"},
+      {:phoenix_storybook, "~> 1.1"},
       {:phoenix_live_dashboard, "~> 0.8"},
       {:floki, ">= 0.30.0", only: :test},
-      {:bun, "~> 1.4", runtime: Mix.env() == :dev},
-      {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
+      {:bun, "~> 2.0", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.4", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 1.0"},
-      {:telemetry_poller, "~> 1.0"},
-      {:gettext, "~> 0.26"},
+      {:telemetry_poller, "~> 1.3"},
+      {:gettext, "~> 1.0"},
       {:duskmoon_storybook, in_umbrella: true},
       {:phoenix_duskmoon, in_umbrella: true},
-      {:jason, "~> 1.2"},
-      {:bandit, "~> 1.0"}
+      {:jason, "~> 1.4"},
+      {:bandit, "~> 1.11"}
     ]
   end
 

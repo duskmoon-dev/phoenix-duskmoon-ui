@@ -38,6 +38,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/data-display/avatar", DataDisplayController, :avatar
     get "/data-display/badge", DataDisplayController, :badge
     get "/data-display/card", DataDisplayController, :card
+    get "/data-display/chat", DataDisplayController, :chat
     get "/data-display/chip", DataDisplayController, :chip
     get "/data-display/flash", DataDisplayController, :flash
     get "/data-display/markdown", DataDisplayController, :markdown

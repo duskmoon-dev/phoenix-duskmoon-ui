@@ -88,7 +88,7 @@
       id="elixir-editor"
       name="source_ex"
       language="elixir"
-      value={"defmodule MyApp.Accounts do\n  alias MyApp.Repo\n  alias MyApp.Accounts.User\n\n  def list_users do\n    Repo.all(User)\n  end\n\n  def get_user!(id), do: Repo.get!(User, id)\nend"}
+      value="defmodule MyApp.Accounts do\n  alias MyApp.Repo\n  alias MyApp.Accounts.User\n\n  def list_users do\n    Repo.all(User)\n  end\n\n  def get_user!(id), do: Repo.get!(User, id)\nend"
     />
   </section>
 
@@ -111,7 +111,7 @@
       name="source_dark"
       language="python"
       theme="one-dark"
-      value={"from dataclasses import dataclass\n\n@dataclass\nclass Point:\n    x: float\n    y: float\n\n    def distance(self, other: 'Point') -> float:\n        return ((self.x - other.x)**2 + (self.y - other.y)**2) ** 0.5"}
+      value="from dataclasses import dataclass\n\n@dataclass\nclass Point:\n    x: float\n    y: float\n\n    def distance(self, other: 'Point') -> float:\n        return ((self.x - other.x)**2 + (self.y - other.y)**2) ** 0.5"
     />
   </section>
 
@@ -133,7 +133,7 @@
       name="source_wrap"
       language="markdown"
       wrap
-      value={"# Phoenix Duskmoon UI\n\nA comprehensive component library for Phoenix LiveView applications providing Material Design 3 inspired components with full theme support, custom elements, and CSS art animations.\n\n## Features\n\n- **25+ UI components** — buttons, cards, forms, navigation, data display, feedback, and layout\n- **CSS Art components** — decorative animations like plasma ball, eclipse, snow, and synthwave starfield\n- **Theme system** — sunshine (light) and moonlight (dark) themes with full CSS custom property support"}
+      value="# Phoenix Duskmoon UI\n\nA comprehensive component library for Phoenix LiveView applications providing Material Design 3 inspired components with full theme support, custom elements, and CSS art animations.\n\n## Features\n\n- **25+ UI components** — buttons, cards, forms, navigation, data display, feedback, and layout\n- **CSS Art components** — decorative animations like plasma ball, eclipse, snow, and synthwave starfield\n- **Theme system** — sunshine (light) and moonlight (dark) themes with full CSS custom property support"
     />
   </section>
 
@@ -144,7 +144,7 @@
       name="source_bottombar"
       language="sql"
       show_bottombar
-      value={"SELECT u.name, u.email, COUNT(p.id) AS post_count\nFROM users u\nLEFT JOIN posts p ON p.user_id = u.id\nWHERE u.active = true\nGROUP BY u.id\nORDER BY post_count DESC\nLIMIT 10;"}
+      value="SELECT u.name, u.email, COUNT(p.id) AS post_count\nFROM users u\nLEFT JOIN posts p ON p.user_id = u.id\nWHERE u.active = true\nGROUP BY u.id\nORDER BY post_count DESC\nLIMIT 10;"
     >
       <:bottombar>
         <div class="flex items-center gap-2 px-2 text-xs opacity-60">
