@@ -14,13 +14,13 @@ description: >
 Elixir component library providing 80+ LiveView HEEX components that render as
 HTML Custom Elements (`<el-dm-*>`) styled by `@duskmoon-dev/core`.
 
-**Version: 9.0.1**
+**Version: 9.4.0**
 
 ## Installation
 
 ```elixir
 # mix.exs
-{:phoenix_duskmoon, "~> 9.0"}
+{:phoenix_duskmoon, "~> 9.4"}
 ```
 
 ```bash
@@ -55,8 +55,8 @@ For custom elements to inherit theme colors, include the element-theme-bridge
 
 For CSS art effects, import each CSS art stylesheet you need:
 ```css
-@import "@duskmoon-dev/css-art/eclipse.css";
-@import "@duskmoon-dev/css-art/snow.css";
+@import "@duskmoon-dev/css-art/dist/art/eclipse.css";
+@import "@duskmoon-dev/css-art/dist/art/snow.css";
 /* ... etc */
 ```
 
@@ -84,6 +84,12 @@ import "@duskmoon-dev/el-card/register";
 
 Without registration, `<el-dm-*>` content is invisible.
 
+### 5. Register chat elements (if using chat components)
+
+```javascript
+import "@duskmoon-dev/el-chat/register";
+```
+
 ## Architecture (v9)
 
 ```
@@ -96,13 +102,11 @@ Custom Elements (<el-dm-button>, <el-dm-card>)
 
 **CSS class naming (BEM):** `dm-component`, `dm-component--variant`, `dm-component__element`
 
-**Color mapping:** `"accent"` in component APIs maps to `"tertiary"` in CSS tokens.
-
 ## Hooks Reference
 
 | Hook | Used by | Purpose |
 |------|---------|---------|
-| `WebComponentHook` | Any `el-dm-*` with `phx-*` events | Bridges custom element events to LiveView |
+| `WebComponentHook` | Any `el-dm-*` with `phx-*` events or chat event attrs | Bridges custom element events to LiveView |
 | `FormElementHook` | Form `el-dm-*` inputs | Adds `phx-feedback-for` support |
 | `ThemeSwitcher` | `dm_theme_switcher` | Theme toggle + localStorage persistence |
 | `Spotlight` | Spotlight search component | Cmd/Ctrl+K keyboard shortcut |
@@ -140,6 +144,7 @@ For full component catalog with all attributes and slots, see
 | `dm_avatar` | DataDisplay.Avatar | User avatar with status indicators |
 | `dm_badge` | DataDisplay.Badge | Label badge with color variants |
 | `dm_card` / `dm_async_card` | DataDisplay.Card | Content card with title/action slots |
+| `dm_chat` / `dm_chat_bubble` / `dm_chat_input` / `dm_chat_reasoning` / `dm_chat_tool` / `dm_chat_typing` | DataDisplay.Chat | LLM-oriented chat primitives (message, bubble, input, reasoning, tool, typing indicator) |
 | `dm_chip` | DataDisplay.Chip | Deletable chip/tag |
 | `dm_collapse` / `dm_collapse_group` | DataDisplay.Collapse | Single collapsible panel |
 | `dm_flash` / `dm_flash_group` | DataDisplay.Flash | Flash messages |
@@ -178,6 +183,7 @@ For full component catalog with all attributes and slots, see
 | `dm_cascader` | DataEntry.Cascader | Cascading select |
 | `dm_tree_select` | DataEntry.TreeSelect | Tree-structured select |
 | `dm_markdown_input` | DataEntry.MarkdownInput | Markdown editor with preview |
+| `dm_code_engine` | DataEntry.CodeEngine | Code editor with 25+ language syntax highlighting |
 
 ### Feedback
 
@@ -275,6 +281,39 @@ Import via `use PhoenixDuskmoon.ArtComponent`.
   </:actions>
 </.dm_form>
 
+<%!-- Chat message --%>
+<.dm_chat author="Assistant" avatar="AI" color="primary" content="Hello! How can I help?" />
+<.dm_chat align="end" author="You" avatar="JG" variant="filled">
+  What's the weather like?
+</.dm_chat>
+
+<%!-- Chat input --%>
+<.dm_chat_input id="chat-input" placeholder="Type a message..." send_label="Send" />
+
+<%!-- Chat reasoning section --%>
+<.dm_chat_reasoning summary="Thinking..." open={false}>
+  Step-by-step reasoning here...
+</.dm_chat_reasoning>
+
+<%!-- Chat typing indicator --%>
+<.dm_chat_typing id="typing-indicator" />
+
+<%!-- Code editor --%>
+<.dm_code_engine
+  field={@form[:source]}
+  language="elixir"
+  theme="one-dark"
+  show_topbar
+  title="example.ex"
+/>
+
+<%!-- Markdown editor --%>
+<.dm_markdown_input
+  field={@form[:body]}
+  placeholder="Write markdown here…"
+  upload_url="/api/uploads"
+/>
+
 <%!-- Navigation --%>
 <.dm_appbar title="My App" title_to={~p"/"}>
   <:menu to={~p"/dashboard"} active={@active == :dashboard}>Dashboard</:menu>
@@ -316,5 +355,6 @@ Import via `use PhoenixDuskmoon.ArtComponent`.
 | `phoenix_duskmoon` | `priv/static/phoenix_duskmoon.js` |
 | `phoenix_duskmoon/hooks` | `assets/js/hooks/index.js` |
 | `phoenix_duskmoon/css` | `priv/static/phoenix_duskmoon.css` |
+| `phoenix_duskmoon/components` | `priv/static/phoenix_duskmoon.css` |
 | `phoenix_duskmoon/svg/mdi/*.svg` | `priv/mdi/svg/*.svg` |
 | `phoenix_duskmoon/svg/bsi/*.svg` | `priv/bsi/svg/*.svg` |
