@@ -206,7 +206,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ ~s[<el-dm-button variant="primary"]
     assert result =~ ~s[type="submit"]
     assert result =~ ~s[Yes]
-    assert result =~ ~s[<el-dm-button variant="ghost"]
+    assert result =~ ~s[<el-dm-button variant="ghost" class="" type="submit"]
     assert result =~ ~s[Cancel]
   end
 
