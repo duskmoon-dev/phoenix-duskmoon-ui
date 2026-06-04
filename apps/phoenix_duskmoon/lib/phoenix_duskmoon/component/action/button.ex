@@ -201,7 +201,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
           </el-dm-button>
         </form>
         <form :if={@show_cancel_action} method="dialog">
-          <el-dm-button variant="ghost" class={@cancel_class}>
+          <el-dm-button variant="ghost" class={@cancel_class} type="submit">
             {@cancel_text}
           </el-dm-button>
         </form>
