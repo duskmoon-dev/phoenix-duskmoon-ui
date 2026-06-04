@@ -17,7 +17,6 @@ env:
   ELIXIR_VERSION: '1.18'
   OTP_VERSION: '28'
   MIX_ENV: 'prod'
-  TAILWIND_VERSION: '4.1.11'
 
 permissions:
   contents: write
@@ -52,13 +51,6 @@ jobs:
           if ! timeout 120 bun install; then
             echo "::warning::bun install timed out, falling back to npm install"
             npm install --ignore-scripts
-          fi
-
-      - name: Install Tailwind CLI
-        run: |
-          if ! timeout 60 bun add --dev tailwindcss@${{ env.TAILWIND_VERSION }}; then
-            echo "::warning::bun add timed out, falling back to npm install"
-            npm install --save-dev tailwindcss@${{ env.TAILWIND_VERSION }}
           fi
 
       # ── 1. Update version in all files ──────────────────────────────
