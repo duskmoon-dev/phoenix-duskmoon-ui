@@ -47,6 +47,11 @@ jobs:
         with:
           bun-version: 1.3.13
 
+      - name: Set up Node.js for install
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+
       - name: Install Elixir dependencies
         run: mix deps.get
 
@@ -59,9 +64,10 @@ jobs:
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_bundler/mix.exs
           sed -i "s%\"version\": \"[^\"]\+\"%\"version\": \"${VERSION}\"%" apps/phoenix_duskmoon/package.json
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" mix.exs
+          sed -i "s%\"version\": \"[^\"]\+\"%\"version\": \"${VERSION}\"%" bun.lock
 
-      - name: Install JavaScript dependencies and refresh Bun lockfile
-        run: bun install --ignore-scripts --no-progress
+      - name: Install JavaScript dependencies
+        run: npm install --ignore-scripts --no-audit --no-fund --package-lock=false --registry=https://registry.npmjs.org/
 
       - name: Prepare package assets
         env:
