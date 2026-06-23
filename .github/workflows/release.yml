@@ -59,7 +59,7 @@ jobs:
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" mix.exs
 
       - name: Install JavaScript dependencies and refresh Bun lockfile
-        run: bun install
+        run: bun install --ignore-scripts --no-progress
 
       - name: Prepare package assets
         env:
