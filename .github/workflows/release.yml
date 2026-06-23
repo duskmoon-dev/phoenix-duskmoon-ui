@@ -54,6 +54,7 @@ jobs:
           VERSION="${{ inputs.version }}"
           echo "Releasing version: ${VERSION}"
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/phoenix_duskmoon/mix.exs
+          sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_bundler/mix.exs
           sed -i "s%\"version\": \"[^\"]\+\"%\"version\": \"${VERSION}\"%" apps/phoenix_duskmoon/package.json
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" mix.exs
 
@@ -66,8 +67,17 @@ jobs:
         run: mix prepublish
 
       # ── 2. Publish packages ─────────────────────────────────────────
-      - name: Publish to hex.pm
+      - name: Publish phoenix_duskmoon to hex.pm
         working-directory: apps/phoenix_duskmoon
+        env:
+          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
+          MIX_ENV: dev
+        run: |
+          mix deps.get
+          mix hex.publish package --yes --replace
+
+      - name: Publish duskmoon_bundler to hex.pm
+        working-directory: apps/duskmoon_bundler
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
           MIX_ENV: dev
@@ -103,7 +113,7 @@ jobs:
           VERSION="${{ inputs.version }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add apps/phoenix_duskmoon/mix.exs apps/phoenix_duskmoon/package.json mix.exs bun.lock
+          git add apps/phoenix_duskmoon/mix.exs apps/duskmoon_bundler/mix.exs apps/phoenix_duskmoon/package.json mix.exs bun.lock
           git commit -m "chore(version): bump to ${VERSION}"
           git tag "v${VERSION}"
           git push origin HEAD:${{ inputs.git-ref }} --tags
@@ -129,7 +139,8 @@ jobs:
           **Version**: v${VERSION}
 
           ### Published:
-          - [Hex.pm](https://hex.pm/packages/phoenix_duskmoon/${VERSION})
+          - [Hex.pm: phoenix_duskmoon](https://hex.pm/packages/phoenix_duskmoon/${VERSION})
+          - [Hex.pm: duskmoon_bundler](https://hex.pm/packages/duskmoon_bundler/${VERSION})
           - [npm](https://www.npmjs.com/package/phoenix_duskmoon/v/${VERSION})
           - GitHub Release
           EOF
