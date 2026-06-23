@@ -16,7 +16,11 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "workspaces": ["apps/duskmoon_storybook_web", "apps/phoenix_duskmoon"],
+    "workspaces": [
+        "apps/duskmoon_storybook_web",
+        "apps/phoenix_duskmoon",
+        "apps/duskmoon_bundler"
+    ],
     "overrides": {
         "@duskmoon-dev/el-art-flower-animation": "1.5.0",
         "@duskmoon-dev/el-circle-menu": "1.5.5"

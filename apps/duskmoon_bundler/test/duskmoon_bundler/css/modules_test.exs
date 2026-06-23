@@ -1,0 +1,91 @@
+defmodule DuskmoonBundler.CSS.ModulesTest do
+  use ExUnit.Case, async: true
+
+  describe "css_module?/1" do
+    test "identifies .module.css files" do
+      assert DuskmoonBundler.CSS.Modules.css_module?("button.module.css")
+      assert DuskmoonBundler.CSS.Modules.css_module?("path/to/style.module.css")
+    end
+
+    test "rejects non-module CSS" do
+      refute DuskmoonBundler.CSS.Modules.css_module?("app.css")
+      refute DuskmoonBundler.CSS.Modules.css_module?("module.css.bak")
+    end
+  end
+
+  describe "compile/2" do
+    test "generates scoped class names" do
+      {:ok, js, css} =
+        DuskmoonBundler.CSS.Modules.compile(".primary { color: blue }", "button.module.css")
+
+      assert js =~ "export default"
+      assert js =~ "primary"
+      refute css =~ ~r/\.primary[^_]/
+      assert css =~ "primary"
+      assert css =~ "color"
+    end
+
+    test "handles multiple classes" do
+      source = """
+      .title { font-size: 2em }
+      .subtitle { font-size: 1.2em }
+      .active { color: green }
+      """
+
+      {:ok, js, css} = DuskmoonBundler.CSS.Modules.compile(source, "heading.module.css")
+
+      mapping = extract_mapping(js)
+
+      assert Map.has_key?(mapping, "title")
+      assert Map.has_key?(mapping, "subtitle")
+      assert Map.has_key?(mapping, "active")
+
+      for {_original, scoped} <- mapping do
+        assert css =~ scoped
+      end
+    end
+
+    test "different files produce different scoped names" do
+      {:ok, js1, _css1} = DuskmoonBundler.CSS.Modules.compile(".box { }", "a.module.css")
+      {:ok, js2, _css2} = DuskmoonBundler.CSS.Modules.compile(".box { }", "b.module.css")
+
+      map1 = extract_mapping(js1)
+      map2 = extract_mapping(js2)
+
+      assert map1["box"] != map2["box"]
+    end
+  end
+
+  defp extract_mapping(js) do
+    ast = OXC.parse!(js, "module.css.js")
+
+    {_ast, mapping} =
+      OXC.postwalk(ast, nil, fn
+        %{type: :variable_declarator, id: %{name: "_exports"}, init: %{properties: properties}} =
+            node,
+        nil ->
+          {node, Map.new(properties, &property_pair/1)}
+
+        node, acc ->
+          {node, acc}
+      end)
+
+    mapping
+  end
+
+  defp property_pair(%{key: key, value: %{value: value}}), do: {property_name(key), value}
+
+  defp property_name(%{name: name}), do: name
+  defp property_name(%{value: value}), do: value
+
+  describe "Pipeline integration" do
+    test "compiles .module.css through pipeline" do
+      {:ok, result} =
+        DuskmoonBundler.Pipeline.compile("button.module.css", ".btn { color: red }")
+
+      assert result.code =~ "export default"
+      assert result.css =~ "btn"
+      assert result.css =~ "color"
+    end
+  end
+end

@@ -1,0 +1,31 @@
+const __duskmoon_bundlerPreloaded = new Set<string>()
+
+const __duskmoon_bundlerPreload = (load: () => Promise<unknown>, deps: string[]) =>
+  Promise.all(deps.map(__duskmoon_bundlerPreloadDep))
+    .then(load)
+    .catch((error) => {
+      window.dispatchEvent(new CustomEvent('duskmoon_bundler:preloadError', { detail: error }))
+      throw error
+    })
+
+function __duskmoon_bundlerPreloadDep(dep: string) {
+  if (__duskmoon_bundlerPreloaded.has(dep) || document.querySelector(`link[href=${JSON.stringify(dep)}]`)) {
+    return Promise.resolve()
+  }
+
+  __duskmoon_bundlerPreloaded.add(dep)
+
+  const link = document.createElement('link')
+  link.rel = dep.endsWith('.css') ? 'stylesheet' : 'modulepreload'
+  link.href = dep
+  document.head.appendChild(link)
+
+  if (link.rel !== 'stylesheet') {
+    return Promise.resolve()
+  }
+
+  return new Promise((resolve, reject) => {
+    link.onload = resolve
+    link.onerror = reject
+  })
+}

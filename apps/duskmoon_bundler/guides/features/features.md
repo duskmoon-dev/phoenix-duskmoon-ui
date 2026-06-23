@@ -1,0 +1,192 @@
+# Features
+
+## Elixir-Native Toolchain
+
+DuskmoonBundler keeps the frontend toolchain inside the BEAM. The dev server, production builds, Tailwind rebuilds, formatting, linting, and plugin hooks run from Mix tasks and Elixir configuration instead of a separate Node.js watcher.
+
+Runtime npm package installs use `npm_ex`, which ignores package lifecycle hooks by default. Packages installed for embedded JS runtimes do not execute `preinstall`, `install`, or `postinstall` scripts.
+
+## JavaScript and TypeScript
+
+DuskmoonBundler compiles JavaScript and TypeScript through [OXC](https://oxc.rs), a Rust-based toolchain. ES2020+ syntax is downleveled to your configured target. TypeScript types are stripped at compile time without type-checking — use `tsc --noEmit` separately if you want type safety.
+
+## Vue and Svelte
+
+Vue single-file components (`.vue`) compile through Vize with scoped CSS and optional Vapor mode. Svelte components (`.svelte`) compile through QuickBEAM. Both work without Node.js installed. Import `.vue` and `.svelte` files directly from your application code.
+
+## React, Solid, and JSX
+
+JSX and TSX files are transformed by OXC. Set `import_source: "react"` in your DuskmoonBundler config to use React's automatic JSX runtime. DuskmoonBundler includes a React plugin that pre-bundles `react`, `react-dom/client`, and `react/jsx-runtime` into a single vendor module for efficient loading.
+
+Solid JSX/TSX is supported through `DuskmoonBundler.Plugin.Solid`, which compiles Solid components through QuickBEAM without requiring Node.js in the host application.
+
+See [Frontend Frameworks](frameworks.md) for setup instructions and entry point examples for each framework.
+
+## Tailwind CSS
+
+DuskmoonBundler compiles Tailwind CSS v4 natively. [Oxide](https://hex.pm/packages/oxide_ex) scans source files in parallel for candidate class names, then the Tailwind compiler generates CSS. In dev mode, only changed files are re-scanned — editing a `.heex` template triggers an incremental CSS rebuild and hot-swaps the stylesheet without a page reload.
+
+Tailwind `@plugin` and `@config` directives are resolved and bundled automatically, including local files and npm packages.
+
+See [Tailwind CSS](tailwind.md) for configuration and the programmatic API.
+
+## Hot Module Replacement
+
+The dev server pushes updates over a WebSocket. CSS changes hot-swap without a page reload. JavaScript modules that call `import.meta.hot.accept()` are re-imported in place. Vue style-only changes skip the full recompile.
+
+See [HMR](hmr.md) for the `import.meta.hot` API.
+
+## Production Builds
+
+Production builds include tree-shaking, minification, code splitting, asset URL rewriting, content-hashed JavaScript/CSS/assets, source maps, and a `manifest.json` ready for `mix phx.digest`.
+
+## Code Splitting
+
+Dynamic `import()` calls automatically create separate async chunks. Simple relative dynamic import variables such as ``import(`./pages/${name}.ts`)`` are expanded through `import.meta.glob()` so production builds can include matching modules. Shared modules between chunks are extracted to avoid duplication. Chunk-local CSS and assets are recorded in the production manifest.
+
+`DuskmoonBundler.Preload` can generate `<link rel="modulepreload">` tags from the production manifest for entry/static imports. Runtime dynamic imports preload their own dependency chunks and CSS when needed.
+
+See [Code Splitting](code-splitting.md) for examples and configuration.
+
+## CSS Modules
+
+Files ending in `.module.css` get scoped class names via LightningCSS:
+
+```css
+/* button.module.css */
+.primary { color: blue }
+```
+
+```javascript
+import styles from './button.module.css'
+console.log(styles.primary) // "ewq3O_primary"
+```
+
+## Static Assets
+
+Images, fonts, and other files are handled automatically when imported from JavaScript or used with `new URL(..., import.meta.url)`:
+
+```javascript
+import logo from './logo.svg'      // small files → data URI
+import photo from './photo.jpg?url' // forced hashed URL
+import text from './message.txt?raw'
+```
+
+## JSON Imports
+
+```javascript
+import config from './config.json'
+console.log(config.apiUrl)
+```
+
+## Environment Variables
+
+Create `.env` files in your project root. Variables prefixed with `DUSKMOON_BUNDLER_` are available as `import.meta.env.DUSKMOON_BUNDLER_*` in client code by default. Use `env_prefix` to expose a different prefix such as `VITE_`. Built-in variables include `MODE`, `DEV`, and `PROD`.
+
+See [Environment Variables](environment-variables.md) for file loading order and modes.
+
+## Glob Imports
+
+`import.meta.glob()` resolves glob patterns at build time:
+
+```javascript
+const pages = import.meta.glob('./pages/*.ts', { eager: true })
+```
+
+See [Glob Imports](glob-imports.md) for lazy vs eager loading, array and negative patterns, named imports, query options, and dynamic import variables.
+
+## `DuskmoonBundler.static_path/2`
+
+Use `DuskmoonBundler.static_path/2` in your root layout to link to DuskmoonBundler-managed scripts and stylesheets:
+
+```heex
+<link phx-track-static rel="stylesheet" href={DuskmoonBundler.static_path(MyAppWeb.Endpoint, "/assets/css/app.css")} />
+<script defer phx-track-static type="module" src={DuskmoonBundler.static_path(MyAppWeb.Endpoint, "/assets/js/app.js")}></script>
+<img src={DuskmoonBundler.static_path(MyAppWeb.Endpoint, "/assets/images/logo.svg")} />
+```
+
+In development, JavaScript entries return the source path served by the dev server (e.g. `/assets/js/app.ts`) and other paths are returned unchanged. In production, DuskmoonBundler reads `manifest.json` and returns the content-hashed path for scripts, stylesheets, and emitted image/font assets (e.g. `/assets/js/app-5e6f7a8b.js`, `/assets/css/app-2aa55585.css`, or `/assets/js/logo-a1b2c3d4.svg`).
+
+## Multi-Entry Builds
+
+For multi-page apps, specify multiple entry points:
+
+```elixir
+config :duskmoon_bundler, entry: ["assets/js/app.ts", "assets/js/admin.ts"]
+```
+
+Or via CLI: `mix duskmoon_bundler.build --entry assets/js/app.ts --entry assets/js/admin.ts`
+
+Each entry produces its own bundle and manifest entry. Reference the compiled asset path with `DuskmoonBundler.static_path/2`:
+
+```elixir
+DuskmoonBundler.static_path(MyAppWeb.Endpoint, "/assets/js/admin.js")
+```
+
+## HTML Entry Points
+
+Entry files can be HTML — `<script src="...">` tags are extracted as JS entry points:
+
+```bash
+mix duskmoon_bundler.build --entry index.html
+```
+
+## Import Aliases
+
+Configure path aliases in DuskmoonBundler config:
+
+```elixir
+config :duskmoon_bundler, aliases: %{"@" => "assets/src"}
+```
+
+```javascript
+import { Button } from '@/components/Button'
+```
+
+DuskmoonBundler also reads `compilerOptions.paths` from `tsconfig.json` automatically.
+
+## External Modules
+
+Exclude packages the host page already provides:
+
+```elixir
+config :duskmoon_bundler, external: ~w(phoenix phoenix_html phoenix_live_view)
+```
+
+## Source Maps
+
+Production builds write `.map` files by default. Use `sourcemap: :hidden` to write maps without the URL comment (for Sentry, Datadog, etc.), or `sourcemap: false` to skip.
+
+## Formatting and Linting
+
+DuskmoonBundler includes Prettier-compatible JS/TS formatting via oxfmt (~30× faster) and 650+ oxlint rules, both as Rust NIFs. `DuskmoonBundler.Formatter` integrates with `mix format` and can read Elixir config, `.oxfmtrc.json`, or `.prettierrc.json`.
+
+Custom lint rules can be written in Elixir with `OXC.Lint.Rule` and configured alongside oxlint's built-in rules.
+
+See [Formatting and Linting](formatting-and-linting.md) for setup and configuration.
+
+## Web Workers
+
+Worker URLs using the standard pattern are rewritten in production builds:
+
+```javascript
+const worker = new Worker(new URL('./worker.ts', import.meta.url))
+```
+
+The worker file is built as a separate entry and the URL is rewritten to the hashed output path.
+
+## Dev Console Forwarding
+
+In development, browser `console.log`, `console.warn`, and `console.error` calls are forwarded to the Elixir terminal, so you can see client-side logs alongside server logs without opening browser DevTools.
+
+## Error Overlay
+
+Compilation errors in development are displayed as a full-screen browser overlay with the error message. The overlay dismisses on click and clears automatically when the error is fixed.
+
+## Plugins
+
+Extend the build pipeline with the `DuskmoonBundler.Plugin` behaviour. Plugins can resolve imports, load custom file formats, compile files to JS and CSS, extract imports for dependency tracking, transform compiled code with OXC ASTs, inject compile-time definitions, customize vendor prebundling, and render final output chunks.
+
+Plugins can also run JavaScript build tools through `DuskmoonBundler.JS.Runtime`, which installs npm packages into DuskmoonBundler's cache and executes bundled runtime code through QuickBEAM without requiring Node.js in the host application.
+
+See [Plugins](plugins.md) for the full hook API and examples.

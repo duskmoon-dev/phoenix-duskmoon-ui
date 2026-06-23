@@ -1,0 +1,451 @@
+# Plugins
+
+## Built-in Plugins
+
+DuskmoonBundler includes built-in support for Vue, Svelte, and React. These are activated automatically when you import `.vue` or `.svelte` files, or configure `import_source: "react"`.
+
+## Using Plugins
+
+Add plugins to your DuskmoonBundler config:
+
+```elixir
+config :duskmoon_bundler, plugins: [MyApp.MarkdownPlugin]
+```
+
+Plugins can also accept options as `{module, opts}` tuples:
+
+```elixir
+config :duskmoon_bundler, plugins: [{MyApp.SassPlugin, output_style: :compressed}]
+```
+
+## Plugin ordering
+
+Plugins run in Vite-style phases. By default, plugins run in the order they are configured. Return `:pre` or `:post` from `enforce/0` to run before or after normal plugins:
+
+```elixir
+defmodule MyApp.PrePlugin do
+  @behaviour DuskmoonBundler.Plugin
+
+  def name, do: "my-pre-plugin"
+  def enforce, do: :pre
+end
+```
+
+The ordering applies consistently to resolve, load, compile, transform, define, prebundle, and render hooks.
+
+## Writing Plugins
+
+Implement the `DuskmoonBundler.Plugin` behaviour. All callbacks except `name/0` are optional — implement only the hooks you need.
+
+### Example: Markdown imports
+
+Load `.md` files as HTML string modules:
+
+```elixir
+defmodule MyApp.MarkdownPlugin do
+  @behaviour DuskmoonBundler.Plugin
+
+  @impl true
+  def name, do: "markdown"
+
+  @impl true
+  def resolve(spec, _importer) do
+    if String.ends_with?(spec, ".md"), do: {:ok, spec}
+  end
+
+  @impl true
+  def load(path) do
+    if String.ends_with?(path, ".md") do
+      html = path |> File.read!() |> Earmark.as_html!()
+      {:ok, "export default #{Jason.encode!(html)};\n"}
+    end
+  end
+
+  def resolve(_, _), do: nil
+  def load(_), do: nil
+end
+```
+
+```javascript
+import readme from './README.md'
+document.getElementById('content').innerHTML = readme
+```
+
+### Example: Banner injection
+
+Use `render_chunk/2` to prepend a license banner to production output:
+
+```elixir
+defmodule MyApp.BannerPlugin do
+  @behaviour DuskmoonBundler.Plugin
+
+  @banner "/* © 2026 MyApp — MIT License */\n"
+
+  @impl true
+  def name, do: "banner"
+
+  @impl true
+  def render_chunk(code, %{type: :entry}), do: {:ok, @banner <> code}
+  def render_chunk(_code, _chunk_info), do: nil
+end
+```
+
+### Example: Compile-time constants
+
+Use `define/1` to inject build-time values:
+
+```elixir
+defmodule MyApp.BuildInfo do
+  @behaviour DuskmoonBundler.Plugin
+
+  @impl true
+  def name, do: "build-info"
+
+  @impl true
+  def define(_mode) do
+    {hash, 0} = System.cmd("git", ["rev-parse", "--short", "HEAD"])
+
+    %{
+      "__BUILD_HASH__" => Jason.encode!(String.trim(hash)),
+      "__BUILD_TIME__" => Jason.encode!(DateTime.utc_now() |> to_string())
+    }
+  end
+end
+```
+
+```javascript
+console.log(`Build ${__BUILD_HASH__} at ${__BUILD_TIME__}`)
+```
+
+### Example: CSS compilation
+
+Use `compile/3` to return both a JavaScript module and extracted CSS. DuskmoonBundler will inject the CSS in dev, collect it into the production CSS file, and run parser-backed asset URL rewriting on the final CSS output:
+
+```elixir
+defmodule MyApp.SassPlugin do
+  @behaviour DuskmoonBundler.Plugin
+
+  @impl true
+  def name, do: "sass"
+
+  @impl true
+  def extensions(:compile), do: [".scss"]
+  def extensions(:resolve), do: [".scss"]
+  def extensions(:watch), do: [".scss"]
+  def extensions(_), do: []
+
+  @impl true
+  def resolve(spec, _importer) do
+    if String.ends_with?(spec, ".scss"), do: {:ok, spec}
+  end
+
+  def resolve(_, _), do: nil
+
+  @impl true
+  def compile(path, source, _opts) do
+    if Path.extname(path) == ".scss" do
+      case MyApp.Sass.compile(source, filename: path) do
+        {:ok, css} ->
+          {:ok, %{code: "export default undefined;\n", css: css, sourcemap: nil, hashes: nil}}
+
+        {:error, _} = error ->
+          error
+      end
+    end
+  end
+end
+```
+
+```javascript
+import './theme.scss'
+```
+
+If the generated CSS contains relative asset URLs such as `url('./logo.svg')`, DuskmoonBundler rewrites them through the same asset pipeline as normal CSS files.
+
+### Example: Custom file compilation with OXC templates
+
+Use `compile/3` to handle a custom file format. OXC templates let you generate JavaScript from real JavaScript syntax instead of string concatenation:
+
+```elixir
+defmodule MyApp.CSVPlugin do
+  @behaviour DuskmoonBundler.Plugin
+
+  @impl true
+  def name, do: "csv"
+
+  @impl true
+  def extensions(:compile), do: [".csv"]
+  def extensions(:resolve), do: [".csv"]
+  def extensions(_), do: []
+
+  @impl true
+  def resolve(spec, _importer) do
+    if String.ends_with?(spec, ".csv"), do: {:ok, spec}
+  end
+
+  def resolve(_, _), do: nil
+
+  @impl true
+  def compile(path, source, _opts) do
+    if Path.extname(path) == ".csv" do
+      rows =
+        source
+        |> String.split("\n", trim: true)
+        |> Enum.map(&String.split(&1, ","))
+
+      js =
+        "export default $rows;"
+        |> OXC.parse!("csv-template.js")
+        |> OXC.bind(rows: {:literal, rows})
+        |> OXC.codegen!()
+
+      {:ok, %{code: js, sourcemap: nil, css: nil, hashes: nil}}
+    end
+  end
+end
+```
+
+```javascript
+import data from './prices.csv'
+// data = [["name", "price"], ["Widget", "9.99"], ...]
+```
+
+For larger generated modules, keep the template in a `.js` file so editors and formatters understand it:
+
+```javascript
+// priv/templates/api-client.js
+export const $name = {
+  endpoint: $endpoint,
+  columns: $columns,
+}
+```
+
+```elixir
+template = File.read!("priv/templates/api-client.js")
+
+js =
+  template
+  |> OXC.parse!("api-client-template.js")
+  |> OXC.bind(
+    name: "prices",
+    endpoint: {:literal, "/api/prices"},
+    columns: {:literal, ["name", "price"]}
+  )
+  |> OXC.codegen!()
+```
+
+Use `OXC.splice/3` when a placeholder represents multiple syntax nodes, such as object entries or function arguments. DuskmoonBundler uses this pattern internally for `import.meta.glob()` output generation.
+
+### Example: AST transform with OXC
+
+Use `transform/2` to modify compiled JavaScript. OXC provides `parse/2`, `postwalk/3`, and `patch_string/2` for AST-based transforms:
+
+```elixir
+defmodule MyApp.StripConsolePlugin do
+  @behaviour DuskmoonBundler.Plugin
+
+  @impl true
+  def name, do: "strip-console"
+
+  @impl true
+  def transform(code, _path) do
+    case OXC.parse(code, "module.js") do
+      {:ok, ast} ->
+        patches =
+          collect_console_calls(ast)
+          |> Enum.map(fn %{start: s, end: e} ->
+            %{start: s, end: e, change: "void 0"}
+          end)
+
+        if patches == [] do
+          nil
+        else
+          {:ok, OXC.patch_string(code, patches)}
+        end
+
+      {:error, _} ->
+        nil
+    end
+  end
+
+  defp collect_console_calls(ast) do
+    {_ast, calls} =
+      OXC.postwalk(ast, [], fn
+        %{
+          type: :call_expression,
+          callee: %{
+            type: :member_expression,
+            object: %{type: :identifier, name: "console"}
+          }
+        } = node, acc ->
+          {node, [node | acc]}
+
+        node, acc ->
+          {node, acc}
+      end)
+
+    calls
+  end
+end
+```
+
+## Hooks
+
+All hooks are optional. Return `nil` to pass to the next plugin.
+
+| Hook | Purpose |
+| --- | --- |
+| `name/0` | Plugin identifier (required) |
+| `extensions/1` | File extensions for `:compile`, `:resolve`, `:watch`, or `:scan` |
+| `resolve/2` | Resolve import specifiers to file paths |
+| `load/1` | Load file content for a resolved path |
+| `compile/3` | Compile source into browser-ready JS + optional CSS |
+| `extract_imports/3` | Extract import specifiers from source |
+| `embedded_modules/3` | Expose JavaScript-like modules embedded in a custom source format |
+| `transform/2` | Transform compiled JS before serving or bundling |
+| `define/1` | Compile-time variable replacements |
+| `render_chunk/2` | Transform final output chunks |
+
+### Hook execution order
+
+During compilation, hooks run in this order:
+
+1. **`resolve`** — map import specifier to a file path
+2. **`load`** — read file content (override `File.read`)
+3. **`compile`** — transform source into JS + CSS
+4. **`extract_imports`** — find imports for dependency walking
+5. **`transform`** — post-process compiled JS
+6. **`render_chunk`** — modify final bundled output
+
+`define/1` runs once at build start. `extensions/1` is checked throughout to determine which files a plugin handles.
+
+`extract_imports/3` returns structured import metadata when a plugin owns a source format whose dependencies are not visible to DuskmoonBundler's normal JavaScript parser:
+
+```elixir
+alias DuskmoonBundler.JS.ImportExtractor.Result
+
+def extract_imports(".widget" <> _ = _path, _source, _opts) do
+  {:ok, %Result{imports: [{:static, "./runtime"}], workers: []}}
+end
+
+def extract_imports(_path, _source, _opts), do: nil
+```
+
+`embedded_modules/3` exposes JavaScript-like modules inside custom file formats. DuskmoonBundler uses this for type-aware linting so tools such as `tsgolint` can analyze embedded scripts without receiving the original component file directly:
+
+```elixir
+def embedded_modules(path, source, _opts) do
+  if Path.extname(path) == ".widget" do
+    [{".ts", extract_script(source)}]
+  end
+end
+```
+
+The first tuple element is the virtual file extension (`".js"`, `".ts"`, or `".tsx"`), and the second is the embedded source. Diagnostics are reported against the original file.
+
+### Advanced framework runtime integration
+
+Framework plugins can also coordinate DuskmoonBundler's dev dependency prebundling. These hooks are DuskmoonBundler-specific; Vite framework plugins achieve similar results through dependency optimization, resolution, and virtual modules rather than direct hooks with these names.
+
+| Hook | Purpose |
+| --- | --- |
+| `prebundle_alias/1` | Normalize related package entrypoints to one dev prebundle |
+| `prebundle_entry/1` | Generate a source or proxy entry for that dev prebundle |
+
+Use `prebundle_alias/1` when several package entrypoints should share one generated dev vendor module:
+
+```elixir
+def prebundle_alias("my-framework/runtime"), do: "my-framework"
+def prebundle_alias("my-framework/jsx-runtime"), do: "my-framework"
+def prebundle_alias(_specifier), do: nil
+```
+
+Use `prebundle_entry/1` when the canonical specifier needs a generated proxy module:
+
+```elixir
+alias DuskmoonBundler.JS.PrebundleEntry.{Export, Import}
+
+def prebundle_entry("my-framework") do
+  {:proxy, "my-framework.js",
+   imports: [Import.default("Framework", from: "my-framework")],
+   exports: [
+     Export.default("Framework"),
+     Export.members([
+       {"createApp", "Framework.createApp"},
+       {"hydrate", "Framework.hydrate"}
+     ]),
+     Export.all_from("my-framework/runtime")
+   ]}
+end
+
+def prebundle_entry(_specifier), do: nil
+```
+
+Return `nil` from either hook to let DuskmoonBundler keep the original specifier or generate a normal package prebundle.
+
+### Plugin options
+
+When configured as a `{module, opts}` tuple, the opts are passed as an extra argument to callbacks that support it. Define a callback with one additional arity to receive them:
+
+```elixir
+defmodule MyApp.SassPlugin do
+  @behaviour DuskmoonBundler.Plugin
+
+  @impl true
+  def name, do: "sass"
+
+  # 3-arg version (standard)
+  def compile(path, source, opts), do: compile(path, source, opts, [])
+
+  # 4-arg version receives plugin opts
+  def compile(path, source, opts, plugin_opts) do
+    style = Keyword.get(plugin_opts, :output_style, :expanded)
+    # ...
+  end
+end
+```
+
+## JavaScript Runtimes
+
+Plugins can run JavaScript build tools through `DuskmoonBundler.JS.Runtime`, which installs npm packages into DuskmoonBundler's cache and executes them in QuickBEAM without requiring Node.js in the host application. This is useful for CSS preprocessors and other tools that do not have a native Elixir or Rust binding:
+
+```elixir
+defmodule MyApp.SassPlugin do
+  @behaviour DuskmoonBundler.Plugin
+
+  @runtime_name __MODULE__.Runtime
+  @runtime_packages %{"sass" => "^1.80.0"}
+
+  @impl true
+  def name, do: "sass"
+
+  @impl true
+  def extensions(:compile), do: [".scss"]
+  def extensions(:resolve), do: [".scss"]
+  def extensions(_), do: []
+
+  @impl true
+  def compile(path, source, _opts) do
+    if Path.extname(path) == ".scss" do
+      runtime =
+        DuskmoonBundler.JS.Runtime.ensure!(
+          name: @runtime_name,
+          packages: @runtime_packages,
+          entry: {:duskmoon_bundler_asset, "sass-runtime.ts"},
+          bundle: true
+        )
+
+      case DuskmoonBundler.JS.Runtime.call(runtime, "compileSass", [source, path]) do
+        {:ok, %{"css" => css}} ->
+          js = "var s = document.createElement('style'); s.textContent = #{Jason.encode!(css)}; document.head.appendChild(s);\n"
+          {:ok, %{code: js, sourcemap: nil, css: css, hashes: nil}}
+
+        {:error, _} = error ->
+          error
+      end
+    end
+  end
+end
+```
+
+The runtime automatically installs npm packages on first use and caches the bundled entry script. Subsequent calls reuse the running QuickBEAM instance.

@@ -1,0 +1,41 @@
+defmodule DuskmoonBundler.Formatter do
+  @moduledoc """
+  A `mix format` plugin that formats JavaScript and TypeScript files with oxfmt.
+
+  ## Setup
+
+  Add `DuskmoonBundler.Formatter` to your `.formatter.exs`:
+
+      [
+        plugins: [DuskmoonBundler.Formatter],
+        inputs: [
+          "{mix,.formatter}.exs",
+          "{config,lib,test}/**/*.{ex,exs}",
+          "assets/**/*.{js,ts,jsx,tsx}"
+        ]
+      ]
+
+  ## Configuration
+
+  Reads options from `config :duskmoon_bundler, :format` or falls back to
+  `.oxfmtrc.json` / `.prettierrc.json`. See the "Formatter & linter configuration" section in the README for details.
+  """
+
+  @behaviour Mix.Tasks.Format
+
+  @impl true
+  def features(_opts) do
+    [extensions: DuskmoonBundler.JS.Extensions.formattable()]
+  end
+
+  @impl true
+  def format(contents, opts) do
+    filename = opts[:file] || extension_to_filename(opts[:extension]) || "input.ts"
+    format_opts = DuskmoonBundler.JS.Format.load_config()
+
+    OXC.Format.run!(contents, filename, format_opts)
+  end
+
+  defp extension_to_filename(nil), do: nil
+  defp extension_to_filename(ext), do: "input#{ext}"
+end

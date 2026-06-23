@@ -24,6 +24,11 @@ config :duskmoon_storybook_web, DuskmoonStorybookWeb.Storybook,
   js_path: "/assets/app.js",
   css_path: "/assets/app.css"
 
+config :duskmoon_bundler,
+  namespace: DuskmoonBundler,
+  root: "apps/duskmoon_bundler/priv/ts",
+  entry: "apps/duskmoon_bundler/priv/ts/dev/hmr-client.ts"
+
 config :tailwind,
   version: "4.1.11",
   duskmoon: [

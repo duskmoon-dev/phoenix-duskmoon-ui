@@ -1,0 +1,297 @@
+# Configuration
+
+## Build Options
+{: .col-2}
+
+### Entry
+
+```elixir
+config :duskmoon_bundler, entry: "assets/js/app.ts"
+```
+
+Entry file path or list of paths.
+
+### Output Directory
+
+```elixir
+config :duskmoon_bundler, outdir: "priv/static/assets"
+```
+
+### Public Directory
+
+```elixir
+config :duskmoon_bundler, public_dir: false
+```
+
+Optional Vite-style public directory. Phoenix apps usually keep stable public files in `priv/static` instead.
+
+### Asset URL Prefix
+
+```elixir
+config :duskmoon_bundler, asset_url_prefix: "/assets"
+```
+
+Public URL prefix emitted for production JavaScript and CSS asset references. This does not change `outdir` or Phoenix endpoint/static URL configuration.
+
+### Root
+
+```elixir
+config :duskmoon_bundler, root: "assets"
+```
+
+Source directory for asset resolution.
+
+### Sources
+
+```elixir
+config :duskmoon_bundler, sources: ["**/*.{js,ts,jsx,tsx,vue}"]
+```
+
+Glob patterns for file discovery (formatting, linting).
+
+### Ignore
+
+```elixir
+config :duskmoon_bundler, ignore: ["node_modules/**", "vendor/**"]
+```
+
+### Target
+
+```elixir
+config :duskmoon_bundler, target: :es2020
+```
+
+JS downlevel target.
+
+### Format
+
+```elixir
+config :duskmoon_bundler, format: :iife
+```
+
+Output format: `:iife`, `:esm`, or `:cjs`.
+
+### Minify
+
+```elixir
+config :duskmoon_bundler, minify: true
+```
+
+### Hash
+
+```elixir
+config :duskmoon_bundler, hash: true
+```
+
+Content-hash filenames for cache busting.
+
+### Source Maps
+
+```elixir
+config :duskmoon_bundler, sourcemap: true
+```
+
+`true`, `:hidden` (no URL comment), or `false`.
+
+### Code Splitting
+
+```elixir
+config :duskmoon_bundler, code_splitting: true
+```
+
+### Tree Shaking
+
+```elixir
+config :duskmoon_bundler, tree_shaking: true
+```
+
+Enabled by default for production builds. Set to `false` to preserve unused exports.
+
+### Env Prefix
+
+```elixir
+config :duskmoon_bundler, env_prefix: "DUSKMOON_BUNDLER_"
+```
+
+Prefix or list of prefixes exposed through `import.meta.env`.
+
+### External
+
+```elixir
+config :duskmoon_bundler, external: ~w(phoenix phoenix_html)
+```
+
+Exclude packages from the bundle.
+
+### Aliases
+
+```elixir
+config :duskmoon_bundler, aliases: %{"@" => "assets/src"}
+```
+
+Import path aliases.
+
+### Chunks
+
+```elixir
+config :duskmoon_bundler, chunks: %{"vendor" => ["vue"]}
+```
+
+Manual chunk boundaries.
+
+### Plugins
+
+```elixir
+config :duskmoon_bundler, plugins: [MyPlugin]
+```
+
+### Import Source
+
+```elixir
+config :duskmoon_bundler, import_source: "react"
+```
+
+JSX import source for React.
+
+### Resolve Dirs
+
+```elixir
+config :duskmoon_bundler, resolve_dirs: ["node_modules", "deps"]
+```
+
+Additional directories for bare import resolution.
+
+### Module Types
+
+```elixir
+config :duskmoon_bundler, module_types: %{".css" => :empty, ".ttf" => :empty}
+```
+
+Map file extensions to bundler loaders. Useful for packages that import non-JS files (e.g. Monaco Editor). Supported: `:js`, `:jsx`, `:ts`, `:tsx`, `:json`, `:text`, `:base64`, `:dataurl`, `:binary`, `:empty`, `:css`, `:asset`.
+
+### Mode
+
+```elixir
+config :duskmoon_bundler, mode: :production
+```
+
+Build mode for env variables. Override with `--mode`.
+
+### Vapor
+
+```elixir
+config :duskmoon_bundler, vapor: true
+```
+
+Enable Vue Vapor mode compilation.
+
+### Custom Renderer
+
+```elixir
+config :duskmoon_bundler, custom_renderer: true
+```
+
+Treat non-HTML tags as renderer-native elements (for PhoenixVapor).
+
+### Loaders
+
+```elixir
+config :duskmoon_bundler, loaders: %{".js" => "jsx"}
+```
+
+Override file type parsing (e.g. for React projects using JSX in `.js` files).
+
+## Tailwind Options
+{: .col-2}
+
+### CSS Input
+
+```elixir
+config :duskmoon_bundler, tailwind: [css: "assets/css/app.css"]
+```
+
+### Scan Sources
+
+```elixir
+config :duskmoon_bundler, tailwind: [
+  sources: [
+    %{base: "lib/", pattern: "**/*.{ex,heex}"},
+    %{base: "assets/", pattern: "**/*.{vue,ts,tsx}"}
+  ]
+]
+```
+
+## Dev Server Options
+{: .col-2}
+
+### Prefix
+
+```elixir
+config :duskmoon_bundler, :server, prefix: "/assets"
+```
+
+URL prefix for dev server routes.
+
+### Watch Dirs
+
+```elixir
+config :duskmoon_bundler, :server, watch_dirs: ["lib/", "assets/"]
+```
+
+Directories to watch for HMR.
+
+## Formatting Options
+{: .col-2}
+
+### Semi
+
+```elixir
+config :duskmoon_bundler, :format, semi: false
+```
+
+### Single Quote
+
+```elixir
+config :duskmoon_bundler, :format, single_quote: true
+```
+
+### Print Width
+
+```elixir
+config :duskmoon_bundler, :format, print_width: 100
+```
+
+### Trailing Comma
+
+```elixir
+config :duskmoon_bundler, :format, trailing_comma: :none
+```
+
+### Arrow Parens
+
+```elixir
+config :duskmoon_bundler, :format, arrow_parens: :always
+```
+
+## Lint Options
+{: .col-2}
+
+### Plugins
+
+```elixir
+config :duskmoon_bundler, :lint, plugins: [:typescript, :react]
+```
+
+### Rules
+
+```elixir
+config :duskmoon_bundler, :lint, rules: %{"eqeqeq" => :deny}
+```
+
+### Custom Rules
+
+```elixir
+config :duskmoon_bundler, :lint, custom_rules: [
+  {MyApp.NoConsoleLog, :warn}
+]
+```

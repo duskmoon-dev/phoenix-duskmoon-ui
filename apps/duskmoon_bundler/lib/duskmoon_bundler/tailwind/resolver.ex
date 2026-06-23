@@ -1,0 +1,145 @@
+defmodule DuskmoonBundler.Tailwind.Resolver do
+  @moduledoc "Resolves stylesheet and module paths for the Tailwind runtime."
+
+  @module_extensions DuskmoonBundler.JS.Extensions.node_resolvable_with_exact()
+  @module_index_files Enum.map(DuskmoonBundler.JS.Extensions.node_resolvable(), &("/index" <> &1))
+  @stylesheet_extensions ["", ".css"]
+  @stylesheet_index_files ["/index.css"]
+  @module_conditions ["require", "default", "browser", "import"]
+  @stylesheet_conditions ["style", "browser", "import", "default"]
+
+  def resolve_stylesheet_path!(id, base, runtime_node_modules) do
+    base = normalize_base(base)
+
+    if NPM.Resolution.PackageResolver.relative?(id) or absolute_specifier?(id) do
+      resolve_path!(base, id, @stylesheet_extensions, @stylesheet_index_files)
+    else
+      resolve_bare_path!(
+        id,
+        base,
+        @stylesheet_extensions,
+        @stylesheet_index_files,
+        "stylesheet",
+        runtime_node_modules
+      )
+    end
+  end
+
+  def resolve_module_path!(id, base, kind, runtime_node_modules) do
+    base = normalize_base(base)
+
+    if NPM.Resolution.PackageResolver.relative?(id) or absolute_specifier?(id) do
+      resolve_path!(base, id, @module_extensions, @module_index_files)
+    else
+      resolve_bare_path!(
+        id,
+        base,
+        @module_extensions,
+        @module_index_files,
+        kind,
+        runtime_node_modules
+      )
+    end
+  end
+
+  def node_builtin_specifier?(specifier),
+    do: NPM.Resolution.PackageResolver.node_builtin?(specifier)
+
+  def relative_specifier?(specifier), do: NPM.Resolution.PackageResolver.relative?(specifier)
+  def absolute_specifier?(specifier), do: String.starts_with?(specifier, "/")
+
+  defp resolve_bare_path!(id, base, extensions, index_files, kind, runtime_node_modules) do
+    {package_name, subpath} = NPM.Resolution.PackageResolver.split_specifier(id)
+
+    resolved =
+      [find_node_modules_for(base), runtime_node_modules]
+      |> Enum.reject(&is_nil/1)
+      |> Enum.uniq()
+      |> Enum.find_value(fn node_modules ->
+        package_dir = Path.join(node_modules, package_name)
+
+        conditions = package_conditions(kind)
+
+        result =
+          if subpath do
+            resolve_package_subpath(package_dir, subpath, extensions, index_files, conditions)
+          else
+            resolve_package_entry(package_dir, extensions, index_files, conditions)
+          end
+
+        case result do
+          {:ok, path} -> {:ok, path}
+          _ -> nil
+        end
+      end)
+
+    case resolved do
+      {:ok, path} ->
+        path
+
+      nil ->
+        raise "Could not resolve #{kind} #{inspect(id)} from #{inspect(base)}. Add it to node_modules or the Tailwind runtime install."
+    end
+  end
+
+  defp resolve_package_entry(package_dir, extensions, index_files, conditions) do
+    case NPM.Resolution.PackageResolver.resolve_entry(package_dir,
+           conditions: conditions,
+           extensions: extensions
+         ) do
+      {:ok, _} = ok ->
+        ok
+
+      :error ->
+        try_resolve(Path.join(package_dir, "index"), extensions, index_files)
+    end
+  end
+
+  defp resolve_package_subpath(package_dir, subpath, extensions, index_files, conditions) do
+    case NPM.Resolution.PackageResolver.resolve_entry(package_dir,
+           subpath: subpath,
+           conditions: conditions,
+           extensions: extensions
+         ) do
+      {:ok, _} = ok ->
+        ok
+
+      :error ->
+        subpath_bare = String.trim_leading(subpath, "./")
+        try_resolve(Path.join(package_dir, subpath_bare), extensions, index_files)
+    end
+  end
+
+  defp resolve_path!(base, id, extensions, index_files) do
+    target = if absolute_specifier?(id), do: Path.expand(id), else: Path.expand(id, base)
+
+    case try_resolve(target, extensions, index_files) do
+      {:ok, path} ->
+        path
+
+      {:error, reason} ->
+        raise "Could not resolve file #{inspect(id)} from #{inspect(base)}: #{inspect(reason)}"
+    end
+  end
+
+  defp try_resolve(base, extensions, index_files) do
+    Enum.find_value(extensions, fn ext ->
+      path = base <> ext
+      if File.regular?(path), do: {:ok, path}
+    end) ||
+      Enum.find_value(index_files, fn index ->
+        path = base <> index
+        if File.regular?(path), do: {:ok, path}
+      end) || {:error, :not_found}
+  end
+
+  def normalize_base(base) when base in [nil, "", "."], do: File.cwd!()
+  def normalize_base(base), do: Path.expand(base)
+
+  defp package_conditions("stylesheet"), do: @stylesheet_conditions
+  defp package_conditions(_kind), do: @module_conditions
+
+  defp find_node_modules_for(base) do
+    base |> normalize_base() |> NPM.Resolution.PackageResolver.find_node_modules()
+  end
+end
