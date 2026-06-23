@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.git-ref }}
 
@@ -45,13 +45,8 @@ jobs:
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
 
-      - name: Install dependencies
-        run: |
-          mix deps.get
-          if ! timeout 120 bun install; then
-            echo "::warning::bun install timed out, falling back to npm install"
-            npm install --ignore-scripts
-          fi
+      - name: Install Elixir dependencies
+        run: mix deps.get
 
       # ── 1. Update version in all files ──────────────────────────────
       - name: Update version
@@ -61,6 +56,9 @@ jobs:
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/phoenix_duskmoon/mix.exs
           sed -i "s%\"version\": \"[^\"]\+\"%\"version\": \"${VERSION}\"%" apps/phoenix_duskmoon/package.json
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" mix.exs
+
+      - name: Install JavaScript dependencies and refresh Bun lockfile
+        run: bun install
 
       - name: Prepare package assets
         env:
@@ -78,7 +76,7 @@ jobs:
           mix hex.publish package --yes --replace
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org'
@@ -105,14 +103,14 @@ jobs:
           VERSION="${{ inputs.version }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add apps/phoenix_duskmoon/mix.exs apps/phoenix_duskmoon/package.json mix.exs
+          git add apps/phoenix_duskmoon/mix.exs apps/phoenix_duskmoon/package.json mix.exs bun.lock
           git commit -m "chore(version): bump to ${VERSION}"
           git tag "v${VERSION}"
           git push origin HEAD:${{ inputs.git-ref }} --tags
 
       # ── 4. Create GitHub Release ────────────────────────────────────
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: v${{ inputs.version }}
           name: v${{ inputs.version }}
@@ -143,7 +141,7 @@ jobs:
 
     steps:
       - name: Trigger Docker workflow
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             await github.rest.actions.createWorkflowDispatch({
