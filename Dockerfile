@@ -1,4 +1,4 @@
-FROM elixir:1.18-alpine AS builder
+FROM elixir:1.18 AS builder
 
 ARG MIX_ENV=prod
 ARG RELEASE_VERSION=1.0.0
@@ -8,29 +8,30 @@ WORKDIR /build
 
 RUN <<EOF
 set -ex
-apk update
-apk add --no-cache curl unzip bash nodejs npm
+apt-get update
+apt-get install -y --no-install-recommends curl unzip bash nodejs npm
+rm -rf /var/lib/apt/lists/*
 # Install bun
 curl -fsSL https://bun.sh/install | bash
 export PATH="/root/.bun/bin:$PATH"
 mix local.hex --force
 mix local.rebar --force
 mix deps.get
-timeout 120 bun install || npm install --ignore-scripts
+npm install --ignore-scripts --no-audit --no-fund --package-lock=false --registry=https://registry.npmjs.org/
 export MATCH_STRING="s%@version \"[^\"]\+\"%@version \"${RELEASE_VERSION}\"%"
 sed -i "$MATCH_STRING" mix.exs;
 sed -i "$MATCH_STRING" apps/duskmoon_storybook_web/mix.exs;
 sed -i "$MATCH_STRING" apps/duskmoon_storybook/mix.exs;
 sed -i "$MATCH_STRING" apps/phoenix_duskmoon/mix.exs;
 cd /build/apps/duskmoon_storybook_web
-mix tailwind.install https://github.com/tailwindlabs/tailwindcss/releases/download/v4.1.11/tailwindcss-linux-x64-musl
+mix tailwind.install https://github.com/tailwindlabs/tailwindcss/releases/download/v4.1.11/tailwindcss-linux-x64
 mix assets.deploy
 cd /build
 mix release storybook --version "${RELEASE_VERSION}"
 cp -r _build/prod/rel/storybook /app
 EOF
 
-FROM alpine:latest
+FROM debian:bookworm-slim
 
 ARG RELEASE_VERSION=1.0.0
 
@@ -41,7 +42,9 @@ LABEL org.opencontainers.image.source="https://github.com/duskmoon-dev/phoenix-d
 LABEL org.opencontainers.image.description="Duskmoon UI Demo and Storybook"
 LABEL org.opencontainers.image.licenses=MIT
 
-RUN apk add --no-cache openssl ncurses-libs libstdc++ libgcc
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates openssl libncurses6 libstdc++6 && \
+    rm -rf /var/lib/apt/lists/*
 
 ENV PORT=80
 ENV REPLACE_OS_VARS=true
