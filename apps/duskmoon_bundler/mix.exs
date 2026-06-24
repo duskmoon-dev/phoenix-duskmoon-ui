@@ -1,7 +1,7 @@
 defmodule DuskmoonBundler.MixProject do
   use Mix.Project
 
-  @version "9.4.3"
+  @version "9.5.0"
   @source_url "https://github.com/duskmoon-dev/phoenix-duskmoon-ui"
 
   def project do
