@@ -3,15 +3,15 @@
   "version": "9.4.3",
   "type": "module",
   "exports": {
-    ".": "./priv/static/phoenix_duskmoon.js",
+    ".": "./priv/static/assets/js/phoenix_duskmoon.js",
     "./hooks": "./assets/js/hooks/index.js",
-    "./css": "./priv/static/phoenix_duskmoon.css",
-    "./components": "./priv/static/phoenix_duskmoon.css",
+    "./css": "./priv/static/assets/css/app.css",
+    "./components": "./priv/static/assets/css/app.css",
     "./svg/mdi/*.svg": "./priv/mdi/svg/*.svg",
     "./svg/bsi/*.svg": "./priv/bsi/svg/*.svg"
   },
   "scripts": {
-    "build": "mix tailwind duskmoon && mix bun duskmoon",
+    "build": "mix duskmoon_bundler.build phoenix_duskmoon",
     "format": "bunx --bun @biomejs/biome format --write",
     "lint": "bunx --bun @biomejs/biome lint --write",
     "check": "bunx --bun @biomejs/biome check --write",

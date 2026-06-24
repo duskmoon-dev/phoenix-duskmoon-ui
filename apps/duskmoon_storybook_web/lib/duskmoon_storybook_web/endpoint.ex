@@ -12,6 +12,13 @@ defmodule DuskmoonStorybookWeb.Endpoint do
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 
+  if code_reloading? do
+    plug DuskmoonBundler.DevServer,
+      profile: :duskmoon_storybook_web,
+      root: "apps/duskmoon_storybook_web/assets/js",
+      prefix: "/assets/js"
+  end
+
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phx.digest

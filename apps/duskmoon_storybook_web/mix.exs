@@ -46,8 +46,7 @@ defmodule DuskmoonStorybookWeb.MixProject do
       {:phoenix_storybook, "~> 1.1"},
       {:phoenix_live_dashboard, "~> 0.8"},
       {:floki, ">= 0.30.0", only: :test},
-      {:bun, "~> 2.0", runtime: Mix.env() == :dev},
-      {:tailwind, "~> 0.4", runtime: Mix.env() == :dev},
+      {:duskmoon_bundler, in_umbrella: true, runtime: false},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.3"},
       {:gettext, "~> 1.0"},
@@ -64,7 +63,7 @@ defmodule DuskmoonStorybookWeb.MixProject do
   defp aliases do
     [
       setup: ["deps.get"],
-      "assets.deploy": ["tailwind storybook --minify", "bun storybook --minify", "phx.digest"]
+      "assets.deploy": ["duskmoon_bundler.build duskmoon_storybook_web", "phx.digest"]
     ]
   end
 end

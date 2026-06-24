@@ -150,8 +150,7 @@ defmodule PhoenixDuskmoon.Mixfile do
       {:phoenix_html, "~> 4.0"},
       {:phoenix_live_view, "~> 1.0"},
       {:plug, "~> 1.19", optional: true},
-      {:bun, "~> 2.0", runtime: Mix.env() == :dev},
-      {:tailwind, "~> 0.4", runtime: Mix.env() == :dev},
+      {:duskmoon_bundler, in_umbrella: true, only: :dev, runtime: false},
       {:jason, "~> 1.4", only: :test},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
@@ -174,8 +173,7 @@ defmodule PhoenixDuskmoon.Mixfile do
     [
       prepublish: [
         "cmd cp #{Path.expand("../../README.md", __DIR__)} #{Path.expand("README.md", __DIR__)}",
-        "tailwind duskmoon",
-        "bun duskmoon",
+        "duskmoon_bundler.build phoenix_duskmoon",
         "icons.bundle"
       ]
     ]

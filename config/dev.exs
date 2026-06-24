@@ -7,10 +7,10 @@ config :duskmoon_storybook_web, DuskmoonStorybookWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "BM3gjYo7YUKjr9Ye7kqOjj4t4c4dAkezwSbPFN1AJE1Tqi/aw1Kt/fNszzGoSGi9",
   watchers: [
-    tailwind: {Tailwind, :install_and_run, [:duskmoon, ~w(--watch)]},
-    bun: {Bun, :install_and_run, [:duskmoon, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:storybook, ~w(--watch)]},
-    bun: {Bun, :install_and_run, [:storybook, ~w(--sourcemap=inline --watch)]}
+    duskmoon_bundler_phoenix_duskmoon:
+      {Mix.Tasks.DuskmoonBundler.Dev, :run, [["phoenix_duskmoon"]]},
+    duskmoon_bundler_storybook:
+      {Mix.Tasks.DuskmoonBundler.Dev, :run, [["duskmoon_storybook_web"]]}
   ],
   live_reload: [
     patterns: [

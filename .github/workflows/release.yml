@@ -70,8 +70,6 @@ jobs:
         run: npm install --ignore-scripts --no-audit --no-fund --package-lock=false --registry=https://registry.npmjs.org/
 
       - name: Prepare package assets
-        env:
-          TAILWIND_PATH: ${{ github.workspace }}/node_modules/.bin/tailwindcss
         run: mix prepublish
 
       # ── 2. Publish packages ─────────────────────────────────────────
