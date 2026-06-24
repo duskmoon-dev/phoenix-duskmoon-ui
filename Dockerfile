@@ -17,7 +17,7 @@ export PATH="/root/.bun/bin:$PATH"
 mix local.hex --force
 mix local.rebar --force
 mix deps.get
-npm install --ignore-scripts --no-audit --no-fund --package-lock=false --registry=https://registry.npmjs.org/
+bun install --frozen-lockfile
 export MATCH_STRING="s%@version \"[^\"]\+\"%@version \"${RELEASE_VERSION}\"%"
 sed -i "$MATCH_STRING" mix.exs;
 sed -i "$MATCH_STRING" apps/duskmoon_storybook_web/mix.exs;
