@@ -1,4 +1,4 @@
-FROM elixir:1.18 AS builder
+FROM elixir:1.19-otp-28 AS builder
 
 ARG MIX_ENV=prod
 ARG RELEASE_VERSION=1.0.0
