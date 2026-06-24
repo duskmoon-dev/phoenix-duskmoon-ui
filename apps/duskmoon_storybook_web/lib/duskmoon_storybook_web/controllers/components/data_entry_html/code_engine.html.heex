@@ -3,8 +3,8 @@
   <:crumb>Code Engine</:crumb>
 </.dm_breadcrumb>
 
-<.dm_card class="w-full h-full overflow-auto" body_class="p-4 flex flex-col gap-8">
-  <:title class="flex flex-row justify-center items-center gap-3">
+<.dm_card class="w-full min-w-0 h-full overflow-auto" body_class="p-4 flex flex-col gap-8 min-w-0">
+  <:title class="flex flex-row flex-wrap justify-center items-center gap-3 min-w-0">
     <span class="text-4xl text-primary">Code Engine</span>
     <span class="text-sm opacity-60">dm_code_engine</span>
   </:title>
@@ -72,6 +72,61 @@
   """ %>
   <.dm_markdown content={docs} />
 
+  <% elixir_sample =
+    [
+      "defmodule MyApp.Accounts do",
+      "  alias MyApp.Repo",
+      "  alias MyApp.Accounts.User",
+      "",
+      "  def list_users do",
+      "    Repo.all(User)",
+      "  end",
+      "",
+      "  def get_user!(id), do: Repo.get!(User, id)",
+      "end"
+    ]
+    |> Enum.join("\n")
+
+  one_dark_sample =
+    [
+      "from dataclasses import dataclass",
+      "",
+      "@dataclass",
+      "class Point:",
+      "    x: float",
+      "    y: float",
+      "",
+      "    def distance(self, other: 'Point') -> float:",
+      "        return ((self.x - other.x)**2 + (self.y - other.y)**2) ** 0.5"
+    ]
+    |> Enum.join("\n")
+
+  wrap_sample =
+    [
+      "# Phoenix Duskmoon UI",
+      "",
+      "A comprehensive component library for Phoenix LiveView applications providing Material Design 3 inspired components with full theme support, custom elements, and CSS art animations.",
+      "",
+      "## Features",
+      "",
+      "- **25+ UI components** — buttons, cards, forms, navigation, data display, feedback, and layout",
+      "- **CSS Art components** — decorative animations like plasma ball, eclipse, snow, and synthwave starfield",
+      "- **Theme system** — sunshine (light) and moonlight (dark) themes with full CSS custom property support"
+    ]
+    |> Enum.join("\n")
+
+  sql_sample =
+    [
+      "SELECT u.name, u.email, COUNT(p.id) AS post_count",
+      "FROM users u",
+      "LEFT JOIN posts p ON p.user_id = u.id",
+      "WHERE u.active = true",
+      "GROUP BY u.id",
+      "ORDER BY post_count DESC",
+      "LIMIT 10;"
+    ]
+    |> Enum.join("\n") %>
+
   <section>
     <h2 class="text-lg font-semibold mb-3">Rust</h2>
     <.dm_code_engine
@@ -88,7 +143,7 @@
       id="elixir-editor"
       name="source_ex"
       language="elixir"
-      value="defmodule MyApp.Accounts do\n  alias MyApp.Repo\n  alias MyApp.Accounts.User\n\n  def list_users do\n    Repo.all(User)\n  end\n\n  def get_user!(id), do: Repo.get!(User, id)\nend"
+      value={elixir_sample}
     />
   </section>
 
@@ -111,7 +166,7 @@
       name="source_dark"
       language="python"
       theme="one-dark"
-      value="from dataclasses import dataclass\n\n@dataclass\nclass Point:\n    x: float\n    y: float\n\n    def distance(self, other: 'Point') -> float:\n        return ((self.x - other.x)**2 + (self.y - other.y)**2) ** 0.5"
+      value={one_dark_sample}
     />
   </section>
 
@@ -133,7 +188,7 @@
       name="source_wrap"
       language="markdown"
       wrap
-      value="# Phoenix Duskmoon UI\n\nA comprehensive component library for Phoenix LiveView applications providing Material Design 3 inspired components with full theme support, custom elements, and CSS art animations.\n\n## Features\n\n- **25+ UI components** — buttons, cards, forms, navigation, data display, feedback, and layout\n- **CSS Art components** — decorative animations like plasma ball, eclipse, snow, and synthwave starfield\n- **Theme system** — sunshine (light) and moonlight (dark) themes with full CSS custom property support"
+      value={wrap_sample}
     />
   </section>
 
@@ -144,7 +199,7 @@
       name="source_bottombar"
       language="sql"
       show_bottombar
-      value="SELECT u.name, u.email, COUNT(p.id) AS post_count\nFROM users u\nLEFT JOIN posts p ON p.user_id = u.id\nWHERE u.active = true\nGROUP BY u.id\nORDER BY post_count DESC\nLIMIT 10;"
+      value={sql_sample}
     >
       <:bottombar>
         <div class="flex items-center gap-2 px-2 text-xs opacity-60">

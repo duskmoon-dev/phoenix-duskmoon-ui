@@ -31,7 +31,7 @@
     <.dm_appbar
       title="Duskmoon UI"
       title_to={~p"/"}
-      class="appbar-primary appbar-elevated z-50 w-full"
+      class="storybook-appbar appbar-primary appbar-elevated z-50 w-full"
     >
       <:logo>
         <.dm_mdi name="moon-waning-crescent" class="w-8 h-8" />
@@ -41,9 +41,9 @@
           v{Application.spec(:phoenix_duskmoon, :vsn)}
         </.dm_badge>
       </:after_title>
-      <:menu to={~p"/components/action/button"}>Components</:menu>
-      <:menu to={~p"/art-component"}>Art Components</:menu>
-      <:menu to={~p"/storybook"}>Storybook</:menu>
+      <:menu to={~p"/components/action/button"} class="hidden sm:flex">Components</:menu>
+      <:menu to={~p"/art-component"} class="hidden sm:flex">Art Components</:menu>
+      <:menu to={~p"/storybook"} class="hidden sm:flex">Storybook</:menu>
       <:user_profile>
         <.dm_theme_switcher />
         <.dm_link href="https://github.com/duskmoon-dev/phoenix-duskmoon-ui" class="appbar-action">

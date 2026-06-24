@@ -4,6 +4,137 @@ import * as DuskmoonHooks from "phoenix_duskmoon/hooks";
 // Make Duskmoon hooks available in PhoenixStorybook LiveView iframes
 window.storybook = { Hooks: DuskmoonHooks };
 
+let codeEngineShadowStyleWorkaroundInstalled = false;
+let codeEngineLayoutWorkaroundInstalled = false;
+let codeEngineLayoutWorkaroundFrame = undefined;
+
+const codeEngineLayoutWorkaroundStyleId = "duskmoon-code-engine-layout-workaround";
+
+function getPropertyDescriptor(object, property) {
+  for (let current = object; current; current = Object.getPrototypeOf(current)) {
+    const descriptor = Object.getOwnPropertyDescriptor(current, property);
+    if (descriptor) return descriptor;
+  }
+
+  return undefined;
+}
+
+function installCodeEngineShadowStyleWorkaround() {
+  if (codeEngineShadowStyleWorkaroundInstalled || typeof ShadowRoot === "undefined") return;
+
+  const descriptor = getPropertyDescriptor(ShadowRoot.prototype, "adoptedStyleSheets");
+  if (!descriptor || !descriptor.configurable || !descriptor.get || !descriptor.set) return;
+
+  codeEngineShadowStyleWorkaroundInstalled = true;
+  Object.defineProperty(ShadowRoot.prototype, "adoptedStyleSheets", {
+    configurable: true,
+    get() {
+      // WORKAROUND(upstream): duskmoon-dev/code-engine#9
+      // CodeMirror's vendored StyleSet reuses adopted sheets with a constructor bug.
+      // Keep adoptedStyleSheets available to BaseElement so component styles still apply.
+      if (this.host?.localName === "el-dm-code-engine") {
+        const stack = new Error().stack || "";
+        if (stack.includes("StyleSet") || stack.includes("StyleModule.mount")) {
+          return undefined;
+        }
+      }
+
+      return descriptor.get.call(this);
+    },
+    set(value) {
+      descriptor.set.call(this, value);
+    }
+  });
+}
+
+function applyCodeEngineLayoutWorkaround(host) {
+  const root = host.shadowRoot;
+  if (!root || root.getElementById(codeEngineLayoutWorkaroundStyleId)) return;
+
+  const style = document.createElement("style");
+  style.id = codeEngineLayoutWorkaroundStyleId;
+  style.textContent = `
+    /* WORKAROUND(upstream): duskmoon-dev/code-engine#10 */
+    .cm-host {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+
+    .cm-host .cm-editor {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+  `;
+  root.appendChild(style);
+}
+
+function patchCodeEngineLayout() {
+  document.querySelectorAll("el-dm-code-engine").forEach(applyCodeEngineLayoutWorkaround);
+}
+
+function scheduleCodeEngineLayoutPatch() {
+  if (codeEngineLayoutWorkaroundFrame !== undefined) return;
+
+  codeEngineLayoutWorkaroundFrame = requestAnimationFrame(() => {
+    codeEngineLayoutWorkaroundFrame = undefined;
+    patchCodeEngineLayout();
+  });
+}
+
+function installCodeEngineLayoutWorkaround() {
+  if (codeEngineLayoutWorkaroundInstalled) return;
+
+  codeEngineLayoutWorkaroundInstalled = true;
+  scheduleCodeEngineLayoutPatch();
+
+  new MutationObserver(scheduleCodeEngineLayoutPatch)
+    .observe(document.documentElement, { childList: true, subtree: true });
+}
+
+function withCodeEngineOneDarkThemeWorkaround(load) {
+  const objectValues = Object.values;
+
+  const patchedObjectValues = function patchedObjectValues(value) {
+    const values = objectValues(value);
+
+    // WORKAROUND(upstream): duskmoon-dev/duskmoon-elements#65
+    // el-code-engine picks the first non-string namespace export; one-dark exports
+    // a color map before the actual extension array.
+    if (value?.color && Array.isArray(value?.oneDark) && values.includes(value.color)) {
+      return [value.oneDark, ...values.filter((item) => item !== value.oneDark)];
+    }
+
+    return values;
+  };
+
+  Object.values = patchedObjectValues;
+
+  return Promise.resolve()
+    .then(load)
+    .finally(() => {
+      if (Object.values === patchedObjectValues) {
+        Object.values = objectValues;
+      }
+    });
+}
+
+function withCodeEngineWorkarounds(load) {
+  installCodeEngineShadowStyleWorkaround();
+
+  return withCodeEngineOneDarkThemeWorkaround(load).then((result) => {
+    installCodeEngineLayoutWorkaround();
+    return result;
+  });
+}
+
+function registerCodeEngineElement() {
+  return import("@duskmoon-dev/el-code-engine/register");
+}
+
+registerCodeEngineElement.duskmoonBeforeVendorImport = withCodeEngineWorkarounds;
+
 const duskmoonElementRegistrars = {
   "el-dm-accordion": () => import("@duskmoon-dev/el-accordion/register"),
   "el-dm-art-atom": () => import("@duskmoon-dev/el-art-atom/register"),
@@ -34,7 +165,7 @@ const duskmoonElementRegistrars = {
   "el-dm-chip": () => import("@duskmoon-dev/el-chip/register"),
   "el-dm-circle-menu": () => import("@duskmoon-dev/el-circle-menu/register"),
   "el-dm-code-block": () => import("@duskmoon-dev/el-code-block/register"),
-  "el-dm-code-engine": () => import("@duskmoon-dev/el-code-engine/register"),
+  "el-dm-code-engine": registerCodeEngineElement,
   "el-dm-datepicker": () => import("@duskmoon-dev/el-datepicker/register"),
   "el-dm-dialog": () => import("@duskmoon-dev/el-dialog/register"),
   "el-dm-drawer": () => import("@duskmoon-dev/el-drawer/register"),
@@ -69,6 +200,7 @@ const duskmoonElementRegistrars = {
 const duskmoonElementSelector = Object.keys(duskmoonElementRegistrars).join(",");
 const registeringDuskmoonElements = new Set();
 let duskmoonElementRegistrationQueue = Promise.resolve();
+const duskmoonVendorImportReady = new Promise((resolve) => setTimeout(resolve, 100));
 
 function duskmoonElementLoadToken() {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
@@ -82,11 +214,7 @@ function duskmoonElementVendorUrl(url) {
 function importDuskmoonVendorUrl(url) {
   const checkedUrl = duskmoonElementVendorUrl(url);
 
-  return fetch(checkedUrl, { cache: "no-store" }).then((response) => {
-    if (!response.ok) {
-      throw new Error("Vendor module unavailable: " + response.status);
-    }
-
+  return duskmoonVendorImportReady.then(() => {
     return import(`${checkedUrl}&m=${duskmoonElementLoadToken()}`);
   });
 }
@@ -94,12 +222,15 @@ function importDuskmoonVendorUrl(url) {
 function loadDuskmoonRegistrar(registrar) {
   const match = registrar.toString().match(/import\((["'])([^"']+)\1\)/);
   const url = match && match[2];
+  const load = url && url.startsWith("/@vendor/")
+    ? () => importDuskmoonVendorUrl(url)
+    : () => registrar();
 
-  if (url && url.startsWith("/@vendor/")) {
-    return importDuskmoonVendorUrl(url);
+  if (registrar.duskmoonBeforeVendorImport) {
+    return registrar.duskmoonBeforeVendorImport(load);
   }
 
-  return registrar();
+  return load();
 }
 
 function loadDuskmoonRegistrarWithRetry(registrar) {

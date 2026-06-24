@@ -60,4 +60,20 @@
     width: 100%;
     height: fit-content;
   }
+
+  @media (width < 40rem) {
+    .storybook-appbar .appbar-actions {
+      display: none;
+    }
+
+    .storybook-appbar .appbar-trailing {
+      min-width: 0;
+    }
+  }
+}
+
+/* WORKAROUND(upstream): duskmoon-dev/code-engine#10 */
+el-dm-code-engine {
+  display: flex;
+  flex-direction: column;
 }
