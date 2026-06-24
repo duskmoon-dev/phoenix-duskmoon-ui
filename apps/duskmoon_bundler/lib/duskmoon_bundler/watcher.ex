@@ -81,6 +81,7 @@ defmodule DuskmoonBundler.Watcher do
         :file_system_interval
       ])
       |> Map.new()
+      |> normalize_config_paths()
 
     all_dirs = Enum.uniq([root | watch_dirs])
 
@@ -122,6 +123,10 @@ defmodule DuskmoonBundler.Watcher do
 
   defp file_system_opts(dir, backend, interval) do
     [dirs: [dir], backend: backend, interval: interval]
+  end
+
+  defp normalize_config_paths(config) do
+    Map.update(config, :tailwind_css, nil, &maybe_expand/1)
   end
 
   defp initial_tailwind_build(dirs, css_path, outdir) do

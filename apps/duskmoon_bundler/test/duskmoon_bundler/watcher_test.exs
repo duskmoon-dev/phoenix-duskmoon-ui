@@ -39,6 +39,25 @@ defmodule DuskmoonBundler.WatcherTest do
     GenServer.stop(pid)
   end
 
+  test "normalizes tailwind css path for rebuilds", %{watch_dir: watch_dir} do
+    css_file = Path.join(watch_dir, "app.css")
+    File.write!(css_file, ~s(@import "tailwindcss";))
+    relative_css_file = Path.relative_to(css_file, File.cwd!())
+
+    {:ok, pid} =
+      DuskmoonBundler.Watcher.start_link(
+        root: watch_dir,
+        tailwind_css: relative_css_file,
+        name: :test_watcher_tailwind_css_path
+      )
+
+    state = :sys.get_state(pid)
+
+    assert state.config[:tailwind_css] == Path.expand(relative_css_file)
+
+    GenServer.stop(pid)
+  end
+
   test "detects file changes and broadcasts update", %{watch_dir: watch_dir} do
     Registry.register(DuskmoonBundler.HMR.Registry, :clients, nil)
 
