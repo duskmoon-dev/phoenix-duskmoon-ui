@@ -519,42 +519,53 @@ defmodule DuskmoonBundler.JS.Vendor do
          plugins,
          module_types,
          source_specifiers,
-         browser_token
+         _browser_token
        ) do
-    case prebundle_entry(specifier, module_dirs, plugins) do
-      {:ok, entry_path, project_root} ->
-        bundle_opts =
-          [
-            cwd: project_root,
-            format: :esm,
+    case bundle_entry_for(specifier, module_dirs, plugins) do
+      {:ok, ^specifier, entry} ->
+        bundle =
+          Bundle.new()
+          |> Bundle.entry(entry)
+          |> Bundle.cwd(project_root(module_dirs))
+          |> Bundle.outdir(cache_dir())
+          |> Bundle.format(:esm)
+          |> Bundle.resolve(
             conditions: DuskmoonBundler.JS.Resolution.browser_conditions(),
-            modules: module_dirs,
+            modules: module_dirs
+          )
+          |> Bundle.transform(
             define: %{"process.env.NODE_ENV" => ~s("development")},
+            module_types: module_types
+          )
+          |> Bundle.output(
+            entry_file_names: "[name].js",
+            chunk_file_names: "chunks/[name]-[hash].js",
             exports: :named,
             preserve_entry_signatures: :strict
-          ] ++ if(module_types != %{}, do: [module_types: module_types], else: [])
+          )
 
-        case OXC.bundle(entry_path, bundle_opts) do
-          {:ok, result} ->
-            write_cache_files!(
-              output_path,
-              extract_code(result),
-              specifier,
+        case Bundle.run(bundle) do
+          {:ok, _result} ->
+            write_vendor_cache_metadata(
+              [specifier],
               module_dirs,
               plugins,
               module_types,
-              source_specifiers,
-              browser_token
+              source_specifiers
             )
 
-            {:ok, output_path}
+            if File.regular?(output_path) do
+              {:ok, output_path}
+            else
+              {:error, {:not_found, specifier}}
+            end
 
           {:error, _} = error ->
             error
         end
 
-      :error ->
-        {:error, {:not_found, specifier}}
+      {:error, _} = error ->
+        error
     end
   end
 
@@ -678,9 +689,6 @@ defmodule DuskmoonBundler.JS.Vendor do
   end
 
   # ── Helpers ───────────────────────────────────────────────────────
-
-  defp extract_code(result) when is_binary(result), do: result
-  defp extract_code(%{code: code}), do: code
 
   defp resolve_package_entry(specifier, module_dirs) do
     Enum.find_value(module_dirs, :error, fn module_dir ->

@@ -566,6 +566,35 @@ defmodule DuskmoonBundler.JS.VendorTest do
       assert code =~ "from ancestor"
     end
 
+    test "bundles a package with dynamic imports on demand" do
+      File.mkdir_p!(Path.join(@node_modules, "dynamic-lib"))
+
+      File.write!(
+        Path.join(@node_modules, "dynamic-lib/package.json"),
+        ~s({"name":"dynamic-lib","type":"module","main":"index.js"})
+      )
+
+      File.write!(
+        Path.join(@node_modules, "dynamic-lib/index.js"),
+        "export function loadFeature() { return import('./feature.js'); }"
+      )
+
+      File.write!(
+        Path.join(@node_modules, "dynamic-lib/feature.js"),
+        "export const feature = 'dynamic';"
+      )
+
+      {:ok, code} = DuskmoonBundler.JS.Vendor.bundle_on_demand("dynamic-lib", @node_modules)
+
+      assert code =~ "loadFeature"
+      assert code =~ ~s(import("./chunks/)
+
+      chunk_dir = vendor_cache_path("chunks")
+      chunk_paths = chunk_dir |> File.ls!() |> Enum.map(&Path.join(chunk_dir, &1))
+
+      assert Enum.any?(chunk_paths, &(File.read!(&1) =~ "dynamic"))
+    end
+
     test "source-serves selected specifiers with rewritten bare imports" do
       File.mkdir_p!(Path.join(@node_modules, "source-lib"))
       File.mkdir_p!(Path.join(@node_modules, "dep-lib"))
