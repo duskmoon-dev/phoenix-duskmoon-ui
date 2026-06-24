@@ -23,9 +23,8 @@ sed -i "$MATCH_STRING" mix.exs;
 sed -i "$MATCH_STRING" apps/duskmoon_storybook_web/mix.exs;
 sed -i "$MATCH_STRING" apps/duskmoon_storybook/mix.exs;
 sed -i "$MATCH_STRING" apps/phoenix_duskmoon/mix.exs;
-cd /build/apps/duskmoon_storybook_web
-mix assets.deploy
-cd /build
+mix duskmoon_bundler.build duskmoon_storybook_web
+mix phx.digest
 mix release storybook --version "${RELEASE_VERSION}"
 cp -r _build/prod/rel/storybook /app
 EOF
