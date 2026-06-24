@@ -77,19 +77,15 @@ jobs:
         working-directory: apps/phoenix_duskmoon
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
-          MIX_ENV: dev
-        run: |
-          mix deps.get
-          mix hex.publish package --yes --replace
+          MIX_ENV: prod
+        run: mix hex.publish package --yes --replace
 
       - name: Publish duskmoon_bundler to hex.pm
         working-directory: apps/duskmoon_bundler
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
-          MIX_ENV: dev
-        run: |
-          mix deps.get
-          mix hex.publish package --yes --replace
+          MIX_ENV: prod
+        run: mix hex.publish package --yes --replace
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
