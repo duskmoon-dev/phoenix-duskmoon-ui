@@ -73,6 +73,20 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
     assert result =~ "appbar-action"
   end
 
+  test "renders full appbar menu links with text-width action classes" do
+    result =
+      render_component(&dm_appbar/1, %{
+        title: "App",
+        menu: [
+          %{to: "/dashboard", inner_block: fn _, _ -> "Dashboard" end}
+        ]
+      })
+
+    assert result =~ "!w-auto"
+    assert result =~ "min-w-max"
+    assert result =~ "shrink-0"
+  end
+
   test "renders appbar with logo slot" do
     result =
       render_component(&dm_appbar/1, %{

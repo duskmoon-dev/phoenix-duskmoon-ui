@@ -87,7 +87,10 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
           <.dm_link
             :for={menu <- @menu}
             navigate={menu[:to]}
-            class={["appbar-action w-auto px-3 rounded-md whitespace-nowrap", menu[:class]]}
+            class={[
+              "appbar-action !w-auto min-w-max shrink-0 px-3 rounded-md whitespace-nowrap",
+              menu[:class]
+            ]}
             aria-current={menu[:active] && "page"}
           >
             {render_slot(menu)}
