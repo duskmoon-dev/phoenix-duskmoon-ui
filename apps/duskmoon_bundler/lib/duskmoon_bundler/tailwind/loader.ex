@@ -5,8 +5,10 @@ defmodule DuskmoonBundler.Tailwind.Loader do
   alias DuskmoonBundler.Tailwind.Resolver
 
   @tailwind_install_spec "^4.3.0"
+  @typography_install_spec "^0.5.20"
   @tailwind_runtime_deps %{
-    "tailwindcss" => @tailwind_install_spec
+    "tailwindcss" => @tailwind_install_spec,
+    "@tailwindcss/typography" => @typography_install_spec
   }
 
   def runtime_packages, do: @tailwind_runtime_deps
