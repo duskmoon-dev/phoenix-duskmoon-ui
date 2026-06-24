@@ -63,18 +63,16 @@ defmodule Mix.Tasks.DuskmoonBundler.Dev do
     watch_dirs = if tailwind? and watch_dirs == [], do: [Paths.lib()], else: watch_dirs
 
     tailwind_css = Keyword.get(parsed, :tailwind_css) || tailwind_config[:css]
-
-    if tailwind? do
-      initial_build(tailwind_config, tailwind_css, parsed)
-    end
+    tailwind_outdir = Keyword.get(parsed, :tailwind_outdir, Path.join(config.outdir, "css"))
 
     opts = [
       root: root,
       watch_dirs: watch_dirs,
       tailwind: tailwind?,
       tailwind_css: tailwind_css,
-      tailwind_outdir: Keyword.get(parsed, :tailwind_outdir, Paths.static_css()),
-      target: target
+      tailwind_outdir: tailwind_outdir,
+      target: target,
+      name: watcher_name(profile)
     ]
 
     {:ok, _pid} = DuskmoonBundler.Watcher.start_link(opts)
@@ -92,36 +90,13 @@ defmodule Mix.Tasks.DuskmoonBundler.Dev do
     end
   end
 
-  defp initial_build(tailwind_config, tailwind_css, parsed) do
-    sources =
-      tailwind_config[:sources] ||
-        [
-          %{base: Paths.lib(), pattern: "**/*.{ex,heex,eex}"},
-          %{base: Paths.assets_dir(), pattern: "**/*.{vue,ts,tsx,js,jsx}"}
-        ]
-
-    {css_input, css_base} =
-      case tailwind_css do
-        nil -> {nil, File.cwd!()}
-        path -> {File.read!(path), Path.dirname(path)}
-      end
-
-    case DuskmoonBundler.Tailwind.build(sources: sources, css: css_input, css_base: css_base) do
-      {:ok, css} ->
-        outdir = Keyword.get(parsed, :tailwind_outdir, Paths.static_css())
-        File.mkdir_p!(outdir)
-        File.write!(Path.join(outdir, "app.css"), css)
-
-        Mix.shell().info(
-          "[DuskmoonBundler] Initial Tailwind build: #{DuskmoonBundler.Format.format_size(byte_size(css))}"
-        )
-
-      {:error, reason} ->
-        Mix.shell().error("[DuskmoonBundler] Tailwind build failed: #{inspect(reason)}")
-    end
-  end
-
   defp parse_profile(args), do: DuskmoonBundler.Config.Profile.from_args(args)
+
+  defp watcher_name(nil), do: DuskmoonBundler.Watcher
+
+  defp watcher_name(profile) do
+    Module.concat(DuskmoonBundler.Watcher, profile |> Atom.to_string() |> Macro.camelize())
+  end
 
   @dialyzer {:nowarn_function, iex_running?: 0}
   defp iex_running? do

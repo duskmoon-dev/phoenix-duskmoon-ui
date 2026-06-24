@@ -52,7 +52,7 @@ defmodule DuskmoonBundler.Tailwind.Resolver do
     {package_name, subpath} = NPM.Resolution.PackageResolver.split_specifier(id)
 
     resolved =
-      [find_node_modules_for(base), runtime_node_modules]
+      (node_modules_dirs_for(base) ++ [runtime_node_modules])
       |> Enum.reject(&is_nil/1)
       |> Enum.uniq()
       |> Enum.find_value(fn node_modules ->
@@ -139,7 +139,21 @@ defmodule DuskmoonBundler.Tailwind.Resolver do
   defp package_conditions("stylesheet"), do: @stylesheet_conditions
   defp package_conditions(_kind), do: @module_conditions
 
-  defp find_node_modules_for(base) do
-    base |> normalize_base() |> NPM.Resolution.PackageResolver.find_node_modules()
+  defp node_modules_dirs_for(base) do
+    base
+    |> normalize_base()
+    |> ancestors()
+    |> Enum.map(&Path.join(&1, "node_modules"))
+    |> Enum.filter(&File.dir?/1)
+  end
+
+  defp ancestors(path) do
+    parent = Path.dirname(path)
+
+    if parent == path do
+      [path]
+    else
+      [path | ancestors(parent)]
+    end
   end
 end

@@ -6,8 +6,7 @@ defmodule DuskmoonBundler.Tailwind.Loader do
 
   @tailwind_install_spec "^4.3.0"
   @tailwind_runtime_deps %{
-    "tailwindcss" => @tailwind_install_spec,
-    "@tailwindcss/typography" => "*"
+    "tailwindcss" => @tailwind_install_spec
   }
 
   def runtime_packages, do: @tailwind_runtime_deps

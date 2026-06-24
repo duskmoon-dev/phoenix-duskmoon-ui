@@ -47,6 +47,16 @@ defmodule DuskmoonBundler.ConfigTest do
       assert DuskmoonBundler.Config.build(:my_app).outdir == "priv/static/my_app"
     end
 
+    test "returns profile vendor source specifiers" do
+      Application.put_env(:duskmoon_bundler, :my_app,
+        vendor_source: ["@scope/problematic/register"]
+      )
+
+      assert DuskmoonBundler.Config.build(:my_app).vendor_source == [
+               "@scope/problematic/register"
+             ]
+    end
+
     test "profile values override flat config" do
       current = Application.get_env(:duskmoon_bundler, :entry)
 
@@ -119,15 +129,17 @@ defmodule DuskmoonBundler.ConfigTest do
   describe "server/0 and server/1" do
     test "returns defaults when nothing is set" do
       assert DuskmoonBundler.Config.server().prefix == "/assets"
+      assert DuskmoonBundler.Config.server().vendor_prebundle
     end
 
     test "profile server config takes precedence over global :server" do
       Application.put_env(:duskmoon_bundler, :my_app,
         entry: "my_app/js/app.ts",
-        server: [watch_dirs: ["my_app/lib/"]]
+        server: [watch_dirs: ["my_app/lib/"], vendor_prebundle: false]
       )
 
       assert DuskmoonBundler.Config.server(:my_app).watch_dirs == ["my_app/lib/"]
+      refute DuskmoonBundler.Config.server(:my_app).vendor_prebundle
     end
 
     test "falls back to global :server when profile has no :server key" do

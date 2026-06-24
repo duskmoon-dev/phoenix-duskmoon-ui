@@ -75,14 +75,21 @@ defmodule DuskmoonBundler.Tailwind do
   end
 
   defp ensure_runtime(%{runtime: nil} = state) do
+    local_tailwind_path = local_package_path("tailwindcss")
+
+    runtime_packages =
+      if local_tailwind_path, do: %{}, else: DuskmoonBundler.Tailwind.Loader.runtime_packages()
+
     runtime =
       DuskmoonBundler.JS.Runtime.ensure!(
-        packages: DuskmoonBundler.Tailwind.Loader.runtime_packages(),
+        packages: runtime_packages,
         apis: [:browser, :node],
         handlers: fn runtime -> DuskmoonBundler.Tailwind.Loader.handlers(runtime.node_modules) end,
         define: fn runtime ->
           %{
-            "TAILWIND_ROOT" => DuskmoonBundler.JS.Runtime.package_path!(runtime, "tailwindcss"),
+            "TAILWIND_ROOT" =>
+              local_tailwind_path ||
+                DuskmoonBundler.JS.Runtime.package_path!(runtime, "tailwindcss"),
             "TAILWIND_DEFAULT_BASE" => File.cwd!()
           }
         end,
@@ -93,6 +100,17 @@ defmodule DuskmoonBundler.Tailwind do
   end
 
   defp ensure_runtime(state), do: state
+
+  defp local_package_path(package) do
+    with node_modules when is_binary(node_modules) <-
+           NPM.Resolution.PackageResolver.find_node_modules(File.cwd!()),
+         path = Path.join(node_modules, package),
+         true <- File.dir?(path) do
+      path
+    else
+      _ -> nil
+    end
+  end
 
   @impl true
   def handle_call({:build, opts}, _from, state) do

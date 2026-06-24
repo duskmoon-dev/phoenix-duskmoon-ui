@@ -24,7 +24,7 @@ defmodule DuskmoonBundler.JS.VendorTest do
       "import { greet } from 'fake-lib'\nconsole.log(greet('world'))"
     )
 
-    File.rm_rf!("_build/duskmoon_bundler/vendor")
+    File.rm_rf!(vendor_cache_dir())
 
     on_exit(fn -> File.rm_rf!(@fixture_dir) end)
     :ok
@@ -47,7 +47,7 @@ defmodule DuskmoonBundler.JS.VendorTest do
         node_modules: @node_modules
       )
 
-      assert File.regular?("_build/duskmoon_bundler/vendor/fake-lib.js")
+      assert File.regular?(vendor_cache_path("fake-lib.js"))
     end
 
     test "does not scan into node_modules under the root" do
@@ -547,6 +547,85 @@ defmodule DuskmoonBundler.JS.VendorTest do
       assert code =~ "greet"
     end
 
+    test "bundles a specifier from an ancestor node_modules directory" do
+      app_node_modules = Path.join(@fixture_dir, "ancestor/apps/web/node_modules")
+      package_dir = Path.join(@fixture_dir, "ancestor/node_modules/ancestor-lib")
+
+      File.mkdir_p!(app_node_modules)
+      File.mkdir_p!(package_dir)
+
+      File.write!(
+        Path.join(package_dir, "package.json"),
+        :json.encode(%{"name" => "ancestor-lib", "main" => "index.js"})
+      )
+
+      File.write!(Path.join(package_dir, "index.js"), "export const value = 'from ancestor';")
+
+      {:ok, code} = DuskmoonBundler.JS.Vendor.bundle_on_demand("ancestor-lib", app_node_modules)
+
+      assert code =~ "from ancestor"
+    end
+
+    test "source-serves selected specifiers with rewritten bare imports" do
+      File.mkdir_p!(Path.join(@node_modules, "source-lib"))
+      File.mkdir_p!(Path.join(@node_modules, "dep-lib"))
+
+      File.write!(
+        Path.join(@node_modules, "source-lib/package.json"),
+        ~s({"name":"source-lib","type":"module","exports":{"./register":"./register.js"}})
+      )
+
+      File.write!(
+        Path.join(@node_modules, "source-lib/register.js"),
+        "import { dep } from 'dep-lib'; export const value = 'source ' + dep;"
+      )
+
+      File.write!(
+        Path.join(@node_modules, "dep-lib/package.json"),
+        ~s({"name":"dep-lib","type":"module","main":"index.js"})
+      )
+
+      File.write!(Path.join(@node_modules, "dep-lib/index.js"), "export const dep = 'dep';")
+
+      {:ok, code} =
+        DuskmoonBundler.JS.Vendor.bundle_on_demand("source-lib/register", @node_modules,
+          vendor_source: ["source-lib/register"],
+          browser_token: "dev-token"
+        )
+
+      assert code =~ ~s(from "/@vendor/dep-lib.js?v=)
+      assert code =~ ~s(t=dev-token)
+      assert code =~ "source "
+      refute code =~ "const dep ="
+
+      {:ok, cached} =
+        DuskmoonBundler.JS.Vendor.read("source-lib/register",
+          node_modules: @node_modules,
+          vendor_source: ["source-lib/register"],
+          browser_token: "dev-token"
+        )
+
+      assert cached == code
+    end
+
+    test "uses a supplied browser hash for vendor URLs and stale checks" do
+      url =
+        DuskmoonBundler.JS.Vendor.vendor_url("fake-lib",
+          browser_hash: "fixedhash",
+          browser_token: "dev-token"
+        )
+
+      assert url == "/@vendor/fake-lib.js?v=fixedhash&t=dev-token"
+
+      assert DuskmoonBundler.JS.Vendor.current_browser_hash?("fixedhash",
+               browser_hash: "fixedhash"
+             )
+
+      refute DuskmoonBundler.JS.Vendor.current_browser_hash?("outdated",
+               browser_hash: "fixedhash"
+             )
+    end
+
     test "caches the result for subsequent read/1 calls" do
       {:ok, _} = DuskmoonBundler.JS.Vendor.bundle_on_demand("fake-lib", @node_modules)
       {:ok, code} = DuskmoonBundler.JS.Vendor.read("fake-lib")
@@ -653,6 +732,19 @@ defmodule DuskmoonBundler.JS.VendorTest do
              ) == url
     end
 
+    test "adds browser token without changing the dependency hash" do
+      hashed = DuskmoonBundler.JS.Vendor.vendor_url("vue", node_modules: @node_modules)
+
+      tokenized =
+        DuskmoonBundler.JS.Vendor.vendor_url("vue",
+          node_modules: @node_modules,
+          browser_token: "dev-token"
+        )
+
+      assert tokenized =~ "&t=dev-token"
+      assert String.replace(tokenized, "&t=dev-token", "") == hashed
+    end
+
     test "browser hash changes when lockfile changes" do
       lockfile = Path.join(@fixture_dir, "package-lock.json")
       File.write!(lockfile, ~s({"lockfileVersion":1}))
@@ -681,5 +773,15 @@ defmodule DuskmoonBundler.JS.VendorTest do
 
       assert decoded == "@vue/reactivity"
     end
+  end
+
+  defp vendor_cache_dir do
+    Mix.Project.build_path()
+    |> Path.dirname()
+    |> Path.join("duskmoon_bundler/vendor")
+  end
+
+  defp vendor_cache_path(path) do
+    Path.join(vendor_cache_dir(), path)
   end
 end

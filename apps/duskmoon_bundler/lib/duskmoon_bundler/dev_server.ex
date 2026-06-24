@@ -19,6 +19,8 @@ defmodule DuskmoonBundler.DevServer do
     * `:target` — JS downlevel target (e.g. `:es2020`)
     * `:import_source` — JSX import source (e.g. `"vue"`)
     * `:vapor` — use Vue Vapor mode (default: `false`)
+    * `:vendor_prebundle` — prebundle bare npm imports on startup (default: `true`)
+    * `:vendor_source` — vendor specifiers to serve as source ESM with import rewriting
 
   ## Example
 
@@ -50,7 +52,25 @@ defmodule DuskmoonBundler.DevServer do
 
     module_types = config.module_types
 
-    prebundle_vendor(expanded_root, node_modules, plugins, config.resolve_dirs, module_types)
+    vendor_hash =
+      DuskmoonBundler.JS.Vendor.browser_hash(
+        node_modules: node_modules,
+        plugins: plugins,
+        resolve_dirs: config.resolve_dirs,
+        module_types: module_types,
+        vendor_source: config.vendor_source
+      )
+
+    if server_config.vendor_prebundle do
+      prebundle_vendor(
+        expanded_root,
+        node_modules,
+        plugins,
+        config.resolve_dirs,
+        module_types,
+        config.vendor_source
+      )
+    end
 
     %DuskmoonBundler.DevServer.Config{
       root: expanded_root,
@@ -64,6 +84,9 @@ defmodule DuskmoonBundler.DevServer do
       aliases: config.aliases,
       node_modules: node_modules,
       resolve_dirs: config.resolve_dirs,
+      vendor_hash: vendor_hash,
+      vendor_source: config.vendor_source,
+      vendor_url_token: vendor_url_token(),
       module_types: module_types,
       define:
         DuskmoonBundler.Env.define(
@@ -194,7 +217,7 @@ defmodule DuskmoonBundler.DevServer do
     mtime = DuskmoonBundler.Format.file_mtime(file_path)
     css_import? = css_import_request?(conn, file_path)
     content_type = content_type_for(file_path, css_import?)
-    cache_key = cache_key_for(file_path, css_import?)
+    cache_key = cache_key_for(file_path, css_import?, config)
 
     case DuskmoonBundler.Cache.get(cache_key, mtime) do
       %{code: code, sourcemap: sourcemap} ->
@@ -388,8 +411,16 @@ defmodule DuskmoonBundler.DevServer do
     |> Map.has_key?("import")
   end
 
-  defp cache_key_for(file_path, true), do: URL.append_query(file_path, "import")
-  defp cache_key_for(file_path, false), do: file_path
+  defp cache_key_for(file_path, css_import?, config) do
+    file_path
+    |> maybe_append_css_import_cache_key(css_import?)
+    |> URL.append_query("vendor=#{config.vendor_hash}")
+  end
+
+  defp maybe_append_css_import_cache_key(file_path, true),
+    do: URL.append_query(file_path, "import")
+
+  defp maybe_append_css_import_cache_key(file_path, false), do: file_path
 
   defp rewrite_dev_css_urls(%{type: :css, code: code} = result, file_path, config) do
     case DuskmoonBundler.CSS.AssetURLRewriter.rewrite_dev(
@@ -544,13 +575,14 @@ defmodule DuskmoonBundler.DevServer do
 
   # ── Vendor pre-bundling ───────────────────────────────────────────
 
-  defp prebundle_vendor(root, node_modules, plugins, resolve_dirs, module_types) do
+  defp prebundle_vendor(root, node_modules, plugins, resolve_dirs, module_types, vendor_source) do
     case DuskmoonBundler.JS.Vendor.prebundle(
            root: root,
            node_modules: node_modules,
            plugins: plugins,
            resolve_dirs: resolve_dirs,
-           module_types: module_types
+           module_types: module_types,
+           vendor_source: vendor_source
          ) do
       {:ok, vendor_map} when map_size(vendor_map) > 0 ->
         count = map_size(vendor_map)
@@ -586,8 +618,17 @@ defmodule DuskmoonBundler.DevServer do
       node_modules: config.node_modules,
       plugins: config.plugins,
       resolve_dirs: config.resolve_dirs,
-      module_types: config.module_types
+      module_types: config.module_types,
+      browser_hash: config.vendor_hash,
+      vendor_source: config.vendor_source,
+      browser_token: config.vendor_url_token
     ]
+  end
+
+  defp vendor_url_token do
+    8
+    |> :crypto.strong_rand_bytes()
+    |> Base.url_encode64(padding: false)
   end
 
   # ── Helpers ───────────────────────────────────────────────────────

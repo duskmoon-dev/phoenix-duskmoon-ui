@@ -10,7 +10,8 @@ defmodule DuskmoonBundler.JS.Vendor do
   bundling. `process.env.NODE_ENV` is replaced with `"development"`
   so conditional CJS branches resolve correctly.
 
-  Bundled files are cached on disk in `_build/duskmoon_bundler/vendor/`.
+  Bundled files are cached on disk in the Mix build root under
+  `_build/duskmoon_bundler/vendor/`.
   """
 
   require Logger
@@ -18,8 +19,16 @@ defmodule DuskmoonBundler.JS.Vendor do
   alias OXC.Bundle
 
   defp cache_dir do
-    build_path = System.get_env("MIX_BUILD_PATH") || "_build"
-    Path.join(build_path, "duskmoon_bundler/vendor")
+    Path.join(build_root(), "duskmoon_bundler/vendor")
+  end
+
+  defp build_root do
+    if Mix.Project.get() do
+      Mix.Project.build_path()
+      |> Path.dirname()
+    else
+      Path.expand("_build")
+    end
   end
 
   @doc """
@@ -32,6 +41,7 @@ defmodule DuskmoonBundler.JS.Vendor do
     * `:root` — source directory to scan
     * `:node_modules` — path to node_modules (default: auto-detect)
     * `:resolve_dirs` — additional package directories to resolve from
+    * `:vendor_source` — specifiers to serve as source ESM with import rewriting
     * `:force` — rebuild even if cached (default: `false`)
   """
   @spec prebundle(keyword()) :: {:ok, %{String.t() => String.t()}} | {:error, term()}
@@ -43,6 +53,7 @@ defmodule DuskmoonBundler.JS.Vendor do
 
     plugins = Keyword.get(opts, :plugins, [])
     module_types = Keyword.get(opts, :module_types, %{})
+    source_specifiers = Keyword.get(opts, :vendor_source, [])
 
     with {:ok, specifiers} <- scan_bare_imports(root, plugins),
          :ok <- ensure_cache_dir() do
@@ -51,7 +62,7 @@ defmodule DuskmoonBundler.JS.Vendor do
         |> Enum.map(&DuskmoonBundler.PluginRunner.prebundle_alias(plugins, &1))
         |> Enum.uniq()
 
-      prebundle_vendors(specifiers, module_dirs, force, plugins, module_types)
+      prebundle_vendors(specifiers, module_dirs, force, plugins, module_types, source_specifiers)
     end
   end
 
@@ -66,11 +77,37 @@ defmodule DuskmoonBundler.JS.Vendor do
           {:ok, String.t()} | {:error, term()}
   def bundle_on_demand(specifier, node_modules, opts \\ []) do
     ensure_cache_dir()
-    {plugins, resolve_dirs, module_types} = normalize_on_demand_opts(opts)
+
+    {plugins, resolve_dirs, module_types, source_specifiers, browser_token} =
+      normalize_on_demand_opts(opts)
+
     module_dirs = module_dirs(node_modules, resolve_dirs)
     specifier = DuskmoonBundler.PluginRunner.prebundle_alias(plugins, specifier)
 
-    case bundle_vendor(specifier, module_dirs, false, plugins, module_types) do
+    result =
+      if source_vendor?(specifier, source_specifiers) do
+        source_vendor(
+          specifier,
+          module_dirs,
+          false,
+          plugins,
+          module_types,
+          source_specifiers,
+          browser_token
+        )
+      else
+        bundle_vendor(
+          specifier,
+          module_dirs,
+          false,
+          plugins,
+          module_types,
+          source_specifiers,
+          browser_token
+        )
+      end
+
+    case result do
       {:ok, path} -> File.read(path)
       {:error, _} = error -> error
     end
@@ -87,24 +124,40 @@ defmodule DuskmoonBundler.JS.Vendor do
   def vendor_url(specifier, opts) do
     specifier
     |> vendor_url()
-    |> DuskmoonBundler.URL.append_query("v=#{browser_hash(opts)}")
+    |> DuskmoonBundler.URL.append_query("v=#{browser_hash_for_url(opts)}")
+    |> append_browser_token(Keyword.get(opts, :browser_token))
   end
 
   @doc "Return whether a request browser hash matches the current optimized dependency state."
   @spec current_browser_hash?(String.t() | nil, keyword()) :: boolean()
   def current_browser_hash?(nil, _opts), do: true
-  def current_browser_hash?(hash, opts), do: hash == browser_hash(opts)
+  def current_browser_hash?(hash, opts), do: hash == browser_hash_for_url(opts)
 
   @doc "Return the current browser hash for optimized dependency requests."
   @spec browser_hash(keyword()) :: String.t()
   def browser_hash(opts) do
-    {plugins, resolve_dirs, module_types} = normalize_on_demand_opts(opts)
+    {plugins, resolve_dirs, module_types, source_specifiers, _browser_token} =
+      normalize_on_demand_opts(opts)
+
     node_modules = Keyword.get(opts, :node_modules)
     module_dirs = module_dirs(node_modules, resolve_dirs)
 
+    browser_hash(module_dirs, plugins, module_types, source_specifiers)
+  end
+
+  defp browser_hash_for_url(opts) do
+    case Keyword.get(opts, :browser_hash) do
+      hash when is_binary(hash) and hash != "" -> hash
+      _ -> browser_hash(opts)
+    end
+  end
+
+  defp browser_hash(module_dirs, plugins, module_types, source_specifiers) do
     :crypto.hash(
       :sha256,
-      :erlang.term_to_binary(browser_signature(module_dirs, plugins, module_types))
+      :erlang.term_to_binary(
+        browser_signature(module_dirs, plugins, module_types, source_specifiers)
+      )
     )
     |> Base.encode16(case: :lower)
     |> binary_part(0, 8)
@@ -121,12 +174,21 @@ defmodule DuskmoonBundler.JS.Vendor do
   def read("chunks/" <> _ = specifier, _opts), do: read_cached(specifier)
 
   def read(specifier, opts) do
-    {plugins, resolve_dirs, module_types} = normalize_on_demand_opts(opts)
+    {plugins, resolve_dirs, module_types, source_specifiers, browser_token} =
+      normalize_on_demand_opts(opts)
+
     node_modules = Keyword.get(opts, :node_modules)
     module_dirs = module_dirs(node_modules, resolve_dirs)
     specifier = DuskmoonBundler.PluginRunner.prebundle_alias(plugins, specifier)
 
-    if cache_fresh?(specifier, module_dirs, plugins, module_types) do
+    if cache_fresh?(
+         specifier,
+         module_dirs,
+         plugins,
+         module_types,
+         source_specifiers,
+         browser_token
+       ) do
       read_cached(specifier)
     else
       {:error, :not_found}
@@ -183,30 +245,103 @@ defmodule DuskmoonBundler.JS.Vendor do
 
   # ── Bundling ──────────────────────────────────────────────────────
 
-  defp prebundle_vendors([], _module_dirs, _force, _plugins, _module_types), do: {:ok, %{}}
+  defp prebundle_vendors([], _module_dirs, _force, _plugins, _module_types, _source_specifiers),
+    do: {:ok, %{}}
 
-  defp prebundle_vendors(specifiers, module_dirs, force, plugins, module_types) do
+  defp prebundle_vendors(specifiers, module_dirs, force, plugins, module_types, source_specifiers) do
     vendor_map = Map.new(specifiers, &{&1, cache_path(&1)})
 
-    if not force and Enum.all?(specifiers, &cache_fresh?(&1, module_dirs, plugins, module_types)) do
+    if not force and
+         Enum.all?(
+           specifiers,
+           &cache_fresh?(&1, module_dirs, plugins, module_types, source_specifiers, nil)
+         ) do
       {:ok, vendor_map}
     else
-      safe_bundle_vendors(specifiers, module_dirs, plugins, module_types, vendor_map)
+      {source_specs, bundle_specs} =
+        Enum.split_with(specifiers, &source_vendor?(&1, source_specifiers))
+
+      with {:ok, source_map} <-
+             source_vendors(
+               source_specs,
+               module_dirs,
+               force,
+               plugins,
+               module_types,
+               source_specifiers
+             ),
+           {:ok, bundle_map} <-
+             safe_bundle_vendors(
+               bundle_specs,
+               module_dirs,
+               plugins,
+               module_types,
+               source_specifiers,
+               vendor_map
+             ) do
+        {:ok, Map.merge(source_map, bundle_map)}
+      end
     end
   end
 
-  defp safe_bundle_vendors(specifiers, module_dirs, plugins, module_types, vendor_map) do
-    bundle_vendors(specifiers, module_dirs, plugins, module_types, vendor_map)
+  defp source_vendors([], _module_dirs, _force, _plugins, _module_types, _source_specifiers),
+    do: {:ok, %{}}
+
+  defp source_vendors(specifiers, module_dirs, force, plugins, module_types, source_specifiers) do
+    specifiers
+    |> Enum.reduce(%{}, fn specifier, acc ->
+      case source_vendor(
+             specifier,
+             module_dirs,
+             force,
+             plugins,
+             module_types,
+             source_specifiers,
+             nil
+           ) do
+        {:ok, path} -> Map.put(acc, specifier, path)
+        {:error, _} -> acc
+      end
+    end)
+    |> then(&{:ok, &1})
+  end
+
+  defp safe_bundle_vendors(
+         [],
+         _module_dirs,
+         _plugins,
+         _module_types,
+         _source_specifiers,
+         _vendor_map
+       ),
+       do: {:ok, %{}}
+
+  defp safe_bundle_vendors(
+         specifiers,
+         module_dirs,
+         plugins,
+         module_types,
+         source_specifiers,
+         vendor_map
+       ) do
+    bundle_vendors(specifiers, module_dirs, plugins, module_types, source_specifiers, vendor_map)
   rescue
     exception ->
       Logger.debug(
         "[DuskmoonBundler] Vendor prebundle fell back to per-package bundling: #{Exception.message(exception)}"
       )
 
-      fallback_bundle_vendors(specifiers, module_dirs, plugins, module_types)
+      fallback_bundle_vendors(specifiers, module_dirs, plugins, module_types, source_specifiers)
   end
 
-  defp bundle_vendors(specifiers, module_dirs, plugins, module_types, vendor_map) do
+  defp bundle_vendors(
+         specifiers,
+         module_dirs,
+         plugins,
+         module_types,
+         source_specifiers,
+         vendor_map
+       ) do
     entries =
       Enum.flat_map(specifiers, fn specifier ->
         case bundle_entry_for(specifier, module_dirs, plugins) do
@@ -220,11 +355,27 @@ defmodule DuskmoonBundler.JS.Vendor do
         {:ok, %{}}
 
       entries ->
-        run_vendor_bundle(entries, specifiers, module_dirs, plugins, module_types, vendor_map)
+        run_vendor_bundle(
+          entries,
+          specifiers,
+          module_dirs,
+          plugins,
+          module_types,
+          source_specifiers,
+          vendor_map
+        )
     end
   end
 
-  defp run_vendor_bundle(entries, specifiers, module_dirs, plugins, module_types, vendor_map) do
+  defp run_vendor_bundle(
+         entries,
+         specifiers,
+         module_dirs,
+         plugins,
+         module_types,
+         source_specifiers,
+         vendor_map
+       ) do
     bundled_specifiers = Enum.map(entries, fn {specifier, _entry} -> specifier end)
     bundle_entries = Enum.map(entries, fn {_specifier, entry} -> entry end)
 
@@ -251,30 +402,51 @@ defmodule DuskmoonBundler.JS.Vendor do
 
     case Bundle.run(bundle) do
       {:ok, _result} ->
-        write_vendor_cache_metadata(bundled_specifiers, module_dirs, plugins, module_types)
+        write_vendor_cache_metadata(
+          bundled_specifiers,
+          module_dirs,
+          plugins,
+          module_types,
+          source_specifiers
+        )
+
         {:ok, Map.take(vendor_map, bundled_specifiers)}
 
       {:error, errors} ->
         Logger.debug("[DuskmoonBundler] Vendor multi-entry prebundle failed: #{inspect(errors)}")
-        fallback_bundle_vendors(specifiers, module_dirs, plugins, module_types)
+        fallback_bundle_vendors(specifiers, module_dirs, plugins, module_types, source_specifiers)
     end
   end
 
-  defp write_vendor_cache_metadata(specifiers, module_dirs, plugins, module_types) do
+  defp write_vendor_cache_metadata(
+         specifiers,
+         module_dirs,
+         plugins,
+         module_types,
+         source_specifiers
+       ) do
     Enum.each(specifiers, fn specifier ->
       if File.regular?(cache_path(specifier)) do
         File.write!(
           cache_meta_path(specifier),
-          cache_signature(specifier, module_dirs, plugins, module_types)
+          cache_signature(specifier, module_dirs, plugins, module_types, source_specifiers, nil)
         )
       end
     end)
   end
 
-  defp fallback_bundle_vendors(specifiers, module_dirs, plugins, module_types) do
+  defp fallback_bundle_vendors(specifiers, module_dirs, plugins, module_types, source_specifiers) do
     specifiers
     |> Enum.reduce(%{}, fn specifier, acc ->
-      case bundle_vendor(specifier, module_dirs, false, plugins, module_types) do
+      case bundle_vendor(
+             specifier,
+             module_dirs,
+             false,
+             plugins,
+             module_types,
+             source_specifiers,
+             nil
+           ) do
         {:ok, path} -> Map.put(acc, specifier, path)
         {:error, _} -> acc
       end
@@ -306,18 +478,49 @@ defmodule DuskmoonBundler.JS.Vendor do
     end
   end
 
-  defp bundle_vendor(specifier, module_dirs, force, plugins, module_types) do
+  defp bundle_vendor(
+         specifier,
+         module_dirs,
+         force,
+         plugins,
+         module_types,
+         source_specifiers,
+         browser_token
+       ) do
     path = cache_path(specifier)
 
     if not force and File.regular?(path) and
-         cache_fresh?(specifier, module_dirs, plugins, module_types) do
+         cache_fresh?(
+           specifier,
+           module_dirs,
+           plugins,
+           module_types,
+           source_specifiers,
+           browser_token
+         ) do
       {:ok, path}
     else
-      do_bundle_vendor(specifier, module_dirs, path, plugins, module_types)
+      do_bundle_vendor(
+        specifier,
+        module_dirs,
+        path,
+        plugins,
+        module_types,
+        source_specifiers,
+        browser_token
+      )
     end
   end
 
-  defp do_bundle_vendor(specifier, module_dirs, output_path, plugins, module_types) do
+  defp do_bundle_vendor(
+         specifier,
+         module_dirs,
+         output_path,
+         plugins,
+         module_types,
+         source_specifiers,
+         browser_token
+       ) do
     case prebundle_entry(specifier, module_dirs, plugins) do
       {:ok, entry_path, project_root} ->
         bundle_opts =
@@ -339,7 +542,9 @@ defmodule DuskmoonBundler.JS.Vendor do
               specifier,
               module_dirs,
               plugins,
-              module_types
+              module_types,
+              source_specifiers,
+              browser_token
             )
 
             {:ok, output_path}
@@ -350,6 +555,82 @@ defmodule DuskmoonBundler.JS.Vendor do
 
       :error ->
         {:error, {:not_found, specifier}}
+    end
+  end
+
+  defp source_vendor(
+         specifier,
+         module_dirs,
+         force,
+         plugins,
+         module_types,
+         source_specifiers,
+         browser_token
+       ) do
+    path = cache_path(specifier)
+
+    if not force and File.regular?(path) and
+         cache_fresh?(
+           specifier,
+           module_dirs,
+           plugins,
+           module_types,
+           source_specifiers,
+           browser_token
+         ) do
+      {:ok, path}
+    else
+      do_source_vendor(
+        specifier,
+        module_dirs,
+        path,
+        plugins,
+        module_types,
+        source_specifiers,
+        browser_token
+      )
+    end
+  end
+
+  defp do_source_vendor(
+         specifier,
+         module_dirs,
+         output_path,
+         plugins,
+         module_types,
+         source_specifiers,
+         browser_token
+       ) do
+    with {:ok, entry_path, _project_root} <- prebundle_entry(specifier, module_dirs, plugins),
+         {:ok, source} <- File.read(entry_path),
+         {:ok, code} <-
+           DuskmoonBundler.JS.Transforms.Imports.rewrite(
+             source,
+             Path.basename(entry_path),
+             &rewrite_source_import(
+               &1,
+               module_dirs,
+               plugins,
+               module_types,
+               source_specifiers,
+               browser_token
+             )
+           ) do
+      write_cache_files!(
+        output_path,
+        code,
+        specifier,
+        module_dirs,
+        plugins,
+        module_types,
+        source_specifiers,
+        browser_token
+      )
+
+      {:ok, output_path}
+    else
+      :error -> {:error, {:not_found, specifier}}
+      {:error, _} = error -> error
     end
   end
 
@@ -498,17 +779,85 @@ defmodule DuskmoonBundler.JS.Vendor do
   defp normalize_on_demand_opts(opts) do
     if Keyword.keyword?(opts) do
       {Keyword.get(opts, :plugins, []), Keyword.get(opts, :resolve_dirs, []),
-       Keyword.get(opts, :module_types, %{})}
+       Keyword.get(opts, :module_types, %{}), Keyword.get(opts, :vendor_source, []),
+       Keyword.get(opts, :browser_token)}
     else
-      {opts, [], %{}}
+      {opts, [], %{}, [], nil}
     end
   end
 
+  defp source_vendor?(specifier, source_specifiers), do: specifier in List.wrap(source_specifiers)
+
+  defp rewrite_source_import(
+         specifier,
+         module_dirs,
+         plugins,
+         module_types,
+         source_specifiers,
+         browser_token
+       ) do
+    cond do
+      NPM.Resolution.PackageResolver.node_builtin?(specifier) ->
+        :keep
+
+      NPM.Resolution.PackageResolver.bare?(specifier) ->
+        specifier = DuskmoonBundler.PluginRunner.prebundle_alias(plugins, specifier)
+
+        {:rewrite,
+         vendor_url(
+           specifier,
+           module_dirs,
+           plugins,
+           module_types,
+           source_specifiers,
+           browser_token
+         )}
+
+      true ->
+        :keep
+    end
+  end
+
+  defp vendor_url(specifier, module_dirs, plugins, module_types, source_specifiers, browser_token) do
+    specifier
+    |> vendor_url()
+    |> DuskmoonBundler.URL.append_query(
+      "v=#{browser_hash(module_dirs, plugins, module_types, source_specifiers)}"
+    )
+    |> append_browser_token(browser_token)
+  end
+
+  defp append_browser_token(url, nil), do: url
+  defp append_browser_token(url, ""), do: url
+  defp append_browser_token(url, token), do: DuskmoonBundler.URL.append_query(url, "t=#{token}")
+
   defp module_dirs(node_modules, resolve_dirs) do
-    [node_modules | List.wrap(resolve_dirs)]
+    node_modules
+    |> node_modules_dirs_for()
+    |> Kernel.++(List.wrap(resolve_dirs))
     |> Enum.reject(&is_nil/1)
     |> Enum.map(&Path.expand/1)
     |> Enum.uniq()
+  end
+
+  defp node_modules_dirs_for(nil), do: []
+
+  defp node_modules_dirs_for(node_modules) do
+    node_modules
+    |> Path.dirname()
+    |> ancestors()
+    |> Enum.map(&Path.join(&1, "node_modules"))
+    |> Enum.filter(&File.dir?/1)
+  end
+
+  defp ancestors(path) do
+    parent = Path.dirname(path)
+
+    if parent == path do
+      [path]
+    else
+      [path | ancestors(parent)]
+    end
   end
 
   defp project_root([module_dir | _]), do: Path.dirname(module_dir)
@@ -538,21 +887,57 @@ defmodule DuskmoonBundler.JS.Vendor do
     end
   end
 
-  defp cache_fresh?(specifier, module_dirs, plugins, module_types) do
+  defp cache_fresh?(
+         specifier,
+         module_dirs,
+         plugins,
+         module_types,
+         source_specifiers,
+         browser_token
+       ) do
     File.regular?(cache_path(specifier)) and
       File.read(cache_meta_path(specifier)) ==
-        {:ok, cache_signature(specifier, module_dirs, plugins, module_types)}
+        {:ok,
+         cache_signature(
+           specifier,
+           module_dirs,
+           plugins,
+           module_types,
+           source_specifiers,
+           browser_token
+         )}
   end
 
-  defp write_cache_files!(output_path, code, specifier, module_dirs, plugins, module_types) do
+  defp write_cache_files!(
+         output_path,
+         code,
+         specifier,
+         module_dirs,
+         plugins,
+         module_types,
+         source_specifiers,
+         browser_token
+       ) do
     meta_path = cache_meta_path(specifier)
-    nonce = System.unique_integer([:positive])
+    nonce = cache_nonce()
     tmp_output = "#{output_path}.#{nonce}.tmp"
     tmp_meta = "#{meta_path}.#{nonce}.tmp"
 
     try do
       File.write!(tmp_output, code)
-      File.write!(tmp_meta, cache_signature(specifier, module_dirs, plugins, module_types))
+
+      File.write!(
+        tmp_meta,
+        cache_signature(
+          specifier,
+          module_dirs,
+          plugins,
+          module_types,
+          source_specifiers,
+          browser_token
+        )
+      )
+
       File.rename!(tmp_output, output_path)
       File.rename!(tmp_meta, meta_path)
     after
@@ -561,27 +946,67 @@ defmodule DuskmoonBundler.JS.Vendor do
     end
   end
 
-  defp cache_signature(specifier, module_dirs, plugins, module_types) do
+  defp cache_signature(
+         specifier,
+         module_dirs,
+         plugins,
+         module_types,
+         source_specifiers,
+         browser_token
+       ) do
     :crypto.hash(
       :sha256,
-      :erlang.term_to_binary(signature_terms(specifier, module_dirs, plugins, module_types))
+      :erlang.term_to_binary(
+        signature_terms(
+          specifier,
+          module_dirs,
+          plugins,
+          module_types,
+          source_specifiers,
+          browser_token
+        )
+      )
     )
     |> Base.encode16(case: :lower)
   end
 
-  defp signature_terms(specifier, module_dirs, plugins, module_types) do
-    browser_signature(module_dirs, plugins, module_types)
+  defp cache_nonce do
+    random =
+      6
+      |> :crypto.strong_rand_bytes()
+      |> Base.url_encode64(padding: false)
+
+    [System.os_time(:nanosecond), System.unique_integer([:positive]), random]
+    |> Enum.join("-")
+  end
+
+  defp signature_terms(
+         specifier,
+         module_dirs,
+         plugins,
+         module_types,
+         source_specifiers,
+         browser_token
+       ) do
+    browser_signature(module_dirs, plugins, module_types, source_specifiers)
     |> Map.put(:specifier, specifier)
     |> Map.put(:plugins, Enum.map(plugins, &plugin_signature(&1, specifier)))
     |> Map.put(:package, package_signature(specifier, module_dirs))
+    |> Map.put(:source_vendor, source_vendor?(specifier, source_specifiers))
+    |> Map.put(:browser_token, source_browser_token(specifier, source_specifiers, browser_token))
   end
 
-  defp browser_signature(module_dirs, plugins, module_types) do
+  defp source_browser_token(specifier, source_specifiers, browser_token) do
+    if source_vendor?(specifier, source_specifiers), do: browser_token, else: nil
+  end
+
+  defp browser_signature(module_dirs, plugins, module_types, source_specifiers) do
     %{
       lockfiles: lockfile_signature(module_dirs),
       module_dirs: module_dirs,
       module_types: module_types,
-      plugins: Enum.map(plugins, &base_plugin_signature/1)
+      plugins: Enum.map(plugins, &base_plugin_signature/1),
+      vendor_source: List.wrap(source_specifiers)
     }
   end
 

@@ -19,6 +19,7 @@ defmodule DuskmoonBundler.Config.Build do
             chunks: %{},
             plugins: [],
             resolve_dirs: [],
+            vendor_source: [],
             root: DuskmoonBundler.Paths.assets(),
             sources: ["**/*.{js,ts,jsx,tsx,vue}"],
             ignore: ["vendor/**" | DuskmoonBundler.Paths.ignored_globs()],

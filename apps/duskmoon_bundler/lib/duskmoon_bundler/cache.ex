@@ -30,7 +30,7 @@ defmodule DuskmoonBundler.Cache do
   def get_file(path) do
     case :ets.lookup(@table, path) do
       [{^path, %{entry: entry}}] -> entry
-      [] -> nil
+      [] -> get_file_variant(path)
     end
   end
 
@@ -51,8 +51,12 @@ defmodule DuskmoonBundler.Cache do
   @doc "Evict all cache entries derived from a file path, including variant keys like `path <> \"?import\"`."
   @spec evict_file(String.t()) :: :ok
   def evict_file(path) do
-    evict(path)
-    evict(DuskmoonBundler.URL.append_query(path, "import"))
+    @table
+    |> :ets.tab2list()
+    |> Enum.each(fn {key, _entry} ->
+      if file_variant_key?(key, path), do: :ets.delete(@table, key)
+    end)
+
     :ok
   end
 
@@ -61,5 +65,25 @@ defmodule DuskmoonBundler.Cache do
   def clear do
     :ets.delete_all_objects(@table)
     :ok
+  end
+
+  defp get_file_variant(path) do
+    @table
+    |> :ets.tab2list()
+    |> Enum.find_value(fn
+      {key, %{entry: entry}} ->
+        if file_variant_key?(key, path), do: entry
+
+      _ ->
+        nil
+    end)
+  end
+
+  defp file_variant_key?(key, path) when is_binary(key) do
+    key == path or String.starts_with?(key, path <> "?")
+  end
+
+  defp file_variant_key?(_key, _path) do
+    false
   end
 end
