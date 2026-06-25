@@ -180,9 +180,90 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       assert result =~ ~s(aria-label="Buscar opciones")
     end
 
+    test "renders search value" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          searchable: true,
+          search_value: "delta"
+        })
+
+      assert result =~ ~s(value="delta")
+    end
+
     test "no search input by default" do
       result = render_component(&dm_multi_select/1, %{})
       refute result =~ "multi-select-search"
+    end
+
+    test "renders creatable action for current search value" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          searchable: true,
+          creatable: true,
+          search_value: "Delta"
+        })
+
+      assert result =~ "multi-select-create"
+      assert result =~ "multi-select-create-action"
+      assert result =~ "Add"
+      assert result =~ "Delta"
+      assert result =~ ~s(aria-label="Add &quot;Delta&quot;")
+      assert result =~ ~s(phx-value-value="Delta")
+    end
+
+    test "renders creatable action with event target and custom label" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          creatable: true,
+          create_value: "  delta  ",
+          create_event: "create_tag",
+          create_target: "#tag-picker",
+          create_label: "Create tag {value}"
+        })
+
+      assert result =~ ~s(phx-click="create_tag")
+      assert result =~ ~s(phx-target="#tag-picker")
+      assert result =~ ~s(phx-value-value="delta")
+      assert result =~ "Create tag delta"
+    end
+
+    test "does not render creatable action for blank value" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          creatable: true,
+          create_value: "   "
+        })
+
+      refute result =~ "multi-select-create-action"
+    end
+
+    test "creatable mode renders search input" do
+      result = render_component(&dm_multi_select/1, %{creatable: true})
+      assert result =~ "multi-select-search-input"
+    end
+
+    test "submits creatable search value with predictable name" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          creatable: true,
+          name: "tags",
+          search_value: "delta"
+        })
+
+      assert result =~ ~s(name="tags_create")
+      assert result =~ ~s(value="delta")
+    end
+
+    test "submits creatable search value with nested field name" do
+      result =
+        render_component(&dm_multi_select/1, %{
+          searchable: true,
+          creatable: true,
+          name: "post[tags]",
+          search_value: "delta"
+        })
+
+      assert result =~ ~s(name="post[tags_create]")
     end
 
     test "renders action buttons" do
@@ -329,12 +410,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
         render_component(&dm_multi_select/1, %{
           options: @options,
           selected: ["a", "b"],
+          searchable: true,
+          creatable: true,
+          search_value: "delta",
           name: "tags"
         })
 
       assert result =~ ~s(name="tags[]")
       assert result =~ ~s(value="a")
       assert result =~ ~s(value="b")
+      assert result =~ ~s(name="tags_create")
     end
 
     test "renders additional CSS classes" do

@@ -100,6 +100,41 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
     doc: "accessible label for the search input"
   )
 
+  attr(:search_value, :string,
+    default: nil,
+    doc: "current search input value"
+  )
+
+  attr(:creatable, :boolean,
+    default: false,
+    doc: "show an action for creating the current search value"
+  )
+
+  attr(:create_value, :string,
+    default: nil,
+    doc: "typed value offered for creation; defaults to search_value"
+  )
+
+  attr(:create_event, :string,
+    default: nil,
+    doc: "optional LiveView event emitted by the create action"
+  )
+
+  attr(:create_target, :any,
+    default: nil,
+    doc: "optional phx-target for the create action"
+  )
+
+  attr(:create_name, :string,
+    default: nil,
+    doc: "form field name for submitting the typed create value"
+  )
+
+  attr(:create_label, :string,
+    default: "Add \"{value}\"",
+    doc: "visible and accessible label template for the create action"
+  )
+
   attr(:clear_label, :string,
     default: "Clear all",
     doc: "accessible label for the clear all button (i18n)"
@@ -141,6 +176,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
     selected_set = MapSet.new(assigns.selected)
     selected_options = Enum.filter(assigns.options, &MapSet.member?(selected_set, &1[:value]))
     grouped_options = group_options(assigns.options)
+    search_value = assigns.search_value || assigns.create_value
+    create_value = create_value(assigns.create_value || search_value)
+    create_input_name = assigns.create_name || default_create_name(assigns.name)
+    create_action_label = format_label(assigns.create_label, %{"value" => create_value || ""})
 
     visible_tags =
       if assigns.max_tags,
@@ -159,6 +198,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
       |> assign(:grouped_options, grouped_options)
       |> assign(:visible_tags, visible_tags)
       |> assign(:overflow_count, overflow_count)
+      |> assign(:search_value, search_value)
+      |> assign(:create_value, create_value)
+      |> assign(:create_input_name, create_input_name)
+      |> assign(:create_action_label, create_action_label)
 
     ~H"""
     <div
@@ -220,14 +263,29 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
       </button>
 
       <div id={@id && "#{@id}-dropdown"} class="multi-select-dropdown">
-        <div :if={@searchable} class="multi-select-search">
+        <div :if={@searchable || @creatable} class="multi-select-search">
           <input
             type="text"
             class="multi-select-search-input"
+            name={@creatable && @create_input_name}
+            value={@search_value}
             placeholder={@search_placeholder}
             autocomplete="off"
             aria-label={@search_label}
           />
+        </div>
+
+        <div :if={@creatable && @create_value} class="multi-select-create">
+          <button
+            type="button"
+            class="multi-select-action multi-select-create-action"
+            phx-click={@create_event}
+            phx-target={@create_target}
+            phx-value-value={@create_value}
+            aria-label={@create_action_label}
+          >
+            {@create_action_label}
+          </button>
         </div>
 
         <div :if={@show_actions} class="multi-select-actions">
@@ -306,6 +364,24 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
       grouped_map
     else
       [{nil, ungrouped} | grouped_map]
+    end
+  end
+
+  defp create_value(value) when is_binary(value) do
+    case String.trim(value) do
+      "" -> nil
+      value -> value
+    end
+  end
+
+  defp create_value(_value), do: nil
+
+  defp default_create_name(nil), do: nil
+
+  defp default_create_name(name) do
+    case Regex.run(~r/^(.*)\[([^\]]+)\]$/, name) do
+      [_, prefix, field] -> "#{prefix}[#{field}_create]"
+      _ -> "#{name}_create"
     end
   end
 end
