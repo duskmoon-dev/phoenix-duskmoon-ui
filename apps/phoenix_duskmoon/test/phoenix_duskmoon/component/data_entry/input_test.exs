@@ -2472,6 +2472,62 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
 
       assert result =~ ~s(name="post[tags][]")
     end
+
+    test "renders errors from FormField" do
+      field =
+        Phoenix.Component.to_form(%{"title" => ""},
+          as: "post",
+          errors: [title: {"can't be blank", []}]
+        )[:title]
+
+      result =
+        render_component(&dm_input/1, %{
+          field: field,
+          type: "text",
+          label: "Title"
+        })
+
+      assert result =~ "can&#39;t be blank"
+      assert result =~ "form-group-error"
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ ~s[aria-describedby="post_title-errors"]
+    end
+
+    test "interpolates FormField error options" do
+      field =
+        Phoenix.Component.to_form(%{"title" => ""},
+          as: "post",
+          errors: [title: {"should be at least %{count} character(s)", [count: 3]}]
+        )[:title]
+
+      result =
+        render_component(&dm_input/1, %{
+          field: field,
+          type: "text",
+          label: "Title"
+        })
+
+      assert result =~ "should be at least 3 character(s)"
+    end
+
+    test "explicit errors override FormField errors" do
+      field =
+        Phoenix.Component.to_form(%{"title" => ""},
+          as: "post",
+          errors: [title: {"can't be blank", []}]
+        )[:title]
+
+      result =
+        render_component(&dm_input/1, %{
+          field: field,
+          type: "text",
+          label: "Title",
+          errors: ["custom error"]
+        })
+
+      assert result =~ "custom error"
+      refute result =~ "can&#39;t be blank"
+    end
   end
 
   describe "rating edge cases" do

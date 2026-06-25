@@ -289,6 +289,34 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TextareaTest do
       assert result =~ ~s[rows="10"]
       assert result =~ "textarea-resize-none"
     end
+
+    test "renders errors from FormField" do
+      field =
+        Phoenix.Component.to_form(%{"bio" => ""},
+          as: "user",
+          errors: [bio: {"can't be blank", []}]
+        )[:bio]
+
+      result = render_component(&dm_textarea/1, %{field: field, label: "Bio"})
+
+      assert result =~ "can&#39;t be blank"
+      assert result =~ "form-group-error"
+      assert result =~ ~s[aria-invalid="true"]
+      assert result =~ ~s[aria-describedby="user_bio-errors"]
+    end
+
+    test "explicit errors override FormField errors" do
+      field =
+        Phoenix.Component.to_form(%{"bio" => ""},
+          as: "user",
+          errors: [bio: {"can't be blank", []}]
+        )[:bio]
+
+      result = render_component(&dm_textarea/1, %{field: field, errors: ["custom error"]})
+
+      assert result =~ "custom error"
+      refute result =~ "can&#39;t be blank"
+    end
   end
 
   test "renders textarea with aria-invalid and error messages when errors present" do
