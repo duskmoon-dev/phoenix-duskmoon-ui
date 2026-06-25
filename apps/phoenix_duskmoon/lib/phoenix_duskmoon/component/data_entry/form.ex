@@ -132,6 +132,26 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Form do
     """
   end
 
+  @doc false
+  def field_errors(%Phoenix.HTML.FormField{errors: errors}, explicit_errors)
+      when explicit_errors in [nil, []] do
+    errors
+    |> List.wrap()
+    |> Enum.map(&translate_error/1)
+  end
+
+  def field_errors(_field, explicit_errors), do: List.wrap(explicit_errors)
+
+  defp translate_error({message, opts}) when is_binary(message) and is_list(opts) do
+    Enum.reduce(opts, message, fn {key, value}, acc ->
+      String.replace(acc, "%{#{key}}", to_string(value))
+    end)
+  end
+
+  defp translate_error({message, _opts}), do: to_string(message)
+  defp translate_error(message) when is_binary(message), do: message
+  defp translate_error(message), do: to_string(message)
+
   @doc """
   Generates an alert component.
 

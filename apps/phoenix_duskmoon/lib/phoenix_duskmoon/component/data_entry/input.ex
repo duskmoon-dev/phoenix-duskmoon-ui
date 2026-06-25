@@ -234,7 +234,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   def dm_input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns
     |> assign(field: nil, id: assigns.id || field.id)
-    # |> assign(:errors, Enum.map(field.errors, &translate_error(&1)))
+    |> assign(:errors, field_errors(field, assigns[:errors]))
     |> assign_new(:name, fn -> if assigns.multiple, do: field.name <> "[]", else: field.name end)
     |> assign_new(:value, fn -> field.value end)
     |> dm_input()

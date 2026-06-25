@@ -13,7 +13,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
   """
   use Phoenix.Component
 
-  import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1]
+  import PhoenixDuskmoon.Component.DataEntry.Form, only: [dm_error: 1, field_errors: 2]
   import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
@@ -82,6 +82,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Textarea do
     assigns
     |> assign(field: nil, id: assigns.id || field.id)
     |> assign_new(:name, fn -> field.name end)
+    |> assign(:errors, field_errors(field, assigns[:errors]))
     |> assign(:value, field.value)
     |> dm_textarea()
   end
