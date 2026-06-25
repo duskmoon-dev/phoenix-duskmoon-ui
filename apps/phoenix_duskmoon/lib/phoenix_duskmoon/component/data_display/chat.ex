@@ -132,7 +132,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Chat do
   attr(:class, :any, default: nil, doc: "additional CSS classes")
 
   attr(:rest, :global,
-    include: ~w[duskmoon-send-send duskmoon-receive duskmoon-receive-reset],
+    include:
+      ~w[duskmoon-send-send duskmoon-send-quick-action duskmoon-receive duskmoon-receive-reset],
     doc: "additional HTML attributes"
   )
 
