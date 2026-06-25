@@ -556,6 +556,45 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ ~s[value="save"]
   end
 
+  test "renders submit button with native form submit bridge" do
+    result =
+      render_component(&dm_btn/1, %{
+        type: "submit",
+        name: "action",
+        value: "save",
+        form: "note-form",
+        inner_block: %{inner_block: fn _, _ -> "Save" end}
+      })
+
+    assert result =~ "document.createElement"
+    assert result =~ "requestSubmit(submitter)"
+    assert result =~ "submitter.name"
+    assert result =~ "submitter.value"
+    assert result =~ "getAttribute(&#39;form&#39;)"
+  end
+
+  test "does not render submit bridge for non-submit buttons" do
+    result =
+      render_component(&dm_btn/1, %{
+        type: "button",
+        inner_block: %{inner_block: fn _, _ -> "Cancel" end}
+      })
+
+    refute result =~ "requestSubmit"
+  end
+
+  test "merges custom onclick with submit bridge" do
+    result =
+      render_component(&dm_btn/1, %{
+        type: "submit",
+        onclick: "window.beforeSubmit()",
+        inner_block: %{inner_block: fn _, _ -> "Save" end}
+      })
+
+    assert result =~ "window.beforeSubmit()"
+    assert result =~ "requestSubmit(submitter)"
+  end
+
   test "renders confirm dialog with empty confirm_action shows default Yes button" do
     result =
       render_component(&dm_btn/1, %{
