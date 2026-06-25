@@ -104,6 +104,16 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ChatTest do
     assert result =~ ~s[phx-hook="WebComponentHook"]
   end
 
+  test "renders chat input quick action event bridge" do
+    result =
+      render_component(&dm_chat_input/1, %{
+        "duskmoon-send-quick-action": "steer_message"
+      })
+
+    assert result =~ ~s[duskmoon-send-quick-action="steer_message"]
+    assert result =~ ~s[phx-hook="WebComponentHook"]
+  end
+
   test "renders chat input from form field" do
     field = Phoenix.Component.to_form(%{"message" => "Hello"}, as: "chat")[:message]
     result = render_component(&dm_chat_input/1, %{field: field})
