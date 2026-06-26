@@ -81,28 +81,29 @@ jobs:
           MIX_ENV: prod
         run: mix hex.publish package --yes --replace
 
-      - name: Use Hex duskmoon_npm dependency for package metadata
+      - name: Prepare duskmoon_bundler Hex package
         run: |
           VERSION="${{ inputs.version }}"
-          sed -i "s%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
-          grep -q "{:duskmoon_npm, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
+          BUNDLER_PACKAGE_DIR="${RUNNER_TEMP}/duskmoon_bundler_hex"
+          rm -rf "${BUNDLER_PACKAGE_DIR}"
+          cp -R apps/duskmoon_bundler "${BUNDLER_PACKAGE_DIR}"
+          sed -i "s%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, \"~> ${VERSION}\"}%" "${BUNDLER_PACKAGE_DIR}/mix.exs"
+          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' "${BUNDLER_PACKAGE_DIR}/mix.exs"
+          grep -q "{:duskmoon_npm, \"~> ${VERSION}\"}" "${BUNDLER_PACKAGE_DIR}/mix.exs"
+          echo "BUNDLER_PACKAGE_DIR=${BUNDLER_PACKAGE_DIR}" >> "$GITHUB_ENV"
 
-      - name: Fetch Hex duskmoon_npm dependency
-        run: mix deps.get
+      - name: Fetch duskmoon_bundler Hex dependencies
+        run: |
+          cd "$BUNDLER_PACKAGE_DIR"
+          mix deps.get
 
       - name: Publish duskmoon_bundler to hex.pm
-        working-directory: apps/duskmoon_bundler
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
           MIX_ENV: prod
-        run: mix hex.publish package --yes --replace
-
-      - name: Restore local duskmoon_npm umbrella dependency
-        if: always()
         run: |
-          VERSION="${{ inputs.version }}"
-          sed -i "s%{:duskmoon_npm, \"~> ${VERSION}\"}%{:duskmoon_npm, in_umbrella: true}%" apps/duskmoon_bundler/mix.exs
-          grep -q "{:duskmoon_npm, in_umbrella: true}" apps/duskmoon_bundler/mix.exs
+          cd "$BUNDLER_PACKAGE_DIR"
+          mix hex.publish package --yes --replace
 
       - name: Publish phoenix_duskmoon to hex.pm
         working-directory: apps/phoenix_duskmoon
