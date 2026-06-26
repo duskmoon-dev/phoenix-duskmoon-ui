@@ -1,0 +1,174 @@
+# CLI
+
+## Install
+{: .col-2}
+
+### Init
+
+```bash
+mix npm.init
+```
+
+Create `package.json`.
+
+### Install all
+
+```bash
+mix npm.install
+```
+
+Install dependencies from `package.json`.
+
+### Add package
+
+```bash
+mix npm.install lodash
+mix npm.install lodash@^4.17
+```
+
+Add a dependency.
+
+### Add dev package
+
+```bash
+mix npm.install eslint --save-dev
+```
+
+Add to `devDependencies`.
+
+### Frozen install
+
+```bash
+mix npm.ci
+mix npm.install --frozen
+```
+
+Fail if lockfile is stale.
+
+### Fetch lockfile
+
+```bash
+mix npm.get
+```
+
+Link from `npm.lock` without re-resolving.
+
+## Inspect
+{: .col-2}
+
+### List
+
+```bash
+mix npm.list
+mix npm.ls
+```
+
+### Tree
+
+```bash
+mix npm.tree
+```
+
+### Why
+
+```bash
+mix npm.why accepts
+```
+
+### Outdated
+
+```bash
+mix npm.outdated
+```
+
+### Info
+
+```bash
+mix npm.info express
+mix npm.view express
+```
+
+### Search
+
+```bash
+mix npm.search react
+```
+
+## Run
+{: .col-2}
+
+### Script
+
+```bash
+mix npm.run build
+```
+
+### Binary
+
+```bash
+mix npm.exec eslint .
+```
+
+## Security
+{: .col-2}
+
+### Vulnerability audit
+
+```bash
+mix npm.audit
+```
+
+### OSV online audit
+
+```bash
+mix npm.audit --osv
+```
+
+### Refresh OSV cache
+
+```bash
+mix npm.audit --osv --write-cache --policy warn
+```
+
+### Offline compromised audit
+
+```bash
+mix npm.audit --compromised
+```
+
+### Verify install
+
+```bash
+mix npm.verify
+mix npm.check
+```
+
+## Maintenance
+{: .col-2}
+
+### Update
+
+```bash
+mix npm.update
+mix npm.update lodash
+```
+
+### Remove
+
+```bash
+mix npm.remove lodash
+mix npm.uninstall lodash
+```
+
+### Cache
+
+```bash
+mix npm.cache status
+mix npm.cache clean
+```
+
+### Config
+
+```bash
+mix npm.config
+```

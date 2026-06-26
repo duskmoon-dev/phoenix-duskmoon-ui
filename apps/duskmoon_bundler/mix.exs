@@ -50,7 +50,7 @@ defmodule DuskmoonBundler.MixProject do
       {:jason, "~> 1.4"},
       {:json_codec, "~> 0.1.5"},
       {:igniter, "~> 0.5", optional: true},
-      {:npm, "~> 0.7.4"},
+      {:duskmoon_npm, in_umbrella: true},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:ex_slop, "~> 0.4", only: [:dev, :test], runtime: false},

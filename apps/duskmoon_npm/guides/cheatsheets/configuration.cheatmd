@@ -1,0 +1,155 @@
+# Configuration
+
+## Registry
+{: .col-2}
+
+### Registry URL
+
+```bash
+NPM_REGISTRY=https://registry.npmjs.org
+```
+
+```elixir
+config :duskmoon_npm, registry: "https://registry.npmjs.org"
+```
+
+### Token
+
+```bash
+NPM_TOKEN=npm_...
+```
+
+```elixir
+config :duskmoon_npm, token: System.get_env("NPM_TOKEN")
+```
+
+### Mirror
+
+```bash
+NPM_MIRROR=https://registry.npmmirror.com
+```
+
+```elixir
+config :duskmoon_npm, mirror: "https://registry.npmmirror.com"
+```
+
+## Paths
+{: .col-2}
+
+### Cache root
+
+```bash
+NPM_EX_CACHE_DIR=~/.npm_ex
+```
+
+```elixir
+config :duskmoon_npm, cache_dir: Path.expand("~/.npm_ex")
+```
+
+### Runtime installs
+
+```bash
+NPM_INSTALL_DIR=/tmp/npm-installs
+```
+
+```elixir
+config :duskmoon_npm, install_dir: "/tmp/npm-installs"
+```
+
+## Security Policy
+{: .col-2}
+
+### Block transitive exotic deps
+
+```bash
+NPM_EX_BLOCK_EXOTIC_SUBDEPS=true
+```
+
+```elixir
+config :duskmoon_npm, block_exotic_subdeps: true
+```
+
+### Allow direct exotic deps
+
+```bash
+NPM_EX_EXOTIC_DEPS=github:org/repo#sha
+```
+
+```elixir
+config :duskmoon_npm, exotic_deps: ["github:org/repo#sha"]
+```
+
+### Allowed registries
+
+```bash
+NPM_EX_ALLOWED_REGISTRIES=https://registry.npmjs.org
+```
+
+```elixir
+config :duskmoon_npm, allowed_registries: ["https://registry.npmjs.org"]
+```
+
+### Redirects
+
+```bash
+NPM_EX_ALLOW_REGISTRY_REDIRECTS=false
+```
+
+```elixir
+config :duskmoon_npm, allow_registry_redirects: false
+```
+
+## Warnings
+{: .col-2}
+
+### Package age
+
+```bash
+NPM_EX_PACKAGE_AGE_WARNING_DAYS=7
+```
+
+```elixir
+config :duskmoon_npm, package_age_warning_days: 7
+```
+
+### Version age
+
+```bash
+NPM_EX_VERSION_AGE_WARNING_DAYS=3
+```
+
+```elixir
+config :duskmoon_npm, version_age_warning_days: 3
+```
+
+## Compromised Packages
+{: .col-2}
+
+### DB path
+
+```bash
+NPM_EX_COMPROMISED_DB_PATH=~/.npm_ex/security/compromised_packages.json
+```
+
+```elixir
+config :duskmoon_npm, compromised_db_path: Path.expand("~/.npm_ex/security/compromised_packages.json")
+```
+
+### Policy
+
+```bash
+NPM_EX_COMPROMISED_POLICY=error
+```
+
+```elixir
+config :duskmoon_npm, compromised_policy: :error
+```
+
+## Inspect
+{: .col-2}
+
+### Effective config
+
+```bash
+mix npm.config
+```
