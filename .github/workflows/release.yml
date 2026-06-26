@@ -87,6 +87,9 @@ jobs:
           sed -i "s%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           grep -q "{:duskmoon_npm, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
 
+      - name: Fetch Hex duskmoon_npm dependency
+        run: mix deps.get
+
       - name: Publish duskmoon_bundler to hex.pm
         working-directory: apps/duskmoon_bundler
         env:
