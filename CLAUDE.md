@@ -4,11 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Phoenix Duskmoon UI is an umbrella project providing Duskmoon UI components for Phoenix applications. It consists of three main applications:
+Phoenix Duskmoon UI is an umbrella project providing Duskmoon UI components for Phoenix applications. It consists of two main applications:
 
 1. **phoenix_duskmoon** - Core UI component library (Hex package)
-2. **duskmoon_storybook** - Storybook backend/context
-3. **duskmoon_storybook_web** - Live Storybook web application for component showcase
+2. **duskmoon_storybook** - Live Storybook web application for component showcase
 
 ## Color Policy
 
@@ -97,11 +96,11 @@ Components are organized into three main categories:
 
 ### Storybook Architecture
 
-**PhoenixStorybook stories** are in `.story.exs` files under `apps/duskmoon_storybook_web/storybook/{category}/`:
+**PhoenixStorybook stories** are in `.story.exs` files under `apps/duskmoon_storybook/storybook/{category}/`:
 - Each story uses `PhoenixStorybook.Story` with `%Variation{}` structs
 - When using templates, **always use explicit component calls** - the `.variation` helper is not available in template contexts
 
-**Demo pages** (standalone controller-based pages) live under `apps/duskmoon_storybook_web/lib/duskmoon_storybook_web/controllers/components/`:
+**Demo pages** (standalone controller-based pages) live under `apps/duskmoon_storybook/lib/duskmoon_storybook_web/controllers/components/`:
 - 8 controllers (one per category): ActionController, DataDisplayController, DataEntryController, FeedbackController, NavigationController, LayoutController, IconController, CssArtController
 - Each controller has a matching HTML module and HEEX templates directory
 - Routes are scoped under `/components/{category}/{component}` in `router.ex`
@@ -110,7 +109,7 @@ Components are organized into three main categories:
 
 ### Custom Elements Registration
 
-The storybook registers individual `@duskmoon-dev/el-*` packages in `apps/duskmoon_storybook_web/assets/js/app.js`:
+The storybook registers individual `@duskmoon-dev/el-*` packages in `apps/duskmoon_storybook/assets/js/app.js`:
 ```javascript
 import "@duskmoon-dev/el-button/register";
 import "@duskmoon-dev/el-card/register";
@@ -213,8 +212,7 @@ Releases are triggered manually via GitHub Actions `workflow_dispatch` or by pus
   - `lib/phoenix_duskmoon/component/fun/` - Interactive/animated components
   - `test/` - Test files mirroring lib structure
   - `assets/css/` - CSS source files
-- `apps/duskmoon_storybook/` - Storybook backend application
-- `apps/duskmoon_storybook_web/` - Storybook Phoenix web application
+- `apps/duskmoon_storybook/` - Storybook Phoenix web application
   - `storybook/` - PhoenixStorybook story definitions (.story.exs) organized by category
   - `lib/.../controllers/components/` - Demo page controllers, HTML modules, and HEEX templates
   - `assets/js/app.js` - Custom element registration

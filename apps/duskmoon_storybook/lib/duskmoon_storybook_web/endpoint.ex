@@ -1,5 +1,5 @@
 defmodule DuskmoonStorybookWeb.Endpoint do
-  use Phoenix.Endpoint, otp_app: :duskmoon_storybook_web
+  use Phoenix.Endpoint, otp_app: :duskmoon_storybook
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
@@ -14,8 +14,8 @@ defmodule DuskmoonStorybookWeb.Endpoint do
 
   if code_reloading? do
     plug DuskmoonBundler.DevServer,
-      profile: :duskmoon_storybook_web,
-      root: "apps/duskmoon_storybook_web/assets/js",
+      profile: :duskmoon_storybook,
+      root: "apps/duskmoon_storybook/assets/js",
       prefix: "/assets/js"
   end
 
@@ -25,7 +25,7 @@ defmodule DuskmoonStorybookWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
-    from: :duskmoon_storybook_web,
+    from: :duskmoon_storybook,
     gzip: Mix.env() == :prod,
     only: ~w(assets fonts images favicon.ico robots.txt)
 

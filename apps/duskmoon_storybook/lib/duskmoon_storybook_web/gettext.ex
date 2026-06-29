@@ -20,5 +20,5 @@ defmodule DuskmoonStorybookWeb.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext.Backend, otp_app: :duskmoon_storybook_web
+  use Gettext.Backend, otp_app: :duskmoon_storybook
 end

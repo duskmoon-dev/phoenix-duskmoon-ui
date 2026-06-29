@@ -1,6 +1,6 @@
 import Config
 
-config :duskmoon_storybook_web, DuskmoonStorybookWeb.Endpoint,
+config :duskmoon_storybook, DuskmoonStorybookWeb.Endpoint,
   http: [ip: {0, 0, 0, 0}, port: 4600],
   check_origin: false,
   code_reloader: true,
@@ -9,8 +9,7 @@ config :duskmoon_storybook_web, DuskmoonStorybookWeb.Endpoint,
   watchers: [
     duskmoon_bundler_phoenix_duskmoon:
       {Mix.Tasks.DuskmoonBundler.Dev, :run, [["phoenix_duskmoon"]]},
-    duskmoon_bundler_storybook:
-      {Mix.Tasks.DuskmoonBundler.Dev, :run, [["duskmoon_storybook_web"]]}
+    duskmoon_bundler_storybook: {Mix.Tasks.DuskmoonBundler.Dev, :run, [["duskmoon_storybook"]]}
   ],
   live_reload: [
     patterns: [
@@ -21,7 +20,7 @@ config :duskmoon_storybook_web, DuskmoonStorybookWeb.Endpoint,
     ]
   ]
 
-config :duskmoon_storybook_web, DuskmoonStorybookWeb.Storybook,
+config :duskmoon_storybook, DuskmoonStorybookWeb.Storybook,
   compilation_mode: :lazy,
   compilation_debug: true
 

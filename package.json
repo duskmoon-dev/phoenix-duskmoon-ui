@@ -17,7 +17,7 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "workspaces": [
-        "apps/duskmoon_storybook_web",
+        "apps/duskmoon_storybook",
         "apps/phoenix_duskmoon",
         "apps/duskmoon_bundler"
     ],

@@ -13,7 +13,7 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
       listeners: [Phoenix.CodeReloader],
       releases: [
         storybook: [
-          applications: [duskmoon_storybook_web: :permanent]
+          applications: [duskmoon_storybook: :permanent]
         ]
       ],
       aliases: aliases()

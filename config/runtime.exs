@@ -1,7 +1,7 @@
 import Config
 
 if System.get_env("PHX_SERVER") do
-  config :duskmoon_storybook_web, DuskmoonStorybookWeb.Endpoint, server: true
+  config :duskmoon_storybook, DuskmoonStorybookWeb.Endpoint, server: true
 end
 
 if config_env() == :prod do
@@ -16,7 +16,7 @@ if config_env() == :prod do
         You can generate one by calling: mix phx.gen.secret
         """
 
-    config :duskmoon_storybook_web, DuskmoonStorybookWeb.Endpoint,
+    config :duskmoon_storybook, DuskmoonStorybookWeb.Endpoint,
       http: [
         ip: {0, 0, 0, 0, 0, 0, 0, 0},
         port: String.to_integer(System.get_env("PORT", "4600"))

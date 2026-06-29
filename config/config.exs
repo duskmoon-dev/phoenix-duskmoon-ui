@@ -1,13 +1,10 @@
 import Config
 
 config :duskmoon_storybook,
-  namespace: DuskmoonStorybook
+  namespace: DuskmoonStorybook,
+  generators: [context_app: false]
 
-config :duskmoon_storybook_web,
-  namespace: DuskmoonStorybookWeb,
-  generators: [context_app: :duskmoon_storybook]
-
-config :duskmoon_storybook_web, DuskmoonStorybookWeb.Endpoint,
+config :duskmoon_storybook, DuskmoonStorybookWeb.Endpoint,
   adapter: Bandit.PhoenixAdapter,
   url: [host: "localhost"],
   render_errors: [
@@ -17,9 +14,9 @@ config :duskmoon_storybook_web, DuskmoonStorybookWeb.Endpoint,
   pubsub_server: DuskmoonStorybook.PubSub,
   live_view: [signing_salt: "HkF5qV0r"]
 
-config :duskmoon_storybook_web, DuskmoonStorybookWeb.Storybook,
-  content_path: Path.expand("../apps/duskmoon_storybook_web/storybook", __DIR__),
-  otp_app: :duskmoon_storybook_web,
+config :duskmoon_storybook, DuskmoonStorybookWeb.Storybook,
+  content_path: Path.expand("../apps/duskmoon_storybook/storybook", __DIR__),
+  otp_app: :duskmoon_storybook,
   title: "Phoenix Duskmoon UI Storybook",
   js_path: "/assets/js/app.js",
   css_path: "/assets/css/app.css"
@@ -51,10 +48,10 @@ config :duskmoon_bundler, :phoenix_duskmoon,
     ]
   ]
 
-config :duskmoon_bundler, :duskmoon_storybook_web,
-  root: "apps/duskmoon_storybook_web/assets",
-  entry: "apps/duskmoon_storybook_web/assets/js/app.js",
-  outdir: "apps/duskmoon_storybook_web/priv/static/assets",
+config :duskmoon_bundler, :duskmoon_storybook,
+  root: "apps/duskmoon_storybook/assets",
+  entry: "apps/duskmoon_storybook/assets/js/app.js",
+  outdir: "apps/duskmoon_storybook/priv/static/assets",
   resolve_dirs: ["apps", "deps"],
   vendor_source: [
     "@duskmoon-dev/el-chat/register",
@@ -66,11 +63,11 @@ config :duskmoon_bundler, :duskmoon_storybook_web,
   hash: false,
   sourcemap: false,
   tailwind: [
-    css: "apps/duskmoon_storybook_web/assets/css/app.css",
+    css: "apps/duskmoon_storybook/assets/css/app.css",
     sources: [
-      %{base: "apps/duskmoon_storybook_web/assets", pattern: "**/*.{css,js}"},
-      %{base: "apps/duskmoon_storybook_web/lib", pattern: "**/*.{ex,exs,heex}"},
-      %{base: "apps/duskmoon_storybook_web/storybook", pattern: "**/*.{ex,exs,heex}"},
+      %{base: "apps/duskmoon_storybook/assets", pattern: "**/*.{css,js}"},
+      %{base: "apps/duskmoon_storybook/lib", pattern: "**/*.{ex,exs,heex}"},
+      %{base: "apps/duskmoon_storybook/storybook", pattern: "**/*.{ex,exs,heex}"},
       %{base: "apps/phoenix_duskmoon/assets", pattern: "**/*.{css,js}"},
       %{base: "apps/phoenix_duskmoon/lib", pattern: "**/*.{ex,exs,heex}"}
     ]
@@ -78,9 +75,9 @@ config :duskmoon_bundler, :duskmoon_storybook_web,
   server: [
     vendor_prebundle: false,
     watch_dirs: [
-      "apps/duskmoon_storybook_web/assets",
-      "apps/duskmoon_storybook_web/lib",
-      "apps/duskmoon_storybook_web/storybook",
+      "apps/duskmoon_storybook/assets",
+      "apps/duskmoon_storybook/lib",
+      "apps/duskmoon_storybook/storybook",
       "apps/phoenix_duskmoon/assets",
       "apps/phoenix_duskmoon/lib"
     ]

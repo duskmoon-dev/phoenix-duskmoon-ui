@@ -1,5 +1,5 @@
 {
-  "name": "duskmoon_storybook_web",
+  "name": "duskmoon_storybook",
   "private": true,
   "dependencies": {
     "phoenix_html": "file:../../deps/phoenix_html",
