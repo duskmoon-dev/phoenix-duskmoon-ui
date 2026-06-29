@@ -45,7 +45,7 @@ defmodule DuskmoonNpm.MixProject do
 
   defp deps do
     [
-      {:hex_solver, "~> 0.2"},
+      {:duskmoon_hex_solver, in_umbrella: true},
       {:nimble_parsec, "~> 1.0", runtime: false},
       {:jason, "~> 1.4"},
       {:req, "~> 0.5"},

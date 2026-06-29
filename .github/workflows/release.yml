@@ -63,6 +63,7 @@ jobs:
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/phoenix_duskmoon/mix.exs
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_bundler/mix.exs
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_npm/mix.exs
+          sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_hex_solver/mix.exs
           sed -i "s%\"version\": \"[^\"]\+\"%\"version\": \"${VERSION}\"%" apps/phoenix_duskmoon/package.json
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" mix.exs
           sed -i "s%\"version\": \"[^\"]\+\"%\"version\": \"${VERSION}\"%" bun.lock
@@ -74,6 +75,36 @@ jobs:
         run: mix prepublish
 
       # ── 2. Publish packages ─────────────────────────────────────────
+      - name: Prepare app mix.exs files for Hex publish
+        run: |
+          VERSION="${{ inputs.version }}"
+          MIX_BACKUP_DIR="${RUNNER_TEMP}/app_mix_exs"
+          mkdir -p "${MIX_BACKUP_DIR}"
+          cp apps/duskmoon_hex_solver/mix.exs "${MIX_BACKUP_DIR}/duskmoon_hex_solver.mix.exs"
+          cp apps/duskmoon_npm/mix.exs "${MIX_BACKUP_DIR}/duskmoon_npm.mix.exs"
+          cp apps/duskmoon_bundler/mix.exs "${MIX_BACKUP_DIR}/duskmoon_bundler.mix.exs"
+          cp apps/phoenix_duskmoon/mix.exs "${MIX_BACKUP_DIR}/phoenix_duskmoon.mix.exs"
+          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_hex_solver/mix.exs
+          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_npm/mix.exs
+          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_bundler/mix.exs
+          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/phoenix_duskmoon/mix.exs
+          sed -i "s%{:duskmoon_hex_solver, in_umbrella: true}%{:duskmoon_hex_solver, \"~> ${VERSION}\"}%" apps/duskmoon_npm/mix.exs
+          sed -i "s%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
+          grep -q "{:duskmoon_hex_solver, \"~> ${VERSION}\"}" apps/duskmoon_npm/mix.exs
+          grep -q "{:duskmoon_npm, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
+          echo "MIX_BACKUP_DIR=${MIX_BACKUP_DIR}" >> "$GITHUB_ENV"
+
+      - name: Publish duskmoon_hex_solver to hex.pm
+        working-directory: apps/duskmoon_hex_solver
+        env:
+          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
+          MIX_ENV: prod
+        run: mix hex.publish package --yes --replace
+
+      - name: Fetch duskmoon_npm Hex dependencies
+        working-directory: apps/duskmoon_npm
+        run: mix deps.get
+
       - name: Publish duskmoon_npm to hex.pm
         working-directory: apps/duskmoon_npm
         env:
@@ -81,29 +112,20 @@ jobs:
           MIX_ENV: prod
         run: mix hex.publish package --yes --replace
 
-      - name: Prepare duskmoon_bundler Hex package
-        run: |
-          VERSION="${{ inputs.version }}"
-          BUNDLER_PACKAGE_DIR="${RUNNER_TEMP}/duskmoon_bundler_hex"
-          rm -rf "${BUNDLER_PACKAGE_DIR}"
-          cp -R apps/duskmoon_bundler "${BUNDLER_PACKAGE_DIR}"
-          sed -i "s%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, \"~> ${VERSION}\"}%" "${BUNDLER_PACKAGE_DIR}/mix.exs"
-          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' "${BUNDLER_PACKAGE_DIR}/mix.exs"
-          grep -q "{:duskmoon_npm, \"~> ${VERSION}\"}" "${BUNDLER_PACKAGE_DIR}/mix.exs"
-          echo "BUNDLER_PACKAGE_DIR=${BUNDLER_PACKAGE_DIR}" >> "$GITHUB_ENV"
-
       - name: Fetch duskmoon_bundler Hex dependencies
-        run: |
-          cd "$BUNDLER_PACKAGE_DIR"
-          mix deps.get
+        working-directory: apps/duskmoon_bundler
+        run: mix deps.get
 
       - name: Publish duskmoon_bundler to hex.pm
+        working-directory: apps/duskmoon_bundler
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
           MIX_ENV: prod
-        run: |
-          cd "$BUNDLER_PACKAGE_DIR"
-          mix hex.publish package --yes --replace
+        run: mix hex.publish package --yes --replace
+
+      - name: Fetch phoenix_duskmoon Hex dependencies
+        working-directory: apps/phoenix_duskmoon
+        run: mix deps.get
 
       - name: Publish phoenix_duskmoon to hex.pm
         working-directory: apps/phoenix_duskmoon
@@ -111,6 +133,16 @@ jobs:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
           MIX_ENV: prod
         run: mix hex.publish package --yes --replace
+
+      - name: Restore local umbrella mix.exs files
+        if: always()
+        run: |
+          if [ -n "${MIX_BACKUP_DIR:-}" ] && [ -d "${MIX_BACKUP_DIR}" ]; then
+            cp "${MIX_BACKUP_DIR}/duskmoon_hex_solver.mix.exs" apps/duskmoon_hex_solver/mix.exs
+            cp "${MIX_BACKUP_DIR}/duskmoon_npm.mix.exs" apps/duskmoon_npm/mix.exs
+            cp "${MIX_BACKUP_DIR}/duskmoon_bundler.mix.exs" apps/duskmoon_bundler/mix.exs
+            cp "${MIX_BACKUP_DIR}/phoenix_duskmoon.mix.exs" apps/phoenix_duskmoon/mix.exs
+          fi
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
@@ -140,7 +172,7 @@ jobs:
           VERSION="${{ inputs.version }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add apps/phoenix_duskmoon/mix.exs apps/duskmoon_bundler/mix.exs apps/duskmoon_npm/mix.exs apps/phoenix_duskmoon/package.json mix.exs bun.lock
+          git add apps/phoenix_duskmoon/mix.exs apps/duskmoon_bundler/mix.exs apps/duskmoon_npm/mix.exs apps/duskmoon_hex_solver/mix.exs apps/phoenix_duskmoon/package.json mix.exs bun.lock
           git commit -m "chore(version): bump to ${VERSION}"
           git tag "v${VERSION}"
           git push origin HEAD:${{ inputs.git-ref }} --tags
@@ -166,6 +198,7 @@ jobs:
           **Version**: v${VERSION}
 
           ### Published:
+          - [Hex.pm: duskmoon_hex_solver](https://hex.pm/packages/duskmoon_hex_solver/${VERSION})
           - [Hex.pm: duskmoon_npm](https://hex.pm/packages/duskmoon_npm/${VERSION})
           - [Hex.pm: duskmoon_bundler](https://hex.pm/packages/duskmoon_bundler/${VERSION})
           - [Hex.pm: phoenix_duskmoon](https://hex.pm/packages/phoenix_duskmoon/${VERSION})

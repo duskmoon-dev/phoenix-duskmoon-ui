@@ -141,3 +141,39 @@ jobs:
       - name: Check duskmoon_npm formatting
         working-directory: apps/duskmoon_npm
         run: mix format --check-formatted
+
+  duskmoon-hex-solver:
+    name: Duskmoon Hex Solver
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.18'
+          otp-version: '28'
+
+      - name: Restore dependencies cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-duskmoon-hex-solver-elixir-v1-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-duskmoon-hex-solver-elixir-v1-
+            ${{ runner.os }}-mix-
+
+      - name: Install Elixir dependencies
+        run: mix deps.get
+
+      - name: Compile duskmoon_hex_solver
+        working-directory: apps/duskmoon_hex_solver
+        run: mix compile --warnings-as-errors
+
+      - name: Check duskmoon_hex_solver formatting
+        working-directory: apps/duskmoon_hex_solver
+        run: mix format --check-formatted

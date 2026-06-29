@@ -70,7 +70,7 @@ mix npm.config
 ## How installs work
 
 1. Read `package.json` dependencies, dev dependencies, optional dependencies, and overrides.
-2. Resolve the full dependency tree using [hex_solver](https://hex.pm/packages/hex_solver) and the bundled npm semver parser.
+2. Resolve the full dependency tree using [duskmoon_hex_solver](https://hex.pm/packages/duskmoon_hex_solver) and the bundled npm semver parser.
 3. Fetch registry packuments and tarballs with integrity verification.
 4. Store package contents in the global cache.
 5. Link packages into `node_modules/` and write `npm.lock`.

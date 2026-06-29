@@ -1,0 +1,72 @@
+name: E2E
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Released version to test (e.g., 9.5.2)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  hex-package-install:
+    name: Hex Package Install
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.18'
+          otp-version: '28'
+
+      - name: Create package install project
+        run: mix new duskmoon_package_e2e --sup
+
+      - name: Add released package dependencies
+        working-directory: duskmoon_package_e2e
+        run: |
+          VERSION="${{ inputs.version }}"
+          perl -0pi -e 's/defp deps do\n    \[\n.*?    \]\n  end/defp deps do\n    [\n      {:duskmoon_hex_solver, "~> '"${VERSION}"'"},\n      {:duskmoon_npm, "~> '"${VERSION}"'"},\n      {:duskmoon_bundler, "~> '"${VERSION}"'"},\n      {:phoenix_duskmoon, "~> '"${VERSION}"'"}\n    ]\n  end/s' mix.exs
+
+      - name: Install dependencies
+        working-directory: duskmoon_package_e2e
+        run: mix deps.get
+
+      - name: Compile package graph
+        working-directory: duskmoon_package_e2e
+        run: mix compile --warnings-as-errors
+
+      - name: Add package smoke tests
+        working-directory: duskmoon_package_e2e
+        run: |
+          cat > test/duskmoon_packages_test.exs <<'EOF'
+          defmodule DuskmoonPackagesTest do
+            use ExUnit.Case, async: true
+
+            test "Duskmoon Hex packages load together" do
+              assert Code.ensure_loaded?(HexSolver)
+              assert Code.ensure_loaded?(NPM)
+              assert Code.ensure_loaded?(DuskmoonBundler)
+              assert Code.ensure_loaded?(PhoenixDuskmoon)
+            end
+
+            test "duskmoon_npm resolves an empty dependency set" do
+              assert {:ok, %{}} = NPM.Resolver.resolve(%{})
+            end
+          end
+          EOF
+
+      - name: Run package smoke tests
+        working-directory: duskmoon_package_e2e
+        env:
+          MIX_ENV: test
+        run: mix test
