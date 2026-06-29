@@ -90,8 +90,10 @@ jobs:
           sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/phoenix_duskmoon/mix.exs
           sed -i "s%{:duskmoon_hex_solver, in_umbrella: true}%{:duskmoon_hex_solver, \"~> ${VERSION}\"}%" apps/duskmoon_npm/mix.exs
           sed -i "s%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
+          sed -i "s%{:duskmoon_bundler, in_umbrella: true, only: :dev, runtime: false}%{:duskmoon_bundler, \"~> ${VERSION}\", only: :dev, runtime: false}%" apps/phoenix_duskmoon/mix.exs
           grep -q "{:duskmoon_hex_solver, \"~> ${VERSION}\"}" apps/duskmoon_npm/mix.exs
           grep -q "{:duskmoon_npm, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
+          grep -q "{:duskmoon_bundler, \"~> ${VERSION}\", only: :dev, runtime: false}" apps/phoenix_duskmoon/mix.exs
           echo "MIX_BACKUP_DIR=${MIX_BACKUP_DIR}" >> "$GITHUB_ENV"
 
       - name: Publish duskmoon_hex_solver to hex.pm
@@ -103,7 +105,7 @@ jobs:
 
       - name: Fetch duskmoon_npm Hex dependencies
         working-directory: apps/duskmoon_npm
-        run: mix deps.get
+        run: mix deps.get --only prod
 
       - name: Publish duskmoon_npm to hex.pm
         working-directory: apps/duskmoon_npm
@@ -114,7 +116,7 @@ jobs:
 
       - name: Fetch duskmoon_bundler Hex dependencies
         working-directory: apps/duskmoon_bundler
-        run: mix deps.get
+        run: mix deps.get --only prod
 
       - name: Publish duskmoon_bundler to hex.pm
         working-directory: apps/duskmoon_bundler
@@ -125,7 +127,7 @@ jobs:
 
       - name: Fetch phoenix_duskmoon Hex dependencies
         working-directory: apps/phoenix_duskmoon
-        run: mix deps.get
+        run: mix deps.get --only prod
 
       - name: Publish phoenix_duskmoon to hex.pm
         working-directory: apps/phoenix_duskmoon
