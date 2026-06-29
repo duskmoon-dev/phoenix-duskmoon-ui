@@ -37,7 +37,6 @@ jobs:
         with:
           path: |
             deps
-            _build
           key: ${{ runner.os }}-mix-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-mix-${{ matrix.elixir }}-${{ matrix.otp }}-
@@ -74,7 +73,6 @@ jobs:
         with:
           path: |
             deps
-            _build
           key: ${{ runner.os }}-duskmoon-bundler-test-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-duskmoon-bundler-test-${{ matrix.elixir }}-${{ matrix.otp }}-
@@ -112,7 +110,6 @@ jobs:
         with:
           path: |
             deps
-            _build
           key: ${{ runner.os }}-duskmoon-npm-test-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-duskmoon-npm-test-${{ matrix.elixir }}-${{ matrix.otp }}-
@@ -151,7 +148,6 @@ jobs:
         with:
           path: |
             deps
-            _build
           key: ${{ runner.os }}-duskmoon-hex-solver-test-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-duskmoon-hex-solver-test-${{ matrix.elixir }}-${{ matrix.otp }}-

@@ -31,7 +31,6 @@ jobs:
         with:
           path: |
             deps
-            _build
           key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-
 
@@ -60,7 +59,6 @@ jobs:
         with:
           path: |
             deps
-            _build
           key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-
 
@@ -89,7 +87,6 @@ jobs:
         with:
           path: |
             deps
-            _build
           key: ${{ runner.os }}-duskmoon-bundler-elixir-v1-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-duskmoon-bundler-elixir-v1-
@@ -125,7 +122,6 @@ jobs:
         with:
           path: |
             deps
-            _build
           key: ${{ runner.os }}-duskmoon-npm-elixir-v1-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-duskmoon-npm-elixir-v1-
@@ -161,7 +157,6 @@ jobs:
         with:
           path: |
             deps
-            _build
           key: ${{ runner.os }}-duskmoon-hex-solver-elixir-v1-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-duskmoon-hex-solver-elixir-v1-
