@@ -13,6 +13,7 @@ in
     lolcat
     watchman
     tailwindcss_4
+    zig_0_15
   ] ++ lib.optionals stdenv.isLinux [
     inotify-tools
   ];

@@ -42,6 +42,7 @@ package-lock.json
 # Generated Rust NIF output copied during local compiles.
 /apps/duskmoon_oxc/priv/native/
 /apps/duskmoon_oxc/target/
+/apps/duskmoon_oxc/native/*/target/
 /apps/duskmoon_oxide/priv/native/
 /apps/duskmoon_oxide/target/
 /apps/duskmoon_vize/priv/native/

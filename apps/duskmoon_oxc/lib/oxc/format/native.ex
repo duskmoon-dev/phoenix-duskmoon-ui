@@ -2,7 +2,10 @@ defmodule OXC.Format.Native do
   @moduledoc false
 
   native_version = Mix.Project.config()[:version]
-  build_from_source = System.get_env("DUSKMOON_BUILD_NATIVE_FROM_SOURCE") in ["1", "true"]
+  local_dev? = Mix.env() == :dev and Mix.Project.config()[:build_path] == "../../_build"
+
+  build_from_source =
+    local_dev? or System.get_env("DUSKMOON_BUILD_NATIVE_FROM_SOURCE") in ["1", "true"]
 
   use RustlerPrecompiled,
     otp_app: :duskmoon_oxc,
