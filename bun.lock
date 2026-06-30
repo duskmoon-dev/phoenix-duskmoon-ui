@@ -75,7 +75,7 @@
     },
     "apps/phoenix_duskmoon": {
       "name": "phoenix_duskmoon",
-      "version": "9.5.4",
+      "version": "9.6.0",
       "dependencies": {
         "@duskmoon-dev/art-elements": "1.5.5",
         "@duskmoon-dev/core": "1.17.0",
