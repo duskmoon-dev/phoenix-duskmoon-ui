@@ -1,5 +1,6 @@
 defmodule NPM.Resolver do
   alias NPM.Security.ExoticDeps
+  alias NPM.Security.RegistryPolicy
 
   @moduledoc """
   `HexSolver.Registry` implementation for npm packages.
@@ -9,6 +10,17 @@ defmodule NPM.Resolver do
   """
 
   @behaviour HexSolver.Registry
+
+  defmodule PrefetchError do
+    @moduledoc "Raised when resolver prefetching fails before PubGrub can run."
+
+    defexception [:reason]
+
+    @impl true
+    def message(%__MODULE__{reason: reason}) do
+      "npm dependency prefetch failed: #{NPM.Resolver.format_prefetch_reason(reason)}"
+    end
+  end
 
   @table :npm_resolver_cache
   @max_nesting_depth 128
@@ -38,7 +50,8 @@ defmodule NPM.Resolver do
     if overrides != %{}, do: store_overrides(overrides)
     resolve_with_nesting(root_deps, MapSet.new(), %{}, 0)
   rescue
-    error in ExoticDeps.Error -> {:error, Exception.message(error)}
+    error in [ExoticDeps.Error, PrefetchError, RegistryPolicy.Error] ->
+      {:error, Exception.message(error)}
   end
 
   defp store_overrides(overrides) do
@@ -58,28 +71,33 @@ defmodule NPM.Resolver do
   end
 
   defp resolve_with_nesting(root_deps, excluded, nested, depth) do
-    prefetch_tree(Map.keys(root_deps))
-    dependencies = build_dependencies(root_deps)
+    case prefetch_tree(Map.keys(root_deps)) do
+      :ok ->
+        dependencies = build_dependencies(root_deps)
 
-    case run_solver(dependencies, excluded) do
-      {:ok, result} ->
-        final = if nested == %{}, do: result, else: Map.put(result, :nested, nested)
-        {:ok, final}
+        case run_solver(dependencies, excluded) do
+          {:ok, result} ->
+            final = if nested == %{}, do: result, else: Map.put(result, :nested, nested)
+            {:ok, final}
 
-      {:error, message} ->
-        conflict_packages =
-          message
-          |> extract_conflict_packages()
-          |> Enum.reject(&MapSet.member?(excluded, &1))
+          {:error, message} ->
+            conflict_packages =
+              message
+              |> extract_conflict_packages()
+              |> Enum.reject(&MapSet.member?(excluded, &1))
 
-        if conflict_packages != [] do
-          new_nested = collect_nested_versions(conflict_packages)
-          merged_nested = Map.merge(nested, new_nested)
-          new_excluded = Enum.reduce(conflict_packages, excluded, &MapSet.put(&2, &1))
-          resolve_with_nesting(root_deps, new_excluded, merged_nested, depth + 1)
-        else
-          {:error, message}
+            if conflict_packages != [] do
+              new_nested = collect_nested_versions(conflict_packages)
+              merged_nested = Map.merge(nested, new_nested)
+              new_excluded = Enum.reduce(conflict_packages, excluded, &MapSet.put(&2, &1))
+              resolve_with_nesting(root_deps, new_excluded, merged_nested, depth + 1)
+            else
+              {:error, message}
+            end
         end
+
+      {:error, reason} ->
+        {:error, prefetch_error_message(reason)}
     end
   end
 
@@ -314,18 +332,54 @@ defmodule NPM.Resolver do
     packages
     |> Enum.map(fn {_repo, name} -> name end)
     |> Enum.reject(&cached?/1)
-    |> Task.async_stream(&fetch_and_cache/1,
-      max_concurrency: @prefetch_concurrency,
-      timeout: @fetch_timeout
-    )
-    |> Stream.run()
-
-    :ok
+    |> prefetch_packages()
+    |> case do
+      :ok -> :ok
+      {:error, reason} -> raise PrefetchError, reason: reason
+    end
   end
 
   # --- Helpers ---
 
+  @doc false
+  def collect_prefetch_results(results) do
+    Enum.reduce_while(results, :ok, fn
+      {:ok, {:ok, _packument}}, :ok ->
+        {:cont, :ok}
+
+      {:ok, {:error, reason}}, :ok ->
+        {:halt, {:error, reason}}
+
+      {:exit, reason}, :ok ->
+        {:halt, {:error, reason}}
+    end)
+  end
+
+  @doc false
+  def format_prefetch_reason({%{__exception__: true} = error, _stack}) do
+    Exception.message(error)
+  end
+
+  def format_prefetch_reason(%{__exception__: true} = error), do: Exception.message(error)
+  def format_prefetch_reason(reason), do: inspect(reason)
+
+  defp prefetch_error_message(reason), do: Exception.message(%PrefetchError{reason: reason})
+
   defp parse_sorted_versions(packument) do
+    key = {:__sorted_versions__, packument.name}
+
+    case :ets.lookup(@table, key) do
+      [{^key, versions}] ->
+        versions
+
+      [] ->
+        versions = do_parse_sorted_versions(packument)
+        :ets.insert(@table, {key, versions})
+        versions
+    end
+  end
+
+  defp do_parse_sorted_versions(packument) do
     packument.versions
     |> Enum.reject(fn {version_str, info} ->
       exotic_candidate?(packument.name, version_str, info)
@@ -340,10 +394,10 @@ defmodule NPM.Resolver do
   end
 
   defp exotic_candidate?(package, version_str, info) do
-    ExoticDeps.validate!(package, version_str, info)
-    false
-  rescue
-    ExoticDeps.Error -> true
+    case validate_version(package, version_str, info) do
+      :ok -> false
+      {:error, %ExoticDeps.Error{}} -> true
+    end
   end
 
   defp deps_for_version(package, packument, version_str) do
@@ -354,7 +408,7 @@ defmodule NPM.Resolver do
         :error
 
       info ->
-        ExoticDeps.validate!(package, version_str, info)
+        validate_version!(package, version_str, info)
         overrides = get_overrides()
 
         deps =
@@ -362,6 +416,34 @@ defmodule NPM.Resolver do
           |> solver_dependencies(package, excluded, overrides)
 
         {:ok, deps}
+    end
+  end
+
+  defp validate_version!(package, version_str, info) do
+    case validate_version(package, version_str, info) do
+      :ok -> :ok
+      {:error, error} -> raise error
+    end
+  end
+
+  defp validate_version(package, version_str, info) do
+    key = {:__exotic_validation__, package, version_str}
+
+    case :ets.lookup(@table, key) do
+      [{^key, result}] ->
+        result
+
+      [] ->
+        result =
+          try do
+            ExoticDeps.validate!(package, version_str, info)
+            :ok
+          rescue
+            error in ExoticDeps.Error -> {:error, error}
+          end
+
+        :ets.insert(@table, {key, result})
+        result
     end
   end
 
@@ -453,27 +535,49 @@ defmodule NPM.Resolver do
     end
   end
 
+  defp prefetch_packages([]), do: :ok
+
+  defp prefetch_packages(packages) do
+    packages
+    |> Task.async_stream(&safe_fetch_and_cache/1,
+      max_concurrency: @prefetch_concurrency,
+      timeout: @fetch_timeout,
+      ordered: false,
+      on_timeout: :kill_task
+    )
+    |> collect_prefetch_results()
+  end
+
+  defp safe_fetch_and_cache(package) do
+    fetch_and_cache(package)
+  rescue
+    error -> {:error, {error, __STACKTRACE__}}
+  catch
+    kind, reason -> {:error, {kind, reason}}
+  end
+
   defp prefetch_tree(packages, depth \\ 0)
   defp prefetch_tree(_packages, depth) when depth > @max_prefetch_depth, do: :ok
 
   defp prefetch_tree(packages, depth) do
     to_fetch = Enum.reject(packages, &cached?/1)
 
-    if to_fetch != [] do
-      to_fetch
-      |> Task.async_stream(&fetch_and_cache/1,
-        max_concurrency: @prefetch_concurrency,
-        timeout: @fetch_timeout
-      )
-      |> Stream.run()
+    case prefetch_packages(to_fetch) do
+      :ok ->
+        next_level =
+          to_fetch
+          |> Enum.flat_map(&dep_names_from_cache/1)
+          |> Enum.uniq()
+          |> Enum.reject(&cached?/1)
 
-      next_level =
-        to_fetch
-        |> Enum.flat_map(&dep_names_from_cache/1)
-        |> Enum.uniq()
-        |> Enum.reject(&cached?/1)
+        if next_level != [] do
+          prefetch_tree(next_level, depth + 1)
+        else
+          :ok
+        end
 
-      if next_level != [], do: prefetch_tree(next_level, depth + 1)
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 

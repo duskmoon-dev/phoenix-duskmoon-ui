@@ -25,8 +25,8 @@ defmodule Mix.Tasks.Npm.Install do
     {opts, positional} = parse_args(args)
 
     case positional do
-      [] -> NPM.install(opts)
-      specs -> Enum.each(specs, &install_spec(&1, opts))
+      [] -> NPM.install(opts) |> handle_result()
+      specs -> Enum.each(specs, &(&1 |> install_spec(opts) |> handle_result()))
     end
   end
 
@@ -56,6 +56,9 @@ defmodule Mix.Tasks.Npm.Install do
 
     NPM.add(name, range, add_opts)
   end
+
+  defp handle_result(:ok), do: :ok
+  defp handle_result({:error, reason}), do: Mix.raise("npm.install failed: #{inspect(reason)}")
 
   @doc false
   def parse_package_spec(spec) do

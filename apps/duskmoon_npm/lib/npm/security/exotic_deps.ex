@@ -37,6 +37,8 @@ defmodule NPM.Security.ExoticDeps do
     {:dependencies, "dependencies"},
     {:optional_dependencies, "optionalDependencies"}
   ]
+  @exotic_prefixes ~w(file: git+ git:// github: ssh:// http:// https://)
+  @github_shorthand_regex ~r/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(?:#.+)?$/
 
   @doc "Validate a direct project dependency against the exotic dependency allowlist."
   @spec validate_direct!(String.t(), term()) :: :ok
@@ -82,11 +84,10 @@ defmodule NPM.Security.ExoticDeps do
   def exotic?(_), do: false
 
   defp has_exotic_prefix?(spec) do
-    prefixes = ~w(file: git+ git:// github: ssh:// http:// https://)
-    Enum.any?(prefixes, &String.starts_with?(spec, &1))
+    Enum.any?(@exotic_prefixes, &String.starts_with?(spec, &1))
   end
 
   defp github_shorthand?(spec) do
-    Regex.match?(~r/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(?:#.+)?$/, spec)
+    Regex.match?(@github_shorthand_regex, spec)
   end
 end

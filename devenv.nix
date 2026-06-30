@@ -6,6 +6,8 @@ let
 in
 {
   env.GREET = "Phoenix Duskmoon";
+  env.NPM_EX_ALLOWED_REGISTRIES =
+    "https://npm.gsmlg.dev,https://registry.npmjs.org,https://nexus.gsmlg.net";
 
   packages = with pkgs-stable; [
     git

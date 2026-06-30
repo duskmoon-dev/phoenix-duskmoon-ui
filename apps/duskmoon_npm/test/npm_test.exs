@@ -16,6 +16,21 @@ defmodule NPMTest do
     assert {:ok, %{}} = NPM.Resolver.resolve(%{})
   end
 
+  test "resolver keeps async prefetch failures" do
+    error = %NPM.Security.RegistryPolicy.Error{
+      url: "https://registry.npmjs.org/pkg/-/pkg-1.0.0.tgz",
+      allowed: ["https://npm.gsmlg.dev"]
+    }
+
+    assert {:error, {^error, []}} = NPM.Resolver.collect_prefetch_results([{:exit, {error, []}}])
+
+    assert {:error, {^error, []}} =
+             NPM.Resolver.collect_prefetch_results([{:ok, {:error, {error, []}}}])
+
+    assert NPM.Resolver.format_prefetch_reason({error, []}) ==
+             "untrusted npm registry URL https://registry.npmjs.org/pkg/-/pkg-1.0.0.tgz. Allowed registry origins: https://npm.gsmlg.dev."
+  end
+
   test "bundled npm semver parser supports npm ranges" do
     assert NPMSemver.matches?("1.2.3", "^1.0.0")
     refute NPMSemver.matches?("2.0.0", "^1.0.0")
