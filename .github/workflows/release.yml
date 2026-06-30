@@ -129,16 +129,16 @@ jobs:
         with:
           toolchain: stable
 
+      - name: Install Zig
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.15.1
+
       - name: Install Elixir dependencies
         run: mix deps.get
 
       - name: Install JavaScript dependencies
         run: npm install --ignore-scripts --no-audit --no-fund --package-lock=false --registry=https://registry.npmjs.org/
-
-      - name: Prepare package assets
-        env:
-          DUSKMOON_BUILD_NATIVE_FROM_SOURCE: '1'
-        run: mix prepublish
 
       - name: Generate native checksum files
         run: |
@@ -169,6 +169,9 @@ jobs:
             DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1 mix compile --force
             mix zigler_precompiled.download QuickBEAM.Native --all --print
           )
+
+      - name: Prepare package assets
+        run: mix prepublish
 
       - name: Prepare app mix.exs files for Hex publish
         run: |
