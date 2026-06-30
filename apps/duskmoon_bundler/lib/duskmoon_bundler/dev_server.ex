@@ -52,15 +52,6 @@ defmodule DuskmoonBundler.DevServer do
 
     module_types = config.module_types
 
-    vendor_hash =
-      DuskmoonBundler.JS.Vendor.browser_hash(
-        node_modules: node_modules,
-        plugins: plugins,
-        resolve_dirs: config.resolve_dirs,
-        module_types: module_types,
-        vendor_source: config.vendor_source
-      )
-
     if server_config.vendor_prebundle do
       prebundle_vendor(
         expanded_root,
@@ -84,7 +75,6 @@ defmodule DuskmoonBundler.DevServer do
       aliases: config.aliases,
       node_modules: node_modules,
       resolve_dirs: config.resolve_dirs,
-      vendor_hash: vendor_hash,
       vendor_source: config.vendor_source,
       vendor_url_token: vendor_url_token(),
       module_types: module_types,
@@ -132,7 +122,7 @@ defmodule DuskmoonBundler.DevServer do
     specifier =
       specifier_js |> String.trim_trailing(".js") |> DuskmoonBundler.JS.Vendor.decode_specifier()
 
-    case serve_vendor(specifier, config, conn.query_params["v"]) do
+    case serve_vendor(specifier, config, conn.query_params["v"], conn.query_params["t"]) do
       {:ok, code} ->
         conn
         |> Conn.put_resp_content_type("application/javascript")
@@ -214,6 +204,7 @@ defmodule DuskmoonBundler.DevServer do
     do: Path.extname(path) in DuskmoonBundler.JS.Extensions.compilable(config.plugins)
 
   defp serve_compiled(conn, file_path, relative, config) do
+    config = %{config | vendor_hash: current_vendor_hash(config)}
     mtime = DuskmoonBundler.Format.file_mtime(file_path)
     css_import? = css_import_request?(conn, file_path)
     content_type = content_type_for(file_path, css_import?)
@@ -414,7 +405,7 @@ defmodule DuskmoonBundler.DevServer do
   defp cache_key_for(file_path, css_import?, config) do
     file_path
     |> maybe_append_css_import_cache_key(css_import?)
-    |> URL.append_query("vendor=#{config.vendor_hash}")
+    |> URL.append_query("vendor=#{vendor_hash(config)}")
   end
 
   defp maybe_append_css_import_cache_key(file_path, true),
@@ -593,15 +584,26 @@ defmodule DuskmoonBundler.DevServer do
     end
   end
 
-  defp serve_vendor(specifier, config, browser_hash) do
+  defp serve_vendor(specifier, config, browser_hash, browser_token) do
     vendor_opts = vendor_opts(config)
 
-    if DuskmoonBundler.JS.Vendor.current_browser_hash?(browser_hash, vendor_opts) do
+    if current_vendor_request?(browser_hash, browser_token, config, vendor_opts) do
       read_or_bundle_vendor(specifier, config, vendor_opts)
     else
       {:error, :outdated}
     end
   end
+
+  defp current_vendor_request?(browser_hash, browser_token, config, vendor_opts) do
+    DuskmoonBundler.JS.Vendor.current_browser_hash?(browser_hash, vendor_opts) or
+      same_server_vendor_token?(browser_token, config)
+  end
+
+  defp same_server_vendor_token?(token, %{vendor_url_token: token})
+       when is_binary(token) and token != "",
+       do: true
+
+  defp same_server_vendor_token?(_token, _config), do: false
 
   defp read_or_bundle_vendor(specifier, config, vendor_opts) do
     case DuskmoonBundler.JS.Vendor.read(specifier, vendor_opts) do
@@ -619,10 +621,23 @@ defmodule DuskmoonBundler.DevServer do
       plugins: config.plugins,
       resolve_dirs: config.resolve_dirs,
       module_types: config.module_types,
-      browser_hash: config.vendor_hash,
+      browser_hash: vendor_hash(config),
       vendor_source: config.vendor_source,
       browser_token: config.vendor_url_token
     ]
+  end
+
+  defp vendor_hash(%{vendor_hash: hash}) when is_binary(hash) and hash != "", do: hash
+  defp vendor_hash(config), do: current_vendor_hash(config)
+
+  defp current_vendor_hash(config) do
+    DuskmoonBundler.JS.Vendor.browser_hash(
+      node_modules: config.node_modules,
+      plugins: config.plugins,
+      resolve_dirs: config.resolve_dirs,
+      module_types: config.module_types,
+      vendor_source: config.vendor_source
+    )
   end
 
   defp vendor_url_token do

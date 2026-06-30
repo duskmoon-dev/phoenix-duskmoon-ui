@@ -149,6 +149,63 @@ defmodule DuskmoonBundler.DevServerTest do
       assert stale_conn.status == 504
       assert stale_conn.resp_body =~ "outdated optimized dependency"
     end
+
+    test "refreshes vendor URLs when dependencies change without restarting" do
+      node_modules = Path.join(@fixture_dir, "node_modules/fake-lib")
+      File.mkdir_p!(node_modules)
+
+      File.write!(
+        Path.join(node_modules, "package.json"),
+        Jason.encode!(%{"name" => "fake-lib", "main" => "index.js"})
+      )
+
+      File.write!(Path.join(node_modules, "index.js"), "export const value = 'fake'")
+      File.write!(Path.join(@fixture_dir, "bun.lock"), "version-a")
+
+      File.write!(
+        Path.join(@fixture_dir, "src/app.ts"),
+        "import { value } from 'fake-lib'\nconsole.log(value)"
+      )
+
+      config =
+        DuskmoonBundler.DevServer.init(root: Path.join(@fixture_dir, "src"), prefix: "/assets")
+
+      first_conn = conn(:get, "/assets/app.ts") |> DuskmoonBundler.DevServer.call(config)
+      assert first_conn.status == 200
+
+      assert [first_url] =
+               Regex.run(
+                 ~r{/@vendor/fake-lib\.js\?v=[a-f0-9]+(?:&t=[^"']+)?},
+                 first_conn.resp_body
+               )
+
+      File.write!(Path.join(@fixture_dir, "bun.lock"), "version-b")
+
+      second_conn = conn(:get, "/assets/app.ts") |> DuskmoonBundler.DevServer.call(config)
+      assert second_conn.status == 200
+
+      assert [second_url] =
+               Regex.run(
+                 ~r{/@vendor/fake-lib\.js\?v=[a-f0-9]+(?:&t=[^"']+)?},
+                 second_conn.resp_body
+               )
+
+      refute second_url == first_url
+
+      same_server_conn = conn(:get, first_url) |> DuskmoonBundler.DevServer.call(config)
+      assert same_server_conn.status == 200
+
+      stale_conn =
+        first_url
+        |> String.replace(~r/&t=[^&]+/, "&t=stale")
+        |> then(&conn(:get, &1))
+        |> DuskmoonBundler.DevServer.call(config)
+
+      assert stale_conn.status == 504
+
+      current_conn = conn(:get, second_url) |> DuskmoonBundler.DevServer.call(config)
+      assert current_conn.status == 200
+    end
   end
 
   describe "TypeScript files" do
