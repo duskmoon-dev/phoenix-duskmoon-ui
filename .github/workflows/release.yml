@@ -136,6 +136,8 @@ jobs:
         run: npm install --ignore-scripts --no-audit --no-fund --package-lock=false --registry=https://registry.npmjs.org/
 
       - name: Prepare package assets
+        env:
+          DUSKMOON_BUILD_NATIVE_FROM_SOURCE: '1'
         run: mix prepublish
 
       - name: Generate native checksum files
@@ -164,7 +166,7 @@ jobs:
 
           (
             cd apps/duskmoon_quickbeam
-            mix compile --force
+            DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1 mix compile --force
             mix zigler_precompiled.download QuickBEAM.Native --all --print
           )
 
