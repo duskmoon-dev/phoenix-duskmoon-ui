@@ -28,6 +28,34 @@ This creates a minimal `package.json` in the project root.
 
 If your project already has a `package.json`, npm_ex will use it directly.
 
+## Umbrella Phoenix assets
+
+In an Elixir umbrella, use npm workspaces instead of separate install roots for each Phoenix web app.
+
+Put a root `package.json` at the umbrella root:
+
+```json
+{
+  "name": "my_umbrella",
+  "private": true,
+  "workspaces": ["apps/*"]
+}
+```
+
+Then put a `package.json` in each Phoenix web app that owns frontend assets:
+
+```json
+{
+  "name": "my_app_web",
+  "private": true,
+  "dependencies": {
+    "phoenix_html": "file:../../deps/phoenix_html"
+  }
+}
+```
+
+Run `mix npm.install` from the umbrella root. npm_ex reads the root manifest plus workspace manifests, resolves registry dependencies into one root `npm.lock`, and links workspace/local packages into root `node_modules/`.
+
 ## Add dependencies
 
 ```bash

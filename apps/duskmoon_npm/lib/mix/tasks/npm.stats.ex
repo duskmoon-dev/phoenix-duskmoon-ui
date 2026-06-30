@@ -1,6 +1,4 @@
 defmodule Mix.Tasks.Npm.Stats do
-  alias NPM.Package.JSON
-
   @shortdoc "Show dependency statistics"
 
   @moduledoc """
@@ -20,9 +18,9 @@ defmodule Mix.Tasks.Npm.Stats do
   def run([]) do
     Application.ensure_all_started(:req)
 
-    with {:ok, %{dependencies: deps, dev_dependencies: dev_deps}} <- JSON.read_all(),
+    with {:ok, project} <- NPM.Workspace.read_all(),
+         {:ok, all_deps} <- NPM.Workspace.install_dependencies(project),
          {:ok, lockfile} when lockfile != %{} <- NPM.Lockfile.read() do
-      all_deps = Map.merge(deps, dev_deps)
       adj = Graph.adjacency_list(lockfile)
       fin = Graph.fan_in(adj)
       fout = Graph.fan_out(adj)

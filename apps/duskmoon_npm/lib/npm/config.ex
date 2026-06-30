@@ -21,15 +21,15 @@ defmodule NPM.Config do
   end
 
   @doc """
-  Read the auth token.
+  Read the auth token for the configured registry.
 
-  Priority: `NPM_TOKEN` env var > `config :duskmoon_npm, :token` > project `.npmrc` > home `.npmrc`.
+  Priority: `NPM_TOKEN` env var > `config :duskmoon_npm, :token` > registry-matched project `.npmrc` > registry-matched home `.npmrc`.
   """
-  @spec auth_token :: String.t() | nil
-  def auth_token do
+  @spec auth_token(String.t()) :: String.t() | nil
+  def auth_token(registry_url \\ registry()) do
     System.get_env("NPM_TOKEN") ||
       Application.get_env(:duskmoon_npm, :token) ||
-      read_npmrc_value("//registry.npmjs.org/:_authToken")
+      read_npmrc_auth_token(registry_url)
   end
 
   @doc "Read the global package cache directory."
@@ -207,6 +207,29 @@ defmodule NPM.Config do
       {:error, _} -> nil
     end
   end
+
+  defp read_npmrc_auth_token(registry_url) do
+    auth_keys = npmrc_auth_token_keys(registry_url)
+
+    Enum.find_value(auth_keys, fn key ->
+      read_npmrc_value(key)
+    end)
+  end
+
+  defp npmrc_auth_token_keys(registry_url) do
+    uri = URI.parse(normalize_registry_url(registry_url))
+    authority = npmrc_authority(uri)
+    path = uri.path || ""
+    scoped_key = "//#{authority}#{String.trim_trailing(path, "/")}/:_authToken"
+
+    [scoped_key, "//#{authority}/:_authToken"]
+    |> Enum.uniq()
+  end
+
+  defp npmrc_authority(%URI{host: host, port: nil}), do: host
+  defp npmrc_authority(%URI{host: host, port: 80, scheme: "http"}), do: host
+  defp npmrc_authority(%URI{host: host, port: 443, scheme: "https"}), do: host
+  defp npmrc_authority(%URI{host: host, port: port}), do: "#{host}:#{port}"
 
   defp parse_line(line) do
     case String.split(String.trim(line), "=", parts: 2) do

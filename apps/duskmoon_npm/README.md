@@ -35,6 +35,44 @@ mix npm.init
 mix npm.install lodash
 ```
 
+## Elixir umbrella projects
+
+For umbrella projects, prefer npm workspaces for frontend assets:
+
+- keep one root `package.json` with a `workspaces` list such as `["apps/*"]`
+- keep a `package.json` in each Phoenix web app that owns assets
+- run `mix npm.install` from the umbrella root so npm_ex resolves all workspace manifests into one root `npm.lock` and `node_modules/`
+
+Example root manifest:
+
+```json
+{
+  "name": "my_umbrella",
+  "private": true,
+  "workspaces": ["apps/*"],
+  "dependencies": {
+    "tailwindcss": "4.3.0"
+  }
+}
+```
+
+Example Phoenix web app manifest:
+
+```json
+{
+  "name": "my_app_web",
+  "private": true,
+  "dependencies": {
+    "phoenix_html": "file:../../deps/phoenix_html"
+  },
+  "devDependencies": {
+    "postcss": "8.5.15"
+  }
+}
+```
+
+npm_ex links workspace packages and local directory `file:` packages into the root `node_modules/` and resolves registry dependencies into `npm.lock`.
+
 ## Common workflows
 
 ```sh
@@ -69,11 +107,11 @@ mix npm.config
 
 ## How installs work
 
-1. Read `package.json` dependencies, dev dependencies, optional dependencies, and overrides.
+1. Read root `package.json` dependencies, workspace package dependencies, dev dependencies, optional dependencies, and root overrides.
 2. Resolve the full dependency tree using [duskmoon_hex_solver](https://hex.pm/packages/duskmoon_hex_solver) and the bundled npm semver parser.
 3. Fetch registry packuments and tarballs with integrity verification.
 4. Store package contents in the global cache.
-5. Link packages into `node_modules/` and write `npm.lock`.
+5. Link registry packages plus local workspace packages into `node_modules/` and write `npm.lock`.
 
 `npm_ex` uses its own `npm.lock` because it is not npm. `package.json` remains the shared manifest; `npm.lock` records npm_ex's resolved dependency graph and security policy.
 

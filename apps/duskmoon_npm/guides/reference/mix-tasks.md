@@ -7,7 +7,7 @@ npm_ex exposes npm-like workflows as Mix tasks.
 | Task | Purpose |
 | --- | --- |
 | `mix npm.init` | create `package.json` |
-| `mix npm.install` | install dependencies from `package.json` |
+| `mix npm.install` | install dependencies from `package.json` and npm workspaces |
 | `mix npm.install package` | add a package and install |
 | `mix npm.install --frozen` | fail if `npm.lock` is stale |
 | `mix npm.ci` | CI alias for frozen install |

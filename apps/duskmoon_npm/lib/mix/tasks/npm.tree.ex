@@ -1,6 +1,4 @@
 defmodule Mix.Tasks.Npm.Tree do
-  alias NPM.Package.JSON
-
   @shortdoc "Show dependency tree"
 
   @moduledoc """
@@ -17,13 +15,12 @@ defmodule Mix.Tasks.Npm.Tree do
   def run([]) do
     Application.ensure_all_started(:req)
 
-    with {:ok, %{dependencies: deps, dev_dependencies: dev_deps}} <-
-           JSON.read_all(),
+    with {:ok, project} <- NPM.Workspace.read_all(),
          {:ok, lockfile} <- NPM.Lockfile.read() do
       if lockfile == %{} do
         Mix.shell().info("No packages installed.")
       else
-        print_tree(deps, dev_deps, lockfile)
+        print_tree(project.dependencies, project.dev_dependencies, lockfile)
       end
     end
   end

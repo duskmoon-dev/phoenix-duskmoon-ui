@@ -10,11 +10,11 @@ defmodule NPM do
   npm package manager for Elixir.
 
   Resolves, fetches, and installs npm packages using Mix tasks.
-  Dependencies are declared in `package.json` and locked in `npm.lock`.
+  Dependencies are declared in `package.json` files and locked in `npm.lock`.
 
   ## Mix tasks
 
-      mix npm.install              # Install all deps from package.json
+      mix npm.install              # Install all deps from package.json/workspaces
       mix npm.install lodash       # Add latest version
       mix npm.install lodash@^4.0  # Add with specific range
       mix npm.install --frozen     # Fail if lockfile is stale (CI mode)
@@ -71,7 +71,7 @@ defmodule NPM do
   defdelegate node_modules_dir!, to: ScriptInstall
 
   @doc """
-  Install all dependencies from `package.json` (project context).
+  Install all dependencies from `package.json` and configured workspaces.
 
   ## Options
 
@@ -81,19 +81,9 @@ defmodule NPM do
   """
   @spec install(keyword()) :: :ok | {:error, term()}
   def install(opts \\ []) when is_list(opts) do
-    case JSON.read_all() do
-      {:ok, %{dependencies: deps, dev_dependencies: dev_deps, optional_dependencies: opt_deps}} ->
-        all_deps =
-          if opts[:production] do
-            Map.merge(deps, opt_deps)
-          else
-            deps |> Map.merge(dev_deps) |> Map.merge(opt_deps)
-          end
-
-        do_install(all_deps, opts)
-
-      error ->
-        error
+    with {:ok, project} <- NPM.Workspace.read_all(),
+         {:ok, deps} <- NPM.Workspace.install_dependencies(project, opts) do
+      do_install(deps, Keyword.put(opts, :local_links, project.local_links))
     end
   end
 
@@ -131,12 +121,9 @@ defmodule NPM do
   """
   @spec update :: :ok | {:error, term()}
   def update do
-    case JSON.read_all() do
-      {:ok, %{dependencies: deps, dev_dependencies: dev_deps}} ->
-        do_install(Map.merge(deps, dev_deps), [])
-
-      error ->
-        error
+    with {:ok, project} <- NPM.Workspace.read_all(),
+         {:ok, deps} <- NPM.Workspace.install_dependencies(project) do
+      do_install(deps, local_links: project.local_links)
     end
   end
 
@@ -147,14 +134,13 @@ defmodule NPM do
   """
   @spec update(String.t()) :: :ok | {:error, term()}
   def update(name) do
-    with {:ok, %{dependencies: deps, dev_dependencies: dev_deps}} <- JSON.read_all(),
+    with {:ok, project} <- NPM.Workspace.read_all(),
+         {:ok, all_deps} <- NPM.Workspace.install_dependencies(project),
          {:ok, lockfile} <- NPM.Lockfile.read() do
-      all_deps = Map.merge(deps, dev_deps)
-
       if Map.has_key?(all_deps, name) do
         updated_lock = Map.delete(lockfile, name)
         NPM.Lockfile.write(updated_lock)
-        do_install(all_deps, [])
+        do_install(all_deps, local_links: project.local_links)
       else
         Mix.shell().error("Package #{name} not found in package.json.")
         {:error, {:not_found, name}}
@@ -176,7 +162,9 @@ defmodule NPM do
         :ok
 
       {:ok, lockfile} ->
-        link_from_lockfile(lockfile)
+        with {:ok, project} <- NPM.Workspace.read_all() do
+          link_from_lockfile(lockfile, project.local_links)
+        end
 
       error ->
         error
@@ -209,20 +197,29 @@ defmodule NPM do
 
   # --- Private ---
 
-  defp do_install(deps, _opts) when map_size(deps) == 0 do
-    Mix.shell().info("No npm dependencies found in package.json.")
+  defp do_install(deps, opts) when map_size(deps) == 0 do
+    local_links = Keyword.get(opts, :local_links, %{})
+
+    if local_links == %{} do
+      Mix.shell().info("No npm dependencies found in package.json.")
+    else
+      Linker.link(%{}, @node_modules)
+      Linker.link_local_packages(local_links, @node_modules)
+      Mix.shell().info("Linked #{map_size(local_links)} local npm package#{plural(local_links)}.")
+    end
+
     :ok
   end
 
   defp do_install(deps, opts) do
     if opts[:frozen] do
-      frozen_install(deps)
+      frozen_install(deps, Keyword.get(opts, :local_links, %{}))
     else
-      full_install(deps)
+      full_install(deps, Keyword.get(opts, :local_links, %{}))
     end
   end
 
-  defp frozen_install(deps) do
+  defp frozen_install(deps, local_links) do
     case NPM.Lockfile.read() do
       {:ok, lockfile} when lockfile == %{} ->
         Mix.shell().error("npm.lock not found. Run `mix npm.install` first.")
@@ -230,7 +227,7 @@ defmodule NPM do
 
       {:ok, lockfile} ->
         if lockfile_matches?(lockfile, deps) and lockfile_policy_current?() do
-          link_from_lockfile(lockfile)
+          link_from_lockfile(lockfile, local_links)
         else
           Mix.shell().error(
             "npm.lock is out of date with package.json or current security policy.\n" <>
@@ -266,17 +263,17 @@ defmodule NPM do
       end)
   end
 
-  defp full_install(deps) do
+  defp full_install(deps, local_links) do
     validate_direct_exotic_deps!(deps)
     {:ok, old_lockfile} = NPM.Lockfile.read()
 
     if old_lockfile != %{} and lockfile_matches?(old_lockfile, deps) and
          lockfile_policy_current?() and
-         node_modules_intact?(old_lockfile) do
+         node_modules_intact?(old_lockfile, local_links) do
       Mix.shell().info("Already up to date.")
       :ok
     else
-      resolve_and_install(deps, old_lockfile)
+      resolve_and_install(deps, old_lockfile, local_links)
     end
   end
 
@@ -284,13 +281,21 @@ defmodule NPM do
     Enum.each(deps, fn {name, spec} -> ExoticDeps.validate_direct!(name, spec) end)
   end
 
-  defp node_modules_intact?(lockfile) do
-    Enum.all?(lockfile, fn {name, _entry} ->
-      Path.join([@node_modules, name, "package.json"]) |> File.exists?()
-    end)
+  defp node_modules_intact?(lockfile, local_links) do
+    lockfile_intact? =
+      Enum.all?(lockfile, fn {name, _entry} ->
+        Path.join([@node_modules, name, "package.json"]) |> File.exists?()
+      end)
+
+    local_links_intact? =
+      Enum.all?(local_links, fn {name, _path} ->
+        Path.join([@node_modules, name, "package.json"]) |> File.exists?()
+      end)
+
+    lockfile_intact? and local_links_intact?
   end
 
-  defp resolve_and_install(deps, old_lockfile) do
+  defp resolve_and_install(deps, old_lockfile, local_links) do
     {:ok, overrides} = JSON.read_overrides()
 
     {resolve_us, result} =
@@ -313,7 +318,7 @@ defmodule NPM do
         lockfile = expand_all_optional_deps(lockfile)
         print_lockfile_diff(old_lockfile, lockfile)
         NPM.Lockfile.write(lockfile)
-        link_and_nest(lockfile, nested_info, flat)
+        link_and_nest(lockfile, nested_info, flat, local_links)
 
       {:error, message} ->
         Mix.shell().error("Resolution failed:\n#{message}")
@@ -321,14 +326,14 @@ defmodule NPM do
     end
   end
 
-  defp link_and_nest(lockfile, nested_info, flat) do
-    with :ok <- link_from_lockfile(lockfile) do
+  defp link_and_nest(lockfile, nested_info, flat, local_links) do
+    with :ok <- link_from_lockfile(lockfile, local_links) do
       if nested_info != %{}, do: Linker.link_nested(nested_info, flat, @node_modules)
       :ok
     end
   end
 
-  defp link_from_lockfile(lockfile) do
+  defp link_from_lockfile(lockfile, local_links) do
     cached = Enum.count(lockfile, fn {name, entry} -> NPM.Cache.cached?(name, entry.version) end)
     to_fetch = map_size(lockfile) - cached
 
@@ -340,6 +345,8 @@ defmodule NPM do
 
     case result do
       :ok ->
+        NPM.Install.Linker.link_local_packages(local_links, @node_modules)
+
         ms = div(link_us, 1000)
         Mix.shell().info(NPM.DepsOutput.format_summary(map_size(lockfile), ms))
         warn_ignored_install_scripts(lockfile)
@@ -349,6 +356,10 @@ defmodule NPM do
       error ->
         error
     end
+  end
+
+  defp plural(map) do
+    if map_size(map) == 1, do: "", else: "s"
   end
 
   defp build_lockfile(resolved) do

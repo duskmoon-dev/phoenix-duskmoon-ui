@@ -25,6 +25,7 @@ defmodule NPMSemver do
   Test fixtures ported from [node-semver](https://github.com/npm/node-semver).
   """
 
+  alias HexSolver.Constraint
   alias NPMSemver.{Range, Version}
 
   @doc """
@@ -113,8 +114,8 @@ defmodule NPMSemver do
   """
   @spec to_hex_constraint(String.t(), keyword()) :: {:ok, HexSolver.constraint()} | :error
   def to_hex_constraint(range_string, opts \\ []) do
-    case to_elixir_requirement(range_string, opts) do
-      {:ok, req_string} -> HexSolver.parse_constraint(req_string)
+    case Range.parse(range_string, opts) do
+      {:ok, range} -> to_hex_constraint_from_range(range)
       :error -> :error
     end
   end
@@ -138,4 +139,53 @@ defmodule NPMSemver do
       :error -> :error
     end
   end
+
+  defp to_hex_constraint_from_range(%Range{sets: sets}) do
+    Enum.reduce_while(sets, {:ok, nil}, fn comparators, {:ok, acc} ->
+      case to_hex_constraint_from_set(comparators) do
+        {:ok, constraint} ->
+          next = if acc, do: Constraint.union(acc, constraint), else: constraint
+          {:cont, {:ok, next}}
+
+        :error ->
+          {:halt, :error}
+      end
+    end)
+    |> case do
+      {:ok, nil} -> any_constraint()
+      {:ok, constraint} -> {:ok, constraint}
+      :error -> :error
+    end
+  end
+
+  defp to_hex_constraint_from_set([]), do: any_constraint()
+
+  defp to_hex_constraint_from_set([comparator | rest]) do
+    with {:ok, first} <- to_hex_constraint_from_comparator(comparator) do
+      Enum.reduce_while(rest, {:ok, first}, fn comparator, {:ok, acc} ->
+        case to_hex_constraint_from_comparator(comparator) do
+          {:ok, constraint} -> {:cont, {:ok, Constraint.intersect(acc, constraint)}}
+          :error -> {:halt, :error}
+        end
+      end)
+    end
+  end
+
+  defp to_hex_constraint_from_comparator(comparator) do
+    comparator
+    |> format_comparator()
+    |> HexSolver.parse_constraint()
+  end
+
+  defp any_constraint, do: HexSolver.parse_constraint(">= 0.0.0")
+
+  defp format_comparator({op, version}) do
+    "#{op_to_string(op)} #{version}"
+  end
+
+  defp op_to_string(:gte), do: ">="
+  defp op_to_string(:gt), do: ">"
+  defp op_to_string(:lte), do: "<="
+  defp op_to_string(:lt), do: "<"
+  defp op_to_string(:eq), do: "=="
 end

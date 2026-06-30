@@ -27,6 +27,28 @@ defmodule NPM.Install.Linker do
   end
 
   @doc """
+  Link local workspace and directory `file:` packages into `node_modules`.
+  """
+  @spec link_local_packages(%{String.t() => String.t()}, String.t()) :: :ok
+  def link_local_packages(local_links, node_modules_dir \\ "node_modules")
+
+  def link_local_packages(local_links, _node_modules_dir) when map_size(local_links) == 0, do: :ok
+
+  def link_local_packages(local_links, node_modules_dir) do
+    File.mkdir_p!(node_modules_dir)
+
+    local_links
+    |> Enum.sort_by(&elem(&1, 0))
+    |> Enum.each(fn {name, source} ->
+      source = Path.expand(source)
+      target = Path.join(node_modules_dir, name)
+      link_local_package(source, target)
+    end)
+
+    link_bins(node_modules_dir, Enum.map(local_links, fn {name, _path} -> {name, "local"} end))
+  end
+
+  @doc """
   Link nested packages into parent package `node_modules/` subdirectories.
 
   For each nested package, resolves which version each parent needs and
@@ -106,6 +128,18 @@ defmodule NPM.Install.Linker do
     File.mkdir_p!(Path.dirname(target))
     File.rm_rf!(target)
     File.cp_r!(source, target)
+  end
+
+  defp link_local_package(source, target) do
+    if Path.expand(source) != Path.expand(target) do
+      File.mkdir_p!(Path.dirname(target))
+      File.rm_rf!(target)
+
+      case File.ln_s(source, target) do
+        :ok -> :ok
+        {:error, _reason} -> File.cp_r!(source, target)
+      end
+    end
   end
 
   @doc """
@@ -236,14 +270,22 @@ defmodule NPM.Install.Linker do
   defp install_nested_for_parents(nested_pkg, original_deps, flat_lockfile, nm_dir, strategy) do
     flat_lockfile
     |> Enum.each(fn {parent_name, parent_entry} ->
-      key = "#{parent_name}@#{parent_entry.version}"
-      range = Map.get(original_deps, key)
-
-      if range do
-        version = resolve_nested_version(nested_pkg, range)
-        install_single_nested(nested_pkg, version, parent_name, nm_dir, strategy)
+      with version when is_binary(version) <- parent_entry_version(parent_entry),
+           range when is_binary(range) <- Map.get(original_deps, "#{parent_name}@#{version}") do
+        nested_version = resolve_nested_version(nested_pkg, range)
+        install_single_nested(nested_pkg, nested_version, parent_name, nm_dir, strategy)
       end
     end)
+  end
+
+  defp parent_entry_version(%{version: version}) when is_binary(version), do: version
+  defp parent_entry_version(%{"version" => version}) when is_binary(version), do: version
+  defp parent_entry_version(version) when is_binary(version), do: version
+  defp parent_entry_version(_entry), do: nil
+
+  @doc false
+  def __parent_entry_version__(entry) do
+    parent_entry_version(entry)
   end
 
   defp resolve_nested_version(name, range) do

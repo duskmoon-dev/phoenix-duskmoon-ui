@@ -21,7 +21,14 @@ defmodule Mix.Tasks.Npm.Verify do
         Mix.shell().info("No lockfile. Nothing to verify.")
 
       {:ok, lockfile} ->
-        lockfile |> NPM.NodeModules.diff() |> report_diff(map_size(lockfile))
+        case NPM.Workspace.read_all() do
+          {:ok, project} ->
+            expected = expected_packages(lockfile, project.local_links)
+            expected |> NPM.NodeModules.diff() |> report_diff(map_size(expected))
+
+          {:error, reason} ->
+            Mix.shell().error("Failed: #{inspect(reason)}")
+        end
 
       {:error, reason} ->
         Mix.shell().error("Failed: #{inspect(reason)}")
@@ -30,6 +37,10 @@ defmodule Mix.Tasks.Npm.Verify do
 
   def run(_) do
     Mix.shell().error("Usage: mix npm.verify")
+  end
+
+  defp expected_packages(lockfile, local_links) do
+    Map.merge(lockfile, Map.new(local_links, fn {name, _path} -> {name, %{}} end))
   end
 
   defp report_diff({[], []}, count) do

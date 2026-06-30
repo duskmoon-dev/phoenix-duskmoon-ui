@@ -11,7 +11,7 @@ defmodule NPM.Resolver do
   @behaviour HexSolver.Registry
 
   @table :npm_resolver_cache
-  @max_nesting_depth 5
+  @max_nesting_depth 128
   @max_prefetch_depth 10
   @prefetch_concurrency 16
   @fetch_timeout 30_000
@@ -156,21 +156,63 @@ defmodule NPM.Resolver do
     %{packument | versions: versions}
   end
 
-  defp extract_conflict_package(message) do
+  @doc false
+  def extract_conflict_package(message) do
+    extract_repeated_dependency_target(message) ||
+      extract_dependency_pair_conflict(message) ||
+      extract_exact_version_conflict(message)
+  end
+
+  defp extract_repeated_dependency_target(message) do
+    ~r/depends on "([^"]+)"/
+    |> Regex.scan(message)
+    |> Enum.map(fn [_, term] -> package_name_from_term(term) end)
+    |> Enum.flat_map(fn
+      {:ok, name} -> [name]
+      :error -> []
+    end)
+    |> repeated_package_name()
+  end
+
+  defp extract_dependency_pair_conflict(message) do
+    ~r/depends on "([^"]+)" and "[^"]+" depends on "([^"]+)"/
+    |> Regex.scan(message)
+    |> Enum.find_value(fn [_, left, right] ->
+      with {:ok, left_name} <- package_name_from_term(left),
+           {:ok, right_name} <- package_name_from_term(right),
+           true <- left_name == right_name do
+        left_name
+      else
+        _ -> nil
+      end
+    end)
+  end
+
+  defp extract_exact_version_conflict(message) do
     # Look for patterns like: "ms 2.0.0" and "ms 2.1.3" in the error
     case Regex.scan(~r/"(\S+) (\d+\.\d+\.\d+)"/, message) do
       [_, _ | _] = matches ->
         names = Enum.map(matches, fn [_, name, _] -> name end)
-
-        names
-        |> Enum.frequencies()
-        |> Enum.filter(fn {_, count} -> count >= 2 end)
-        |> Enum.map(&elem(&1, 0))
-        |> List.first()
+        repeated_package_name(names)
 
       _ ->
         nil
     end
+  end
+
+  defp package_name_from_term(term) do
+    case Regex.run(~r/^(@[^\/\s]+\/[^\s]+|[^\s]+)\s+.+$/, term) do
+      [_, name] -> {:ok, name}
+      _ -> :error
+    end
+  end
+
+  defp repeated_package_name(names) do
+    names
+    |> Enum.frequencies()
+    |> Enum.filter(fn {_, count} -> count >= 2 end)
+    |> Enum.map(&elem(&1, 0))
+    |> List.first()
   end
 
   @doc false
@@ -194,8 +236,11 @@ defmodule NPM.Resolver do
     parent_deps =
       :ets.foldl(
         fn
-          {key, _}, acc when is_atom(key) -> acc
-          {name, packument}, acc -> find_dependents(name, packument, package, acc)
+          {name, %{versions: _} = packument}, acc ->
+            find_dependents(name, packument, package, acc)
+
+          _, acc ->
+            acc
         end,
         %{},
         @table
@@ -204,14 +249,20 @@ defmodule NPM.Resolver do
     :ets.insert(@table, {{:__original_deps__, package}, parent_deps})
   end
 
-  defp find_dependents(name, packument, package, acc) do
-    Enum.reduce(packument.versions, acc, fn {ver, info}, inner_acc ->
-      case Map.get(info.dependencies, package) do
+  defp find_dependents(name, %{versions: versions}, package, acc) do
+    Enum.reduce(versions, acc, fn {ver, info}, inner_acc ->
+      case info |> version_dependencies() |> Map.get(package) do
         nil -> inner_acc
         range -> Map.put(inner_acc, "#{name}@#{ver}", range)
       end
     end)
   end
+
+  defp find_dependents(_name, _packument, _package, acc), do: acc
+
+  defp version_dependencies(%{dependencies: deps}) when is_map(deps), do: deps
+  defp version_dependencies(%{"dependencies" => deps}) when is_map(deps), do: deps
+  defp version_dependencies(_info), do: %{}
 
   @doc "Clear the packument cache."
   @spec clear_cache() :: :ok

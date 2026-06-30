@@ -1,6 +1,4 @@
 defmodule Mix.Tasks.Npm.Outdated do
-  alias NPM.Package.JSON
-
   @shortdoc "Show outdated npm packages"
 
   @moduledoc """
@@ -18,7 +16,8 @@ defmodule Mix.Tasks.Npm.Outdated do
     Application.ensure_all_started(:req)
 
     with {:ok, lockfile} <- NPM.Lockfile.read(),
-         {:ok, deps} <- JSON.read() do
+         {:ok, project} <- NPM.Workspace.read_all(),
+         {:ok, deps} <- NPM.Workspace.install_dependencies(project) do
       if lockfile == %{} do
         Mix.shell().info("No npm.lock found, run `mix npm.install` first.")
       else

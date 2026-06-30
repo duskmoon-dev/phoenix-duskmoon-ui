@@ -4,7 +4,7 @@ defmodule Mix.Tasks.Npm.Install do
   @moduledoc """
   Install npm packages.
 
-      mix npm.install                         # Install all deps from package.json
+      mix npm.install                         # Install all deps from package.json/workspaces
       mix npm.install lodash                  # Add latest version
       mix npm.install lodash@^4.0             # Add with specific range
       mix npm.install @types/node@^20         # Add scoped package
@@ -13,8 +13,8 @@ defmodule Mix.Tasks.Npm.Install do
       mix npm.install eslint --save-dev       # Add to devDependencies
       mix npm.install lodash react vue        # Add multiple packages
 
-  Resolves all dependencies using the PubGrub solver, writes `npm.lock`,
-  and links packages into `node_modules/`.
+  Resolves all root and workspace dependencies using the PubGrub solver,
+  writes `npm.lock`, and links packages into `node_modules/`.
   """
 
   use Mix.Task
