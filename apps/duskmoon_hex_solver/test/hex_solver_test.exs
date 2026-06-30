@@ -1,5 +1,7 @@
 defmodule HexSolverTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
+
+  import ExUnit.CaptureLog
 
   @npm_mix_exs Path.expand("../../duskmoon_npm/mix.exs", __DIR__)
 
@@ -28,6 +30,34 @@ defmodule HexSolverTest do
 
     assert {:ok, %{"left-pad" => {%Version{major: 1, minor: 0, patch: 0}, nil}}} =
              HexSolver.run(HexSolverTest.Registry, dependencies, [], [])
+  end
+
+  test "solver debug logs are opt-in" do
+    previous_level = Logger.level()
+    Logger.configure(level: :debug)
+    on_exit(fn -> Logger.configure(level: previous_level) end)
+
+    constraint = HexSolver.parse_constraint!("~> 1.0")
+
+    dependencies = [
+      %{
+        repo: nil,
+        name: "left-pad",
+        constraint: constraint,
+        optional: false,
+        label: "left-pad",
+        dependencies: []
+      }
+    ]
+
+    assert capture_log([level: :debug], fn ->
+             assert {:ok, _} = HexSolver.run(HexSolverTest.Registry, dependencies, [], [])
+           end) == ""
+
+    assert capture_log([level: :debug], fn ->
+             assert {:ok, _} =
+                      HexSolver.run(HexSolverTest.Registry, dependencies, [], [], debug: true)
+           end) =~ "RESOLVER:"
   end
 
   defp npm_version do

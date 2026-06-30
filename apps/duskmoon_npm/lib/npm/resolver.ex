@@ -67,12 +67,15 @@ defmodule NPM.Resolver do
         {:ok, final}
 
       {:error, message} ->
-        conflict_pkg = extract_conflict_package(message)
+        conflict_packages =
+          message
+          |> extract_conflict_packages()
+          |> Enum.reject(&MapSet.member?(excluded, &1))
 
-        if conflict_pkg && not MapSet.member?(excluded, conflict_pkg) do
-          new_nested = collect_nested_versions(conflict_pkg, excluded)
+        if conflict_packages != [] do
+          new_nested = collect_nested_versions(conflict_packages)
           merged_nested = Map.merge(nested, new_nested)
-          new_excluded = MapSet.put(excluded, conflict_pkg)
+          new_excluded = Enum.reduce(conflict_packages, excluded, &MapSet.put(&2, &1))
           resolve_with_nesting(root_deps, new_excluded, merged_nested, depth + 1)
         else
           {:error, message}
@@ -158,12 +161,55 @@ defmodule NPM.Resolver do
 
   @doc false
   def extract_conflict_package(message) do
-    extract_repeated_dependency_target(message) ||
-      extract_dependency_pair_conflict(message) ||
-      extract_exact_version_conflict(message)
+    message
+    |> extract_conflict_packages()
+    |> List.first()
   end
 
-  defp extract_repeated_dependency_target(message) do
+  @doc false
+  def extract_conflict_packages(message) do
+    [
+      extract_repeated_dependency_targets(message),
+      extract_dependency_pair_conflicts(message),
+      extract_exact_version_conflicts(message)
+    ]
+    |> List.flatten()
+    |> Enum.uniq()
+  end
+
+  defp extract_repeated_dependency_targets(message) do
+    message
+    |> dependency_target_names()
+    |> repeated_package_names()
+  end
+
+  defp extract_dependency_pair_conflicts(message) do
+    ~r/depends on "([^"]+)" and "[^"]+" depends on "([^"]+)"/
+    |> Regex.scan(message)
+    |> Enum.flat_map(fn [_, left, right] ->
+      with {:ok, left_name} <- package_name_from_term(left),
+           {:ok, right_name} <- package_name_from_term(right),
+           true <- left_name == right_name do
+        [left_name]
+      else
+        _ -> []
+      end
+    end)
+  end
+
+  defp extract_exact_version_conflicts(message) do
+    # Look for patterns like: "ms 2.0.0" and "ms 2.1.3" in the error
+    case Regex.scan(~r/"(\S+) (\d+\.\d+\.\d+)"/, message) do
+      [_, _ | _] = matches ->
+        names = Enum.map(matches, fn [_, name, _] -> name end)
+        repeated_package_names(names)
+
+      _ ->
+        []
+    end
+  end
+
+  defp dependency_target_names(message) do
     ~r/depends on "([^"]+)"/
     |> Regex.scan(message)
     |> Enum.map(fn [_, term] -> package_name_from_term(term) end)
@@ -171,33 +217,6 @@ defmodule NPM.Resolver do
       {:ok, name} -> [name]
       :error -> []
     end)
-    |> repeated_package_name()
-  end
-
-  defp extract_dependency_pair_conflict(message) do
-    ~r/depends on "([^"]+)" and "[^"]+" depends on "([^"]+)"/
-    |> Regex.scan(message)
-    |> Enum.find_value(fn [_, left, right] ->
-      with {:ok, left_name} <- package_name_from_term(left),
-           {:ok, right_name} <- package_name_from_term(right),
-           true <- left_name == right_name do
-        left_name
-      else
-        _ -> nil
-      end
-    end)
-  end
-
-  defp extract_exact_version_conflict(message) do
-    # Look for patterns like: "ms 2.0.0" and "ms 2.1.3" in the error
-    case Regex.scan(~r/"(\S+) (\d+\.\d+\.\d+)"/, message) do
-      [_, _ | _] = matches ->
-        names = Enum.map(matches, fn [_, name, _] -> name end)
-        repeated_package_name(names)
-
-      _ ->
-        nil
-    end
   end
 
   defp package_name_from_term(term) do
@@ -207,12 +226,11 @@ defmodule NPM.Resolver do
     end
   end
 
-  defp repeated_package_name(names) do
+  defp repeated_package_names(names) do
     names
     |> Enum.frequencies()
     |> Enum.filter(fn {_, count} -> count >= 2 end)
     |> Enum.map(&elem(&1, 0))
-    |> List.first()
   end
 
   @doc false
@@ -225,11 +243,13 @@ defmodule NPM.Resolver do
     end
   end
 
-  defp collect_nested_versions(package, _excluded) do
+  defp collect_nested_versions(packages) do
     # Before stripping, save the original dependency data
     # so the linker can look up which parents need which version
-    save_original_deps(package)
-    %{package => :nested}
+    Map.new(packages, fn package ->
+      save_original_deps(package)
+      {package, :nested}
+    end)
   end
 
   defp save_original_deps(package) do

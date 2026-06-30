@@ -41,6 +41,15 @@ defmodule NPMTest do
     assert NPM.Resolver.extract_conflict_package(message) == "commander"
   end
 
+  test "resolver extracts all nested conflicts from one solver message" do
+    message = """
+    Because "pkg-a >= 1.0.0" depends on "left-pad 1.0.0" and "pkg-b >= 1.0.0" depends on "left-pad 2.0.0", "pkg-a >= 1.0.0" is incompatible with "pkg-b >= 1.0.0".
+    And because "pkg-c >= 1.0.0" depends on "right-pad 1.0.0" and "pkg-d >= 1.0.0" depends on "right-pad 2.0.0", "pkg-c >= 1.0.0" is incompatible with "pkg-d >= 1.0.0".
+    """
+
+    assert NPM.Resolver.extract_conflict_packages(message) == ["left-pad", "right-pad"]
+  end
+
   defp bundler_version do
     [_, version] = Regex.run(~r/@version "([^"]+)"/, File.read!(@bundler_mix_exs))
     version

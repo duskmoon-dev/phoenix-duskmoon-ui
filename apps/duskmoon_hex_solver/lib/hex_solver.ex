@@ -54,12 +54,13 @@ defmodule HexSolver do
   ## Options
 
     * `:ansi` - If `true` adds ANSI formatting to the failure message (Default: `false`)
+    * `:debug` - If `true` emits detailed solver trace logs (Default: `false`)
 
   """
-  @spec run(module(), [dependency()], [locked()], [label()], ansi: boolean()) ::
+  @spec run(module(), [dependency()], [locked()], [label()], keyword()) ::
           {:ok, result()} | {:error, String.t()}
   def run(registry, dependencies, locked, overrides, opts \\ []) do
-    case Solver.run(registry, dependencies, locked, overrides) do
+    case Solver.run(registry, dependencies, locked, overrides, opts) do
       {:ok, solution} -> {:ok, Map.drop(solution, ["$root", "$lock"])}
       {:error, incompatibility} -> {:error, Failure.write(incompatibility, opts)}
     end

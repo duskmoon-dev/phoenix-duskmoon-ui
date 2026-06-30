@@ -202,13 +202,17 @@ defmodule NPM do
 
     if local_links == %{} do
       Mix.shell().info("No npm dependencies found in package.json.")
+      :ok
     else
-      Linker.link(%{}, @node_modules)
-      Linker.link_local_packages(local_links, @node_modules)
-      Mix.shell().info("Linked #{map_size(local_links)} local npm package#{plural(local_links)}.")
-    end
+      with :ok <- Linker.link(%{}, @node_modules),
+           :ok <- Linker.link_local_packages(local_links, @node_modules) do
+        Mix.shell().info(
+          "Linked #{map_size(local_links)} local npm package#{plural(local_links)}."
+        )
 
-    :ok
+        :ok
+      end
+    end
   end
 
   defp do_install(deps, opts) do
@@ -267,13 +271,21 @@ defmodule NPM do
     validate_direct_exotic_deps!(deps)
     {:ok, old_lockfile} = NPM.Lockfile.read()
 
-    if old_lockfile != %{} and lockfile_matches?(old_lockfile, deps) and
-         lockfile_policy_current?() and
-         node_modules_intact?(old_lockfile, local_links) do
-      Mix.shell().info("Already up to date.")
-      :ok
-    else
-      resolve_and_install(deps, old_lockfile, local_links)
+    cond do
+      old_lockfile == %{} ->
+        resolve_and_install(deps, old_lockfile, local_links)
+
+      lockfile_matches?(old_lockfile, deps) and lockfile_policy_current?() and
+          node_modules_intact?(old_lockfile, local_links) ->
+        Mix.shell().info("Already up to date.")
+        :ok
+
+      lockfile_matches?(old_lockfile, deps) and lockfile_policy_current?() ->
+        Mix.shell().info("Installing from current npm.lock.")
+        link_from_lockfile(old_lockfile, local_links)
+
+      true ->
+        resolve_and_install(deps, old_lockfile, local_links)
     end
   end
 
@@ -282,8 +294,11 @@ defmodule NPM do
   end
 
   defp node_modules_intact?(lockfile, local_links) do
+    skipped = Linker.skipped_packages(lockfile)
+    linkable_lockfile = linkable_lockfile(lockfile, skipped)
+
     lockfile_intact? =
-      Enum.all?(lockfile, fn {name, _entry} ->
+      Enum.all?(linkable_lockfile, fn {name, _entry} ->
         Path.join([@node_modules, name, "package.json"]) |> File.exists?()
       end)
 
@@ -334,21 +349,30 @@ defmodule NPM do
   end
 
   defp link_from_lockfile(lockfile, local_links) do
-    cached = Enum.count(lockfile, fn {name, entry} -> NPM.Cache.cached?(name, entry.version) end)
-    to_fetch = map_size(lockfile) - cached
+    skipped = Linker.skipped_packages(lockfile)
+    linkable_lockfile = linkable_lockfile(lockfile, skipped)
+    total = length(linkable_lockfile)
+
+    cached =
+      Enum.count(linkable_lockfile, fn {name, entry} -> NPM.Cache.cached?(name, entry.version) end)
+
+    to_fetch = total - cached
 
     if to_fetch > 0 do
       Mix.shell().info("Fetching #{to_fetch} package#{if to_fetch != 1, do: "s", else: ""}...")
     end
 
-    {link_us, result} = :timer.tc(fn -> Linker.link(lockfile, @node_modules) end)
+    {link_us, result} =
+      :timer.tc(fn ->
+        with :ok <- Linker.link(lockfile, @node_modules, :symlink, skipped) do
+          NPM.Install.Linker.link_local_packages(local_links, @node_modules)
+        end
+      end)
 
     case result do
       :ok ->
-        NPM.Install.Linker.link_local_packages(local_links, @node_modules)
-
         ms = div(link_us, 1000)
-        Mix.shell().info(NPM.DepsOutput.format_summary(map_size(lockfile), ms))
+        Mix.shell().info(NPM.DepsOutput.format_summary(total, ms))
         warn_ignored_install_scripts(lockfile)
         Mix.shell().info(NPM.DepsOutput.format_lockfile(lockfile))
         :ok
@@ -356,6 +380,10 @@ defmodule NPM do
       error ->
         error
     end
+  end
+
+  defp linkable_lockfile(lockfile, skipped) do
+    Enum.reject(lockfile, fn {name, _entry} -> MapSet.member?(skipped, name) end)
   end
 
   defp plural(map) do

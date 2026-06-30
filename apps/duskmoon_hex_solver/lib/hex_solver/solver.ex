@@ -13,8 +13,8 @@ defmodule HexSolver.Solver do
 
   require Logger
 
-  def run(registry, dependencies, locked, overrides) do
-    solve("$root", new_state(registry, dependencies, locked, overrides))
+  def run(registry, dependencies, locked, overrides, opts \\ []) do
+    solve("$root", new_state(registry, dependencies, locked, overrides, opts))
   end
 
   defp solve(next, state) do
@@ -96,7 +96,7 @@ defmodule HexSolver.Solver do
   defp propagate_incompatibility([], unsatisfied, incompatibility, state, _opts) do
     # Only one term in the incompatibility was unsatisfied
     unsatisfied = %{unsatisfied | positive: not unsatisfied.positive}
-    Logger.debug("RESOLVER: derived #{unsatisfied}")
+    debug(state, fn -> "RESOLVER: derived #{unsatisfied}" end)
 
     solution = PartialSolution.derive(state.solution, unsatisfied, incompatibility)
     {:ok, unsatisfied.package_range.name, %{state | solution: solution}}
@@ -146,7 +146,7 @@ defmodule HexSolver.Solver do
               state.solution
             else
               package_range = %PackageRange{package_range | constraint: version}
-              Logger.debug("RESOLVER: selecting #{package_range}")
+              debug(state, fn -> "RESOLVER: selecting #{package_range}" end)
               PartialSolution.decide(state.solution, package_range)
             end
 
@@ -164,7 +164,7 @@ defmodule HexSolver.Solver do
   end
 
   defp add_incompatibility(state, incompatibility) do
-    Logger.debug("RESOLVER: fact #{incompatibility}")
+    debug(state, fn -> "RESOLVER: fact #{incompatibility}" end)
 
     incompatibilities =
       Enum.reduce(incompatibility.terms, state.incompatibilities, fn term, incompatibilities ->
@@ -189,7 +189,7 @@ defmodule HexSolver.Solver do
   # incompatibility that encapsulates the root cause of the conflict and backtracks
   # until the new incompatibility will allow propagation to deduce new assignments.
   defp conflict_resolution(state, incompatibility) do
-    Logger.debug("RESOLVER: conflict #{incompatibility}")
+    debug(state, fn -> "RESOLVER: conflict #{incompatibility}" end)
     do_conflict_resolution(state, incompatibility, false)
   catch
     :throw, {__MODULE__, :conflict_resolution, incompatibility, state} ->
@@ -317,12 +317,14 @@ defmodule HexSolver.Solver do
 
       partially = if resolution.difference, do: " partially"
 
-      Logger.debug("""
-      RESOLVER: conflict resolution
-        #{resolution.most_recent_term} is#{partially} satisfied by #{resolution.most_recent_satisfier}
-        which is caused by #{resolution.most_recent_satisfier.cause}
-        thus #{incompatibility}\
-      """)
+      debug(state, fn ->
+        """
+        RESOLVER: conflict resolution
+          #{resolution.most_recent_term} is#{partially} satisfied by #{resolution.most_recent_satisfier}
+          which is caused by #{resolution.most_recent_satisfier.cause}
+          thus #{incompatibility}\
+        """
+      end)
 
       do_conflict_resolution(state, incompatibility, true)
     end
@@ -350,7 +352,7 @@ defmodule HexSolver.Solver do
     }
   end
 
-  defp new_state(registry, root_dependencies, locked, overrides) do
+  defp new_state(registry, root_dependencies, locked, overrides, opts) do
     version = Version.parse!("1.0.0")
     package_range = %PackageRange{name: "$root", constraint: version}
     root = Incompatibility.new([%Term{positive: false, package_range: package_range}], :root)
@@ -370,8 +372,15 @@ defmodule HexSolver.Solver do
     %{
       solution: %PartialSolution{},
       incompatibilities: %{},
-      lister: lister
+      lister: lister,
+      debug: Keyword.get(opts, :debug, false)
     }
     |> add_incompatibility(root)
   end
+
+  defp debug(%{debug: true}, message_fun) when is_function(message_fun, 0) do
+    Logger.debug(message_fun.())
+  end
+
+  defp debug(_state, _message_fun), do: :ok
 end

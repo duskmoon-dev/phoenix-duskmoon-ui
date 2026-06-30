@@ -10,6 +10,9 @@ defmodule NPM.Install.Linker do
   as possible, only nesting when version conflicts occur.
   """
 
+  @cache_concurrency 8
+  @link_concurrency 16
+
   @type strategy :: :symlink | :copy
   @type resolved :: %{String.t() => NPM.Lockfile.entry()}
   @type nested_info :: %{String.t() => term()}
@@ -19,9 +22,14 @@ defmodule NPM.Install.Linker do
 
   First populates the global cache, then creates the `node_modules` tree.
   """
-  @spec link(resolved(), String.t(), strategy()) :: :ok | {:error, term()}
-  def link(lockfile, node_modules_dir \\ "node_modules", strategy \\ default_strategy()) do
-    with {:ok, skipped} <- populate_cache(lockfile) do
+  @spec link(resolved(), String.t(), strategy(), MapSet.t() | nil) :: :ok | {:error, term()}
+  def link(
+        lockfile,
+        node_modules_dir \\ "node_modules",
+        strategy \\ default_strategy(),
+        skipped \\ nil
+      ) do
+    with {:ok, skipped} <- populate_cache(lockfile, skipped) do
       create_node_modules(lockfile, node_modules_dir, strategy, skipped)
     end
   end
@@ -29,7 +37,7 @@ defmodule NPM.Install.Linker do
   @doc """
   Link local workspace and directory `file:` packages into `node_modules`.
   """
-  @spec link_local_packages(%{String.t() => String.t()}, String.t()) :: :ok
+  @spec link_local_packages(%{String.t() => String.t()}, String.t()) :: :ok | {:error, term()}
   def link_local_packages(local_links, node_modules_dir \\ "node_modules")
 
   def link_local_packages(local_links, _node_modules_dir) when map_size(local_links) == 0, do: :ok
@@ -37,15 +45,16 @@ defmodule NPM.Install.Linker do
   def link_local_packages(local_links, node_modules_dir) do
     File.mkdir_p!(node_modules_dir)
 
-    local_links
-    |> Enum.sort_by(&elem(&1, 0))
-    |> Enum.each(fn {name, source} ->
-      source = Path.expand(source)
-      target = Path.join(node_modules_dir, name)
-      link_local_package(source, target)
-    end)
-
-    link_bins(node_modules_dir, Enum.map(local_links, fn {name, _path} -> {name, "local"} end))
+    with :ok <-
+           local_links
+           |> Enum.sort_by(&elem(&1, 0))
+           |> run_concurrently(fn {name, source} ->
+             source = Path.expand(source)
+             target = Path.join(node_modules_dir, name)
+             link_local_package(source, target)
+           end) do
+      link_bins(node_modules_dir, Enum.map(local_links, fn {name, _path} -> {name, "local"} end))
+    end
   end
 
   @doc """
@@ -54,21 +63,21 @@ defmodule NPM.Install.Linker do
   For each nested package, resolves which version each parent needs and
   creates `parent_pkg/node_modules/nested_pkg/` with the correct version.
   """
-  @spec link_nested(nested_info(), resolved(), String.t(), strategy()) :: :ok
+  @spec link_nested(nested_info(), resolved(), String.t(), strategy()) :: :ok | {:error, term()}
   def link_nested(
         nested_info,
         flat_lockfile,
         nm_dir \\ "node_modules",
         strategy \\ default_strategy()
       ) do
-    Enum.each(nested_info, fn {nested_pkg, _} ->
+    run_concurrently(nested_info, fn {nested_pkg, _} ->
       original_deps = NPM.Resolver.get_original_deps(nested_pkg)
       install_nested_for_parents(nested_pkg, original_deps, flat_lockfile, nm_dir, strategy)
     end)
   end
 
-  defp populate_cache(lockfile) do
-    platform_skipped = platform_incompatible_packages(lockfile)
+  defp populate_cache(lockfile, platform_skipped) do
+    platform_skipped = platform_skipped || platform_incompatible_packages(lockfile)
 
     lockfile
     |> Enum.reject(fn {name, _} -> MapSet.member?(platform_skipped, name) end)
@@ -83,7 +92,7 @@ defmodule NPM.Install.Linker do
           other -> other
         end
       end,
-      max_concurrency: 8,
+      max_concurrency: @cache_concurrency,
       timeout: 60_000
     )
     |> Enum.reduce({:ok, MapSet.union(platform_skipped, MapSet.new())}, fn
@@ -106,28 +115,35 @@ defmodule NPM.Install.Linker do
 
     prune(node_modules_dir, expected_names)
 
-    Enum.each(tree, fn {name, version} ->
-      cache_path = NPM.Cache.package_dir(name, version)
-      target = Path.join(node_modules_dir, name)
-      link_package(cache_path, target, strategy)
-    end)
-
-    link_bins(node_modules_dir, tree)
-
-    :ok
+    with :ok <-
+           run_concurrently(tree, fn {name, version} ->
+             cache_path = NPM.Cache.package_dir(name, version)
+             target = Path.join(node_modules_dir, name)
+             link_package(cache_path, target, strategy)
+           end) do
+      link_bins(node_modules_dir, tree)
+    end
   end
 
   defp link_package(source, target, :symlink) do
     File.mkdir_p!(Path.dirname(target))
-
     File.rm_rf!(target)
-    File.ln_s!(source, target)
+
+    case File.ln_s(source, target) do
+      :ok -> :ok
+      {:error, _reason} -> copy_package(source, target)
+    end
   end
 
   defp link_package(source, target, :copy) do
+    copy_package(source, target)
+  end
+
+  defp copy_package(source, target) do
     File.mkdir_p!(Path.dirname(target))
     File.rm_rf!(target)
     File.cp_r!(source, target)
+    :ok
   end
 
   defp link_local_package(source, target) do
@@ -137,8 +153,10 @@ defmodule NPM.Install.Linker do
 
       case File.ln_s(source, target) do
         :ok -> :ok
-        {:error, _reason} -> File.cp_r!(source, target)
+        {:error, _reason} -> copy_package(source, target)
       end
+    else
+      :ok
     end
   end
 
@@ -155,6 +173,10 @@ defmodule NPM.Install.Linker do
     |> collect_all_packages()
     |> pick_hoisted_versions()
   end
+
+  @doc false
+  @spec skipped_packages(resolved()) :: MapSet.t(String.t())
+  def skipped_packages(lockfile), do: platform_incompatible_packages(lockfile)
 
   defp collect_all_packages(lockfile) do
     lockfile
@@ -224,6 +246,8 @@ defmodule NPM.Install.Linker do
         File.chmod(target_path, 0o755)
       end)
     end
+
+    :ok
   end
 
   defp read_package_bins(node_modules_dir, {name, _version}) do
@@ -270,12 +294,16 @@ defmodule NPM.Install.Linker do
   defp install_nested_for_parents(nested_pkg, original_deps, flat_lockfile, nm_dir, strategy) do
     flat_lockfile
     |> Enum.each(fn {parent_name, parent_entry} ->
-      with version when is_binary(version) <- parent_entry_version(parent_entry),
-           range when is_binary(range) <- Map.get(original_deps, "#{parent_name}@#{version}") do
+      version = parent_entry_version(parent_entry)
+      range = if is_binary(version), do: Map.get(original_deps, "#{parent_name}@#{version}")
+
+      if is_binary(range) do
         nested_version = resolve_nested_version(nested_pkg, range)
         install_single_nested(nested_pkg, nested_version, parent_name, nm_dir, strategy)
       end
     end)
+
+    :ok
   end
 
   defp parent_entry_version(%{version: version}) when is_binary(version), do: version
@@ -355,10 +383,12 @@ defmodule NPM.Install.Linker do
         cache_path = NPM.Cache.package_dir(pkg, version)
         target = Path.join([nm_dir, parent, "node_modules", pkg])
         link_package(cache_path, target, strategy)
+      else
+        :ok
       end
+    else
+      _ -> :ok
     end
-
-    :ok
   end
 
   defp list_dir(path) do
@@ -369,6 +399,22 @@ defmodule NPM.Install.Linker do
   end
 
   defp default_strategy do
-    :copy
+    :symlink
+  end
+
+  defp run_concurrently(items, fun) do
+    items
+    |> Task.async_stream(fun,
+      max_concurrency: @link_concurrency,
+      ordered: false,
+      timeout: :infinity
+    )
+    |> Enum.reduce_while(:ok, fn
+      {:ok, :ok}, :ok -> {:cont, :ok}
+      {:ok, nil}, :ok -> {:cont, :ok}
+      {:ok, {:error, reason}}, :ok -> {:halt, {:error, reason}}
+      {:ok, _result}, :ok -> {:cont, :ok}
+      {:exit, reason}, :ok -> {:halt, {:error, reason}}
+    end)
   end
 end
