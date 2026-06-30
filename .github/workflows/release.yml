@@ -93,7 +93,7 @@ jobs:
     uses: ./.github/workflows/native-prebuild.yml
     with:
       version: ${{ inputs.version }}
-      git-ref: v${{ inputs.version }}
+      git-ref: ${{ inputs.git-ref }}
     secrets: inherit
 
   publish:
@@ -106,7 +106,7 @@ jobs:
       - name: Checkout release tag
         uses: actions/checkout@v6
         with:
-          ref: v${{ inputs.version }}
+          ref: ${{ inputs.git-ref }}
 
       - name: Set up Elixir
         uses: erlef/setup-beam@v1

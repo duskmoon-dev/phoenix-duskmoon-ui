@@ -127,8 +127,6 @@ jobs:
             os: ubuntu-22.04
           - target: x86_64-macos-none
             os: macos-15-intel
-          - target: x86_64-windows-gnu
-            os: ubuntu-22.04
 
     steps:
       - name: Checkout code

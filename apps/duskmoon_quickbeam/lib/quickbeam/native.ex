@@ -143,7 +143,6 @@ defmodule QuickBEAM.Native do
       x86_64-freebsd-none
       x86_64-linux-gnu
       x86_64-macos-none
-      x86_64-windows-gnu
     ),
     zig_code_path: "quickbeam.zig",
     optimize: :env,
