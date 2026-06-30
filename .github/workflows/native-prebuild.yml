@@ -89,6 +89,8 @@ jobs:
       - name: Build Rust NIF
         id: build-crate
         uses: philss/rustler-precompiled-action@v1.1.5
+        env:
+          CARGO_TARGET_DIR: target
         with:
           project-name: ${{ matrix.crate.name }}
           project-version: ${{ inputs.version }}
@@ -108,6 +110,7 @@ jobs:
 
   quickbeam-nif:
     name: duskmoon_quickbeam / ${{ matrix.target.target }}
+    needs: rust-nifs
     runs-on: ${{ matrix.target.os }}
     timeout-minutes: 45
     strategy:

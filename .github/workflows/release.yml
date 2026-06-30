@@ -55,23 +55,37 @@ jobs:
       - name: Commit and tag
         run: |
           VERSION="${{ inputs.version }}"
+          if git ls-remote --exit-code --tags origin "refs/tags/v${VERSION}" >/dev/null 2>&1; then
+            echo "Tag v${VERSION} already exists; skipping version commit and tag creation"
+            exit 0
+          fi
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add apps/phoenix_duskmoon/mix.exs apps/duskmoon_bundler/mix.exs apps/duskmoon_quickbeam/mix.exs apps/duskmoon_oxc/mix.exs apps/duskmoon_oxide/mix.exs apps/duskmoon_vize/mix.exs apps/duskmoon_npm/mix.exs apps/duskmoon_hex_solver/mix.exs apps/phoenix_duskmoon/package.json mix.exs bun.lock
-          git commit -m "chore(version): bump to ${VERSION}"
+          if git diff --cached --quiet; then
+            echo "No version changes to commit"
+          else
+            git commit -m "chore(version): bump to ${VERSION}"
+          fi
           git tag "v${VERSION}"
-          git push origin HEAD:${{ inputs.git-ref }} --tags
+          git push origin HEAD:${{ inputs.git-ref }} "refs/tags/v${VERSION}"
 
       - name: Create draft GitHub Release
-        uses: softprops/action-gh-release@v3
-        with:
-          tag_name: v${{ inputs.version }}
-          name: v${{ inputs.version }}
-          generate_release_notes: true
-          draft: true
-          prerelease: ${{ contains(inputs.version, '-') }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ inputs.version }}"
+          if gh release view "v${VERSION}" >/dev/null 2>&1; then
+            echo "Release v${VERSION} already exists; skipping release creation"
+            exit 0
+          fi
+
+          if echo "${VERSION}" | grep -qE '[-]'; then
+            gh release create "v${VERSION}" --title "v${VERSION}" --draft --prerelease --generate-notes
+          else
+            gh release create "v${VERSION}" --title "v${VERSION}" --draft --generate-notes
+          fi
 
   native-prebuild:
     name: Build Native Precompiled Artifacts
