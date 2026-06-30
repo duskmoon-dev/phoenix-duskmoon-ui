@@ -3,9 +3,22 @@ name: E2E
 on:
   workflow_dispatch:
     inputs:
-      version:
-        description: 'Released version to test (e.g., 9.5.2)'
+      package_source:
+        description: 'Package source to test'
         required: true
+        type: choice
+        default: source
+        options:
+          - source
+          - hex
+      version:
+        description: 'Released version to test when package_source=hex (e.g., 9.5.4)'
+        required: false
+        type: string
+      git_ref:
+        description: 'Git revision to test when package_source=source'
+        required: false
+        default: main
         type: string
 
 permissions:
@@ -16,38 +29,151 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  hex-package-install:
-    name: Hex Package Install
+  package-install:
+    name: Package Install (${{ inputs.package_source }})
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
 
     steps:
+      - name: Checkout source packages
+        if: inputs.package_source == 'source'
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.git_ref }}
+
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
           elixir-version: '1.18'
           otp-version: '28'
 
+      - name: Install Rust toolchain
+        if: inputs.package_source == 'source'
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Install Zig
+        if: inputs.package_source == 'source'
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.15.1
+
       - name: Create package install project
+        working-directory: ${{ runner.temp }}
         run: mix new duskmoon_package_e2e --sup
 
-      - name: Add released package dependencies
-        working-directory: duskmoon_package_e2e
+      - name: Prepare source package manifests
+        if: inputs.package_source == 'source'
         run: |
-          VERSION="${{ inputs.version }}"
-          perl -0pi -e 's/defp deps do\n    \[\n.*?    \]\n  end/defp deps do\n    [\n      {:duskmoon_hex_solver, "~> '"${VERSION}"'"},\n      {:duskmoon_npm, "~> '"${VERSION}"'"},\n      {:duskmoon_bundler, "~> '"${VERSION}"'"},\n      {:phoenix_duskmoon, "~> '"${VERSION}"'"}\n    ]\n  end/s' mix.exs
-          perl -0pi -e 's/{:duskmoon_bundler, "~> '"${VERSION}"'"},/{:duskmoon_oxc, "~> '"${VERSION}"'"},\n      {:duskmoon_vize, "~> '"${VERSION}"'"},\n      {:duskmoon_oxide, "~> '"${VERSION}"'"},\n      {:duskmoon_quickbeam, "~> '"${VERSION}"'"},\n      {:duskmoon_bundler, "~> '"${VERSION}"'"},/' mix.exs
+          set -euo pipefail
+
+          SOURCE_APP_ROOT="${RUNNER_TEMP}/source_apps"
+          mkdir -p "$SOURCE_APP_ROOT"
+
+          for app in \
+            duskmoon_hex_solver \
+            duskmoon_npm \
+            duskmoon_oxc \
+            duskmoon_vize \
+            duskmoon_oxide \
+            duskmoon_quickbeam \
+            duskmoon_bundler \
+            phoenix_duskmoon
+          do
+            cp -R "apps/${app}" "${SOURCE_APP_ROOT}/${app}"
+          done
+
+          strip_umbrella_paths() {
+            sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' "$1"
+          }
+
+          for mix_file in \
+            "${SOURCE_APP_ROOT}/duskmoon_hex_solver/mix.exs" \
+            "${SOURCE_APP_ROOT}/duskmoon_npm/mix.exs" \
+            "${SOURCE_APP_ROOT}/duskmoon_oxc/mix.exs" \
+            "${SOURCE_APP_ROOT}/duskmoon_vize/mix.exs" \
+            "${SOURCE_APP_ROOT}/duskmoon_oxide/mix.exs" \
+            "${SOURCE_APP_ROOT}/duskmoon_quickbeam/mix.exs" \
+            "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs" \
+            "${SOURCE_APP_ROOT}/phoenix_duskmoon/mix.exs"
+          do
+            strip_umbrella_paths "$mix_file"
+          done
+
+          sed -i 's%{:duskmoon_hex_solver, in_umbrella: true}%{:duskmoon_hex_solver, path: "../duskmoon_hex_solver"}%' "${SOURCE_APP_ROOT}/duskmoon_npm/mix.exs"
+          sed -i 's%{:duskmoon_oxc, in_umbrella: true}%{:duskmoon_oxc, path: "../duskmoon_oxc"}%' "${SOURCE_APP_ROOT}/duskmoon_quickbeam/mix.exs"
+          sed -i 's%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, path: "../duskmoon_npm"}%' "${SOURCE_APP_ROOT}/duskmoon_quickbeam/mix.exs"
+          sed -i 's%{:duskmoon_oxc, in_umbrella: true}%{:duskmoon_oxc, path: "../duskmoon_oxc"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
+          sed -i 's%{:duskmoon_vize, in_umbrella: true}%{:duskmoon_vize, path: "../duskmoon_vize"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
+          sed -i 's%{:duskmoon_oxide, in_umbrella: true}%{:duskmoon_oxide, path: "../duskmoon_oxide"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
+          sed -i 's%{:duskmoon_quickbeam, in_umbrella: true}%{:duskmoon_quickbeam, path: "../duskmoon_quickbeam"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
+          sed -i 's%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, path: "../duskmoon_npm"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
+          sed -i 's%{:duskmoon_bundler, in_umbrella: true, only: :dev, runtime: false}%{:duskmoon_bundler, path: "../duskmoon_bundler", only: :dev, runtime: false}%' "${SOURCE_APP_ROOT}/phoenix_duskmoon/mix.exs"
+
+      - name: Add package dependencies
+        working-directory: ${{ runner.temp }}/duskmoon_package_e2e
+        run: |
+          set -euo pipefail
+
+          if [ "${{ inputs.package_source }}" = "hex" ]; then
+            VERSION="${{ inputs.version }}"
+            if [ -z "$VERSION" ]; then
+              echo "::error::version input is required when package_source=hex"
+              exit 1
+            fi
+
+            DEPS_BLOCK="$(cat <<EOF
+          defp deps do
+            [
+              {:duskmoon_hex_solver, "~> ${VERSION}"},
+              {:duskmoon_npm, "~> ${VERSION}"},
+              {:duskmoon_oxc, "~> ${VERSION}"},
+              {:duskmoon_vize, "~> ${VERSION}"},
+              {:duskmoon_oxide, "~> ${VERSION}"},
+              {:duskmoon_quickbeam, "~> ${VERSION}"},
+              {:duskmoon_bundler, "~> ${VERSION}"},
+              {:phoenix_duskmoon, "~> ${VERSION}"}
+            ]
+          end
+          EOF
+          )"
+          else
+            APP_ROOT="${RUNNER_TEMP}/source_apps"
+            DEPS_BLOCK="$(cat <<EOF
+          defp deps do
+            [
+              {:duskmoon_hex_solver, path: "${APP_ROOT}/duskmoon_hex_solver"},
+              {:duskmoon_npm, path: "${APP_ROOT}/duskmoon_npm"},
+              {:duskmoon_oxc, path: "${APP_ROOT}/duskmoon_oxc"},
+              {:duskmoon_vize, path: "${APP_ROOT}/duskmoon_vize"},
+              {:duskmoon_oxide, path: "${APP_ROOT}/duskmoon_oxide"},
+              {:duskmoon_quickbeam, path: "${APP_ROOT}/duskmoon_quickbeam"},
+              {:duskmoon_bundler, path: "${APP_ROOT}/duskmoon_bundler"},
+              {:phoenix_duskmoon, path: "${APP_ROOT}/phoenix_duskmoon"}
+            ]
+          end
+          EOF
+          )"
+          fi
+
+          export DEPS_BLOCK
+          perl -0pi -e 's/defp deps do\n    \[\n.*?    \]\n  end/$ENV{DEPS_BLOCK}/s' mix.exs
 
       - name: Install dependencies
-        working-directory: duskmoon_package_e2e
+        working-directory: ${{ runner.temp }}/duskmoon_package_e2e
+        env:
+          DUSKMOON_BUILD_NATIVE_FROM_SOURCE: ${{ inputs.package_source == 'source' && '1' || '0' }}
         run: mix deps.get
 
       - name: Compile package graph
-        working-directory: duskmoon_package_e2e
+        working-directory: ${{ runner.temp }}/duskmoon_package_e2e
+        env:
+          DUSKMOON_BUILD_NATIVE_FROM_SOURCE: ${{ inputs.package_source == 'source' && '1' || '0' }}
         run: mix compile --warnings-as-errors
 
       - name: Add package smoke tests
-        working-directory: duskmoon_package_e2e
+        working-directory: ${{ runner.temp }}/duskmoon_package_e2e
         run: |
           cat > test/duskmoon_packages_test.exs <<'EOF'
           defmodule DuskmoonPackagesTest do
@@ -71,7 +197,8 @@ jobs:
           EOF
 
       - name: Run package smoke tests
-        working-directory: duskmoon_package_e2e
+        working-directory: ${{ runner.temp }}/duskmoon_package_e2e
         env:
+          DUSKMOON_BUILD_NATIVE_FROM_SOURCE: ${{ inputs.package_source == 'source' && '1' || '0' }}
           MIX_ENV: test
         run: mix test

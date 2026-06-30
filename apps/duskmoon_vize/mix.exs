@@ -72,7 +72,7 @@ defmodule Vize.MixProject do
 
   defp deps do
     [
-      {:rustler, "~> 0.36 or ~> 0.37 or ~> 0.38", optional: true},
+      {:rustler, "~> 0.36 or ~> 0.37 or ~> 0.38"},
       {:rustler_precompiled, "~> 0.8"},
       {:ex_doc, "~> 0.40", only: :dev, runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
