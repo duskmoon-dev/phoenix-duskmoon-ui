@@ -15,6 +15,11 @@
 @import "../../../phoenix_duskmoon/assets/css/element-theme-bridge.css";
 
 @layer components {
+  /* WORKAROUND(upstream): duskmoon-dev/duskmoonui#43 */
+  .collapse-card:not(.collapse-open):not(.show) .collapse-content > * {
+    padding-block-end: 0;
+  }
+
   .rainbow {
     z-index: -1;
     width: 100vw;

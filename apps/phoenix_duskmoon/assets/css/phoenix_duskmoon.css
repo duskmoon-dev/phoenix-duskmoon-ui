@@ -11,6 +11,13 @@
 @import "@duskmoon-dev/core/components";
 @import "./element-theme-bridge.css";
 
+@layer components {
+  /* WORKAROUND(upstream): duskmoon-dev/duskmoonui#43 */
+  .collapse-card:not(.collapse-open):not(.show) .collapse-content > * {
+    padding-block-end: 0;
+  }
+}
+
 /* CSS Art — decorative/animated visual effects from @duskmoon-dev/css-art */
 @import "@duskmoon-dev/css-art/dist/art/atom.css";
 @import "@duskmoon-dev/css-art/dist/art/cat-stargazer.css";
