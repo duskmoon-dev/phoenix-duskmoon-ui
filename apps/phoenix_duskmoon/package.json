@@ -43,7 +43,7 @@
   "devDependencies": {
     "@mdi/svg": "7.4.47",
     "bootstrap-icons": "1.13.1",
-    "postcss": "8.5.15"
+    "postcss": "8.5.16"
   },
   "peerDependencies": {
     "tailwindcss": "4.3.0"

@@ -13,6 +13,7 @@
         "@duskmoon-dev/el-art-gemini-input": "1.5.5",
         "@duskmoon-dev/el-autocomplete": "1.5.5",
         "@duskmoon-dev/el-badge": "1.5.5",
+        "@duskmoon-dev/el-base": "1.5.3",
         "@duskmoon-dev/el-bottom-navigation": "1.5.5",
         "@duskmoon-dev/el-bottom-sheet": "1.5.5",
         "@duskmoon-dev/el-breadcrumbs": "1.5.5",

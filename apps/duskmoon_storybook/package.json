@@ -6,6 +6,6 @@
     "phoenix_duskmoon": "file:../phoenix_duskmoon"
   },
   "devDependencies": {
-    "postcss": "8.5.15"
+    "postcss": "8.5.16"
   }
 }

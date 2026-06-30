@@ -33,6 +33,7 @@
         "@duskmoon-dev/el-alert": "1.5.5",
         "@duskmoon-dev/el-art-gemini-input": "1.5.5",
         "@duskmoon-dev/el-autocomplete": "1.5.5",
+        "@duskmoon-dev/el-base": "1.5.5",
         "@duskmoon-dev/el-badge": "1.5.5",
         "@duskmoon-dev/el-bottom-navigation": "1.5.5",
         "@duskmoon-dev/el-bottom-sheet": "1.5.5",
@@ -75,6 +76,6 @@
         "@duskmoon-dev/el-time-input": "1.5.5",
         "@duskmoon-dev/el-tooltip": "1.5.5",
         "@duskmoon-dev/elements": "1.5.5",
-        "tailwindcss": "4.3.0"
+        "tailwindcss": "4.3.2"
     }
 }

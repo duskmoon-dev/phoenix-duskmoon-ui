@@ -9,7 +9,7 @@
       "has_install_script": false,
       "integrity": "sha512-MGQsmw10ZyI+EJo45CdSER4zEb+p31LpDAFp2Z3gkSd1yqVZGi0Ebx++YTEMonJy4oChEMLsxZ64j8FH6sSqtQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@antfu/install-pkg/-/install-pkg-1.1.0.tgz",
+      "tarball": "https://registry.npmjs.org/@antfu/install-pkg/-/install-pkg-1.1.0.tgz",
       "version": "1.1.0"
     },
     "@braintree/sanitize-url": {
@@ -17,7 +17,7 @@
       "has_install_script": false,
       "integrity": "sha512-jigsZK+sMF/cuiB7sERuo9V7N9jx+dhmHHnQyDSVdpZwVutaBu7WvNYqMDLSgFgfB30n452TP3vjDAvFC973mA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@braintree/sanitize-url/-/sanitize-url-7.1.2.tgz",
+      "tarball": "https://registry.npmjs.org/@braintree/sanitize-url/-/sanitize-url-7.1.2.tgz",
       "version": "7.1.2"
     },
     "@chevrotain/types": {
@@ -25,7 +25,7 @@
       "has_install_script": false,
       "integrity": "sha512-U+HFai5+zmJCkK86QsaJtoITlboZHBqrVketcO2ROv865xfCMSFpELQoz1GkX5GzME8pTa+3kbKrZHQtI0gdbw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@chevrotain/types/-/types-11.1.2.tgz",
+      "tarball": "https://registry.npmjs.org/@chevrotain/types/-/types-11.1.2.tgz",
       "version": "11.1.2"
     },
     "@duskmoon-dev/art-elements": {
@@ -284,6 +284,14 @@
       "integrity": "sha512-erU/fatIxD7v106F/TGyy0KzW6+S5KHAPlDpinHp5w3aErV0g01Ns/xngcF44Q4sp+RZ2gi4Qe8H3hFS1crwWQ==",
       "optional_dependencies": {},
       "tarball": "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-badge/-/el-badge-1.5.5.tgz",
+      "version": "1.5.5"
+    },
+    "@duskmoon-dev/el-base": {
+      "dependencies": {},
+      "has_install_script": false,
+      "integrity": "sha512-9o9KoULhid7UEMbXP/BbOUgWDrfQja2In6Jd3xMTAxwr8UU4jKuljL94b0K4YTG4b+MtwpalAdX5SKKfBHKVKw==",
+      "optional_dependencies": {},
+      "tarball": "https://nexus.gsmlg.net/repository/npm/@duskmoon-dev/el-base/-/el-base-1.5.5.tgz",
       "version": "1.5.5"
     },
     "@duskmoon-dev/el-bottom-navigation": {
@@ -814,7 +822,7 @@
       "has_install_script": false,
       "integrity": "sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@iconify/types/-/types-2.0.0.tgz",
+      "tarball": "https://registry.npmjs.org/@iconify/types/-/types-2.0.0.tgz",
       "version": "2.0.0"
     },
     "@iconify/utils": {
@@ -826,7 +834,7 @@
       "has_install_script": false,
       "integrity": "sha512-LPKOXPn/zV+zis1oOfGWogaXVpqUybF3ZS6SCZIsz8vg0ivVp9+fVqyYB7xq0aiST/VhUQYGO1qo6uoYSiEJqw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@iconify/utils/-/utils-3.1.3.tgz",
+      "tarball": "https://registry.npmjs.org/@iconify/utils/-/utils-3.1.3.tgz",
       "version": "3.1.3"
     },
     "@mdi/svg": {
@@ -844,56 +852,56 @@
       "has_install_script": false,
       "integrity": "sha512-oYPyv8A4As1yH5Bx+04iQEQxXuIQDe0GKCNSRgao6z8AM9jixXIfP0vsppRLvGf+nKIOb9/LdpWA4YuJiVvESA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@mermaid-js/parser/-/parser-1.2.0.tgz",
+      "tarball": "https://registry.npmjs.org/@mermaid-js/parser/-/parser-1.2.0.tgz",
       "version": "1.2.0"
     },
     "@oxlint-tsgolint/darwin-arm64": {
       "dependencies": {},
       "has_install_script": false,
-      "integrity": "sha512-4150Lpgc1YM09GcjA6GSrra1JoPjC7aOpfywLjWEY4vW0Sd1qKzqHF1WRaiw0/qUZ40OATYdv3aRd7ipPkWQbw==",
+      "integrity": "sha512-C2uMmwK5Bc4ri4ysZ6sA8Rcu+A5zBQTp6ml2u0CLLbRZp4kMFPV3yWk8B5DK9Aw7y9bbjogIm75tUwGLFzlsYQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@oxlint-tsgolint/darwin-arm64/-/darwin-arm64-0.22.1.tgz",
-      "version": "0.22.1"
+      "tarball": "https://registry.npmjs.org/@oxlint-tsgolint/darwin-arm64/-/darwin-arm64-0.24.0.tgz",
+      "version": "0.24.0"
     },
     "@oxlint-tsgolint/darwin-x64": {
       "dependencies": {},
       "has_install_script": false,
-      "integrity": "sha512-vFWcPWYOgZs4HWcgS1EjUZg33NLcNfEYU49KGImmCfZWkflENrmBYV4HN/C0YeAPum6ZZ/goPSvQrB/cOD+NfA==",
+      "integrity": "sha512-Wgvt/1lRbDxmoNqWQKKcL+UIiqLmdJ+EWLpQa1qzoNVAfNB0PJpa82/8dH1twT/3rSs4zrP5TXPWl4juB71WuQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@oxlint-tsgolint/darwin-x64/-/darwin-x64-0.22.1.tgz",
-      "version": "0.22.1"
+      "tarball": "https://registry.npmjs.org/@oxlint-tsgolint/darwin-x64/-/darwin-x64-0.24.0.tgz",
+      "version": "0.24.0"
     },
     "@oxlint-tsgolint/linux-arm64": {
       "dependencies": {},
       "has_install_script": false,
-      "integrity": "sha512-6LiUpP0Zir3+29FvBm7Y28q/dBjSHqTZ5MhG1Ckw4fGhI4cAvbcwXaKvbjx1TP7rRmBNOoq/M5xdpHjTb+GAew==",
+      "integrity": "sha512-PB1rxII7KV83+ASY4sSkXtqvpij6ME66+QCRL49uksi/ofs2Rf/UVboYr095n0Rkbl2wgvlsHGl6DHC361jQUQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@oxlint-tsgolint/linux-arm64/-/linux-arm64-0.22.1.tgz",
-      "version": "0.22.1"
+      "tarball": "https://registry.npmjs.org/@oxlint-tsgolint/linux-arm64/-/linux-arm64-0.24.0.tgz",
+      "version": "0.24.0"
     },
     "@oxlint-tsgolint/linux-x64": {
       "dependencies": {},
       "has_install_script": false,
-      "integrity": "sha512-fuX1hEQfpHauUbXADsfqVhRzrUrGabzGXbj5wsp2vKhV5uk/Rze8Mba9GdjFGECzvXudMGqHqxB4r6jGRdhxVA==",
+      "integrity": "sha512-xcz3CxKmjTQLREtE/UShh+ruWmm9nAb7UM9zKcD65BStiuYgOakAKkPHl4YS5DztpVcDrE0+HqbOolTlRKYWmw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@oxlint-tsgolint/linux-x64/-/linux-x64-0.22.1.tgz",
-      "version": "0.22.1"
+      "tarball": "https://registry.npmjs.org/@oxlint-tsgolint/linux-x64/-/linux-x64-0.24.0.tgz",
+      "version": "0.24.0"
     },
     "@oxlint-tsgolint/win32-arm64": {
       "dependencies": {},
       "has_install_script": false,
-      "integrity": "sha512-8SZidAj+jrbZf9ZjBEYW0tiNZ+KasqB2zgW26qdiPpQSF/DzURnPmXz651IeA9YsmbVdHGIooEHUmev6QJdquA==",
+      "integrity": "sha512-A2i6ZGBec3i20S7RaxkgHc6r3HYtD5Mn7j/mb22NkTz14u0JuudvTu6JggAnbGMcv8+dBKQI//EasxSPJLD8pw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@oxlint-tsgolint/win32-arm64/-/win32-arm64-0.22.1.tgz",
-      "version": "0.22.1"
+      "tarball": "https://registry.npmjs.org/@oxlint-tsgolint/win32-arm64/-/win32-arm64-0.24.0.tgz",
+      "version": "0.24.0"
     },
     "@oxlint-tsgolint/win32-x64": {
       "dependencies": {},
       "has_install_script": false,
-      "integrity": "sha512-QweSk9H5lFh5Y+WUf2Kq/OAN88V6+62ZwGhP38gqdRotI90luXSMkruFTj7Q2rYrzH4ZVNaSqx7NY8JpSfIzqg==",
+      "integrity": "sha512-0ZbGd9qRB6zs82moekaKdEvncRANq49EAwfNX62JpTS46feXUhKAuoyVDvZMj6Rywejylrmmu79Wo6faYCo4Ew==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@oxlint-tsgolint/win32-x64/-/win32-x64-0.22.1.tgz",
-      "version": "0.22.1"
+      "tarball": "https://registry.npmjs.org/@oxlint-tsgolint/win32-x64/-/win32-x64-0.24.0.tgz",
+      "version": "0.24.0"
     },
     "@types/d3": {
       "dependencies": {
@@ -931,7 +939,7 @@
       "has_install_script": false,
       "integrity": "sha512-lZXZ9ckh5R8uiFVt8ogUNf+pIrK4EsWrx2Np75WvF/eTpJ0FMHNhjXk8CKEx/+gpHbNQyJWehbFaTvqmHWB3ww==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3/-/d3-7.4.3.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3/-/d3-7.4.3.tgz",
       "version": "7.4.3"
     },
     "@types/d3-array": {
@@ -939,7 +947,7 @@
       "has_install_script": false,
       "integrity": "sha512-hOLWVbm7uRza0BYXpIIW5pxfrKe0W+D5lrFiAEYR+pb6w3N2SwSMaJbXdUfSEv+dT4MfHBLtn5js0LAWaO6otw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-array/-/d3-array-3.2.2.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-array/-/d3-array-3.2.2.tgz",
       "version": "3.2.2"
     },
     "@types/d3-axis": {
@@ -949,7 +957,7 @@
       "has_install_script": false,
       "integrity": "sha512-pYeijfZuBd87T0hGn0FO1vQ/cgLk6E1ALJjfkC0oJ8cbwkZl3TpgS8bVBLZN+2jjGgg38epgxb2zmoGtSfvgMw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-axis/-/d3-axis-3.0.6.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-axis/-/d3-axis-3.0.6.tgz",
       "version": "3.0.6"
     },
     "@types/d3-brush": {
@@ -959,7 +967,7 @@
       "has_install_script": false,
       "integrity": "sha512-nH60IZNNxEcrh6L1ZSMNA28rj27ut/2ZmI3r96Zd+1jrZD++zD3LsMIjWlvg4AYrHn/Pqz4CF3veCxGjtbqt7A==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-brush/-/d3-brush-3.0.6.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-brush/-/d3-brush-3.0.6.tgz",
       "version": "3.0.6"
     },
     "@types/d3-chord": {
@@ -967,7 +975,7 @@
       "has_install_script": false,
       "integrity": "sha512-LFYWWd8nwfwEmTZG9PfQxd17HbNPksHBiJHaKuY1XeqscXacsS2tyoo6OdRsjf+NQYeB6XrNL3a25E3gH69lcg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-chord/-/d3-chord-3.0.6.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-chord/-/d3-chord-3.0.6.tgz",
       "version": "3.0.6"
     },
     "@types/d3-color": {
@@ -975,7 +983,7 @@
       "has_install_script": false,
       "integrity": "sha512-iO90scth9WAbmgv7ogoq57O9YpKmFBbmoEoCHDB2xMBY0+/KVrqAaCDyCE16dUspeOvIxFFRI+0sEtqDqy2b4A==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-color/-/d3-color-3.1.3.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-color/-/d3-color-3.1.3.tgz",
       "version": "3.1.3"
     },
     "@types/d3-contour": {
@@ -986,7 +994,7 @@
       "has_install_script": false,
       "integrity": "sha512-BjzLgXGnCWjUSYGfH1cpdo41/hgdWETu4YxpezoztawmqsvCeep+8QGfiY6YbDvfgHz/DkjeIkkZVJavB4a3rg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-contour/-/d3-contour-3.0.6.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-contour/-/d3-contour-3.0.6.tgz",
       "version": "3.0.6"
     },
     "@types/d3-delaunay": {
@@ -994,7 +1002,7 @@
       "has_install_script": false,
       "integrity": "sha512-ZMaSKu4THYCU6sV64Lhg6qjf1orxBthaC161plr5KuPHo3CNm8DTHiLw/5Eq2b6TsNP0W0iJrUOFscY6Q450Hw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-delaunay/-/d3-delaunay-6.0.4.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-delaunay/-/d3-delaunay-6.0.4.tgz",
       "version": "6.0.4"
     },
     "@types/d3-dispatch": {
@@ -1002,7 +1010,7 @@
       "has_install_script": false,
       "integrity": "sha512-5o9OIAdKkhN1QItV2oqaE5KMIiXAvDWBDPrD85e58Qlz1c1kI/J0NcqbEG88CoTwJrYe7ntUCVfeUl2UJKbWgA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-dispatch/-/d3-dispatch-3.0.7.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-dispatch/-/d3-dispatch-3.0.7.tgz",
       "version": "3.0.7"
     },
     "@types/d3-drag": {
@@ -1012,7 +1020,7 @@
       "has_install_script": false,
       "integrity": "sha512-HE3jVKlzU9AaMazNufooRJ5ZpWmLIoc90A37WU2JMmeq28w1FQqCZswHZ3xR+SuxYftzHq6WU6KJHvqxKzTxxQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-drag/-/d3-drag-3.0.7.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-drag/-/d3-drag-3.0.7.tgz",
       "version": "3.0.7"
     },
     "@types/d3-dsv": {
@@ -1020,7 +1028,7 @@
       "has_install_script": false,
       "integrity": "sha512-n6QBF9/+XASqcKK6waudgL0pf/S5XHPPI8APyMLLUHd8NqouBGLsU8MgtO7NINGtPBtk9Kko/W4ea0oAspwh9g==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-dsv/-/d3-dsv-3.0.7.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-dsv/-/d3-dsv-3.0.7.tgz",
       "version": "3.0.7"
     },
     "@types/d3-ease": {
@@ -1028,7 +1036,7 @@
       "has_install_script": false,
       "integrity": "sha512-NcV1JjO5oDzoK26oMzbILE6HW7uVXOHLQvHshBUW4UMdZGfiY6v5BeQwh9a9tCzv+CeefZQHJt5SRgK154RtiA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-ease/-/d3-ease-3.0.2.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-ease/-/d3-ease-3.0.2.tgz",
       "version": "3.0.2"
     },
     "@types/d3-fetch": {
@@ -1038,7 +1046,7 @@
       "has_install_script": false,
       "integrity": "sha512-fTAfNmxSb9SOWNB9IoG5c8Hg6R+AzUHDRlsXsDZsNp6sxAEOP0tkP3gKkNSO/qmHPoBFTxNrjDprVHDQDvo5aA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-fetch/-/d3-fetch-3.0.7.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-fetch/-/d3-fetch-3.0.7.tgz",
       "version": "3.0.7"
     },
     "@types/d3-force": {
@@ -1046,7 +1054,7 @@
       "has_install_script": false,
       "integrity": "sha512-ZYeSaCF3p73RdOKcjj+swRlZfnYpK1EbaDiYICEEp5Q6sUiqFaFQ9qgoshp5CzIyyb/yD09kD9o2zEltCexlgw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-force/-/d3-force-3.0.10.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-force/-/d3-force-3.0.10.tgz",
       "version": "3.0.10"
     },
     "@types/d3-format": {
@@ -1054,7 +1062,7 @@
       "has_install_script": false,
       "integrity": "sha512-fALi2aI6shfg7vM5KiR1wNJnZ7r6UuggVqtDA+xiEdPZQwy/trcQaHnwShLuLdta2rTymCNpxYTiMZX/e09F4g==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-format/-/d3-format-3.0.4.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-format/-/d3-format-3.0.4.tgz",
       "version": "3.0.4"
     },
     "@types/d3-geo": {
@@ -1064,7 +1072,7 @@
       "has_install_script": false,
       "integrity": "sha512-856sckF0oP/diXtS4jNsiQw/UuK5fQG8l/a9VVLeSouf1/PPbBE1i1W852zVwKwYCBkFJJB7nCFTbk6UMEXBOQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-geo/-/d3-geo-3.1.0.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-geo/-/d3-geo-3.1.0.tgz",
       "version": "3.1.0"
     },
     "@types/d3-hierarchy": {
@@ -1072,7 +1080,7 @@
       "has_install_script": false,
       "integrity": "sha512-tJFtNoYBtRtkNysX1Xq4sxtjK8YgoWUNpIiUee0/jHGRwqvzYxkq0hGVbbOGSz+JgFxxRu4K8nb3YpG3CMARtg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-hierarchy/-/d3-hierarchy-3.1.7.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-hierarchy/-/d3-hierarchy-3.1.7.tgz",
       "version": "3.1.7"
     },
     "@types/d3-interpolate": {
@@ -1082,7 +1090,7 @@
       "has_install_script": false,
       "integrity": "sha512-mgLPETlrpVV1YRJIglr4Ez47g7Yxjl1lj7YKsiMCb27VJH9W8NVM6Bb9d8kkpG/uAQS5AmbA48q2IAolKKo1MA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-interpolate/-/d3-interpolate-3.0.4.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-interpolate/-/d3-interpolate-3.0.4.tgz",
       "version": "3.0.4"
     },
     "@types/d3-path": {
@@ -1090,7 +1098,7 @@
       "has_install_script": false,
       "integrity": "sha512-VMZBYyQvbGmWyWVea0EHs/BwLgxc+MKi1zLDCONksozI4YJMcTt8ZEuIR4Sb1MMTE8MMW49v0IwI5+b7RmfWlg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-path/-/d3-path-3.1.1.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-path/-/d3-path-3.1.1.tgz",
       "version": "3.1.1"
     },
     "@types/d3-polygon": {
@@ -1098,7 +1106,7 @@
       "has_install_script": false,
       "integrity": "sha512-ZuWOtMaHCkN9xoeEMr1ubW2nGWsp4nIql+OPQRstu4ypeZ+zk3YKqQT0CXVe/PYqrKpZAi+J9mTs05TKwjXSRA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-polygon/-/d3-polygon-3.0.2.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-polygon/-/d3-polygon-3.0.2.tgz",
       "version": "3.0.2"
     },
     "@types/d3-quadtree": {
@@ -1106,7 +1114,7 @@
       "has_install_script": false,
       "integrity": "sha512-oUzyO1/Zm6rsxKRHA1vH0NEDG58HrT5icx/azi9MF1TWdtttWl0UIUsjEQBBh+SIkrpd21ZjEv7ptxWys1ncsg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-quadtree/-/d3-quadtree-3.0.6.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-quadtree/-/d3-quadtree-3.0.6.tgz",
       "version": "3.0.6"
     },
     "@types/d3-random": {
@@ -1114,7 +1122,7 @@
       "has_install_script": false,
       "integrity": "sha512-Imagg1vJ3y76Y2ea0871wpabqp613+8/r0mCLEBfdtqC7xMSfj9idOnmBYyMoULfHePJyxMAw3nWhJxzc+LFwQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-random/-/d3-random-3.0.3.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-random/-/d3-random-3.0.3.tgz",
       "version": "3.0.3"
     },
     "@types/d3-scale": {
@@ -1124,7 +1132,7 @@
       "has_install_script": false,
       "integrity": "sha512-dLmtwB8zkAeO/juAMfnV+sItKjlsw2lKdZVVy6LRr0cBmegxSABiLEpGVmSJJ8O08i4+sGR6qQtb6WtuwJdvVw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-scale/-/d3-scale-4.0.9.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-scale/-/d3-scale-4.0.9.tgz",
       "version": "4.0.9"
     },
     "@types/d3-scale-chromatic": {
@@ -1132,7 +1140,7 @@
       "has_install_script": false,
       "integrity": "sha512-iWMJgwkK7yTRmWqRB5plb1kadXyQ5Sj8V/zYlFGMUBbIPKQScw+Dku9cAAMgJG+z5GYDoMjWGLVOvjghDEFnKQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-scale-chromatic/-/d3-scale-chromatic-3.1.0.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-scale-chromatic/-/d3-scale-chromatic-3.1.0.tgz",
       "version": "3.1.0"
     },
     "@types/d3-selection": {
@@ -1140,7 +1148,7 @@
       "has_install_script": false,
       "integrity": "sha512-bhAXu23DJWsrI45xafYpkQ4NtcKMwWnAC/vKrd2l+nxMFuvOT3XMYTIj2opv8vq8AO5Yh7Qac/nSeP/3zjTK0w==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-selection/-/d3-selection-3.0.11.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-selection/-/d3-selection-3.0.11.tgz",
       "version": "3.0.11"
     },
     "@types/d3-shape": {
@@ -1150,7 +1158,7 @@
       "has_install_script": false,
       "integrity": "sha512-lae0iWfcDeR7qt7rA88BNiqdvPS5pFVPpo5OfjElwNaT2yyekbM0C9vK+yqBqEmHr6lDkRnYNoTBYlAgJa7a4w==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-shape/-/d3-shape-3.1.8.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-shape/-/d3-shape-3.1.8.tgz",
       "version": "3.1.8"
     },
     "@types/d3-time": {
@@ -1158,7 +1166,7 @@
       "has_install_script": false,
       "integrity": "sha512-yuzZug1nkAAaBlBBikKZTgzCeA+k1uy4ZFwWANOfKw5z5LRhV0gNA7gNkKm7HoK+HRN0wX3EkxGk0fpbWhmB7g==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-time/-/d3-time-3.0.4.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-time/-/d3-time-3.0.4.tgz",
       "version": "3.0.4"
     },
     "@types/d3-time-format": {
@@ -1166,7 +1174,7 @@
       "has_install_script": false,
       "integrity": "sha512-5xg9rC+wWL8kdDj153qZcsJ0FWiFt0J5RB6LYUNZjwSnesfblqrI/bJ1wBdJ8OQfncgbJG5+2F+qfqnqyzYxyg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-time-format/-/d3-time-format-4.0.3.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-time-format/-/d3-time-format-4.0.3.tgz",
       "version": "4.0.3"
     },
     "@types/d3-timer": {
@@ -1174,7 +1182,7 @@
       "has_install_script": false,
       "integrity": "sha512-Ps3T8E8dZDam6fUyNiMkekK3XUsaUEik+idO9/YjPtfj2qruF8tFBXS7XhtE4iIXBLxhmLjP3SXpLhVf21I9Lw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-timer/-/d3-timer-3.0.2.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-timer/-/d3-timer-3.0.2.tgz",
       "version": "3.0.2"
     },
     "@types/d3-transition": {
@@ -1184,7 +1192,7 @@
       "has_install_script": false,
       "integrity": "sha512-uZS5shfxzO3rGlu0cC3bjmMFKsXv+SmZZcgp0KD22ts4uGXp5EVYGzu/0YdwZeKmddhcAccYtREJKkPfXkZuCg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-transition/-/d3-transition-3.0.9.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-transition/-/d3-transition-3.0.9.tgz",
       "version": "3.0.9"
     },
     "@types/d3-zoom": {
@@ -1195,7 +1203,7 @@
       "has_install_script": false,
       "integrity": "sha512-iqMC4/YlFCSlO8+2Ii1GGGliCAY4XdeG748w5vQUbevlbDu0zSjH/+jojorQVBK/se0j6DUFNPBGSqD3YWYnDw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/d3-zoom/-/d3-zoom-3.0.8.tgz",
+      "tarball": "https://registry.npmjs.org/@types/d3-zoom/-/d3-zoom-3.0.8.tgz",
       "version": "3.0.8"
     },
     "@types/debug": {
@@ -1213,7 +1221,7 @@
       "has_install_script": false,
       "integrity": "sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/geojson/-/geojson-7946.0.16.tgz",
+      "tarball": "https://registry.npmjs.org/@types/geojson/-/geojson-7946.0.16.tgz",
       "version": "7946.0.16"
     },
     "@types/hast": {
@@ -1265,7 +1273,7 @@
       "has_install_script": false,
       "integrity": "sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@types/trusted-types/-/trusted-types-2.0.7.tgz",
+      "tarball": "https://registry.npmjs.org/@types/trusted-types/-/trusted-types-2.0.7.tgz",
       "version": "2.0.7"
     },
     "@ungap/structured-clone": {
@@ -1284,7 +1292,7 @@
         "d3-selection": "^3.0.0",
         "d3-transition": "^3.0.1"
       },
-      "tarball": "https://nexus.gsmlg.net/repository/npm/@upsetjs/venn.js/-/venn.js-2.0.0.tgz",
+      "tarball": "https://registry.npmjs.org/@upsetjs/venn.js/-/venn.js-2.0.0.tgz",
       "version": "2.0.0"
     },
     "bail": {
@@ -1356,7 +1364,7 @@
       "has_install_script": false,
       "integrity": "sha512-62rNSrioXw93uliKFBwjukeQyeWwH2PqDrTac31r2P6464u3AUvTk0xS4LVvT251g7IgkFunrI48ZEZGjywSOg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/cytoscape/-/cytoscape-3.34.0.tgz",
+      "tarball": "https://registry.npmjs.org/cytoscape/-/cytoscape-3.34.0.tgz",
       "version": "3.34.0"
     },
     "cytoscape-cose-bilkent": {
@@ -1366,7 +1374,7 @@
       "has_install_script": false,
       "integrity": "sha512-wgQlVIUJF13Quxiv5e1gstZ08rnZj2XaLHGoFMYXz7SkNfCDOOteKBE6SYRfA9WxxI/iBc3ajfDoc6hb/MRAHQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/cytoscape-cose-bilkent/-/cytoscape-cose-bilkent-4.1.0.tgz",
+      "tarball": "https://registry.npmjs.org/cytoscape-cose-bilkent/-/cytoscape-cose-bilkent-4.1.0.tgz",
       "version": "4.1.0"
     },
     "cytoscape-fcose": {
@@ -1376,7 +1384,7 @@
       "has_install_script": false,
       "integrity": "sha512-ki1/VuRIHFCzxWNrsshHYPs6L7TvLu3DL+TyIGEsRcvVERmxokbf5Gdk7mFxZnTdiGtnA4cfSmjZJMviqSuZrQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/cytoscape-fcose/-/cytoscape-fcose-2.2.0.tgz",
+      "tarball": "https://registry.npmjs.org/cytoscape-fcose/-/cytoscape-fcose-2.2.0.tgz",
       "version": "2.2.0"
     },
     "d3": {
@@ -1415,7 +1423,7 @@
       "has_install_script": false,
       "integrity": "sha512-e1U46jVP+w7Iut8Jt8ri1YsPOvFpg46k+K8TpCb0P+zjCkjkPnV7WzfDJzMHy1LnA+wj5pLT1wjO901gLXeEhA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3/-/d3-7.9.0.tgz",
+      "tarball": "https://registry.npmjs.org/d3/-/d3-7.9.0.tgz",
       "version": "7.9.0"
     },
     "d3-axis": {
@@ -1423,7 +1431,7 @@
       "has_install_script": false,
       "integrity": "sha512-IH5tgjV4jE/GhHkRV0HiVYPDtvfjHQlQfJHs0usq7M30XcSBvOotpmH1IgkcXsO/5gEQZD43B//fc7SRT5S+xw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-axis/-/d3-axis-3.0.0.tgz",
+      "tarball": "https://registry.npmjs.org/d3-axis/-/d3-axis-3.0.0.tgz",
       "version": "3.0.0"
     },
     "d3-brush": {
@@ -1437,7 +1445,7 @@
       "has_install_script": false,
       "integrity": "sha512-ALnjWlVYkXsVIGlOsuWH1+3udkYFI48Ljihfnh8FZPF2QS9o+PzGLBslO0PjzVoHLZ2KCVgAM8NVkXPJB2aNnQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-brush/-/d3-brush-3.0.0.tgz",
+      "tarball": "https://registry.npmjs.org/d3-brush/-/d3-brush-3.0.0.tgz",
       "version": "3.0.0"
     },
     "d3-chord": {
@@ -1447,7 +1455,7 @@
       "has_install_script": false,
       "integrity": "sha512-VE5S6TNa+j8msksl7HwjxMHDM2yNK3XCkusIlpX5kwauBfXuyLAtNg9jCp/iHH61tgI4sb6R/EIMWCqEIdjT/g==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-chord/-/d3-chord-3.0.1.tgz",
+      "tarball": "https://registry.npmjs.org/d3-chord/-/d3-chord-3.0.1.tgz",
       "version": "3.0.1"
     },
     "d3-color": {
@@ -1455,7 +1463,7 @@
       "has_install_script": false,
       "integrity": "sha512-zg/chbXyeBtMQ1LbD/WSoW2DpC3I0mpmPdW+ynRTj/x2DAWYrIY7qeZIHidozwV24m4iavr15lNwIwLxRmOxhA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-color/-/d3-color-3.1.0.tgz",
+      "tarball": "https://registry.npmjs.org/d3-color/-/d3-color-3.1.0.tgz",
       "version": "3.1.0"
     },
     "d3-contour": {
@@ -1465,7 +1473,7 @@
       "has_install_script": false,
       "integrity": "sha512-4EzFTRIikzs47RGmdxbeUvLWtGedDUNkTcmzoeyg4sP/dvCexO47AaQL7VKy/gul85TOxw+IBgA8US2xwbToNA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-contour/-/d3-contour-4.0.2.tgz",
+      "tarball": "https://registry.npmjs.org/d3-contour/-/d3-contour-4.0.2.tgz",
       "version": "4.0.2"
     },
     "d3-delaunay": {
@@ -1475,7 +1483,7 @@
       "has_install_script": false,
       "integrity": "sha512-mdjtIZ1XLAM8bm/hx3WwjfHt6Sggek7qH043O8KEjDXN40xi3vx/6pYSVTwLjEgiXQTbvaouWKynLBiUZ6SK6A==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-delaunay/-/d3-delaunay-6.0.4.tgz",
+      "tarball": "https://registry.npmjs.org/d3-delaunay/-/d3-delaunay-6.0.4.tgz",
       "version": "6.0.4"
     },
     "d3-dispatch": {
@@ -1483,7 +1491,7 @@
       "has_install_script": false,
       "integrity": "sha512-rzUyPU/S7rwUflMyLc1ETDeBj0NRuHKKAcvukozwhshr6g6c5d8zh4c2gQjY2bZ0dXeGLWc1PF174P2tVvKhfg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-dispatch/-/d3-dispatch-3.0.1.tgz",
+      "tarball": "https://registry.npmjs.org/d3-dispatch/-/d3-dispatch-3.0.1.tgz",
       "version": "3.0.1"
     },
     "d3-drag": {
@@ -1494,7 +1502,7 @@
       "has_install_script": false,
       "integrity": "sha512-pWbUJLdETVA8lQNJecMxoXfH6x+mO2UQo8rSmZ+QqxcbyA3hfeprFgIT//HW2nlHChWeIIMwS2Fq+gEARkhTkg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-drag/-/d3-drag-3.0.0.tgz",
+      "tarball": "https://registry.npmjs.org/d3-drag/-/d3-drag-3.0.0.tgz",
       "version": "3.0.0"
     },
     "d3-dsv": {
@@ -1506,7 +1514,7 @@
       "has_install_script": false,
       "integrity": "sha512-UG6OvdI5afDIFP9w4G0mNq50dSOsXHJaRE8arAS5o9ApWnIElp8GZw1Dun8vP8OyHOZ/QJUKUJwxiiCCnUwm+Q==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-dsv/-/d3-dsv-3.0.1.tgz",
+      "tarball": "https://registry.npmjs.org/d3-dsv/-/d3-dsv-3.0.1.tgz",
       "version": "3.0.1"
     },
     "d3-ease": {
@@ -1514,7 +1522,7 @@
       "has_install_script": false,
       "integrity": "sha512-wR/XK3D3XcLIZwpbvQwQ5fK+8Ykds1ip7A2Txe0yxncXSdq1L9skcG7blcedkOX+ZcgxGAmLX1FrRGbADwzi0w==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-ease/-/d3-ease-3.0.1.tgz",
+      "tarball": "https://registry.npmjs.org/d3-ease/-/d3-ease-3.0.1.tgz",
       "version": "3.0.1"
     },
     "d3-fetch": {
@@ -1524,7 +1532,7 @@
       "has_install_script": false,
       "integrity": "sha512-kpkQIM20n3oLVBKGg6oHrUchHM3xODkTzjMoj7aWQFq5QEM+R6E4WkzT5+tojDY7yjez8KgCBRoj4aEr99Fdqw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-fetch/-/d3-fetch-3.0.1.tgz",
+      "tarball": "https://registry.npmjs.org/d3-fetch/-/d3-fetch-3.0.1.tgz",
       "version": "3.0.1"
     },
     "d3-force": {
@@ -1536,7 +1544,7 @@
       "has_install_script": false,
       "integrity": "sha512-zxV/SsA+U4yte8051P4ECydjD/S+qeYtnaIyAs9tgHCqfguma/aAQDjo85A9Z6EKhBirHRJHXIgJUlffT4wdLg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-force/-/d3-force-3.0.0.tgz",
+      "tarball": "https://registry.npmjs.org/d3-force/-/d3-force-3.0.0.tgz",
       "version": "3.0.0"
     },
     "d3-format": {
@@ -1544,7 +1552,7 @@
       "has_install_script": false,
       "integrity": "sha512-AJDdYOdnyRDV5b6ArilzCPPwc1ejkHcoyFarqlPqT7zRYjhavcT3uSrqcMvsgh2CgoPbK3RCwyHaVyxYcP2Arg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-format/-/d3-format-3.1.2.tgz",
+      "tarball": "https://registry.npmjs.org/d3-format/-/d3-format-3.1.2.tgz",
       "version": "3.1.2"
     },
     "d3-geo": {
@@ -1554,7 +1562,7 @@
       "has_install_script": false,
       "integrity": "sha512-637ln3gXKXOwhalDzinUgY83KzNWZRKbYubaG+fGVuc/dxO64RRljtCTnf5ecMyE1RIdtqpkVcq0IbtU2S8j2Q==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-geo/-/d3-geo-3.1.1.tgz",
+      "tarball": "https://registry.npmjs.org/d3-geo/-/d3-geo-3.1.1.tgz",
       "version": "3.1.1"
     },
     "d3-hierarchy": {
@@ -1562,7 +1570,7 @@
       "has_install_script": false,
       "integrity": "sha512-FX/9frcub54beBdugHjDCdikxThEqjnR93Qt7PvQTOHxyiNCAlvMrHhclk3cD5VeAaq9fxmfRp+CnWw9rEMBuA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-hierarchy/-/d3-hierarchy-3.1.2.tgz",
+      "tarball": "https://registry.npmjs.org/d3-hierarchy/-/d3-hierarchy-3.1.2.tgz",
       "version": "3.1.2"
     },
     "d3-interpolate": {
@@ -1572,7 +1580,7 @@
       "has_install_script": false,
       "integrity": "sha512-3bYs1rOD33uo8aqJfKP3JWPAibgw8Zm2+L9vBKEHJ2Rg+viTR7o5Mmv5mZcieN+FRYaAOWX5SJATX6k1PWz72g==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-interpolate/-/d3-interpolate-3.0.1.tgz",
+      "tarball": "https://registry.npmjs.org/d3-interpolate/-/d3-interpolate-3.0.1.tgz",
       "version": "3.0.1"
     },
     "d3-path": {
@@ -1580,7 +1588,7 @@
       "has_install_script": false,
       "integrity": "sha512-p3KP5HCf/bvjBSSKuXid6Zqijx7wIfNW+J/maPs+iwR35at5JCbLUT0LzF1cnjbCHWhqzQTIN2Jpe8pRebIEFQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-path/-/d3-path-3.1.0.tgz",
+      "tarball": "https://registry.npmjs.org/d3-path/-/d3-path-3.1.0.tgz",
       "version": "3.1.0"
     },
     "d3-polygon": {
@@ -1588,7 +1596,7 @@
       "has_install_script": false,
       "integrity": "sha512-3vbA7vXYwfe1SYhED++fPUQlWSYTTGmFmQiany/gdbiWgU/iEyQzyymwL9SkJjFFuCS4902BSzewVGsHHmHtXg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-polygon/-/d3-polygon-3.0.1.tgz",
+      "tarball": "https://registry.npmjs.org/d3-polygon/-/d3-polygon-3.0.1.tgz",
       "version": "3.0.1"
     },
     "d3-quadtree": {
@@ -1596,7 +1604,7 @@
       "has_install_script": false,
       "integrity": "sha512-04xDrxQTDTCFwP5H6hRhsRcb9xxv2RzkcsygFzmkSIOJy3PeRJP7sNk3VRIbKXcog561P9oU0/rVH6vDROAgUw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-quadtree/-/d3-quadtree-3.0.1.tgz",
+      "tarball": "https://registry.npmjs.org/d3-quadtree/-/d3-quadtree-3.0.1.tgz",
       "version": "3.0.1"
     },
     "d3-random": {
@@ -1604,7 +1612,7 @@
       "has_install_script": false,
       "integrity": "sha512-FXMe9GfxTxqd5D6jFsQ+DJ8BJS4E/fT5mqqdjovykEB2oFbTMDVdg1MGFxfQW+FBOGoB++k8swBrgwSHT1cUXQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-random/-/d3-random-3.0.1.tgz",
+      "tarball": "https://registry.npmjs.org/d3-random/-/d3-random-3.0.1.tgz",
       "version": "3.0.1"
     },
     "d3-sankey": {
@@ -1615,7 +1623,7 @@
       "has_install_script": false,
       "integrity": "sha512-nQhsBRmM19Ax5xEIPLMY9ZmJ/cDvd1BG3UVvt5h3WRxKg5zGRbvnteTyWAbzeSvlh3tW7ZEmq4VwR5mB3tutmQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-sankey/-/d3-sankey-0.12.3.tgz",
+      "tarball": "https://registry.npmjs.org/d3-sankey/-/d3-sankey-0.12.3.tgz",
       "version": "0.12.3"
     },
     "d3-scale": {
@@ -1629,7 +1637,7 @@
       "has_install_script": false,
       "integrity": "sha512-GZW464g1SH7ag3Y7hXjf8RoUuAFIqklOAq3MRl4OaWabTFJY9PN/E1YklhXLh+OQ3fM9yS2nOkCoS+WLZ6kvxQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-scale/-/d3-scale-4.0.2.tgz",
+      "tarball": "https://registry.npmjs.org/d3-scale/-/d3-scale-4.0.2.tgz",
       "version": "4.0.2"
     },
     "d3-scale-chromatic": {
@@ -1640,7 +1648,7 @@
       "has_install_script": false,
       "integrity": "sha512-A3s5PWiZ9YCXFye1o246KoscMWqf8BsD9eRiJ3He7C9OBaxKhAd5TFCdEx/7VbKtxxTsu//1mMJFrEt572cEyQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-scale-chromatic/-/d3-scale-chromatic-3.1.0.tgz",
+      "tarball": "https://registry.npmjs.org/d3-scale-chromatic/-/d3-scale-chromatic-3.1.0.tgz",
       "version": "3.1.0"
     },
     "d3-selection": {
@@ -1648,7 +1656,7 @@
       "has_install_script": false,
       "integrity": "sha512-fmTRWbNMmsmWq6xJV8D19U/gw/bwrHfNXxrIN+HfZgnzqTHp9jOmKMhsTUjXOJnZOdZY9Q28y4yebKzqDKlxlQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-selection/-/d3-selection-3.0.0.tgz",
+      "tarball": "https://registry.npmjs.org/d3-selection/-/d3-selection-3.0.0.tgz",
       "version": "3.0.0"
     },
     "d3-time": {
@@ -1658,7 +1666,7 @@
       "has_install_script": false,
       "integrity": "sha512-VqKjzBLejbSMT4IgbmVgDjpkYrNWUYJnbCGo874u7MMKIWsILRX+OpX/gTk8MqjpT1A/c6HY2dCA77ZN0lkQ2Q==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-time/-/d3-time-3.1.0.tgz",
+      "tarball": "https://registry.npmjs.org/d3-time/-/d3-time-3.1.0.tgz",
       "version": "3.1.0"
     },
     "d3-time-format": {
@@ -1668,7 +1676,7 @@
       "has_install_script": false,
       "integrity": "sha512-dJxPBlzC7NugB2PDLwo9Q8JiTR3M3e4/XANkreKSUxF8vvXKqm1Yfq4Q5dl8budlunRVlUUaDUgFt7eA8D6NLg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-time-format/-/d3-time-format-4.1.0.tgz",
+      "tarball": "https://registry.npmjs.org/d3-time-format/-/d3-time-format-4.1.0.tgz",
       "version": "4.1.0"
     },
     "d3-timer": {
@@ -1676,7 +1684,7 @@
       "has_install_script": false,
       "integrity": "sha512-ndfJ/JxxMd3nw31uyKoY2naivF+r29V+Lc0svZxe1JvvIRmi8hUsrMvdOwgS1o6uBHmiz91geQ0ylPP0aj1VUA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-timer/-/d3-timer-3.0.1.tgz",
+      "tarball": "https://registry.npmjs.org/d3-timer/-/d3-timer-3.0.1.tgz",
       "version": "3.0.1"
     },
     "d3-transition": {
@@ -1690,7 +1698,7 @@
       "has_install_script": false,
       "integrity": "sha512-ApKvfjsSR6tg06xrL434C0WydLr7JewBB3V+/39RMHsaXTOG0zmt/OAXeng5M5LBm0ojmxJrpomQVZ1aPvBL4w==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-transition/-/d3-transition-3.0.1.tgz",
+      "tarball": "https://registry.npmjs.org/d3-transition/-/d3-transition-3.0.1.tgz",
       "version": "3.0.1"
     },
     "d3-zoom": {
@@ -1704,7 +1712,7 @@
       "has_install_script": false,
       "integrity": "sha512-b8AmV3kfQaqWAuacbPuNbL6vahnOJflOhexLzMMNLga62+/nh0JzvJ0aO/5a5MVgUFGS7Hu1P9P03o3fJkDCyw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/d3-zoom/-/d3-zoom-3.0.0.tgz",
+      "tarball": "https://registry.npmjs.org/d3-zoom/-/d3-zoom-3.0.0.tgz",
       "version": "3.0.0"
     },
     "dagre-d3-es": {
@@ -1715,7 +1723,7 @@
       "has_install_script": false,
       "integrity": "sha512-P4rFMVq9ESWqmOgK+dlXvOtLwYg0i7u0HBGJER0LZDJT2VHIPAMZ/riPxqJceWMStH5+E61QxFra9kIS3AqdMg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/dagre-d3-es/-/dagre-d3-es-7.0.14.tgz",
+      "tarball": "https://registry.npmjs.org/dagre-d3-es/-/dagre-d3-es-7.0.14.tgz",
       "version": "7.0.14"
     },
     "dayjs": {
@@ -1723,7 +1731,7 @@
       "has_install_script": false,
       "integrity": "sha512-98IT+HOahAisibz/yjKbzuOBwYcjJ7BCLPzARyHiyEBmRz4fatF+KPJszEHXsGYjUG234aH/cOjW1wwTbKUZlA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/dayjs/-/dayjs-1.11.21.tgz",
+      "tarball": "https://registry.npmjs.org/dayjs/-/dayjs-1.11.21.tgz",
       "version": "1.11.21"
     },
     "debug": {
@@ -1753,7 +1761,7 @@
       "has_install_script": false,
       "integrity": "sha512-AGrQ4QSgssa1NGmWmLPqN5NY2KajF5MqxetNEO+o0n3ZwZZeTmt7bBnvzHWrmkZFxGgr4HdyFgelzgi06otLuQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/delaunator/-/delaunator-5.1.0.tgz",
+      "tarball": "https://registry.npmjs.org/delaunator/-/delaunator-5.1.0.tgz",
       "version": "5.1.0"
     },
     "dequal": {
@@ -1781,7 +1789,7 @@
       "optional_dependencies": {
         "@types/trusted-types": "^2.0.7"
       },
-      "tarball": "https://nexus.gsmlg.net/repository/npm/dompurify/-/dompurify-3.4.11.tgz",
+      "tarball": "https://registry.npmjs.org/dompurify/-/dompurify-3.4.11.tgz",
       "version": "3.4.11"
     },
     "entities": {
@@ -1797,7 +1805,7 @@
       "has_install_script": false,
       "integrity": "sha512-G5iZ6Pc/FNRY/soKZHC+TxGDD83rHUDXxzaWhGCX44vAv/tMs56WMusnm/KMNK+luUPsgA9U28cGr4RDlSzL2g==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/es-toolkit/-/es-toolkit-1.49.0.tgz",
+      "tarball": "https://registry.npmjs.org/es-toolkit/-/es-toolkit-1.49.0.tgz",
       "version": "1.49.0"
     },
     "escape-string-regexp": {
@@ -1821,7 +1829,7 @@
       "has_install_script": false,
       "integrity": "sha512-3GKBOn+m2LX9iq+JC1064cSFprJY4jL1jCXTcpnfER5HYE2l/4EfWSGzkPa/ZDBmYI0ZOEj5VHV/eKnPGkHuOg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/hachure-fill/-/hachure-fill-0.5.2.tgz",
+      "tarball": "https://registry.npmjs.org/hachure-fill/-/hachure-fill-0.5.2.tgz",
       "version": "0.5.2"
     },
     "hast-util-from-dom": {
@@ -2003,7 +2011,7 @@
       "has_install_script": false,
       "integrity": "sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/iconv-lite/-/iconv-lite-0.6.3.tgz",
+      "tarball": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.6.3.tgz",
       "version": "0.6.3"
     },
     "import-meta-resolve": {
@@ -2011,7 +2019,7 @@
       "has_install_script": false,
       "integrity": "sha512-Iqv2fzaTQN28s/FwZAoFq0ZSs/7hMAHJVX+w8PZl3cY19Pxk6jFFalxQoIfW2826i/fDLXv8IiEZRIT0lDuWcg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/import-meta-resolve/-/import-meta-resolve-4.2.0.tgz",
+      "tarball": "https://registry.npmjs.org/import-meta-resolve/-/import-meta-resolve-4.2.0.tgz",
       "version": "4.2.0"
     },
     "is-alphabetical": {
@@ -2072,7 +2080,7 @@
       "has_install_script": false,
       "integrity": "sha512-Ls993zuzfayK269Svk9hzpeGUKob/sIgZzyHYdjQoAdQetRKpOLj+k/QQQ/6Qi0Yz65mlROrfd+Ev+1+7dz9Kw==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/khroma/-/khroma-2.1.0.tgz",
+      "tarball": "https://registry.npmjs.org/khroma/-/khroma-2.1.0.tgz",
       "version": "2.1.0"
     },
     "lodash-es": {
@@ -2080,7 +2088,7 @@
       "has_install_script": false,
       "integrity": "sha512-J8xewKD/Gk22OZbhpOVSwcs60zhd95ESDwezOFuA3/099925PdHJ7OFHNTGtajL3AlZkykD32HykiMo+BIBI8A==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/lodash-es/-/lodash-es-4.18.1.tgz",
+      "tarball": "https://registry.npmjs.org/lodash-es/-/lodash-es-4.18.1.tgz",
       "version": "4.18.1"
     },
     "longest-streak": {
@@ -2719,24 +2727,24 @@
     "oxlint-tsgolint": {
       "dependencies": {},
       "has_install_script": false,
-      "integrity": "sha512-YUSGSLUnoolsu8gxISEDio3q1rtsCozwfOzASUn3DT2mR2EeQ93uEEnen7s+6LpF+lyTQFln1pQfqwBh/fsVEg==",
+      "integrity": "sha512-giCk5sEvG02d5tzPmFMX3hem8ndzEEu1xvGYS5OwNfO2WGl6ZVxt5LjE0yiMDoz94INI7XkXwgFAQiydPvVHDw==",
       "optional_dependencies": {
-        "@oxlint-tsgolint/darwin-arm64": "0.22.1",
-        "@oxlint-tsgolint/darwin-x64": "0.22.1",
-        "@oxlint-tsgolint/linux-arm64": "0.22.1",
-        "@oxlint-tsgolint/linux-x64": "0.22.1",
-        "@oxlint-tsgolint/win32-arm64": "0.22.1",
-        "@oxlint-tsgolint/win32-x64": "0.22.1"
+        "@oxlint-tsgolint/darwin-arm64": "0.24.0",
+        "@oxlint-tsgolint/darwin-x64": "0.24.0",
+        "@oxlint-tsgolint/linux-arm64": "0.24.0",
+        "@oxlint-tsgolint/linux-x64": "0.24.0",
+        "@oxlint-tsgolint/win32-arm64": "0.24.0",
+        "@oxlint-tsgolint/win32-x64": "0.24.0"
       },
-      "tarball": "https://nexus.gsmlg.net/repository/npm/oxlint-tsgolint/-/oxlint-tsgolint-0.22.1.tgz",
-      "version": "0.22.1"
+      "tarball": "https://nexus.gsmlg.net/repository/npm/oxlint-tsgolint/-/oxlint-tsgolint-0.24.0.tgz",
+      "version": "0.24.0"
     },
     "package-manager-detector": {
       "dependencies": {},
       "has_install_script": false,
       "integrity": "sha512-61A5ThoTiDG/C8s8UMZwSorAGwMJ0ERVGj2OjoW5pAalsNOg15+iQiPzrLJ4jhZ1HJzmC2PIHT2oEiH3R5fzNA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/package-manager-detector/-/package-manager-detector-1.6.0.tgz",
+      "tarball": "https://registry.npmjs.org/package-manager-detector/-/package-manager-detector-1.6.0.tgz",
       "version": "1.6.0"
     },
     "parse-entities": {
@@ -2778,7 +2786,7 @@
       "has_install_script": false,
       "integrity": "sha512-NOnmBpt5Y2RWbuv0LMzsayp3lVylAHLPUTut412ZA3l+C4uw4ZVkQbjShYCQ8TCpUMdPapr4YjUqLYD6v68j+w==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/path-data-parser/-/path-data-parser-0.1.0.tgz",
+      "tarball": "https://registry.npmjs.org/path-data-parser/-/path-data-parser-0.1.0.tgz",
       "version": "0.1.0"
     },
     "picocolors": {
@@ -2794,7 +2802,7 @@
       "has_install_script": false,
       "integrity": "sha512-0mYKnYYe9ZcqMCWhUjItv/oHjvgEsfKvnUTg8sAtnHr3GVy7rGkXCb6d5cSyqrWqL4k81b9CPg3urd+T7aop3A==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/points-on-curve/-/points-on-curve-0.2.0.tgz",
+      "tarball": "https://registry.npmjs.org/points-on-curve/-/points-on-curve-0.2.0.tgz",
       "version": "0.2.0"
     },
     "points-on-path": {
@@ -2805,7 +2813,7 @@
       "has_install_script": false,
       "integrity": "sha512-25ClnWWuw7JbWZcgqY/gJ4FQWadKxGWk+3kR/7kD0tCaDtPPMj7oHu2ToLaVhfpnHrZzYby2w6tUA0eOIuUg8g==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/points-on-path/-/points-on-path-0.2.1.tgz",
+      "tarball": "https://registry.npmjs.org/points-on-path/-/points-on-path-0.2.1.tgz",
       "version": "0.2.1"
     },
     "postcss": {
@@ -2815,10 +2823,10 @@
         "source-map-js": "^1.2.1"
       },
       "has_install_script": false,
-      "integrity": "sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==",
+      "integrity": "sha512-vuwillviilfKZsg0VGj5R/YwwcHx4SLsIOI/7K6mQkWx+l5cUHTjj5g0AasTBcyXsbfTgrwsUNmVUb5xVwyPwg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/postcss/-/postcss-8.5.15.tgz",
-      "version": "8.5.15"
+      "tarball": "https://nexus.gsmlg.net/repository/npm/postcss/-/postcss-8.5.16.tgz",
+      "version": "8.5.16"
     },
     "property-information": {
       "dependencies": {},
@@ -2979,7 +2987,7 @@
       "has_install_script": false,
       "integrity": "sha512-NS3levdsRIUOmiJ8FZWCP7LG3QpJyrs/TE0Zpf1yvZu8cAJJ6QMW92H1c7kWpdIHo8RvmLxN/o2JXTKHp74lUA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/robust-predicates/-/robust-predicates-3.0.3.tgz",
+      "tarball": "https://registry.npmjs.org/robust-predicates/-/robust-predicates-3.0.3.tgz",
       "version": "3.0.3"
     },
     "roughjs": {
@@ -2992,7 +3000,7 @@
       "has_install_script": false,
       "integrity": "sha512-ZUz/69+SYpFN/g/lUlo2FXcIjRkSu3nDarreVdGGndHEBJ6cXPdKguS8JGxwj5HA5xIbVKSmLgr5b3AWxtRfvQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/roughjs/-/roughjs-4.6.6.tgz",
+      "tarball": "https://registry.npmjs.org/roughjs/-/roughjs-4.6.6.tgz",
       "version": "4.6.6"
     },
     "rw": {
@@ -3000,7 +3008,7 @@
       "has_install_script": false,
       "integrity": "sha512-PdhdWy89SiZogBLaw42zdeqtRJ//zFd2PgQavcICDUgJT5oW10QCRKbJ6bg4r0/UY2M6BWd5tkxuGFRvCkgfHQ==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/rw/-/rw-1.3.3.tgz",
+      "tarball": "https://registry.npmjs.org/rw/-/rw-1.3.3.tgz",
       "version": "1.3.3"
     },
     "safer-buffer": {
@@ -3008,7 +3016,7 @@
       "has_install_script": false,
       "integrity": "sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/safer-buffer/-/safer-buffer-2.1.2.tgz",
+      "tarball": "https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz",
       "version": "2.1.2"
     },
     "source-map-js": {
@@ -3043,23 +3051,23 @@
       "has_install_script": false,
       "integrity": "sha512-5Z9ZpRzfuH6l/UAvCPAPUo3665Nk2wLaZU3x+TLHKVzIz33+sbJqbtrYoC3KD4/uVOr2Zp+L0LySezP9OHV9yA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/stylis/-/stylis-4.4.0.tgz",
+      "tarball": "https://registry.npmjs.org/stylis/-/stylis-4.4.0.tgz",
       "version": "4.4.0"
     },
     "tailwindcss": {
       "dependencies": {},
       "has_install_script": false,
-      "integrity": "sha512-y6nxMGB1nMW9R6k96e5gdIFzcfL/gTJRNaqGes1YvkLnPVXzWgbqFF2yLC0T8G774n24cx3Pe8XrKoniCOAH+Q==",
+      "integrity": "sha512-WtctNNSH8A9jlMIqxzuYumOHU5uGZyRv0Q5svQl+oEPy5w84YpBxdb7MdqyiSPQge5jTJ6zFQLq0PFygdccSBA==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/tailwindcss/-/tailwindcss-4.3.0.tgz",
-      "version": "4.3.0"
+      "tarball": "https://nexus.gsmlg.net/repository/npm/tailwindcss/-/tailwindcss-4.3.2.tgz",
+      "version": "4.3.2"
     },
     "tinyexec": {
       "dependencies": {},
       "has_install_script": false,
       "integrity": "sha512-SHf/r48b7vOrjve9PxJo3MN5v5yuyjHvdUcrQffT3WXMUfnGmHDVbC4k3sHJaJTgZCwpUplIaAo5ANtMyp3YHg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/tinyexec/-/tinyexec-1.2.4.tgz",
+      "tarball": "https://registry.npmjs.org/tinyexec/-/tinyexec-1.2.4.tgz",
       "version": "1.2.4"
     },
     "trim-lines": {
@@ -3083,7 +3091,7 @@
       "has_install_script": false,
       "integrity": "sha512-JfJeIHke7y2egdGGgRAvpCwYFUsHlM2gPcrVOxFkznt/4uzQ7HFmvE63iFHVLBJNDuyDOQgijDK/tXH/f6Msjg==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/ts-dedent/-/ts-dedent-2.3.0.tgz",
+      "tarball": "https://registry.npmjs.org/ts-dedent/-/ts-dedent-2.3.0.tgz",
       "version": "2.3.0"
     },
     "unified": {
@@ -3194,7 +3202,7 @@
       "has_install_script": false,
       "integrity": "sha512-6ZxzVpzDXDa3bJWaHilVayA+BH/1zmxCJoVgvmqJnid/gPoKHxUrS/aC/T6LGQtNHT+XHG9fXPJB4d+IrU30Ew==",
       "optional_dependencies": {},
-      "tarball": "https://nexus.gsmlg.net/repository/npm/uuid/-/uuid-14.0.1.tgz",
+      "tarball": "https://registry.npmjs.org/uuid/-/uuid-14.0.1.tgz",
       "version": "14.0.1"
     },
     "vfile": {
@@ -3250,6 +3258,8 @@
   "policy": {
     "allow_registry_redirects": false,
     "allowed_registries": [
+      "https://npm.gsmlg.dev",
+      "https://registry.npmjs.org",
       "https://nexus.gsmlg.net"
     ],
     "block_exotic_subdeps": true,
