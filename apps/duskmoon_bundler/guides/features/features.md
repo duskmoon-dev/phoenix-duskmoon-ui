@@ -24,7 +24,7 @@ See [Frontend Frameworks](frameworks.md) for setup instructions and entry point 
 
 ## Tailwind CSS
 
-DuskmoonBundler compiles Tailwind CSS v4 natively. [Oxide](https://hex.pm/packages/oxide_ex) scans source files in parallel for candidate class names, then the Tailwind compiler generates CSS. In dev mode, only changed files are re-scanned — editing a `.heex` template triggers an incremental CSS rebuild and hot-swaps the stylesheet without a page reload.
+DuskmoonBundler compiles Tailwind CSS v4 natively. [Oxide](https://hex.pm/packages/duskmoon_oxide) scans source files in parallel for candidate class names, then the Tailwind compiler generates CSS. In dev mode, only changed files are re-scanned — editing a `.heex` template triggers an incremental CSS rebuild and hot-swaps the stylesheet without a page reload.
 
 Tailwind `@plugin` and `@config` directives are resolved and bundled automatically, including local files and npm packages.
 

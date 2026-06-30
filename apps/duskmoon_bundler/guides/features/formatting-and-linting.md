@@ -34,7 +34,7 @@ config :duskmoon_bundler, :format,
   arrow_parens: :always
 ```
 
-All [oxfmt options](https://hexdocs.pm/oxc/OXC.Format.html) are supported. Falls back to `.oxfmtrc.json` if no Elixir config is set.
+All [oxfmt options](https://hexdocs.pm/duskmoon_oxc/OXC.Format.html) are supported. Falls back to `.oxfmtrc.json` if no Elixir config is set.
 
 ## Linting
 
@@ -61,7 +61,7 @@ config :duskmoon_bundler, :lint,
 
 ### Custom Rules
 
-Custom lint rules can be written in Elixir using the `OXC.Lint.Rule` behaviour — see the [oxc docs](https://hexdocs.pm/oxc/OXC.Lint.Rule.html).
+Custom lint rules can be written in Elixir using the `OXC.Lint.Rule` behaviour — see the [oxc docs](https://hexdocs.pm/duskmoon_oxc/OXC.Lint.Rule.html).
 
 ## Combined Check
 

@@ -1,0 +1,29 @@
+[package]
+name = "vize_ex_nif"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "vize_ex_nif"
+crate-type = ["cdylib"]
+
+[dependencies]
+rustler = { version = "0.38", default-features = false, features = ["derive", "nif_version_2_15"] }
+rustler_match_spec = { version = "0.1", default-features = false }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+lightningcss = { version = "=1.0.0-alpha.71", features = ["visitor"] }
+
+vize_carton = "0.206"
+vize_relief = "0.206"
+vize_armature = "0.206"
+vize_atelier_core = "0.206"
+vize_atelier_dom = "0.206"
+vize_atelier_vapor = "0.206"
+vize_atelier_ssr = "0.206"
+vize_atelier_sfc = { version = "0.206", features = ["native"] }
+vize_patina = "0.206"
+vize_croquis = "0.206"
+
+[dev-dependencies]
+proptest = "1.6"

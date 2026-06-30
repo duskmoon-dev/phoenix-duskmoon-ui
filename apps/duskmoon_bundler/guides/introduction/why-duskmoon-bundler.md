@@ -14,9 +14,9 @@ DuskmoonBundler takes a different approach: compile frontend assets natively ins
 
 DuskmoonBundler doesn't shell out to Node.js, esbuild, or any external binary. JavaScript and TypeScript
 are parsed, transformed, and bundled by [OXC](https://oxc.rs) through a Rust NIF. Vue
-single-file components compile through [Vize](https://hex.pm/packages/vize). Tailwind CSS
-uses [Oxide](https://hex.pm/packages/oxide_ex) for content scanning and
-[QuickBEAM](https://hex.pm/packages/quickbeam) (QuickJS on the BEAM) for the compiler.
+single-file components compile through [Vize](https://hex.pm/packages/duskmoon_vize). Tailwind CSS
+uses [Oxide](https://hex.pm/packages/duskmoon_oxide) for content scanning and
+[QuickBEAM](https://hex.pm/packages/duskmoon_quickbeam) (QuickJS on the BEAM) for the compiler.
 Everything runs in-process.
 
 This means `mix phx.server` starts your frontend toolchain automatically. No separate

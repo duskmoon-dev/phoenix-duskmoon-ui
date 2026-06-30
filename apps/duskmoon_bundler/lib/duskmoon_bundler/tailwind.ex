@@ -77,8 +77,7 @@ defmodule DuskmoonBundler.Tailwind do
   defp ensure_runtime(%{runtime: nil} = state) do
     local_tailwind_path = local_package_path("tailwindcss")
 
-    runtime_packages =
-      if local_tailwind_path, do: %{}, else: DuskmoonBundler.Tailwind.Loader.runtime_packages()
+    runtime_packages = DuskmoonBundler.Tailwind.Loader.runtime_packages()
 
     runtime =
       DuskmoonBundler.JS.Runtime.ensure!(

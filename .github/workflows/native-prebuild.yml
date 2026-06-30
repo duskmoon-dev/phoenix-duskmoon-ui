@@ -1,0 +1,166 @@
+name: Native Prebuild
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: 'Version to build native artifacts for'
+        required: true
+        type: string
+      git-ref:
+        description: 'Git revision to build from'
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to build native artifacts for'
+        required: true
+        type: string
+      git-ref:
+        description: 'Git revision to build from'
+        required: true
+        default: 'main'
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.version }}
+  cancel-in-progress: false
+
+jobs:
+  rust-nifs:
+    name: ${{ matrix.crate.app }} / ${{ matrix.crate.name }} / ${{ matrix.target.target }}
+    runs-on: ${{ matrix.target.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        crate:
+          - app: duskmoon_oxc
+            name: oxc_ex_nif
+            project-dir: apps/duskmoon_oxc/native/oxc_ex_nif
+          - app: duskmoon_oxc
+            name: oxc_fmt_nif
+            project-dir: apps/duskmoon_oxc/native/oxc_fmt_nif
+          - app: duskmoon_oxc
+            name: oxc_lint_nif
+            project-dir: apps/duskmoon_oxc/native/oxc_lint_nif
+          - app: duskmoon_oxide
+            name: oxide_ex_nif
+            project-dir: apps/duskmoon_oxide/native/oxide_ex_nif
+          - app: duskmoon_vize
+            name: vize_ex_nif
+            project-dir: apps/duskmoon_vize/native/vize_ex_nif
+        target:
+          - target: aarch64-apple-darwin
+            os: macos-15
+            use-cross: false
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-22.04
+            use-cross: true
+          - target: x86_64-apple-darwin
+            os: macos-15-intel
+            use-cross: false
+          - target: x86_64-pc-windows-gnu
+            os: windows-2022
+            use-cross: false
+          - target: x86_64-unknown-freebsd
+            os: ubuntu-22.04
+            use-cross: true
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-22.04
+            use-cross: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.git-ref }}
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          target: ${{ matrix.target.target }}
+
+      - name: Build Rust NIF
+        id: build-crate
+        uses: philss/rustler-precompiled-action@v1.1.5
+        with:
+          project-name: ${{ matrix.crate.name }}
+          project-version: ${{ inputs.version }}
+          target: ${{ matrix.target.target }}
+          nif-version: '2.15'
+          use-cross: ${{ matrix.target.use-cross }}
+          cross-version: from-source
+          project-dir: ${{ matrix.crate.project-dir }}
+
+      - name: Upload artifact to GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: v${{ inputs.version }}
+          files: ${{ steps.build-crate.outputs.file-path }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  quickbeam-nif:
+    name: duskmoon_quickbeam / ${{ matrix.target.target }}
+    runs-on: ${{ matrix.target.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - target: aarch64-linux-gnu
+            os: ubuntu-22.04
+          - target: aarch64-macos-none
+            os: macos-15
+          - target: x86_64-freebsd-none
+            os: ubuntu-22.04
+          - target: x86_64-linux-gnu
+            os: ubuntu-22.04
+          - target: x86_64-macos-none
+            os: macos-15-intel
+          - target: x86_64-windows-gnu
+            os: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.git-ref }}
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.18'
+          otp-version: '28'
+
+      - name: Install Zig
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.15.1
+
+      - name: Install Elixir dependencies
+        run: mix deps.get
+
+      - name: Build QuickBEAM NIF
+        working-directory: apps/duskmoon_quickbeam
+        env:
+          QUICKBEAM_BUILD: '1'
+        run: |
+          mix zigler_precompiled.build lib/quickbeam/native.ex \
+            --target ${{ matrix.target.target }} \
+            --version ${{ inputs.version }} \
+            --out ../../artifacts
+
+      - name: Upload artifact to GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: v${{ inputs.version }}
+          files: artifacts/*.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,6 +1,6 @@
 # Tailwind CSS
 
-DuskmoonBundler compiles Tailwind CSS v4 natively at runtime. [Oxide](https://hex.pm/packages/oxide_ex) scans source files in parallel for candidate class names, then the Tailwind compiler (running in [QuickBEAM](https://hex.pm/packages/quickbeam)) generates CSS. [LightningCSS](https://hex.pm/packages/vize) handles minification.
+DuskmoonBundler compiles Tailwind CSS v4 natively at runtime. [Oxide](https://hex.pm/packages/duskmoon_oxide) scans source files in parallel for candidate class names, then the Tailwind compiler (running in [QuickBEAM](https://hex.pm/packages/duskmoon_quickbeam)) generates CSS. [LightningCSS](https://hex.pm/packages/duskmoon_vize) handles minification.
 
 The Tailwind compiler is installed into the npm_ex cache on first use — no manual setup required.
 

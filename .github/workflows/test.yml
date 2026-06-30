@@ -9,6 +9,9 @@ on:
 permissions:
   contents: read
 
+env:
+  DUSKMOON_BUILD_NATIVE_FROM_SOURCE: '1'
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -18,6 +21,7 @@ jobs:
     name: Test (Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}})
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         elixir: ['1.18']
         otp: ['27', '28']
@@ -31,6 +35,16 @@ jobs:
         with:
           elixir-version: ${{ matrix.elixir }}
           otp-version: ${{ matrix.otp }}
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Install Zig
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.15.1
 
       - name: Restore dependencies cache
         uses: actions/cache@v5
@@ -67,6 +81,16 @@ jobs:
         with:
           elixir-version: ${{ matrix.elixir }}
           otp-version: ${{ matrix.otp }}
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Install Zig
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.15.1
 
       - name: Restore dependencies cache
         uses: actions/cache@v5
@@ -158,6 +182,59 @@ jobs:
 
       - name: Run duskmoon_hex_solver tests
         working-directory: apps/duskmoon_hex_solver
+        run: mix test
+        env:
+          MIX_ENV: test
+
+  migrated-native-apps:
+    name: ${{ matrix.app }} Tests (Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        elixir: ['1.18']
+        otp: ['27', '28']
+        app:
+          - duskmoon_oxc
+          - duskmoon_vize
+          - duskmoon_oxide
+          - duskmoon_quickbeam
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Install Zig
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.15.1
+
+      - name: Restore dependencies cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            deps
+          key: ${{ runner.os }}-${{ matrix.app }}-test-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.app }}-test-${{ matrix.elixir }}-${{ matrix.otp }}-
+            ${{ runner.os }}-mix-${{ matrix.elixir }}-${{ matrix.otp }}-
+
+      - name: Install dependencies
+        run: mix deps.get
+
+      - name: Run ${{ matrix.app }} tests
+        working-directory: apps/${{ matrix.app }}
         run: mix test
         env:
           MIX_ENV: test

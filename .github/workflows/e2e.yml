@@ -36,6 +36,7 @@ jobs:
         run: |
           VERSION="${{ inputs.version }}"
           perl -0pi -e 's/defp deps do\n    \[\n.*?    \]\n  end/defp deps do\n    [\n      {:duskmoon_hex_solver, "~> '"${VERSION}"'"},\n      {:duskmoon_npm, "~> '"${VERSION}"'"},\n      {:duskmoon_bundler, "~> '"${VERSION}"'"},\n      {:phoenix_duskmoon, "~> '"${VERSION}"'"}\n    ]\n  end/s' mix.exs
+          perl -0pi -e 's/{:duskmoon_bundler, "~> '"${VERSION}"'"},/{:duskmoon_oxc, "~> '"${VERSION}"'"},\n      {:duskmoon_vize, "~> '"${VERSION}"'"},\n      {:duskmoon_oxide, "~> '"${VERSION}"'"},\n      {:duskmoon_quickbeam, "~> '"${VERSION}"'"},\n      {:duskmoon_bundler, "~> '"${VERSION}"'"},/' mix.exs
 
       - name: Install dependencies
         working-directory: duskmoon_package_e2e
@@ -55,6 +56,10 @@ jobs:
             test "Duskmoon Hex packages load together" do
               assert Code.ensure_loaded?(HexSolver)
               assert Code.ensure_loaded?(NPM)
+              assert Code.ensure_loaded?(OXC)
+              assert Code.ensure_loaded?(Vize)
+              assert Code.ensure_loaded?(Oxide)
+              assert Code.ensure_loaded?(QuickBEAM)
               assert Code.ensure_loaded?(DuskmoonBundler)
               assert Code.ensure_loaded?(PhoenixDuskmoon)
             end

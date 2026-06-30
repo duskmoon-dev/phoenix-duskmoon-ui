@@ -3,9 +3,14 @@ name: CI
 on:
   push:
     branches: [ '*' ]
+  pull_request:
+    branches: [ '*' ]
 
 permissions:
   contents: read
+
+env:
+  DUSKMOON_BUILD_NATIVE_FROM_SOURCE: '1'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,6 +30,16 @@ jobs:
         with:
           elixir-version: '1.18'
           otp-version: '28'
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Install Zig
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.15.1
 
       - name: Restore dependencies cache
         uses: actions/cache@v5
@@ -81,6 +96,16 @@ jobs:
         with:
           elixir-version: '1.18'
           otp-version: '28'
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Install Zig
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.15.1
 
       - name: Restore dependencies cache
         uses: actions/cache@v5
@@ -171,4 +196,61 @@ jobs:
 
       - name: Check duskmoon_hex_solver formatting
         working-directory: apps/duskmoon_hex_solver
+        run: mix format --check-formatted
+
+  migrated-native-apps:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - app: duskmoon_oxc
+            name: Duskmoon OXC
+          - app: duskmoon_vize
+            name: Duskmoon Vize
+          - app: duskmoon_oxide
+            name: Duskmoon Oxide
+          - app: duskmoon_quickbeam
+            name: Duskmoon QuickBEAM
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.18'
+          otp-version: '28'
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Install Zig
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.15.1
+
+      - name: Restore dependencies cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            deps
+          key: ${{ runner.os }}-${{ matrix.app }}-elixir-v1-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.app }}-elixir-v1-
+            ${{ runner.os }}-mix-
+
+      - name: Install Elixir dependencies
+        run: mix deps.get
+
+      - name: Compile ${{ matrix.app }}
+        working-directory: apps/${{ matrix.app }}
+        run: mix compile --warnings-as-errors
+
+      - name: Check ${{ matrix.app }} formatting
+        working-directory: apps/${{ matrix.app }}
         run: mix format --check-formatted

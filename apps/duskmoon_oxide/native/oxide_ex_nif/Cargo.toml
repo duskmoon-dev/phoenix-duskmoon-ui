@@ -1,0 +1,15 @@
+[package]
+name = "oxide_ex_nif"
+version = "0.1.0"
+authors = ["Danila Poyarkov"]
+edition = "2021"
+license = "MIT"
+
+[lib]
+name = "oxide_ex_nif"
+path = "src/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+rustler = { version = "0.37", default-features = false, features = ["derive", "nif_version_2_15"] }
+tailwindcss-oxide = { git = "https://github.com/tailwindlabs/tailwindcss.git", tag = "v4.2.4" }

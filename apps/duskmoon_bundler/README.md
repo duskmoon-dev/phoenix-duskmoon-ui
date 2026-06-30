@@ -4,7 +4,7 @@
 
 Duskmoon-maintained frontend tooling for Phoenix that runs inside the BEAM. This app is based on [Volt](https://github.com/elixir-volt/volt) and keeps the same Vite-level workflow under the `:duskmoon_bundler` OTP app and `DuskmoonBundler` module namespace.
 
-One dep replaces esbuild, the Tailwind CLI, and Node.js with Rust NIFs powered by [OXC](https://oxc.rs), [LightningCSS](https://lightningcss.dev), and [QuickBEAM](https://github.com/elixir-volt/quickbeam) for embedded JavaScript runtimes.
+One dep replaces esbuild, the Tailwind CLI, and Node.js with Rust NIFs powered by [OXC](https://oxc.rs), [LightningCSS](https://lightningcss.dev), and [QuickBEAM](https://hex.pm/packages/duskmoon_quickbeam) for embedded JavaScript runtimes.
 
 ```bash
 mix igniter.install duskmoon_bundler

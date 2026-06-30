@@ -46,7 +46,7 @@ DuskmoonBundler pre-bundles `react`, `react-dom/client`, and `react/jsx-runtime`
 
 ## Vue
 
-Vue single-file components (`.vue`) compile through [Vize](https://hex.pm/packages/vize), a Rust NIF wrapping the official Vue compiler. Scoped CSS, `<script setup>`, and TypeScript in SFCs are all supported.
+Vue single-file components (`.vue`) compile through [Vize](https://hex.pm/packages/duskmoon_vize), a Rust NIF wrapping the official Vue compiler. Scoped CSS, `<script setup>`, and TypeScript in SFCs are all supported.
 
 ### Setup
 
@@ -99,7 +99,7 @@ config :duskmoon_bundler, vapor: true
 
 ## Svelte
 
-Svelte components (`.svelte`) compile through [QuickBEAM](https://hex.pm/packages/quickbeam), which runs the Svelte compiler in-process without Node.js. Svelte 5 runes (`$state`, `$derived`, `$props`) are supported.
+Svelte components (`.svelte`) compile through [QuickBEAM](https://hex.pm/packages/duskmoon_quickbeam), which runs the Svelte compiler in-process without Node.js. Svelte 5 runes (`$state`, `$derived`, `$props`) are supported.
 
 ### Setup
 
@@ -144,7 +144,7 @@ if (import.meta.hot) {
 
 ## Solid
 
-Solid JSX/TSX compiles through [QuickBEAM](https://hex.pm/packages/quickbeam), which runs `babel-preset-solid` in-process without Node.js. Solid uses the same `.jsx`/`.tsx` extensions as React, so the plugin must be enabled explicitly.
+Solid JSX/TSX compiles through [QuickBEAM](https://hex.pm/packages/duskmoon_quickbeam), which runs `babel-preset-solid` in-process without Node.js. Solid uses the same `.jsx`/`.tsx` extensions as React, so the plugin must be enabled explicitly.
 
 ### Setup
 

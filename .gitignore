@@ -22,6 +22,9 @@ erl_crash.dump
 # Temporary files, for example, from tests.
 /tmp
 
+# Native prebuild output.
+/artifacts/
+
 
 node_modules
 package-lock.json
@@ -32,3 +35,14 @@ package-lock.json
 
 # Generated icon bundles (built by mix icons.bundle)
 *.etf.gz
+
+# Generated QuickBEAM precompiled NIF copied during local compiles.
+/apps/duskmoon_quickbeam/priv/lib/
+
+# Generated Rust NIF output copied during local compiles.
+/apps/duskmoon_oxc/priv/native/
+/apps/duskmoon_oxc/target/
+/apps/duskmoon_oxide/priv/native/
+/apps/duskmoon_oxide/target/
+/apps/duskmoon_vize/priv/native/
+/apps/duskmoon_vize/target/

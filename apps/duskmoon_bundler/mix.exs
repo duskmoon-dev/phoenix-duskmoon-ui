@@ -36,12 +36,12 @@ defmodule DuskmoonBundler.MixProject do
 
   defp deps do
     [
-      {:reach, "~> 2.6.1", only: [:dev, :test], runtime: false},
+      {:reach, "~> 2.6.1", only: :dev, runtime: false},
       {:glob_ex, "~> 0.1"},
-      {:oxc, "~> 0.17.1"},
-      {:vize, "~> 0.13.0"},
-      {:oxide_ex, "~> 0.2.1"},
-      {:quickbeam, "~> 0.10.18"},
+      {:duskmoon_oxc, in_umbrella: true},
+      {:duskmoon_vize, in_umbrella: true},
+      {:duskmoon_oxide, in_umbrella: true},
+      {:duskmoon_quickbeam, in_umbrella: true},
       {:dotenvy, "~> 1.1"},
       {:floki, "~> 0.38"},
       {:plug, "~> 1.16"},
