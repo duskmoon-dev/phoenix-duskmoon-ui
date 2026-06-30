@@ -147,6 +147,11 @@ jobs:
         with:
           version: 0.15.1
 
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
       - name: Install Elixir dependencies
         run: mix deps.get
 
@@ -154,6 +159,7 @@ jobs:
         working-directory: apps/duskmoon_quickbeam
         env:
           QUICKBEAM_BUILD: '1'
+          DUSKMOON_BUILD_NATIVE_FROM_SOURCE: '1'
         run: |
           mix zigler_precompiled.build lib/quickbeam/native.ex \
             --target ${{ matrix.target.target }} \
