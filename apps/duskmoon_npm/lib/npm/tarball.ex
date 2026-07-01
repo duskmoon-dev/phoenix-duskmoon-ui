@@ -5,6 +5,9 @@ defmodule NPM.Tarball do
   Verifies SHA-512 integrity and extracts contents to disk.
   """
 
+  @max_retries 3
+  @receive_timeout 120_000
+
   @doc """
   Download a tarball, verify its integrity, and extract to a directory.
 
@@ -13,7 +16,11 @@ defmodule NPM.Tarball do
   @spec fetch_and_extract(String.t(), String.t(), String.t()) ::
           {:ok, non_neg_integer()} | {:error, term()}
   def fetch_and_extract(tarball_url, integrity, dest_dir) do
-    case Req.get(tarball_url, decode_body: false) do
+    fetch_and_extract(tarball_url, integrity, dest_dir, @max_retries)
+  end
+
+  defp fetch_and_extract(tarball_url, integrity, dest_dir, retries_left) do
+    case fetch(tarball_url) do
       {:ok, %{status: 200, body: body}} ->
         with :ok <- verify_integrity(body, integrity) do
           extract(body, dest_dir)
@@ -22,10 +29,37 @@ defmodule NPM.Tarball do
       {:ok, %{status: status}} ->
         {:error, {:http, status}}
 
+      {:error, reason} when retries_left > 0 ->
+        retry(tarball_url, integrity, dest_dir, reason, retries_left)
+
       {:error, reason} ->
         {:error, reason}
     end
   end
+
+  defp fetch(tarball_url) do
+    case Req.get(tarball_url, decode_body: false, receive_timeout: @receive_timeout) do
+      {:ok, %{status: status}} = response when status in 200..499 ->
+        response
+
+      {:ok, %{status: status}} ->
+        {:error, {:http, status}}
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  defp retry(tarball_url, integrity, dest_dir, reason, retries_left) do
+    Mix.shell().error(
+      "tarball fetch failed, retrying in #{retry_delay_ms(retries_left)}ms: #{inspect(reason)}"
+    )
+
+    Process.sleep(retry_delay_ms(retries_left))
+    fetch_and_extract(tarball_url, integrity, dest_dir, retries_left - 1)
+  end
+
+  defp retry_delay_ms(retries_left), do: 1000 * (@max_retries - retries_left + 1)
 
   @doc "Verify SHA-512 integrity of a binary against an SRI hash."
   @spec verify_integrity(binary(), String.t()) :: :ok | {:error, :integrity_mismatch}

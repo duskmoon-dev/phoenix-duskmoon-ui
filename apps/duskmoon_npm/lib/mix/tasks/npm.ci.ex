@@ -15,7 +15,11 @@ defmodule Mix.Tasks.Npm.Ci do
   @impl true
   def run([]) do
     Application.ensure_all_started(:req)
-    NPM.install(frozen: true)
+
+    case NPM.install(frozen: true) do
+      :ok -> :ok
+      {:error, reason} -> Mix.raise("npm.ci failed: #{inspect(reason)}")
+    end
   end
 
   def run(_) do

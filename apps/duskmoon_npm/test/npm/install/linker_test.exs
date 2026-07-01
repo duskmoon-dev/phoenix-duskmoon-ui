@@ -53,6 +53,22 @@ defmodule NPM.Install.LinkerTest do
     assert {:ok, ^cache_path} = File.read_link(Path.join(node_modules, "cached-pkg"))
   end
 
+  test "returns cache population errors directly", %{tmp_dir: tmp_dir} do
+    node_modules = Path.join(tmp_dir, "node_modules")
+
+    entry = %{
+      version: "1.0.0",
+      integrity: "",
+      tarball: "https://blocked.example/blocked-pkg-1.0.0.tgz",
+      dependencies: %{},
+      optional_dependencies: %{},
+      has_install_script: false
+    }
+
+    assert {:error, %NPM.Security.RegistryPolicy.Error{}} =
+             Linker.link(%{"blocked-pkg" => entry}, node_modules)
+  end
+
   defp write_cached_package!(name, version) do
     cache_path = NPM.Cache.package_dir(name, version)
     File.mkdir_p!(cache_path)

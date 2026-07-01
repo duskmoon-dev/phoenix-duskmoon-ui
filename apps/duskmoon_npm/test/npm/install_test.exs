@@ -87,6 +87,22 @@ defmodule NPM.InstallTest do
     refute File.exists?(Path.join([node_modules, optional_package, "package.json"]))
   end
 
+  test "npm.ci raises when frozen install fails", %{project_dir: project_dir} do
+    Mix.Task.reenable("npm.ci")
+
+    File.write!(
+      Path.join(project_dir, "package.json"),
+      NPM.JSON.encode_pretty(%{
+        "name" => "missing_lockfile_project",
+        "dependencies" => %{"lockfile-required" => "1.0.0"}
+      })
+    )
+
+    assert_raise Mix.Error, ~r/npm\.ci failed: :no_lockfile/, fn ->
+      Mix.Tasks.Npm.Ci.run([])
+    end
+  end
+
   defp write_cached_package!(name, version) do
     cache_path = NPM.Cache.package_dir(name, version)
     File.mkdir_p!(cache_path)

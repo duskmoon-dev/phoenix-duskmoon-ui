@@ -26,7 +26,15 @@ mix local.hex --force
 mix local.rebar --force
 mix deps.get
 mix zig.get --version 0.15.2
-mix run -e 'case NPM.install(frozen: true) do :ok -> :ok; {:error, reason} -> Mix.raise("npm frozen install failed: #{inspect(reason)}") end'
+npm_ci_status=1
+for attempt in 1 2 3 4; do
+  if mix npm.ci; then
+    npm_ci_status=0
+    break
+  fi
+  sleep $((attempt * 5))
+done
+test "$npm_ci_status" -eq 0
 export MATCH_STRING="s%@version \"[^\"]\+\"%@version \"${RELEASE_VERSION}\"%"
 sed -i "$MATCH_STRING" mix.exs;
 sed -i "$MATCH_STRING" apps/duskmoon_storybook/mix.exs;

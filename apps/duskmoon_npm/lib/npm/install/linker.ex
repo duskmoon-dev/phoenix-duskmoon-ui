@@ -95,11 +95,18 @@ defmodule NPM.Install.Linker do
       max_concurrency: @cache_concurrency,
       timeout: 60_000
     )
-    |> Enum.reduce({:ok, MapSet.union(platform_skipped, MapSet.new())}, fn
-      {:ok, {:ok, _}}, {status, skipped} -> {status, skipped}
-      {:ok, {:skip, name}}, {status, skipped} -> {status, MapSet.put(skipped, name)}
-      {:ok, {:error, reason}}, {_status, _skipped} -> {{:error, reason}, MapSet.new()}
-      {:exit, reason}, {_status, _skipped} -> {{:error, reason}, MapSet.new()}
+    |> Enum.reduce_while({:ok, MapSet.union(platform_skipped, MapSet.new())}, fn
+      {:ok, {:ok, _}}, {:ok, skipped} ->
+        {:cont, {:ok, skipped}}
+
+      {:ok, {:skip, name}}, {:ok, skipped} ->
+        {:cont, {:ok, MapSet.put(skipped, name)}}
+
+      {:ok, {:error, reason}}, _ ->
+        {:halt, {:error, reason}}
+
+      {:exit, reason}, _ ->
+        {:halt, {:error, reason}}
     end)
   end
 

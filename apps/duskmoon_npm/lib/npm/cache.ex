@@ -42,14 +42,19 @@ defmodule NPM.Cache do
     if cached?(name, version) do
       {:ok, dest}
     else
-      RegistryPolicy.validate_url!(tarball_url)
+      try do
+        RegistryPolicy.validate_url!(tarball_url)
 
-      case NPM.Tarball.fetch_and_extract(tarball_url, integrity, dest) do
-        {:ok, _count} ->
-          {:ok, dest}
+        case NPM.Tarball.fetch_and_extract(tarball_url, integrity, dest) do
+          {:ok, _count} ->
+            {:ok, dest}
 
-        {:error, reason} ->
-          handle_fetch_error(reason, dest, opts)
+          {:error, reason} ->
+            handle_fetch_error(reason, dest, opts)
+        end
+      rescue
+        error in RegistryPolicy.Error ->
+          handle_fetch_error(error, dest, opts)
       end
     end
   end
