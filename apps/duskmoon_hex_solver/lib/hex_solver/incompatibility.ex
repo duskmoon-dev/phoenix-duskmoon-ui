@@ -116,18 +116,18 @@ defmodule HexSolver.Incompatibility do
   end
 
   def to_string(%Incompatibility{terms: [%Term{positive: false} = term]}, opts) do
-    "#{terse_name(%Term{term | positive: true}, opts)} is required"
+    "#{terse_name(term_abs(term), opts)} is required"
   end
 
   def to_string(
-        %Incompatibility{terms: [%{positive: true} = left, %{positive: true} = right]},
+        %Incompatibility{terms: [%Term{positive: true} = left, %Term{positive: true} = right]},
         opts
       ) do
     "#{terse_name(left, opts)} is incompatible with #{terse_name(right, opts)}"
   end
 
   def to_string(
-        %Incompatibility{terms: [%{positive: false} = left, %{positive: false} = right]},
+        %Incompatibility{terms: [%Term{positive: false} = left, %Term{positive: false} = right]},
         opts
       ) do
     "either #{bright_term_abs(left, opts)} or #{bright_term_abs(right, opts)}"
