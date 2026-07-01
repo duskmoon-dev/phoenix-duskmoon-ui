@@ -45,7 +45,11 @@ defmodule NPM.Cache do
       try do
         RegistryPolicy.validate_url!(tarball_url)
 
-        case NPM.Tarball.fetch_and_extract(tarball_url, integrity, dest) do
+        case fetch_and_extract(
+               candidate_tarball_urls(name, version, tarball_url, integrity),
+               integrity,
+               dest
+             ) do
           {:ok, _count} ->
             {:ok, dest}
 
@@ -57,6 +61,53 @@ defmodule NPM.Cache do
           handle_fetch_error(error, dest, opts)
       end
     end
+  end
+
+  @doc false
+  @spec __candidate_tarball_urls__(String.t(), String.t(), String.t(), String.t()) :: [String.t()]
+  def __candidate_tarball_urls__(name, version, tarball_url, integrity) do
+    candidate_tarball_urls(name, version, tarball_url, integrity)
+  end
+
+  defp fetch_and_extract([], _integrity, _dest), do: {:error, :no_tarball_url}
+
+  defp fetch_and_extract([tarball_url | fallback_urls], integrity, dest) do
+    RegistryPolicy.validate_url!(tarball_url)
+
+    case NPM.Tarball.fetch_and_extract(tarball_url, integrity, dest) do
+      {:ok, _count} = ok ->
+        ok
+
+      {:error, reason} when fallback_urls != [] ->
+        File.rm_rf(dest)
+
+        Mix.shell().error(
+          "tarball fetch failed for #{tarball_url}, trying fallback #{hd(fallback_urls)}: #{inspect(reason)}"
+        )
+
+        fetch_and_extract(fallback_urls, integrity, dest)
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  defp candidate_tarball_urls(_name, _version, tarball_url, integrity)
+       when integrity in [nil, ""] do
+    [tarball_url]
+  end
+
+  defp candidate_tarball_urls(name, version, tarball_url, _integrity) do
+    original_origin = RegistryPolicy.origin(tarball_url)
+
+    fallback_urls =
+      NPM.Config.allowed_registries()
+      |> Enum.reject(&(RegistryPolicy.origin(&1) in [nil, original_origin]))
+      |> Enum.map(&NPM.Registry.URL.tarball_url(name, version, &1))
+
+    [tarball_url | fallback_urls]
+    |> Enum.reject(&(&1 in [nil, ""]))
+    |> Enum.uniq()
   end
 
   defp handle_fetch_error(reason, dest, opts) do

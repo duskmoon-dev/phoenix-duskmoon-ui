@@ -9,7 +9,7 @@ ENV RUSTUP_HOME=/usr/local/rustup
 ENV CARGO_HOME=/usr/local/cargo
 ENV DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1
 ENV QUICKBEAM_BUILD=1
-ENV NPM_EX_ALLOWED_REGISTRIES=https://npm.gsmlg.dev,https://registry.npmjs.org,https://nexus.gsmlg.net
+ENV NPM_EX_ALLOWED_REGISTRIES=https://registry.npmjs.org,https://npm.gsmlg.dev,https://nexus.gsmlg.net
 ENV PATH="/usr/local/cargo/bin:${PATH}"
 
 COPY --from=rust /usr/local/cargo /usr/local/cargo
