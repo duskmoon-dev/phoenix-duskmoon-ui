@@ -197,6 +197,8 @@ jobs:
           sed -i "s%{:duskmoon_hex_solver, in_umbrella: true}%{:duskmoon_hex_solver, \"~> ${VERSION}\"}%" apps/duskmoon_npm/mix.exs
           sed -i "s%{:duskmoon_oxc, in_umbrella: true}%{:duskmoon_oxc, \"~> ${VERSION}\"}%" apps/duskmoon_quickbeam/mix.exs
           sed -i "s%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, \"~> ${VERSION}\", optional: true}%" apps/duskmoon_quickbeam/mix.exs
+          # zig_doc depends on ex_doc without an :only restriction, so avoid a dev-only duplicate in the packaged mix.exs.
+          sed -i '/^[[:space:]]*{:ex_doc, .*only: :dev, runtime: false},\?$/d' apps/duskmoon_quickbeam/mix.exs
           sed -i "s%{:duskmoon_oxc, in_umbrella: true}%{:duskmoon_oxc, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i "s%{:duskmoon_vize, in_umbrella: true}%{:duskmoon_vize, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i "s%{:duskmoon_oxide, in_umbrella: true}%{:duskmoon_oxide, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
@@ -206,6 +208,10 @@ jobs:
           grep -q "{:duskmoon_hex_solver, \"~> ${VERSION}\"}" apps/duskmoon_npm/mix.exs
           grep -q "{:duskmoon_oxc, \"~> ${VERSION}\"}" apps/duskmoon_quickbeam/mix.exs
           grep -q "{:duskmoon_npm, \"~> ${VERSION}\", optional: true}" apps/duskmoon_quickbeam/mix.exs
+          if grep -q "{:ex_doc, .*only: :dev" apps/duskmoon_quickbeam/mix.exs; then
+            echo "QuickBEAM packaged mix.exs still contains a dev-only ex_doc dependency" >&2
+            exit 1
+          fi
           grep -q "{:duskmoon_oxc, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
           grep -q "{:duskmoon_vize, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
           grep -q "{:duskmoon_oxide, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
