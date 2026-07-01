@@ -94,6 +94,7 @@ jobs:
     with:
       version: ${{ inputs.version }}
       git-ref: ${{ inputs.git-ref }}
+      allow-existing-release-overwrite: true
     secrets: inherit
 
   publish:
@@ -169,6 +170,18 @@ jobs:
             DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1 mix compile --force
             mix zigler_precompiled.download QuickBEAM.Native --all --print
           )
+
+      - name: Verify native checksum files
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          elixir .github/scripts/verify_native_checksums.exs "v${{ inputs.version }}" \
+            apps/duskmoon_oxc/checksum-Elixir.OXC.Native.exs \
+            apps/duskmoon_oxc/checksum-Elixir.OXC.Format.Native.exs \
+            apps/duskmoon_oxc/checksum-Elixir.OXC.Lint.Native.exs \
+            apps/duskmoon_oxide/checksum-Elixir.Oxide.Native.exs \
+            apps/duskmoon_vize/checksum-Elixir.Vize.Native.exs \
+            apps/duskmoon_quickbeam/checksum-QuickBEAM.Native.exs
 
       - name: Prepare package assets
         run: mix prepublish
@@ -264,10 +277,11 @@ jobs:
           MIX_ENV: prod
         run: |
           if mix hex.info duskmoon_oxc "${{ inputs.version }}" >/dev/null 2>&1; then
-            echo "duskmoon_oxc ${{ inputs.version }} is already published; skipping"
+            echo "duskmoon_oxc ${{ inputs.version }} is already published; replacing to sync native checksums"
           else
-            mix hex.publish package --yes --replace
+            echo "Publishing duskmoon_oxc ${{ inputs.version }}"
           fi
+          mix hex.publish package --yes --replace
 
       - name: Fetch duskmoon_vize Hex dependencies
         working-directory: apps/duskmoon_vize
@@ -280,10 +294,11 @@ jobs:
           MIX_ENV: prod
         run: |
           if mix hex.info duskmoon_vize "${{ inputs.version }}" >/dev/null 2>&1; then
-            echo "duskmoon_vize ${{ inputs.version }} is already published; skipping"
+            echo "duskmoon_vize ${{ inputs.version }} is already published; replacing to sync native checksums"
           else
-            mix hex.publish package --yes --replace
+            echo "Publishing duskmoon_vize ${{ inputs.version }}"
           fi
+          mix hex.publish package --yes --replace
 
       - name: Fetch duskmoon_oxide Hex dependencies
         working-directory: apps/duskmoon_oxide
@@ -296,10 +311,11 @@ jobs:
           MIX_ENV: prod
         run: |
           if mix hex.info duskmoon_oxide "${{ inputs.version }}" >/dev/null 2>&1; then
-            echo "duskmoon_oxide ${{ inputs.version }} is already published; skipping"
+            echo "duskmoon_oxide ${{ inputs.version }} is already published; replacing to sync native checksums"
           else
-            mix hex.publish package --yes --replace
+            echo "Publishing duskmoon_oxide ${{ inputs.version }}"
           fi
+          mix hex.publish package --yes --replace
 
       - name: Fetch duskmoon_quickbeam Hex dependencies
         working-directory: apps/duskmoon_quickbeam
@@ -312,10 +328,11 @@ jobs:
           MIX_ENV: prod
         run: |
           if mix hex.info duskmoon_quickbeam "${{ inputs.version }}" >/dev/null 2>&1; then
-            echo "duskmoon_quickbeam ${{ inputs.version }} is already published; skipping"
+            echo "duskmoon_quickbeam ${{ inputs.version }} is already published; replacing to sync native checksums"
           else
-            mix hex.publish package --yes --replace
+            echo "Publishing duskmoon_quickbeam ${{ inputs.version }}"
           fi
+          mix hex.publish package --yes --replace
 
       - name: Fetch duskmoon_bundler Hex dependencies
         working-directory: apps/duskmoon_bundler

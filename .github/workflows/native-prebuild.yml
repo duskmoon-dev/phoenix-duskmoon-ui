@@ -11,6 +11,11 @@ on:
         description: 'Git revision to build from'
         required: true
         type: string
+      allow-existing-release-overwrite:
+        description: 'Allow overwriting assets on an already-published release'
+        required: false
+        default: false
+        type: boolean
   workflow_dispatch:
     inputs:
       version:
@@ -22,6 +27,11 @@ on:
         required: true
         default: 'main'
         type: string
+      allow-existing-release-overwrite:
+        description: 'Allow overwriting assets on an already-published release'
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -31,8 +41,33 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  release-upload-guard:
+    name: Check release upload safety
+    runs-on: ubuntu-latest
+    steps:
+      - name: Refuse published release overwrite
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ inputs.version }}
+          ALLOW_OVERWRITE: ${{ inputs.allow-existing-release-overwrite }}
+        run: |
+          set -euo pipefail
+
+          if [ "${ALLOW_OVERWRITE}" = "true" ]; then
+            echo "Existing release overwrite explicitly allowed for v${VERSION}"
+            exit 0
+          fi
+
+          is_draft="$(gh release view "v${VERSION}" --json isDraft --jq '.isDraft' 2>/dev/null || true)"
+          if [ "${is_draft}" = "false" ]; then
+            echo "Refusing to overwrite native assets on published release v${VERSION}" >&2
+            echo "Run the full release workflow if native Hex packages also need checksum replacement." >&2
+            exit 1
+          fi
+
   rust-nifs:
     name: ${{ matrix.crate.app }} / ${{ matrix.crate.name }} / ${{ matrix.target.target }}
+    needs: release-upload-guard
     runs-on: ${{ matrix.target.os }}
     timeout-minutes: 45
     strategy:
