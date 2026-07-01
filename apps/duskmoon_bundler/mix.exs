@@ -8,7 +8,7 @@ defmodule DuskmoonBundler.MixProject do
     [
       app: :duskmoon_bundler,
       version: @version,
-      elixir: "~> 1.17",
+      elixir: "~> 1.18",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
