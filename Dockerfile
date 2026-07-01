@@ -1,22 +1,35 @@
+ARG BUN_VERSION=1.3.13
+
+FROM oven/bun:${BUN_VERSION} AS bun
+
+FROM rust:1-trixie AS rust
+
 FROM elixir:1.19-otp-28 AS builder
 
 ARG MIX_ENV=prod
 ARG RELEASE_VERSION=1.0.0
 
+ENV RUSTUP_HOME=/usr/local/rustup
+ENV CARGO_HOME=/usr/local/cargo
+ENV DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1
+ENV QUICKBEAM_BUILD=1
+ENV PATH="/usr/local/cargo/bin:${PATH}"
+
+COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
+COPY --from=rust /usr/local/cargo /usr/local/cargo
+COPY --from=rust /usr/local/rustup /usr/local/rustup
 COPY . /build
 WORKDIR /build
 
 RUN <<EOF
 set -ex
 apt-get update
-apt-get install -y --no-install-recommends curl unzip bash nodejs npm
+apt-get install -y --no-install-recommends bash build-essential curl git nodejs pkg-config unzip xz-utils
 rm -rf /var/lib/apt/lists/*
-# Install bun
-curl -fsSL https://bun.sh/install | bash
-export PATH="/root/.bun/bin:$PATH"
 mix local.hex --force
 mix local.rebar --force
 mix deps.get
+mix zig.get --version 0.15.2
 bun install --frozen-lockfile
 export MATCH_STRING="s%@version \"[^\"]\+\"%@version \"${RELEASE_VERSION}\"%"
 sed -i "$MATCH_STRING" mix.exs;

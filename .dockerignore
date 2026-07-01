@@ -1,11 +1,12 @@
 # Build artifacts
-/_build/
-/deps/
-/cover/
+**/_build/
+**/deps/
+**/cover/
 /doc/
+**/target/
 
 # Node dependencies (rebuilt inside container)
-node_modules/
+**/node_modules/
 
 # Development files
 /.devenv*
@@ -13,7 +14,10 @@ node_modules/
 /.trees/
 /.playwright-mcp/
 /.claude/
+/.elixir_ls/
+/.opencode/
 /tmp/
+/screenshots/
 
 # Git
 .git/
