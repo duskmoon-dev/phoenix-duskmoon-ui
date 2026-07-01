@@ -225,7 +225,12 @@ jobs:
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
           MIX_ENV: prod
-        run: mix hex.publish package --yes --replace
+        run: |
+          if mix hex.info duskmoon_hex_solver "${{ inputs.version }}" >/dev/null 2>&1; then
+            echo "duskmoon_hex_solver ${{ inputs.version }} is already published; skipping"
+          else
+            mix hex.publish package --yes --replace
+          fi
 
       - name: Fetch duskmoon_npm Hex dependencies
         working-directory: apps/duskmoon_npm
@@ -236,7 +241,12 @@ jobs:
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
           MIX_ENV: prod
-        run: mix hex.publish package --yes --replace
+        run: |
+          if mix hex.info duskmoon_npm "${{ inputs.version }}" >/dev/null 2>&1; then
+            echo "duskmoon_npm ${{ inputs.version }} is already published; skipping"
+          else
+            mix hex.publish package --yes --replace
+          fi
 
       - name: Fetch duskmoon_oxc Hex dependencies
         working-directory: apps/duskmoon_oxc
@@ -247,7 +257,12 @@ jobs:
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
           MIX_ENV: prod
-        run: mix hex.publish package --yes --replace
+        run: |
+          if mix hex.info duskmoon_oxc "${{ inputs.version }}" >/dev/null 2>&1; then
+            echo "duskmoon_oxc ${{ inputs.version }} is already published; skipping"
+          else
+            mix hex.publish package --yes --replace
+          fi
 
       - name: Fetch duskmoon_vize Hex dependencies
         working-directory: apps/duskmoon_vize
@@ -258,7 +273,12 @@ jobs:
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
           MIX_ENV: prod
-        run: mix hex.publish package --yes --replace
+        run: |
+          if mix hex.info duskmoon_vize "${{ inputs.version }}" >/dev/null 2>&1; then
+            echo "duskmoon_vize ${{ inputs.version }} is already published; skipping"
+          else
+            mix hex.publish package --yes --replace
+          fi
 
       - name: Fetch duskmoon_oxide Hex dependencies
         working-directory: apps/duskmoon_oxide
@@ -269,7 +289,12 @@ jobs:
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
           MIX_ENV: prod
-        run: mix hex.publish package --yes --replace
+        run: |
+          if mix hex.info duskmoon_oxide "${{ inputs.version }}" >/dev/null 2>&1; then
+            echo "duskmoon_oxide ${{ inputs.version }} is already published; skipping"
+          else
+            mix hex.publish package --yes --replace
+          fi
 
       - name: Fetch duskmoon_quickbeam Hex dependencies
         working-directory: apps/duskmoon_quickbeam
@@ -280,7 +305,12 @@ jobs:
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
           MIX_ENV: prod
-        run: mix hex.publish package --yes --replace
+        run: |
+          if mix hex.info duskmoon_quickbeam "${{ inputs.version }}" >/dev/null 2>&1; then
+            echo "duskmoon_quickbeam ${{ inputs.version }} is already published; skipping"
+          else
+            mix hex.publish package --yes --replace
+          fi
 
       - name: Fetch duskmoon_bundler Hex dependencies
         working-directory: apps/duskmoon_bundler
@@ -291,7 +321,12 @@ jobs:
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
           MIX_ENV: prod
-        run: mix hex.publish package --yes --replace
+        run: |
+          if mix hex.info duskmoon_bundler "${{ inputs.version }}" >/dev/null 2>&1; then
+            echo "duskmoon_bundler ${{ inputs.version }} is already published; skipping"
+          else
+            mix hex.publish package --yes --replace
+          fi
 
       - name: Fetch phoenix_duskmoon Hex dependencies
         working-directory: apps/phoenix_duskmoon
@@ -302,7 +337,12 @@ jobs:
         env:
           HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
           MIX_ENV: prod
-        run: mix hex.publish package --yes --replace
+        run: |
+          if mix hex.info phoenix_duskmoon "${{ inputs.version }}" >/dev/null 2>&1; then
+            echo "phoenix_duskmoon ${{ inputs.version }} is already published; skipping"
+          else
+            mix hex.publish package --yes --replace
+          fi
 
       - name: Restore local umbrella mix.exs files
         if: always()
@@ -338,7 +378,13 @@ jobs:
         working-directory: apps/phoenix_duskmoon
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public --provenance --tag ${{ steps.npm-tag.outputs.tag }}
+        run: |
+          VERSION="${{ inputs.version }}"
+          if npm view "phoenix_duskmoon@${VERSION}" version >/dev/null 2>&1; then
+            echo "phoenix_duskmoon ${VERSION} is already published to npm; skipping"
+          else
+            npm publish --access public --provenance --tag ${{ steps.npm-tag.outputs.tag }}
+          fi
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v3
