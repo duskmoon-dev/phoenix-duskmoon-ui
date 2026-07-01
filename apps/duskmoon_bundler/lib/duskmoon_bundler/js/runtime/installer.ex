@@ -22,6 +22,7 @@ defmodule DuskmoonBundler.JS.Runtime.Installer do
     lockfile_path = Path.join(install_dir, "npm.lock")
     metadata_path = Path.join(install_dir, "duskmoon-bundler-runtime.json")
     signature = install_signature(packages)
+    resolver_opts = resolver_opts(opts)
 
     with_lock(install_dir, fn ->
       if Keyword.get(opts, :force, false) or metadata_mismatch?(metadata_path, signature) do
@@ -30,7 +31,7 @@ defmodule DuskmoonBundler.JS.Runtime.Installer do
 
       unless install_intact?(lockfile_path, node_modules, metadata_path, signature) do
         File.mkdir_p!(install_dir)
-        resolve_and_link!(packages, node_modules, lockfile_path)
+        resolve_and_link!(packages, node_modules, lockfile_path, resolver_opts)
         write_metadata!(metadata_path, signature, packages)
       end
     end)
@@ -38,10 +39,10 @@ defmodule DuskmoonBundler.JS.Runtime.Installer do
     %{install_dir: install_dir, node_modules: node_modules}
   end
 
-  defp resolve_and_link!(packages, node_modules, lockfile_path) do
+  defp resolve_and_link!(packages, node_modules, lockfile_path, resolver_opts) do
     NPM.Resolver.clear_cache()
 
-    case NPM.Resolver.resolve(packages) do
+    case NPM.Resolver.resolve(packages, resolver_opts) do
       {:ok, resolved} ->
         {_nested, flat} = Map.pop(resolved, :nested, %{})
         lockfile = build_lockfile(flat)
@@ -51,6 +52,16 @@ defmodule DuskmoonBundler.JS.Runtime.Installer do
 
       {:error, message} ->
         raise "NPM package resolution failed:\n#{message}"
+    end
+  end
+
+  defp resolver_opts(opts) do
+    resolver_opts = Keyword.get(opts, :resolver_opts, [])
+
+    if Keyword.has_key?(opts, :prefetch_timeout) do
+      Keyword.put(resolver_opts, :prefetch_timeout, Keyword.fetch!(opts, :prefetch_timeout))
+    else
+      resolver_opts
     end
   end
 
