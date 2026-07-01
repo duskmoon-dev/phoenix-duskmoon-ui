@@ -6,6 +6,8 @@ defmodule NPM.Tarball do
   """
 
   @max_retries 3
+  @connect_timeout 30_000
+  @pool_timeout 120_000
   @receive_timeout 120_000
 
   @doc """
@@ -38,7 +40,13 @@ defmodule NPM.Tarball do
   end
 
   defp fetch(tarball_url) do
-    case Req.get(tarball_url, decode_body: false, receive_timeout: @receive_timeout) do
+    case Req.get(tarball_url,
+           decode_body: false,
+           connect_options: [timeout: @connect_timeout],
+           pool_timeout: @pool_timeout,
+           receive_timeout: @receive_timeout,
+           retry: false
+         ) do
       {:ok, %{status: status}} = response when status in 200..499 ->
         response
 
@@ -52,7 +60,7 @@ defmodule NPM.Tarball do
 
   defp retry(tarball_url, integrity, dest_dir, reason, retries_left) do
     Mix.shell().error(
-      "tarball fetch failed, retrying in #{retry_delay_ms(retries_left)}ms: #{inspect(reason)}"
+      "tarball fetch failed for #{tarball_url}, retrying in #{retry_delay_ms(retries_left)}ms: #{inspect(reason)}"
     )
 
     Process.sleep(retry_delay_ms(retries_left))

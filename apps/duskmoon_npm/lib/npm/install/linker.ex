@@ -10,7 +10,7 @@ defmodule NPM.Install.Linker do
   as possible, only nesting when version conflicts occur.
   """
 
-  @cache_concurrency 8
+  @default_cache_concurrency 4
   @link_concurrency 16
 
   @type strategy :: :symlink | :copy
@@ -92,8 +92,9 @@ defmodule NPM.Install.Linker do
           other -> other
         end
       end,
-      max_concurrency: @cache_concurrency,
-      timeout: 60_000
+      max_concurrency: cache_concurrency(),
+      ordered: false,
+      timeout: :infinity
     )
     |> Enum.reduce_while({:ok, MapSet.union(platform_skipped, MapSet.new())}, fn
       {:ok, {:ok, _}}, {:ok, skipped} ->
@@ -407,6 +408,19 @@ defmodule NPM.Install.Linker do
 
   defp default_strategy do
     :symlink
+  end
+
+  defp cache_concurrency do
+    case System.get_env("NPM_EX_CACHE_CONCURRENCY") do
+      nil ->
+        @default_cache_concurrency
+
+      value ->
+        case Integer.parse(value) do
+          {concurrency, ""} when concurrency > 0 -> concurrency
+          _ -> @default_cache_concurrency
+        end
+    end
   end
 
   defp run_concurrently(items, fun) do

@@ -50,7 +50,7 @@ defmodule NPM.Cache do
             {:ok, dest}
 
           {:error, reason} ->
-            handle_fetch_error(reason, dest, opts)
+            handle_fetch_error({:fetch_failed, name, version, reason}, dest, opts)
         end
       rescue
         error in RegistryPolicy.Error ->
