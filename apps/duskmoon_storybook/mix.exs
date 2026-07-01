@@ -47,7 +47,7 @@ defmodule DuskmoonStorybook.MixProject do
       {:phoenix_live_dashboard, "~> 0.8"},
       {:phoenix_pubsub, "~> 2.2"},
       {:floki, ">= 0.30.0", only: :test},
-      {:duskmoon_bundler, in_umbrella: true, runtime: false},
+      {:duskmoon_bundler, in_umbrella: true},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.3"},
       {:gettext, "~> 1.0"},

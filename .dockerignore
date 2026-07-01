@@ -34,5 +34,9 @@ erl_crash.dump
 # Lock files (npm install recreates these)
 package-lock.json
 
+# Docker metadata
+/Dockerfile
+/.dockerignore
+
 # Screenshots and temp images
 *.png

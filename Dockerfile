@@ -41,7 +41,7 @@ mix release storybook --version "${RELEASE_VERSION}"
 cp -r _build/prod/rel/storybook /app
 EOF
 
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 ARG RELEASE_VERSION=1.0.0
 
@@ -57,6 +57,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 ENV PORT=80
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
 ENV REPLACE_OS_VARS=true
 ENV ERL_EPMD_PORT=4369
 ENV ERLCOOKIE=duskmoon_storybook
