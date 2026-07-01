@@ -204,12 +204,17 @@ jobs:
           sed -i "s%{:duskmoon_oxide, in_umbrella: true}%{:duskmoon_oxide, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i "s%{:duskmoon_quickbeam, in_umbrella: true}%{:duskmoon_quickbeam, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i "s%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
+          sed -i '/^[[:space:]]*{:ex_doc, .*only: :dev, runtime: false},\?$/d' apps/duskmoon_bundler/mix.exs
           sed -i "s%{:duskmoon_bundler, in_umbrella: true, only: :dev, runtime: false}%{:duskmoon_bundler, \"~> ${VERSION}\", only: :dev, runtime: false}%" apps/phoenix_duskmoon/mix.exs
           grep -q "{:duskmoon_hex_solver, \"~> ${VERSION}\"}" apps/duskmoon_npm/mix.exs
           grep -q "{:duskmoon_oxc, \"~> ${VERSION}\"}" apps/duskmoon_quickbeam/mix.exs
           grep -q "{:duskmoon_npm, \"~> ${VERSION}\", optional: true}" apps/duskmoon_quickbeam/mix.exs
           if grep -q "{:ex_doc, .*only: :dev" apps/duskmoon_quickbeam/mix.exs; then
             echo "QuickBEAM packaged mix.exs still contains a dev-only ex_doc dependency" >&2
+            exit 1
+          fi
+          if grep -q "{:ex_doc, .*only: :dev" apps/duskmoon_bundler/mix.exs; then
+            echo "Bundler packaged mix.exs still contains a dev-only ex_doc dependency" >&2
             exit 1
           fi
           grep -q "{:duskmoon_oxc, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
