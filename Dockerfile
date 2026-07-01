@@ -24,13 +24,13 @@ WORKDIR /build
 RUN <<EOF
 set -ex
 apt-get update
-apt-get install -y --no-install-recommends bash build-essential curl git nodejs npm pkg-config unzip xz-utils
+apt-get install -y --no-install-recommends bash build-essential curl git nodejs pkg-config unzip xz-utils
 rm -rf /var/lib/apt/lists/*
 mix local.hex --force
 mix local.rebar --force
 mix deps.get
 mix zig.get --version 0.15.2
-npm install --ignore-scripts --no-audit --no-fund --package-lock=false --registry=https://registry.npmjs.org/
+bun install --frozen-lockfile --ignore-scripts --backend=copyfile --no-progress
 export MATCH_STRING="s%@version \"[^\"]\+\"%@version \"${RELEASE_VERSION}\"%"
 sed -i "$MATCH_STRING" mix.exs;
 sed -i "$MATCH_STRING" apps/duskmoon_storybook/mix.exs;
