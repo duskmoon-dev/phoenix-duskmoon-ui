@@ -100,12 +100,14 @@ defmodule NPM.Cache do
   defp candidate_tarball_urls(name, version, tarball_url, _integrity) do
     original_origin = RegistryPolicy.origin(tarball_url)
 
-    fallback_urls =
-      NPM.Config.allowed_registries()
-      |> Enum.reject(&(RegistryPolicy.origin(&1) in [nil, original_origin]))
-      |> Enum.map(&NPM.Registry.URL.tarball_url(name, version, &1))
-
-    [tarball_url | fallback_urls]
+    NPM.Config.allowed_registries()
+    |> Enum.map(fn registry ->
+      if RegistryPolicy.origin(registry) == original_origin do
+        tarball_url
+      else
+        NPM.Registry.URL.tarball_url(name, version, registry)
+      end
+    end)
     |> Enum.reject(&(&1 in [nil, ""]))
     |> Enum.uniq()
   end

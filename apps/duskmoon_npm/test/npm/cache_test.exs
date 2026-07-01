@@ -45,6 +45,22 @@ defmodule NPM.CacheTest do
     assert Cache.__candidate_tarball_urls__("rehype-parse", "9.0.1", original, "") == [original]
   end
 
+  test "honors allowed registry order for integrity-protected tarballs" do
+    original =
+      "https://nexus.gsmlg.net/repository/npm/rehype-parse/-/rehype-parse-9.0.1.tgz"
+
+    Application.put_env(:duskmoon_npm, :allowed_registries, [
+      "https://registry.npmjs.org",
+      "https://nexus.gsmlg.net"
+    ])
+
+    assert Cache.__candidate_tarball_urls__("rehype-parse", "9.0.1", original, "sha512-hash") ==
+             [
+               "https://registry.npmjs.org/rehype-parse/-/rehype-parse-9.0.1.tgz",
+               original
+             ]
+  end
+
   test "builds fallback tarball URLs for scoped packages" do
     original =
       "https://nexus.gsmlg.net/repository/npm/@scope/package/-/package-1.2.3.tgz"
