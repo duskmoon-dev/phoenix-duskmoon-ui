@@ -4,8 +4,6 @@ defmodule HexSolver.Term do
   alias HexSolver.{Constraint, PackageRange, Term}
   alias HexSolver.Constraints.Empty
 
-  require Logger
-
   defstruct positive: true,
             package_range: nil,
             optional: false

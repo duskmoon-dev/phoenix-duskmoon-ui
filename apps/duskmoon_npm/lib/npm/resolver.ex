@@ -312,8 +312,6 @@ defmodule NPM.Resolver do
     end)
   end
 
-  defp find_dependents(_name, _packument, _package, acc), do: acc
-
   defp version_dependencies(%{dependencies: deps}) when is_map(deps), do: deps
   defp version_dependencies(%{"dependencies" => deps}) when is_map(deps), do: deps
   defp version_dependencies(_info), do: %{}

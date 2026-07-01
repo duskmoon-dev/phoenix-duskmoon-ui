@@ -93,9 +93,9 @@ defmodule HexSolver.Solver do
     {:error, :conflict}
   end
 
-  defp propagate_incompatibility([], unsatisfied, incompatibility, state, _opts) do
+  defp propagate_incompatibility([], %Term{} = unsatisfied, incompatibility, state, _opts) do
     # Only one term in the incompatibility was unsatisfied
-    unsatisfied = %{unsatisfied | positive: not unsatisfied.positive}
+    unsatisfied = %Term{unsatisfied | positive: not unsatisfied.positive}
     debug(state, fn -> "RESOLVER: derived #{unsatisfied}" end)
 
     solution = PartialSolution.derive(state.solution, unsatisfied, incompatibility)
@@ -109,14 +109,14 @@ defmodule HexSolver.Solver do
       :done
     else
       case PackageLister.pick_package(state.lister, unsatisfied) do
-        {:ok, package_range, nil} ->
+        {:ok, %PackageRange{} = package_range, nil} ->
           # If no version satisfies the constraint then add an incompatibility that indicates that
           term = %Term{positive: true, package_range: package_range}
           incompatibility = Incompatibility.new([term], :no_versions)
           state = add_incompatibility(state, incompatibility)
           {:choice, package_range.name, state}
 
-        {:ok, package_range, version} ->
+        {:ok, %PackageRange{} = package_range, version} ->
           {lister, incompatibilities} =
             PackageLister.dependencies_as_incompatibilities(
               state.lister,
@@ -153,7 +153,7 @@ defmodule HexSolver.Solver do
           state = %{state | solution: solution}
           {:choice, package_range.name, state}
 
-        {:error, package_range} ->
+        {:error, %PackageRange{} = package_range} ->
           package_range = %PackageRange{package_range | constraint: Util.any()}
           term = %Term{positive: true, package_range: package_range}
           incompatibility = Incompatibility.new([term], :package_not_found)

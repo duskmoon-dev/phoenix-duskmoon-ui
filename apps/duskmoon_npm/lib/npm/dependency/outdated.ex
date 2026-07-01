@@ -55,7 +55,6 @@ defmodule NPM.Dependency.Outdated do
     case NPM.SemverUtil.update_type(current, latest) do
       :none -> :current
       type when type in [:major, :minor, :patch] -> type
-      _ -> :current
     end
   end
 
