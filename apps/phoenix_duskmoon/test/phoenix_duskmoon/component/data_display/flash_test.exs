@@ -160,6 +160,17 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
       assert result =~ "toast-close"
     end
 
+    test "only close button clears the flash" do
+      result =
+        render_component(&dm_flash/1, %{
+          kind: :info,
+          flash: %{"info" => "Closeable"}
+        })
+
+      assert result =~ ~r/<div id="flash"(?:(?!phx-click).)*role="alert"/s
+      assert result =~ ~r/<button[^>]*class="toast-close"[^>]*phx-click="[^"]*lv:clear-flash/s
+    end
+
     test "renders flash without close button when close=false" do
       result =
         render_component(&dm_flash/1, %{

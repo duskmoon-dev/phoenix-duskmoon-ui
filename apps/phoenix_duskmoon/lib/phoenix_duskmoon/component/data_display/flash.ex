@@ -37,10 +37,6 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
       :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
       id={@id}
       phx-mounted={@autoshow && JS.add_class("toast-open", to: "##{@id}")}
-      phx-click={
-        JS.push("lv:clear-flash", value: %{key: @kind})
-        |> JS.remove_class("toast-open", to: "##{@id}")
-      }
       role="alert"
       aria-live={if(@kind == :error, do: "assertive", else: "polite")}
       aria-atomic="true"
@@ -60,6 +56,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
         type="button"
         class="toast-close"
         aria-label={@close_label}
+        phx-click={
+          JS.push("lv:clear-flash", value: %{key: @kind})
+          |> JS.remove_class("toast-open", to: "##{@id}")
+        }
       >
         <.dm_mdi name="close" class="w-4 h-4" />
       </button>
