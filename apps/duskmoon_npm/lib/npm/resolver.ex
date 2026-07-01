@@ -26,7 +26,6 @@ defmodule NPM.Resolver do
   @max_nesting_depth 128
   @max_prefetch_depth 10
   @prefetch_concurrency 16
-  @fetch_timeout 30_000
 
   @doc """
   Resolve a set of root dependencies to exact versions.
@@ -48,10 +47,22 @@ defmodule NPM.Resolver do
     ensure_cache()
     overrides = Keyword.get(opts, :overrides, %{})
     if overrides != %{}, do: store_overrides(overrides)
-    resolve_with_nesting(root_deps, MapSet.new(), %{}, 0)
+    store_resolver_opts(opts)
+    resolve_with_nesting(root_deps, MapSet.new(), %{}, 0, opts)
   rescue
     error in [ExoticDeps.Error, PrefetchError, RegistryPolicy.Error] ->
       {:error, Exception.message(error)}
+  end
+
+  defp store_resolver_opts(opts) do
+    :ets.insert(@table, {:__resolver_opts__, Keyword.take(opts, [:prefetch_timeout])})
+  end
+
+  defp get_resolver_opts do
+    case :ets.lookup(@table, :__resolver_opts__) do
+      [{_, opts}] -> opts
+      [] -> []
+    end
   end
 
   defp store_overrides(overrides) do
@@ -65,13 +76,18 @@ defmodule NPM.Resolver do
     end
   end
 
-  defp resolve_with_nesting(_root_deps, _excluded, _nested, depth)
+  @doc false
+  def prefetch_timeout(opts \\ []) do
+    Keyword.get(opts, :prefetch_timeout) || NPM.Config.prefetch_timeout()
+  end
+
+  defp resolve_with_nesting(_root_deps, _excluded, _nested, depth, _opts)
        when depth > @max_nesting_depth do
     {:error, "Too many resolution retries — deeply conflicting dependencies"}
   end
 
-  defp resolve_with_nesting(root_deps, excluded, nested, depth) do
-    case prefetch_tree(Map.keys(root_deps)) do
+  defp resolve_with_nesting(root_deps, excluded, nested, depth, opts) do
+    case prefetch_tree(Map.keys(root_deps), opts) do
       :ok ->
         dependencies = build_dependencies(root_deps)
 
@@ -90,7 +106,7 @@ defmodule NPM.Resolver do
               new_nested = collect_nested_versions(conflict_packages)
               merged_nested = Map.merge(nested, new_nested)
               new_excluded = Enum.reduce(conflict_packages, excluded, &MapSet.put(&2, &1))
-              resolve_with_nesting(root_deps, new_excluded, merged_nested, depth + 1)
+              resolve_with_nesting(root_deps, new_excluded, merged_nested, depth + 1, opts)
             else
               {:error, message}
             end
@@ -332,7 +348,7 @@ defmodule NPM.Resolver do
     packages
     |> Enum.map(fn {_repo, name} -> name end)
     |> Enum.reject(&cached?/1)
-    |> prefetch_packages()
+    |> prefetch_packages(get_resolver_opts())
     |> case do
       :ok -> :ok
       {:error, reason} -> raise PrefetchError, reason: reason
@@ -535,13 +551,13 @@ defmodule NPM.Resolver do
     end
   end
 
-  defp prefetch_packages([]), do: :ok
+  defp prefetch_packages([], _opts), do: :ok
 
-  defp prefetch_packages(packages) do
+  defp prefetch_packages(packages, opts) do
     packages
     |> Task.async_stream(&safe_fetch_and_cache/1,
       max_concurrency: @prefetch_concurrency,
-      timeout: @fetch_timeout,
+      timeout: prefetch_timeout(opts),
       ordered: false,
       on_timeout: :kill_task
     )
@@ -556,13 +572,13 @@ defmodule NPM.Resolver do
     kind, reason -> {:error, {kind, reason}}
   end
 
-  defp prefetch_tree(packages, depth \\ 0)
-  defp prefetch_tree(_packages, depth) when depth > @max_prefetch_depth, do: :ok
+  defp prefetch_tree(packages, opts), do: prefetch_tree(packages, 0, opts)
+  defp prefetch_tree(_packages, depth, _opts) when depth > @max_prefetch_depth, do: :ok
 
-  defp prefetch_tree(packages, depth) do
+  defp prefetch_tree(packages, depth, opts) do
     to_fetch = Enum.reject(packages, &cached?/1)
 
-    case prefetch_packages(to_fetch) do
+    case prefetch_packages(to_fetch, opts) do
       :ok ->
         next_level =
           to_fetch
@@ -571,7 +587,7 @@ defmodule NPM.Resolver do
           |> Enum.reject(&cached?/1)
 
         if next_level != [] do
-          prefetch_tree(next_level, depth + 1)
+          prefetch_tree(next_level, depth + 1, opts)
         else
           :ok
         end

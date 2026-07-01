@@ -31,6 +31,22 @@ defmodule NPMTest do
              "untrusted npm registry URL https://registry.npmjs.org/pkg/-/pkg-1.0.0.tgz. Allowed registry origins: https://npm.gsmlg.dev."
   end
 
+  test "resolver prefetch timeout can be configured per call" do
+    original_timeout = Application.get_env(:duskmoon_npm, :prefetch_timeout)
+
+    Application.put_env(:duskmoon_npm, :prefetch_timeout, 45_000)
+
+    try do
+      assert NPM.Resolver.prefetch_timeout([]) == 45_000
+      assert NPM.Resolver.prefetch_timeout(prefetch_timeout: 120_000) == 120_000
+    after
+      case original_timeout do
+        nil -> Application.delete_env(:duskmoon_npm, :prefetch_timeout)
+        value -> Application.put_env(:duskmoon_npm, :prefetch_timeout, value)
+      end
+    end
+  end
+
   test "bundled npm semver parser supports npm ranges" do
     assert NPMSemver.matches?("1.2.3", "^1.0.0")
     refute NPMSemver.matches?("2.0.0", "^1.0.0")

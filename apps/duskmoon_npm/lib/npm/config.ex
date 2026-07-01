@@ -32,6 +32,13 @@ defmodule NPM.Config do
       read_npmrc_auth_token(registry_url)
   end
 
+  @doc "Read the async resolver prefetch timeout in milliseconds."
+  @spec prefetch_timeout :: non_neg_integer()
+  def prefetch_timeout do
+    env_integer("NPM_EX_PREFETCH_TIMEOUT_MS") ||
+      Application.get_env(:duskmoon_npm, :prefetch_timeout, 30_000)
+  end
+
   @doc "Read the global package cache directory."
   @spec cache_dir :: String.t()
   def cache_dir do
