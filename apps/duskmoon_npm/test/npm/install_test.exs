@@ -48,6 +48,49 @@ defmodule NPM.InstallTest do
     assert {:ok, ^cache_path} = File.read_link(Path.join([project_dir, "node_modules", package]))
   end
 
+  test "re-resolves a lockfile with missing transitive package records", %{
+    project_dir: project_dir
+  } do
+    package = "root-package"
+    dependency = "missing-transitive-package"
+    version = "1.0.0"
+    dependency_version = "2.0.0"
+    root_cache_path = write_cached_package!(package, version)
+    dependency_cache_path = write_cached_package!(dependency, dependency_version)
+
+    put_packument!(package, version, dependencies: %{dependency => dependency_version})
+    put_packument!(dependency, dependency_version)
+
+    File.write!(
+      Path.join(project_dir, "package.json"),
+      NPM.JSON.encode_pretty(%{
+        "name" => "incomplete_lockfile_project",
+        "dependencies" => %{package => version}
+      })
+    )
+
+    assert :ok =
+             NPM.Lockfile.write(%{
+               package =>
+                 lock_entry(package, version, dependencies: %{dependency => dependency_version})
+             })
+
+    node_modules = Path.join(project_dir, "node_modules")
+    File.mkdir_p!(node_modules)
+    File.ln_s!(root_cache_path, Path.join(node_modules, package))
+
+    output =
+      capture_io(fn ->
+        assert :ok = NPM.install()
+      end)
+
+    refute output =~ "Already up to date."
+    assert {:ok, ^dependency_cache_path} = File.read_link(Path.join(node_modules, dependency))
+
+    assert {:ok, lockfile} = NPM.Lockfile.read()
+    assert Map.has_key?(lockfile, dependency)
+  end
+
   test "current lockfile stays up to date with skipped platform optional packages", %{
     project_dir: project_dir
   } do
@@ -120,10 +163,34 @@ defmodule NPM.InstallTest do
       version: version,
       integrity: "",
       tarball: "https://registry.npmjs.org/#{package}/-/#{package}-#{version}.tgz",
-      dependencies: %{},
+      dependencies: Keyword.get(opts, :dependencies, %{}),
       optional_dependencies: Keyword.get(opts, :optional_dependencies, %{}),
       has_install_script: false
     }
+  end
+
+  defp put_packument!(package, version, opts \\ []) do
+    NPM.PackumentCache.put(package, %{
+      name: package,
+      versions: %{
+        version => %{
+          os: [],
+          cpu: [],
+          dependencies: Keyword.get(opts, :dependencies, %{}),
+          optional_dependencies: Keyword.get(opts, :optional_dependencies, %{}),
+          peer_dependencies: %{},
+          peer_dependencies_meta: %{},
+          dist: %{
+            tarball: "https://registry.npmjs.org/#{package}/-/#{package}-#{version}.tgz",
+            integrity: ""
+          },
+          has_install_script: false,
+          deprecated: nil,
+          created_at: nil,
+          published_at: nil
+        }
+      }
+    })
   end
 
   defp put_incompatible_packument!(package, version) do

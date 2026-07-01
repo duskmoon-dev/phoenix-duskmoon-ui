@@ -255,6 +255,11 @@ defmodule NPM do
   end
 
   defp lockfile_matches?(lockfile, deps) do
+    lockfile_covers_dependencies?(lockfile, deps) and
+      lockfile_dependency_records_complete?(lockfile)
+  end
+
+  defp lockfile_covers_dependencies?(lockfile, deps) do
     Enum.all?(deps, fn {name, _range} ->
       Map.has_key?(lockfile, name)
     end) and
@@ -265,6 +270,18 @@ defmodule NPM do
               Map.has_key?(Map.get(e, :optional_dependencies, %{}), name)
           end)
       end)
+  end
+
+  defp lockfile_dependency_records_complete?(lockfile) do
+    package_names = MapSet.new(Map.keys(lockfile))
+
+    lockfile
+    |> Enum.flat_map(fn {_name, entry} -> lockfile_entry_dependency_names(entry) end)
+    |> Enum.all?(&MapSet.member?(package_names, &1))
+  end
+
+  defp lockfile_entry_dependency_names(entry) do
+    Map.keys(entry.dependencies) ++ Map.keys(Map.get(entry, :optional_dependencies, %{}))
   end
 
   defp full_install(deps, local_links) do
