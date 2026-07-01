@@ -1,7 +1,3 @@
-ARG BUN_VERSION=1.3.13
-
-FROM oven/bun:${BUN_VERSION} AS bun
-
 FROM rust:1-trixie AS rust
 
 FROM elixir:1.19-otp-28 AS builder
@@ -13,9 +9,9 @@ ENV RUSTUP_HOME=/usr/local/rustup
 ENV CARGO_HOME=/usr/local/cargo
 ENV DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1
 ENV QUICKBEAM_BUILD=1
+ENV NPM_EX_ALLOWED_REGISTRIES=https://npm.gsmlg.dev,https://registry.npmjs.org,https://nexus.gsmlg.net
 ENV PATH="/usr/local/cargo/bin:${PATH}"
 
-COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
 COPY --from=rust /usr/local/cargo /usr/local/cargo
 COPY --from=rust /usr/local/rustup /usr/local/rustup
 COPY . /build
@@ -30,12 +26,12 @@ mix local.hex --force
 mix local.rebar --force
 mix deps.get
 mix zig.get --version 0.15.2
-bun install --frozen-lockfile --ignore-scripts --backend=copyfile --no-progress
+mix run -e 'case NPM.install(frozen: true) do :ok -> :ok; {:error, reason} -> Mix.raise("npm frozen install failed: #{inspect(reason)}") end'
 export MATCH_STRING="s%@version \"[^\"]\+\"%@version \"${RELEASE_VERSION}\"%"
 sed -i "$MATCH_STRING" mix.exs;
 sed -i "$MATCH_STRING" apps/duskmoon_storybook/mix.exs;
 sed -i "$MATCH_STRING" apps/phoenix_duskmoon/mix.exs;
-mix duskmoon_bundler.build duskmoon_storybook
+mix duskmoon_bundler.build duskmoon_storybook --target esnext
 mix phx.digest
 mix release storybook --version "${RELEASE_VERSION}"
 cp -r _build/prod/rel/storybook /app
