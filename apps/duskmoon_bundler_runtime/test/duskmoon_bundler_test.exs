@@ -1,4 +1,4 @@
-defmodule VoltTest do
+defmodule DuskmoonBundlerTest do
   use ExUnit.Case, async: true
   doctest DuskmoonBundler
 
@@ -24,10 +24,10 @@ defmodule VoltTest do
            ) == "/assets/js/app.tsx"
   end
 
-  test "static_path reads production manifest" do
+  test "static_path reads versioned production manifest" do
     outdir = tmp_dir("manifest")
     File.mkdir_p!(outdir)
-    File.write!(Path.join(outdir, "manifest.json"), ~s({"app.js":{"file":"app-deadbeef.js"}}))
+    write_manifest(outdir, %{"app.js" => %{"file" => "app-deadbeef.js"}})
 
     assert DuskmoonBundler.static_path(ProdEndpoint, "/assets/js/app.js",
              entry: "assets/js/app.ts",
@@ -36,11 +36,27 @@ defmodule VoltTest do
            ) == "/assets/app-deadbeef.js"
   end
 
+  test "static_path keeps backwards compatibility with flat production manifest" do
+    outdir = tmp_dir("flat-manifest")
+    File.mkdir_p!(outdir)
+
+    File.write!(
+      Path.join(outdir, "manifest.json"),
+      JSON.encode!(%{"app.js" => %{"file" => "app-flat.js"}})
+    )
+
+    assert DuskmoonBundler.static_path(ProdEndpoint, "/assets/js/app.js",
+             entry: "assets/js/app.ts",
+             outdir: outdir,
+             prefix: "/assets"
+           ) == "/assets/app-flat.js"
+  end
+
   test "static_path reads production manifest from build task js directory" do
     outdir = tmp_dir("manifest-js")
     js_outdir = Path.join(outdir, "js")
     File.mkdir_p!(js_outdir)
-    File.write!(Path.join(js_outdir, "manifest.json"), ~s({"app.js":{"file":"app-cafebabe.js"}}))
+    write_manifest(js_outdir, %{"app.js" => %{"file" => "app-cafebabe.js"}})
 
     assert DuskmoonBundler.static_path(ProdEndpoint, "/assets/js/app.js",
              entry: "assets/js/app.ts",
@@ -53,8 +69,8 @@ defmodule VoltTest do
     outdir = tmp_dir("manifest-precedence")
     js_outdir = Path.join(outdir, "js")
     File.mkdir_p!(js_outdir)
-    File.write!(Path.join(outdir, "manifest.json"), ~s({"app.js":{"file":"app-root.js"}}))
-    File.write!(Path.join(js_outdir, "manifest.json"), ~s({"app.js":{"file":"app-js.js"}}))
+    write_manifest(outdir, %{"app.js" => %{"file" => "app-root.js"}})
+    write_manifest(js_outdir, %{"app.js" => %{"file" => "app-js.js"}})
 
     assert DuskmoonBundler.static_path(ProdEndpoint, "/assets/js/app.js",
              entry: "assets/js/app.ts",
@@ -77,7 +93,7 @@ defmodule VoltTest do
     outdir = tmp_dir("manifest-static-path")
     js_outdir = Path.join(outdir, "js")
     File.mkdir_p!(js_outdir)
-    File.write!(Path.join(js_outdir, "manifest.json"), ~s({"app.js":{"file":"app.js"}}))
+    write_manifest(js_outdir, %{"app.js" => %{"file" => "app.js"}})
 
     assert DuskmoonBundler.static_path(StaticEndpoint, "/assets/js/app.js",
              entry: "assets/js/app.ts",
@@ -90,11 +106,7 @@ defmodule VoltTest do
     outdir = tmp_dir("manifest-css")
     css_outdir = Path.join(outdir, "css")
     File.mkdir_p!(css_outdir)
-
-    File.write!(
-      Path.join(css_outdir, "manifest.json"),
-      ~s({"app.css":{"file":"app-deadbeef.css"}})
-    )
+    write_manifest(css_outdir, %{"app.css" => %{"file" => "app-deadbeef.css"}})
 
     assert DuskmoonBundler.static_path(ProdEndpoint, "/assets/css/app.css",
              outdir: outdir,
@@ -106,11 +118,7 @@ defmodule VoltTest do
     outdir = tmp_dir("manifest-image")
     js_outdir = Path.join(outdir, "js")
     File.mkdir_p!(js_outdir)
-
-    File.write!(
-      Path.join(js_outdir, "manifest.json"),
-      ~s({"images/logo.svg":{"file":"logo-deadbeef.svg"}})
-    )
+    write_manifest(js_outdir, %{"images/logo.svg" => %{"file" => "logo-deadbeef.svg"}})
 
     assert DuskmoonBundler.static_path(ProdEndpoint, "/assets/images/logo.svg",
              outdir: outdir,
@@ -118,10 +126,15 @@ defmodule VoltTest do
            ) == "/assets/js/logo-deadbeef.svg"
   end
 
+  defp write_manifest(outdir, entries) do
+    Path.join(outdir, "manifest.json")
+    |> File.write!(DuskmoonBundler.Manifest.wrap(entries) |> JSON.encode!())
+  end
+
   defp tmp_dir(name) do
     Path.join([
       System.tmp_dir!(),
-      "duskmoon_bundler-test-#{System.unique_integer([:positive])}",
+      "duskmoon_bundler_runtime-test-#{System.unique_integer([:positive])}",
       name
     ])
   end

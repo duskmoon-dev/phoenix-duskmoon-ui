@@ -110,7 +110,9 @@ defmodule DuskmoonBundler.Builder.Writer do
   end
 
   def write_manifest(outdir, manifest) do
-    File.write!(Path.join(outdir, "manifest.json"), Jason.encode!(manifest))
+    manifest
+    |> DuskmoonBundler.Manifest.wrap()
+    |> then(&File.write!(Path.join(outdir, "manifest.json"), Jason.encode!(&1)))
   end
 
   def build_manifest(name, js_filename, css_result, assets \\ []) do

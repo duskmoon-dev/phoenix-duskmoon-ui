@@ -81,7 +81,7 @@ defmodule DuskmoonBundler.BuilderTest do
           sourcemap: false
         )
 
-      manifest = @outdir |> Path.join("manifest.json") |> File.read!() |> :json.decode()
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
       [asset] = manifest["asset-app.js"]["assets"]
 
       assert asset =~ ~r/logo-[a-f0-9]{8}\.svg/
@@ -102,7 +102,7 @@ defmodule DuskmoonBundler.BuilderTest do
           sourcemap: false
         )
 
-      manifest = @outdir |> Path.join("manifest.json") |> File.read!() |> :json.decode()
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
 
       assert Map.has_key?(manifest, "app.js")
       assert Map.has_key?(manifest, "admin.js")
@@ -273,7 +273,7 @@ defmodule DuskmoonBundler.BuilderTest do
 
       manifest_path = Path.join(@outdir, "manifest.json")
       assert File.regular?(manifest_path)
-      manifest = manifest_path |> File.read!() |> :json.decode()
+      manifest = read_manifest_entries(manifest_path)
       assert Map.has_key?(manifest, "app.js")
       assert manifest["app.js"]["file"] =~ ~r/^app-[a-f0-9]{8}\.js$/
     end
@@ -519,7 +519,7 @@ defmodule DuskmoonBundler.BuilderTest do
       assert js =~ "new Worker"
       assert js =~ ~r/worker-[a-f0-9]{8}\.js/
 
-      manifest = Path.join(@outdir, "manifest.json") |> File.read!() |> :json.decode()
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
       assert Map.has_key?(manifest, "worker_app.js")
     end
 
@@ -649,7 +649,7 @@ defmodule DuskmoonBundler.BuilderTest do
       lazy_js = File.read!(Path.join(@outdir, "dynamic-entry-lazy.js"))
       assert lazy_js =~ "lazy-loaded"
 
-      manifest = Path.join(@outdir, "manifest.json") |> File.read!() |> :json.decode()
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
       assert manifest["dynamic-entry.js"]["file"] == "dynamic-entry.js"
       assert manifest["dynamic-entry.js"]["isEntry"]
       assert manifest["dynamic-entry.js"]["dynamicImports"] == ["dynamic-entry-lazy.js"]
@@ -686,7 +686,7 @@ defmodule DuskmoonBundler.BuilderTest do
       assert entry_js =~ "__duskmoon_bundlerPreload"
       assert entry_js =~ "./dynamic-css-entry-lazy.css"
 
-      manifest = Path.join(@outdir, "manifest.json") |> File.read!() |> :json.decode()
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
       assert manifest["dynamic-css-entry-lazy.js"]["css"] == ["dynamic-css-entry-lazy.css"]
       assert manifest["dynamic-css-entry.js"]["dynamicImports"] == ["dynamic-css-entry-lazy.js"]
       assert File.read!(Path.join(@outdir, "dynamic-css-entry-lazy.css")) =~ "lazy"
@@ -728,7 +728,7 @@ defmodule DuskmoonBundler.BuilderTest do
           sourcemap: false
         )
 
-      manifest = @outdir |> Path.join("manifest.json") |> File.read!() |> :json.decode()
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
       entry = manifest["hashed-preload.js"]
       entry_js = File.read!(result.js.path)
 
@@ -791,7 +791,7 @@ defmodule DuskmoonBundler.BuilderTest do
       assert entry_js =~ ~r/import\(["']\.\/facade-entry-facade\.js["']\)/
       assert async_js =~ "facade-value"
 
-      manifest = Path.join(@outdir, "manifest.json") |> File.read!() |> :json.decode()
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
       assert manifest["facade-entry.js"]["isEntry"]
       assert manifest["facade-entry-facade.js"]["isEntry"] == false
       assert manifest["facade-entry.js"]["imports"] == ["facade-entry-facade.js"]
@@ -1514,5 +1514,12 @@ defmodule DuskmoonBundler.BuilderTest do
       js = File.read!(result.js.path)
       assert js =~ "ts-resolved"
     end
+  end
+
+  defp read_manifest_entries(path) do
+    path
+    |> File.read!()
+    |> :json.decode()
+    |> DuskmoonBundler.Manifest.entries!()
   end
 end

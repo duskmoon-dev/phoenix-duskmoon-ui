@@ -150,7 +150,8 @@ defmodule PhoenixDuskmoon.Mixfile do
       {:phoenix_html, "~> 4.0"},
       {:phoenix_live_view, "~> 1.0"},
       {:plug, "~> 1.19", optional: true},
-      {:duskmoon_bundler, in_umbrella: true, only: :dev, runtime: false},
+      {:duskmoon_bundler_runtime, in_umbrella: true},
+      {:duskmoon_bundler, in_umbrella: true, runtime: Mix.env() == :dev},
       {:jason, "~> 1.4", only: :test},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]

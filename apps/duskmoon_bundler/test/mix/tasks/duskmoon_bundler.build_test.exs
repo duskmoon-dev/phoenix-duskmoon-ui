@@ -145,7 +145,12 @@ defmodule Mix.Tasks.DuskmoonBundler.BuildTest do
 
     Mix.Tasks.DuskmoonBundler.Build.run(["--tailwind"])
 
-    css_manifest = outdir |> Path.join("css/manifest.json") |> File.read!() |> Jason.decode!()
+    css_manifest =
+      outdir
+      |> Path.join("css/manifest.json")
+      |> File.read!()
+      |> Jason.decode!()
+      |> DuskmoonBundler.Manifest.entries!()
 
     assert File.regular?(Path.join([outdir, "css", "app.css"]))
     assert File.regular?(Path.join([outdir, "js", "app.js"]))

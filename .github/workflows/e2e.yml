@@ -78,6 +78,7 @@ jobs:
             duskmoon_vize \
             duskmoon_oxide \
             duskmoon_quickbeam \
+            duskmoon_bundler_runtime \
             duskmoon_bundler \
             phoenix_duskmoon
           do
@@ -95,6 +96,7 @@ jobs:
             "${SOURCE_APP_ROOT}/duskmoon_vize/mix.exs" \
             "${SOURCE_APP_ROOT}/duskmoon_oxide/mix.exs" \
             "${SOURCE_APP_ROOT}/duskmoon_quickbeam/mix.exs" \
+            "${SOURCE_APP_ROOT}/duskmoon_bundler_runtime/mix.exs" \
             "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs" \
             "${SOURCE_APP_ROOT}/phoenix_duskmoon/mix.exs"
           do
@@ -108,8 +110,10 @@ jobs:
           sed -i 's%{:duskmoon_vize, in_umbrella: true}%{:duskmoon_vize, path: "../duskmoon_vize"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
           sed -i 's%{:duskmoon_oxide, in_umbrella: true}%{:duskmoon_oxide, path: "../duskmoon_oxide"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
           sed -i 's%{:duskmoon_quickbeam, in_umbrella: true}%{:duskmoon_quickbeam, path: "../duskmoon_quickbeam"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
+          sed -i 's%{:duskmoon_bundler_runtime, in_umbrella: true}%{:duskmoon_bundler_runtime, path: "../duskmoon_bundler_runtime"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
           sed -i 's%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, path: "../duskmoon_npm"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
-          sed -i 's%{:duskmoon_bundler, in_umbrella: true, only: :dev, runtime: false}%{:duskmoon_bundler, path: "../duskmoon_bundler", only: :dev, runtime: false}%' "${SOURCE_APP_ROOT}/phoenix_duskmoon/mix.exs"
+          sed -i 's%{:duskmoon_bundler_runtime, in_umbrella: true}%{:duskmoon_bundler_runtime, path: "../duskmoon_bundler_runtime"}%' "${SOURCE_APP_ROOT}/phoenix_duskmoon/mix.exs"
+          sed -i 's%{:duskmoon_bundler, in_umbrella: true, runtime: Mix.env() == :dev}%{:duskmoon_bundler, path: "../duskmoon_bundler", runtime: Mix.env() == :dev}%' "${SOURCE_APP_ROOT}/phoenix_duskmoon/mix.exs"
 
       - name: Add package dependencies
         working-directory: ${{ runner.temp }}/duskmoon_package_e2e
@@ -132,7 +136,8 @@ jobs:
               {:duskmoon_vize, "~> ${VERSION}"},
               {:duskmoon_oxide, "~> ${VERSION}"},
               {:duskmoon_quickbeam, "~> ${VERSION}"},
-              {:duskmoon_bundler, "~> ${VERSION}"},
+              {:duskmoon_bundler_runtime, "~> ${VERSION}"},
+              {:duskmoon_bundler, "~> ${VERSION}", runtime: Mix.env() == :dev},
               {:phoenix_duskmoon, "~> ${VERSION}"}
             ]
           end
@@ -149,7 +154,8 @@ jobs:
               {:duskmoon_vize, path: "${APP_ROOT}/duskmoon_vize"},
               {:duskmoon_oxide, path: "${APP_ROOT}/duskmoon_oxide"},
               {:duskmoon_quickbeam, path: "${APP_ROOT}/duskmoon_quickbeam"},
-              {:duskmoon_bundler, path: "${APP_ROOT}/duskmoon_bundler"},
+              {:duskmoon_bundler_runtime, path: "${APP_ROOT}/duskmoon_bundler_runtime"},
+              {:duskmoon_bundler, path: "${APP_ROOT}/duskmoon_bundler", runtime: Mix.env() == :dev},
               {:phoenix_duskmoon, path: "${APP_ROOT}/phoenix_duskmoon"}
             ]
           end
@@ -187,6 +193,7 @@ jobs:
               assert Code.ensure_loaded?(Oxide)
               assert Code.ensure_loaded?(QuickBEAM)
               assert Code.ensure_loaded?(DuskmoonBundler)
+              assert Code.ensure_loaded?(DuskmoonBundlerRuntime)
               assert Code.ensure_loaded?(PhoenixDuskmoon)
             end
 
@@ -200,5 +207,141 @@ jobs:
         working-directory: ${{ runner.temp }}/duskmoon_package_e2e
         env:
           DUSKMOON_BUILD_NATIVE_FROM_SOURCE: ${{ inputs.package_source == 'source' && '1' || '0' }}
+          MIX_ENV: test
+        run: mix test
+
+  runtime-package-install:
+    name: Runtime Package Install (${{ inputs.package_source }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout source packages
+        if: inputs.package_source == 'source'
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.git_ref }}
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.18'
+          otp-version: '28'
+
+      - name: Create runtime install project
+        working-directory: ${{ runner.temp }}
+        run: mix new duskmoon_runtime_e2e --sup
+
+      - name: Prepare runtime source package
+        if: inputs.package_source == 'source'
+        run: |
+          set -euo pipefail
+
+          SOURCE_APP_ROOT="${RUNNER_TEMP}/runtime_source_apps"
+          mkdir -p "$SOURCE_APP_ROOT"
+          cp -R "apps/duskmoon_bundler_runtime" "${SOURCE_APP_ROOT}/duskmoon_bundler_runtime"
+
+          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' \
+            "${SOURCE_APP_ROOT}/duskmoon_bundler_runtime/mix.exs"
+
+      - name: Add runtime dependency
+        working-directory: ${{ runner.temp }}/duskmoon_runtime_e2e
+        run: |
+          set -euo pipefail
+
+          if [ "${{ inputs.package_source }}" = "hex" ]; then
+            VERSION="${{ inputs.version }}"
+            if [ -z "$VERSION" ]; then
+              echo "::error::version input is required when package_source=hex"
+              exit 1
+            fi
+
+            DEPS_BLOCK="$(cat <<EOF
+          defp deps do
+            [
+              {:duskmoon_bundler_runtime, "~> ${VERSION}"}
+            ]
+          end
+          EOF
+          )"
+          else
+            APP_ROOT="${RUNNER_TEMP}/runtime_source_apps"
+            DEPS_BLOCK="$(cat <<EOF
+          defp deps do
+            [
+              {:duskmoon_bundler_runtime, path: "${APP_ROOT}/duskmoon_bundler_runtime"}
+            ]
+          end
+          EOF
+          )"
+          fi
+
+          export DEPS_BLOCK
+          perl -0pi -e 's/defp deps do\n    \[\n.*?    \]\n  end/$ENV{DEPS_BLOCK}/s' mix.exs
+
+      - name: Install runtime dependency
+        working-directory: ${{ runner.temp }}/duskmoon_runtime_e2e
+        run: mix deps.get
+
+      - name: Compile runtime-only graph
+        working-directory: ${{ runner.temp }}/duskmoon_runtime_e2e
+        run: mix compile --warnings-as-errors
+
+      - name: Add runtime smoke tests
+        working-directory: ${{ runner.temp }}/duskmoon_runtime_e2e
+        run: |
+          cat > test/duskmoon_bundler_runtime_test.exs <<'EOF'
+          defmodule DuskmoonBundlerRuntimePackageTest do
+            use ExUnit.Case, async: true
+
+            defmodule ProdEndpoint do
+              def config(:code_reloader), do: false
+            end
+
+            test "runtime package resolves manifests without build package modules" do
+              refute Code.ensure_loaded?(DuskmoonBundler.Builder)
+              assert Code.ensure_loaded?(DuskmoonBundlerRuntime)
+              assert Code.ensure_loaded?(DuskmoonBundler)
+
+              outdir =
+                Path.join(
+                  System.tmp_dir!(),
+                  "duskmoon-runtime-e2e-#{System.unique_integer([:positive])}"
+                )
+
+              File.mkdir_p!(Path.join(outdir, "js"))
+
+              manifest = %{
+                "manifest_version" => 1,
+                "entries" => %{
+                  "app.js" => %{
+                    "file" => "app-digested.js",
+                    "imports" => ["vendor-digested.js"]
+                  },
+                  "vendor-digested.js" => %{"file" => "vendor-digested.js"}
+                }
+              }
+
+              File.write!(
+                Path.join([outdir, "js", "manifest.json"]),
+                JSON.encode!(manifest)
+              )
+
+              assert DuskmoonBundler.static_path(ProdEndpoint, "/assets/js/app.js",
+                       outdir: outdir,
+                       prefix: "/assets"
+                     ) == "/assets/js/app-digested.js"
+
+              assert DuskmoonBundler.Preload.tags(ProdEndpoint, "/assets/js/app.js",
+                       outdir: outdir,
+                       prefix: "/assets"
+                     ) == ~s(<link rel="modulepreload" href="/assets/js/vendor-digested.js">)
+            end
+          end
+          EOF
+
+      - name: Run runtime smoke tests
+        working-directory: ${{ runner.temp }}/duskmoon_runtime_e2e
+        env:
           MIX_ENV: test
         run: mix test

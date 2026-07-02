@@ -7,7 +7,7 @@ mix igniter.install duskmoon_bundler
 ```
 
 The installer:
-- Adds `{:duskmoon_bundler, "~> 0.9"}` to `mix.exs`
+- Adds `{:duskmoon_bundler_runtime, "~> 9.7"}` and `{:duskmoon_bundler, "~> 9.7", runtime: Mix.env() == :dev}` to `mix.exs`
 - Configures build settings in `config/config.exs`
 - Adds format and lint config to `config/config.exs`
 - Adds `DuskmoonBundler.Formatter` plugin to `.formatter.exs`
@@ -28,9 +28,14 @@ Add DuskmoonBundler to your dependencies:
 
 ```elixir
 def deps do
-  [{:duskmoon_bundler, "~> 0.9"}]
+  [
+    {:duskmoon_bundler_runtime, "~> 9.7"},
+    {:duskmoon_bundler, "~> 9.7", runtime: Mix.env() == :dev}
+  ]
 end
 ```
+
+Do not use `only: :dev` for `:duskmoon_bundler`; production asset build aliases may run under `MIX_ENV=prod`. The `runtime:` option keeps build/dev tooling out of production releases while still making Mix tasks available.
 
 ### Build Configuration
 
@@ -86,7 +91,10 @@ In your root layout, add both the CSS link and the JS script tag:
 ```heex
 <link phx-track-static rel="stylesheet" href={DuskmoonBundler.static_path(MyAppWeb.Endpoint, "/assets/css/app.css")} />
 <script defer phx-track-static type="module" src={DuskmoonBundler.static_path(MyAppWeb.Endpoint, "/assets/js/app.js")}></script>
+<%= DuskmoonBundler.Preload.tags(MyAppWeb.Endpoint, "/assets/js/app.js") %>
 ```
+
+These helpers are provided by `duskmoon_bundler_runtime`, so Phoenix releases only need the runtime package for asset resolution.
 
 ### Mix Aliases
 
