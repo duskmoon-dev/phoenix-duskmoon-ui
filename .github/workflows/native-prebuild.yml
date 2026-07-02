@@ -147,7 +147,7 @@ jobs:
     name: duskmoon_quickbeam / ${{ matrix.target.target }}
     needs: rust-nifs
     runs-on: ${{ matrix.target.os }}
-    timeout-minutes: 45
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
