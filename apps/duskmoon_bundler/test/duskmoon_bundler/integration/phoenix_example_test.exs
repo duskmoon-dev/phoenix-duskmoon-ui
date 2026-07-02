@@ -142,21 +142,23 @@ defmodule DuskmoonBundler.Integration.PhoenixExampleBuildTest do
   end
 
   test "produces valid manifest", %{build_status: 0} do
-    manifest = @outdir |> Path.join("js/manifest.json") |> File.read!() |> Jason.decode!()
+    manifest = @outdir |> Path.join("js/manifest.json") |> read_manifest_entries()
 
+    assert_manifest_version(@outdir |> Path.join("js/manifest.json"))
     assert Map.has_key?(manifest, "app.js")
     assert manifest["app.js"]["file"] =~ ~r/^app-[a-f0-9]{8}\.js$/
   end
 
   test "produces valid Tailwind manifest", %{build_status: 0} do
-    manifest = @outdir |> Path.join("css/manifest.json") |> File.read!() |> Jason.decode!()
+    manifest = @outdir |> Path.join("css/manifest.json") |> read_manifest_entries()
 
+    assert_manifest_version(@outdir |> Path.join("css/manifest.json"))
     assert Map.has_key?(manifest, "app.css")
     assert manifest["app.css"]["file"] =~ ~r/^app-[a-f0-9]{8}\.css$/
   end
 
   test "produces Tailwind CSS with utility classes from heex templates", %{build_status: 0} do
-    manifest = @outdir |> Path.join("css/manifest.json") |> File.read!() |> Jason.decode!()
+    manifest = @outdir |> Path.join("css/manifest.json") |> read_manifest_entries()
     css = File.read!(Path.join([@outdir, "css", manifest["app.css"]["file"]]))
 
     assert css =~ "rounded-2xl"
@@ -165,7 +167,7 @@ defmodule DuskmoonBundler.Integration.PhoenixExampleBuildTest do
   end
 
   test "generates sourcemap", %{build_status: 0} do
-    manifest = @outdir |> Path.join("js/manifest.json") |> File.read!() |> Jason.decode!()
+    manifest = @outdir |> Path.join("js/manifest.json") |> read_manifest_entries()
     map_path = manifest["app.js"]["file"] <> ".map"
     map = [@outdir, "js", map_path] |> Path.join() |> File.read!() |> Jason.decode!()
 
@@ -189,7 +191,21 @@ defmodule DuskmoonBundler.Integration.PhoenixExampleBuildTest do
   end
 
   defp js_path do
-    manifest = @outdir |> Path.join("js/manifest.json") |> File.read!() |> Jason.decode!()
+    manifest = @outdir |> Path.join("js/manifest.json") |> read_manifest_entries()
     Path.join([@outdir, "js", manifest["app.js"]["file"]])
+  end
+
+  defp read_manifest_entries(path) do
+    path
+    |> File.read!()
+    |> Jason.decode!()
+    |> DuskmoonBundler.Manifest.entries!()
+  end
+
+  defp assert_manifest_version(path) do
+    assert %{"manifest_version" => 1, "entries" => entries} =
+             path |> File.read!() |> Jason.decode!()
+
+    assert is_map(entries)
   end
 end

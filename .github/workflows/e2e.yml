@@ -78,6 +78,7 @@ jobs:
             duskmoon_vize \
             duskmoon_oxide \
             duskmoon_quickbeam \
+            duskmoon_bundler_runtime \
             duskmoon_bundler \
             phoenix_duskmoon
           do
@@ -95,6 +96,7 @@ jobs:
             "${SOURCE_APP_ROOT}/duskmoon_vize/mix.exs" \
             "${SOURCE_APP_ROOT}/duskmoon_oxide/mix.exs" \
             "${SOURCE_APP_ROOT}/duskmoon_quickbeam/mix.exs" \
+            "${SOURCE_APP_ROOT}/duskmoon_bundler_runtime/mix.exs" \
             "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs" \
             "${SOURCE_APP_ROOT}/phoenix_duskmoon/mix.exs"
           do
@@ -108,8 +110,10 @@ jobs:
           sed -i 's%{:duskmoon_vize, in_umbrella: true}%{:duskmoon_vize, path: "../duskmoon_vize"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
           sed -i 's%{:duskmoon_oxide, in_umbrella: true}%{:duskmoon_oxide, path: "../duskmoon_oxide"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
           sed -i 's%{:duskmoon_quickbeam, in_umbrella: true}%{:duskmoon_quickbeam, path: "../duskmoon_quickbeam"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
+          sed -i 's%{:duskmoon_bundler_runtime, in_umbrella: true}%{:duskmoon_bundler_runtime, path: "../duskmoon_bundler_runtime"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
           sed -i 's%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, path: "../duskmoon_npm"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
-          sed -i 's%{:duskmoon_bundler, in_umbrella: true, only: :dev, runtime: false}%{:duskmoon_bundler, path: "../duskmoon_bundler", only: :dev, runtime: false}%' "${SOURCE_APP_ROOT}/phoenix_duskmoon/mix.exs"
+          sed -i 's%{:duskmoon_bundler_runtime, in_umbrella: true}%{:duskmoon_bundler_runtime, path: "../duskmoon_bundler_runtime"}%' "${SOURCE_APP_ROOT}/phoenix_duskmoon/mix.exs"
+          sed -i 's%{:duskmoon_bundler, in_umbrella: true, runtime: Mix.env() == :dev}%{:duskmoon_bundler, path: "../duskmoon_bundler", runtime: Mix.env() == :dev}%' "${SOURCE_APP_ROOT}/phoenix_duskmoon/mix.exs"
 
       - name: Add package dependencies
         working-directory: ${{ runner.temp }}/duskmoon_package_e2e
@@ -132,7 +136,8 @@ jobs:
               {:duskmoon_vize, "~> ${VERSION}"},
               {:duskmoon_oxide, "~> ${VERSION}"},
               {:duskmoon_quickbeam, "~> ${VERSION}"},
-              {:duskmoon_bundler, "~> ${VERSION}"},
+              {:duskmoon_bundler_runtime, "~> ${VERSION}"},
+              {:duskmoon_bundler, "~> ${VERSION}", runtime: Mix.env() == :dev},
               {:phoenix_duskmoon, "~> ${VERSION}"}
             ]
           end
@@ -149,7 +154,8 @@ jobs:
               {:duskmoon_vize, path: "${APP_ROOT}/duskmoon_vize"},
               {:duskmoon_oxide, path: "${APP_ROOT}/duskmoon_oxide"},
               {:duskmoon_quickbeam, path: "${APP_ROOT}/duskmoon_quickbeam"},
-              {:duskmoon_bundler, path: "${APP_ROOT}/duskmoon_bundler"},
+              {:duskmoon_bundler_runtime, path: "${APP_ROOT}/duskmoon_bundler_runtime"},
+              {:duskmoon_bundler, path: "${APP_ROOT}/duskmoon_bundler", runtime: Mix.env() == :dev},
               {:phoenix_duskmoon, path: "${APP_ROOT}/phoenix_duskmoon"}
             ]
           end
@@ -187,6 +193,7 @@ jobs:
               assert Code.ensure_loaded?(Oxide)
               assert Code.ensure_loaded?(QuickBEAM)
               assert Code.ensure_loaded?(DuskmoonBundler)
+              assert Code.ensure_loaded?(DuskmoonBundlerRuntime)
               assert Code.ensure_loaded?(PhoenixDuskmoon)
             end
 

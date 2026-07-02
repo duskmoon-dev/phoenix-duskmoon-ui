@@ -41,6 +41,7 @@ jobs:
           VERSION="${{ inputs.version }}"
           echo "Releasing version: ${VERSION}"
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/phoenix_duskmoon/mix.exs
+          sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_bundler_runtime/mix.exs
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_bundler/mix.exs
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_quickbeam/mix.exs
           sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_oxc/mix.exs
@@ -62,7 +63,7 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add apps/phoenix_duskmoon/mix.exs apps/duskmoon_bundler/mix.exs apps/duskmoon_quickbeam/mix.exs apps/duskmoon_oxc/mix.exs apps/duskmoon_oxide/mix.exs apps/duskmoon_vize/mix.exs apps/duskmoon_npm/mix.exs apps/duskmoon_hex_solver/mix.exs apps/phoenix_duskmoon/package.json mix.exs bun.lock
+          git add apps/phoenix_duskmoon/mix.exs apps/duskmoon_bundler_runtime/mix.exs apps/duskmoon_bundler/mix.exs apps/duskmoon_quickbeam/mix.exs apps/duskmoon_oxc/mix.exs apps/duskmoon_oxide/mix.exs apps/duskmoon_vize/mix.exs apps/duskmoon_npm/mix.exs apps/duskmoon_hex_solver/mix.exs apps/phoenix_duskmoon/package.json mix.exs bun.lock
           if git diff --cached --quiet; then
             echo "No version changes to commit"
           else
@@ -197,6 +198,7 @@ jobs:
           cp apps/duskmoon_vize/mix.exs "${MIX_BACKUP_DIR}/duskmoon_vize.mix.exs"
           cp apps/duskmoon_oxide/mix.exs "${MIX_BACKUP_DIR}/duskmoon_oxide.mix.exs"
           cp apps/duskmoon_quickbeam/mix.exs "${MIX_BACKUP_DIR}/duskmoon_quickbeam.mix.exs"
+          cp apps/duskmoon_bundler_runtime/mix.exs "${MIX_BACKUP_DIR}/duskmoon_bundler_runtime.mix.exs"
           cp apps/duskmoon_bundler/mix.exs "${MIX_BACKUP_DIR}/duskmoon_bundler.mix.exs"
           cp apps/phoenix_duskmoon/mix.exs "${MIX_BACKUP_DIR}/phoenix_duskmoon.mix.exs"
           sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_hex_solver/mix.exs
@@ -205,6 +207,7 @@ jobs:
           sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_vize/mix.exs
           sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_oxide/mix.exs
           sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_quickbeam/mix.exs
+          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_bundler_runtime/mix.exs
           sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_bundler/mix.exs
           sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/phoenix_duskmoon/mix.exs
           sed -i "s%{:duskmoon_hex_solver, in_umbrella: true}%{:duskmoon_hex_solver, \"~> ${VERSION}\"}%" apps/duskmoon_npm/mix.exs
@@ -216,9 +219,11 @@ jobs:
           sed -i "s%{:duskmoon_vize, in_umbrella: true}%{:duskmoon_vize, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i "s%{:duskmoon_oxide, in_umbrella: true}%{:duskmoon_oxide, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i "s%{:duskmoon_quickbeam, in_umbrella: true}%{:duskmoon_quickbeam, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
+          sed -i "s%{:duskmoon_bundler_runtime, in_umbrella: true}%{:duskmoon_bundler_runtime, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i "s%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i '/^[[:space:]]*{:ex_doc, .*only: :dev, runtime: false},\?$/d' apps/duskmoon_bundler/mix.exs
-          sed -i "s%{:duskmoon_bundler, in_umbrella: true, only: :dev, runtime: false}%{:duskmoon_bundler, \"~> ${VERSION}\", only: :dev, runtime: false}%" apps/phoenix_duskmoon/mix.exs
+          sed -i "s%{:duskmoon_bundler_runtime, in_umbrella: true}%{:duskmoon_bundler_runtime, \"~> ${VERSION}\"}%" apps/phoenix_duskmoon/mix.exs
+          sed -i "s%{:duskmoon_bundler, in_umbrella: true, runtime: Mix.env() == :dev}%{:duskmoon_bundler, \"~> ${VERSION}\", runtime: Mix.env() == :dev}%" apps/phoenix_duskmoon/mix.exs
           grep -q "{:duskmoon_hex_solver, \"~> ${VERSION}\"}" apps/duskmoon_npm/mix.exs
           grep -q "{:duskmoon_oxc, \"~> ${VERSION}\"}" apps/duskmoon_quickbeam/mix.exs
           grep -q "{:duskmoon_npm, \"~> ${VERSION}\", optional: true}" apps/duskmoon_quickbeam/mix.exs
@@ -234,8 +239,10 @@ jobs:
           grep -q "{:duskmoon_vize, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
           grep -q "{:duskmoon_oxide, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
           grep -q "{:duskmoon_quickbeam, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
+          grep -q "{:duskmoon_bundler_runtime, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
           grep -q "{:duskmoon_npm, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
-          grep -q "{:duskmoon_bundler, \"~> ${VERSION}\", only: :dev, runtime: false}" apps/phoenix_duskmoon/mix.exs
+          grep -q "{:duskmoon_bundler_runtime, \"~> ${VERSION}\"}" apps/phoenix_duskmoon/mix.exs
+          grep -q "{:duskmoon_bundler, \"~> ${VERSION}\", runtime: Mix.env() == :dev}" apps/phoenix_duskmoon/mix.exs
           echo "MIX_BACKUP_DIR=${MIX_BACKUP_DIR}" >> "$GITHUB_ENV"
 
       - name: Publish duskmoon_hex_solver to hex.pm
@@ -334,6 +341,22 @@ jobs:
           fi
           mix hex.publish package --yes --replace
 
+      - name: Fetch duskmoon_bundler_runtime Hex dependencies
+        working-directory: apps/duskmoon_bundler_runtime
+        run: mix deps.get --only prod
+
+      - name: Publish duskmoon_bundler_runtime to hex.pm
+        working-directory: apps/duskmoon_bundler_runtime
+        env:
+          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
+          MIX_ENV: prod
+        run: |
+          if mix hex.info duskmoon_bundler_runtime "${{ inputs.version }}" >/dev/null 2>&1; then
+            echo "duskmoon_bundler_runtime ${{ inputs.version }} is already published; skipping"
+          else
+            mix hex.publish package --yes --replace
+          fi
+
       - name: Fetch duskmoon_bundler Hex dependencies
         working-directory: apps/duskmoon_bundler
         run: mix deps.get --only prod
@@ -376,6 +399,7 @@ jobs:
             cp "${MIX_BACKUP_DIR}/duskmoon_vize.mix.exs" apps/duskmoon_vize/mix.exs
             cp "${MIX_BACKUP_DIR}/duskmoon_oxide.mix.exs" apps/duskmoon_oxide/mix.exs
             cp "${MIX_BACKUP_DIR}/duskmoon_quickbeam.mix.exs" apps/duskmoon_quickbeam/mix.exs
+            cp "${MIX_BACKUP_DIR}/duskmoon_bundler_runtime.mix.exs" apps/duskmoon_bundler_runtime/mix.exs
             cp "${MIX_BACKUP_DIR}/duskmoon_bundler.mix.exs" apps/duskmoon_bundler/mix.exs
             cp "${MIX_BACKUP_DIR}/phoenix_duskmoon.mix.exs" apps/phoenix_duskmoon/mix.exs
           fi
@@ -434,6 +458,7 @@ jobs:
           - [Hex.pm: duskmoon_vize](https://hex.pm/packages/duskmoon_vize/${VERSION})
           - [Hex.pm: duskmoon_oxide](https://hex.pm/packages/duskmoon_oxide/${VERSION})
           - [Hex.pm: duskmoon_quickbeam](https://hex.pm/packages/duskmoon_quickbeam/${VERSION})
+          - [Hex.pm: duskmoon_bundler_runtime](https://hex.pm/packages/duskmoon_bundler_runtime/${VERSION})
           - [Hex.pm: duskmoon_bundler](https://hex.pm/packages/duskmoon_bundler/${VERSION})
           - [Hex.pm: phoenix_duskmoon](https://hex.pm/packages/phoenix_duskmoon/${VERSION})
           - [npm](https://www.npmjs.com/package/phoenix_duskmoon/v/${VERSION})

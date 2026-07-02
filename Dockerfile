@@ -39,6 +39,7 @@ export MATCH_STRING="s%@version \"[^\"]\+\"%@version \"${RELEASE_VERSION}\"%"
 sed -i "$MATCH_STRING" mix.exs;
 sed -i "$MATCH_STRING" apps/duskmoon_storybook/mix.exs;
 sed -i "$MATCH_STRING" apps/phoenix_duskmoon/mix.exs;
+sed -i "$MATCH_STRING" apps/duskmoon_bundler_runtime/mix.exs;
 mix duskmoon_bundler.build duskmoon_storybook --target esnext
 mix phx.digest
 mix release storybook --version "${RELEASE_VERSION}"

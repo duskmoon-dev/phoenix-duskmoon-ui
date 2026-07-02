@@ -1,13 +1,22 @@
 defmodule DuskmoonBundler.PreloadTest do
   use ExUnit.Case, async: true
 
+  defmodule ProdEndpoint do
+    def config(:code_reloader), do: false
+  end
+
+  defmodule DevEndpoint do
+    def config(:code_reloader), do: true
+  end
+
   describe "tags/2" do
     test "generates modulepreload links from manifest map" do
-      manifest = %{
-        "app.js" => "app-abc123.js",
-        "app-admin.js" => "app-admin-def456.js",
-        "app.css" => "app-789abc.css"
-      }
+      manifest =
+        DuskmoonBundler.Manifest.wrap(%{
+          "app.js" => "app-abc123.js",
+          "app-admin.js" => "app-admin-def456.js",
+          "app.css" => "app-789abc.css"
+        })
 
       result = DuskmoonBundler.Preload.tags(manifest, prefix: "/assets/js")
 
@@ -37,6 +46,33 @@ defmodule DuskmoonBundler.PreloadTest do
       refute result =~ "lazy-fedcba.js"
     end
 
+    test "resolves endpoint and entry path through production manifest" do
+      outdir = tmp_dir("endpoint-preload")
+      js_outdir = Path.join(outdir, "js")
+      File.mkdir_p!(js_outdir)
+
+      write_manifest(js_outdir, %{
+        "app.js" => %{
+          "file" => "app-abc123.js",
+          "imports" => ["common-def456.js"]
+        },
+        "common-def456.js" => %{"file" => "common-def456.js"}
+      })
+
+      result =
+        DuskmoonBundler.Preload.tags(ProdEndpoint, "/assets/js/app.js",
+          outdir: outdir,
+          prefix: "/assets"
+        )
+
+      assert result =~ ~s(href="/assets/js/common-def456.js")
+      refute result =~ "app-abc123.js"
+    end
+
+    test "returns no preload tags in development" do
+      assert DuskmoonBundler.Preload.tags(DevEndpoint, "/assets/js/app.js") == ""
+    end
+
     test "joins prefix with URI semantics" do
       manifest = %{"app.js" => "app-abc123.js"}
 
@@ -48,12 +84,10 @@ defmodule DuskmoonBundler.PreloadTest do
     end
 
     test "reads from manifest file" do
-      dir = Path.expand("fixtures/preload", __DIR__)
+      dir = tmp_dir("preload-file")
       File.mkdir_p!(dir)
       path = Path.join(dir, "manifest.json")
-      File.write!(path, Jason.encode!(%{"app.js" => "app-abc.js"}))
-
-      on_exit(fn -> File.rm_rf!(dir) end)
+      File.write!(path, JSON.encode!(DuskmoonBundler.Manifest.wrap(%{"app.js" => "app-abc.js"})))
 
       result = DuskmoonBundler.Preload.tags(path)
       assert result =~ "app-abc.js"
@@ -80,5 +114,18 @@ defmodule DuskmoonBundler.PreloadTest do
       assert result =~ "a.js"
       assert result =~ "b.js"
     end
+  end
+
+  defp write_manifest(outdir, entries) do
+    Path.join(outdir, "manifest.json")
+    |> File.write!(DuskmoonBundler.Manifest.wrap(entries) |> JSON.encode!())
+  end
+
+  defp tmp_dir(name) do
+    Path.join([
+      System.tmp_dir!(),
+      "duskmoon_bundler_runtime-test-#{System.unique_integer([:positive])}",
+      name
+    ])
   end
 end

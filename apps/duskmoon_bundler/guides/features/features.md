@@ -38,13 +38,13 @@ See [HMR](hmr.md) for the `import.meta.hot` API.
 
 ## Production Builds
 
-Production builds include tree-shaking, minification, code splitting, asset URL rewriting, content-hashed JavaScript/CSS/assets, source maps, and a `manifest.json` ready for `mix phx.digest`.
+Production builds include tree-shaking, minification, code splitting, asset URL rewriting, content-hashed JavaScript/CSS/assets, source maps, and a versioned `manifest.json` ready for `mix phx.digest` and `duskmoon_bundler_runtime`.
 
 ## Code Splitting
 
 Dynamic `import()` calls automatically create separate async chunks. Simple relative dynamic import variables such as ``import(`./pages/${name}.ts`)`` are expanded through `import.meta.glob()` so production builds can include matching modules. Shared modules between chunks are extracted to avoid duplication. Chunk-local CSS and assets are recorded in the production manifest.
 
-`DuskmoonBundler.Preload` can generate `<link rel="modulepreload">` tags from the production manifest for entry/static imports. Runtime dynamic imports preload their own dependency chunks and CSS when needed.
+`DuskmoonBundler.Preload` is provided by `duskmoon_bundler_runtime` and can generate `<link rel="modulepreload">` tags from the production manifest for entry/static imports. Runtime dynamic imports preload their own dependency chunks and CSS when needed.
 
 See [Code Splitting](code-splitting.md) for examples and configuration.
 
@@ -97,7 +97,7 @@ See [Glob Imports](glob-imports.md) for lazy vs eager loading, array and negativ
 
 ## `DuskmoonBundler.static_path/2`
 
-Use `DuskmoonBundler.static_path/2` in your root layout to link to DuskmoonBundler-managed scripts and stylesheets:
+Use `DuskmoonBundler.static_path/2` from `duskmoon_bundler_runtime` in your root layout to link to DuskmoonBundler-managed scripts and stylesheets:
 
 ```heex
 <link phx-track-static rel="stylesheet" href={DuskmoonBundler.static_path(MyAppWeb.Endpoint, "/assets/css/app.css")} />
@@ -106,6 +106,12 @@ Use `DuskmoonBundler.static_path/2` in your root layout to link to DuskmoonBundl
 ```
 
 In development, JavaScript entries return the source path served by the dev server (e.g. `/assets/js/app.ts`) and other paths are returned unchanged. In production, DuskmoonBundler reads `manifest.json` and returns the content-hashed path for scripts, stylesheets, and emitted image/font assets (e.g. `/assets/js/app-5e6f7a8b.js`, `/assets/css/app-2aa55585.css`, or `/assets/js/logo-a1b2c3d4.svg`).
+
+For code-split entries, add preload tags from the same runtime package:
+
+```heex
+<%= DuskmoonBundler.Preload.tags(MyAppWeb.Endpoint, "/assets/js/app.js") %>
+```
 
 ## Multi-Entry Builds
 

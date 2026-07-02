@@ -3,9 +3,12 @@
 ## Unreleased
 
 ### Added
+- `duskmoon_bundler_runtime` now owns production-safe manifest reading, `DuskmoonBundler.static_path/2`, `DuskmoonBundler.static_url/2`, and `DuskmoonBundler.Preload.tags/2`.
 - `:hmr_timeout` option on `DuskmoonBundler.DevServer` (and the `:server` config profile) controls the HMR websocket idle timeout. Defaults to `60_000`ms.
 
 ### Changed
+- Production manifests now include `manifest_version: 1` and an `entries` object while the runtime reader remains compatible with legacy flat manifests.
+- Phoenix projects should depend on both `:duskmoon_bundler_runtime` and `:duskmoon_bundler`, with `:duskmoon_bundler` configured as `runtime: Mix.env() == :dev`.
 - HMR websocket messages (`ping`, `pong`, `update`, `error`) now flow through `DuskmoonBundler.HMR.Message`, which uses `JSONCodec` for struct<->JSON (de)serialization with `Jason` performing the final binary encoding.
 - Added `json_codec` as a runtime dependency.
 

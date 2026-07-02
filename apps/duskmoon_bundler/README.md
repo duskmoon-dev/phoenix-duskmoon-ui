@@ -2,9 +2,9 @@
 
 [![Hex.pm](https://img.shields.io/hexpm/v/duskmoon_bundler.svg)](https://hex.pm/packages/duskmoon_bundler) [![Documentation](https://img.shields.io/badge/documentation-gray)](https://hexdocs.pm/duskmoon_bundler)
 
-Duskmoon-maintained frontend tooling for Phoenix that runs inside the BEAM. This app is based on [Volt](https://github.com/elixir-volt/volt) and keeps the same Vite-level workflow under the `:duskmoon_bundler` OTP app and `DuskmoonBundler` module namespace.
+Duskmoon-maintained frontend tooling for Phoenix that runs inside the BEAM. This app is based on [Volt](https://github.com/elixir-volt/volt) and keeps the same Vite-level workflow under the `:duskmoon_bundler` OTP app. Production template helpers live in the separate `:duskmoon_bundler_runtime` app under the existing `DuskmoonBundler` module namespace.
 
-One dep replaces esbuild, the Tailwind CLI, and Node.js with Rust NIFs powered by [OXC](https://oxc.rs), [LightningCSS](https://lightningcss.dev), and [QuickBEAM](https://hex.pm/packages/duskmoon_quickbeam) for embedded JavaScript runtimes.
+The build/dev dep replaces esbuild, the Tailwind CLI, and Node.js with Rust NIFs powered by [OXC](https://oxc.rs), [LightningCSS](https://lightningcss.dev), and [QuickBEAM](https://hex.pm/packages/duskmoon_quickbeam) for embedded JavaScript runtimes. Production releases can keep only the runtime resolver.
 
 ```bash
 mix igniter.install duskmoon_bundler
@@ -33,7 +33,10 @@ Or add the dep manually:
 
 ```elixir
 def deps do
-  [{:duskmoon_bundler, "~> 0.14"}]
+  [
+    {:duskmoon_bundler_runtime, "~> 9.7"},
+    {:duskmoon_bundler, "~> 9.7", runtime: Mix.env() == :dev}
+  ]
 end
 ```
 
@@ -75,11 +78,12 @@ config :duskmoon_bundler, :server,
   watch_dirs: ["lib/"]
 ```
 
-`DuskmoonBundler.static_path/2` resolves DuskmoonBundler-managed assets to source files in dev and content-hashed paths in production:
+`DuskmoonBundler.static_path/2` is provided by `duskmoon_bundler_runtime`. It resolves DuskmoonBundler-managed assets to source files in dev and content-hashed paths in production:
 
 ```heex
 <link phx-track-static rel="stylesheet" href={DuskmoonBundler.static_path(@endpoint, "/assets/css/app.css")} />
 <script defer phx-track-static type="module" src={DuskmoonBundler.static_path(@endpoint, "/assets/js/app.js")}></script>
+<%= DuskmoonBundler.Preload.tags(@endpoint, "/assets/js/app.js") %>
 <img src={DuskmoonBundler.static_path(@endpoint, "/assets/images/logo.svg")} />
 ```
 
@@ -97,7 +101,7 @@ Building "assets/js/app.ts"...
 Built in 15ms
 ```
 
-Tree-shaking, minification, code splitting, configurable env prefixes and asset URL prefixes, source maps, content-hashed JavaScript/CSS/assets, and manifest output. `DuskmoonBundler.Preload.tags/2` can generate modulepreload tags from the manifest, and the build is ready for `mix phx.digest`.
+Tree-shaking, minification, code splitting, configurable env prefixes and asset URL prefixes, source maps, content-hashed JavaScript/CSS/assets, and versioned manifest output. `DuskmoonBundler.Preload.tags/2` can generate modulepreload tags from the manifest through the runtime package, and the build is ready for `mix phx.digest`.
 
 ## Framework support
 

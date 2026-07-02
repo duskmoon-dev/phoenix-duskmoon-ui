@@ -36,6 +36,7 @@ defmodule DuskmoonBundler.MixProject do
 
   defp deps do
     [
+      {:duskmoon_bundler_runtime, in_umbrella: true},
       {:reach, "~> 2.6.1", only: :dev, runtime: false},
       {:glob_ex, "~> 0.1"},
       {:duskmoon_oxc, in_umbrella: true},
@@ -120,8 +121,6 @@ defmodule DuskmoonBundler.MixProject do
       ],
       groups_for_modules: [
         Core: [
-          DuskmoonBundler,
-          DuskmoonBundler.Preload,
           DuskmoonBundler.Config,
           DuskmoonBundler.Plugin
         ],
@@ -237,8 +236,7 @@ defmodule DuskmoonBundler.MixProject do
           DuskmoonBundler.ETS,
           DuskmoonBundler.Path,
           DuskmoonBundler.Tailwind.Loader,
-          DuskmoonBundler.Tailwind.Resolver,
-          DuskmoonBundler.URL
+          DuskmoonBundler.Tailwind.Resolver
         ],
         "Internals: Plugin Options": [
           DuskmoonBundler.Plugin.Solid.CompilerOptions,

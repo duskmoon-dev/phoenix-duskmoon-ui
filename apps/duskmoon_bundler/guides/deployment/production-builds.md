@@ -28,6 +28,8 @@ Production builds run the same framework/plugin compilation pipeline as the dev 
 - writes a manifest that Phoenix can use for digested asset paths and chunk preload metadata
 - optionally copies a Vite-style public directory to the static root without transforming files
 
+Phoenix releases that call `DuskmoonBundler.static_path/2` or `DuskmoonBundler.Preload.tags/2` only need `:duskmoon_bundler_runtime` at runtime. Keep `:duskmoon_bundler` available for build aliases with `runtime: Mix.env() == :dev`; do not mark it `only: :dev`, because asset deploy aliases often run under `MIX_ENV=prod`.
+
 ## Public files in Phoenix apps
 
 For Phoenix projects, stable root files usually belong in `priv/static` and are served by Phoenix through `Plug.Static`. Examples include `favicon.ico`, `robots.txt`, web app manifests, and touch icons. Keep those files at the Phoenix level when possible.
@@ -102,7 +104,13 @@ Or per-build: `mix duskmoon_bundler.build --external phoenix --external phoenix_
 For code-split builds, the production manifest records static imports, dynamic imports, chunk-local CSS, and emitted assets. Use `DuskmoonBundler.Preload.tags/2` in your layout to preload the entry and its static chunk dependencies:
 
 ```heex
-<%= DuskmoonBundler.Preload.tags("priv/static/assets/js/manifest.json", "/assets/js", entry: "app.js") %>
+<%= DuskmoonBundler.Preload.tags(@endpoint, "/assets/js/app.js") %>
+```
+
+The lower-level manifest form is still available:
+
+```elixir
+DuskmoonBundler.Preload.tags("priv/static/assets/js/manifest.json", prefix: "/assets/js", entry: "app.js")
 ```
 
 Runtime dynamic imports are rewritten through DuskmoonBundler's preload helper when the async chunk has dependency chunks or CSS. The helper preloads those files before executing `import()`, avoiding extra round trips while keeping async chunks lazy.

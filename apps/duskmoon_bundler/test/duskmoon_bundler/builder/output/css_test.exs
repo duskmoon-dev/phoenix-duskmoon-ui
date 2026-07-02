@@ -55,7 +55,7 @@ defmodule DuskmoonBundler.Builder.Output.CSSTest do
       css = File.read!(result.css.path)
       assert css =~ "color"
 
-      manifest = Path.join(@outdir, "manifest.json") |> File.read!() |> :json.decode()
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
       assert manifest["main.js"]["css"] == [Path.basename(result.css.path)]
       assert manifest["main.css"]["assets"] == [Path.basename(result.css.path)]
     end
@@ -83,7 +83,7 @@ defmodule DuskmoonBundler.Builder.Output.CSSTest do
       assert result.css != nil
       assert File.regular?(result.css.path)
 
-      manifest = Path.join(@outdir, "manifest.json") |> File.read!() |> :json.decode()
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
       assert manifest["site.css"]["file"] =~ ~r/^site-[a-f0-9]{8}\.css$/
       assert manifest["site.css"]["assets"] == [manifest["site.css"]["file"]]
     end
@@ -110,7 +110,7 @@ defmodule DuskmoonBundler.Builder.Output.CSSTest do
       assert [asset_path] = Path.wildcard(Path.join(@outdir, "logo-*.svg"))
 
       asset_file = Path.basename(asset_path)
-      manifest = Path.join(@outdir, "manifest.json") |> File.read!() |> :json.decode()
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
       assert asset_file in manifest["site.css"]["assets"]
       assert manifest["logo.svg"]["file"] == asset_file
     end
@@ -141,7 +141,7 @@ defmodule DuskmoonBundler.Builder.Output.CSSTest do
       assert [asset_path] = Path.wildcard(Path.join(@outdir, "hero-*.png"))
 
       asset_file = Path.basename(asset_path)
-      manifest = Path.join(@outdir, "manifest.json") |> File.read!() |> :json.decode()
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
       assert asset_file in manifest["css_asset_app.css"]["assets"]
       assert manifest["hero.png"]["file"] == asset_file
     end
@@ -195,7 +195,7 @@ defmodule DuskmoonBundler.Builder.Output.CSSTest do
       refute css =~ "./logo.svg"
 
       assert [asset_path] = Path.wildcard(Path.join(@outdir, "logo-*.svg"))
-      manifest = Path.join(@outdir, "manifest.json") |> File.read!() |> :json.decode()
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
       assert Path.basename(asset_path) in manifest["vue_css_asset.css"]["assets"]
     end
 
@@ -246,5 +246,12 @@ defmodule DuskmoonBundler.Builder.Output.CSSTest do
       assert js =~ "loaded"
       refute js =~ "color"
     end
+  end
+
+  defp read_manifest_entries(path) do
+    path
+    |> File.read!()
+    |> :json.decode()
+    |> DuskmoonBundler.Manifest.entries!()
   end
 end

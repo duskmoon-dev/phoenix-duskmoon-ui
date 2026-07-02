@@ -42,14 +42,17 @@ Code-split builds write chunk relationships to `manifest.json`:
 
 ```json
 {
-  "app.js": {
-    "file": "app-a1b2c3d4.js",
-    "src": "app.js",
-    "isEntry": true,
-    "imports": ["common-11223344.js"],
-    "dynamicImports": ["app-admin-c3d4e5f6.js"],
-    "css": ["app-55667788.css"],
-    "assets": ["logo-99aabbcc.svg"]
+  "manifest_version": 1,
+  "entries": {
+    "app.js": {
+      "file": "app-a1b2c3d4.js",
+      "src": "app.js",
+      "isEntry": true,
+      "imports": ["common-11223344.js"],
+      "dynamicImports": ["app-admin-c3d4e5f6.js"],
+      "css": ["app-55667788.css"],
+      "assets": ["logo-99aabbcc.svg"]
+    }
   }
 }
 ```
@@ -61,4 +64,10 @@ Code-split builds write chunk relationships to `manifest.json`:
 - `css` lists CSS files owned by the chunk.
 - `assets` lists emitted non-code assets referenced by the chunk.
 
-Use `DuskmoonBundler.Preload.tags/2` from server-rendered layouts to generate preload tags for an entry and its static chunk imports. Runtime dynamic imports handle their own dependency preloads.
+Use `DuskmoonBundler.Preload.tags/2` from `duskmoon_bundler_runtime` in server-rendered layouts to generate preload tags for an entry and its static chunk imports:
+
+```heex
+<%= DuskmoonBundler.Preload.tags(@endpoint, "/assets/js/app.js") %>
+```
+
+Runtime dynamic imports handle their own dependency preloads.

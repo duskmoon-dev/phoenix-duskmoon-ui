@@ -14,13 +14,14 @@ if Code.ensure_loaded?(Igniter) do
     This installer will:
 
     1. Remove `:esbuild` and `:tailwind` deps
-    2. Remove `config :esbuild` and `config :tailwind` blocks
-    3. Update `assets.setup`, `assets.build`, and `assets.deploy` aliases
-    4. Add DuskmoonBundler build config to `config/config.exs`
-    5. Add format and lint config to `config/config.exs`
-    6. Add `DuskmoonBundler.Formatter` plugin to `.formatter.exs`
-    7. Add `DuskmoonBundler.DevServer` plug to your endpoint
-    8. Add the DuskmoonBundler watcher to `config/dev.exs`
+    2. Add `:duskmoon_bundler_runtime` and `:duskmoon_bundler` deps
+    3. Remove `config :esbuild` and `config :tailwind` blocks
+    4. Update `assets.setup`, `assets.build`, and `assets.deploy` aliases
+    5. Add DuskmoonBundler build config to `config/config.exs`
+    6. Add format and lint config to `config/config.exs`
+    7. Add `DuskmoonBundler.Formatter` plugin to `.formatter.exs`
+    8. Add `DuskmoonBundler.DevServer` plug to your endpoint
+    9. Add the DuskmoonBundler watcher to `config/dev.exs`
     """
 
     use Igniter.Mix.Task
@@ -51,6 +52,7 @@ if Code.ensure_loaded?(Igniter) do
 
       igniter
       |> remove_old_deps()
+      |> add_duskmoon_deps()
       |> remove_old_config()
       |> remove_old_watchers(app_name, endpoint)
       |> update_aliases()
@@ -68,6 +70,15 @@ if Code.ensure_loaded?(Igniter) do
       igniter
       |> ProjectDeps.remove_dep(:esbuild)
       |> ProjectDeps.remove_dep(:tailwind)
+    end
+
+    defp add_duskmoon_deps(igniter) do
+      runtime_setting = Sourceror.parse_string!("Mix.env() == :dev")
+
+      igniter
+      |> ProjectDeps.add_dep({:duskmoon_bundler_runtime, "~> 9.7"}, on_exists: :skip)
+      |> ProjectDeps.add_dep({:duskmoon_bundler, "~> 9.7"}, yes?: true)
+      |> ProjectDeps.set_dep_option(:duskmoon_bundler, :runtime, runtime_setting)
     end
 
     defp remove_old_config(igniter) do
