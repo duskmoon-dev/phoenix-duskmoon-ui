@@ -2,7 +2,7 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
   use Mix.Project
 
   # Umbrella version tracks phoenix_duskmoon package version
-  @version "9.6.4"
+  @version "9.7.0"
 
   def project do
     [

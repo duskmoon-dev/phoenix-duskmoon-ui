@@ -1,7 +1,7 @@
 defmodule OXC.MixProject do
   use Mix.Project
 
-  @version "9.6.4"
+  @version "9.7.0"
   @source_url "https://github.com/duskmoon-dev/phoenix-duskmoon-ui"
   @upstream_url "https://github.com/elixir-volt/oxc_ex"
 
