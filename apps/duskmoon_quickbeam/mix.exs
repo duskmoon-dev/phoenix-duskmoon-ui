@@ -68,15 +68,15 @@ defmodule QuickBEAM.MixProject do
 
   defp deps do
     [
-      {:zigler_precompiled, "~> 0.1.4"},
-      {:zigler, "~> 0.13.0 or ~> 0.14.0 or ~> 0.15.0 or ~> 0.16.0"},
+      {:zigler_precompiled, "~> 0.1.4", runtime: false},
+      {:zigler, "~> 0.13.0 or ~> 0.14.0 or ~> 0.15.0 or ~> 0.16.0", runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:ex_dna, "~> 1.1", only: [:dev, :test], runtime: false},
       {:ex_slop, "~> 0.2", only: [:dev, :test], runtime: false},
       {:jason, "~> 1.4"},
       {:duskmoon_oxc, in_umbrella: true},
-      {:rustler, "~> 0.36 or ~> 0.37 or ~> 0.38", optional: true},
+      {:rustler, "~> 0.38", optional: true, runtime: false},
       {:duskmoon_npm, in_umbrella: true},
       {:mint_web_socket, "~> 1.0"},
       {:nimble_pool, "~> 1.1"},
