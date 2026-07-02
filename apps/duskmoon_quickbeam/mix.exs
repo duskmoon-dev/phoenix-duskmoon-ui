@@ -76,7 +76,7 @@ defmodule QuickBEAM.MixProject do
       {:ex_slop, "~> 0.2", only: [:dev, :test], runtime: false},
       {:jason, "~> 1.4"},
       {:duskmoon_oxc, in_umbrella: true},
-      {:rustler, "~> 0.38", optional: true, runtime: false},
+      {:rustler, "~> 0.36 or ~> 0.37 or ~> 0.38", optional: true, runtime: false},
       {:duskmoon_npm, in_umbrella: true},
       {:mint_web_socket, "~> 1.0"},
       {:nimble_pool, "~> 1.1"},
