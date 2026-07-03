@@ -1,6 +1,6 @@
 defmodule OXC.Native do
   native_version = Mix.Project.config()[:version]
-  local_dev? = Mix.env() == :dev and Mix.Project.config()[:build_path] == "../../_build"
+  local_dev? = Mix.Project.config()[:build_path] == "../../_build"
 
   build_from_source =
     local_dev? or System.get_env("DUSKMOON_BUILD_NATIVE_FROM_SOURCE") in ["1", "true"]
