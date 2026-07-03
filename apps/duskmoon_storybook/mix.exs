@@ -46,7 +46,7 @@ defmodule DuskmoonStorybook.MixProject do
       {:phoenix_storybook, "~> 1.1"},
       {:phoenix_live_dashboard, "~> 0.8"},
       {:phoenix_pubsub, "~> 2.2"},
-      {:lazy_html, "~> 0.1.0", only: :test},
+      {:lazy_html, "~> 0.1.0"},
       {:duskmoon_bundler_runtime, in_umbrella: true},
       {:duskmoon_bundler, in_umbrella: true, runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 1.0"},
