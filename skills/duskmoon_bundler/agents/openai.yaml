@@ -1,0 +1,4 @@
+interface:
+  display_name: "Duskmoon Bundler"
+  short_description: "Setup and use Duskmoon Bundler"
+  default_prompt: "Use $duskmoon-bundler to set up Phoenix assets with DuskmoonBundler."
