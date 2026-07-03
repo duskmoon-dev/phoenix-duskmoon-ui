@@ -95,7 +95,6 @@ jobs:
     with:
       version: ${{ inputs.version }}
       git-ref: ${{ inputs.git-ref }}
-      allow-existing-release-overwrite: true
     secrets: inherit
 
   publish:
