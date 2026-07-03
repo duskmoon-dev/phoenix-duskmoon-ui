@@ -53,6 +53,46 @@ jobs:
         run: |
           set -euo pipefail
 
+          packages=(
+            duskmoon_hex_solver
+            duskmoon_npm
+            duskmoon_oxc
+            duskmoon_vize
+            duskmoon_oxide
+            duskmoon_quickbeam
+            duskmoon_bundler_runtime
+            duskmoon_bundler
+            phoenix_duskmoon
+          )
+
+          published_packages=()
+          for package in "${packages[@]}"; do
+            if ! status="$(curl --silent --output /dev/null --write-out '%{http_code}' \
+              "https://hex.pm/api/packages/${package}/releases/${VERSION}")"; then
+              echo "Failed to query Hex package ${package} ${VERSION}" >&2
+              exit 1
+            fi
+
+            case "${status}" in
+              200)
+                published_packages+=("${package}")
+                ;;
+              404)
+                ;;
+              *)
+                echo "Unexpected Hex API status ${status} for ${package} ${VERSION}" >&2
+                exit 1
+                ;;
+            esac
+          done
+
+          if [ "${#published_packages[@]}" -gt 0 ]; then
+            echo "Refusing to upload native assets for v${VERSION} because Hex already has published packages:" >&2
+            printf '  - %s\n' "${published_packages[@]}" >&2
+            echo "Publish a new patch version instead of replacing GitHub release assets for an already-published Hex version." >&2
+            exit 1
+          fi
+
           if [ "${ALLOW_OVERWRITE}" = "true" ]; then
             echo "Existing release overwrite explicitly allowed for v${VERSION}"
             exit 0
