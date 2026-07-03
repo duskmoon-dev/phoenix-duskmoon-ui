@@ -26,7 +26,12 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
 
   defp aliases do
     [
-      setup: ["cmd mix setup"]
+      setup: ["cmd mix setup"],
+      prepublish: [
+        "do --app phoenix_duskmoon cmd cp #{Path.expand("README.md", __DIR__)} README.md",
+        "duskmoon_bundler.build phoenix_duskmoon",
+        "do --app phoenix_duskmoon icons.bundle"
+      ]
     ]
   end
 end

@@ -19,7 +19,6 @@ defmodule PhoenixDuskmoon.Mixfile do
       name: "PhoenixDuskmoon",
       description: "Duskmoon UI component library for Phoenix LiveView",
       package: package(),
-      aliases: aliases(),
       docs: [
         main: "home",
         source_url: @source_url,
@@ -150,8 +149,6 @@ defmodule PhoenixDuskmoon.Mixfile do
       {:phoenix_html, "~> 4.0"},
       {:phoenix_live_view, "~> 1.0"},
       {:plug, "~> 1.19", optional: true},
-      {:duskmoon_bundler_runtime, in_umbrella: true},
-      {:duskmoon_bundler, in_umbrella: true, runtime: Mix.env() == :dev},
       {:jason, "~> 1.4", only: :test},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
@@ -167,16 +164,6 @@ defmodule PhoenixDuskmoon.Mixfile do
         Changelog: "https://hexdocs.pm/phoenix_duskmoon/changelog.html",
         GitHub: @source_url
       }
-    ]
-  end
-
-  defp aliases do
-    [
-      prepublish: [
-        "cmd cp #{Path.expand("../../README.md", __DIR__)} #{Path.expand("README.md", __DIR__)}",
-        "duskmoon_bundler.build phoenix_duskmoon",
-        "icons.bundle"
-      ]
     ]
   end
 end

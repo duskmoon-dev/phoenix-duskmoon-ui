@@ -112,8 +112,6 @@ jobs:
           sed -i 's%{:duskmoon_quickbeam, in_umbrella: true}%{:duskmoon_quickbeam, path: "../duskmoon_quickbeam"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
           sed -i 's%{:duskmoon_bundler_runtime, in_umbrella: true}%{:duskmoon_bundler_runtime, path: "../duskmoon_bundler_runtime"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
           sed -i 's%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, path: "../duskmoon_npm"}%' "${SOURCE_APP_ROOT}/duskmoon_bundler/mix.exs"
-          sed -i 's%{:duskmoon_bundler_runtime, in_umbrella: true}%{:duskmoon_bundler_runtime, path: "../duskmoon_bundler_runtime"}%' "${SOURCE_APP_ROOT}/phoenix_duskmoon/mix.exs"
-          sed -i 's%{:duskmoon_bundler, in_umbrella: true, runtime: Mix.env() == :dev}%{:duskmoon_bundler, path: "../duskmoon_bundler", runtime: Mix.env() == :dev}%' "${SOURCE_APP_ROOT}/phoenix_duskmoon/mix.exs"
 
       - name: Add package dependencies
         working-directory: ${{ runner.temp }}/duskmoon_package_e2e

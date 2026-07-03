@@ -221,8 +221,6 @@ jobs:
           sed -i "s%{:duskmoon_bundler_runtime, in_umbrella: true}%{:duskmoon_bundler_runtime, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i "s%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i '/^[[:space:]]*{:ex_doc, .*only: :dev, runtime: false},\?$/d' apps/duskmoon_bundler/mix.exs
-          sed -i "s%{:duskmoon_bundler_runtime, in_umbrella: true}%{:duskmoon_bundler_runtime, \"~> ${VERSION}\"}%" apps/phoenix_duskmoon/mix.exs
-          sed -i "s%{:duskmoon_bundler, in_umbrella: true, runtime: Mix.env() == :dev}%{:duskmoon_bundler, \"~> ${VERSION}\", runtime: Mix.env() == :dev}%" apps/phoenix_duskmoon/mix.exs
           # Transitive production deps pull these without :only restrictions, so avoid packaged mix.exs divergence.
           sed -i '/^[[:space:]]*{:jason, .*only: :test},\?$/d' apps/phoenix_duskmoon/mix.exs
           sed -i '/^[[:space:]]*{:ex_doc, .*only: :dev, runtime: false},\?$/d' apps/phoenix_duskmoon/mix.exs
@@ -252,8 +250,6 @@ jobs:
           grep -q "{:duskmoon_quickbeam, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
           grep -q "{:duskmoon_bundler_runtime, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
           grep -q "{:duskmoon_npm, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
-          grep -q "{:duskmoon_bundler_runtime, \"~> ${VERSION}\"}" apps/phoenix_duskmoon/mix.exs
-          grep -q "{:duskmoon_bundler, \"~> ${VERSION}\", runtime: Mix.env() == :dev}" apps/phoenix_duskmoon/mix.exs
           echo "MIX_BACKUP_DIR=${MIX_BACKUP_DIR}" >> "$GITHUB_ENV"
 
       - name: Publish duskmoon_hex_solver to hex.pm

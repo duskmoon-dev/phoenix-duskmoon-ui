@@ -17,9 +17,10 @@ defmodule Mix.Tasks.Icons.Bundle do
 
   @impl Mix.Task
   def run(_args) do
+    source_app_dir = source_app_dir()
     app_dir = Application.app_dir(:phoenix_duskmoon)
     # Source priv/static (used by hex.build for packaging)
-    src_static = Path.join(File.cwd!(), "priv/static")
+    src_static = Path.join(source_app_dir, "priv/static")
     # Build priv/static (used by Application.app_dir at runtime)
     build_static = Path.join(app_dir, "priv/static")
 
@@ -32,6 +33,13 @@ defmodule Mix.Tasks.Icons.Bundle do
         Path.join(src_static, filename),
         Path.join(build_static, filename)
       )
+    end
+  end
+
+  defp source_app_dir do
+    case Mix.Project.apps_paths() do
+      %{phoenix_duskmoon: path} -> Path.expand(path)
+      _ -> File.cwd!()
     end
   end
 
