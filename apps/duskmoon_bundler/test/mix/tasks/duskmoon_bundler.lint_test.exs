@@ -88,7 +88,7 @@ defmodule DuskmoonBundler.LintTest do
         catch_exit(Mix.Tasks.DuskmoonBundler.Lint.run([]))
       end)
 
-    assert output =~ "loc.js:2:"
+    assert strip_ansi(output) =~ "loc.js:2:"
   end
 
   test "custom rules via config" do
@@ -126,5 +126,9 @@ defmodule DuskmoonBundler.LintTest do
 
     assert output =~ "custom debugger ban"
     assert output =~ "test/no-debugger-custom"
+  end
+
+  defp strip_ansi(output) do
+    String.replace(output, ~r/\e\[[0-9;]*[A-Za-z]/, "")
   end
 end
