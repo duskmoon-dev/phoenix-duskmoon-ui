@@ -43,6 +43,8 @@ defmodule DuskmoonBundler.MixProject do
       {:duskmoon_vize, in_umbrella: true},
       {:duskmoon_oxide, in_umbrella: true},
       {:duskmoon_quickbeam, in_umbrella: true},
+      {:zigler, "~> 0.13.0 or ~> 0.14.0 or ~> 0.15.0 or ~> 0.16.0",
+       only: [:dev, :test], runtime: false},
       {:rustler, "~> 0.36 or ~> 0.37 or ~> 0.38", optional: true, runtime: false},
       {:dotenvy, "~> 1.1"},
       {:floki, "~> 0.38"},
