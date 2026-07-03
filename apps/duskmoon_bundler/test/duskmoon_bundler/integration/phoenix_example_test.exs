@@ -6,7 +6,8 @@ defmodule DuskmoonBundler.Integration.PhoenixExampleTest do
   import Plug.Test
   import Plug.Conn
 
-  @example_dir Path.join(File.cwd!(), "examples/vanilla")
+  @app_dir Path.expand("../../..", __DIR__)
+  @example_dir Path.expand("fixtures/vanilla", __DIR__)
   @assets_root Path.join(@example_dir, "assets")
 
   describe "dev server" do
@@ -84,7 +85,13 @@ defmodule DuskmoonBundler.Integration.PhoenixExampleTest do
   end
 
   defp call_dev_server(path) do
-    opts = DuskmoonBundler.DevServer.init(root: @assets_root, prefix: "/assets")
+    opts =
+      DuskmoonBundler.DevServer.init(
+        root: @assets_root,
+        prefix: "/assets",
+        resolve_dirs: [Path.expand("../../deps", @app_dir)]
+      )
+
     conn(:get, path) |> DuskmoonBundler.DevServer.call(opts)
   end
 
@@ -98,7 +105,9 @@ defmodule DuskmoonBundler.Integration.PhoenixExampleBuildTest do
 
   @moduletag :integration
 
-  @example_dir Path.join(File.cwd!(), "examples/vanilla")
+  @app_dir Path.expand("../../..", __DIR__)
+  @example_dir Path.expand("fixtures/vanilla", __DIR__)
+  @assets_root Path.join(@example_dir, "assets")
   @outdir Path.join(@example_dir, "priv/static/assets")
 
   defmodule Endpoint do
@@ -109,10 +118,15 @@ defmodule DuskmoonBundler.Integration.PhoenixExampleBuildTest do
   setup_all do
     File.rm_rf!(Path.join(@outdir, "js"))
     File.rm_rf!(Path.join(@outdir, "css"))
+    on_exit(fn -> File.rm_rf!(@outdir) end)
 
     {output, status} =
-      System.cmd("mix", ["duskmoon_bundler.build", "--tailwind", "--hash", "--no-minify"],
-        cd: @example_dir,
+      System.cmd("mix", build_args(),
+        cd: @app_dir,
+        env: [
+          {"NPM_EX_ALLOWED_REGISTRIES",
+           "https://registry.npmjs.org,https://npm.gsmlg.dev,https://nexus.gsmlg.net"}
+        ],
         stderr_to_stdout: true
       )
 
@@ -128,7 +142,7 @@ defmodule DuskmoonBundler.Integration.PhoenixExampleBuildTest do
 
     assert js =~ "LiveSocket"
     assert js =~ "phoenix"
-    assert js =~ "csrfToken"
+    assert js =~ "_csrf_token"
     refute js =~ ~s(import "phoenix")
     refute js =~ ~s(import "phoenix_html")
   end
@@ -193,6 +207,25 @@ defmodule DuskmoonBundler.Integration.PhoenixExampleBuildTest do
   defp js_path do
     manifest = @outdir |> Path.join("js/manifest.json") |> read_manifest_entries()
     Path.join([@outdir, "js", manifest["app.js"]["file"]])
+  end
+
+  defp build_args do
+    [
+      "duskmoon_bundler.build",
+      "--entry",
+      Path.join(@assets_root, "js/app.ts"),
+      "--outdir",
+      @outdir,
+      "--tailwind",
+      "--tailwind-css",
+      Path.join(@assets_root, "css/app.css"),
+      "--tailwind-source",
+      Path.join(@example_dir, "lib"),
+      "--resolve-dir",
+      Path.expand("../../deps", @app_dir),
+      "--hash",
+      "--no-minify"
+    ]
   end
 
   defp read_manifest_entries(path) do

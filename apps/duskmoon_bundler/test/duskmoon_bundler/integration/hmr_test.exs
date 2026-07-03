@@ -46,10 +46,16 @@ defmodule DuskmoonBundler.Integration.HMRTest do
 
   @fixture_dir Path.expand("../fixtures/integration_hmr", __DIR__)
   @port 44_831
+  @fixture_mtime_base :calendar.datetime_to_gregorian_seconds({{2030, 1, 1}, {0, 0, 0}})
 
   setup_all do
-    {:ok, _} = PlaywrightEx.Supervisor.start_link(timeout: 10_000)
-    {:ok, browser} = PlaywrightEx.launch_browser(:chromium, timeout: 10_000)
+    {:ok, _} =
+      PlaywrightEx.Supervisor.start_link(
+        executable: playwright_executable(),
+        timeout: 10_000
+      )
+
+    {:ok, browser} = PlaywrightEx.launch_browser(:chromium, browser_launch_opts())
     on_exit(fn -> :ok end)
     %{browser: browser}
   end
@@ -94,13 +100,14 @@ defmodule DuskmoonBundler.Integration.HMRTest do
 
     {:ok, context} = Browser.new_context(browser.guid, timeout: 5000)
     {:ok, %{main_frame: frame}} = BrowserContext.new_page(context.guid, timeout: 5000)
+    hmr_clients = hmr_client_pids()
 
     on_exit(fn ->
       BrowserContext.close(context.guid, timeout: 5000)
       File.rm_rf!(@fixture_dir)
     end)
 
-    %{frame: frame, context: context}
+    %{frame: frame, context: context, hmr_clients: hmr_clients}
   end
 
   describe "dev server module serving" do
@@ -201,7 +208,10 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       assert color == "rgb(10, 20, 30)"
     end
 
-    test "self-accepting modules update without reloading and preserve hot data", %{frame: frame} do
+    test "self-accepting modules update without reloading and preserve hot data", %{
+      frame: frame,
+      hmr_clients: hmr_clients
+    } do
       write_fixture("self_accept.ts", """
       const store = (window.__duskmoon_bundlerSelfAccept ??= { events: [] })
       export const value = 'one'
@@ -237,7 +247,7 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       {:ok, initial} = eval_poll(frame, "document.getElementById('self-accept')?.textContent")
       assert initial == "one:none"
 
-      {:ok, watcher} = start_watcher()
+      {:ok, watcher} = start_watcher(hmr_clients)
 
       update_fixture("self_accept.ts", &String.replace(&1, "'one'", "'two'"))
 
@@ -254,7 +264,10 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       GenServer.stop(watcher)
     end
 
-    test "parent modules accept dependency updates without reloading", %{frame: frame} do
+    test "parent modules accept dependency updates without reloading", %{
+      frame: frame,
+      hmr_clients: hmr_clients
+    } do
       write_fixture("accepted_dep.ts", """
       export const value = 'child-one'
       """)
@@ -290,7 +303,7 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       {:ok, initial} = eval_poll(frame, "document.getElementById('accepted-dep')?.textContent")
       assert initial == "child-one"
 
-      {:ok, watcher} = start_watcher()
+      {:ok, watcher} = start_watcher(hmr_clients)
 
       update_fixture("accepted_dep.ts", &String.replace(&1, "child-one", "child-two"))
 
@@ -314,7 +327,10 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       GenServer.stop(watcher)
     end
 
-    test "parent modules accept multiple dependency updates", %{frame: frame} do
+    test "parent modules accept multiple dependency updates", %{
+      frame: frame,
+      hmr_clients: hmr_clients
+    } do
       write_fixture("multi_dep_a.ts", "export const value = 'a-one'")
       write_fixture("multi_dep_b.ts", "export const value = 'b-one'")
 
@@ -354,7 +370,7 @@ defmodule DuskmoonBundler.Integration.HMRTest do
 
       assert initial == "a-one:b-one"
 
-      {:ok, watcher} = start_watcher()
+      {:ok, watcher} = start_watcher(hmr_clients)
 
       update_fixture("multi_dep_a.ts", &String.replace(&1, "a-one", "a-two"))
 
@@ -378,7 +394,10 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       GenServer.stop(watcher)
     end
 
-    test "non-accepted module updates trigger a full reload", %{frame: frame} do
+    test "non-accepted module updates trigger a full reload", %{
+      frame: frame,
+      hmr_clients: hmr_clients
+    } do
       write_fixture("full_reload.ts", """
       const count = Number(sessionStorage.getItem('voltReloadCount') ?? '0') + 1
       sessionStorage.setItem('voltReloadCount', String(count))
@@ -399,7 +418,7 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       {:ok, initial} = eval_poll(frame, "document.getElementById('full-reload')?.textContent")
       assert initial == "before:1"
 
-      {:ok, watcher} = start_watcher()
+      {:ok, watcher} = start_watcher(hmr_clients)
 
       update_fixture("full_reload.ts", &String.replace(&1, "before", "after"))
 
@@ -409,7 +428,7 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       GenServer.stop(watcher)
     end
 
-    test "CSS import HMR updates injected styles", %{frame: frame} do
+    test "CSS import HMR updates injected styles", %{frame: frame, hmr_clients: hmr_clients} do
       write_fixture("hmr-style.css", ".hmr-style { color: rgb(1, 2, 3); }")
 
       write_fixture("css_hmr.ts", """
@@ -439,7 +458,7 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       {:ok, reload_count} = eval_poll(frame, "sessionStorage.getItem('voltCssReloadCount')")
       assert reload_count == "1"
 
-      {:ok, watcher} = start_watcher()
+      {:ok, watcher} = start_watcher(hmr_clients)
 
       update_fixture("hmr-style.css", &String.replace(&1, "rgb(1, 2, 3)", "rgb(4, 5, 6)"))
 
@@ -530,19 +549,80 @@ defmodule DuskmoonBundler.Integration.HMRTest do
     end
   end
 
-  defp start_watcher do
+  defp start_watcher(existing_clients) do
     with {:ok, pid} <-
            DuskmoonBundler.Watcher.start_link(
              root: @fixture_dir,
              target: :es2020,
              name: String.to_atom("volt_integration_hmr_#{System.unique_integer([:positive])}")
            ) do
+      on_exit(fn ->
+        if Process.alive?(pid), do: GenServer.stop(pid)
+      end)
+
+      assert :ok = wait_for_hmr_client(existing_clients)
       Process.sleep(150)
       {:ok, pid}
     end
   end
 
+  defp wait_for_hmr_client(existing_clients, attempts \\ 40)
+
+  defp wait_for_hmr_client(_existing_clients, 0), do: {:error, :no_hmr_client}
+
+  defp wait_for_hmr_client(existing_clients, attempts) do
+    if MapSet.difference(hmr_client_pids(), existing_clients) == MapSet.new() do
+      Process.sleep(50)
+      wait_for_hmr_client(existing_clients, attempts - 1)
+    else
+      :ok
+    end
+  end
+
+  defp hmr_client_pids do
+    DuskmoonBundler.HMR.Registry
+    |> Registry.lookup(:clients)
+    |> Enum.reduce(MapSet.new(), fn {pid, _value}, clients ->
+      if Process.alive?(pid) do
+        MapSet.put(clients, pid)
+      else
+        clients
+      end
+    end)
+  end
+
   defp base_url(path \\ "/"), do: "http://localhost:#{@port}#{path}"
+
+  defp playwright_executable do
+    [
+      System.get_env("PLAYWRIGHT_EXECUTABLE"),
+      System.find_executable("playwright"),
+      Path.expand("../../../node_modules/.bin/playwright", __DIR__),
+      Path.expand("../../../../../node_modules/.bin/playwright", __DIR__)
+    ]
+    |> Enum.find(&(&1 && File.exists?(&1)))
+    |> Kernel.||("playwright")
+  end
+
+  defp browser_launch_opts do
+    opts = [timeout: 10_000]
+
+    case chromium_executable() do
+      nil -> opts
+      path -> Keyword.put(opts, :executable_path, path)
+    end
+  end
+
+  defp chromium_executable do
+    [
+      System.get_env("PLAYWRIGHT_CHROMIUM_EXECUTABLE"),
+      System.find_executable("chromium"),
+      System.find_executable("chromium-browser"),
+      System.find_executable("google-chrome"),
+      System.find_executable("google-chrome-stable")
+    ]
+    |> Enum.find(&(&1 && File.exists?(&1)))
+  end
 
   defp write_fixture(name, content) do
     File.write!(Path.join(@fixture_dir, name), content)
@@ -551,5 +631,11 @@ defmodule DuskmoonBundler.Integration.HMRTest do
   defp update_fixture(name, callback) do
     path = Path.join(@fixture_dir, name)
     File.write!(path, callback.(File.read!(path)))
+    File.touch!(path, next_fixture_mtime())
+  end
+
+  defp next_fixture_mtime do
+    seconds = @fixture_mtime_base + System.unique_integer([:positive, :monotonic])
+    :calendar.gregorian_seconds_to_datetime(seconds)
   end
 end
