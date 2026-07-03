@@ -152,32 +152,17 @@ defmodule DuskmoonBundler.Plugin.Svelte do
   end
 
   defp script_blocks(source) do
-    case Floki.parse_fragment(source) do
-      {:ok, document} ->
-        document
-        |> Floki.find("script")
-        |> Enum.map(fn node -> {script_extension(script_lang(node)), node_text(node)} end)
-
-      {:error, _reason} ->
-        []
-    end
+    source
+    |> LazyHTML.from_fragment()
+    |> LazyHTML.query("script")
+    |> Enum.map(fn node -> {script_extension(script_lang(node)), LazyHTML.text(node)} end)
   end
 
-  defp script_lang({_tag, attrs, _children}) do
-    attrs
-    |> Enum.find_value(fn
-      {"lang", lang} -> lang
-      _attr -> nil
-    end)
-  end
+  defp script_lang(node), do: node |> LazyHTML.attribute("lang") |> List.first()
 
   defp script_extension("ts"), do: ".ts"
   defp script_extension("tsx"), do: ".tsx"
   defp script_extension(_lang), do: ".js"
-
-  defp node_text({_tag, _attrs, children}), do: Enum.map_join(children, &node_text/1)
-  defp node_text(text) when is_binary(text), do: text
-  defp node_text(_node), do: ""
 
   defp encode_sourcemap(nil), do: nil
   defp encode_sourcemap(map), do: Jason.encode!(map)

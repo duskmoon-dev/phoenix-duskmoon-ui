@@ -3,7 +3,7 @@ defmodule DuskmoonBundler.HTMLEntry do
   Extract entry points from HTML files.
 
   Parses `<script src="...">` and `<link rel="stylesheet" href="...">` tags
-  using Floki to discover JS and CSS entry files.
+  using LazyHTML to discover JS and CSS entry files.
 
   ## Example
 
@@ -25,18 +25,18 @@ defmodule DuskmoonBundler.HTMLEntry do
   def extract(html_path) do
     html_path = Path.expand(html_path)
     html = File.read!(html_path)
-    {:ok, doc} = Floki.parse_document(html)
+    doc = LazyHTML.from_document(html)
 
     scripts =
       doc
-      |> Floki.find("script[src]")
-      |> Enum.flat_map(&Floki.attribute(&1, "src"))
+      |> LazyHTML.query("script[src]")
+      |> LazyHTML.attribute("src")
       |> Enum.map(&resolve_path(&1, html_path))
 
     styles =
       doc
-      |> Floki.find("link[rel=stylesheet][href]")
-      |> Enum.flat_map(&Floki.attribute(&1, "href"))
+      |> LazyHTML.query(~s(link[rel="stylesheet"][href]))
+      |> LazyHTML.attribute("href")
       |> Enum.map(&resolve_path(&1, html_path))
 
     {:ok, %{scripts: scripts, styles: styles}}

@@ -47,7 +47,7 @@ defmodule DuskmoonBundler.MixProject do
        only: [:dev, :test], runtime: false},
       {:rustler, "~> 0.36 or ~> 0.37 or ~> 0.38", optional: true, runtime: false},
       {:dotenvy, "~> 1.1"},
-      {:floki, "~> 0.38"},
+      {:lazy_html, "~> 0.1.0"},
       {:plug, "~> 1.16"},
       {:websock_adapter, "~> 0.5"},
       {:file_system, "~> 1.0"},
