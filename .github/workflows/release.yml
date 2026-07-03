@@ -229,6 +229,7 @@ jobs:
           grep -q "{:duskmoon_hex_solver, \"~> ${VERSION}\"}" apps/duskmoon_npm/mix.exs
           grep -q "{:duskmoon_oxc, \"~> ${VERSION}\"}" apps/duskmoon_quickbeam/mix.exs
           grep -q "{:duskmoon_npm, \"~> ${VERSION}\", optional: true}" apps/duskmoon_quickbeam/mix.exs
+          grep -A1 "{:zigler," apps/duskmoon_quickbeam/mix.exs | grep -q "optional: true, runtime: false"
           if grep -q "{:ex_doc, .*only: :dev" apps/duskmoon_quickbeam/mix.exs; then
             echo "QuickBEAM packaged mix.exs still contains a dev-only ex_doc dependency" >&2
             exit 1

@@ -69,7 +69,8 @@ defmodule QuickBEAM.MixProject do
   defp deps do
     [
       {:zigler_precompiled, "~> 0.1.4", runtime: false},
-      {:zigler, "~> 0.13.0 or ~> 0.14.0 or ~> 0.15.0 or ~> 0.16.0", runtime: false},
+      {:zigler, "~> 0.13.0 or ~> 0.14.0 or ~> 0.15.0 or ~> 0.16.0",
+       optional: true, runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:ex_dna, "~> 1.1", only: [:dev, :test], runtime: false},
