@@ -42,21 +42,15 @@ defmodule DuskmoonBundler.Integration.HMRTest do
 
   @moduletag :integration
 
-  alias PlaywrightEx.{Browser, BrowserContext, Frame}
+  alias DuskmoonBundler.Integration.CDPBrowser
 
   @fixture_dir Path.expand("../fixtures/integration_hmr", __DIR__)
   @port 44_831
   @fixture_mtime_base :calendar.datetime_to_gregorian_seconds({{2030, 1, 1}, {0, 0, 0}})
 
   setup_all do
-    {:ok, _} =
-      PlaywrightEx.Supervisor.start_link(
-        executable: playwright_executable(),
-        timeout: 10_000
-      )
-
-    {:ok, browser} = PlaywrightEx.launch_browser(:chromium, browser_launch_opts())
-    on_exit(fn -> :ok end)
+    {:ok, browser} = CDPBrowser.start_link()
+    on_exit(fn -> CDPBrowser.stop(browser) end)
     %{browser: browser}
   end
 
@@ -98,32 +92,28 @@ defmodule DuskmoonBundler.Integration.HMRTest do
 
     on_exit(fn -> Process.exit(server, :normal) end)
 
-    {:ok, context} = Browser.new_context(browser.guid, timeout: 5000)
-    {:ok, %{main_frame: frame}} = BrowserContext.new_page(context.guid, timeout: 5000)
+    {:ok, page} = CDPBrowser.new_page(browser, timeout: 5000)
     hmr_clients = hmr_client_pids()
 
     on_exit(fn ->
-      BrowserContext.close(context.guid, timeout: 5000)
+      CDPBrowser.close_page(page)
       File.rm_rf!(@fixture_dir)
     end)
 
-    %{frame: frame, context: context, hmr_clients: hmr_clients}
+    %{page: page, hmr_clients: hmr_clients}
   end
 
   describe "dev server module serving" do
-    test "serves compiled TypeScript and executes in browser", %{frame: frame} do
-      {:ok, _} = Frame.goto(frame.guid, url: base_url(), timeout: 10_000)
+    test "serves compiled TypeScript and executes in browser", %{page: page} do
+      :ok = CDPBrowser.goto(page, base_url(), timeout: 10_000)
 
       {:ok, text} =
-        Frame.wait_for_function(frame.guid,
-          expression: "document.getElementById('duskmoon_bundler-test')?.textContent",
-          timeout: 5000
-        )
+        eval_poll(page, "document.getElementById('duskmoon_bundler-test')?.textContent")
 
       assert text
     end
 
-    test "injects import.meta.hot into served modules", %{frame: frame} do
+    test "injects import.meta.hot into served modules", %{page: page} do
       write_fixture("hot_check.ts", """
       window.__duskmoon_bundlerHotAvailable = typeof import.meta.hot?.accept === 'function'
       """)
@@ -135,13 +125,13 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       </body></html>
       """)
 
-      {:ok, _} = Frame.goto(frame.guid, url: base_url("/hot_page.html"), timeout: 10_000)
+      :ok = CDPBrowser.goto(page, base_url("/hot_page.html"), timeout: 10_000)
 
-      {:ok, result} = eval_poll(frame, "window.__duskmoon_bundlerHotAvailable")
+      {:ok, result} = eval_poll(page, "window.__duskmoon_bundlerHotAvailable")
       assert result == true
     end
 
-    test "rewrites relative imports between modules", %{frame: frame} do
+    test "rewrites relative imports between modules", %{page: page} do
       write_fixture("utils.ts", """
       export const greeting = 'hello from utils'
       """)
@@ -158,13 +148,13 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       </body></html>
       """)
 
-      {:ok, _} = Frame.goto(frame.guid, url: base_url("/import_page.html"), timeout: 10_000)
+      :ok = CDPBrowser.goto(page, base_url("/import_page.html"), timeout: 10_000)
 
-      {:ok, result} = eval_poll(frame, "window.__duskmoon_bundlerImportResult")
+      {:ok, result} = eval_poll(page, "window.__duskmoon_bundlerImportResult")
       assert result == "hello from utils"
     end
 
-    test "imports CSS from JavaScript and injects a style tag", %{frame: frame} do
+    test "imports CSS from JavaScript and injects a style tag", %{page: page} do
       write_fixture("imported.css", """
       .duskmoon_bundler-css-import-target { color: rgb(10, 20, 30); }
       """)
@@ -186,14 +176,14 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       </body></html>
       """)
 
-      {:ok, _} = Frame.goto(frame.guid, url: base_url("/css_import_page.html"), timeout: 10_000)
+      :ok = CDPBrowser.goto(page, base_url("/css_import_page.html"), timeout: 10_000)
 
-      {:ok, loaded} = eval_poll(frame, "window.__duskmoon_bundlerCssImportLoaded")
+      {:ok, loaded} = eval_poll(page, "window.__duskmoon_bundlerCssImportLoaded")
       assert loaded == true
 
       {:ok, style_count} =
         eval_poll(
-          frame,
+          page,
           "document.querySelectorAll('style[data-duskmoon-bundler-id=\"/assets/imported.css\"]').length"
         )
 
@@ -201,7 +191,7 @@ defmodule DuskmoonBundler.Integration.HMRTest do
 
       {:ok, color} =
         eval_poll(
-          frame,
+          page,
           "getComputedStyle(document.querySelector('.duskmoon_bundler-css-import-target')).color"
         )
 
@@ -209,7 +199,7 @@ defmodule DuskmoonBundler.Integration.HMRTest do
     end
 
     test "self-accepting modules update without reloading and preserve hot data", %{
-      frame: frame,
+      page: page,
       hmr_clients: hmr_clients
     } do
       write_fixture("self_accept.ts", """
@@ -243,8 +233,8 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       </body></html>
       """)
 
-      {:ok, _} = Frame.goto(frame.guid, url: base_url("/self_accept_page.html"), timeout: 10_000)
-      {:ok, initial} = eval_poll(frame, "document.getElementById('self-accept')?.textContent")
+      :ok = CDPBrowser.goto(page, base_url("/self_accept_page.html"), timeout: 10_000)
+      {:ok, initial} = eval_poll(page, "document.getElementById('self-accept')?.textContent")
       assert initial == "one:none"
 
       {:ok, watcher} = start_watcher(hmr_clients)
@@ -252,11 +242,11 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       update_fixture("self_accept.ts", &String.replace(&1, "'one'", "'two'"))
 
       assert {:ok, "two:one"} =
-               eval_until(frame, "document.getElementById('self-accept')?.textContent", "two:one")
+               eval_until(page, "document.getElementById('self-accept')?.textContent", "two:one")
 
       assert {:ok, true} =
                eval_until(
-                 frame,
+                 page,
                  "window.__duskmoon_bundlerSelfAccept.events.includes('dispose:one') && window.__duskmoon_bundlerSelfAccept.events.includes('accept:two')",
                  true
                )
@@ -265,7 +255,7 @@ defmodule DuskmoonBundler.Integration.HMRTest do
     end
 
     test "parent modules accept dependency updates without reloading", %{
-      frame: frame,
+      page: page,
       hmr_clients: hmr_clients
     } do
       write_fixture("accepted_dep.ts", """
@@ -299,8 +289,8 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       </body></html>
       """)
 
-      {:ok, _} = Frame.goto(frame.guid, url: base_url("/accept_dep_page.html"), timeout: 10_000)
-      {:ok, initial} = eval_poll(frame, "document.getElementById('accepted-dep')?.textContent")
+      :ok = CDPBrowser.goto(page, base_url("/accept_dep_page.html"), timeout: 10_000)
+      {:ok, initial} = eval_poll(page, "document.getElementById('accepted-dep')?.textContent")
       assert initial == "child-one"
 
       {:ok, watcher} = start_watcher(hmr_clients)
@@ -309,26 +299,26 @@ defmodule DuskmoonBundler.Integration.HMRTest do
 
       assert {:ok, "child-two"} =
                eval_until(
-                 frame,
+                 page,
                  "document.getElementById('accepted-dep')?.textContent",
                  "child-two"
                )
 
       assert {:ok, true} =
                eval_until(
-                 frame,
+                 page,
                  "window.__duskmoon_bundlerAcceptedDep.events.includes('accepted:child-two')",
                  true
                )
 
-      {:ok, reloads} = eval_poll(frame, "window.__duskmoon_bundlerAcceptedDep.reloads")
+      {:ok, reloads} = eval_poll(page, "window.__duskmoon_bundlerAcceptedDep.reloads")
       assert reloads == 1
 
       GenServer.stop(watcher)
     end
 
     test "parent modules accept multiple dependency updates", %{
-      frame: frame,
+      page: page,
       hmr_clients: hmr_clients
     } do
       write_fixture("multi_dep_a.ts", "export const value = 'a-one'")
@@ -362,11 +352,10 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       </body></html>
       """)
 
-      {:ok, _} =
-        Frame.goto(frame.guid, url: base_url("/multi_accept_dep_page.html"), timeout: 10_000)
+      :ok = CDPBrowser.goto(page, base_url("/multi_accept_dep_page.html"), timeout: 10_000)
 
       {:ok, initial} =
-        eval_poll(frame, "document.getElementById('multi-accepted-dep')?.textContent")
+        eval_poll(page, "document.getElementById('multi-accepted-dep')?.textContent")
 
       assert initial == "a-one:b-one"
 
@@ -376,26 +365,26 @@ defmodule DuskmoonBundler.Integration.HMRTest do
 
       assert {:ok, "a-two:b-one"} =
                eval_until(
-                 frame,
+                 page,
                  "document.getElementById('multi-accepted-dep')?.textContent",
                  "a-two:b-one"
                )
 
       assert {:ok, true} =
                eval_until(
-                 frame,
+                 page,
                  "window.__duskmoon_bundlerMultiDep.events.includes('accepted:a-two:b-one')",
                  true
                )
 
-      {:ok, reloads} = eval_poll(frame, "window.__duskmoon_bundlerMultiDep.reloads")
+      {:ok, reloads} = eval_poll(page, "window.__duskmoon_bundlerMultiDep.reloads")
       assert reloads == 1
 
       GenServer.stop(watcher)
     end
 
     test "non-accepted module updates trigger a full reload", %{
-      frame: frame,
+      page: page,
       hmr_clients: hmr_clients
     } do
       write_fixture("full_reload.ts", """
@@ -414,8 +403,8 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       </body></html>
       """)
 
-      {:ok, _} = Frame.goto(frame.guid, url: base_url("/full_reload_page.html"), timeout: 10_000)
-      {:ok, initial} = eval_poll(frame, "document.getElementById('full-reload')?.textContent")
+      :ok = CDPBrowser.goto(page, base_url("/full_reload_page.html"), timeout: 10_000)
+      {:ok, initial} = eval_poll(page, "document.getElementById('full-reload')?.textContent")
       assert initial == "before:1"
 
       {:ok, watcher} = start_watcher(hmr_clients)
@@ -423,12 +412,12 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       update_fixture("full_reload.ts", &String.replace(&1, "before", "after"))
 
       assert {:ok, "after:2"} =
-               eval_until(frame, "document.getElementById('full-reload')?.textContent", "after:2")
+               eval_until(page, "document.getElementById('full-reload')?.textContent", "after:2")
 
       GenServer.stop(watcher)
     end
 
-    test "CSS import HMR updates injected styles", %{frame: frame, hmr_clients: hmr_clients} do
+    test "CSS import HMR updates injected styles", %{page: page, hmr_clients: hmr_clients} do
       write_fixture("hmr-style.css", ".hmr-style { color: rgb(1, 2, 3); }")
 
       write_fixture("css_hmr.ts", """
@@ -449,13 +438,13 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       </body></html>
       """)
 
-      {:ok, _} = Frame.goto(frame.guid, url: base_url("/css_hmr_page.html"), timeout: 10_000)
+      :ok = CDPBrowser.goto(page, base_url("/css_hmr_page.html"), timeout: 10_000)
 
       {:ok, initial_color} =
-        eval_poll(frame, "getComputedStyle(document.querySelector('.hmr-style')).color")
+        eval_poll(page, "getComputedStyle(document.querySelector('.hmr-style')).color")
 
       assert initial_color == "rgb(1, 2, 3)"
-      {:ok, reload_count} = eval_poll(frame, "sessionStorage.getItem('voltCssReloadCount')")
+      {:ok, reload_count} = eval_poll(page, "sessionStorage.getItem('voltCssReloadCount')")
       assert reload_count == "1"
 
       {:ok, watcher} = start_watcher(hmr_clients)
@@ -464,7 +453,7 @@ defmodule DuskmoonBundler.Integration.HMRTest do
 
       assert {:ok, "rgb(4, 5, 6)"} =
                eval_until(
-                 frame,
+                 page,
                  "getComputedStyle(document.querySelector('.hmr-style')).color",
                  "rgb(4, 5, 6)"
                )
@@ -472,7 +461,7 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       GenServer.stop(watcher)
     end
 
-    test "imports CSS modules from JavaScript with exports and injected styles", %{frame: frame} do
+    test "imports CSS modules from JavaScript with exports and injected styles", %{page: page} do
       write_fixture("button.module.css", """
       .btn { color: rgb(40, 50, 60); }
       """)
@@ -494,55 +483,45 @@ defmodule DuskmoonBundler.Integration.HMRTest do
       </body></html>
       """)
 
-      {:ok, _} = Frame.goto(frame.guid, url: base_url("/css_module_page.html"), timeout: 10_000)
+      :ok = CDPBrowser.goto(page, base_url("/css_module_page.html"), timeout: 10_000)
 
-      {:ok, class_name} = eval_poll(frame, "window.__duskmoon_bundlerCssModuleClass")
+      {:ok, class_name} = eval_poll(page, "window.__duskmoon_bundlerCssModuleClass")
       assert is_binary(class_name)
       assert class_name =~ "btn"
 
       {:ok, style_count} =
         eval_poll(
-          frame,
+          page,
           "document.querySelectorAll('style[data-duskmoon-bundler-id=\"/assets/button.module.css\"]').length"
         )
 
       assert style_count == 1
 
-      {:ok, color} = eval_poll(frame, "getComputedStyle(document.querySelector('div')).color")
+      {:ok, color} = eval_poll(page, "getComputedStyle(document.querySelector('div')).color")
       assert color == "rgb(40, 50, 60)"
     end
   end
 
-  defp eval_until(frame, expression, expected, attempts \\ 30) do
-    case Frame.evaluate(frame.guid,
-           expression: expression,
-           is_function: false,
-           arg: nil,
-           timeout: 5000
-         ) do
+  defp eval_until(page, expression, expected, attempts \\ 30) do
+    case CDPBrowser.evaluate(page, expression, timeout: 5000) do
       {:ok, ^expected} ->
         {:ok, expected}
 
       {:ok, _other} when attempts > 0 ->
-        Process.sleep(100) && eval_until(frame, expression, expected, attempts - 1)
+        Process.sleep(100) && eval_until(page, expression, expected, attempts - 1)
 
       _ ->
         {:error, :timeout}
     end
   end
 
-  defp eval_poll(frame, expression, attempts \\ 20) do
-    case Frame.evaluate(frame.guid,
-           expression: expression,
-           is_function: false,
-           arg: nil,
-           timeout: 5000
-         ) do
+  defp eval_poll(page, expression, attempts \\ 20) do
+    case CDPBrowser.evaluate(page, expression, timeout: 5000) do
       {:ok, result} when result != nil ->
         {:ok, result}
 
       {:ok, nil} when attempts > 0 ->
-        Process.sleep(100) && eval_poll(frame, expression, attempts - 1)
+        Process.sleep(100) && eval_poll(page, expression, attempts - 1)
 
       _ ->
         {:error, :timeout}
@@ -592,37 +571,6 @@ defmodule DuskmoonBundler.Integration.HMRTest do
   end
 
   defp base_url(path \\ "/"), do: "http://localhost:#{@port}#{path}"
-
-  defp playwright_executable do
-    [
-      System.get_env("PLAYWRIGHT_EXECUTABLE"),
-      System.find_executable("playwright"),
-      Path.expand("../../../node_modules/.bin/playwright", __DIR__),
-      Path.expand("../../../../../node_modules/.bin/playwright", __DIR__)
-    ]
-    |> Enum.find(&(&1 && File.exists?(&1)))
-    |> Kernel.||("playwright")
-  end
-
-  defp browser_launch_opts do
-    opts = [timeout: 10_000]
-
-    case chromium_executable() do
-      nil -> opts
-      path -> Keyword.put(opts, :executable_path, path)
-    end
-  end
-
-  defp chromium_executable do
-    [
-      System.get_env("PLAYWRIGHT_CHROMIUM_EXECUTABLE"),
-      System.find_executable("chromium"),
-      System.find_executable("chromium-browser"),
-      System.find_executable("google-chrome"),
-      System.find_executable("google-chrome-stable")
-    ]
-    |> Enum.find(&(&1 && File.exists?(&1)))
-  end
 
   defp write_fixture(name, content) do
     File.write!(Path.join(@fixture_dir, name), content)

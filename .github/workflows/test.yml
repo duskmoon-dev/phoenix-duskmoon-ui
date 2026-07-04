@@ -46,6 +46,18 @@ jobs:
         with:
           version: 0.15.1
 
+      - name: Set up Chrome
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v2
+
+      - name: Verify headless Chrome
+        run: |
+          set -euo pipefail
+          CHROME_BIN="${{ steps.setup-chrome.outputs.chrome-path }}"
+          echo "CHROME_BIN=${CHROME_BIN}" >> "$GITHUB_ENV"
+          "${CHROME_BIN}" --version
+          "${CHROME_BIN}" --headless --disable-gpu --no-sandbox --dump-dom about:blank >/dev/null
+
       - name: Restore dependencies cache
         uses: actions/cache@v5
         with:
@@ -91,6 +103,18 @@ jobs:
         uses: goto-bus-stop/setup-zig@v2
         with:
           version: 0.15.1
+
+      - name: Set up Chrome
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v2
+
+      - name: Verify headless Chrome
+        run: |
+          set -euo pipefail
+          CHROME_BIN="${{ steps.setup-chrome.outputs.chrome-path }}"
+          echo "CHROME_BIN=${CHROME_BIN}" >> "$GITHUB_ENV"
+          "${CHROME_BIN}" --version
+          "${CHROME_BIN}" --headless --disable-gpu --no-sandbox --dump-dom about:blank >/dev/null
 
       - name: Restore dependencies cache
         uses: actions/cache@v5
