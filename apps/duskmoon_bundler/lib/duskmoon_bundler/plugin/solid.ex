@@ -63,22 +63,15 @@ defmodule DuskmoonBundler.Plugin.Solid do
   def runtime_packages, do: @runtime_packages
 
   defp do_compile(source, filename, opts, plugin_opts) do
-    runtime =
-      DuskmoonBundler.JS.Runtime.ensure!(
-        name: @runtime_name,
-        packages: @runtime_packages,
-        apis: [:browser, :node],
-        entry: {:duskmoon_bundler_asset, "frameworks/solid.ts"},
-        bundle: true,
-        max_stack_size: 32 * 1024 * 1024
-      )
-
     compile_options =
       filename
       |> DuskmoonBundler.Plugin.Solid.CompilerOptions.new(opts, plugin_opts)
       |> Jason.encode!()
 
-    case DuskmoonBundler.JS.Runtime.call(runtime, "compileSolid", [source, compile_options]) do
+    case DuskmoonBundler.JS.Runtime.ensure_and_call(runtime_opts(), "compileSolid", [
+           source,
+           compile_options
+         ]) do
       {:ok, %{"code" => code, "map" => map}} ->
         with {:ok, code, downlevelled?} <- maybe_downlevel(code, filename, opts) do
           {:ok,
@@ -100,6 +93,17 @@ defmodule DuskmoonBundler.Plugin.Solid do
       {:error, _} = error ->
         error
     end
+  end
+
+  defp runtime_opts do
+    [
+      name: @runtime_name,
+      packages: @runtime_packages,
+      apis: [:browser, :node],
+      entry: {:duskmoon_bundler_asset, "frameworks/solid.ts"},
+      bundle: true,
+      max_stack_size: 32 * 1024 * 1024
+    ]
   end
 
   defp maybe_downlevel(code, filename, opts) do

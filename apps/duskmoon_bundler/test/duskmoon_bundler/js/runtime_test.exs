@@ -27,4 +27,13 @@ defmodule DuskmoonBundler.JS.RuntimeTest do
       Runtime.ensure!(name: name, packages: %{}, install_dir: second_dir)
     end
   end
+
+  test "call returns runtime_down when the runtime pid is stale" do
+    parent = self()
+    pid = spawn(fn -> send(parent, :done) end)
+
+    assert_receive :done
+    refute Process.alive?(pid)
+    assert {:error, {:runtime_down, :noproc}} = Runtime.call(%Runtime{pid: pid}, "noop", [])
+  end
 end
