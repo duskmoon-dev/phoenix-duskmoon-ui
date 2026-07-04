@@ -1,6 +1,8 @@
 defmodule NPM.Cache do
   alias NPM.Security.RegistryPolicy
 
+  @complete_marker ".npm-ex-cache-complete"
+
   @moduledoc """
   Global package cache.
 
@@ -24,7 +26,9 @@ defmodule NPM.Cache do
   @doc "Check if a package version is already cached."
   @spec cached?(String.t(), String.t()) :: boolean()
   def cached?(name, version) do
-    File.exists?(Path.join(package_dir(name, version), "package.json"))
+    name
+    |> package_dir(version)
+    |> cache_intact?()
   end
 
   @doc """
@@ -37,30 +41,34 @@ defmodule NPM.Cache do
   @spec ensure(String.t(), String.t(), String.t(), String.t(), keyword()) ::
           {:ok, String.t()} | {:ok, :missing_optional} | {:error, term()}
   def ensure(name, version, tarball_url, integrity, opts \\ []) do
-    dest = package_dir(name, version)
+    with_lock(name, version, fn ->
+      dest = package_dir(name, version)
 
-    if cached?(name, version) do
-      {:ok, dest}
-    else
-      try do
-        RegistryPolicy.validate_url!(tarball_url)
+      if cached?(name, version) do
+        {:ok, dest}
+      else
+        try do
+          RegistryPolicy.validate_url!(tarball_url)
+          File.rm_rf(dest)
 
-        case fetch_and_extract(
-               candidate_tarball_urls(name, version, tarball_url, integrity),
-               integrity,
-               dest
-             ) do
-          {:ok, _count} ->
-            {:ok, dest}
+          case fetch_and_extract(
+                 candidate_tarball_urls(name, version, tarball_url, integrity),
+                 integrity,
+                 dest
+               ) do
+            {:ok, _count} ->
+              write_complete_marker!(dest)
+              {:ok, dest}
 
-          {:error, reason} ->
-            handle_fetch_error({:fetch_failed, name, version, reason}, dest, opts)
+            {:error, reason} ->
+              handle_fetch_error({:fetch_failed, name, version, reason}, dest, opts)
+          end
+        rescue
+          error in RegistryPolicy.Error ->
+            handle_fetch_error(error, dest, opts)
         end
-      rescue
-        error in RegistryPolicy.Error ->
-          handle_fetch_error(error, dest, opts)
       end
-    end
+    end)
   end
 
   @doc false
@@ -113,11 +121,28 @@ defmodule NPM.Cache do
   end
 
   defp handle_fetch_error(reason, dest, opts) do
+    File.rm_rf(dest)
+
     if Keyword.get(opts, :optional?, false) do
-      File.rm_rf(dest)
       {:ok, :missing_optional}
     else
       {:error, reason}
     end
+  end
+
+  defp with_lock(name, version, fun) do
+    :global.trans({__MODULE__, {name, version}}, fun, [node()], :infinity)
+  end
+
+  defp write_complete_marker!(dest) do
+    File.write!(Path.join(dest, @complete_marker), "1\n")
+  end
+
+  defp complete_marker?(dest) do
+    File.regular?(Path.join(dest, @complete_marker))
+  end
+
+  defp cache_intact?(dest) do
+    File.regular?(Path.join(dest, "package.json")) and complete_marker?(dest)
   end
 end

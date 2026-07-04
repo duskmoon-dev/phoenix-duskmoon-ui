@@ -102,8 +102,9 @@ defmodule DuskmoonBundler.JS.Runtime.Installer do
          {:ok, policy} <- Lockfile.read_policy(lockfile_path),
          true <- Lockfile.policy_matches?(policy),
          {:ok, lockfile} when lockfile != %{} <- Lockfile.read(lockfile_path) do
-      Enum.all?(lockfile, fn {name, _} ->
-        File.exists?(Path.join([node_modules, name, "package.json"]))
+      Enum.all?(lockfile, fn {name, entry} ->
+        File.exists?(Path.join([node_modules, name, "package.json"])) and
+          NPM.Cache.cached?(name, entry.version)
       end)
     else
       _ -> false
