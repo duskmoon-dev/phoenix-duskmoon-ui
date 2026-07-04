@@ -63,15 +63,30 @@ defmodule DuskmoonBundler.JS.Runtime do
     end
   end
 
+  @spec ensure_and_call(keyword(), String.t(), list(), keyword()) :: QuickBEAM.js_result()
+  def ensure_and_call(opts, function, args \\ [], call_opts \\ []) do
+    do_ensure_and_call(opts, function, args, call_opts, 2)
+  end
+
   @spec call(t() | GenServer.server(), String.t(), list(), keyword()) :: QuickBEAM.js_result()
   def call(runtime, function, args \\ [], opts \\ [])
 
   def call(%__MODULE__{pid: pid}, function, args, opts) do
-    QuickBEAM.call(pid, function, args, opts)
+    if Process.alive?(pid) do
+      QuickBEAM.call(pid, function, args, opts)
+    else
+      {:error, {:runtime_down, :noproc}}
+    end
+  catch
+    :exit, {:noproc, _} = reason ->
+      {:error, {:runtime_down, reason}}
   end
 
   def call(runtime, function, args, opts) do
     QuickBEAM.call(runtime, function, args, opts)
+  catch
+    :exit, {:noproc, _} = reason ->
+      {:error, {:runtime_down, reason}}
   end
 
   @spec stop(t() | GenServer.server()) :: :ok
@@ -96,6 +111,18 @@ defmodule DuskmoonBundler.JS.Runtime do
     case start(opts) do
       {:ok, runtime} -> runtime
       {:error, error} -> raise error
+    end
+  end
+
+  defp do_ensure_and_call(opts, function, args, call_opts, attempts_left) do
+    runtime = ensure!(opts)
+
+    case call(runtime, function, args, call_opts) do
+      {:error, {:runtime_down, _reason}} when attempts_left > 1 ->
+        do_ensure_and_call(opts, function, args, call_opts, attempts_left - 1)
+
+      result ->
+        result
     end
   end
 

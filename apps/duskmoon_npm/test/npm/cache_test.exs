@@ -6,12 +6,24 @@ defmodule NPM.CacheTest do
   setup do
     old_env = System.get_env("NPM_EX_ALLOWED_REGISTRIES")
     old_allowed = Application.get_env(:duskmoon_npm, :allowed_registries)
+    old_cache_dir = Application.get_env(:duskmoon_npm, :cache_dir)
+
+    tmp_dir =
+      Path.join([
+        System.tmp_dir!(),
+        "npm_cache_test_#{System.unique_integer([:positive])}"
+      ])
 
     System.delete_env("NPM_EX_ALLOWED_REGISTRIES")
+    Application.put_env(:duskmoon_npm, :cache_dir, Path.join(tmp_dir, "cache-root"))
+    File.rm_rf!(tmp_dir)
+    File.mkdir_p!(tmp_dir)
 
     on_exit(fn ->
       restore_env("NPM_EX_ALLOWED_REGISTRIES", old_env)
       restore_app_env(:allowed_registries, old_allowed)
+      restore_app_env(:cache_dir, old_cache_dir)
+      File.rm_rf!(tmp_dir)
     end)
   end
 
@@ -75,6 +87,22 @@ defmodule NPM.CacheTest do
                original,
                "https://registry.npmjs.org/@scope%2fpackage/-/package-1.2.3.tgz"
              ]
+  end
+
+  test "does not reuse partially extracted package caches" do
+    cache_path = Cache.package_dir("partial-package", "1.0.0")
+    File.mkdir_p!(cache_path)
+
+    File.write!(
+      Path.join(cache_path, "package.json"),
+      NPM.JSON.encode_pretty(%{"name" => "partial-package", "version" => "1.0.0"})
+    )
+
+    refute Cache.cached?("partial-package", "1.0.0")
+
+    File.write!(Path.join(cache_path, ".npm-ex-cache-complete"), "1\n")
+
+    assert Cache.cached?("partial-package", "1.0.0")
   end
 
   defp restore_env(key, nil), do: System.delete_env(key)

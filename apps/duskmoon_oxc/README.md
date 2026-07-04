@@ -33,6 +33,32 @@ end
 Precompiled NIFs are available for macOS (aarch64, x86_64) and Linux (aarch64, x86_64, musl).
 Building from source requires a Rust toolchain (`rustup` recommended).
 
+### Precompiled NIF Checksum Recovery
+
+`duskmoon_oxc` verifies every downloaded precompiled NIF against the checksum
+files shipped in the Hex package. If compilation fails with:
+
+```text
+Error while downloading precompiled NIF: the integrity check failed because the checksum of files does not match.
+```
+
+the usual cause is a stale or partially downloaded Rustler precompiled cache.
+Compile once with an empty cache to force a clean download:
+
+```sh
+mix deps.clean duskmoon_oxc --build
+RUSTLER_PRECOMPILED_GLOBAL_CACHE_PATH="$(mktemp -d)" mix compile
+```
+
+For CI or reproducible shells, set `RUSTLER_PRECOMPILED_GLOBAL_CACHE_PATH` to a
+stable cache directory controlled by the project. To bypass precompiled
+downloads completely, build the NIFs from source:
+
+```sh
+mix deps.clean duskmoon_oxc --build
+DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1 mix compile
+```
+
 ## Usage
 
 Source-taking APIs accept binaries and `iodata()`.

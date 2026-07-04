@@ -236,6 +236,8 @@ defmodule NPM.InstallTest do
       NPM.JSON.encode_pretty(%{"name" => name, "version" => version})
     )
 
+    File.write!(Path.join(cache_path, ".npm-ex-cache-complete"), "1\n")
+
     cache_path
   end
 
