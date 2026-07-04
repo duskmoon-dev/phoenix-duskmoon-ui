@@ -21,7 +21,7 @@ defmodule Mix.Tasks.Npm.Deps do
         NPM.DepsOutput.print(lockfile)
 
       {:error, _} ->
-        Mix.shell().info("No npm.lock found. Run `mix npm.install` first.")
+        Mix.shell().info("No package-lock.json found. Run `mix npm.install` first.")
     end
   end
 end

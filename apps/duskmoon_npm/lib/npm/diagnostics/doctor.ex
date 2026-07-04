@@ -69,12 +69,18 @@ defmodule NPM.Diagnostics.Doctor do
   end
 
   defp check_lockfile(dir) do
-    path = Path.join(dir, "npm.lock")
+    path = Path.join(dir, NPM.Lockfile.default_path())
 
     if File.exists?(path) do
-      %{name: "lockfile", status: :ok, message: "npm.lock found"}
+      %{name: "lockfile", status: :ok, message: "package-lock.json found"}
     else
-      %{name: "lockfile", status: :warn, message: "No npm.lock — run mix npm.install"}
+      legacy_path = Path.join(dir, NPM.Lockfile.legacy_path())
+
+      if File.exists?(legacy_path) do
+        %{name: "lockfile", status: :warn, message: "Legacy npm.lock found — run mix npm.install"}
+      else
+        %{name: "lockfile", status: :warn, message: "No package-lock.json — run mix npm.install"}
+      end
     end
   end
 
@@ -99,7 +105,7 @@ defmodule NPM.Diagnostics.Doctor do
 
   defp check_lockfile_sync(dir) do
     pkg_path = Path.join(dir, "package.json")
-    lock_path = Path.join(dir, "npm.lock")
+    lock_path = Path.join(dir, NPM.Lockfile.default_path())
 
     with {:ok, _pkg_content} <- File.read(pkg_path),
          {:ok, _lock_content} <- File.read(lock_path) do

@@ -20,6 +20,37 @@ defmodule NPM.Workspace do
         }
 
   @doc """
+  Returns the effective npm install root for a directory.
+
+  When the directory is inside a configured workspace package, the workspace
+  root is returned. Otherwise the nearest parent directory containing a
+  `package.json` is used, falling back to the provided directory.
+  """
+  @spec root_dir(String.t()) :: {:ok, String.t()} | {:error, term()}
+  def root_dir(start_dir \\ ".") do
+    start_dir = Path.expand(start_dir)
+    dirs = ancestors(start_dir)
+
+    with {:ok, workspace_root} <- find_workspace_root(dirs, start_dir),
+         {:ok, package_dir} <- package_dir(start_dir) do
+      {:ok, workspace_root || package_dir}
+    end
+  end
+
+  @doc """
+  Returns the nearest package directory for a path.
+
+  If no parent `package.json` exists, the provided directory is returned so
+  `mix npm.install <pkg>` keeps the historical behavior of creating one.
+  """
+  @spec package_dir(String.t()) :: {:ok, String.t()}
+  def package_dir(start_dir \\ ".") do
+    start_dir = Path.expand(start_dir)
+    package_dir = Enum.find(ancestors(start_dir), &package_dir?/1)
+    {:ok, package_dir || start_dir}
+  end
+
+  @doc """
   Reads dependency groups from the root package and workspace packages.
 
   Registry dependencies are merged across the root `package.json` and every
@@ -27,8 +58,16 @@ defmodule NPM.Workspace do
   dependencies are returned as `:local_links` so they can be linked into the
   root `node_modules/` without registry resolution.
   """
-  @spec read_all(String.t()) :: {:ok, project()} | {:error, term()}
-  def read_all(root_dir \\ ".") do
+  @spec read_all(String.t() | :auto) :: {:ok, project()} | {:error, term()}
+  def read_all(root_dir \\ :auto)
+
+  def read_all(:auto) do
+    with {:ok, root_dir} <- root_dir() do
+      read_all(root_dir)
+    end
+  end
+
+  def read_all(root_dir) when is_binary(root_dir) do
     with {:ok, manifests} <- manifests(root_dir),
          {:ok, local_links} <- collect_local_links(manifests),
          {:ok, groups} <- dependency_groups(manifests, local_links) do
@@ -55,8 +94,16 @@ defmodule NPM.Workspace do
   @doc """
   Reads root and workspace package manifests.
   """
-  @spec manifests(String.t()) :: {:ok, [map()]} | {:error, term()}
-  def manifests(root_dir \\ ".") do
+  @spec manifests(String.t() | :auto) :: {:ok, [map()]} | {:error, term()}
+  def manifests(root_dir \\ :auto)
+
+  def manifests(:auto) do
+    with {:ok, root_dir} <- root_dir() do
+      manifests(root_dir)
+    end
+  end
+
+  def manifests(root_dir) when is_binary(root_dir) do
     root_dir = Path.expand(root_dir)
     root_path = Path.join(root_dir, "package.json")
 
@@ -74,8 +121,16 @@ defmodule NPM.Workspace do
   Reads the `workspaces` field and resolves glob patterns to actual
   package directories. Returns a list of workspace info maps.
   """
-  @spec discover(String.t()) :: {:ok, [map()]} | {:error, term()}
-  def discover(root_dir \\ ".") do
+  @spec discover(String.t() | :auto) :: {:ok, [map()]} | {:error, term()}
+  def discover(root_dir \\ :auto)
+
+  def discover(:auto) do
+    with {:ok, root_dir} <- root_dir() do
+      discover(root_dir)
+    end
+  end
+
+  def discover(root_dir) when is_binary(root_dir) do
     pkg_path = Path.join(root_dir, "package.json")
 
     with {:ok, workspaces} <- NPM.Package.JSON.read_workspaces(pkg_path),
@@ -87,8 +142,8 @@ defmodule NPM.Workspace do
   @doc """
   Returns a list of workspace package names.
   """
-  @spec names(String.t()) :: {:ok, [String.t()]} | {:error, term()}
-  def names(root_dir \\ ".") do
+  @spec names(String.t() | :auto) :: {:ok, [String.t()]} | {:error, term()}
+  def names(root_dir \\ :auto) do
     case discover(root_dir) do
       {:ok, packages} -> {:ok, Enum.map(packages, & &1.name)}
       error -> error
@@ -135,6 +190,60 @@ defmodule NPM.Workspace do
       {:ok, ws} when ws != [] -> true
       _ -> false
     end
+  end
+
+  defp find_workspace_root(dirs, start_dir) do
+    Enum.reduce_while(dirs, {:ok, nil}, fn dir, {:ok, _} ->
+      case workspace_root_for?(dir, start_dir) do
+        {:ok, true} -> {:halt, {:ok, dir}}
+        {:ok, false} -> {:cont, {:ok, nil}}
+        {:error, reason} -> {:halt, {:error, reason}}
+      end
+    end)
+  end
+
+  defp workspace_root_for?(dir, start_dir) do
+    path = Path.join(dir, "package.json")
+
+    case NPM.Package.JSON.read_workspaces(path) do
+      {:ok, []} ->
+        {:ok, false}
+
+      {:ok, patterns} ->
+        workspace_dirs =
+          patterns
+          |> NPM.Package.JSON.expand_workspaces(dir)
+          |> Enum.map(&Path.expand/1)
+
+        {:ok, start_dir == dir or Enum.any?(workspace_dirs, &inside_dir?(&1, start_dir))}
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  defp ancestors(dir) do
+    dir
+    |> Stream.iterate(&Path.dirname/1)
+    |> Enum.reduce_while([], fn current, acc ->
+      acc = [current | acc]
+      parent = Path.dirname(current)
+
+      if parent == current do
+        {:halt, Enum.reverse(acc)}
+      else
+        {:cont, acc}
+      end
+    end)
+  end
+
+  defp package_dir?(dir), do: File.exists?(Path.join(dir, "package.json"))
+
+  defp inside_dir?(parent, child) do
+    parent = parent |> Path.expand() |> Path.split()
+    child = child |> Path.expand() |> Path.split()
+
+    List.starts_with?(child, parent)
   end
 
   defp resolve_workspaces(patterns, base_dir) do

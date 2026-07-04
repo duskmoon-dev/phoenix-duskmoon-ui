@@ -55,12 +55,12 @@ defmodule NPM.Diagnostics do
   end
 
   defp check_lockfile(issues, dir) do
-    lock_path = Path.join(dir, "npm.lock")
-    pkg_lock_path = Path.join(dir, "package-lock.json")
+    lock_path = Path.join(dir, NPM.Lockfile.default_path())
+    legacy_lock_path = Path.join(dir, NPM.Lockfile.legacy_path())
 
     cond do
       File.exists?(lock_path) -> issues
-      File.exists?(pkg_lock_path) -> issues
+      File.exists?(legacy_lock_path) -> issues
       true -> [%{level: :warning, check: "lockfile", message: "No lockfile found"} | issues]
     end
   end

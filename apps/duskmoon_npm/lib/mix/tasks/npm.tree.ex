@@ -2,7 +2,7 @@ defmodule Mix.Tasks.Npm.Tree do
   @shortdoc "Show dependency tree"
 
   @moduledoc """
-  Display the full dependency tree from `npm.lock`.
+  Display the full dependency tree from `package-lock.json`.
 
       mix npm.tree
 

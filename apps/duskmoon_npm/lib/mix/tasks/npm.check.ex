@@ -10,7 +10,7 @@ defmodule Mix.Tasks.Npm.Check do
 
   Checks:
   - `package.json` exists and is valid
-  - `npm.lock` exists and matches `package.json`
+  - `package-lock.json` exists and matches `package.json`
   - `node_modules/` is populated
   """
 
@@ -53,14 +53,18 @@ defmodule Mix.Tasks.Npm.Check do
   end
 
   defp check_lockfile do
-    if File.exists?("npm.lock") do
+    if File.exists?(NPM.Lockfile.default_path()) do
       case NPM.Lockfile.read() do
-        {:ok, lockfile} when lockfile == %{} -> {:error, "npm.lock is empty"}
+        {:ok, lockfile} when lockfile == %{} -> {:error, "package-lock.json is empty"}
         {:ok, _} -> :ok
-        {:error, reason} -> {:error, "npm.lock is invalid: #{inspect(reason)}"}
+        {:error, reason} -> {:error, "package-lock.json is invalid: #{inspect(reason)}"}
       end
     else
-      {:error, "npm.lock not found — run `mix npm.install`"}
+      if File.exists?(NPM.Lockfile.legacy_path()) do
+        :ok
+      else
+        {:error, "package-lock.json not found — run `mix npm.install`"}
+      end
     end
   end
 

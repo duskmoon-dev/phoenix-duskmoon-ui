@@ -7,7 +7,7 @@ defmodule Mix.Tasks.Npm.Update do
       mix npm.update          # Update all packages
       mix npm.update lodash   # Update a specific package
 
-  Re-resolves the dependency tree and writes an updated `npm.lock`.
+  Re-resolves the dependency tree and writes an updated `package-lock.json`.
   """
 
   use Mix.Task

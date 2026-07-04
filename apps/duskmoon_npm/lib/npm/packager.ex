@@ -7,7 +7,7 @@ defmodule NPM.Packager do
   """
 
   @always_include ["package.json", "README.md", "README", "LICENSE", "LICENCE", "CHANGELOG.md"]
-  @always_exclude [".git", "node_modules", ".npmrc", "npm.lock"]
+  @always_exclude [".git", "node_modules", ".npmrc", "package-lock.json", "npm.lock"]
 
   @doc """
   List files that would be included in a publish tarball.

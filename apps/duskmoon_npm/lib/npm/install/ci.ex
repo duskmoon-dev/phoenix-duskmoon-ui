@@ -19,7 +19,7 @@ defmodule NPM.Install.CI do
   @spec validate(String.t()) :: :ok | {:error, [validation_error()]}
   def validate(project_dir \\ ".") do
     pkg_path = Path.join(project_dir, "package.json")
-    lock_path = Path.join(project_dir, "npm.lock")
+    lock_path = Path.join(project_dir, NPM.Lockfile.default_path())
 
     with {:pkg, {:ok, pkg_content}} <- {:pkg, File.read(pkg_path)},
          {:lock, {:ok, _lock_content}} <- {:lock, File.read(lock_path)} do
@@ -40,7 +40,11 @@ defmodule NPM.Install.CI do
     issues =
       [
         check_file(project_dir, "package.json", "package.json is required"),
-        check_file(project_dir, "npm.lock", "npm.lock is required — run mix npm.install first")
+        check_file(
+          project_dir,
+          NPM.Lockfile.default_path(),
+          "package-lock.json is required — run mix npm.install first"
+        )
       ]
       |> Enum.reject(&is_nil/1)
 
@@ -84,7 +88,7 @@ defmodule NPM.Install.CI do
     if File.exists?(Path.join(dir, name)), do: nil, else: message
   end
 
-  defp format_error(:lockfile_missing), do: "npm.lock is missing"
+  defp format_error(:lockfile_missing), do: "package-lock.json is missing"
   defp format_error(:package_json_missing), do: "package.json is missing"
   defp format_error({:missing_dep, name}), do: "#{name} is in package.json but not in lockfile"
   defp format_error({:extra_dep, name}), do: "#{name} is in lockfile but not in package.json"

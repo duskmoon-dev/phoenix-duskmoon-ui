@@ -12,7 +12,7 @@ defmodule NPM.Compiler do
         ]
       end
 
-  Checks if `npm.lock` exists and `node_modules/` is populated.
+  Checks if `package-lock.json` exists and `node_modules/` is populated.
   Only runs the full install if needed.
   """
 
@@ -32,6 +32,6 @@ defmodule NPM.Compiler do
 
   defp needs_install? do
     File.exists?("package.json") and
-      (not File.exists?("npm.lock") or not File.exists?("node_modules"))
+      (not File.exists?(NPM.Lockfile.default_path()) or not File.exists?("node_modules"))
   end
 end

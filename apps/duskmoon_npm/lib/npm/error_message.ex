@@ -14,11 +14,11 @@ defmodule NPM.ErrorMessage do
   end
 
   def format({:error, :no_lockfile}) do
-    "npm.lock not found.\nRun `mix npm.install` to generate a lockfile."
+    "package-lock.json not found.\nRun `mix npm.install` to generate a lockfile."
   end
 
   def format({:error, :frozen_lockfile}) do
-    "npm.lock is out of sync with package.json.\nRun `mix npm.install` to update the lockfile."
+    "package-lock.json is out of sync with package.json.\nRun `mix npm.install` to update the lockfile."
   end
 
   def format({:error, :resolution_failed}) do

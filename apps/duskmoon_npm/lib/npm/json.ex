@@ -2,7 +2,7 @@ defmodule NPM.JSON do
   @moduledoc """
   JSON helpers for npm manifest and lock files.
 
-  `npm_ex` writes generated JSON files such as `package.json`, `npm.lock`, and
+  `npm_ex` writes generated JSON files such as `package.json`, `package-lock.json`, and
   shrinkwrap files. Those files should be stable across repeated writes, so maps
   are recursively converted to `Jason.OrderedObject` values sorted by key before
   encoding. Jason handles the actual JSON encoding, escaping, duplicate-key

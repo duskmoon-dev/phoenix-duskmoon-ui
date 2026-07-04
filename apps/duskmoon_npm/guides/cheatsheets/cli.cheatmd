@@ -51,7 +51,7 @@ Fail if lockfile is stale.
 mix npm.get
 ```
 
-Link from `npm.lock` without re-resolving.
+Link from `package-lock.json` without re-resolving.
 
 ## Inspect
 {: .col-2}

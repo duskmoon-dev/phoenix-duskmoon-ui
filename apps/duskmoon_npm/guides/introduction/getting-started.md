@@ -54,7 +54,7 @@ Then put a `package.json` in each Phoenix web app that owns frontend assets:
 }
 ```
 
-Run `mix npm.install` from the umbrella root. npm_ex reads the root manifest plus workspace manifests, resolves registry dependencies into one root `npm.lock`, and links workspace/local packages into root `node_modules/`.
+Run `mix npm.install` from the umbrella root or from any configured workspace package. npm_ex finds the workspace root, reads the root manifest plus workspace manifests, resolves registry dependencies into one root `package-lock.json`, and links workspace/local packages into root `node_modules/`.
 
 ## Add dependencies
 
@@ -64,7 +64,7 @@ mix npm.install @types/node@^20
 mix npm.install eslint --save-dev
 ```
 
-npm_ex updates `package.json`, resolves the dependency graph, downloads packages into the global cache, links `node_modules/`, and writes `npm.lock`.
+npm_ex updates `package.json`, resolves the dependency graph, downloads packages into the global cache, links `node_modules/`, and writes `package-lock.json`.
 
 ## Install existing dependencies
 
@@ -101,7 +101,7 @@ mix npm.run build
 Commit:
 
 - `package.json`
-- `npm.lock`
+- `package-lock.json`
 
 Do not commit `node_modules/`.
 

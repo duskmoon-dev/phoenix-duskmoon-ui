@@ -55,7 +55,7 @@ defmodule NPM.Install.ScriptInstall do
     if force?, do: File.rm_rf!(dir)
 
     nm_dir = Path.join(dir, "node_modules")
-    lockfile_path = Path.join(dir, "npm.lock")
+    lockfile_path = Path.join(dir, NPM.Lockfile.default_path())
 
     if not force? and File.exists?(lockfile_path) and lockfile_policy_current?(lockfile_path) and
          node_modules_intact?(lockfile_path, nm_dir) do

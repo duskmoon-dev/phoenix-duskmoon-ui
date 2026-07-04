@@ -44,17 +44,16 @@ defmodule NPM.Lockfile.PackageLock do
   Extracts package names and versions.
   """
   @spec packages(map()) :: %{String.t() => String.t()}
-  def packages(%{"packages" => pkgs}) when is_map(pkgs) do
-    pkgs
-    |> Enum.reject(fn {key, _} -> key == "" end)
-    |> Map.new(fn {path, info} ->
-      name = path |> String.replace("node_modules/", "")
-      {name, info["version"] || ""}
-    end)
+  def packages(%{"packages" => _} = data) do
+    data
+    |> NPM.Lockfile.parse()
+    |> Map.new(fn {name, entry} -> {name, entry.version} end)
   end
 
-  def packages(%{"dependencies" => deps}) when is_map(deps) do
-    Map.new(deps, fn {name, info} -> {name, info["version"] || ""} end)
+  def packages(%{"dependencies" => _} = data) do
+    data
+    |> NPM.Lockfile.parse()
+    |> Map.new(fn {name, entry} -> {name, entry.version} end)
   end
 
   def packages(_), do: %{}

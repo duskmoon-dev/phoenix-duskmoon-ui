@@ -2,7 +2,7 @@ defmodule Mix.Tasks.Npm.List do
   @shortdoc "List installed npm packages"
 
   @moduledoc """
-  List installed npm packages from `npm.lock`.
+  List installed npm packages from `package-lock.json`.
 
       mix npm.list
 

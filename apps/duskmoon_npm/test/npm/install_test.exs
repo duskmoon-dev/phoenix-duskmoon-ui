@@ -44,7 +44,15 @@ defmodule NPM.InstallTest do
     )
 
     assert :ok = NPM.Lockfile.write(%{package => lock_entry(package, version)})
-    assert :ok = NPM.install()
+
+    output =
+      capture_io(fn ->
+        assert :ok = NPM.install()
+      end)
+
+    assert output =~ "Installing from current package-lock.json."
+    assert output =~ "Installed 1 package"
+    assert output =~ "* #{package} #{version} (npm registry)"
     assert {:ok, ^cache_path} = File.read_link(Path.join([project_dir, "node_modules", package]))
   end
 
@@ -130,6 +138,74 @@ defmodule NPM.InstallTest do
     refute File.exists?(Path.join([node_modules, optional_package, "package.json"]))
   end
 
+  test "installs from workspace package using the workspace root", %{project_dir: project_dir} do
+    package = "workspace-root-package"
+    version = "1.0.0"
+    cache_path = write_cached_package!(package, version)
+    app_dir = Path.join([project_dir, "apps", "web"])
+
+    write_package!(project_dir, %{
+      "name" => "workspace_root",
+      "private" => true,
+      "workspaces" => ["apps/*"]
+    })
+
+    write_package!(app_dir, %{
+      "name" => "web",
+      "version" => "1.0.0",
+      "dependencies" => %{package => version}
+    })
+
+    assert :ok = NPM.Lockfile.write(%{package => lock_entry(package, version)})
+    File.cd!(app_dir)
+
+    output =
+      capture_io(fn ->
+        assert :ok = NPM.install()
+      end)
+
+    assert output =~ "Installing from current package-lock.json."
+    assert {:ok, ^cache_path} = File.read_link(Path.join([project_dir, "node_modules", package]))
+    assert {:ok, ^app_dir} = File.read_link(Path.join([project_dir, "node_modules", "web"]))
+    assert File.exists?(Path.join(project_dir, "package-lock.json"))
+    refute File.exists?(Path.join(app_dir, "package-lock.json"))
+    refute File.exists?(Path.join(app_dir, "node_modules"))
+  end
+
+  test "adds dependencies to workspace package and installs at workspace root", %{
+    project_dir: project_dir
+  } do
+    package = "workspace-added-package"
+    version = "1.0.0"
+    cache_path = write_cached_package!(package, version)
+    app_dir = Path.join([project_dir, "apps", "web"])
+
+    write_package!(project_dir, %{
+      "name" => "workspace_root",
+      "private" => true,
+      "workspaces" => ["apps/*"]
+    })
+
+    write_package!(app_dir, %{
+      "name" => "web",
+      "version" => "1.0.0"
+    })
+
+    assert :ok = NPM.Lockfile.write(%{package => lock_entry(package, version)})
+    File.cd!(app_dir)
+
+    capture_io(fn ->
+      assert :ok = NPM.add(package, version)
+    end)
+
+    assert %{"dependencies" => %{^package => ^version}} = read_package!(app_dir)
+    refute Map.has_key?(read_package!(project_dir), "dependencies")
+    assert {:ok, ^cache_path} = File.read_link(Path.join([project_dir, "node_modules", package]))
+    assert File.exists?(Path.join(project_dir, "package-lock.json"))
+    refute File.exists?(Path.join(app_dir, "package-lock.json"))
+    refute File.exists?(Path.join(app_dir, "node_modules"))
+  end
+
   test "npm.ci raises when frozen install fails", %{project_dir: project_dir} do
     Mix.Task.reenable("npm.ci")
 
@@ -141,9 +217,14 @@ defmodule NPM.InstallTest do
       })
     )
 
-    assert_raise Mix.Error, ~r/npm\.ci failed: :no_lockfile/, fn ->
-      Mix.Tasks.Npm.Ci.run([])
-    end
+    output =
+      capture_io(:stderr, fn ->
+        assert_raise Mix.Error, ~r/npm\.ci failed: :no_lockfile/, fn ->
+          Mix.Tasks.Npm.Ci.run([])
+        end
+      end)
+
+    assert output =~ "package-lock.json not found. Run `mix npm.install` first."
   end
 
   defp write_cached_package!(name, version) do
@@ -208,6 +289,18 @@ defmodule NPM.InstallTest do
         }
       }
     })
+  end
+
+  defp write_package!(dir, data) do
+    File.mkdir_p!(dir)
+    File.write!(Path.join(dir, "package.json"), NPM.JSON.encode_pretty(data))
+  end
+
+  defp read_package!(dir) do
+    dir
+    |> Path.join("package.json")
+    |> NPM.JSON.read_file()
+    |> then(fn {:ok, data} -> data end)
   end
 
   defp restore_app_env(key, nil), do: Application.delete_env(:duskmoon_npm, key)

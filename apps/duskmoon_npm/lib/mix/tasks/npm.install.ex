@@ -14,7 +14,7 @@ defmodule Mix.Tasks.Npm.Install do
       mix npm.install lodash react vue        # Add multiple packages
 
   Resolves all root and workspace dependencies using the PubGrub solver,
-  writes `npm.lock`, and links packages into `node_modules/`.
+  writes `package-lock.json`, and links packages into `node_modules/`.
   """
 
   use Mix.Task

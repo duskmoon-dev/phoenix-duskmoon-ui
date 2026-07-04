@@ -10,14 +10,14 @@ mix npm.install lodash
 mix npm.exec eslint .
 ```
 
-`npm_ex` reads `package.json`, resolves npm semver with PubGrub, writes `npm.lock`, and links packages into `node_modules/`.
+`npm_ex` reads `package.json`, resolves npm semver with PubGrub, writes `package-lock.json`, and links packages into `node_modules/`.
 
 ## Why npm_ex
 
 Elixir projects increasingly need JavaScript packages for assets, formatters, linters, browser libraries, and runtime integrations. npm_ex keeps that workflow inside Mix:
 
 - no `npm install` step required for dependency resolution or linking
-- reproducible installs through `npm.lock`
+- reproducible installs through `package-lock.json`
 - global package cache in `~/.npm_ex/cache/`
 - npm registry auth, mirrors, scoped registries, peer/deprecation warnings
 - CI-friendly Mix tasks for install, verify, audit, outdated, tree, and exec
@@ -41,7 +41,7 @@ For umbrella projects, prefer npm workspaces for frontend assets:
 
 - keep one root `package.json` with a `workspaces` list such as `["apps/*"]`
 - keep a `package.json` in each Phoenix web app that owns assets
-- run `mix npm.install` from the umbrella root so npm_ex resolves all workspace manifests into one root `npm.lock` and `node_modules/`
+- run `mix npm.install` from the umbrella root or from any configured workspace package; npm_ex resolves the workspace root and writes one root `package-lock.json` and `node_modules/`
 
 Example root manifest:
 
@@ -71,7 +71,7 @@ Example Phoenix web app manifest:
 }
 ```
 
-npm_ex links workspace packages and local directory `file:` packages into the root `node_modules/` and resolves registry dependencies into `npm.lock`.
+npm_ex links workspace packages and local directory `file:` packages into the root `node_modules/` and resolves registry dependencies into `package-lock.json`. When `mix npm.install <package>` is run from a workspace package, the dependency is saved to that package's `package.json` while installation still happens at the workspace root.
 
 ## Common workflows
 
@@ -111,9 +111,9 @@ mix npm.config
 2. Resolve the full dependency tree using [duskmoon_hex_solver](https://hex.pm/packages/duskmoon_hex_solver) and the bundled npm semver parser.
 3. Fetch registry packuments and tarballs with integrity verification.
 4. Store package contents in the global cache.
-5. Link registry packages plus local workspace packages into `node_modules/` and write `npm.lock`.
+5. Link registry packages plus local workspace packages into `node_modules/` and write `package-lock.json`.
 
-`npm_ex` uses its own `npm.lock` because it is not npm. `package.json` remains the shared manifest; `npm.lock` records npm_ex's resolved dependency graph and security policy.
+`npm_ex` writes npm `package-lock.json` v3 and stores npm_ex-specific security policy metadata under `x-npm-ex`. Existing legacy `npm.lock` files are migrated automatically when `package-lock.json` is missing.
 
 ## Supply-chain safety
 

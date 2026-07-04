@@ -9,9 +9,9 @@ npm_ex exposes npm-like workflows as Mix tasks.
 | `mix npm.init` | create `package.json` |
 | `mix npm.install` | install dependencies from `package.json` and npm workspaces |
 | `mix npm.install package` | add a package and install |
-| `mix npm.install --frozen` | fail if `npm.lock` is stale |
+| `mix npm.install --frozen` | fail if `package-lock.json` is stale |
 | `mix npm.ci` | CI alias for frozen install |
-| `mix npm.get` | fetch and link from `npm.lock` without re-resolving |
+| `mix npm.get` | fetch and link from `package-lock.json` without re-resolving |
 | `mix npm.update` | update all packages within configured ranges |
 | `mix npm.update package` | update one package |
 | `mix npm.remove package` | remove a package |
@@ -53,7 +53,7 @@ npm_ex exposes npm-like workflows as Mix tasks.
 
 | Task | Purpose |
 | --- | --- |
-| `mix npm.verify` / `mix npm.check` | verify `node_modules` matches `npm.lock` |
+| `mix npm.verify` / `mix npm.check` | verify `node_modules` matches `package-lock.json` |
 | `mix npm.audit` | npm registry vulnerability audit |
 | `mix npm.audit --osv` | online OSV malicious-package audit |
 | `mix npm.audit --compromised` | offline malicious-package DB audit |

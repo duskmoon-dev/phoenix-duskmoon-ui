@@ -2,7 +2,7 @@ defmodule Mix.Tasks.Npm.Verify do
   @shortdoc "Verify node_modules matches lockfile"
 
   @moduledoc """
-  Check that `node_modules` matches `npm.lock`.
+  Check that `node_modules` matches `package-lock.json`.
 
       mix npm.verify
 

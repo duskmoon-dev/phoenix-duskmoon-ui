@@ -1,6 +1,6 @@
 defmodule NPM.Install.LockfileBuilder do
   @moduledoc """
-  Builds `npm.lock` entries from resolved package versions.
+  Builds lockfile entries from resolved package versions.
   """
 
   @doc "Build lockfile entries from a resolved `%{name => version}` map."

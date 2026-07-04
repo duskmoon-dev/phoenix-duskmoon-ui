@@ -19,7 +19,7 @@ defmodule Mix.Tasks.Npm.Outdated do
          {:ok, project} <- NPM.Workspace.read_all(),
          {:ok, deps} <- NPM.Workspace.install_dependencies(project) do
       if lockfile == %{} do
-        Mix.shell().info("No npm.lock found, run `mix npm.install` first.")
+        Mix.shell().info("No package-lock.json found, run `mix npm.install` first.")
       else
         check_outdated(lockfile, deps)
       end

@@ -47,7 +47,7 @@ defmodule NPM.Registry do
   def get_packument(package) do
     case NPM.PackumentCache.get(package) do
       {:ok, packument} ->
-        {:ok, packument}
+        {:ok, normalize_packument(packument)}
 
       :miss ->
         fetch_packument(package)
@@ -112,20 +112,21 @@ defmodule NPM.Registry do
   defp decode_body(body) when is_map(body), do: body
 
   defp parse_packument(data) do
+    name = Map.get(data, "name", "")
     times = Map.get(data, "time", %{})
 
     versions =
       for {version_str, info} <- Map.get(data, "versions", %{}), into: %{} do
-        {version_str, parse_version_info(info, times)}
+        {version_str, parse_version_info(name, version_str, info, times)}
       end
 
-    %{name: Map.get(data, "name", ""), versions: versions}
+    %{name: name, versions: versions}
   end
 
-  defp parse_version_info(info, times) do
+  defp parse_version_info(name, version, info, times) do
     dist = Map.get(info, "dist", %{})
     tarball = Map.get(dist, "tarball", "")
-    RegistryPolicy.validate_url!(tarball)
+    integrity = Map.get(dist, "integrity", "")
 
     %{
       dependencies: Map.get(info, "dependencies", %{}),
@@ -141,8 +142,8 @@ defmodule NPM.Registry do
       created_at: Map.get(times, "created"),
       published_at: Map.get(times, Map.get(info, "version", "")),
       dist: %{
-        tarball: tarball,
-        integrity: Map.get(dist, "integrity", ""),
+        tarball: normalized_tarball_url(name, version, tarball, integrity),
+        integrity: integrity,
         file_count: Map.get(dist, "fileCount"),
         unpacked_size: Map.get(dist, "unpackedSize")
       }
@@ -152,4 +153,64 @@ defmodule NPM.Registry do
   defp parse_bin(%{"bin" => bin}) when is_map(bin), do: bin
   defp parse_bin(%{"bin" => bin}) when is_binary(bin), do: %{}
   defp parse_bin(_), do: %{}
+
+  @doc false
+  @spec __normalized_tarball_url__(String.t(), String.t(), String.t(), String.t()) :: String.t()
+  def __normalized_tarball_url__(name, version, tarball, integrity) do
+    normalized_tarball_url(name, version, tarball, integrity)
+  end
+
+  defp normalize_packument(%{name: name, versions: versions} = packument) when is_map(versions) do
+    versions =
+      Map.new(versions, fn {version, info} ->
+        {version, normalize_version_info(name, version, info)}
+      end)
+
+    %{packument | versions: versions}
+  end
+
+  defp normalize_packument(packument), do: packument
+
+  defp normalize_version_info(name, version, %{dist: %{tarball: tarball} = dist} = info) do
+    integrity = Map.get(dist, :integrity, "")
+    dist = put_tarball(dist, :tarball, normalized_tarball_url(name, version, tarball, integrity))
+    Map.put(info, :dist, dist)
+  end
+
+  defp normalize_version_info(name, version, %{"dist" => %{"tarball" => tarball} = dist} = info) do
+    integrity = Map.get(dist, "integrity", "")
+    dist = put_tarball(dist, "tarball", normalized_tarball_url(name, version, tarball, integrity))
+    Map.put(info, "dist", dist)
+  end
+
+  defp normalize_version_info(_name, _version, info), do: info
+
+  defp normalized_tarball_url(_name, _version, tarball, _integrity) when tarball in [nil, ""],
+    do: tarball || ""
+
+  defp normalized_tarball_url(name, version, tarball, integrity) do
+    if RegistryPolicy.origin(tarball) in RegistryPolicy.allowed_origins() do
+      tarball
+    else
+      registry_tarball_url(name, version, tarball, integrity)
+    end
+  end
+
+  defp registry_tarball_url(_name, _version, tarball, integrity)
+       when integrity in [nil, ""] do
+    tarball
+  end
+
+  defp registry_tarball_url(name, version, tarball, _integrity) do
+    case NPM.Config.allowed_registries() do
+      [registry | _] ->
+        NPM.Registry.URL.tarball_url(name, version, registry)
+
+      [] ->
+        RegistryPolicy.validate_url!(tarball)
+        tarball
+    end
+  end
+
+  defp put_tarball(dist, key, tarball), do: Map.put(dist, key, tarball)
 end

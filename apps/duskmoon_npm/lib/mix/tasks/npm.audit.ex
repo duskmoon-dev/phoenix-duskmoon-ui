@@ -14,9 +14,9 @@ defmodule Mix.Tasks.Npm.Audit do
       mix npm.audit --compromised --format json
 
   With no flags, queries the npm registry audit endpoint for vulnerability
-  advisories affecting packages in `npm.lock`.
+  advisories affecting packages in `package-lock.json`.
 
-  `--compromised` checks `npm.lock` offline against a local OSV-format malicious
+  `--compromised` checks `package-lock.json` offline against a local OSV-format malicious
   package database. `--osv` queries OSV.dev for malicious package advisories and
   can optionally write matching advisories to a local database for future offline
   checks.
@@ -83,7 +83,7 @@ defmodule Mix.Tasks.Npm.Audit do
         TaskReporter.report(
           findings,
           format,
-          "No malicious OSV advisories found for npm.lock packages.",
+          "No malicious OSV advisories found for package-lock.json packages.",
           "Found #{length(findings)} malicious OSV advisory matches:"
         )
 
@@ -105,7 +105,7 @@ defmodule Mix.Tasks.Npm.Audit do
     TaskReporter.report(
       findings,
       format,
-      "No compromised packages found in npm.lock.",
+      "No compromised packages found in package-lock.json.",
       "Found #{length(findings)} compromised package matches:"
     )
 

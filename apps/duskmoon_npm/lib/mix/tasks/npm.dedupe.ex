@@ -18,7 +18,7 @@ defmodule Mix.Tasks.Npm.Dedupe do
 
     case NPM.Lockfile.read() do
       {:ok, lockfile} when lockfile == %{} ->
-        Mix.shell().info("No npm.lock found, run `mix npm.install` first.")
+        Mix.shell().info("No package-lock.json found, run `mix npm.install` first.")
 
       {:ok, old_lockfile} ->
         count_before = map_size(old_lockfile)

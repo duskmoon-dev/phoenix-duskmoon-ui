@@ -2,7 +2,7 @@ defmodule Mix.Tasks.Npm.Get do
   @shortdoc "Fetch locked npm packages"
 
   @moduledoc """
-  Fetch npm packages from `npm.lock` without re-resolving.
+  Fetch npm packages from `package-lock.json` without re-resolving.
 
       mix npm.get
 

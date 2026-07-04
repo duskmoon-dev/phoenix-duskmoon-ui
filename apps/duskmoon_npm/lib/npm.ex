@@ -10,7 +10,7 @@ defmodule NPM do
   npm package manager for Elixir.
 
   Resolves, fetches, and installs npm packages using Mix tasks.
-  Dependencies are declared in `package.json` files and locked in `npm.lock`.
+  Dependencies are declared in `package.json` files and locked in `package-lock.json`.
 
   ## Mix tasks
 
@@ -75,16 +75,18 @@ defmodule NPM do
 
   ## Options
 
-    * `:frozen` - when `true`, fails if `npm.lock` doesn't match
+    * `:frozen` - when `true`, fails if `package-lock.json` doesn't match
       `package.json` instead of re-resolving. Useful for CI.
     * `:production` - when `true`, skips `devDependencies`.
   """
   @spec install(keyword()) :: :ok | {:error, term()}
   def install(opts \\ []) when is_list(opts) do
-    with {:ok, project} <- NPM.Workspace.read_all(),
-         {:ok, deps} <- NPM.Workspace.install_dependencies(project, opts) do
-      do_install(deps, Keyword.put(opts, :local_links, project.local_links))
-    end
+    with_root_dir(fn ->
+      with {:ok, project} <- NPM.Workspace.read_all(),
+           {:ok, deps} <- NPM.Workspace.install_dependencies(project, opts) do
+        do_install(deps, Keyword.put(opts, :local_links, project.local_links))
+      end
+    end)
   end
 
   @doc """
@@ -99,7 +101,9 @@ defmodule NPM do
     range = if range == "latest", do: resolve_latest(name, opts), else: range
 
     with range_str when is_binary(range_str) <- range,
-         :ok <- JSON.add_dep(name, range_str, "package.json", opts) do
+         {:ok, package_dir} <- NPM.Workspace.package_dir(),
+         package_path <- Path.join(package_dir, "package.json"),
+         :ok <- JSON.add_dep(name, range_str, package_path, opts) do
       install([])
     end
   end
@@ -109,7 +113,9 @@ defmodule NPM do
   """
   @spec remove(String.t()) :: :ok | {:error, term()}
   def remove(name) do
-    with :ok <- JSON.remove_dep(name) do
+    with {:ok, package_dir} <- NPM.Workspace.package_dir(),
+         package_path <- Path.join(package_dir, "package.json"),
+         :ok <- JSON.remove_dep(name, package_path) do
       install([])
     end
   end
@@ -121,10 +127,12 @@ defmodule NPM do
   """
   @spec update :: :ok | {:error, term()}
   def update do
-    with {:ok, project} <- NPM.Workspace.read_all(),
-         {:ok, deps} <- NPM.Workspace.install_dependencies(project) do
-      do_install(deps, local_links: project.local_links)
-    end
+    with_root_dir(fn ->
+      with {:ok, project} <- NPM.Workspace.read_all(),
+           {:ok, deps} <- NPM.Workspace.install_dependencies(project) do
+        do_install(deps, local_links: project.local_links)
+      end
+    end)
   end
 
   @doc """
@@ -134,41 +142,45 @@ defmodule NPM do
   """
   @spec update(String.t()) :: :ok | {:error, term()}
   def update(name) do
-    with {:ok, project} <- NPM.Workspace.read_all(),
-         {:ok, all_deps} <- NPM.Workspace.install_dependencies(project),
-         {:ok, lockfile} <- NPM.Lockfile.read() do
-      if Map.has_key?(all_deps, name) do
-        updated_lock = Map.delete(lockfile, name)
-        NPM.Lockfile.write(updated_lock)
-        do_install(all_deps, local_links: project.local_links)
-      else
-        Mix.shell().error("Package #{name} not found in package.json.")
-        {:error, {:not_found, name}}
+    with_root_dir(fn ->
+      with {:ok, project} <- NPM.Workspace.read_all(),
+           {:ok, all_deps} <- NPM.Workspace.install_dependencies(project),
+           {:ok, lockfile} <- NPM.Lockfile.read() do
+        if Map.has_key?(all_deps, name) do
+          updated_lock = Map.delete(lockfile, name)
+          NPM.Lockfile.write(updated_lock)
+          do_install(all_deps, local_links: project.local_links)
+        else
+          Mix.shell().error("Package #{name} not found in package.json.")
+          {:error, {:not_found, name}}
+        end
       end
-    end
+    end)
   end
 
   @doc """
   Fetch locked dependencies without re-resolving.
 
-  Reads `npm.lock` and populates the global cache and `node_modules/`
+  Reads `package-lock.json` and populates the global cache and `node_modules/`
   for any missing packages.
   """
   @spec get :: :ok | {:error, term()}
   def get do
-    case NPM.Lockfile.read() do
-      {:ok, lockfile} when lockfile == %{} ->
-        Mix.shell().info("No npm.lock found, run `mix npm.install` first.")
-        :ok
+    with_root_dir(fn ->
+      case NPM.Lockfile.read() do
+        {:ok, lockfile} when lockfile == %{} ->
+          Mix.shell().info("No package-lock.json found, run `mix npm.install` first.")
+          :ok
 
-      {:ok, lockfile} ->
-        with {:ok, project} <- NPM.Workspace.read_all() do
-          link_from_lockfile(lockfile, project.local_links)
-        end
+        {:ok, lockfile} ->
+          with {:ok, project} <- NPM.Workspace.read_all() do
+            link_from_lockfile(lockfile, project.local_links)
+          end
 
-      error ->
-        error
-    end
+        error ->
+          error
+      end
+    end)
   end
 
   @doc """
@@ -178,24 +190,32 @@ defmodule NPM do
   """
   @spec list :: {:ok, [{String.t(), String.t()}]} | {:error, term()}
   def list do
-    case NPM.Lockfile.read() do
-      {:ok, lockfile} when lockfile == %{} ->
-        {:ok, []}
+    with_root_dir(fn ->
+      case NPM.Lockfile.read() do
+        {:ok, lockfile} when lockfile == %{} ->
+          {:ok, []}
 
-      {:ok, lockfile} ->
-        packages =
-          lockfile
-          |> Enum.map(fn {name, entry} -> {name, entry.version} end)
-          |> Enum.sort_by(&elem(&1, 0))
+        {:ok, lockfile} ->
+          packages =
+            lockfile
+            |> Enum.map(fn {name, entry} -> {name, entry.version} end)
+            |> Enum.sort_by(&elem(&1, 0))
 
-        {:ok, packages}
+          {:ok, packages}
 
-      error ->
-        error
-    end
+        error ->
+          error
+      end
+    end)
   end
 
   # --- Private ---
+
+  defp with_root_dir(fun) do
+    with {:ok, root_dir} <- NPM.Workspace.root_dir() do
+      File.cd!(root_dir, fun)
+    end
+  end
 
   defp do_install(deps, opts) when map_size(deps) == 0 do
     local_links = Keyword.get(opts, :local_links, %{})
@@ -226,7 +246,7 @@ defmodule NPM do
   defp frozen_install(deps, local_links) do
     case NPM.Lockfile.read() do
       {:ok, lockfile} when lockfile == %{} ->
-        Mix.shell().error("npm.lock not found. Run `mix npm.install` first.")
+        Mix.shell().error("package-lock.json not found. Run `mix npm.install` first.")
         {:error, :no_lockfile}
 
       {:ok, lockfile} ->
@@ -234,7 +254,7 @@ defmodule NPM do
           link_from_lockfile(lockfile, local_links)
         else
           Mix.shell().error(
-            "npm.lock is out of date with package.json or current security policy.\n" <>
+            "package-lock.json is out of date with package.json or current security policy.\n" <>
               "Run `mix npm.install` to update the lockfile."
           )
 
@@ -273,7 +293,11 @@ defmodule NPM do
   end
 
   defp lockfile_dependency_records_complete?(lockfile) do
-    package_names = MapSet.new(Map.keys(lockfile))
+    package_names =
+      case NPM.Lockfile.all_package_names() do
+        {:ok, names} when names != [] -> MapSet.new(names)
+        _ -> MapSet.new(Map.keys(lockfile))
+      end
 
     lockfile
     |> Enum.flat_map(fn {_name, entry} -> lockfile_entry_dependency_names(entry) end)
@@ -298,7 +322,7 @@ defmodule NPM do
         :ok
 
       lockfile_matches?(old_lockfile, deps) and lockfile_policy_current?() ->
-        Mix.shell().info("Installing from current npm.lock.")
+        Mix.shell().info("Installing from current package-lock.json.")
         link_from_lockfile(old_lockfile, local_links)
 
       true ->
@@ -348,8 +372,9 @@ defmodule NPM do
 
         lockfile = build_lockfile(flat)
         lockfile = expand_all_optional_deps(lockfile)
+        nested_lockfile = build_nested_lockfile(nested_info, flat)
         print_lockfile_diff(old_lockfile, lockfile)
-        NPM.Lockfile.write(lockfile)
+        NPM.Lockfile.write(lockfile, nested: nested_lockfile)
         link_and_nest(lockfile, nested_info, flat, local_links)
 
       {:error, message} ->
@@ -412,6 +437,50 @@ defmodule NPM do
 
     warn_unmet_peers(resolved)
     lockfile
+  end
+
+  defp build_nested_lockfile(nested_info, _flat) when map_size(nested_info) == 0, do: %{}
+
+  defp build_nested_lockfile(nested_info, flat) do
+    Enum.reduce(nested_info, %{}, fn {nested_pkg, _}, acc ->
+      original_deps = NPM.Resolver.get_original_deps(nested_pkg)
+
+      Enum.reduce(flat, acc, fn {parent_name, parent_version}, inner_acc ->
+        range = Map.get(original_deps, "#{parent_name}@#{parent_version}")
+
+        case nested_lockfile_entry(nested_pkg, range) do
+          {:ok, entry} ->
+            Map.put(
+              inner_acc,
+              "node_modules/#{parent_name}/node_modules/#{nested_pkg}",
+              entry
+            )
+
+          :error ->
+            inner_acc
+        end
+      end)
+    end)
+  end
+
+  defp nested_lockfile_entry(_name, nil), do: :error
+
+  defp nested_lockfile_entry(name, range) do
+    case resolve_version(name, range) do
+      {:ok, version_str, info} ->
+        {:ok,
+         %{
+           version: version_str,
+           integrity: info.dist.integrity,
+           tarball: info.dist.tarball,
+           dependencies: info.dependencies,
+           optional_dependencies: Map.get(info, :optional_dependencies, %{}),
+           has_install_script: Map.get(info, :has_install_script, false)
+         }}
+
+      :error ->
+        :error
+    end
   end
 
   defp expand_all_optional_deps(lockfile) do

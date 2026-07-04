@@ -60,4 +60,4 @@ Set thresholds to `0` to disable warnings.
 
 ## Lockfile policy
 
-`npm.lock` records dependency security policy. Installs treat lockfiles generated with weaker or incompatible policy as stale, forcing a re-resolution under the current policy.
+`package-lock.json` records dependency security policy under `x-npm-ex`. Installs treat lockfiles generated with weaker or incompatible policy as stale, forcing a re-resolution under the current policy.

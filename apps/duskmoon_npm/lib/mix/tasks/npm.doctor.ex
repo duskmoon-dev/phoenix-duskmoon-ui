@@ -25,7 +25,7 @@ defmodule Mix.Tasks.Npm.Doctor do
 
     checks = [
       {"package.json", check_package_json()},
-      {"npm.lock", check_lockfile()},
+      {"package-lock.json", check_lockfile()},
       {"node_modules", check_node_modules()},
       {"lifecycle scripts", check_lifecycle()},
       {"platform compat", check_platform()}
@@ -47,7 +47,11 @@ defmodule Mix.Tasks.Npm.Doctor do
   end
 
   defp check_lockfile do
-    if File.exists?("npm.lock"), do: :ok, else: {:warn, "not found — run mix npm.install"}
+    cond do
+      File.exists?(NPM.Lockfile.default_path()) -> :ok
+      File.exists?(NPM.Lockfile.legacy_path()) -> {:warn, "legacy npm.lock — run mix npm.install"}
+      true -> {:warn, "not found — run mix npm.install"}
+    end
   end
 
   defp check_node_modules do

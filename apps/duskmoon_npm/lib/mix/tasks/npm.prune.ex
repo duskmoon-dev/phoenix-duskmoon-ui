@@ -4,7 +4,7 @@ defmodule Mix.Tasks.Npm.Prune do
   @shortdoc "Remove extraneous packages"
 
   @moduledoc """
-  Remove packages from `node_modules/` not listed in `npm.lock`.
+  Remove packages from `node_modules/` not listed in `package-lock.json`.
 
       mix npm.prune
 

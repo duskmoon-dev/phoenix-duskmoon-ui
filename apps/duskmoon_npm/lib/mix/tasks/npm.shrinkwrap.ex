@@ -2,12 +2,12 @@ defmodule Mix.Tasks.Npm.Shrinkwrap do
   @shortdoc "Create npm-shrinkwrap.json from lockfile"
 
   @moduledoc """
-  Create an `npm-shrinkwrap.json` from the current `npm.lock`.
+  Create an `npm-shrinkwrap.json` from the current `package-lock.json`.
 
       mix npm.shrinkwrap
 
   The shrinkwrap file locks exact versions for publishing. Unlike
-  `npm.lock` (which is project-only), `npm-shrinkwrap.json` is
+  `package-lock.json` (which is project-only), `npm-shrinkwrap.json` is
   included when the package is published to the registry.
   """
 
@@ -19,7 +19,7 @@ defmodule Mix.Tasks.Npm.Shrinkwrap do
 
     case NPM.Lockfile.read() do
       {:ok, lockfile} when lockfile == %{} ->
-        Mix.shell().error("No npm.lock found. Run `mix npm.install` first.")
+        Mix.shell().error("No package-lock.json found. Run `mix npm.install` first.")
 
       {:ok, lockfile} ->
         shrinkwrap = build_shrinkwrap(lockfile)

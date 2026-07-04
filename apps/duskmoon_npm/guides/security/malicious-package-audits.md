@@ -10,7 +10,7 @@ OpenSSF publishes malicious package reports in OSV format. npm_ex uses this open
 mix npm.audit --osv
 ```
 
-This queries OSV.dev for every package version in `npm.lock` and reports malicious-package matches.
+This queries OSV.dev for every package version in `package-lock.json` and reports malicious-package matches.
 
 Online OSV audit fails closed: if OSV cannot be queried, the Mix task fails.
 
@@ -20,7 +20,7 @@ Online OSV audit fails closed: if OSV cannot be queried, the Mix task fails.
 mix npm.audit --compromised
 ```
 
-This checks `npm.lock` against a local OSV-format database. By default the database path is:
+This checks `package-lock.json` against a local OSV-format database. By default the database path is:
 
 ```text
 ~/.npm_ex/security/compromised_packages.json

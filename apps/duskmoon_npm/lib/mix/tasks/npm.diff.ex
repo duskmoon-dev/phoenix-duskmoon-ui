@@ -2,11 +2,11 @@ defmodule Mix.Tasks.Npm.Diff do
   @shortdoc "Show changes between lockfile versions"
 
   @moduledoc """
-  Show what changed since the last `npm.lock` was committed.
+  Show what changed since the last `package-lock.json` was committed.
 
       mix npm.diff
 
-  Compares the current `npm.lock` with the git HEAD version and
+  Compares the current `package-lock.json` with the git HEAD version and
   shows added, removed, and updated packages.
   """
 
@@ -23,11 +23,11 @@ defmodule Mix.Tasks.Npm.Diff do
             print_diff(old_lockfile, new_lockfile)
 
           {:error, _} ->
-            Mix.shell().error("Cannot read npm.lock")
+            Mix.shell().error("Cannot read package-lock.json")
         end
 
       {:error, :not_committed} ->
-        Mix.shell().info("npm.lock is not tracked by git.")
+        Mix.shell().info("package-lock.json is not tracked by git.")
     end
   end
 
@@ -36,19 +36,20 @@ defmodule Mix.Tasks.Npm.Diff do
   end
 
   defp read_git_lockfile do
-    case System.cmd("git", ["show", "HEAD:npm.lock"], stderr_to_stdout: true) do
-      {content, 0} ->
-        data = NPM.JSON.decode!(content)
-        lockfile = NPM.Lockfile.parse_packages(Map.get(data, "packages", %{}))
-        {:ok, lockfile}
+    read_git_lockfile(NPM.Lockfile.default_path()) ||
+      read_git_lockfile(NPM.Lockfile.legacy_path()) ||
+      {:error, :not_committed}
+  end
 
-      {_, _} ->
-        {:error, :not_committed}
+  defp read_git_lockfile(path) do
+    case System.cmd("git", ["show", "HEAD:#{path}"], stderr_to_stdout: true) do
+      {content, 0} -> {:ok, content |> NPM.JSON.decode!() |> NPM.Lockfile.parse()}
+      {_, _} -> nil
     end
   end
 
   defp print_diff(old, new) when old == new do
-    Mix.shell().info("No changes in npm.lock")
+    Mix.shell().info("No changes in package-lock.json")
   end
 
   defp print_diff(old, new) do
@@ -62,7 +63,7 @@ defmodule Mix.Tasks.Npm.Diff do
           do: key
 
     if added == [] and removed == [] and updated == [] do
-      Mix.shell().info("No version changes in npm.lock")
+      Mix.shell().info("No version changes in package-lock.json")
     else
       Enum.each(Enum.sort(added), &Mix.shell().info("+ #{&1}@#{new[&1].version}"))
       Enum.each(Enum.sort(removed), &Mix.shell().info("- #{&1}@#{old[&1].version}"))

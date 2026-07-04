@@ -65,7 +65,7 @@ mix npm.licenses
 
 ## Fetch from lockfile
 
-If `npm.lock` already exists, fetch and link locked packages without re-resolving:
+If `package-lock.json` already exists, fetch and link locked packages without re-resolving:
 
 ```bash
 mix npm.get

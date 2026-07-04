@@ -1,6 +1,6 @@
 # CI and Reproducibility
 
-Commit both `package.json` and `npm.lock`.
+Commit both `package.json` and `package-lock.json`.
 
 In CI, use frozen installs:
 
@@ -14,7 +14,7 @@ or:
 mix npm.install --frozen
 ```
 
-Frozen mode fails when `package.json` and `npm.lock` do not agree. This prevents CI from silently resolving a different dependency graph than the one reviewed in source control.
+Frozen mode fails when `package.json` and `package-lock.json` do not agree. This prevents CI from silently resolving a different dependency graph than the one reviewed in source control.
 
 ## Verify installed state
 

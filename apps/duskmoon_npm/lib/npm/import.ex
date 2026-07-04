@@ -2,7 +2,7 @@ defmodule NPM.Import do
   @moduledoc """
   Imports lockfiles from other package managers.
 
-  Converts yarn.lock, pnpm-lock.yaml metadata into npm_ex format
+  Converts yarn.lock, pnpm-lock.yaml, and legacy npm.lock metadata into npm_ex format
   for migration from other tools.
   """
 
@@ -12,11 +12,11 @@ defmodule NPM.Import do
   @spec detect(String.t()) :: [atom()]
   def detect(project_dir \\ ".") do
     checks = [
-      {:npm, "package-lock.json"},
+      {:npm_ex, "package-lock.json"},
       {:yarn, "yarn.lock"},
       {:pnpm, "pnpm-lock.yaml"},
       {:bun, "bun.lockb"},
-      {:npm_ex, "npm.lock"}
+      {:npm_ex_legacy, "npm.lock"}
     ]
 
     Enum.filter(checks, fn {_manager, file} ->
@@ -42,14 +42,12 @@ defmodule NPM.Import do
   end
 
   @doc """
-  Checks if migration is needed (other lockfile exists but no npm.lock).
+  Checks if migration is needed (other lockfile exists but no package-lock.json).
   """
   @spec migration_needed?(String.t()) :: boolean()
   def migration_needed?(project_dir \\ ".") do
     managers = detect(project_dir)
-    other_exists = Enum.any?(managers, &(&1 != :npm_ex))
-    no_npm_ex = :npm_ex not in managers
-    other_exists and no_npm_ex
+    :npm_ex not in managers and managers != []
   end
 
   @doc """
@@ -60,40 +58,27 @@ defmodule NPM.Import do
     detect(project_dir) |> List.first()
   end
 
-  defp extract_npm_lock_packages(%{"packages" => packages}) when is_map(packages) do
-    packages
-    |> Enum.reject(fn {key, _} -> key == "" end)
-    |> Enum.flat_map(fn {path, info} ->
-      name = path |> String.replace("node_modules/", "")
-
-      if String.contains?(name, "node_modules/") do
-        []
-      else
-        [
-          {name,
-           %{
-             version: info["version"] || "",
-             integrity: info["integrity"] || "",
-             resolved: info["resolved"] || "",
-             dependencies: info["dependencies"] || %{}
-           }}
-        ]
-      end
-    end)
-    |> Map.new()
+  defp extract_npm_lock_packages(%{"packages" => packages} = data) when is_map(packages) do
+    extract_lockfile_packages(data)
   end
 
-  defp extract_npm_lock_packages(%{"dependencies" => deps}) when is_map(deps) do
-    Map.new(deps, fn {name, info} ->
-      {name,
-       %{
-         version: info["version"] || "",
-         integrity: info["integrity"] || "",
-         resolved: info["resolved"] || "",
-         dependencies: info["requires"] || %{}
-       }}
-    end)
+  defp extract_npm_lock_packages(%{"dependencies" => deps} = data) when is_map(deps) do
+    extract_lockfile_packages(data)
   end
 
   defp extract_npm_lock_packages(_), do: %{}
+
+  defp extract_lockfile_packages(data) do
+    data
+    |> NPM.Lockfile.parse()
+    |> Map.new(fn {name, entry} ->
+      {name,
+       %{
+         version: entry.version || "",
+         integrity: entry.integrity || "",
+         resolved: entry.tarball || "",
+         dependencies: entry.dependencies || %{}
+       }}
+    end)
+  end
 end

@@ -8,7 +8,7 @@ npm_ex keeps npm dependency management inside Mix.
 
 - dependency resolution from `package.json`
 - npm semver support, including ranges such as `^1.2.0`, `~1.2`, and `>=1 <2`
-- a reproducible `npm.lock`
+- a reproducible `package-lock.json`
 - a global package cache under `~/.npm_ex/cache/`
 - `node_modules/` linking and `node_modules/.bin/` executables
 - Mix tasks for install, update, audit, verify, outdated, tree, and exec
@@ -16,7 +16,7 @@ npm_ex keeps npm dependency management inside Mix.
 
 ## What npm_ex is not
 
-npm_ex is not the npm CLI and does not try to share npm's lockfile format. `package.json` is the shared manifest; `npm.lock` is npm_ex's reproducibility file.
+npm_ex writes npm `package-lock.json` v3 while keeping npm_ex-specific security policy metadata under `x-npm-ex`.
 
 npm_ex also does not execute package lifecycle hooks automatically. That is a deliberate security choice. Packages that declare install hooks are still installed, but hooks are ignored and reported.
 

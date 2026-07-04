@@ -90,6 +90,27 @@ defmodule NPM.WorkspaceTest do
     assert package_path == Path.join([tmp_dir, "apps", "web", "package.json"])
   end
 
+  test "discovers workspace root from a workspace package child", %{tmp_dir: tmp_dir} do
+    write_package!(tmp_dir, %{
+      "name" => "umbrella",
+      "private" => true,
+      "workspaces" => ["apps/*"]
+    })
+
+    app_dir = Path.join([tmp_dir, "apps", "web"])
+    nested_dir = Path.join([app_dir, "assets", "js"])
+    File.mkdir_p!(nested_dir)
+
+    write_package!(app_dir, %{
+      "name" => "web",
+      "version" => "1.0.0"
+    })
+
+    assert {:ok, ^tmp_dir} = NPM.Workspace.root_dir(app_dir)
+    assert {:ok, ^tmp_dir} = NPM.Workspace.root_dir(nested_dir)
+    assert {:ok, ^app_dir} = NPM.Workspace.package_dir(nested_dir)
+  end
+
   defp write_package!(dir, data) do
     File.mkdir_p!(dir)
     File.write!(Path.join(dir, "package.json"), NPM.JSON.encode_pretty(data))

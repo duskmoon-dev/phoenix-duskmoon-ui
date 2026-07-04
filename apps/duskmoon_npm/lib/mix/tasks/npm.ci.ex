@@ -6,7 +6,7 @@ defmodule Mix.Tasks.Npm.Ci do
 
       mix npm.ci
 
-  Equivalent to `mix npm.install --frozen`. Fails if `npm.lock` doesn't
+  Equivalent to `mix npm.install --frozen`. Fails if `package-lock.json` doesn't
   match `package.json`, ensuring reproducible builds.
   """
 
