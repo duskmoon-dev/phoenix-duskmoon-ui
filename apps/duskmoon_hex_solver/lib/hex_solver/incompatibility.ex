@@ -407,7 +407,7 @@ defmodule HexSolver.Incompatibility do
     end
   end
 
-  defp term_abs(term), do: %Term{term | positive: true}
+  defp term_abs(%Term{} = term), do: %{term | positive: true}
 
   defp bright_term_abs(term, opts), do: bright(term_abs(term), opts)
 
