@@ -20,6 +20,7 @@ defmodule OXC.Format.Native do
       x86_64-pc-windows-gnu
       x86_64-unknown-freebsd
       x86_64-unknown-linux-gnu
+      x86_64-unknown-linux-musl
     ),
     version: native_version
 
