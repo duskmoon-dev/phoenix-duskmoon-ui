@@ -280,8 +280,11 @@ defmodule NPM do
   end
 
   defp lockfile_covers_dependencies?(lockfile, deps) do
-    Enum.all?(deps, fn {name, _range} ->
-      Map.has_key?(lockfile, name)
+    Enum.all?(deps, fn {name, range} ->
+      case Map.get(lockfile, name) do
+        nil -> false
+        entry -> lockfile_entry_satisfies_range?(entry, range)
+      end
     end) and
       Enum.all?(lockfile, fn {name, _entry} ->
         Map.has_key?(deps, name) or
@@ -290,6 +293,16 @@ defmodule NPM do
               Map.has_key?(Map.get(e, :optional_dependencies, %{}), name)
           end)
       end)
+  end
+
+  defp lockfile_entry_satisfies_range?(_entry, range) when range in ["", "*", "latest"],
+    do: true
+
+  defp lockfile_entry_satisfies_range?(entry, range) do
+    case NPM.Alias.parse(range) do
+      {:alias, _package, alias_range} -> NPMSemver.matches?(entry.version, alias_range)
+      {:normal, normal_range} -> NPMSemver.matches?(entry.version, normal_range)
+    end
   end
 
   defp lockfile_dependency_records_complete?(lockfile) do
