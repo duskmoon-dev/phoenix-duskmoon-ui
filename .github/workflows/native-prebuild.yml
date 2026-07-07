@@ -148,6 +148,31 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-22.04
             use-cross: false
+        include:
+          - crate:
+              app: duskmoon_oxc
+              name: oxc_ex_nif
+              project-dir: apps/duskmoon_oxc/native/oxc_ex_nif
+            target:
+              target: x86_64-unknown-linux-musl
+              os: ubuntu-22.04
+              use-cross: true
+          - crate:
+              app: duskmoon_oxc
+              name: oxc_fmt_nif
+              project-dir: apps/duskmoon_oxc/native/oxc_fmt_nif
+            target:
+              target: x86_64-unknown-linux-musl
+              os: ubuntu-22.04
+              use-cross: true
+          - crate:
+              app: duskmoon_oxc
+              name: oxc_lint_nif
+              project-dir: apps/duskmoon_oxc/native/oxc_lint_nif
+            target:
+              target: x86_64-unknown-linux-musl
+              os: ubuntu-22.04
+              use-cross: true
 
     steps:
       - name: Checkout code
