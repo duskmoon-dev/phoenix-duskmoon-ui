@@ -1,0 +1,52 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/git-repository-header"}>Data Display</:crumb>
+  <:crumb>Git Repository Header</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Git Repository Header</span>
+    <span class="text-sm opacity-60">dm_git_repository_header</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Repository header for forge-style pages. It renders owner/name identity,
+  visibility, default ref, description, metadata, and action slots.
+
+  ## Usage
+  ```elixir
+  <.dm_git_repository_header owner="duskmoon-dev" name="phoenix-duskmoon-ui" visibility="public">
+    <:meta icon="source-commit">b91d64a</:meta>
+    <:action><.dm_btn size="sm">Settings</.dm_btn></:action>
+  </.dm_git_repository_header>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Repository Overview</h3>
+  <.dm_git_repository_header
+    owner="duskmoon-dev"
+    name="phoenix-duskmoon-ui"
+    visibility="public"
+    default_ref="main"
+    description="DuskMoon UI component library for Phoenix applications."
+  >
+    <:meta icon="source-commit">3a97452</:meta>
+    <:meta icon="star-outline">128 stars</:meta>
+    <:meta icon="clock-outline">Updated 2 minutes ago</:meta>
+    <:action><a href="#" class="btn btn-sm">Watch</a></:action>
+    <:action><a href="#" class="btn btn-sm">Settings</a></:action>
+  </.dm_git_repository_header>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Long Repository Name</h3>
+  <.dm_git_repository_header
+    owner="example-organization-with-a-long-name"
+    name="repository-with-a-very-long-name-that-should-wrap-without-overflowing"
+    visibility="private"
+    default_ref="feature/very-long-branch-name-for-release-review"
+    description="The header keeps repository names, refs, and descriptions readable when forge data contains long strings."
+  >
+    <:meta icon="lock-outline">Private access</:meta>
+  </.dm_git_repository_header>
+</.dm_card>

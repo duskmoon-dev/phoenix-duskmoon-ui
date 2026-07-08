@@ -25,4 +25,33 @@ defmodule DuskmoonStorybookWeb.RouterTest do
       refute router_source =~ "backend_module: Storybook"
     end
   end
+
+  describe "git repository data display routes" do
+    test "renders issue 78 component gallery pages", %{conn: conn} do
+      pages = [
+        {"/components/data-display/git-repository-header", "Git Repository Header"},
+        {"/components/data-display/git-repository-nav", "Git Repository Nav"},
+        {"/components/data-display/git-file-tree", "Git File Tree"},
+        {"/components/data-display/git-blob-viewer", "Git Blob Viewer"},
+        {"/components/data-display/git-commit-diff", "Git Commit Diff"},
+        {"/components/data-display/git-clone-box", "Git Clone Box"}
+      ]
+
+      for {path, title} <- pages do
+        conn = get(recycle(conn), path)
+        assert html_response(conn, 200) =~ title
+      end
+    end
+  end
+
+  describe "git blob viewer page" do
+    test "renders source samples with real newlines", %{conn: conn} do
+      conn = get(conn, "/components/data-display/git-blob-viewer")
+      html = html_response(conn, 200)
+
+      assert html =~ "export const generated = true;\n"
+      assert html =~ "// preview only"
+      refute html =~ "true;\\n// preview only"
+    end
+  end
 end

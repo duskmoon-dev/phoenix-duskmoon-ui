@@ -85,6 +85,42 @@
       },
       %{
         kind: :story,
+        name: "Git Repository Header",
+        path: "/data_display/git_repository_header",
+        module: Storybook.DataDisplay.GitRepositoryHeader
+      },
+      %{
+        kind: :story,
+        name: "Git Repository Nav",
+        path: "/data_display/git_repository_nav",
+        module: Storybook.DataDisplay.GitRepositoryNav
+      },
+      %{
+        kind: :story,
+        name: "Git File Tree",
+        path: "/data_display/git_file_tree",
+        module: Storybook.DataDisplay.GitFileTree
+      },
+      %{
+        kind: :story,
+        name: "Git Blob Viewer",
+        path: "/data_display/git_blob_viewer",
+        module: Storybook.DataDisplay.GitBlobViewer
+      },
+      %{
+        kind: :story,
+        name: "Git Commit Diff",
+        path: "/data_display/git_commit_diff",
+        module: Storybook.DataDisplay.GitCommitDiff
+      },
+      %{
+        kind: :story,
+        name: "Git Clone Box",
+        path: "/data_display/git_clone_box",
+        module: Storybook.DataDisplay.GitCloneBox
+      },
+      %{
+        kind: :story,
         name: "List",
         path: "/data_display/list",
         module: Storybook.DataDisplay.List

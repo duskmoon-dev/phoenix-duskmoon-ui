@@ -1,0 +1,62 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/git-blob-viewer"}>Data Display</:crumb>
+  <:crumb>Git Blob Viewer</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Git Blob Viewer</span>
+    <span class="text-sm opacity-60">dm_git_blob_viewer</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Read-only source blob panel with file metadata, raw and copy actions, and
+  binary, non-UTF-8, and truncated file states.
+
+  ## Usage
+  ```elixir
+  <.dm_git_blob_viewer filename="lib/app.ex" language="elixir" content={@source} />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <% router_source = """
+  defmodule FornacastWeb.Router do
+    use FornacastWeb, :router
+
+    scope "/", FornacastWeb do
+      pipe_through :browser
+      get "/", PageController, :home
+    end
+  end
+  """ %>
+  <% truncated_source = """
+  export const generated = true;
+  // preview only
+  """ %>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Source File</h3>
+  <.dm_git_blob_viewer
+    filename="lib/fornacast_web/router.ex"
+    size="348 B"
+    language="elixir"
+    raw_href="#"
+    content={router_source}
+  />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Truncated Source</h3>
+  <.dm_git_blob_viewer
+    filename="priv/static/large-generated-file.js"
+    size="1.8 MB"
+    language="javascript"
+    truncated
+    content={truncated_source}
+  />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Binary and Non-UTF-8 States</h3>
+  <div class="grid gap-4 lg:grid-cols-2">
+    <.dm_git_blob_viewer filename="priv/static/logo.png" size="24 KB" binary />
+    <.dm_git_blob_viewer filename="legacy/shift_jis.txt" size="8 KB" non_utf8 />
+  </div>
+</.dm_card>

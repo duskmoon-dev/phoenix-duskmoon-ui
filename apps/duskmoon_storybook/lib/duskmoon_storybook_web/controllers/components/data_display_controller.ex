@@ -33,6 +33,30 @@ defmodule DuskmoonStorybookWeb.Components.DataDisplayController do
     render(conn, :flash, active_menu: "data-display-flash")
   end
 
+  def git_repository_header(conn, _params) do
+    render(conn, :git_repository_header, active_menu: "data-display-git-repository-header")
+  end
+
+  def git_repository_nav(conn, _params) do
+    render(conn, :git_repository_nav, active_menu: "data-display-git-repository-nav")
+  end
+
+  def git_file_tree(conn, _params) do
+    render(conn, :git_file_tree, active_menu: "data-display-git-file-tree")
+  end
+
+  def git_blob_viewer(conn, _params) do
+    render(conn, :git_blob_viewer, active_menu: "data-display-git-blob-viewer")
+  end
+
+  def git_commit_diff(conn, _params) do
+    render(conn, :git_commit_diff, active_menu: "data-display-git-commit-diff")
+  end
+
+  def git_clone_box(conn, _params) do
+    render(conn, :git_clone_box, active_menu: "data-display-git-clone-box")
+  end
+
   def markdown(conn, _params) do
     render(conn, :markdown, active_menu: "data-display-markdown")
   end

@@ -1,0 +1,42 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/git-repository-nav"}>Data Display</:crumb>
+  <:crumb>Git Repository Nav</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Git Repository Nav</span>
+    <span class="text-sm opacity-60">dm_git_repository_nav</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Server-rendered repository navigation for Code, Commits, Branches, Tags,
+  and settings-style tabs. Items accept `href`, `navigate`, or `patch`.
+
+  ## Usage
+  ```elixir
+  <.dm_git_repository_nav>
+    <:item label="Code" href="/repo" active />
+    <:item label="Commits" navigate="/repo/commits" count={42} />
+  </.dm_git_repository_nav>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Repository Sections</h3>
+  <.dm_git_repository_nav>
+    <:item label="Code" href="#" icon="code-tags" active />
+    <:item label="Commits" href="#" icon="source-commit" count={42} />
+    <:item label="Branches" href="#" icon="source-branch" count={7} />
+    <:item label="Tags" href="#" icon="tag-outline" />
+    <:item label="Settings" href="#" icon="cog-outline" />
+  </.dm_git_repository_nav>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Long Labels</h3>
+  <.dm_git_repository_nav label="Repository admin navigation">
+    <:item label="Repository Activity Overview" href="#" icon="chart-timeline-variant" active />
+    <:item label="Protected Branch Rules" href="#" icon="shield-check-outline" count={12} />
+    <:item label="Deployment Keys And Access Tokens" href="#" icon="key-outline" />
+  </.dm_git_repository_nav>
+</.dm_card>
