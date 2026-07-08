@@ -179,7 +179,6 @@ jobs:
         with:
           tag_name: v${{ inputs.version }}
           files: ${{ steps.build-crate.outputs.file-path }}
-          draft: ${{ ! inputs.allow-existing-release-overwrite }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -244,6 +243,5 @@ jobs:
         with:
           tag_name: v${{ inputs.version }}
           files: artifacts/*.tar.gz
-          draft: ${{ ! inputs.allow-existing-release-overwrite }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
