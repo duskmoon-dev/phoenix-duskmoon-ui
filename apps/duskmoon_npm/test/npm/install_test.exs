@@ -172,6 +172,48 @@ defmodule NPM.InstallTest do
     refute File.exists?(Path.join(app_dir, "node_modules"))
   end
 
+  test "re-resolves stale workspace dependency ranges", %{project_dir: project_dir} do
+    package = "workspace-stale-package"
+    old_version = "0.2.0"
+    new_version = "1.5.5"
+    old_cache_path = write_cached_package!(package, old_version)
+    new_cache_path = write_cached_package!(package, new_version)
+    app_dir = Path.join([project_dir, "apps", "web"])
+
+    put_packument!(package, new_version)
+
+    write_package!(project_dir, %{
+      "name" => "workspace_root",
+      "private" => true,
+      "workspaces" => ["apps/*"]
+    })
+
+    write_package!(app_dir, %{
+      "name" => "web",
+      "version" => "1.0.0",
+      "dependencies" => %{package => new_version}
+    })
+
+    assert :ok = NPM.Lockfile.write(%{package => lock_entry(package, old_version)})
+
+    node_modules = Path.join(project_dir, "node_modules")
+    File.mkdir_p!(node_modules)
+    File.ln_s!(old_cache_path, Path.join(node_modules, package))
+    File.cd!(app_dir)
+
+    output =
+      capture_io(fn ->
+        assert :ok = NPM.install()
+      end)
+
+    refute output =~ "Already up to date."
+    assert {:ok, ^new_cache_path} = File.read_link(Path.join(node_modules, package))
+    assert {:ok, ^app_dir} = File.read_link(Path.join([node_modules, "web"]))
+
+    assert {:ok, lockfile} = NPM.Lockfile.read(Path.join(project_dir, "package-lock.json"))
+    assert lockfile[package].version == new_version
+  end
+
   test "adds dependencies to workspace package and installs at workspace root", %{
     project_dir: project_dir
   } do
