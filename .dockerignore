@@ -31,9 +31,6 @@
 erl_crash.dump
 *.ez
 
-# Lock files (npm install recreates these)
-package-lock.json
-
 # Docker metadata
 /Dockerfile
 /.dockerignore
