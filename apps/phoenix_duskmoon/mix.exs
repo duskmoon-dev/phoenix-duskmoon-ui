@@ -51,6 +51,7 @@ defmodule PhoenixDuskmoon.Mixfile do
             PhoenixDuskmoon.Component.DataDisplay.Chip,
             PhoenixDuskmoon.Component.DataDisplay.Collapse,
             PhoenixDuskmoon.Component.DataDisplay.Flash,
+            PhoenixDuskmoon.Component.DataDisplay.GitRepository,
             PhoenixDuskmoon.Component.DataDisplay.List,
             PhoenixDuskmoon.Component.DataDisplay.Markdown,
             PhoenixDuskmoon.Component.DataDisplay.Pagination,
