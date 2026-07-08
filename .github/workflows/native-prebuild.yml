@@ -148,32 +148,6 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-22.04
             use-cross: false
-        include:
-          - crate:
-              app: duskmoon_oxc
-              name: oxc_ex_nif
-              project-dir: apps/duskmoon_oxc/native/oxc_ex_nif
-            target:
-              target: x86_64-unknown-linux-musl
-              os: ubuntu-22.04
-              use-cross: true
-          - crate:
-              app: duskmoon_oxc
-              name: oxc_fmt_nif
-              project-dir: apps/duskmoon_oxc/native/oxc_fmt_nif
-            target:
-              target: x86_64-unknown-linux-musl
-              os: ubuntu-22.04
-              use-cross: true
-          - crate:
-              app: duskmoon_oxc
-              name: oxc_lint_nif
-              project-dir: apps/duskmoon_oxc/native/oxc_lint_nif
-            target:
-              target: x86_64-unknown-linux-musl
-              os: ubuntu-22.04
-              use-cross: true
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -205,6 +179,7 @@ jobs:
         with:
           tag_name: v${{ inputs.version }}
           files: ${{ steps.build-crate.outputs.file-path }}
+          draft: ${{ ! inputs.allow-existing-release-overwrite }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -269,5 +244,6 @@ jobs:
         with:
           tag_name: v${{ inputs.version }}
           files: artifacts/*.tar.gz
+          draft: ${{ ! inputs.allow-existing-release-overwrite }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
