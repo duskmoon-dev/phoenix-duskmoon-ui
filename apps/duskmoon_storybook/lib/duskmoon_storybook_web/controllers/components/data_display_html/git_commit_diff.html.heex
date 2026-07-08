@@ -1,0 +1,79 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/git-commit-diff"}>Data Display</:crumb>
+  <:crumb>Git Commit Diff</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Git Commit Diff</span>
+    <span class="text-sm opacity-60">dm_git_commit_diff</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Commit metadata with changed-file summaries and unified diff presentation.
+  It supports added, deleted, context, hunk, binary, and truncated states.
+
+  ## Usage
+  ```elixir
+  <.dm_git_commit_diff title="Add repository page" sha={@sha}>
+    <:file path="lib/app.ex" lines={@lines} />
+  </.dm_git_commit_diff>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Commit Diff</h3>
+  <.dm_git_commit_diff
+    title="Add repository web view components"
+    sha="3a97452d9cf94e8915273e88728f4413e80c0e64"
+    author="Jonathan"
+    committed_at="2 minutes ago"
+    message="Expose DuskMoon-native forge primitives for repository pages."
+    changed_files={2}
+    additions={7}
+    deletions={2}
+  >
+    <:file
+      path="apps/phoenix_duskmoon/lib/phoenix_duskmoon/component/data_display/git_repository.ex"
+      status="modified"
+      additions={5}
+      deletions={1}
+      lines={[
+        %{type: :hunk, old_line: nil, new_line: nil, content: "@@ -1,4 +1,8 @@"},
+        %{
+          type: :context,
+          old_line: 1,
+          new_line: 1,
+          content: "defmodule PhoenixDuskmoon.Component.DataDisplay.GitRepository do"
+        },
+        %{type: :delete, old_line: 2, new_line: nil, content: "  @moduledoc false"},
+        %{
+          type: :add,
+          old_line: nil,
+          new_line: 2,
+          content: "  @moduledoc \"Git repository web view components.\""
+        },
+        %{type: :add, old_line: nil, new_line: 3, content: "  use Phoenix.Component"}
+      ]}
+    />
+    <:file
+      path="apps/duskmoon_storybook/assets/images/repository-preview.png"
+      status="added"
+      additions={2}
+      deletions={1}
+      binary
+    />
+  </.dm_git_commit_diff>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Truncated Diff</h3>
+  <.dm_git_commit_diff title="Update generated bundle" sha="a13f9c2">
+    <:file
+      path="priv/static/assets/app.js"
+      status="modified"
+      additions={4200}
+      deletions={3900}
+      truncated
+    />
+  </.dm_git_commit_diff>
+</.dm_card>

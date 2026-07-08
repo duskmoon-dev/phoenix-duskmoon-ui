@@ -1,0 +1,46 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/git-clone-box"}>Data Display</:crumb>
+  <:crumb>Git Clone Box</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Git Clone Box</span>
+    <span class="text-sm opacity-60">dm_git_clone_box</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Clone URL and command snippets for existing and empty repositories. It renders
+  copy affordances for HTTPS, SSH, and command rows.
+
+  ## Usage
+  ```elixir
+  <.dm_git_clone_box clone_url="https://github.com/example/repo.git" ssh_url="git@github.com:example/repo.git" />
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Clone Existing Repository</h3>
+  <.dm_git_clone_box
+    clone_url="https://github.com/duskmoon-dev/phoenix-duskmoon-ui.git"
+    ssh_url="git@github.com:duskmoon-dev/phoenix-duskmoon-ui.git"
+  />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Empty Repository Setup</h3>
+  <.dm_git_clone_box
+    title="Push an existing repository"
+    clone_url="https://github.com/example/new-repository.git"
+    empty
+  />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Custom Commands</h3>
+  <.dm_git_clone_box title="Manual setup">
+    <:url label="HTTPS" value="https://github.com/example/custom.git" />
+    <:command
+      label="Create README"
+      value={"echo '# Custom' > README.md\ngit add README.md\ngit commit -m \"init\""}
+    />
+    <:command label="Push" value="git push -u origin main" />
+  </.dm_git_clone_box>
+</.dm_card>

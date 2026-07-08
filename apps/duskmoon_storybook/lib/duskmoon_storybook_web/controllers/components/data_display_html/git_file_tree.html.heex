@@ -1,0 +1,57 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/git-file-tree"}>Data Display</:crumb>
+  <:crumb>Git File Tree</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Git File Tree</span>
+    <span class="text-sm opacity-60">dm_git_file_tree</span>
+  </:title>
+
+  <% md_content = """
+  ## Overview
+  Dense file tree rows for folders, files, submodules, symlinks, and empty
+  repository states. Rows accept normal Phoenix route links.
+
+  ## Usage
+  ```elixir
+  <.dm_git_file_tree>
+    <:row kind="folder" name="lib" path="lib" href="/tree/lib" />
+    <:row kind="file" name="mix.exs" path="mix.exs" href="/blob/mix.exs" />
+  </.dm_git_file_tree>
+  ```
+  """ %>
+  <.dm_markdown content={md_content} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Source Tree</h3>
+  <.dm_git_file_tree>
+    <:row kind="folder" name="apps" path="apps" href="#" meta="8 entries" />
+    <:row kind="folder" name="lib" path="lib" href="#" meta="12 entries" />
+    <:row kind="file" name="mix.exs" path="mix.exs" href="#" meta="4 KB" />
+    <:row kind="file" name="README.md" path="README.md" href="#" meta="12 KB" />
+    <:row
+      kind="submodule"
+      name="vendor/duskmoon-theme"
+      path="vendor/duskmoon-theme"
+      href="#"
+      meta="a13f9c2"
+    />
+    <:row kind="symlink" name="assets/current" path="assets/current" href="#" meta="symlink" />
+  </.dm_git_file_tree>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Long Paths</h3>
+  <.dm_git_file_tree>
+    <:row
+      kind="file"
+      name="component_with_a_very_long_filename_that_should_wrap_without_breaking_layout.ex"
+      path="apps/phoenix_duskmoon/lib/phoenix_duskmoon/component/data_display/component_with_a_very_long_filename_that_should_wrap_without_breaking_layout.ex"
+      href="#"
+      meta="18 KB"
+      active
+    />
+  </.dm_git_file_tree>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Empty Repository</h3>
+  <.dm_git_file_tree empty_message="No files on this branch." />
+</.dm_card>
