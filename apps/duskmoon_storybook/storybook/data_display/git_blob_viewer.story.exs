@@ -13,7 +13,11 @@ defmodule Storybook.DataDisplay.GitBlobViewer do
           filename: "lib/app.ex",
           size: "238 B",
           language: "elixir",
-          content: "defmodule App do\\n  def hello, do: :world\\nend\\n",
+          content: """
+          defmodule App do
+            def hello, do: :world
+          end
+          """,
           raw_href: "#"
         }
       },

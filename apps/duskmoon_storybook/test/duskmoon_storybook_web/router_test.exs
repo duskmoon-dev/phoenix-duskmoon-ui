@@ -43,4 +43,15 @@ defmodule DuskmoonStorybookWeb.RouterTest do
       end
     end
   end
+
+  describe "git blob viewer page" do
+    test "renders source samples with real newlines", %{conn: conn} do
+      conn = get(conn, "/components/data-display/git-blob-viewer")
+      html = html_response(conn, 200)
+
+      assert html =~ "export const generated = true;\n"
+      assert html =~ "// preview only"
+      refute html =~ "true;\\n// preview only"
+    end
+  end
 end
