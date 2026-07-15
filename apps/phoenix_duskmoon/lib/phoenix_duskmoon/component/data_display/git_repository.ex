@@ -312,15 +312,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.GitRepository do
           >
             Raw
           </a>
-          <button
+          <.git_copy_button
             :if={!@binary && !@non_utf8}
-            type="button"
-            class="btn btn-sm"
-            aria-label={@copy_label}
-            data-copy-value={@content}
-          >
-            Copy
-          </button>
+            label={@copy_label}
+            value={@content}
+          />
           <span :for={action <- @action} class={action[:class]}>
             {render_slot(action)}
           </span>
@@ -505,9 +501,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.GitRepository do
           <code class="min-w-0 flex-1 overflow-x-auto rounded bg-surface-container px-2 py-1 font-mono text-sm">
             {url[:value]}
           </code>
-          <button type="button" class="btn btn-sm" aria-label={"Copy #{url[:label] || "URL"}"} data-copy-value={url[:value]}>
-            Copy
-          </button>
+          <.git_copy_button label={"Copy #{url[:label] || "URL"}"} value={url[:value]} />
         </div>
         <div :for={url <- @default_urls} class="flex min-w-0 items-center gap-2">
           <span class="w-16 shrink-0 text-xs font-medium uppercase text-on-surface-variant">
@@ -516,9 +510,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.GitRepository do
           <code class="min-w-0 flex-1 overflow-x-auto rounded bg-surface-container px-2 py-1 font-mono text-sm">
             {url.value}
           </code>
-          <button type="button" class="btn btn-sm" aria-label={"Copy #{url.label}"} data-copy-value={url.value}>
-            Copy
-          </button>
+          <.git_copy_button label={"Copy #{url.label}"} value={url.value} />
         </div>
       </div>
       <div :if={@command != [] || @default_commands != []} class="space-y-2">
@@ -528,9 +520,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.GitRepository do
           </div>
           <div class="flex min-w-0 items-start gap-2">
             <pre class="min-w-0 flex-1 overflow-x-auto rounded bg-surface-container p-3 text-sm"><code class="font-mono">{command[:value]}</code></pre>
-            <button type="button" class="btn btn-sm" aria-label={"Copy #{command[:label] || "command"}"} data-copy-value={command[:value]}>
-              Copy
-            </button>
+            <.git_copy_button
+              label={"Copy #{command[:label] || "command"}"}
+              value={command[:value]}
+            />
           </div>
         </div>
         <div :for={command <- @default_commands}>
@@ -539,13 +532,30 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.GitRepository do
           </div>
           <div class="flex min-w-0 items-start gap-2">
             <pre class="min-w-0 flex-1 overflow-x-auto rounded bg-surface-container p-3 text-sm"><code class="font-mono">{command.value}</code></pre>
-            <button type="button" class="btn btn-sm" aria-label={"Copy #{command.label}"} data-copy-value={command.value}>
-              Copy
-            </button>
+            <.git_copy_button label={"Copy #{command.label}"} value={command.value} />
           </div>
         </div>
       </div>
     </section>
+    """
+  end
+
+  attr(:label, :string, required: true)
+  attr(:value, :string, required: true)
+
+  defp git_copy_button(assigns) do
+    ~H"""
+    <button type="button" class="btn btn-sm" aria-label={@label} data-copy-value={@value}>
+      <span data-copy-label>Copy</span>
+    </button>
+    <span
+      class="sr-only"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      data-copy-status
+    >
+    </span>
     """
   end
 

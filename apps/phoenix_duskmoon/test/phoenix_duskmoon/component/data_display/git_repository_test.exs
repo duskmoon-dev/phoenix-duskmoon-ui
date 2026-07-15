@@ -111,6 +111,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.GitRepositoryTest do
       assert result =~ "defmodule App"
       assert result =~ ~s[href="/raw/lib/app.ex"]
       assert result =~ "data-copy-value"
+      assert result =~ "data-copy-label"
+      assert result =~ "data-copy-status"
+      assert result =~ ~s[role="status"]
+      assert result =~ ~s[aria-live="polite"]
+      assert result =~ ~s[aria-atomic="true"]
     end
 
     test "renders truncated, binary, and non-UTF-8 states" do
@@ -213,6 +218,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.GitRepositoryTest do
       assert result =~ "SSH"
       assert result =~ "git@github.com:example/repo.git"
       assert result =~ "git clone https://github.com/example/repo.git"
+      assert [_, _, _] = Regex.scan(~r/data-copy-value=/, result)
+      assert [_, _, _] = Regex.scan(~r/data-copy-status/, result)
     end
 
     test "renders empty repository setup commands and custom command slots" do
