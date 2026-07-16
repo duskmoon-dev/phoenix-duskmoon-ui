@@ -53,7 +53,7 @@ See the [Getting Started](getting-started.md) guide for full setup instructions.
 | Category | Examples | Count |
 |----------|----------|-------|
 | [Action](`PhoenixDuskmoon.Component.Action.Button`) | Button, Dropdown, Link, Menu, Toggle | 5 |
-| [Data Display](`PhoenixDuskmoon.Component.DataDisplay.Card`) | Card, Table, Badge, Avatar, Git Repository, Pagination, Timeline | 18 |
+| [Data Display](`PhoenixDuskmoon.Component.DataDisplay.Card`) | Card, Table, Badge, Avatar, Git Repository, Markdown Body, Pagination, Timeline | 18 |
 | [Data Entry](`PhoenixDuskmoon.Component.DataEntry.Input`) | Input, Select, Checkbox, Switch, Autocomplete, TreeSelect | 19 |
 | [Feedback](`PhoenixDuskmoon.Component.Feedback.Dialog`) | Dialog, Loading, Snackbar, Toast | 4 |
 | [Navigation](`PhoenixDuskmoon.Component.Navigation.Appbar`) | Appbar, Breadcrumb, Tab, Stepper, PageHeader | 12 |

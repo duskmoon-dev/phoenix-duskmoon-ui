@@ -149,7 +149,8 @@ For full component catalog with all attributes and slots, see
 | `dm_collapse` / `dm_collapse_group` | DataDisplay.Collapse | Single collapsible panel |
 | `dm_flash` / `dm_flash_group` | DataDisplay.Flash | Flash messages |
 | `dm_list` | DataDisplay.List | Structured list with icons and subtitles |
-| `dm_markdown` | DataDisplay.Markdown | Markdown renderer with syntax highlighting |
+| `dm_markdown` | DataDisplay.Markdown | Client-rendered Markdown custom element |
+| `dm_markdown_body` | DataDisplay.Markdown | Server-rendered MDEx Markdown with GFM, color chips, front matter, hard line breaks, and Mermaid |
 | `dm_pagination` / `dm_pagination_thin` | DataDisplay.Pagination | Page navigation |
 | `dm_popover` | DataDisplay.Popover | Contextual overlay with trigger |
 | `dm_progress` | DataDisplay.Progress | Linear/circular progress |

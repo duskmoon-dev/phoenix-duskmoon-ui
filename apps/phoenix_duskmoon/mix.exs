@@ -149,6 +149,9 @@ defmodule PhoenixDuskmoon.Mixfile do
       {:phoenix, "~> 1.8"},
       {:phoenix_html, "~> 4.0"},
       {:phoenix_live_view, "~> 1.0"},
+      {:mdex, "~> 0.13.3"},
+      {:mdex_gfm, "~> 0.2.0"},
+      {:mdex_mermaid, "~> 0.3.6"},
       {:plug, "~> 1.19", optional: true},
       {:jason, "~> 1.4", only: :test},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}

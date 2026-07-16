@@ -334,6 +334,16 @@ Slots: `item` (required) — attrs: `title`, `subtitle`, `icon`, `active`, `disa
 | `theme` | string | nil | nil, github, atom-one-dark, atom-one-light, auto |
 | `no_mermaid` | boolean | false | |
 
+### `dm_markdown_body/1` — Server-rendered Markdown Body
+
+| Attr | Type | Default | Description |
+|------|------|---------|-------------|
+| `source` | string | required | Markdown source rendered by MDEx |
+| `plugins` | list | `[MDExGFM, Markdown.ColorChips, MDExMermaid]` | MDEx-compatible plugins; replaces the default list |
+| `options` | list | `[]` | MDEx document options merged over the component defaults; `source` and `plugins` use their dedicated attributes |
+
+Soft line breaks become `<br>` elements by default; use `options={[render: [hardbreaks: false]]}` to disable that behavior. Front matter between `---` delimiters is omitted from the rendered HTML by default, but is not parsed into component metadata; use `options={[extension: [front_matter_delimiter: nil]]}` to render it as ordinary Markdown. The default color-chip plugin recognizes six-digit hexadecimal, RGB, and HSL values written as inline code. `MDExGFM` and `MDExMermaid` enable raw HTML, so only render trusted Markdown with the default configuration. To preserve only MDEx's conservative set of safe HTML tags from untrusted source, use `plugins={[MDExGFM]}` with `options={[render: [unsafe: true], sanitize: MDEx.Document.default_sanitize_options()]}`. Mermaid is disabled in this safe configuration because sanitization removes its built-in initialization script. Custom plugins and options execute on the server and must also be trusted. The wrapper always includes the `markdown-body` class and accepts `id`, additional `class` values, and global HTML attributes.
+
 ### `dm_pagination/1` — Pagination
 
 | Attr | Type | Default |

@@ -306,4 +306,188 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.MarkdownTest do
     assert result =~ "no-mermaid"
     assert result =~ "prose"
   end
+
+  describe "dm_markdown_body/1" do
+    test "renders Markdown source as semantic HTML" do
+      result =
+        render_component(&dm_markdown_body/1, %{
+          source: "# Hello\n\nThis is **Markdown**."
+        })
+
+      assert result =~ ~s[<div class="markdown-body">]
+      assert result =~ "<h1>Hello</h1>"
+      assert result =~ "<strong>Markdown</strong>"
+      refute result =~ "# Hello"
+    end
+
+    test "enables GitHub Flavored Markdown by default" do
+      source = """
+      | Feature | Status |
+      | ------- | ------ |
+      | Tables  | Ready  |
+
+      - [x] Plugins
+
+      https://example.com
+      """
+
+      result = render_component(&dm_markdown_body/1, %{source: source})
+
+      assert result =~ "<table>"
+      assert result =~ "<th>Feature</th>"
+      assert result =~ ~s[type="checkbox"]
+      assert result =~ "checked"
+      assert result =~ "disabled"
+      assert result =~ ~s[<a href="https://example.com"]
+    end
+
+    test "enables Mermaid by default" do
+      result =
+        render_component(&dm_markdown_body/1, %{
+          source: "```mermaid\ngraph TD;\nA-->B;\n```"
+        })
+
+      assert result =~ ~s[<pre id="mermaid-1" class="mermaid" phx-update="ignore">]
+      assert result =~ "graph TD;"
+      assert result =~ "mermaid.initialize"
+      refute result =~ ~s[<code class="language-mermaid">]
+    end
+
+    test "enables hard line breaks by default" do
+      result =
+        render_component(&dm_markdown_body/1, %{
+          source: "first line\nsecond line"
+        })
+
+      assert result =~ "first line<br />\nsecond line"
+    end
+
+    test "allows hard line breaks to be disabled" do
+      result =
+        render_component(&dm_markdown_body/1, %{
+          source: "first line\nsecond line",
+          options: [render: [hardbreaks: false]]
+        })
+
+      assert result =~ "first line\nsecond line"
+      refute result =~ "<br"
+    end
+
+    test "omits front matter from rendered HTML by default" do
+      result =
+        render_component(&dm_markdown_body/1, %{
+          source: "---\ntitle: Release notes\nstatus: published\n---\n# Changes"
+        })
+
+      assert result =~ "<h1>Changes</h1>"
+      refute result =~ "title: Release notes"
+      refute result =~ "status: published"
+    end
+
+    test "allows front matter support to be disabled" do
+      result =
+        render_component(&dm_markdown_body/1, %{
+          source: "---\ntitle: Release notes\n---\n# Changes",
+          options: [extension: [front_matter_delimiter: nil]]
+        })
+
+      assert result =~ "title: Release notes"
+      assert result =~ "<h1>Changes</h1>"
+    end
+
+    test "renders color chips for supported inline color values" do
+      result =
+        render_component(&dm_markdown_body/1, %{
+          source: "`#0969DA` `rgb(9, 105, 218)` `hsl(212, 92%, 45%)`"
+        })
+
+      assert length(Regex.scan(~r/class="markdown-color-chip"/, result)) == 3
+      assert result =~ "background-color: #0969DA;"
+      assert result =~ "background-color: rgb(9, 105, 218);"
+      assert result =~ "background-color: hsl(212, 92%, 45%);"
+    end
+
+    test "does not render color chips for unsupported or fenced color values" do
+      result =
+        render_component(&dm_markdown_body/1, %{
+          source: "`#12345`\n\n```css\n#0969DA\n```"
+        })
+
+      assert result =~ "#12345"
+      assert result =~ "#0969DA"
+      refute result =~ "markdown-color-chip"
+    end
+
+    test "accepts a custom MDEx plugin list" do
+      underline_plugin = fn document ->
+        MDEx.Document.put_extension_options(document, underline: true)
+      end
+
+      result =
+        render_component(&dm_markdown_body/1, %{
+          source: "__underlined__ `#0969DA`",
+          plugins: [underline_plugin]
+        })
+
+      assert result =~ "<u>underlined</u>"
+      refute result =~ "<strong>underlined</strong>"
+      refute result =~ "markdown-color-chip"
+    end
+
+    test "source and plugins attributes override matching MDEx options" do
+      underline_plugin = fn document ->
+        MDEx.Document.put_extension_options(document, underline: true)
+      end
+
+      result =
+        render_component(&dm_markdown_body/1, %{
+          source: "__underlined__",
+          plugins: [underline_plugin],
+          options: [
+            markdown: "ignored",
+            plugins: [MDExGFM]
+          ]
+        })
+
+      assert result =~ "<u>underlined</u>"
+      refute result =~ "<strong>underlined</strong>"
+      refute result =~ "ignored"
+    end
+
+    test "renders allowed HTML tags while sanitizing unsafe HTML" do
+      result =
+        render_component(&dm_markdown_body/1, %{
+          source: "<article><mark>Safe content</mark><script>alert('unsafe')</script></article>",
+          plugins: [MDExGFM],
+          options: [
+            render: [unsafe: true],
+            sanitize: MDEx.Document.default_sanitize_options()
+          ]
+        })
+
+      assert result =~ "<article><mark>Safe content</mark></article>"
+      refute result =~ "<script"
+      refute result =~ "alert('unsafe')"
+      refute result =~ "&lt;article"
+    end
+
+    test "renders wrapper attributes and additional classes" do
+      result =
+        render_component(&dm_markdown_body/1, %{
+          source: "Body",
+          id: "readme",
+          class: "max-w-none",
+          "data-testid": "markdown-body"
+        })
+
+      assert result =~ ~s[id="readme"]
+      assert result =~ ~s[class="markdown-body max-w-none"]
+      assert result =~ ~s[data-testid="markdown-body"]
+    end
+
+    test "renders an empty source" do
+      assert render_component(&dm_markdown_body/1, %{source: ""}) ==
+               ~s[<div class="markdown-body"></div>]
+    end
+  end
 end

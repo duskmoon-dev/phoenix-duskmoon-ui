@@ -133,6 +133,12 @@
       },
       %{
         kind: :story,
+        name: "Markdown Body",
+        path: "/data_display/markdown_body",
+        module: Storybook.DataDisplay.MarkdownBody
+      },
+      %{
+        kind: :story,
         name: "Pagination",
         path: "/data_display/pagination",
         module: Storybook.DataDisplay.Pagination
