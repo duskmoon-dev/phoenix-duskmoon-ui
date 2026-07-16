@@ -16,7 +16,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       assert result =~ ~s[aria-label="Pagination"]
-      assert result =~ ~s[<el-dm-pagination]
+      assert result =~ ~s[<ul class="pagination"]
+      refute result =~ ~s[<el-dm-pagination]
       assert result =~ ~s[flex items-center gap-2]
     end
 
@@ -59,9 +60,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       # Should show ellipsis for hidden pages
-      assert result =~ "..."
+      assert result =~ "pagination-ellipsis"
       # Ellipsis should have accessible label
-      assert result =~ ~s[aria-label="More pages"]
+      assert result =~ ~s[<span class="sr-only">More pages</span>]
       # Should show current page
       assert result =~ ~s[aria-current="page"]
       # Check for prev/next
@@ -79,7 +80,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           ellipsis_label: "Skipped pages"
         })
 
-      assert result =~ ~s[aria-label="Skipped pages"]
+      assert result =~ ~s[<span class="sr-only">Skipped pages</span>]
     end
 
     test "renders with show_total enabled" do
@@ -129,7 +130,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       # Should have 10 pages
-      assert result =~ ~s[total-pages="10"]
+      assert result =~ ~s[phx-value-current="10"]
     end
 
     test "calculates correct max_page for remainder" do
@@ -141,7 +142,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       # Should have 10 pages (ceiling of 95/10)
-      assert result =~ ~s[total-pages="10"]
+      assert result =~ ~s[phx-value-current="10"]
     end
 
     test "handles zero total gracefully" do
@@ -153,7 +154,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       # Should show page 1 even with 0 total
-      assert result =~ ~s[current-page="1"]
+      assert result =~ ~s[phx-value-current="1"]
     end
 
     test "renders page links with href when page_url provided" do
@@ -197,7 +198,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
       assert result =~ ~s[phx-value-current="4"]
       assert result =~ ~s[phx-value-current="5"]
       # No ellipsis needed
-      refute result =~ "..."
+      refute result =~ "pagination-ellipsis"
     end
 
     test "handles page_size of 0 without crashing" do
@@ -209,8 +210,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       # Should treat page_size=0 as 1 and not crash
-      assert result =~ ~s[<el-dm-pagination]
-      assert result =~ ~s[current-page="1"]
+      assert result =~ ~s[<ul class="pagination"]
+      assert result =~ ~s[phx-value-current="1"]
     end
 
     test "handles negative page_size without crashing" do
@@ -221,8 +222,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           total: 100
         })
 
-      assert result =~ ~s[<el-dm-pagination]
-      assert result =~ ~s[current-page="1"]
+      assert result =~ ~s[<ul class="pagination"]
+      assert result =~ ~s[phx-value-current="1"]
     end
 
     test "renders prev and next buttons with aria-labels" do
@@ -248,7 +249,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
       # Should show pages and ellipsis
       assert result =~ ~s[phx-value-current="1"]
       assert result =~ ~s[phx-value-current="3"]
-      assert result =~ "..."
+      assert result =~ "pagination-ellipsis"
       assert result =~ ~s[phx-value-current="10"]
     end
 
@@ -264,7 +265,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
       assert result =~ ~s[phx-value-current="1"]
       assert result =~ ~s[phx-value-current="2"]
       assert result =~ ~s[phx-value-current="3"]
-      assert result =~ "..."
+      assert result =~ "pagination-ellipsis"
       assert result =~ ~s[phx-value-current="10"]
     end
 
@@ -278,7 +279,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
 
       # page_num == max_page - 2 => [1, 2, 3, "...", 7, 8, 9, 10]
       assert result =~ ~s[phx-value-current="1"]
-      assert result =~ "..."
+      assert result =~ "pagination-ellipsis"
       assert result =~ ~s[phx-value-current="7"]
       assert result =~ ~s[phx-value-current="8"]
       assert result =~ ~s[phx-value-current="9"]
@@ -295,7 +296,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
 
       # page_num > max_page - 2 => [1, 2, 3, "...", 8, 9, 10]
       assert result =~ ~s[phx-value-current="1"]
-      assert result =~ "..."
+      assert result =~ "pagination-ellipsis"
       assert result =~ ~s[phx-value-current="8"]
       assert result =~ ~s[phx-value-current="9"]
       assert result =~ ~s[phx-value-current="10"]
@@ -311,20 +312,78 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           page_url: "/items?page={page}"
         })
 
-      assert result =~ ~s[data-phx-link="navigate"]
+      assert result =~ ~s[data-phx-link="redirect"]
     end
 
-    test "renders page_link_type href" do
+    test "renders ordered native server links for page_link_type href" do
       result =
         render_component(&dm_pagination/1, %{
           page_num: 2,
-          page_size: 10,
-          total: 50,
+          page_size: 50,
+          total: 125,
+          page_link_type: "href",
+          page_url: "/owner/repo/commits/main?page={page}"
+        })
+
+      links =
+        result
+        |> then(&Regex.scan(~r/<a\b[^>]*>/, &1))
+        |> Enum.map(fn [link] ->
+          [_, href] = Regex.run(~r/href="([^"]+)"/, link)
+          {href, link}
+        end)
+
+      [
+        {"/owner/repo/commits/main?page=1", previous_link},
+        {"/owner/repo/commits/main?page=1", page_one_link},
+        {"/owner/repo/commits/main?page=2", current_page_link},
+        {"/owner/repo/commits/main?page=3", page_three_link},
+        {"/owner/repo/commits/main?page=3", next_link}
+      ] = links
+
+      assert previous_link =~ ~s[aria-label="Previous page"]
+      assert page_one_link =~ ~s[aria-label="Page 1"]
+      assert current_page_link =~ ~s[aria-current="page"]
+      assert current_page_link =~ ~s[aria-label="Page 2"]
+      assert page_three_link =~ ~s[aria-label="Page 3"]
+      assert next_link =~ ~s[aria-label="Next page"]
+      refute result =~ ~s[data-phx-link=]
+      refute result =~ ~s[<el-dm-pagination]
+      refute result =~ ~s[slot="prev"]
+      refute result =~ ~s[slot="page"]
+      refute result =~ ~s[slot="next"]
+    end
+
+    test "renders boundary controls as disabled buttons instead of links" do
+      first_page =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 50,
+          total: 125,
           page_link_type: "href",
           page_url: "/items?page={page}"
         })
 
-      assert result =~ ~s[data-phx-link="href"]
+      last_page =
+        render_component(&dm_pagination/1, %{
+          page_num: 3,
+          page_size: 50,
+          total: 125,
+          page_link_type: "href",
+          page_url: "/items?page={page}"
+        })
+
+      [previous_button] = Regex.run(~r/<button[^>]*class="pagination-prev"[^>]*>/, first_page)
+      [next_button] = Regex.run(~r/<button[^>]*class="pagination-next"[^>]*>/, last_page)
+
+      assert previous_button =~ "disabled"
+      assert previous_button =~ ~s[aria-disabled="true"]
+      assert next_button =~ "disabled"
+      assert next_button =~ ~s[aria-disabled="true"]
+      refute first_page =~ ~r/<a[^>]*class="pagination-prev"/
+      refute last_page =~ ~r/<a[^>]*class="pagination-next"/
+      refute first_page =~ "page=0"
+      refute last_page =~ "page=4"
     end
 
     test "renders page_url substitution in prev/next buttons" do
@@ -363,7 +422,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       # max_page = 1, both prev and next disabled
-      assert result =~ ~s[total-pages="1"]
+      assert result =~ ~s[phx-value-current="1"]
       assert result =~ ~s[disabled]
     end
 
@@ -747,10 +806,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       # max_page = 6, all pages shown without ellipsis
-      assert result =~ ~s[total-pages="6"]
       assert result =~ ~s[phx-value-current="1"]
       assert result =~ ~s[phx-value-current="6"]
-      refute result =~ "..."
+      refute result =~ "pagination-ellipsis"
     end
 
     test "renders penultimate page correctly (page_num == max_page - 2)" do
@@ -766,7 +824,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
       assert result =~ ~s[phx-value-current="8"]
       assert result =~ ~s[phx-value-current="9"]
       assert result =~ ~s[phx-value-current="10"]
-      assert result =~ "..."
+      assert result =~ "pagination-ellipsis"
     end
 
     test "renders page_num == 3 with expanded near-start layout" do
@@ -779,7 +837,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       assert result =~ ~s[phx-value-current="4"]
-      assert result =~ "..."
+      assert result =~ "pagination-ellipsis"
     end
 
     test "renders exactly 2 pages without ellipsis" do
@@ -790,10 +848,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           total: 20
         })
 
-      assert result =~ ~s[total-pages="2"]
       assert result =~ ~s[phx-value-current="1"]
       assert result =~ ~s[phx-value-current="2"]
-      refute result =~ "..."
+      refute result =~ "pagination-ellipsis"
     end
 
     test "renders all 7 pages without ellipsis at first page" do
@@ -805,9 +862,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           total: 70
         })
 
-      assert result =~ ~s[total-pages="7"]
       for p <- 1..7, do: assert(result =~ ~s[phx-value-current="#{p}"])
-      refute result =~ "..."
+      refute result =~ "pagination-ellipsis"
     end
 
     test "renders all 7 pages without ellipsis at middle position" do
@@ -820,7 +876,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       for p <- 1..7, do: assert(result =~ ~s[phx-value-current="#{p}"])
-      refute result =~ "..."
+      refute result =~ "pagination-ellipsis"
     end
 
     test "renders all 7 pages without ellipsis at near-end" do
@@ -833,7 +889,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       for p <- 1..7, do: assert(result =~ ~s[phx-value-current="#{p}"])
-      refute result =~ "..."
+      refute result =~ "pagination-ellipsis"
     end
 
     test "renders all 7 pages without ellipsis at last page" do
@@ -846,7 +902,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
         })
 
       for p <- 1..7, do: assert(result =~ ~s[phx-value-current="#{p}"])
-      refute result =~ "..."
+      refute result =~ "pagination-ellipsis"
     end
 
     test "renders large total with middle page ellipsis on both sides" do
@@ -858,13 +914,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           total: 10000
         })
 
-      assert result =~ ~s[total-pages="1000"]
       assert result =~ ~s[phx-value-current="499"]
       assert result =~ ~s[phx-value-current="500"]
       assert result =~ ~s[phx-value-current="501"]
       # Should have ellipsis on both sides
-      parts = String.split(result, "...")
-      assert length(parts) >= 3
+      assert [[_], [_]] = Regex.scan(~r/class="pagination-ellipsis"/, result)
     end
   end
 
@@ -1107,7 +1161,25 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           el_size: "sm"
         })
 
-      assert result =~ ~s[size="sm"]
+      assert result =~ ~s[data-size="sm"]
+      assert result =~ ~s[class="pagination pagination-sm"]
+    end
+
+    test "renders xs controls distinctly from sm controls" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 50,
+          el_size: "xs"
+        })
+
+      assert result =~ ~s[data-size="xs"]
+
+      assert result =~
+               ~s[min-width: 1.5rem; height: 1.5rem; padding: 0 0.25rem; font-size: 0.75rem;]
+
+      refute result =~ "pagination-sm"
     end
 
     test "renders pagination with el_color attribute" do
@@ -1119,7 +1191,20 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           el_color: "primary"
         })
 
-      assert result =~ ~s[color="primary"]
+      assert result =~ ~s[data-color="primary"]
+    end
+
+    test "renders neutral color with neutral theme tokens" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 1,
+          page_size: 10,
+          total: 50,
+          el_color: "neutral"
+        })
+
+      assert result =~ ~s[data-color="neutral"]
+      assert result =~ ~s[--color-primary: var(--color-neutral)]
     end
 
     test "renders pagination without el_size by default" do
@@ -1130,9 +1215,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           total: 50
         })
 
-      # Extract el-dm-pagination element to check it doesn't have size attr
-      [el_tag] = Regex.run(~r/<el-dm-pagination[^>]*>/, result)
-      refute el_tag =~ ~s[size="]
+      refute result =~ ~s[data-size=]
     end
 
     test "renders pagination without el_color by default" do
@@ -1143,8 +1226,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           total: 50
         })
 
-      [el_tag] = Regex.run(~r/<el-dm-pagination[^>]*>/, result)
-      refute el_tag =~ ~s[color="]
+      refute result =~ ~s[data-color=]
     end
 
     test "renders pagination with el_size and el_color combined" do
@@ -1157,8 +1239,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
           el_color: "secondary"
         })
 
-      assert result =~ ~s[size="lg"]
-      assert result =~ ~s[color="secondary"]
+      assert result =~ ~s[data-size="lg"]
+      assert result =~ ~s[data-color="secondary"]
+      assert result =~ ~s[class="pagination pagination-lg"]
+      assert result =~ ~s[--color-primary: var(--color-secondary)]
     end
   end
 end
