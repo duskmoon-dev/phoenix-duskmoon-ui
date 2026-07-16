@@ -1,6 +1,6 @@
 defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
   @moduledoc """
-  Pagination component using el-dm-pagination custom element.
+  Server-rendered pagination components for event-driven and URL-based navigation.
 
   ## Examples
 
@@ -80,19 +80,20 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
   attr(:el_size, :string,
     default: nil,
     values: [nil, "xs", "sm", "md", "lg"],
-    doc: "Button size for the el-dm-pagination element"
+    doc: "Pagination control size"
   )
 
   attr(:el_color, :string,
     default: nil,
     values: [nil, "primary", "secondary", "neutral"],
-    doc: "Color variant for the el-dm-pagination element"
+    doc: "Pagination color variant"
   )
 
   attr(:rest, :global)
 
   slot(:inner_block, required: false, doc: "optional extra content after the pagination controls")
 
+  # WORKAROUND(upstream): duskmoon-dev/duskmoon-elements#68
   def dm_pagination(assigns) do
     {max_page, pages} = generate_pages(assigns.total, assigns.page_size, assigns.page_num)
 
@@ -100,6 +101,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
       assigns
       |> assign(:max_page, max_page)
       |> assign(:pages, pages)
+      |> assign(:pagination_class, pagination_class(assigns.el_size))
+      |> assign(:control_size_style, pagination_control_size_style(assigns.el_size))
+      |> assign(:color_style, pagination_color_style(assigns.el_color))
 
     ~H"""
     <nav
@@ -112,63 +116,136 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
         <.dm_mdi name="view-dashboard" class="w-5 h-5" />
         <code>{@total}</code>
       </div>
-      <el-dm-pagination
-        current-page={@page_num}
-        total-pages={@max_page}
-        size={@el_size}
-        color={@el_color}
+      <ul
+        class={@pagination_class}
+        data-size={@el_size}
+        data-color={@el_color}
+        style={@color_style}
       >
-        <button
-          type="button"
-          slot="prev"
-          aria-label={@prev_page_label}
-          phx-click={if(@page_num == 1, do: nil, else: @update_event)}
-          phx-value-current={if(@page_num == 1, do: nil, else: @page_num - 1)}
-          disabled={@page_num == 1}
-          aria-disabled={@page_num == 1 && "true"}
-          data-phx-link={@page_url && @page_link_type}
-          data-phx-link-state={@page_url && "push"}
-          href={page_url(@page_url, @page_url_marker, max(@page_num - 1, 1))}
-        >
-          <span class="sr-only">{@prev_label}</span>
-          <.dm_mdi name="page-previous" class="w-5 h-5" />
-        </button>
+        <li>
+          <button
+            :if={is_nil(@page_url) || @page_num == 1}
+            type="button"
+            aria-label={@prev_page_label}
+            phx-click={if(@page_num == 1, do: nil, else: @update_event)}
+            phx-value-current={if(@page_num == 1, do: nil, else: @page_num - 1)}
+            disabled={@page_num == 1}
+            aria-disabled={@page_num == 1 && "true"}
+            class="pagination-prev"
+            style={@control_size_style}
+          >
+            <span class="sr-only">{@prev_label}</span>
+            <.dm_mdi name="page-previous" class="w-5 h-5" />
+          </button>
+          <.link
+            :if={!is_nil(@page_url) && @page_num > 1}
+            href={
+              if(@page_link_type == "href",
+                do: page_url(@page_url, @page_url_marker, @page_num - 1)
+              )
+            }
+            patch={
+              if(@page_link_type == "patch",
+                do: page_url(@page_url, @page_url_marker, @page_num - 1)
+              )
+            }
+            navigate={
+              if(@page_link_type == "navigate",
+                do: page_url(@page_url, @page_url_marker, @page_num - 1)
+              )
+            }
+            aria-label={@prev_page_label}
+            class="pagination-prev"
+            style={@control_size_style}
+          >
+            <span class="sr-only">{@prev_label}</span>
+            <.dm_mdi name="page-previous" class="w-5 h-5" />
+          </.link>
+        </li>
 
         <%= for p <- @pages do %>
-          <span :if={is_binary(p)} slot="page" class="pagination-ellipsis" aria-label={@ellipsis_label}>{p}</span>
-          <button
-            :if={!is_binary(p)}
-            type="button"
-            slot="page"
-            phx-click={@update_event}
-            phx-value-current={p}
-            aria-label={format_label(@page_button_label, %{"page" => p})}
-            aria-current={p == @page_num && "page"}
-            data-active={p == @page_num}
-            data-phx-link={@page_url && @page_link_type}
-            data-phx-link-state={@page_url && "push"}
-            href={page_url(@page_url, @page_url_marker, p)}
-          >
-            {p}
-          </button>
+          <li :if={is_binary(p)}>
+            <span class="pagination-ellipsis" style={@control_size_style}>
+              <span class="sr-only">{@ellipsis_label}</span>
+            </span>
+          </li>
+          <li :if={!is_binary(p)}>
+            <button
+              :if={is_nil(@page_url)}
+              type="button"
+              phx-click={@update_event}
+              phx-value-current={p}
+              aria-label={format_label(@page_button_label, %{"page" => p})}
+              aria-current={p == @page_num && "page"}
+              data-active={p == @page_num}
+              class="pagination-item"
+              style={@control_size_style}
+            >
+              {p}
+            </button>
+            <.link
+              :if={!is_nil(@page_url)}
+              href={
+                if(@page_link_type == "href", do: page_url(@page_url, @page_url_marker, p))
+              }
+              patch={
+                if(@page_link_type == "patch", do: page_url(@page_url, @page_url_marker, p))
+              }
+              navigate={
+                if(@page_link_type == "navigate", do: page_url(@page_url, @page_url_marker, p))
+              }
+              aria-label={format_label(@page_button_label, %{"page" => p})}
+              aria-current={p == @page_num && "page"}
+              data-active={p == @page_num}
+              class="pagination-item"
+              style={@control_size_style}
+            >
+              {p}
+            </.link>
+          </li>
         <% end %>
 
-        <button
-          type="button"
-          slot="next"
-          aria-label={@next_page_label}
-          phx-click={if(@page_num == @max_page, do: nil, else: @update_event)}
-          phx-value-current={if(@page_num == @max_page, do: nil, else: @page_num + 1)}
-          disabled={@page_num == @max_page}
-          aria-disabled={@page_num == @max_page && "true"}
-          data-phx-link={@page_url && @page_link_type}
-          data-phx-link-state={@page_url && "push"}
-          href={page_url(@page_url, @page_url_marker, min(@page_num + 1, @max_page))}
-        >
-          <span class="sr-only">{@next_label}</span>
-          <.dm_mdi name="page-next" class="w-5 h-5" />
-        </button>
-      </el-dm-pagination>
+        <li>
+          <button
+            :if={is_nil(@page_url) || @page_num == @max_page}
+            type="button"
+            aria-label={@next_page_label}
+            phx-click={if(@page_num == @max_page, do: nil, else: @update_event)}
+            phx-value-current={if(@page_num == @max_page, do: nil, else: @page_num + 1)}
+            disabled={@page_num == @max_page}
+            aria-disabled={@page_num == @max_page && "true"}
+            class="pagination-next"
+            style={@control_size_style}
+          >
+            <span class="sr-only">{@next_label}</span>
+            <.dm_mdi name="page-next" class="w-5 h-5" />
+          </button>
+          <.link
+            :if={!is_nil(@page_url) && @page_num < @max_page}
+            href={
+              if(@page_link_type == "href",
+                do: page_url(@page_url, @page_url_marker, @page_num + 1)
+              )
+            }
+            patch={
+              if(@page_link_type == "patch",
+                do: page_url(@page_url, @page_url_marker, @page_num + 1)
+              )
+            }
+            navigate={
+              if(@page_link_type == "navigate",
+                do: page_url(@page_url, @page_url_marker, @page_num + 1)
+              )
+            }
+            aria-label={@next_page_label}
+            class="pagination-next"
+            style={@control_size_style}
+          >
+            <span class="sr-only">{@next_label}</span>
+            <.dm_mdi name="page-next" class="w-5 h-5" />
+          </.link>
+        </li>
+      </ul>
       {render_slot(@inner_block)}
     </nav>
     """
@@ -308,6 +385,26 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
 
   defp page_url(nil, _marker, _page), do: nil
   defp page_url(url, marker, page), do: String.replace(url, marker, "#{page}")
+
+  defp pagination_class("sm"), do: "pagination pagination-sm"
+  defp pagination_class("lg"), do: "pagination pagination-lg"
+  defp pagination_class(_size), do: "pagination"
+
+  defp pagination_control_size_style("xs") do
+    "min-width: 1.5rem; height: 1.5rem; padding: 0 0.25rem; font-size: 0.75rem;"
+  end
+
+  defp pagination_control_size_style(_size), do: false
+
+  defp pagination_color_style("secondary") do
+    "--color-primary: var(--color-secondary); --color-primary-content: var(--color-secondary-content);"
+  end
+
+  defp pagination_color_style("neutral") do
+    "--color-primary: var(--color-neutral); --color-primary-content: var(--color-neutral-content);"
+  end
+
+  defp pagination_color_style(_color), do: false
 
   defp generate_pages(total, page_size, page_num) do
     safe_page_size = max(page_size, 1)
