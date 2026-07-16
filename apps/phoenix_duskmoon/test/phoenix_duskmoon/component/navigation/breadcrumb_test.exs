@@ -12,22 +12,25 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
     end)
   end
 
-  test "renders el-dm-breadcrumbs element" do
+  test "renders a semantic breadcrumb navigation" do
     result =
       render_component(&dm_breadcrumb/1, %{
         crumb: crumbs(["Home", "Products"])
       })
 
-    assert result =~ "<el-dm-breadcrumbs"
-    assert result =~ "</el-dm-breadcrumbs>"
+    assert result =~ "<nav"
+    assert result =~ "<ol"
+    assert result =~ "</ol>"
+    assert result =~ "</nav>"
     assert result =~ "Home"
     assert result =~ "Products"
   end
 
-  test "renders crumb items with slot attribute" do
+  test "does not project crumbs into the unsupported item slot" do
     result = render_component(&dm_breadcrumb/1, %{crumb: crumbs(["Home"])})
 
-    assert result =~ ~s[slot="item"]
+    refute result =~ "<el-dm-breadcrumbs"
+    refute result =~ ~s[slot="item"]
   end
 
   test "renders crumbs with links when to is provided" do
@@ -53,13 +56,34 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
     refute result =~ "<a "
   end
 
-  test "renders data-href on linked crumbs" do
+  test "renders linked crumbs without custom-element navigation data" do
     result =
       render_component(&dm_breadcrumb/1, %{
         crumb: crumbs([{"Home", %{to: "/home"}}])
       })
 
-    assert result =~ ~s[data-href="/home"]
+    assert result =~ ~s[href="/home"]
+    refute result =~ "data-href"
+    refute result =~ "data-phx-link"
+  end
+
+  test "server-renders repository crumbs in order with normal links and a current page" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        crumb:
+          crumbs([
+            {"repo", %{to: "/owner/repo"}},
+            {"lib", %{to: "/owner/repo/src/main/lib"}},
+            "file.ex"
+          ])
+      })
+
+    assert result =~
+             ~r{<a[^>]*href="/owner/repo"[^>]*>\s*repo\s*</a>.*<a[^>]*href="/owner/repo/src/main/lib"[^>]*>\s*lib\s*</a>.*<span[^>]*aria-current="page"[^>]*>\s*file\.ex\s*</span>}s
+
+    refute result =~ ~s[slot="item"]
+    refute result =~ "data-href"
+    refute result =~ "data-phx-link"
   end
 
   test "renders last crumb with aria-current page" do
@@ -104,7 +128,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
         crumb: crumbs(["Home", "Page"])
       })
 
-    assert result =~ "separator"
+    assert result =~ ~r{aria-hidden="true">\s*&gt;\s*</span>}
   end
 
   test "renders crumb with id sub-attribute" do
@@ -153,14 +177,24 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
     assert result =~ "Final"
   end
 
-  test "renders separator attribute value on el-dm-breadcrumbs" do
+  test "renders separator text between crumbs" do
     result =
       render_component(&dm_breadcrumb/1, %{
         separator: "/",
         crumb: crumbs(["Home", "Page"])
       })
 
-    assert result =~ ~s[separator="/"]
+    assert result =~ ~r{aria-hidden="true">\s*/\s*</span>}
+  end
+
+  test "renders the default separator when separator is empty" do
+    result =
+      render_component(&dm_breadcrumb/1, %{
+        separator: "",
+        crumb: crumbs(["Home", "Page"])
+      })
+
+    assert result =~ ~r{aria-hidden="true">\s*/\s*</span>}
   end
 
   test "renders crumb with both to and class" do
@@ -171,7 +205,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
 
     assert result =~ ~s[href="/"]
     assert result =~ "font-bold"
-    assert result =~ ~s[data-href="/"]
+    refute result =~ "data-href"
   end
 
   test "renders only last crumb with aria-current in long chain" do
@@ -181,8 +215,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
       })
 
     # Only the last crumb should have aria-current
-    parts = String.split(result, ~s[aria-current="page"])
-    assert length(parts) - 1 == 1
+    assert [_, _] = String.split(result, ~s[aria-current="page"])
   end
 
   test "renders first crumb without aria-current when multiple" do
@@ -191,7 +224,6 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
         crumb: crumbs(["Home", "Products", "Detail"])
       })
 
-    # Split by each span with slot="item" to inspect individually
     assert result =~ ~s[aria-current="page"]
     assert result =~ "Detail"
   end
@@ -207,13 +239,19 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
     assert result =~ ~s[href="/dash"]
   end
 
-  test "renders breadcrumb without separator by default" do
+  test "renders slash separator by default" do
     result =
       render_component(&dm_breadcrumb/1, %{
-        crumb: crumbs(["Home"])
+        crumb: crumbs(["Home", "Page"])
       })
 
-    refute result =~ ~s[separator="]
+    assert result =~ ~r{aria-hidden="true">\s*/\s*</span>}
+  end
+
+  test "does not render a separator for a single crumb" do
+    result = render_component(&dm_breadcrumb/1, %{crumb: crumbs(["Home"])})
+
+    refute result =~ ~s[aria-hidden="true"]
   end
 
   test "renders breadcrumb with arrow separator" do
@@ -223,7 +261,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
         crumb: crumbs(["Home", "Page"])
       })
 
-    assert result =~ ~s[separator="&gt;&gt;"]
+    assert result =~ ~r{aria-hidden="true">\s*&gt;&gt;\s*</span>}
   end
 
   test "renders breadcrumb with all attributes combined" do
@@ -243,7 +281,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
 
     assert result =~ ~s[id="main-breadcrumb"]
     assert result =~ "text-sm"
-    assert result =~ "separator"
+    assert result =~ ~r{aria-hidden="true">\s*&gt;\s*</span>}
     assert result =~ "aria-label=\"Breadcrumb navigation\""
     assert result =~ ~s[href="/"]
     assert result =~ ~s[id="c-home"]
@@ -262,32 +300,35 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
     assert result =~ ~s[aria-label="Breadcrumb"]
   end
 
-  test "renders breadcrumb using el-dm-breadcrumbs custom element" do
+  test "renders breadcrumb using server-owned semantic markup" do
     result =
       render_component(&dm_breadcrumb/1, %{
         crumb: crumbs(["Home"])
       })
 
-    assert result =~ "<el-dm-breadcrumbs"
-    assert result =~ "</el-dm-breadcrumbs>"
+    assert result =~ "<nav"
+    assert result =~ "</nav>"
+    refute result =~ "<el-dm-breadcrumbs"
   end
 
-  test "renders breadcrumb items with slot attribute" do
+  test "renders breadcrumb items as list items" do
     result =
       render_component(&dm_breadcrumb/1, %{
         crumb: crumbs(["Home", "Products"])
       })
 
-    assert result =~ ~s[slot="item"]
+    assert [_, _] = Regex.scan(~r/<li(?:\s|>)/, result)
+    refute result =~ ~s[slot="item"]
   end
 
-  test "renders breadcrumb with data-href on linked items" do
+  test "renders breadcrumb with regular href on linked items" do
     result =
       render_component(&dm_breadcrumb/1, %{
         crumb: crumbs([{"Home", %{to: "/"}}, "Current"])
       })
 
-    assert result =~ ~s[data-href="/"]
+    assert result =~ ~s[href="/"]
+    refute result =~ "data-href"
   end
 
   test "renders only last crumb with aria-current page" do
@@ -297,8 +338,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
       })
 
     # Only last item should have aria-current="page"
-    page_count = length(String.split(result, ~s[aria-current="page"])) - 1
-    assert page_count == 1
+    assert [_, _] = String.split(result, ~s[aria-current="page"])
     assert result =~ "Details"
   end
 
@@ -320,18 +360,18 @@ defmodule PhoenixDuskmoon.Component.Navigation.BreadcrumbTest do
       })
 
     assert result =~ "Plain Text"
-    # The text should be rendered without an anchor wrapper
-    assert result =~ ~s[slot="item"]
+    assert result =~ "<span"
+    refute result =~ "<a"
   end
 
-  test "renders breadcrumb with closing custom element tag" do
+  test "renders breadcrumb with closing nav tag" do
     result =
       render_component(&dm_breadcrumb/1, %{
         crumb: crumbs(["Home"])
       })
 
-    assert result =~ "<el-dm-breadcrumbs"
-    assert result =~ "</el-dm-breadcrumbs>"
+    assert result =~ "<nav"
+    assert result =~ "</nav>"
   end
 
   test "renders breadcrumb with custom nav_label" do
