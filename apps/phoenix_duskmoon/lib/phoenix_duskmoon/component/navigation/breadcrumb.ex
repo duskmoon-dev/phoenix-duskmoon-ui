@@ -1,6 +1,6 @@
 defmodule PhoenixDuskmoon.Component.Navigation.Breadcrumb do
   @moduledoc """
-  Breadcrumb navigation component using el-dm-breadcrumbs custom element.
+  Breadcrumb navigation component using semantic server-rendered markup.
 
   ## Examples
 
@@ -53,28 +53,53 @@ defmodule PhoenixDuskmoon.Component.Navigation.Breadcrumb do
   end
 
   def dm_breadcrumb(assigns) do
-    assigns = assign(assigns, :last_index, length(assigns.crumb) - 1)
+    assigns =
+      assigns
+      |> assign(:last_index, length(assigns.crumb) - 1)
+      |> assign(
+        :separator_text,
+        if(assigns.separator in [nil, ""], do: "/", else: assigns.separator)
+      )
 
+    # WORKAROUND(upstream): duskmoon-dev/duskmoon-elements#67
     ~H"""
-    <el-dm-breadcrumbs
+    <nav
       id={@id}
-      separator={@separator}
       class={@class}
       aria-label={@nav_label}
       {@rest}
     >
-      <span
-        :for={{crumb, i} <- Enum.with_index(@crumb)}
-        slot="item"
-        id={crumb[:id]}
-        class={crumb[:class]}
-        data-href={crumb[:to]}
-        aria-current={i == @last_index && "page"}
-      >
-        <a :if={crumb[:to]} href={crumb[:to]}>{render_slot(crumb)}</a>
-        <template :if={!crumb[:to]}>{render_slot(crumb)}</template>
-      </span>
-    </el-dm-breadcrumbs>
+      <ol class="m-0 flex list-none flex-wrap items-center gap-2 py-2 text-sm">
+        <li
+          :for={{crumb, i} <- Enum.with_index(@crumb)}
+          id={crumb[:id]}
+          class={["breadcrumb-item", crumb[:class]]}
+        >
+          <a
+            :if={crumb[:to]}
+            href={crumb[:to]}
+            class="breadcrumb-link"
+            aria-current={i == @last_index && "page"}
+          >
+            {render_slot(crumb)}
+          </a>
+          <span
+            :if={!crumb[:to]}
+            class={i == @last_index && "breadcrumb-item-active"}
+            aria-current={i == @last_index && "page"}
+          >
+            {render_slot(crumb)}
+          </span>
+          <span
+            :if={i < @last_index}
+            class="inline-flex select-none items-center opacity-60"
+            aria-hidden="true"
+          >
+            {@separator_text}
+          </span>
+        </li>
+      </ol>
+    </nav>
     """
   end
 end
