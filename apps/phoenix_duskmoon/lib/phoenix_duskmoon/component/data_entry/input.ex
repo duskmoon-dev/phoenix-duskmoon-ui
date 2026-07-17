@@ -1089,6 +1089,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
 
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   defp dm_input_by_type(assigns) do
+    assigns = assign_new(assigns, :value, fn -> nil end)
+
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>
