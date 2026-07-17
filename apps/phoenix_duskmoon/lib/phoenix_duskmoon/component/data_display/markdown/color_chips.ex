@@ -3,16 +3,17 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Markdown.ColorChips do
   MDEx plugin that renders GitHub-style color chips next to supported inline
   color values.
 
-  Six-digit hexadecimal, RGB, and HSL colors are supported when written as
-  inline code, for example `` `#0969DA` ``.
+  Three-, four-, six-, and eight-digit hexadecimal, RGB, and HSL colors are
+  supported when written as inline code, for example `` `#0969DA` ``.
   """
 
   alias MDEx.Document
 
-  @hex_color ~r/\A#[0-9A-Fa-f]{6}\z/
+  @hex_color ~r/\A#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})\z/
   @rgb_color ~r/\Argb\(\s*(?<red>\d{1,3})\s*,\s*(?<green>\d{1,3})\s*,\s*(?<blue>\d{1,3})\s*\)\z/
   @hsl_color ~r/\Ahsl\(\s*(?<hue>\d{1,3})\s*,\s*(?<saturation>\d{1,3})%\s*,\s*(?<lightness>\d{1,3})%\s*\)\z/
-  @chip_style "box-sizing: border-box; display: inline-block; width: 0.75em; height: 0.75em; margin-left: 0.25em; border: 1px solid currentColor; border-radius: 50%; vertical-align: -0.0625em;"
+  @chip_style "box-sizing: border-box; position: relative; display: inline-block; width: 0.75em; height: 0.75em; margin-left: 0.35em; overflow: hidden; border: 1px solid currentColor; border-radius: 0.2em; vertical-align: -0.05em; background-color: #fff; background-image: conic-gradient(#b8b8b8 25%, transparent 0 50%, #b8b8b8 0 75%, transparent 0); background-size: 4px 4px;"
+  @swatch_style "position: absolute; inset: 0;"
 
   @doc """
   Attaches the color-chip transformation to an MDEx document.
@@ -85,7 +86,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Markdown.ColorChips do
 
     %MDEx.Raw{
       literal:
-        ~s(<code>#{escaped_literal}<span class="markdown-color-chip" style="#{@chip_style} background-color: #{color};" aria-hidden="true"></span></code>),
+        ~s(<code>#{escaped_literal}<span class="markdown-color-chip" style="#{@chip_style}" aria-hidden="true"><span class="markdown-color-chip-swatch" style="#{@swatch_style} background-color: #{color};"></span></span></code>),
       sourcepos: sourcepos
     }
   end

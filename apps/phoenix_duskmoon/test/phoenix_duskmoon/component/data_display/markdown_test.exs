@@ -373,15 +373,31 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.MarkdownTest do
       refute result =~ "<br"
     end
 
-    test "omits front matter from rendered HTML by default" do
+    test "renders front matter as a labeled YAML code block by default" do
       result =
         render_component(&dm_markdown_body/1, %{
           source: "---\ntitle: Release notes\nstatus: published\n---\n# Changes"
         })
 
+      assert result =~ ~s[class="markdown-front-matter code-block"]
+      assert result =~ ~s[data-language="yaml"]
+      assert result =~ ~s[<span class="code-language"]
+      assert result =~ ">YAML</span>"
+      assert result =~ ~s[<code class="language-yaml"]
+      assert result =~ "title: Release notes"
+      assert result =~ "status: published"
       assert result =~ "<h1>Changes</h1>"
-      refute result =~ "title: Release notes"
-      refute result =~ "status: published"
+      refute result =~ "---"
+    end
+
+    test "escapes HTML in rendered front matter" do
+      result =
+        render_component(&dm_markdown_body/1, %{
+          source: "---\ntitle: <script>alert('unsafe')</script>\n---\n# Changes"
+        })
+
+      assert result =~ "title: &lt;script&gt;alert(&#39;unsafe&#39;)&lt;/script&gt;"
+      refute result =~ "<script>"
     end
 
     test "allows front matter support to be disabled" do
@@ -393,16 +409,21 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.MarkdownTest do
 
       assert result =~ "title: Release notes"
       assert result =~ "<h1>Changes</h1>"
+      refute result =~ "markdown-front-matter"
+      refute result =~ "language-yaml"
     end
 
     test "renders color chips for supported inline color values" do
       result =
         render_component(&dm_markdown_body/1, %{
-          source: "`#0969DA` `rgb(9, 105, 218)` `hsl(212, 92%, 45%)`"
+          source: "`#4C86FC` `#fff` `#0000` `#FF000080` `rgb(9, 105, 218)` `hsl(212, 92%, 45%)`"
         })
 
-      assert length(Regex.scan(~r/class="markdown-color-chip"/, result)) == 3
-      assert result =~ "background-color: #0969DA;"
+      assert length(Regex.scan(~r/class="markdown-color-chip"/, result)) == 6
+      assert result =~ "background-color: #4C86FC;"
+      assert result =~ "background-color: #fff;"
+      assert result =~ "background-color: #0000;"
+      assert result =~ "background-color: #FF000080;"
       assert result =~ "background-color: rgb(9, 105, 218);"
       assert result =~ "background-color: hsl(212, 92%, 45%);"
     end

@@ -24,6 +24,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Markdown do
 
   @default_markdown_body_plugins [
     MDExGFM,
+    PhoenixDuskmoon.Component.DataDisplay.Markdown.FrontMatter,
     PhoenixDuskmoon.Component.DataDisplay.Markdown.ColorChips,
     MDExMermaid
   ]
@@ -109,14 +110,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Markdown do
   @doc """
   Renders Markdown source as server-generated HTML using MDEx.
 
-  GitHub Flavored Markdown, color chips, and Mermaid are enabled by default.
-  Six-digit hexadecimal, RGB, and HSL colors written as inline code render with
-  a color chip. YAML-style front matter delimited by `---` is omitted from the
-  rendered HTML, and soft line breaks render as `<br>` elements by default.
-  Front matter is not parsed into component metadata. Pass a custom list of
-  MDEx-compatible plugins through `plugins` to replace the defaults, and pass
-  MDEx document options through `options` to override the default document
-  options.
+  GitHub Flavored Markdown, visible YAML front matter, color chips, and Mermaid
+  are enabled by default. Three-, four-, six-, and eight-digit hexadecimal,
+  RGB, and HSL colors written as inline code render with a color chip.
+  YAML-style front matter delimited by `---` renders as a labeled code block,
+  and soft line breaks render as `<br>` elements by default. Front matter is
+  not parsed into component metadata. Pass a custom list of MDEx-compatible
+  plugins through `plugins` to replace the defaults, and pass MDEx document
+  options through `options` to override the default document options.
 
   The default plugins enable raw HTML rendering. Only render trusted Markdown
   source with the default configuration, and only use trusted plugins and
