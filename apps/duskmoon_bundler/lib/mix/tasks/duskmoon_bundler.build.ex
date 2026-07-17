@@ -74,23 +74,31 @@ defmodule Mix.Tasks.DuskmoonBundler.Build do
     outdir = Keyword.get(parsed, :outdir) || to_string(config.outdir)
     minify = Keyword.get(parsed, :minify, config.minify)
 
+    resolve_dirs =
+      case cli_resolve_dirs do
+        [] -> config.resolve_dirs
+        list -> list
+      end
+
     tailwind? =
       Keyword.get(parsed, :tailwind) ||
         (tailwind_config != [] and Keyword.get(parsed, :tailwind, true))
 
     if tailwind? do
-      build_tailwind(parsed, tailwind_config, outdir, minify, config.hash, config.root)
+      build_tailwind(
+        parsed,
+        tailwind_config,
+        outdir,
+        minify,
+        config.hash,
+        config.root,
+        resolve_dirs
+      )
     end
 
     entries =
       case cli_entries do
         [] -> List.wrap(config.entry)
-        list -> list
-      end
-
-    resolve_dirs =
-      case cli_resolve_dirs do
-        [] -> config.resolve_dirs
         list -> list
       end
 
@@ -165,7 +173,15 @@ defmodule Mix.Tasks.DuskmoonBundler.Build do
     end
   end
 
-  defp build_tailwind(parsed, tailwind_config, outdir, minify, config_hash, root) do
+  defp build_tailwind(
+         parsed,
+         tailwind_config,
+         outdir,
+         minify,
+         config_hash,
+         root,
+         resolve_dirs
+       ) do
     cli_sources = Keyword.get_values(parsed, :tailwind_source)
     hash = Keyword.get(parsed, :hash, config_hash)
 
@@ -197,6 +213,7 @@ defmodule Mix.Tasks.DuskmoonBundler.Build do
                  sources: sources,
                  css: css_input,
                  css_base: css_base,
+                 resolve_dirs: resolve_dirs,
                  minify: false
                ) do
           DuskmoonBundler.Builder.Writer.build_style_entry(

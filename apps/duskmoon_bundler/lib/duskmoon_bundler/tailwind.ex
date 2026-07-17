@@ -43,6 +43,7 @@ defmodule DuskmoonBundler.Tailwind do
 
     * `:css` — custom input CSS (default: Tailwind's base with theme + preflight + utilities)
     * `:css_base` — base directory for resolving local `@import`, `@reference`, `@plugin`, and `@config` paths
+    * `:resolve_dirs` — additional package directories for resolving bare stylesheet imports
     * `:sources` — override source patterns (default: from config)
     * `:minify` — minify the output CSS (default: `false`)
   """
@@ -64,12 +65,15 @@ defmodule DuskmoonBundler.Tailwind do
   @impl true
   def init(opts) do
     sources = opts[:sources] || DuskmoonBundler.Config.tailwind()[:sources] || []
+    resolve_dirs = normalize_resolve_dirs(opts[:resolve_dirs])
 
     {:ok,
      %{
        runtime: nil,
        scanner: nil,
        sources: sources,
+       default_resolve_dirs: resolve_dirs,
+       resolve_dirs: resolve_dirs,
        last_css: nil
      }}
   end
@@ -119,16 +123,21 @@ defmodule DuskmoonBundler.Tailwind do
     css_base = opts[:css_base] || File.cwd!()
     sources = opts[:sources] || state.sources
 
+    resolve_dirs =
+      opts |> Keyword.get(:resolve_dirs, state.default_resolve_dirs) |> normalize_resolve_dirs()
+
     scanner =
       if(opts[:sources],
         do: build_scanner(sources),
         else: state.scanner || Oxide.new(sources: [])
       )
 
-    case compile_css(state.runtime, css_input, Oxide.scan(scanner), css_base) do
+    case compile_css(state.runtime, css_input, Oxide.scan(scanner), css_base, resolve_dirs) do
       {:ok, css} ->
         css = maybe_minify(css, minify)
-        {:reply, {:ok, css}, %{state | scanner: scanner, last_css: css}}
+
+        {:reply, {:ok, css},
+         %{state | scanner: scanner, resolve_dirs: resolve_dirs, last_css: css}}
 
       {:error, _} = error ->
         {:reply, error, state}
@@ -140,6 +149,9 @@ defmodule DuskmoonBundler.Tailwind do
     minify = Keyword.get(opts, :minify, false)
     css_input = opts[:css]
     css_base = opts[:css_base] || File.cwd!()
+
+    resolve_dirs =
+      opts |> Keyword.get(:resolve_dirs, state.resolve_dirs) |> normalize_resolve_dirs()
 
     changed =
       Enum.map(changed_files, fn
@@ -158,10 +170,16 @@ defmodule DuskmoonBundler.Tailwind do
         if Oxide.scan_files(scanner, changed) == [] do
           {:reply, :unchanged, state}
         else
-          case compile_css(state.runtime, css_input, Oxide.scan(scanner), css_base) do
+          case compile_css(
+                 state.runtime,
+                 css_input,
+                 Oxide.scan(scanner),
+                 css_base,
+                 resolve_dirs
+               ) do
             {:ok, css} ->
               css = maybe_minify(css, minify)
-              {:reply, {:ok, css}, %{state | last_css: css}}
+              {:reply, {:ok, css}, %{state | resolve_dirs: resolve_dirs, last_css: css}}
 
             {:error, _} = error ->
               {:reply, error, state}
@@ -185,11 +203,12 @@ defmodule DuskmoonBundler.Tailwind do
     Oxide.new(sources: oxide_sources)
   end
 
-  defp compile_css(runtime, css_input, candidates, css_base) do
+  defp compile_css(runtime, css_input, candidates, css_base, resolve_dirs) do
     case DuskmoonBundler.JS.Runtime.call(runtime, "compileTailwindCss", [
            css_input,
            candidates,
-           Path.expand(css_base)
+           Path.expand(css_base),
+           resolve_dirs
          ]) do
       {:ok, css} when is_binary(css) -> {:ok, css}
       {:ok, _} -> {:error, :unexpected_result}
@@ -202,6 +221,14 @@ defmodule DuskmoonBundler.Tailwind do
   defp maybe_minify(css, true) do
     {:ok, %{code: minified}} = Vize.CSS.compile(css, minify: true)
     minified
+  end
+
+  defp normalize_resolve_dirs(resolve_dirs) do
+    resolve_dirs
+    |> List.wrap()
+    |> Enum.reject(&is_nil/1)
+    |> Enum.map(&Path.expand/1)
+    |> Enum.uniq()
   end
 
   defp to_oxide_source(%{base: base, pattern: pattern} = source) do

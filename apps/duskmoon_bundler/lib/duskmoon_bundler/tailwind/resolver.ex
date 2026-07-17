@@ -8,7 +8,7 @@ defmodule DuskmoonBundler.Tailwind.Resolver do
   @module_conditions ["require", "default", "browser", "import"]
   @stylesheet_conditions ["style", "browser", "import", "default"]
 
-  def resolve_stylesheet_path!(id, base, runtime_node_modules) do
+  def resolve_stylesheet_path!(id, base, runtime_node_modules, resolve_dirs \\ []) do
     base = normalize_base(base)
 
     if NPM.Resolution.PackageResolver.relative?(id) or absolute_specifier?(id) do
@@ -20,7 +20,8 @@ defmodule DuskmoonBundler.Tailwind.Resolver do
         @stylesheet_extensions,
         @stylesheet_index_files,
         "stylesheet",
-        runtime_node_modules
+        runtime_node_modules,
+        resolve_dirs
       )
     end
   end
@@ -37,7 +38,8 @@ defmodule DuskmoonBundler.Tailwind.Resolver do
         @module_extensions,
         @module_index_files,
         kind,
-        runtime_node_modules
+        runtime_node_modules,
+        []
       )
     end
   end
@@ -48,11 +50,19 @@ defmodule DuskmoonBundler.Tailwind.Resolver do
   def relative_specifier?(specifier), do: NPM.Resolution.PackageResolver.relative?(specifier)
   def absolute_specifier?(specifier), do: String.starts_with?(specifier, "/")
 
-  defp resolve_bare_path!(id, base, extensions, index_files, kind, runtime_node_modules) do
+  defp resolve_bare_path!(
+         id,
+         base,
+         extensions,
+         index_files,
+         kind,
+         runtime_node_modules,
+         resolve_dirs
+       ) do
     {package_name, subpath} = NPM.Resolution.PackageResolver.split_specifier(id)
 
     resolved =
-      (node_modules_dirs_for(base) ++ [runtime_node_modules])
+      (node_modules_dirs_for(base) ++ List.wrap(resolve_dirs) ++ [runtime_node_modules])
       |> Enum.reject(&is_nil/1)
       |> Enum.uniq()
       |> Enum.find_value(fn node_modules ->
@@ -78,7 +88,7 @@ defmodule DuskmoonBundler.Tailwind.Resolver do
         path
 
       nil ->
-        raise "Could not resolve #{kind} #{inspect(id)} from #{inspect(base)}. Add it to node_modules or the Tailwind runtime install."
+        raise "Could not resolve #{kind} #{inspect(id)} from #{inspect(base)}. Add it to node_modules, a configured resolve directory, or the Tailwind runtime install."
     end
   end
 

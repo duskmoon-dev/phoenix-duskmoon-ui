@@ -69,10 +69,12 @@ const tailwindExports = requireResolvedModule(tailwindRuntimeSpec, new Map()) as
 async function compileTailwindCss(
   inputCss: string | null,
   candidates: string[] | null,
-  base: string | null
+  base: string | null,
+  resolveDirs: string[] | null = null
 ) {
   const moduleCache = new Map<string, { exports: unknown }>()
   const rootBase = normalizeBase(base, TAILWIND_DEFAULT_BASE)
+  const packageRoots = resolveDirs ?? []
   const css = inputCss == null ? '@import "tailwindcss";' : inputCss
 
   const compiler = await tailwindExports.compile(css, {
@@ -102,7 +104,12 @@ async function compileTailwindCss(
         return { base: rootBase, content: fs.readFileSync(utilitiesCssPath, 'utf8') }
       }
 
-      return Beam.callSync('tailwind.load_stylesheet', id, normalizeBase(currentBase, rootBase))
+      return Beam.callSync(
+        'tailwind.load_stylesheet',
+        id,
+        normalizeBase(currentBase, rootBase),
+        packageRoots
+      )
     },
     loadModule: async (id, currentBase, type) => {
       const spec = Beam.callSync(
