@@ -37,7 +37,7 @@ defmodule DuskmoonBundler.MixProject do
   defp deps do
     [
       {:duskmoon_bundler_runtime, in_umbrella: true},
-      {:reach, "~> 2.6.1", only: :dev, runtime: false},
+      {:reach, "~> 2.6", only: :dev, runtime: false},
       {:glob_ex, "~> 0.1"},
       {:duskmoon_oxc, in_umbrella: true},
       {:duskmoon_vize, in_umbrella: true},
@@ -52,7 +52,7 @@ defmodule DuskmoonBundler.MixProject do
       {:websock_adapter, "~> 0.5"},
       {:file_system, "~> 1.0"},
       {:jason, "~> 1.4"},
-      {:json_codec, "~> 0.1.5"},
+      {:json_codec, "~> 0.2"},
       {:igniter, "~> 0.5", optional: true},
       {:duskmoon_npm, in_umbrella: true},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
