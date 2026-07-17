@@ -115,20 +115,21 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     refute result =~ "aria-disabled"
   end
 
-  test "renders navigate button as link with button styling" do
+  test "renders navigate button as one link with button styling" do
     result =
       render_component(&dm_btn/1, %{
         navigate: "/dashboard",
-        variant: "ghost",
         inner_block: %{inner_block: fn _, _ -> "Dashboard" end}
       })
 
+    assert [_] = Regex.scan(~r/<a\b/, result)
     assert result =~ ~s[<a]
     assert result =~ ~s[href="/dashboard"]
     assert result =~ ~s[data-phx-link="redirect"]
     assert result =~ ~s[data-phx-link-state="push"]
-    assert result =~ ~s[<el-dm-button]
-    assert result =~ ~s[variant="ghost"]
+    assert result =~ ~s[class="btn btn-primary"]
+    refute result =~ ~s[<el-dm-button]
+    refute result =~ ~s[<button]
     assert result =~ "Dashboard"
   end
 
@@ -141,29 +142,82 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
         inner_block: %{inner_block: fn _, _ -> "Profile" end}
       })
 
+    assert [_] = Regex.scan(~r/<a\b/, result)
     assert result =~ ~s[href="/settings?tab=profile"]
     assert result =~ ~s[data-phx-link="patch"]
     assert result =~ ~s[data-phx-link-state="replace"]
-    assert result =~ ~s[variant="outline"]
+    assert result =~ ~s[class="btn btn-outline"]
+    refute result =~ ~s[<el-dm-button]
+    refute result =~ ~s[<button]
   end
 
   test "renders href button as link with styling attributes" do
     result =
       render_component(&dm_btn/1, %{
+        id: "external-action",
         href: "https://example.com",
         variant: "error",
         size: "lg",
         class: "external-action",
+        rest: %{"aria-label" => "External site", "rel" => "noopener", "target" => "_blank"},
         inner_block: %{inner_block: fn _, _ -> "External" end}
       })
 
+    assert [_] = Regex.scan(~r/<a\b/, result)
     assert result =~ ~s[<a]
+    assert result =~ ~s[id="external-action"]
     assert result =~ ~s[href="https://example.com"]
-    assert result =~ ~s[variant="primary"]
+    assert result =~ ~s[class="btn btn-primary btn-lg external-action"]
+    assert result =~ ~s[aria-label="External site"]
+    assert result =~ ~s[rel="noopener"]
+    assert result =~ ~s[target="_blank"]
     assert result =~ "--color-primary: var(--color-error)"
-    assert result =~ ~s[size="lg"]
-    assert result =~ "external-action"
+    refute result =~ ~s[<el-dm-button]
+    refute result =~ ~s[<button]
     assert result =~ "External"
+  end
+
+  test "renders disabled link button as an inert control" do
+    result =
+      render_component(&dm_btn/1, %{
+        navigate: "/dashboard",
+        disabled: true,
+        rest: %{
+          "aria-label" => "Dashboard unavailable",
+          "onclick" => "alert('clicked')",
+          "phx-click" => "navigate",
+          "tabindex" => "0"
+        },
+        inner_block: %{inner_block: fn _, _ -> "Dashboard" end}
+      })
+
+    assert [_] = Regex.scan(~r/<a\b/, result)
+    assert result =~ ~s[role="link"]
+    assert result =~ ~s[aria-disabled="true"]
+    assert result =~ ~s[aria-label="Dashboard unavailable"]
+    assert result =~ "opacity-50"
+    assert result =~ "cursor-not-allowed"
+    assert result =~ "pointer-events-none"
+    refute result =~ ~s[href=]
+    refute result =~ ~s[data-phx-link=]
+    refute result =~ ~s[onclick=]
+    refute result =~ ~s[phx-click=]
+    refute result =~ ~s[tabindex=]
+  end
+
+  test "renders loading link button without an active destination" do
+    result =
+      render_component(&dm_btn/1, %{
+        href: "https://example.com",
+        loading: true,
+        inner_block: %{inner_block: fn _, _ -> "Loading" end}
+      })
+
+    assert [_] = Regex.scan(~r/<a\b/, result)
+    assert result =~ "btn-loading"
+    assert result =~ ~s[aria-disabled="true"]
+    assert result =~ ~s[aria-busy="true"]
+    refute result =~ ~s[href=]
   end
 
   test "renders button with noise effect" do

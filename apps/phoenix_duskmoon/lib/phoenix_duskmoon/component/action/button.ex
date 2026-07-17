@@ -249,23 +249,28 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   end
 
   def dm_btn(%{} = assigns) do
-    assigns = assign_button_element(assigns)
+    link? =
+      is_binary(assigns.navigate) || is_binary(assigns.patch) ||
+        (!is_nil(assigns.href) && assigns.href != "#")
+
+    assigns =
+      assigns
+      |> then(fn assigns ->
+        if link?, do: assign_button_style(assigns), else: assign_button_element(assigns)
+      end)
+      |> assign(:link?, link?)
 
     ~H"""
-    <.button_link :if={is_binary(@navigate)} navigate={@navigate} replace={@replace}>
-      <.button_element {assigns} />
-    </.button_link>
-    <.button_link :if={!is_binary(@navigate) && is_binary(@patch)} patch={@patch} replace={@replace}>
-      <.button_element {assigns} />
-    </.button_link>
-    <.button_link
-      :if={!is_binary(@navigate) && !is_binary(@patch) && !is_nil(@href) && @href != "#"}
-      href={@href}
-    >
-      <.button_element {assigns} />
-    </.button_link>
-    <.button_element :if={!is_binary(@navigate) && !is_binary(@patch) && (is_nil(@href) || @href == "#")} {assigns} />
+    <.button_link :if={@link?} {assigns} />
+    <.button_element :if={!@link?} {assigns} />
     """
+  end
+
+  defp assign_button_style(assigns) do
+    assigns
+    |> assign_new(:id, fn -> nil end)
+    |> assign(:el_variant, map_variant(assigns.variant))
+    |> assign(:el_style, variant_style(assigns.variant))
   end
 
   defp assign_button_element(assigns) do
@@ -273,10 +278,8 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
 
     assigns
     |> assign(:rest, rest_without_onclick(assigns.rest, submit_onclick))
-    |> assign_new(:id, fn -> nil end)
-    |> assign(:el_variant, map_variant(assigns.variant))
-    |> assign(:el_style, variant_style(assigns.variant))
     |> assign(:submit_onclick, submit_onclick)
+    |> assign_button_style()
   end
 
   attr(:id, :any, default: nil)
@@ -321,24 +324,73 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   attr(:patch, :string, default: nil)
   attr(:href, :any, default: nil)
   attr(:replace, :boolean, default: false)
-  slot(:inner_block, required: true)
+  attr(:id, :any, default: nil)
+  attr(:el_variant, :string, default: nil)
+  attr(:size, :string, default: nil)
+  attr(:shape, :string, default: nil)
+  attr(:loading, :boolean, default: false)
+  attr(:disabled, :boolean, default: false)
+  attr(:class, :any, default: nil)
+  attr(:el_style, :string, default: nil)
+  attr(:rest, :global)
+  slot(:inner_block)
+  slot(:prefix)
+  slot(:suffix)
 
-  defp button_link(%{navigate: to} = assigns) when is_binary(to) do
+  defp button_link(assigns) do
+    assigns =
+      assigns
+      |> assign(:button_class, [
+        "btn",
+        "btn-#{assigns.el_variant || "primary"}",
+        assigns.size && "btn-#{assigns.size}",
+        assigns.shape && "btn-#{assigns.shape}",
+        assigns.loading && "btn-loading",
+        assigns.disabled && "opacity-50",
+        assigns.disabled && "cursor-not-allowed",
+        assigns.disabled && "pointer-events-none",
+        assigns.class
+      ])
+      |> assign(:inert_rest, inert_link_rest(assigns.rest))
+
     ~H"""
-    <.link navigate={@navigate} replace={@replace}>{render_slot(@inner_block)}</.link>
+    <.link
+      :if={!@disabled && !@loading}
+      navigate={@navigate}
+      patch={@patch}
+      href={@href}
+      replace={@replace}
+      id={@id}
+      class={@button_class}
+      style={@el_style}
+      {@rest}
+    >
+      <span :for={prefix <- @prefix} class="inline-flex items-center">{render_slot(prefix)}</span>
+      {render_slot(@inner_block)}
+      <span :for={suffix <- @suffix} class="inline-flex items-center">{render_slot(suffix)}</span>
+    </.link>
+    <a
+      :if={@disabled || @loading}
+      id={@id}
+      role="link"
+      class={@button_class}
+      style={@el_style}
+      aria-disabled="true"
+      aria-busy={@loading && "true"}
+      {@inert_rest}
+    >
+      <span :for={prefix <- @prefix} class="inline-flex items-center">{render_slot(prefix)}</span>
+      {render_slot(@inner_block)}
+      <span :for={suffix <- @suffix} class="inline-flex items-center">{render_slot(suffix)}</span>
+    </a>
     """
   end
 
-  defp button_link(%{patch: to} = assigns) when is_binary(to) do
-    ~H"""
-    <.link patch={@patch} replace={@replace}>{render_slot(@inner_block)}</.link>
-    """
-  end
-
-  defp button_link(%{href: href} = assigns) when not is_nil(href) and href != "#" do
-    ~H"""
-    <.link href={@href}>{render_slot(@inner_block)}</.link>
-    """
+  defp inert_link_rest(rest) do
+    Map.reject(rest, fn {key, _value} ->
+      key = to_string(key)
+      key == "tabindex" || String.starts_with?(key, ["on", "phx-"])
+    end)
   end
 
   # WORKAROUND(upstream): duskmoon-dev/duskmoon-elements#66
