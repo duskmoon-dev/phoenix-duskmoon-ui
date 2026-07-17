@@ -221,8 +221,7 @@ jobs:
           sed -i "s%{:duskmoon_bundler_runtime, in_umbrella: true}%{:duskmoon_bundler_runtime, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i "s%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i '/^[[:space:]]*{:ex_doc, .*only: :dev, runtime: false},\?$/d' apps/duskmoon_bundler/mix.exs
-          # Transitive production deps pull these without :only restrictions, so avoid packaged mix.exs divergence.
-          sed -i '/^[[:space:]]*{:jason, .*only: :test},\?$/d' apps/phoenix_duskmoon/mix.exs
+          # A transitive production dep pulls ex_doc without an :only restriction, so avoid a dev-only duplicate.
           sed -i '/^[[:space:]]*{:ex_doc, .*only: :dev, runtime: false},\?$/d' apps/phoenix_duskmoon/mix.exs
           grep -q "{:duskmoon_hex_solver, \"~> ${VERSION}\"}" apps/duskmoon_npm/mix.exs
           grep -q "{:duskmoon_oxc, \"~> ${VERSION}\"}" apps/duskmoon_quickbeam/mix.exs
@@ -234,10 +233,6 @@ jobs:
           fi
           if grep -q "{:ex_doc, .*only: :dev" apps/duskmoon_bundler/mix.exs; then
             echo "Bundler packaged mix.exs still contains a dev-only ex_doc dependency" >&2
-            exit 1
-          fi
-          if grep -q "{:jason, .*only: :test" apps/phoenix_duskmoon/mix.exs; then
-            echo "PhoenixDuskmoon packaged mix.exs still contains a test-only jason dependency" >&2
             exit 1
           fi
           if grep -q "{:ex_doc, .*only: :dev" apps/phoenix_duskmoon/mix.exs; then
