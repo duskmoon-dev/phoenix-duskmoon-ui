@@ -71,7 +71,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
         })
 
       assert result =~ ~s[role="table"]
-      assert result =~ ~s[role="row-group"]
+      assert result =~ "<thead"
+      assert result =~ "<tbody"
+      refute result =~ ~r/<(?:thead|tbody)\b[^>]*\srole=/
       assert result =~ ~s[role="row"]
       assert result =~ ~s[role="cell"]
       assert result =~ "Alice"
@@ -275,6 +277,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
       assert result =~ ~s[id="row-2"]
       assert result =~ "Alice"
       assert result =~ "Bob"
+      refute result =~ ~r/<tbody\b[^>]*\srole=/
     end
 
     test "renders table without caption by default" do
