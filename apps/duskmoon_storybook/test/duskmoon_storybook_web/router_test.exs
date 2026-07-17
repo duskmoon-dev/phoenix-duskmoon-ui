@@ -54,4 +54,27 @@ defmodule DuskmoonStorybookWeb.RouterTest do
       refute html =~ "true;\\n// preview only"
     end
   end
+
+  describe "markdown body data display route" do
+    test "renders the server-side Markdown component and its defaults", %{conn: conn} do
+      conn = get(conn, "/components/data-display/markdown-body")
+      html = html_response(conn, 200)
+      document = LazyHTML.from_document(html)
+      features = LazyHTML.query_by_id(document, "markdown-features")
+      hardbreaks_enabled = LazyHTML.query_by_id(document, "markdown-hardbreaks-true")
+      hardbreaks_disabled = LazyHTML.query_by_id(document, "markdown-hardbreaks-false")
+
+      assert html =~ "Markdown Body"
+      assert html =~ "dm_markdown_body"
+      assert html =~ "hardbreaks: true"
+      assert html =~ "hardbreaks: false"
+      assert Enum.count(LazyHTML.query(features, ".markdown-color-chip")) == 4
+      assert Enum.count(LazyHTML.query(features, ".markdown-front-matter")) == 1
+      assert Enum.count(LazyHTML.query(features, "code.language-yaml")) == 1
+      assert LazyHTML.text(features) =~ "YAML"
+      assert LazyHTML.text(features) =~ "title: DmMarkdown feature showcase"
+      assert Enum.count(LazyHTML.query(hardbreaks_enabled, "br")) == 1
+      assert Enum.empty?(LazyHTML.query(hardbreaks_disabled, "br"))
+    end
+  end
 end

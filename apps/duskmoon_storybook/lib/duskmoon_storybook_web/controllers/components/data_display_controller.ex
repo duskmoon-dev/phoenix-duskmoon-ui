@@ -61,6 +61,10 @@ defmodule DuskmoonStorybookWeb.Components.DataDisplayController do
     render(conn, :markdown, active_menu: "data-display-markdown")
   end
 
+  def markdown_body(conn, _params) do
+    render(conn, :markdown_body, active_menu: "data-display-markdown-body")
+  end
+
   def pagination(conn, _params) do
     render(conn, :pagination, active_menu: "data-display-pagination")
   end

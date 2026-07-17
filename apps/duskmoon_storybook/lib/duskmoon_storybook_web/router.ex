@@ -19,6 +19,7 @@ defmodule DuskmoonStorybookWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :page
+    get "/components", PageController, :page
 
     live_storybook("/storybook", backend_module: DuskmoonStorybookWeb.Storybook)
   end
@@ -48,6 +49,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/data-display/git-commit-diff", DataDisplayController, :git_commit_diff
     get "/data-display/git-clone-box", DataDisplayController, :git_clone_box
     get "/data-display/markdown", DataDisplayController, :markdown
+    get "/data-display/markdown-body", DataDisplayController, :markdown_body
     get "/data-display/pagination", DataDisplayController, :pagination
     get "/data-display/progress", DataDisplayController, :progress
     get "/data-display/skeleton", DataDisplayController, :skeleton

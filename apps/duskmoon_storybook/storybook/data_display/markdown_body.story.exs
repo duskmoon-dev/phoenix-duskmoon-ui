@@ -59,18 +59,26 @@ defmodule Storybook.DataDisplay.MarkdownBody do
       },
       %Variation{
         id: :front_matter_and_color_chips,
-        description: "Front matter is omitted and inline color values render with chips",
+        description: "Front matter renders as YAML and inline color values render with chips",
         attributes: %{
           source: """
           ---
-          title: Brand palette
-          status: published
+          title: DmMarkdown feature showcase
+          tags:
+            - rust
+            - yew
+          accent: '#4C86FC'
           ---
-          ## Brand palette
+          # DmMarkdown rendering
 
-          Primary `#0969DA`
-          Accent `rgb(130, 80, 223)`
-          Highlight `hsl(38, 92%, 50%)`
+          ## Inline color chips
+
+          | Color | Inline code |
+          | --- | --- |
+          | Brand blue | `#4C86FC` |
+          | White | `#fff` |
+          | Black | `#000` |
+          | Transparent red | `#FF000080` |
           """
         }
       },

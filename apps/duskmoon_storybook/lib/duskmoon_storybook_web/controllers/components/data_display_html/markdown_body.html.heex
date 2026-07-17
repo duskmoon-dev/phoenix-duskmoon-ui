@@ -1,0 +1,111 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/markdown-body"}>Data Display</:crumb>
+  <:crumb>Markdown Body</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Markdown Body</span>
+    <span class="text-sm opacity-60">dm_markdown_body</span>
+  </:title>
+
+  <% feature_source = """
+  ---
+  title: DmMarkdown feature showcase
+  tags:
+    - rust
+    - yew
+  accent: '#4C86FC'
+  ---
+  # DmMarkdown rendering
+
+  Dm Markdown renders source text into the same typography scope as `MarkdownBody`, with labeled fenced code and Mermaid diagrams.
+
+  ## Inline color chips
+
+  | Color | Inline code |
+  | --- | --- |
+  | Brand blue | `#4C86FC` |
+  | White | `#fff` |
+  | Black | `#000` |
+  | Transparent red | `#FF000080` |
+
+  Function colors work too: `rgb(...)`, `rgba(...)`, `hsl(...)`, `hsla(...)`.
+  """ %>
+  <% docs = """
+  ## Overview
+  Server-rendered Markdown powered by MDEx. GitHub Flavored Markdown, color chips,
+  front matter, hard line breaks, and Mermaid diagrams are enabled by default.
+
+  ## Usage
+  ```heex
+  <.dm_markdown_body source={"# Hello\\n\\nThis is **Markdown**."} />
+  ```
+
+  Pass MDEx document settings through `options`, or replace the default plugin
+  list through `plugins`.
+
+  ## Front matter and color chips
+
+  Front matter delimited by `---` renders visibly as a labeled YAML code block.
+  Three-, four-, six-, and eight-digit hexadecimal colors plus RGB and HSL
+  colors render with color chips when written as inline code.
+
+  ````markdown
+  #{feature_source}
+  ````
+
+  ## Hard line breaks
+
+  `hardbreaks: true` is the default and converts soft line breaks to `<br>`.
+  Set it to `false` to preserve CommonMark soft line breaks.
+
+  ```heex
+  <.dm_markdown_body
+    source={"First line\\nSecond line"}
+    options={[render: [hardbreaks: true]]}
+  />
+
+  <.dm_markdown_body
+    source={"First line\\nSecond line"}
+    options={[render: [hardbreaks: false]]}
+  />
+  ```
+  """ %>
+  <.dm_markdown content={docs} />
+
+  <section class="mt-8">
+    <h2 class="text-2xl font-semibold">Front matter and color chips</h2>
+    <p class="mt-2 opacity-70">
+      The rendered result shows the YAML front matter and adds chips for each supported color value.
+    </p>
+    <.dm_markdown_body id="markdown-features" class="mt-4" source={feature_source} />
+  </section>
+
+  <% break_source = "First line\nSecond line" %>
+  <section class="mt-8">
+    <h2 class="text-2xl font-semibold">Hard line breaks</h2>
+    <div class="mt-4 grid gap-4 md:grid-cols-2">
+      <div class="rounded border border-outline-variant p-4">
+        <h3 class="text-lg font-semibold">Enabled (default)</h3>
+        <code class="text-sm">render: [hardbreaks: true]</code>
+        <.dm_markdown_body
+          id="markdown-hardbreaks-true"
+          class="mt-4"
+          source={break_source}
+          options={[render: [hardbreaks: true]]}
+        />
+      </div>
+      <div class="rounded border border-outline-variant p-4">
+        <h3 class="text-lg font-semibold">Disabled</h3>
+        <code class="text-sm">render: [hardbreaks: false]</code>
+        <.dm_markdown_body
+          id="markdown-hardbreaks-false"
+          class="mt-4"
+          source={break_source}
+          options={[render: [hardbreaks: false]]}
+        />
+      </div>
+    </div>
+  </section>
+</.dm_card>
