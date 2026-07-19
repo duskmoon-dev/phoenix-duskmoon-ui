@@ -46,6 +46,6 @@
     "postcss": "8.5.19"
   },
   "peerDependencies": {
-    "tailwindcss": "4.3.3"
+    "tailwindcss": "^4.3.2"
   }
 }
