@@ -5,6 +5,22 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
   import Phoenix.LiveViewTest
   import PhoenixDuskmoon.Component.DataEntry.Input
 
+  describe "generic input type" do
+    test "renders when the optional value is omitted" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "search",
+          name: "q",
+          id: "repository-search",
+          label: "Search code"
+        })
+
+      assert result =~ ~s[type="search"]
+      assert result =~ ~s[name="q"]
+      assert result =~ ~s[id="repository-search"]
+    end
+  end
+
   describe "select input type" do
     test "renders select element with basic attributes" do
       result =
