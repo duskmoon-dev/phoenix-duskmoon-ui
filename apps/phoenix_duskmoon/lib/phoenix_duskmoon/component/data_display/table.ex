@@ -163,7 +163,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
         id={caption[:id]}
         class={caption[:class]}
       >{render_slot(caption)}</caption>
-      <thead role="row-group" class="hidden md:table-header-group sticky top-0">
+      <thead class="hidden md:table-header-group sticky top-0">
         <tr role="row">
           <th
             :for={col <- @col}
@@ -173,7 +173,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
           >{col.label}</th>
         </tr>
       </thead>
-      <tbody :if={@stream} role="row-group" id={@id && "#{@id}-stream-body"} phx-update="stream">
+      <tbody :if={@stream} id={@id && "#{@id}-stream-body"} phx-update="stream">
         <tr
           :for={{row_id, row} <- @data}
           role="row"
@@ -187,7 +187,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
           >{render_slot(col, row)}</td>
         </tr>
       </tbody>
-      <tbody :if={!@stream} role="row-group">
+      <tbody :if={!@stream}>
         <%= for row <- @data do %>
           <tr
             role="row"
