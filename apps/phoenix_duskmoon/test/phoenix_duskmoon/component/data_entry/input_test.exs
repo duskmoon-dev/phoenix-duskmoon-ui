@@ -689,6 +689,20 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
       assert result =~ "Username"
     end
 
+    test "omits label when label is not provided" do
+      result =
+        render_component(&dm_input/1, %{
+          type: "text",
+          name: "filter[key]",
+          value: nil,
+          "aria-label": "Label key"
+        })
+
+      assert result =~ ~s(name="filter[key]")
+      assert result =~ ~s[aria-label="Label key"]
+      refute result =~ "<label"
+    end
+
     test "renders text input with value" do
       result =
         render_component(&dm_input/1, %{
