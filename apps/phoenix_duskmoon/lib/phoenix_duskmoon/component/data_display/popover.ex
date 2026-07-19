@@ -25,6 +25,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Popover do
   """
   use Phoenix.Component
 
+  # WORKAROUND(upstream): duskmoon-dev/duskmoon-elements#69
+  @restore_trigger_focus """
+  const trigger = this.querySelector("button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])") || this.firstElementChild;
+  trigger?.focus();
+  """
+
   @doc """
   Renders a popover with trigger and floating content.
 
@@ -74,6 +80,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Popover do
   slot(:inner_block, doc: "Popover content")
 
   def dm_popover(assigns) do
+    restore_trigger_focus =
+      if assigns.trigger_mode == "focus", do: nil, else: @restore_trigger_focus
+
+    assigns =
+      assigns
+      |> assign(:restore_trigger_focus, restore_trigger_focus)
+      |> assign(:trigger_tabindex, restore_trigger_focus && "-1")
+
     ~H"""
     <el-dm-popover
       id={@id}
@@ -85,7 +99,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Popover do
       class={@class}
       {@rest}
     >
-      <div slot="trigger">
+      <div slot="trigger" tabindex={@trigger_tabindex} onfocus={@restore_trigger_focus}>
         {render_slot(@trigger)}
       </div>
       {render_slot(@inner_block)}

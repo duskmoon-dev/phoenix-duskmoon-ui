@@ -8,6 +8,17 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PopoverTest do
     [%{__slot__: :trigger, inner_block: fn _, _ -> "Trigger" end}]
   end
 
+  defp button_trigger_slot do
+    [
+      %{
+        __slot__: :trigger,
+        inner_block: fn _, _ ->
+          Phoenix.HTML.raw(~s(<button type="button">Code</button>))
+        end
+      }
+    ]
+  end
+
   describe "dm_popover basic rendering" do
     test "renders el-dm-popover element" do
       result = render_component(&dm_popover/1, %{trigger: trigger_slot()})
@@ -140,9 +151,26 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PopoverTest do
   end
 
   describe "dm_popover trigger structure" do
-    test "trigger is wrapped in div with slot=trigger" do
-      result = render_component(&dm_popover/1, %{trigger: trigger_slot()})
-      assert result =~ ~s(<div slot="trigger">)
+    test "trigger wrapper delegates restored focus to the authored control" do
+      result = render_component(&dm_popover/1, %{trigger: button_trigger_slot()})
+
+      assert result =~ ~s(<div slot="trigger")
+      assert result =~ ~s(tabindex="-1")
+      assert result =~ ~s(onfocus=")
+      assert result =~ "querySelector"
+      assert result =~ ".focus()"
+      assert result =~ ~s(<button type="button">Code</button>)
+    end
+
+    test "focus-triggered wrapper stays non-focusable so Escape does not reopen it" do
+      result =
+        render_component(&dm_popover/1, %{
+          trigger_mode: "focus",
+          trigger: button_trigger_slot()
+        })
+
+      refute result =~ ~s(tabindex="-1")
+      refute result =~ ~s(onfocus=")
     end
   end
 
