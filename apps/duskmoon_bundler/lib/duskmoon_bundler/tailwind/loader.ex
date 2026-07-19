@@ -15,8 +15,12 @@ defmodule DuskmoonBundler.Tailwind.Loader do
 
   def handlers(runtime_node_modules) do
     %{
-      "tailwind.load_stylesheet" => fn [id, base] ->
-        load_stylesheet(id, base, runtime_node_modules)
+      "tailwind.load_stylesheet" => fn
+        [id, base] ->
+          load_stylesheet(id, base, runtime_node_modules, [])
+
+        [id, base, resolve_dirs] ->
+          load_stylesheet(id, base, runtime_node_modules, resolve_dirs)
       end,
       "tailwind.load_module" => fn [id, base, kind] ->
         load_module(id, base, kind, runtime_node_modules)
@@ -24,8 +28,8 @@ defmodule DuskmoonBundler.Tailwind.Loader do
     }
   end
 
-  defp load_stylesheet(id, base, runtime_node_modules) do
-    path = Resolver.resolve_stylesheet_path!(id, base, runtime_node_modules)
+  defp load_stylesheet(id, base, runtime_node_modules, resolve_dirs) do
+    path = Resolver.resolve_stylesheet_path!(id, base, runtime_node_modules, resolve_dirs)
 
     %{
       base: Path.dirname(path),

@@ -161,4 +161,65 @@ defmodule Mix.Tasks.DuskmoonBundler.BuildTest do
            |> File.ls!()
            |> Enum.any?(&String.match?(&1, ~r/^app-[a-f0-9]{8}\.css$/))
   end
+
+  test "Tailwind build resolves stylesheet imports from configured resolve directories", %{
+    tmp_dir: tmp_dir
+  } do
+    entry = Path.join(tmp_dir, "src/app.js")
+    css_path = Path.join(tmp_dir, "src/app.css")
+    outdir = Path.join(tmp_dir, "dist")
+    deps_dir = Path.join(tmp_dir, "deps")
+    package_dir = Path.join(deps_dir, "phoenix_duskmoon")
+    previous_env = Application.get_all_env(:duskmoon_bundler)
+
+    Application.put_env(:duskmoon_bundler, :issue_89,
+      entry: entry,
+      outdir: outdir,
+      resolve_dirs: [deps_dir],
+      hash: false,
+      minify: false,
+      sourcemap: false,
+      format: :iife,
+      tailwind: [
+        css: css_path,
+        sources: [%{base: Path.join(tmp_dir, "src"), pattern: "**/*"}]
+      ]
+    )
+
+    on_exit(fn ->
+      for {key, _value} <- Application.get_all_env(:duskmoon_bundler) do
+        Application.delete_env(:duskmoon_bundler, key)
+      end
+
+      for {key, value} <- previous_env do
+        Application.put_env(:duskmoon_bundler, key, value)
+      end
+    end)
+
+    File.mkdir_p!(Path.join(package_dir, "priv/static/assets/css"))
+
+    File.write!(
+      Path.join(package_dir, "package.json"),
+      :json.encode(%{
+        "name" => "phoenix_duskmoon",
+        "exports" => %{
+          "./components" => "./priv/static/assets/css/app.css"
+        }
+      })
+    )
+
+    File.write!(
+      Path.join(package_dir, "priv/static/assets/css/app.css"),
+      ".from-resolve-dir { color: rebeccapurple; }"
+    )
+
+    File.write!(entry, "console.log('app')")
+    File.write!(css_path, "@import \"phoenix_duskmoon/components\";\n")
+
+    Mix.Tasks.DuskmoonBundler.Build.run(["issue_89", "--tailwind"])
+
+    css = File.read!(Path.join([outdir, "css", "app.css"]))
+    assert css =~ ".from-resolve-dir"
+    assert css =~ "color: #639"
+  end
 end
