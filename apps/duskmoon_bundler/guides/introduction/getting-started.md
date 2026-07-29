@@ -7,7 +7,7 @@ mix igniter.install duskmoon_bundler
 ```
 
 The installer:
-- Adds `{:duskmoon_bundler_runtime, "~> 9.7"}` and `{:duskmoon_bundler, "~> 9.7", runtime: Mix.env() == :dev}` to `mix.exs`
+- Adds `{:duskmoon_bundler_runtime, "~> 9.7"}` and `{:duskmoon_bundler, "~> 9.7", runtime: Mix.env() in [:dev, :test]}` to `mix.exs`
 - Configures build settings in `config/config.exs`
 - Adds format and lint config to `config/config.exs`
 - Adds `DuskmoonBundler.Formatter` plugin to `.formatter.exs`
@@ -30,12 +30,12 @@ Add DuskmoonBundler to your dependencies:
 def deps do
   [
     {:duskmoon_bundler_runtime, "~> 9.7"},
-    {:duskmoon_bundler, "~> 9.7", runtime: Mix.env() == :dev}
+    {:duskmoon_bundler, "~> 9.7", runtime: Mix.env() in [:dev, :test]}
   ]
 end
 ```
 
-Do not use `only: :dev` for `:duskmoon_bundler`; production asset build aliases may run under `MIX_ENV=prod`. The `runtime:` option keeps build/dev tooling out of production releases while still making Mix tasks available.
+Do not use `only: :dev` for `:duskmoon_bundler`; production asset build aliases may run under `MIX_ENV=prod`. The `runtime:` option starts the DevServer and its cache/HMR supervision tree in development and code-reloading tests, keeps build/dev tooling out of production releases, and still makes Mix tasks available.
 
 ### Build Configuration
 

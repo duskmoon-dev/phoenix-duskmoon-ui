@@ -123,7 +123,10 @@ defmodule DuskmoonBundler.InstallTest do
         |> Rewrite.Source.get(:content)
 
       assert mix_content =~ ~s({:duskmoon_bundler_runtime, "~> 9.7"})
-      assert mix_content =~ "{:duskmoon_bundler, \"~> 9.7\", runtime: Mix.env() == :dev}"
+
+      assert mix_content =~
+               "{:duskmoon_bundler, \"~> 9.7\", runtime: Mix.env() in [:dev, :test]}"
+
       assert mix_content =~ ~s("assets.setup": [])
       assert mix_content =~ ~s("assets.build": ["compile", "duskmoon_bundler.build --tailwind"])
 
