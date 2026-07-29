@@ -3,8 +3,8 @@ defmodule NPM.Install.Linker do
   Creates `node_modules` from the global cache.
 
   Supports multiple linking strategies:
-  - `:symlink` (default) — symlinks from `node_modules/pkg` to cache
-  - `:copy` — full file copy
+  - `:copy` (default) — full file copy
+  - `:symlink` — symlinks from `node_modules/pkg` to cache
 
   Uses a hoisted layout where packages are placed as high in the tree
   as possible, only nesting when version conflicts occur.
@@ -407,7 +407,7 @@ defmodule NPM.Install.Linker do
   end
 
   defp default_strategy do
-    :symlink
+    :copy
   end
 
   defp cache_concurrency do

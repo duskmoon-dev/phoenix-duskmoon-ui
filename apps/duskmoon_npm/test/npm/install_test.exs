@@ -53,7 +53,39 @@ defmodule NPM.InstallTest do
     assert output =~ "Installing from current package-lock.json."
     assert output =~ "Installed 1 package"
     assert output =~ "* #{package} #{version} (npm registry)"
-    assert {:ok, ^cache_path} = File.read_link(Path.join([project_dir, "node_modules", package]))
+
+    assert_copied_package(
+      cache_path,
+      Path.join([project_dir, "node_modules", package])
+    )
+  end
+
+  test "replaces cache symlinks left by earlier installs", %{project_dir: project_dir} do
+    package = "legacy-symlink-package"
+    version = "1.0.0"
+    cache_path = write_cached_package!(package, version)
+
+    File.write!(
+      Path.join(project_dir, "package.json"),
+      NPM.JSON.encode_pretty(%{
+        "name" => "legacy_symlink_project",
+        "dependencies" => %{package => version}
+      })
+    )
+
+    assert :ok = NPM.Lockfile.write(%{package => lock_entry(package, version)})
+
+    installed_path = Path.join([project_dir, "node_modules", package])
+    File.mkdir_p!(Path.dirname(installed_path))
+    File.ln_s!(cache_path, installed_path)
+
+    output =
+      capture_io(fn ->
+        assert :ok = NPM.install()
+      end)
+
+    assert output =~ "Installing from current package-lock.json."
+    assert_copied_package(cache_path, installed_path)
   end
 
   test "re-resolves a lockfile with missing transitive package records", %{
@@ -93,7 +125,7 @@ defmodule NPM.InstallTest do
       end)
 
     refute output =~ "Already up to date."
-    assert {:ok, ^dependency_cache_path} = File.read_link(Path.join(node_modules, dependency))
+    assert_copied_package(dependency_cache_path, Path.join(node_modules, dependency))
 
     assert {:ok, lockfile} = NPM.Lockfile.read()
     assert Map.has_key?(lockfile, dependency)
@@ -127,7 +159,7 @@ defmodule NPM.InstallTest do
 
     node_modules = Path.join(project_dir, "node_modules")
     File.mkdir_p!(node_modules)
-    File.ln_s!(cache_path, Path.join(node_modules, package))
+    File.cp_r!(cache_path, Path.join(node_modules, package))
 
     output =
       capture_io(fn ->
@@ -165,7 +197,12 @@ defmodule NPM.InstallTest do
       end)
 
     assert output =~ "Installing from current package-lock.json."
-    assert {:ok, ^cache_path} = File.read_link(Path.join([project_dir, "node_modules", package]))
+
+    assert_copied_package(
+      cache_path,
+      Path.join([project_dir, "node_modules", package])
+    )
+
     assert {:ok, ^app_dir} = File.read_link(Path.join([project_dir, "node_modules", "web"]))
     assert File.exists?(Path.join(project_dir, "package-lock.json"))
     refute File.exists?(Path.join(app_dir, "package-lock.json"))
@@ -207,7 +244,7 @@ defmodule NPM.InstallTest do
       end)
 
     refute output =~ "Already up to date."
-    assert {:ok, ^new_cache_path} = File.read_link(Path.join(node_modules, package))
+    assert_copied_package(new_cache_path, Path.join(node_modules, package))
     assert {:ok, ^app_dir} = File.read_link(Path.join([node_modules, "web"]))
 
     assert {:ok, lockfile} = NPM.Lockfile.read(Path.join(project_dir, "package-lock.json"))
@@ -242,7 +279,12 @@ defmodule NPM.InstallTest do
 
     assert %{"dependencies" => %{^package => ^version}} = read_package!(app_dir)
     refute Map.has_key?(read_package!(project_dir), "dependencies")
-    assert {:ok, ^cache_path} = File.read_link(Path.join([project_dir, "node_modules", package]))
+
+    assert_copied_package(
+      cache_path,
+      Path.join([project_dir, "node_modules", package])
+    )
+
     assert File.exists?(Path.join(project_dir, "package-lock.json"))
     refute File.exists?(Path.join(app_dir, "package-lock.json"))
     refute File.exists?(Path.join(app_dir, "node_modules"))
@@ -345,6 +387,13 @@ defmodule NPM.InstallTest do
     |> Path.join("package.json")
     |> NPM.JSON.read_file()
     |> then(fn {:ok, data} -> data end)
+  end
+
+  defp assert_copied_package(cache_path, installed_path) do
+    assert {:ok, %File.Stat{type: :directory}} = File.lstat(installed_path)
+
+    assert File.read!(Path.join(installed_path, "package.json")) ==
+             File.read!(Path.join(cache_path, "package.json"))
   end
 
   defp restore_app_env(key, nil), do: Application.delete_env(:duskmoon_npm, key)
