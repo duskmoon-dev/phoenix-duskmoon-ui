@@ -500,25 +500,29 @@ defmodule NPM do
     Enum.reduce(lockfile, lockfile, fn {_name, entry}, acc ->
       entry
       |> Map.get(:optional_dependencies, %{})
-      |> Enum.reduce(acc, &maybe_add_optional_dep/2)
+      |> Enum.reduce(acc, &expand_dependency/2)
     end)
   end
 
-  defp maybe_add_optional_dep({name, _range}, acc) when is_map_key(acc, name), do: acc
+  defp expand_dependency({name, _range}, acc) when is_map_key(acc, name), do: acc
 
-  defp maybe_add_optional_dep({name, range}, acc) do
+  defp expand_dependency({name, range}, acc) do
     case resolve_version(name, range) do
       {:ok, version_str, info} ->
         warn_age_heuristics(name, version_str, info)
 
-        Map.put(acc, name, %{
+        entry = %{
           version: version_str,
           integrity: info.dist.integrity,
           tarball: info.dist.tarball,
           dependencies: info.dependencies,
           optional_dependencies: Map.get(info, :optional_dependencies, %{}),
           has_install_script: Map.get(info, :has_install_script, false)
-        })
+        }
+
+        entry.dependencies
+        |> Map.merge(entry.optional_dependencies)
+        |> Enum.reduce(Map.put(acc, name, entry), &expand_dependency/2)
 
       :error ->
         acc

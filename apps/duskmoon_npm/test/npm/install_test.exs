@@ -138,6 +138,70 @@ defmodule NPM.InstallTest do
     refute File.exists?(Path.join([node_modules, optional_package, "package.json"]))
   end
 
+  test "locks required dependencies of optional packages excluded from resolution", %{
+    project_dir: project_dir
+  } do
+    package = "@duskmoon-dev/el-markdown-input"
+    version = "1.5.5"
+    current_mermaid = "mermaid-#{NPM.Platform.current_os()}-#{NPM.Platform.current_cpu()}"
+    other_mermaid = "mermaid-darwin-arm64"
+    parser = "@mermaid-js/parser"
+    parser_dependency = "langium"
+
+    other_mermaid =
+      if other_mermaid == current_mermaid, do: "mermaid-linux-x64", else: other_mermaid
+
+    Enum.each(
+      [
+        {package, version},
+        {current_mermaid, "11.15.0"},
+        {other_mermaid, "11.15.0"},
+        {parser, "1.1.1"},
+        {parser_dependency, "3.3.1"}
+      ],
+      fn {name, package_version} -> write_cached_package!(name, package_version) end
+    )
+
+    put_packument!(package, version,
+      optional_dependencies: %{
+        current_mermaid => "11.15.0",
+        other_mermaid => "11.15.0"
+      }
+    )
+
+    put_packument!(current_mermaid, "11.15.0")
+    put_packument!(other_mermaid, "11.15.0", dependencies: %{parser => "1.1.1"})
+    put_packument!(parser, "1.1.1", dependencies: %{parser_dependency => "3.3.1"})
+    put_packument!(parser_dependency, "3.3.1")
+
+    File.write!(
+      Path.join(project_dir, "package.json"),
+      NPM.JSON.encode_pretty(%{
+        "name" => "mermaid_optional_dependency_project",
+        "dependencies" => %{package => version}
+      })
+    )
+
+    capture_io(fn ->
+      assert :ok = NPM.install()
+    end)
+
+    assert {:ok, package_names} = NPM.Lockfile.all_package_names()
+
+    assert MapSet.new(package_names) ==
+             MapSet.new([
+               package,
+               current_mermaid,
+               other_mermaid,
+               parser,
+               parser_dependency
+             ])
+
+    capture_io(fn ->
+      assert :ok = NPM.install(frozen: true)
+    end)
+  end
+
   test "installs from workspace package using the workspace root", %{project_dir: project_dir} do
     package = "workspace-root-package"
     version = "1.0.0"
