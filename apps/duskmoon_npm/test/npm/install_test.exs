@@ -197,9 +197,94 @@ defmodule NPM.InstallTest do
                parser_dependency
              ])
 
+    assert {:ok, %{"packages" => packages}} = NPM.JSON.read_file("package-lock.json")
+
+    Enum.each([other_mermaid, parser, parser_dependency], fn name ->
+      assert packages["node_modules/#{name}"]["optional"] == true
+    end)
+
     capture_io(fn ->
       assert :ok = NPM.install(frozen: true)
     end)
+  end
+
+  test "nests marked 16 for optional mermaid beside flat marked 18", %{
+    project_dir: project_dir
+  } do
+    markdown = "@duskmoon-dev/el-markdown"
+    markdown_input = "@duskmoon-dev/el-markdown-input"
+    mermaid = "mermaid"
+    marked = "marked"
+
+    platform_mermaid =
+      "mermaid-#{NPM.Platform.current_os()}-#{NPM.Platform.current_cpu()}"
+
+    Enum.each(
+      [
+        {markdown, "1.5.3"},
+        {markdown_input, "1.5.3"},
+        {platform_mermaid, "1.0.0"},
+        {mermaid, "11.15.0"},
+        {marked, "16.3.0"},
+        {marked, "18.0.4"}
+      ],
+      fn {name, version} -> write_cached_package!(name, version) end
+    )
+
+    put_packument!(markdown, "1.5.3", dependencies: %{marked => "18.0.4"})
+
+    put_packument!(markdown_input, "1.5.3",
+      optional_dependencies: %{
+        mermaid => "11.15.0",
+        platform_mermaid => "1.0.0"
+      }
+    )
+
+    put_packument!(platform_mermaid, "1.0.0")
+    put_packument!(mermaid, "11.15.0", dependencies: %{marked => "^16.3.0"})
+
+    put_packument_versions!(marked, [
+      {"16.3.0", []},
+      {"18.0.4", []}
+    ])
+
+    File.write!(
+      Path.join(project_dir, "package.json"),
+      NPM.JSON.encode_pretty(%{
+        "name" => "marked_version_conflict_project",
+        "dependencies" => %{
+          markdown => "1.5.3",
+          markdown_input => "1.5.3"
+        }
+      })
+    )
+
+    capture_io(fn ->
+      assert :ok = NPM.install()
+    end)
+
+    assert {:ok, %{"packages" => packages}} = NPM.JSON.read_file("package-lock.json")
+    assert packages["node_modules/marked"]["version"] == "18.0.4"
+    assert packages["node_modules/mermaid"]["version"] == "11.15.0"
+    assert packages["node_modules/mermaid"]["optional"] == true
+
+    nested_marked = "node_modules/mermaid/node_modules/marked"
+    assert packages[nested_marked]["version"] == "16.3.0"
+    assert packages[nested_marked]["optional"] == true
+    assert installed_version!(nested_marked) == "16.3.0"
+
+    File.rm_rf!("node_modules")
+
+    mermaid
+    |> NPM.Cache.package_dir("11.15.0")
+    |> Path.join("node_modules")
+    |> File.rm_rf!()
+
+    capture_io(fn ->
+      assert :ok = NPM.install(frozen: true)
+    end)
+
+    assert installed_version!(nested_marked) == "16.3.0"
   end
 
   test "installs from workspace package using the workspace root", %{project_dir: project_dir} do
@@ -359,26 +444,32 @@ defmodule NPM.InstallTest do
   end
 
   defp put_packument!(package, version, opts \\ []) do
+    put_packument_versions!(package, [{version, opts}])
+  end
+
+  defp put_packument_versions!(package, versions) do
     NPM.PackumentCache.put(package, %{
       name: package,
-      versions: %{
-        version => %{
-          os: [],
-          cpu: [],
-          dependencies: Keyword.get(opts, :dependencies, %{}),
-          optional_dependencies: Keyword.get(opts, :optional_dependencies, %{}),
-          peer_dependencies: %{},
-          peer_dependencies_meta: %{},
-          dist: %{
-            tarball: "https://registry.npmjs.org/#{package}/-/#{package}-#{version}.tgz",
-            integrity: ""
-          },
-          has_install_script: false,
-          deprecated: nil,
-          created_at: nil,
-          published_at: nil
-        }
-      }
+      versions:
+        Map.new(versions, fn {version, opts} ->
+          {version,
+           %{
+             os: [],
+             cpu: [],
+             dependencies: Keyword.get(opts, :dependencies, %{}),
+             optional_dependencies: Keyword.get(opts, :optional_dependencies, %{}),
+             peer_dependencies: %{},
+             peer_dependencies_meta: %{},
+             dist: %{
+               tarball: "https://registry.npmjs.org/#{package}/-/#{package}-#{version}.tgz",
+               integrity: ""
+             },
+             has_install_script: false,
+             deprecated: nil,
+             created_at: nil,
+             published_at: nil
+           }}
+        end)
     })
   end
 
@@ -409,6 +500,13 @@ defmodule NPM.InstallTest do
     |> Path.join("package.json")
     |> NPM.JSON.read_file()
     |> then(fn {:ok, data} -> data end)
+  end
+
+  defp installed_version!(package_dir) do
+    package_dir
+    |> Path.join("package.json")
+    |> NPM.JSON.read_file()
+    |> then(fn {:ok, %{"version" => version}} -> version end)
   end
 
   defp restore_app_env(key, nil), do: Application.delete_env(:duskmoon_npm, key)

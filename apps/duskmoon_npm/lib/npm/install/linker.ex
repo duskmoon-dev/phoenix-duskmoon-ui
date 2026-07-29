@@ -76,8 +76,60 @@ defmodule NPM.Install.Linker do
     end)
   end
 
+  @doc false
+  @spec link_nested_lockfile(
+          %{String.t() => NPM.Lockfile.entry()},
+          String.t(),
+          strategy(),
+          MapSet.t(String.t())
+        ) :: :ok | {:error, term()}
+  def link_nested_lockfile(
+        nested_lockfile,
+        nm_dir \\ "node_modules",
+        strategy \\ default_strategy(),
+        flat_skipped \\ MapSet.new()
+      ) do
+    nested_lockfile
+    |> Enum.sort_by(fn {location, _entry} -> location_depth(location) end)
+    |> Enum.reduce_while({:ok, MapSet.new()}, fn {location, entry}, {:ok, skipped_locations} ->
+      with {:ok, name} <- NPM.Lockfile.nested_package_name(location) do
+        cond do
+          nested_under_skipped?(location, flat_skipped, skipped_locations) ->
+            {:cont, {:ok, MapSet.put(skipped_locations, location)}}
+
+          Map.get(entry, :optional, false) and
+              not platform_compatible?(name, entry.version) ->
+            {:cont, {:ok, MapSet.put(skipped_locations, location)}}
+
+          true ->
+            case NPM.Cache.ensure(name, entry.version, entry.tarball, entry.integrity,
+                   optional?: Map.get(entry, :optional, false)
+                 ) do
+              {:ok, :missing_optional} ->
+                {:cont, {:ok, MapSet.put(skipped_locations, location)}}
+
+              {:ok, _cache_result} ->
+                cache_path = NPM.Cache.package_dir(name, entry.version)
+                target = nested_target(nm_dir, location)
+                :ok = link_package(cache_path, target, strategy)
+                {:cont, {:ok, skipped_locations}}
+
+              {:error, reason} ->
+                {:halt, {:error, reason}}
+            end
+        end
+      else
+        :error -> {:halt, {:error, {:invalid_nested_package_location, location}}}
+      end
+    end)
+    |> case do
+      {:ok, _skipped_locations} -> :ok
+      error -> error
+    end
+  end
+
   defp populate_cache(lockfile, platform_skipped) do
-    platform_skipped = platform_skipped || platform_incompatible_packages(lockfile)
+    platform_skipped = platform_skipped || skipped_packages(lockfile)
 
     lockfile
     |> Enum.reject(fn {name, _} -> MapSet.member?(platform_skipped, name) end)
@@ -184,7 +236,11 @@ defmodule NPM.Install.Linker do
 
   @doc false
   @spec skipped_packages(resolved()) :: MapSet.t(String.t())
-  def skipped_packages(lockfile), do: platform_incompatible_packages(lockfile)
+  def skipped_packages(lockfile) do
+    lockfile
+    |> platform_incompatible_packages()
+    |> propagate_skipped_optional_descendants(lockfile)
+  end
 
   defp collect_all_packages(lockfile) do
     lockfile
@@ -357,11 +413,46 @@ defmodule NPM.Install.Linker do
         Map.keys(Map.get(entry, :optional_dependencies, %{}))
       end)
       |> MapSet.new()
+      |> then(fn names ->
+        Enum.reduce(lockfile, names, fn {name, entry}, acc ->
+          if Map.get(entry, :optional, false), do: MapSet.put(acc, name), else: acc
+        end)
+      end)
 
     lockfile
     |> Enum.filter(fn {name, _} -> MapSet.member?(optional_names, name) end)
     |> Enum.reject(fn {name, entry} -> platform_compatible?(name, entry.version) end)
     |> MapSet.new(fn {name, _} -> name end)
+  end
+
+  defp propagate_skipped_optional_descendants(skipped, lockfile) do
+    descendants =
+      skipped
+      |> Enum.flat_map(fn name ->
+        case Map.get(lockfile, name) do
+          nil ->
+            []
+
+          entry ->
+            Map.keys(entry.dependencies) ++
+              Map.keys(Map.get(entry, :optional_dependencies, %{}))
+        end
+      end)
+      |> Enum.filter(fn name ->
+        case Map.get(lockfile, name) do
+          nil -> false
+          entry -> Map.get(entry, :optional, false)
+        end
+      end)
+      |> MapSet.new()
+
+    expanded = MapSet.union(skipped, descendants)
+
+    if MapSet.equal?(expanded, skipped) do
+      skipped
+    else
+      propagate_skipped_optional_descendants(expanded, lockfile)
+    end
   end
 
   defp platform_compatible?(name, version) do
@@ -375,10 +466,33 @@ defmodule NPM.Install.Linker do
   end
 
   defp optional_dependency?(name, lockfile) do
-    Enum.any?(lockfile, fn {_pkg, entry} ->
-      Map.has_key?(Map.get(entry, :optional_dependencies, %{}), name)
-    end)
+    case Map.get(lockfile, name) do
+      %{optional: true} ->
+        true
+
+      _entry ->
+        Enum.any?(lockfile, fn {_pkg, entry} ->
+          Map.has_key?(Map.get(entry, :optional_dependencies, %{}), name)
+        end)
+    end
   end
+
+  defp nested_under_skipped?(location, flat_skipped, skipped_locations) do
+    Enum.any?(flat_skipped, fn name ->
+      String.starts_with?(location, "node_modules/#{name}/node_modules/")
+    end) or
+      Enum.any?(skipped_locations, fn skipped_location ->
+        String.starts_with?(location, "#{skipped_location}/node_modules/")
+      end)
+  end
+
+  defp nested_target(nm_dir, "node_modules/" <> relative_location) do
+    Path.join(nm_dir, relative_location)
+  end
+
+  defp nested_target(nm_dir, location), do: Path.join(nm_dir, location)
+
+  defp location_depth(location), do: location |> String.split("/") |> length()
 
   defp install_single_nested(_pkg, nil, _parent, _nm_dir, _strategy), do: :ok
 
