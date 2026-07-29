@@ -460,6 +460,29 @@ defmodule NPM.InstallTest do
     assert output =~ "package-lock.json not found. Run `mix npm.install` first."
   end
 
+  test "npm.ci starts SSL before installing", %{project_dir: project_dir} do
+    File.write!(
+      Path.join(project_dir, "package.json"),
+      NPM.JSON.encode_pretty(%{"name" => "ssl_startup_project"})
+    )
+
+    {:ok, _started} = Application.ensure_all_started(:ssl)
+    on_exit(fn -> Application.ensure_all_started(:ssl) end)
+    assert :ok = Application.stop(:ssl)
+    refute List.keymember?(Application.started_applications(), :ssl, 0)
+
+    Mix.Task.reenable("npm.ci")
+
+    capture_io(fn ->
+      assert :ok = Mix.Tasks.Npm.Ci.run([])
+    end)
+
+    assert {:ssl, _description, _version} =
+             List.keyfind(Application.started_applications(), :ssl, 0)
+
+    assert :ssl in Application.spec(:duskmoon_npm, :applications)
+  end
+
   defp write_cached_package!(name, version) do
     cache_path = NPM.Cache.package_dir(name, version)
     File.mkdir_p!(cache_path)
