@@ -2,6 +2,7 @@ defmodule NPM.Install.LinkerTest do
   use ExUnit.Case, async: false
 
   alias NPM.Install.Linker
+  alias NPM.Resolution.PackageResolver
 
   setup do
     old_cache_dir = Application.get_env(:duskmoon_npm, :cache_dir)
@@ -45,12 +46,53 @@ defmodule NPM.Install.LinkerTest do
              )
   end
 
-  test "links cached packages with symlinks by default", %{tmp_dir: tmp_dir} do
-    cache_path = write_cached_package!("cached-pkg", "1.0.0")
+  test "copies cached packages so sibling dependencies resolve from node_modules", %{
+    tmp_dir: tmp_dir
+  } do
+    importer = "importer-pkg"
+    sibling = "sibling-pkg"
+    importer_cache_path = write_cached_package!(importer, "1.0.0")
+    sibling_cache_path = write_cached_package!(sibling, "2.0.0")
     node_modules = Path.join(tmp_dir, "node_modules")
 
-    assert :ok = Linker.link(%{"cached-pkg" => lock_entry("1.0.0")}, node_modules)
-    assert {:ok, ^cache_path} = File.read_link(Path.join(node_modules, "cached-pkg"))
+    File.write!(
+      Path.join(importer_cache_path, "index.js"),
+      ~s[module.exports = require("#{sibling}");]
+    )
+
+    File.write!(Path.join(sibling_cache_path, "index.js"), ~s[module.exports = "resolved";])
+
+    lockfile = %{
+      importer => %{
+        lock_entry(importer, "1.0.0")
+        | dependencies: %{sibling => "2.0.0"}
+      },
+      sibling => lock_entry(sibling, "2.0.0")
+    }
+
+    assert :ok = Linker.link(lockfile, node_modules)
+
+    installed_importer = Path.join(node_modules, importer)
+    installed_sibling = Path.join(node_modules, sibling)
+
+    assert {:ok, %File.Stat{type: :directory}} = File.lstat(installed_importer)
+    assert {:ok, %File.Stat{type: :directory}} = File.lstat(installed_sibling)
+    assert File.read!(Path.join(installed_importer, "index.js")) =~ sibling
+
+    assert File.read!(Path.join(installed_importer, "package.json")) ==
+             File.read!(Path.join(importer_cache_path, "package.json"))
+
+    assert File.read!(Path.join(installed_sibling, "package.json")) ==
+             File.read!(Path.join(sibling_cache_path, "package.json"))
+
+    canonical_importer =
+      case File.read_link(installed_importer) do
+        {:ok, target} -> Path.expand(target, Path.dirname(installed_importer))
+        {:error, :einval} -> installed_importer
+      end
+
+    assert {:ok, sibling_entry} = PackageResolver.resolve(sibling, canonical_importer)
+    assert sibling_entry == Path.join(installed_sibling, "index.js")
   end
 
   test "returns cache population errors directly", %{tmp_dir: tmp_dir} do
@@ -83,11 +125,11 @@ defmodule NPM.Install.LinkerTest do
     cache_path
   end
 
-  defp lock_entry(version) do
+  defp lock_entry(package, version) do
     %{
       version: version,
       integrity: "",
-      tarball: "https://registry.npmjs.org/cached-pkg/-/cached-pkg-#{version}.tgz",
+      tarball: "https://registry.npmjs.org/#{package}/-/#{package}-#{version}.tgz",
       dependencies: %{},
       optional_dependencies: %{},
       has_install_script: false

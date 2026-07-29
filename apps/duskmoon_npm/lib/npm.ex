@@ -22,8 +22,9 @@ defmodule NPM do
       mix npm.remove lodash        # Remove a package
       mix npm.list                 # List installed packages
 
-  Packages are cached globally in `~/.npm_ex/cache/` and linked into
-  `node_modules/` via symlinks (macOS/Linux) or copies (Windows).
+  Packages are cached globally in `~/.npm_ex/cache/` and copied into
+  `node_modules/` so Node-compatible tools resolve sibling dependencies
+  from the installed dependency tree.
   """
 
   @node_modules "node_modules"
@@ -353,7 +354,7 @@ defmodule NPM do
 
     lockfile_intact? =
       Enum.all?(linkable_lockfile, fn {name, _entry} ->
-        Path.join([@node_modules, name, "package.json"]) |> File.exists?()
+        registry_package_intact?(name)
       end)
 
     local_links_intact? =
@@ -419,7 +420,7 @@ defmodule NPM do
 
     {link_us, result} =
       :timer.tc(fn ->
-        with :ok <- Linker.link(lockfile, @node_modules, :symlink, skipped) do
+        with :ok <- Linker.link(lockfile, @node_modules, :copy, skipped) do
           NPM.Install.Linker.link_local_packages(local_links, @node_modules)
         end
       end)
@@ -439,6 +440,13 @@ defmodule NPM do
 
   defp linkable_lockfile(lockfile, skipped) do
     Enum.reject(lockfile, fn {name, _entry} -> MapSet.member?(skipped, name) end)
+  end
+
+  defp registry_package_intact?(name) do
+    package_dir = Path.join(@node_modules, name)
+
+    match?({:ok, %File.Stat{type: :directory}}, File.lstat(package_dir)) and
+      File.exists?(Path.join(package_dir, "package.json"))
   end
 
   defp plural(map) do
