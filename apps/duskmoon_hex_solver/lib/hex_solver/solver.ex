@@ -122,7 +122,8 @@ defmodule HexSolver.Solver do
               state.lister,
               package_range.repo,
               package_range.name,
-              version
+              version,
+              package_range.constraint
             )
 
           state = %{state | lister: lister}

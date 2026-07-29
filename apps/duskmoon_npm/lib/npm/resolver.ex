@@ -45,6 +45,7 @@ defmodule NPM.Resolver do
 
   def resolve(root_deps, opts) do
     ensure_cache()
+    clear_prerelease_requirements()
     overrides = Keyword.get(opts, :overrides, %{})
     if overrides != %{}, do: store_overrides(overrides)
     store_resolver_opts(opts)
@@ -119,6 +120,7 @@ defmodule NPM.Resolver do
 
   defp build_dependencies(root_deps) do
     Enum.map(root_deps, fn {name, range} ->
+      track_prerelease_requirement(name, range)
       {:ok, constraint} = normalize_range(range)
 
       %{
@@ -380,27 +382,30 @@ defmodule NPM.Resolver do
   defp prefetch_error_message(reason), do: Exception.message(%PrefetchError{reason: reason})
 
   defp parse_sorted_versions(packument) do
-    key = {:__sorted_versions__, packument.name}
+    include_prerelease? = prerelease_requested?(packument.name)
+    key = {:__sorted_versions__, packument.name, include_prerelease?}
 
     case :ets.lookup(@table, key) do
       [{^key, versions}] ->
         versions
 
       [] ->
-        versions = do_parse_sorted_versions(packument)
+        versions = do_parse_sorted_versions(packument, include_prerelease?)
         :ets.insert(@table, {key, versions})
         versions
     end
   end
 
-  defp do_parse_sorted_versions(packument) do
+  defp do_parse_sorted_versions(packument, include_prerelease?) do
     packument.versions
     |> Enum.reject(fn {version_str, info} ->
       exotic_candidate?(packument.name, version_str, info)
     end)
     |> Enum.flat_map(fn {v, _info} ->
       case Version.parse(v) do
-        {:ok, version} -> [version]
+        {:ok, %Version{pre: []} = version} -> [version]
+        {:ok, version} when include_prerelease? -> [version]
+        {:ok, _version} -> []
         :error -> []
       end
     end)
@@ -485,6 +490,8 @@ defmodule NPM.Resolver do
   end
 
   defp to_solver_dep({name, range, optional?}) do
+    track_prerelease_requirement(name, range)
+
     case normalize_range(range) do
       {:ok, constraint} ->
         [
@@ -512,6 +519,37 @@ defmodule NPM.Resolver do
   end
 
   defp normalize_range(range), do: NPMSemver.to_hex_constraint(range)
+
+  defp clear_prerelease_requirements do
+    :ets.match_delete(@table, {{:__prerelease_requested__, :_}, :_})
+  end
+
+  defp track_prerelease_requirement(package, range) do
+    if prerelease_range?(range) do
+      :ets.insert(@table, {{:__prerelease_requested__, package}, true})
+    end
+  end
+
+  defp prerelease_requested?(package) do
+    :ets.member(@table, {:__prerelease_requested__, package})
+  end
+
+  defp prerelease_range?(range) when is_binary(range) do
+    case NPMSemver.parse_range(range) do
+      {:ok, %NPMSemver.Range{sets: sets}} ->
+        Enum.any?(sets, fn comparators ->
+          Enum.any?(comparators, fn
+            {:lt, %NPMSemver.Version{pre: [0]}} -> false
+            {_operator, %NPMSemver.Version{pre: prerelease}} -> prerelease != []
+          end)
+        end)
+
+      :error ->
+        false
+    end
+  end
+
+  defp prerelease_range?(_range), do: false
 
   # --- Cache ---
 
