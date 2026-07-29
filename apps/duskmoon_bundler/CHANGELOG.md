@@ -8,11 +8,12 @@
 
 ### Changed
 - Production manifests now include `manifest_version: 1` and an `entries` object while the runtime reader remains compatible with legacy flat manifests.
-- Phoenix projects should depend on both `:duskmoon_bundler_runtime` and `:duskmoon_bundler`, with `:duskmoon_bundler` configured as `runtime: Mix.env() == :dev`.
+- Phoenix projects should depend on both `:duskmoon_bundler_runtime` and `:duskmoon_bundler`, with `:duskmoon_bundler` configured as `runtime: Mix.env() in [:dev, :test]`.
 - HMR websocket messages (`ping`, `pong`, `update`, `error`) now flow through `DuskmoonBundler.HMR.Message`, which uses `JSONCodec` for struct<->JSON (de)serialization with `Jason` performing the final binary encoding.
 - Added `json_codec` as a runtime dependency.
 
 ### Fixed
+- Generated installs now start `:duskmoon_bundler` in test, ensuring endpoints with code reloading enabled also start the DevServer cache and HMR supervision tree.
 - HMR websocket no longer drops idle connections after 60 seconds. The browser client now sends a periodic `{"type":"ping"}` heartbeat, and the server replies with `{"type":"pong"}`, preventing Bandit's websocket `read_timeout` from closing an otherwise idle socket. The client also tracks pongs and force-reconnects if the link goes half-open. This eliminates the spurious `[DuskmoonBundler] Disconnected. Reconnecting...` console noise observed on long-lived demo/dev pages with no file changes.
 
 ## 0.14.6

@@ -23,10 +23,10 @@ Add:
 
 ```elixir
 {:duskmoon_bundler_runtime, "~> 9.7"},
-{:duskmoon_bundler, "~> 9.7", runtime: Mix.env() == :dev}
+{:duskmoon_bundler, "~> 9.7", runtime: Mix.env() in [:dev, :test]}
 ```
 
-Do not use `only: :dev` for `:duskmoon_bundler`; production asset build aliases may run under `MIX_ENV=prod`. The `runtime:` option keeps the build/dev app out of production releases.
+Do not use `only: :dev` for `:duskmoon_bundler`; production asset build aliases may run under `MIX_ENV=prod`. The `runtime:` option starts the DevServer and its cache/HMR supervision tree in development and code-reloading tests while keeping the build/dev app out of production releases.
 
 ### 2. Replace Config
 
