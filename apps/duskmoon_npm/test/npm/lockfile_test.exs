@@ -116,19 +116,44 @@ defmodule NPM.LockfileTest do
              NPM.Lockfile.write(
                %{"parent" => lock_entry("1.0.0")},
                nested: %{
-                 "node_modules/parent/node_modules/nested" => lock_entry("2.0.0")
+                 "node_modules/parent/node_modules/nested" =>
+                   Map.put(lock_entry("2.0.0"), :optional, true)
                }
              )
 
     assert %{
              "packages" => %{
                "node_modules/parent" => %{"version" => "1.0.0"},
-               "node_modules/parent/node_modules/nested" => %{"version" => "2.0.0"}
+               "node_modules/parent/node_modules/nested" => %{
+                 "version" => "2.0.0",
+                 "optional" => true
+               }
              }
            } = read_json!("package-lock.json")
 
     assert {:ok, ["nested", "parent"]} = NPM.Lockfile.all_package_names()
     assert {:ok, %{"parent" => %{version: "1.0.0"}}} = NPM.Lockfile.read()
+
+    assert {:ok,
+            %{
+              "node_modules/parent/node_modules/nested" => %{
+                version: "2.0.0",
+                optional: true
+              }
+            }} = NPM.Lockfile.read_nested()
+  end
+
+  test "rejects unsafe nested package-lock locations while reading" do
+    location = "node_modules/parent/node_modules/.."
+
+    assert :ok =
+             NPM.Lockfile.write(
+               %{"parent" => lock_entry("1.0.0")},
+               nested: %{location => lock_entry("2.0.0")}
+             )
+
+    assert {:error, {:invalid_nested_package_location, ^location}} =
+             NPM.Lockfile.read_nested()
   end
 
   test "package-lock analyzer skips workspace links and nested packages" do

@@ -362,7 +362,25 @@ defmodule NPM do
         Path.join([@node_modules, name, "package.json"]) |> File.exists?()
       end)
 
-    lockfile_intact? and local_links_intact?
+    nested_lockfile_intact? =
+      case NPM.Lockfile.read_nested() do
+        {:ok, nested_lockfile} ->
+          Enum.all?(nested_lockfile, fn {location, _entry} ->
+            nested_location_skipped?(location, skipped) or
+              Path.join(location, "package.json") |> File.exists?()
+          end)
+
+        {:error, _reason} ->
+          false
+      end
+
+    lockfile_intact? and nested_lockfile_intact? and local_links_intact?
+  end
+
+  defp nested_location_skipped?(location, skipped) do
+    Enum.any?(skipped, fn name ->
+      String.starts_with?(location, "node_modules/#{name}/node_modules/")
+    end)
   end
 
   defp resolve_and_install(deps, old_lockfile, local_links) do
@@ -384,12 +402,12 @@ defmodule NPM do
           Mix.shell().info("  (#{map_size(nested_info)} packages with nested versions)")
         end
 
-        lockfile = build_lockfile(flat)
-        lockfile = expand_all_optional_deps(lockfile)
         nested_lockfile = build_nested_lockfile(nested_info, flat)
+        lockfile = build_lockfile(flat)
+        {lockfile, nested_lockfile} = expand_all_optional_deps(lockfile, nested_lockfile)
         print_lockfile_diff(old_lockfile, lockfile)
         NPM.Lockfile.write(lockfile, nested: nested_lockfile)
-        link_and_nest(lockfile, nested_info, flat, local_links)
+        link_from_lockfile(lockfile, local_links, nested_lockfile)
 
       {:error, message} ->
         Mix.shell().error("Resolution failed:\n#{message}")
@@ -397,14 +415,15 @@ defmodule NPM do
     end
   end
 
-  defp link_and_nest(lockfile, nested_info, flat, local_links) do
-    with :ok <- link_from_lockfile(lockfile, local_links) do
-      if nested_info != %{}, do: Linker.link_nested(nested_info, flat, @node_modules)
-      :ok
+  defp link_from_lockfile(lockfile, local_links, nested_lockfile \\ :read)
+
+  defp link_from_lockfile(lockfile, local_links, :read) do
+    with {:ok, nested_lockfile} <- NPM.Lockfile.read_nested() do
+      link_from_lockfile(lockfile, local_links, nested_lockfile)
     end
   end
 
-  defp link_from_lockfile(lockfile, local_links) do
+  defp link_from_lockfile(lockfile, local_links, nested_lockfile) do
     skipped = Linker.skipped_packages(lockfile)
     linkable_lockfile = linkable_lockfile(lockfile, skipped)
     total = length(linkable_lockfile)
@@ -420,7 +439,14 @@ defmodule NPM do
 
     {link_us, result} =
       :timer.tc(fn ->
-        with :ok <- Linker.link(lockfile, @node_modules, :copy, skipped) do
+        with :ok <- Linker.link(lockfile, @node_modules, :copy, skipped),
+             :ok <-
+               Linker.link_nested_lockfile(
+                 nested_lockfile,
+                 @node_modules,
+                 :copy,
+                 skipped
+               ) do
           NPM.Install.Linker.link_local_packages(local_links, @node_modules)
         end
       end)
@@ -504,37 +530,93 @@ defmodule NPM do
     end
   end
 
-  defp expand_all_optional_deps(lockfile) do
-    Enum.reduce(lockfile, lockfile, fn {_name, entry}, acc ->
+  defp expand_all_optional_deps(lockfile, nested_lockfile) do
+    Enum.reduce(lockfile, {lockfile, nested_lockfile}, fn {name, entry}, acc ->
       entry
       |> Map.get(:optional_dependencies, %{})
-      |> Enum.reduce(acc, &expand_dependency/2)
+      |> Enum.reduce(acc, fn dependency, state ->
+        expand_dependency(dependency, "node_modules/#{name}", state)
+      end)
     end)
   end
 
-  defp expand_dependency({name, _range}, acc) when is_map_key(acc, name), do: acc
+  defp expand_dependency({name, range}, parent_location, {flat, nested} = state) do
+    if dependency_satisfied?(name, range, parent_location, flat, nested) do
+      state
+    else
+      case resolve_version(name, range) do
+        {:ok, version_str, info} ->
+          warn_age_heuristics(name, version_str, info)
 
-  defp expand_dependency({name, range}, acc) do
-    case resolve_version(name, range) do
-      {:ok, version_str, info} ->
-        warn_age_heuristics(name, version_str, info)
+          entry = %{
+            version: version_str,
+            integrity: info.dist.integrity,
+            tarball: info.dist.tarball,
+            dependencies: info.dependencies,
+            optional_dependencies: Map.get(info, :optional_dependencies, %{}),
+            has_install_script: Map.get(info, :has_install_script, false),
+            optional: true
+          }
 
-        entry = %{
-          version: version_str,
-          integrity: info.dist.integrity,
-          tarball: info.dist.tarball,
-          dependencies: info.dependencies,
-          optional_dependencies: Map.get(info, :optional_dependencies, %{}),
-          has_install_script: Map.get(info, :has_install_script, false)
-        }
+          {state, installed_location} =
+            put_expanded_dependency(name, entry, parent_location, flat, nested)
 
-        entry.dependencies
-        |> Map.merge(entry.optional_dependencies)
-        |> Enum.reduce(Map.put(acc, name, entry), &expand_dependency/2)
+          entry.dependencies
+          |> Map.merge(entry.optional_dependencies)
+          |> Enum.reduce(state, fn dependency, acc ->
+            expand_dependency(dependency, installed_location, acc)
+          end)
 
-      :error ->
-        acc
+        :error ->
+          state
+      end
     end
+  end
+
+  defp dependency_satisfied?(name, range, parent_location, flat, nested) do
+    parent_location
+    |> dependency_locations(name)
+    |> Enum.any?(fn location ->
+      case dependency_entry(location, name, flat, nested) do
+        nil -> false
+        entry -> lockfile_entry_satisfies_range?(entry, range)
+      end
+    end)
+  end
+
+  defp dependency_entry("node_modules/" <> rest = location, name, flat, nested) do
+    if rest == name, do: Map.get(flat, name), else: Map.get(nested, location)
+  end
+
+  defp put_expanded_dependency(name, entry, parent_location, flat, nested) do
+    if Map.has_key?(flat, name) do
+      location = "#{parent_location}/node_modules/#{name}"
+      {{flat, Map.put(nested, location, entry)}, location}
+    else
+      location = "node_modules/#{name}"
+      {{Map.put(flat, name, entry), nested}, location}
+    end
+  end
+
+  defp dependency_locations(parent_location, name) do
+    parent_segments = String.split(parent_location, "/", trim: true)
+    package_segments = String.split(name, "/", trim: true)
+
+    ancestors =
+      parent_segments
+      |> Enum.with_index()
+      |> Enum.filter(fn {segment, _index} -> segment == "node_modules" end)
+      |> Enum.map(fn {_segment, index} ->
+        Enum.take(parent_segments, index) ++ ["node_modules"] ++ package_segments
+      end)
+      |> Enum.reverse()
+
+    [
+      parent_segments ++ ["node_modules"] ++ package_segments
+      | ancestors
+    ]
+    |> Enum.map(&Enum.join(&1, "/"))
+    |> Enum.uniq()
   end
 
   defp resolve_version(name, range) do

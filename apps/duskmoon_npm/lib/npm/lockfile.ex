@@ -49,6 +49,28 @@ defmodule NPM.Lockfile do
     read_file(path)
   end
 
+  @doc false
+  @spec read_nested(String.t()) :: {:ok, %{String.t() => entry()}} | {:error, term()}
+  def read_nested(path \\ @default_path) do
+    case read_json(path) do
+      {:ok, %{"packages" => packages} = data} when is_map(packages) ->
+        if package_lock?(data, packages) do
+          parse_nested_package_lock_packages(packages)
+        else
+          {:ok, %{}}
+        end
+
+      {:ok, _data} ->
+        {:ok, %{}}
+
+      {:error, :enoent} ->
+        {:ok, %{}}
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
   @doc """
   Migrates the legacy `npm.lock` schema to `package-lock.json` v3.
 
@@ -217,22 +239,88 @@ defmodule NPM.Lockfile do
     |> Enum.flat_map(fn {location, info} ->
       with false <- Map.get(info, "link") == true,
            {:ok, name} <- package_name_from_location(location) do
-        [
-          {name,
-           %{
-             version: Map.get(info, "version", ""),
-             integrity: Map.get(info, "integrity", ""),
-             tarball: Map.get(info, "resolved", ""),
-             dependencies: Map.get(info, "dependencies", %{}),
-             optional_dependencies: optional_dependencies(info),
-             has_install_script: has_install_script?(info)
-           }}
-        ]
+        [{name, package_lock_entry_from_info(info)}]
       else
         _ -> []
       end
     end)
     |> Map.new()
+  end
+
+  defp parse_nested_package_lock_packages(packages) do
+    packages
+    |> Enum.reduce_while({:ok, %{}}, fn {location, info}, {:ok, acc} ->
+      cond do
+        not nested_package_location?(location) or Map.get(info, "link") == true ->
+          {:cont, {:ok, acc}}
+
+        match?({:ok, _name}, nested_package_name(location)) ->
+          {:cont, {:ok, Map.put(acc, location, package_lock_entry_from_info(info))}}
+
+        true ->
+          {:halt, {:error, {:invalid_nested_package_location, location}}}
+      end
+    end)
+  end
+
+  defp nested_package_location?(location) do
+    String.starts_with?(location, "node_modules/") and
+      location
+      |> String.split("/")
+      |> Enum.count(&(&1 == "node_modules"))
+      |> Kernel.>(1)
+  end
+
+  @doc false
+  @spec nested_package_name(String.t()) :: {:ok, String.t()} | :error
+  def nested_package_name(location) do
+    location
+    |> String.split("/", trim: false)
+    |> parse_nested_location([])
+  end
+
+  defp parse_nested_location(["node_modules" | rest], parents) do
+    with {:ok, name, remaining} <- take_package_name(rest) do
+      case remaining do
+        [] when parents != [] -> {:ok, name}
+        ["node_modules" | _] -> parse_nested_location(remaining, [name | parents])
+        _ -> :error
+      end
+    end
+  end
+
+  defp parse_nested_location(_segments, _parents), do: :error
+
+  defp take_package_name(["@" <> scope = scoped, package | rest]) do
+    name = "#{scoped}/#{package}"
+
+    if scope != "" and NPM.Scope.valid_name?(name) do
+      {:ok, name, rest}
+    else
+      :error
+    end
+  end
+
+  defp take_package_name([package | rest]) do
+    if NPM.Scope.valid_name?(package) do
+      {:ok, package, rest}
+    else
+      :error
+    end
+  end
+
+  defp take_package_name(_segments), do: :error
+
+  defp package_lock_entry_from_info(info) do
+    %{
+      version: Map.get(info, "version", ""),
+      integrity: Map.get(info, "integrity", ""),
+      tarball: Map.get(info, "resolved", ""),
+      dependencies: Map.get(info, "dependencies", %{}),
+      optional_dependencies: optional_dependencies(info),
+      has_install_script: has_install_script?(info)
+    }
+    |> maybe_mark_optional(info)
   end
 
   defp parse_legacy_dependencies(deps) do
@@ -402,6 +490,7 @@ defmodule NPM.Lockfile do
       empty_to_nil(Map.get(entry, :optional_dependencies, %{}))
     )
     |> maybe_put("hasInstallScript", if(Map.get(entry, :has_install_script, false), do: true))
+    |> maybe_put("optional", if(Map.get(entry, :optional, false), do: true))
   end
 
   defp put_workspace_links(packages, manifests) do
@@ -503,6 +592,14 @@ defmodule NPM.Lockfile do
 
   defp has_install_script?(info) do
     Map.get(info, "hasInstallScript") || Map.get(info, "has_install_script", false)
+  end
+
+  defp maybe_mark_optional(entry, info) do
+    if Map.get(info, "optional", false) do
+      Map.put(entry, :optional, true)
+    else
+      entry
+    end
   end
 
   defp legacy_path?(path), do: Path.basename(path) == @legacy_path
