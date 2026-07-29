@@ -43,7 +43,7 @@ defmodule NPM.Tarball do
     case Req.get(tarball_url,
            decode_body: false,
            connect_options: [timeout: @connect_timeout],
-           pool_timeout: @pool_timeout,
+           finch: [pool_timeout: @pool_timeout],
            receive_timeout: @receive_timeout,
            retry: false
          ) do
