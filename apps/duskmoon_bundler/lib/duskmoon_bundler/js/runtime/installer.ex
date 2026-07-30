@@ -112,7 +112,14 @@ defmodule DuskmoonBundler.JS.Runtime.Installer do
   end
 
   defp with_lock(id, fun) do
-    :global.trans({__MODULE__, id}, fun, [node()], :infinity)
+    :global.trans(lock_id(id), fun, [node()], :infinity)
+  end
+
+  @doc false
+  def __lock_id__(id, requester \\ self()), do: lock_id(id, requester)
+
+  defp lock_id(id, requester \\ self()) do
+    {{__MODULE__, Path.expand(id)}, requester}
   end
 
   defp metadata_mismatch?(metadata_path, signature) do

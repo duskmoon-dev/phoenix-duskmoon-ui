@@ -107,7 +107,10 @@ defmodule NPM.Install.ScriptInstall do
     case NPM.Lockfile.read(lockfile_path) do
       {:ok, lockfile} when lockfile != %{} ->
         Enum.all?(lockfile, fn {name, _} ->
-          File.exists?(Path.join([nm_dir, name, "package.json"]))
+          package_dir = Path.join(nm_dir, name)
+
+          match?({:ok, %File.Stat{type: :directory}}, File.lstat(package_dir)) and
+            File.exists?(Path.join(package_dir, "package.json"))
         end)
 
       _ ->

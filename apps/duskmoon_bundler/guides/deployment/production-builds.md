@@ -28,7 +28,7 @@ Production builds run the same framework/plugin compilation pipeline as the dev 
 - writes a manifest that Phoenix can use for digested asset paths and chunk preload metadata
 - optionally copies a Vite-style public directory to the static root without transforming files
 
-Phoenix releases that call `DuskmoonBundler.static_path/2` or `DuskmoonBundler.Preload.tags/2` only need `:duskmoon_bundler_runtime` at runtime. Keep `:duskmoon_bundler` available for build aliases with `runtime: Mix.env() == :dev`; do not mark it `only: :dev`, because asset deploy aliases often run under `MIX_ENV=prod`.
+Phoenix releases that call `DuskmoonBundler.static_path/2` or `DuskmoonBundler.Preload.tags/2` only need `:duskmoon_bundler_runtime` at runtime. Keep `:duskmoon_bundler` available for build aliases with `runtime: Mix.env() in [:dev, :test]`; do not mark it `only: :dev`, because asset deploy aliases often run under `MIX_ENV=prod`. Starting the app in test ensures endpoints with code reloading enabled also start the DevServer cache and HMR supervision tree.
 
 ## Public files in Phoenix apps
 

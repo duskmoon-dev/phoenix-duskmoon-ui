@@ -35,7 +35,7 @@ Or add the dep manually:
 def deps do
   [
     {:duskmoon_bundler_runtime, "~> 9.7"},
-    {:duskmoon_bundler, "~> 9.7", runtime: Mix.env() == :dev}
+    {:duskmoon_bundler, "~> 9.7", runtime: Mix.env() in [:dev, :test]}
   ]
 end
 ```

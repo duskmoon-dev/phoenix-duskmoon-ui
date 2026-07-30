@@ -13,7 +13,7 @@ Development and production asset builds should include the build package too:
 
 ```elixir
 {:duskmoon_bundler_runtime, "~> 9.7"},
-{:duskmoon_bundler, "~> 9.7", runtime: Mix.env() == :dev}
+{:duskmoon_bundler, "~> 9.7", runtime: Mix.env() in [:dev, :test]}
 ```
 
 The runtime package owns the public template-facing APIs:

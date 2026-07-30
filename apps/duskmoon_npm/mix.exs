@@ -28,7 +28,7 @@ defmodule DuskmoonNpm.MixProject do
   end
 
   def application do
-    [extra_applications: [:crypto]]
+    [extra_applications: [:crypto, :ssl]]
   end
 
   defp aliases do

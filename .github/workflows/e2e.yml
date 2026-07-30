@@ -135,7 +135,7 @@ jobs:
               {:duskmoon_oxide, "~> ${VERSION}"},
               {:duskmoon_quickbeam, "~> ${VERSION}"},
               {:duskmoon_bundler_runtime, "~> ${VERSION}"},
-              {:duskmoon_bundler, "~> ${VERSION}", runtime: Mix.env() == :dev},
+              {:duskmoon_bundler, "~> ${VERSION}", runtime: Mix.env() in [:dev, :test]},
               {:phoenix_duskmoon, "~> ${VERSION}"}
             ]
           end
@@ -153,7 +153,7 @@ jobs:
               {:duskmoon_oxide, path: "${APP_ROOT}/duskmoon_oxide"},
               {:duskmoon_quickbeam, path: "${APP_ROOT}/duskmoon_quickbeam"},
               {:duskmoon_bundler_runtime, path: "${APP_ROOT}/duskmoon_bundler_runtime"},
-              {:duskmoon_bundler, path: "${APP_ROOT}/duskmoon_bundler", runtime: Mix.env() == :dev},
+              {:duskmoon_bundler, path: "${APP_ROOT}/duskmoon_bundler", runtime: Mix.env() in [:dev, :test]},
               {:phoenix_duskmoon, path: "${APP_ROOT}/phoenix_duskmoon"}
             ]
           end

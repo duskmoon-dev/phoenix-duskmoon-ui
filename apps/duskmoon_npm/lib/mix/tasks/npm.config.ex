@@ -34,10 +34,5 @@ defmodule Mix.Tasks.Npm.Config do
     if System.get_env("NPM_TOKEN"), do: "token set", else: "none"
   end
 
-  defp link_strategy do
-    case :os.type() do
-      {:unix, _} -> "symlink"
-      _ -> "copy"
-    end
-  end
+  defp link_strategy, do: "copy"
 end

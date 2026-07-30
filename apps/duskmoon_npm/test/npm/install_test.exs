@@ -53,7 +53,39 @@ defmodule NPM.InstallTest do
     assert output =~ "Installing from current package-lock.json."
     assert output =~ "Installed 1 package"
     assert output =~ "* #{package} #{version} (npm registry)"
-    assert {:ok, ^cache_path} = File.read_link(Path.join([project_dir, "node_modules", package]))
+
+    assert_copied_package(
+      cache_path,
+      Path.join([project_dir, "node_modules", package])
+    )
+  end
+
+  test "replaces cache symlinks left by earlier installs", %{project_dir: project_dir} do
+    package = "legacy-symlink-package"
+    version = "1.0.0"
+    cache_path = write_cached_package!(package, version)
+
+    File.write!(
+      Path.join(project_dir, "package.json"),
+      NPM.JSON.encode_pretty(%{
+        "name" => "legacy_symlink_project",
+        "dependencies" => %{package => version}
+      })
+    )
+
+    assert :ok = NPM.Lockfile.write(%{package => lock_entry(package, version)})
+
+    installed_path = Path.join([project_dir, "node_modules", package])
+    File.mkdir_p!(Path.dirname(installed_path))
+    File.ln_s!(cache_path, installed_path)
+
+    output =
+      capture_io(fn ->
+        assert :ok = NPM.install()
+      end)
+
+    assert output =~ "Installing from current package-lock.json."
+    assert_copied_package(cache_path, installed_path)
   end
 
   test "re-resolves a lockfile with missing transitive package records", %{
@@ -93,7 +125,7 @@ defmodule NPM.InstallTest do
       end)
 
     refute output =~ "Already up to date."
-    assert {:ok, ^dependency_cache_path} = File.read_link(Path.join(node_modules, dependency))
+    assert_copied_package(dependency_cache_path, Path.join(node_modules, dependency))
 
     assert {:ok, lockfile} = NPM.Lockfile.read()
     assert Map.has_key?(lockfile, dependency)
@@ -127,7 +159,7 @@ defmodule NPM.InstallTest do
 
     node_modules = Path.join(project_dir, "node_modules")
     File.mkdir_p!(node_modules)
-    File.ln_s!(cache_path, Path.join(node_modules, package))
+    File.cp_r!(cache_path, Path.join(node_modules, package))
 
     output =
       capture_io(fn ->
@@ -136,6 +168,155 @@ defmodule NPM.InstallTest do
 
     assert output =~ "Already up to date."
     refute File.exists?(Path.join([node_modules, optional_package, "package.json"]))
+  end
+
+  test "locks required dependencies of optional packages excluded from resolution", %{
+    project_dir: project_dir
+  } do
+    package = "@duskmoon-dev/el-markdown-input"
+    version = "1.5.5"
+    current_mermaid = "mermaid-#{NPM.Platform.current_os()}-#{NPM.Platform.current_cpu()}"
+    other_mermaid = "mermaid-darwin-arm64"
+    parser = "@mermaid-js/parser"
+    parser_dependency = "langium"
+
+    other_mermaid =
+      if other_mermaid == current_mermaid, do: "mermaid-linux-x64", else: other_mermaid
+
+    Enum.each(
+      [
+        {package, version},
+        {current_mermaid, "11.15.0"},
+        {other_mermaid, "11.15.0"},
+        {parser, "1.1.1"},
+        {parser_dependency, "3.3.1"}
+      ],
+      fn {name, package_version} -> write_cached_package!(name, package_version) end
+    )
+
+    put_packument!(package, version,
+      optional_dependencies: %{
+        current_mermaid => "11.15.0",
+        other_mermaid => "11.15.0"
+      }
+    )
+
+    put_packument!(current_mermaid, "11.15.0")
+    put_packument!(other_mermaid, "11.15.0", dependencies: %{parser => "1.1.1"})
+    put_packument!(parser, "1.1.1", dependencies: %{parser_dependency => "3.3.1"})
+    put_packument!(parser_dependency, "3.3.1")
+
+    File.write!(
+      Path.join(project_dir, "package.json"),
+      NPM.JSON.encode_pretty(%{
+        "name" => "mermaid_optional_dependency_project",
+        "dependencies" => %{package => version}
+      })
+    )
+
+    capture_io(fn ->
+      assert :ok = NPM.install()
+    end)
+
+    assert {:ok, package_names} = NPM.Lockfile.all_package_names()
+
+    assert MapSet.new(package_names) ==
+             MapSet.new([
+               package,
+               current_mermaid,
+               other_mermaid,
+               parser,
+               parser_dependency
+             ])
+
+    assert {:ok, %{"packages" => packages}} = NPM.JSON.read_file("package-lock.json")
+
+    Enum.each([other_mermaid, parser, parser_dependency], fn name ->
+      assert packages["node_modules/#{name}"]["optional"] == true
+    end)
+
+    capture_io(fn ->
+      assert :ok = NPM.install(frozen: true)
+    end)
+  end
+
+  test "nests marked 16 for optional mermaid beside flat marked 18", %{
+    project_dir: project_dir
+  } do
+    markdown = "@duskmoon-dev/el-markdown"
+    markdown_input = "@duskmoon-dev/el-markdown-input"
+    mermaid = "mermaid"
+    marked = "marked"
+
+    platform_mermaid =
+      "mermaid-#{NPM.Platform.current_os()}-#{NPM.Platform.current_cpu()}"
+
+    Enum.each(
+      [
+        {markdown, "1.5.3"},
+        {markdown_input, "1.5.3"},
+        {platform_mermaid, "1.0.0"},
+        {mermaid, "11.15.0"},
+        {marked, "16.3.0"},
+        {marked, "18.0.4"}
+      ],
+      fn {name, version} -> write_cached_package!(name, version) end
+    )
+
+    put_packument!(markdown, "1.5.3", dependencies: %{marked => "18.0.4"})
+
+    put_packument!(markdown_input, "1.5.3",
+      optional_dependencies: %{
+        mermaid => "11.15.0",
+        platform_mermaid => "1.0.0"
+      }
+    )
+
+    put_packument!(platform_mermaid, "1.0.0")
+    put_packument!(mermaid, "11.15.0", dependencies: %{marked => "^16.3.0"})
+
+    put_packument_versions!(marked, [
+      {"16.3.0", []},
+      {"18.0.4", []}
+    ])
+
+    File.write!(
+      Path.join(project_dir, "package.json"),
+      NPM.JSON.encode_pretty(%{
+        "name" => "marked_version_conflict_project",
+        "dependencies" => %{
+          markdown => "1.5.3",
+          markdown_input => "1.5.3"
+        }
+      })
+    )
+
+    capture_io(fn ->
+      assert :ok = NPM.install()
+    end)
+
+    assert {:ok, %{"packages" => packages}} = NPM.JSON.read_file("package-lock.json")
+    assert packages["node_modules/marked"]["version"] == "18.0.4"
+    assert packages["node_modules/mermaid"]["version"] == "11.15.0"
+    assert packages["node_modules/mermaid"]["optional"] == true
+
+    nested_marked = "node_modules/mermaid/node_modules/marked"
+    assert packages[nested_marked]["version"] == "16.3.0"
+    assert packages[nested_marked]["optional"] == true
+    assert installed_version!(nested_marked) == "16.3.0"
+
+    File.rm_rf!("node_modules")
+
+    mermaid
+    |> NPM.Cache.package_dir("11.15.0")
+    |> Path.join("node_modules")
+    |> File.rm_rf!()
+
+    capture_io(fn ->
+      assert :ok = NPM.install(frozen: true)
+    end)
+
+    assert installed_version!(nested_marked) == "16.3.0"
   end
 
   test "installs from workspace package using the workspace root", %{project_dir: project_dir} do
@@ -165,7 +346,12 @@ defmodule NPM.InstallTest do
       end)
 
     assert output =~ "Installing from current package-lock.json."
-    assert {:ok, ^cache_path} = File.read_link(Path.join([project_dir, "node_modules", package]))
+
+    assert_copied_package(
+      cache_path,
+      Path.join([project_dir, "node_modules", package])
+    )
+
     assert {:ok, ^app_dir} = File.read_link(Path.join([project_dir, "node_modules", "web"]))
     assert File.exists?(Path.join(project_dir, "package-lock.json"))
     refute File.exists?(Path.join(app_dir, "package-lock.json"))
@@ -207,7 +393,7 @@ defmodule NPM.InstallTest do
       end)
 
     refute output =~ "Already up to date."
-    assert {:ok, ^new_cache_path} = File.read_link(Path.join(node_modules, package))
+    assert_copied_package(new_cache_path, Path.join(node_modules, package))
     assert {:ok, ^app_dir} = File.read_link(Path.join([node_modules, "web"]))
 
     assert {:ok, lockfile} = NPM.Lockfile.read(Path.join(project_dir, "package-lock.json"))
@@ -242,7 +428,12 @@ defmodule NPM.InstallTest do
 
     assert %{"dependencies" => %{^package => ^version}} = read_package!(app_dir)
     refute Map.has_key?(read_package!(project_dir), "dependencies")
-    assert {:ok, ^cache_path} = File.read_link(Path.join([project_dir, "node_modules", package]))
+
+    assert_copied_package(
+      cache_path,
+      Path.join([project_dir, "node_modules", package])
+    )
+
     assert File.exists?(Path.join(project_dir, "package-lock.json"))
     refute File.exists?(Path.join(app_dir, "package-lock.json"))
     refute File.exists?(Path.join(app_dir, "node_modules"))
@@ -267,6 +458,29 @@ defmodule NPM.InstallTest do
       end)
 
     assert output =~ "package-lock.json not found. Run `mix npm.install` first."
+  end
+
+  test "npm.ci starts SSL before installing", %{project_dir: project_dir} do
+    File.write!(
+      Path.join(project_dir, "package.json"),
+      NPM.JSON.encode_pretty(%{"name" => "ssl_startup_project"})
+    )
+
+    {:ok, _started} = Application.ensure_all_started(:ssl)
+    on_exit(fn -> Application.ensure_all_started(:ssl) end)
+    assert :ok = Application.stop(:ssl)
+    refute List.keymember?(Application.started_applications(), :ssl, 0)
+
+    Mix.Task.reenable("npm.ci")
+
+    capture_io(fn ->
+      assert :ok = Mix.Tasks.Npm.Ci.run([])
+    end)
+
+    assert {:ssl, _description, _version} =
+             List.keyfind(Application.started_applications(), :ssl, 0)
+
+    assert :ssl in Application.spec(:duskmoon_npm, :applications)
   end
 
   defp write_cached_package!(name, version) do
@@ -295,26 +509,32 @@ defmodule NPM.InstallTest do
   end
 
   defp put_packument!(package, version, opts \\ []) do
+    put_packument_versions!(package, [{version, opts}])
+  end
+
+  defp put_packument_versions!(package, versions) do
     NPM.PackumentCache.put(package, %{
       name: package,
-      versions: %{
-        version => %{
-          os: [],
-          cpu: [],
-          dependencies: Keyword.get(opts, :dependencies, %{}),
-          optional_dependencies: Keyword.get(opts, :optional_dependencies, %{}),
-          peer_dependencies: %{},
-          peer_dependencies_meta: %{},
-          dist: %{
-            tarball: "https://registry.npmjs.org/#{package}/-/#{package}-#{version}.tgz",
-            integrity: ""
-          },
-          has_install_script: false,
-          deprecated: nil,
-          created_at: nil,
-          published_at: nil
-        }
-      }
+      versions:
+        Map.new(versions, fn {version, opts} ->
+          {version,
+           %{
+             os: [],
+             cpu: [],
+             dependencies: Keyword.get(opts, :dependencies, %{}),
+             optional_dependencies: Keyword.get(opts, :optional_dependencies, %{}),
+             peer_dependencies: %{},
+             peer_dependencies_meta: %{},
+             dist: %{
+               tarball: "https://registry.npmjs.org/#{package}/-/#{package}-#{version}.tgz",
+               integrity: ""
+             },
+             has_install_script: false,
+             deprecated: nil,
+             created_at: nil,
+             published_at: nil
+           }}
+        end)
     })
   end
 
@@ -345,6 +565,20 @@ defmodule NPM.InstallTest do
     |> Path.join("package.json")
     |> NPM.JSON.read_file()
     |> then(fn {:ok, data} -> data end)
+  end
+
+  defp assert_copied_package(cache_path, installed_path) do
+    assert {:ok, %File.Stat{type: :directory}} = File.lstat(installed_path)
+
+    assert File.read!(Path.join(installed_path, "package.json")) ==
+             File.read!(Path.join(cache_path, "package.json"))
+  end
+
+  defp installed_version!(package_dir) do
+    package_dir
+    |> Path.join("package.json")
+    |> NPM.JSON.read_file()
+    |> then(fn {:ok, %{"version" => version}} -> version end)
   end
 
   defp restore_app_env(key, nil), do: Application.delete_env(:duskmoon_npm, key)
