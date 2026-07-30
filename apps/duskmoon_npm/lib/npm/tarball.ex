@@ -56,19 +56,26 @@ defmodule NPM.Tarball do
   @doc false
   @spec __request_options__(String.t()) :: keyword()
   def __request_options__(req_version) do
-    pool_timeout_options =
+    adapter_options =
       if Version.compare(req_version, @scoped_finch_options_req) == :lt do
-        [pool_timeout: @pool_timeout]
+        [
+          connect_options: [timeout: @connect_timeout],
+          pool_timeout: @pool_timeout
+        ]
       else
-        [finch: [pool_timeout: @pool_timeout]]
+        [
+          finch: [
+            conn_opts: [transport_opts: [timeout: @connect_timeout]],
+            pool_timeout: @pool_timeout
+          ]
+        ]
       end
 
     [
       decode_body: false,
-      connect_options: [timeout: @connect_timeout],
       receive_timeout: @receive_timeout,
       retry: false
-    ] ++ pool_timeout_options
+    ] ++ adapter_options
   end
 
   defp request_options, do: __request_options__(req_version())
