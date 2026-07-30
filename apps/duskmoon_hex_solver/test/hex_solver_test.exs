@@ -60,6 +60,29 @@ defmodule HexSolverTest do
            end) =~ "RESOLVER:"
   end
 
+  test "solver only loads dependencies for versions allowed by the active constraint" do
+    dependencies = [
+      %{
+        repo: nil,
+        name: "version-heavy-package",
+        constraint: HexSolver.parse_constraint!("~> 1.0"),
+        optional: false,
+        label: "version-heavy-package",
+        dependencies: []
+      }
+    ]
+
+    assert {:ok,
+            %{
+              "version-heavy-package" => {%Version{major: 1, minor: 1, patch: 0}, nil}
+            }} =
+             HexSolver.run(HexSolverTest.CountingRegistry, dependencies, [], [])
+
+    assert_receive {:dependencies, %Version{major: 1, minor: 0, patch: 0}}
+    assert_receive {:dependencies, %Version{major: 1, minor: 1, patch: 0}}
+    refute_receive {:dependencies, %Version{major: 2, minor: 0, patch: 0}}
+  end
+
   defp npm_version do
     [_, version] = Regex.run(~r/@version "([^"]+)"/, File.read!(@npm_mix_exs))
     version
@@ -77,6 +100,33 @@ defmodule HexSolverTest do
 
     @impl true
     def dependencies(nil, "left-pad", %Version{}) do
+      {:ok, []}
+    end
+
+    def dependencies(_, _, _), do: :error
+
+    @impl true
+    def prefetch(_packages), do: :ok
+  end
+
+  defmodule CountingRegistry do
+    @behaviour HexSolver.Registry
+
+    @impl true
+    def versions(nil, "version-heavy-package") do
+      {:ok,
+       [
+         Version.parse!("1.0.0"),
+         Version.parse!("1.1.0"),
+         Version.parse!("2.0.0")
+       ]}
+    end
+
+    def versions(_, _), do: :error
+
+    @impl true
+    def dependencies(nil, "version-heavy-package", %Version{} = version) do
+      send(self(), {:dependencies, version})
       {:ok, []}
     end
 

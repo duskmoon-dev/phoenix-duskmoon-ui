@@ -35,8 +35,15 @@ defmodule HexSolver.PackageLister do
       {:error, package_range}
   end
 
-  def dependencies_as_incompatibilities(%PackageLister{} = lister, package_repo, package, version) do
+  def dependencies_as_incompatibilities(
+        %PackageLister{} = lister,
+        package_repo,
+        package,
+        version,
+        active_constraint
+      ) do
     {:ok, versions} = versions(lister, package_repo, package)
+    versions = Enum.filter(versions, &Constraint.allows?(active_constraint, &1))
     already_returned = Map.get(lister.already_returned, {package_repo, package}, %{})
 
     # Dependencies of package keyed on package version
