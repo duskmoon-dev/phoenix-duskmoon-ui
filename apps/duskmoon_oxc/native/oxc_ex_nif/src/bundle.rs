@@ -24,6 +24,12 @@ use crate::atoms;
 use crate::error::error_to_term;
 use crate::options::{BundleEntry, BundleOptions};
 
+// Rolldown and OXC recursively traverse generated expression trees. Run the
+// complete bundle operation away from the comparatively small dirty NIF stack.
+// The standard library reserves this address space without committing it
+// upfront on supported platforms, including Windows.
+const BUNDLE_STACK_SIZE: usize = 64 * 1024 * 1024;
+
 #[derive(Serialize)]
 struct CodeWithSourcemap {
     code: String,
@@ -48,6 +54,22 @@ struct BundleRunOutput {
     imports: Vec<String>,
     dynamic_imports: Vec<String>,
     exports: Vec<String>,
+}
+
+fn run_bundle_operation<T: Send>(
+    operation: impl FnOnce() -> Result<T, Vec<String>> + Send,
+) -> Result<T, Vec<String>> {
+    std::thread::scope(|scope| {
+        let worker = std::thread::Builder::new()
+            .name("oxc-bundle".to_string())
+            .stack_size(BUNDLE_STACK_SIZE)
+            .spawn_scoped(scope, operation)
+            .map_err(|error| vec![format!("Failed to start bundle worker: {error}")])?;
+
+        worker
+            .join()
+            .map_err(|_| vec!["Bundle worker panicked".to_string()])?
+    })
 }
 
 fn normalize_virtual_path(path: &str) -> Result<PathBuf, String> {
@@ -644,7 +666,7 @@ fn output_path(opts: &BundleOptions<'_>, filename: &str) -> Option<String> {
 pub fn bundle_run<'a>(env: Env<'a>, opts_term: Term<'a>) -> NifResult<Term<'a>> {
     let opts = BundleOptions::from_term(opts_term);
 
-    match bundle_run_project(&opts) {
+    match run_bundle_operation(|| bundle_run_project(&opts)) {
         Ok(result) => Ok((atoms::ok(), result).encode(env)),
         Err(errors) => error_to_term(env, &errors),
     }
@@ -658,7 +680,7 @@ pub fn bundle<'a>(
 ) -> NifResult<Term<'a>> {
     let opts = BundleOptions::from_term(opts_term);
 
-    match bundle_virtual_project(files, &opts) {
+    match run_bundle_operation(|| bundle_virtual_project(files, &opts)) {
         Ok((code, Some(sourcemap))) => Ok((
             atoms::ok(),
             SerdeTerm(CodeWithSourcemap { code, sourcemap }),
@@ -673,7 +695,7 @@ pub fn bundle<'a>(
 pub fn bundle_entry<'a>(env: Env<'a>, entry: String, opts_term: Term<'a>) -> NifResult<Term<'a>> {
     let opts = BundleOptions::from_term(opts_term);
 
-    match bundle_filesystem_entry(entry, &opts) {
+    match run_bundle_operation(|| bundle_filesystem_entry(entry, &opts)) {
         Ok((code, Some(sourcemap))) => Ok((
             atoms::ok(),
             SerdeTerm(CodeWithSourcemap { code, sourcemap }),
