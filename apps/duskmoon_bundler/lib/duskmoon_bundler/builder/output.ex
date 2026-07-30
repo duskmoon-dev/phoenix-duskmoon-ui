@@ -361,14 +361,30 @@ defmodule DuskmoonBundler.Builder.Output do
   end
 
   defp chunk_import_map(chunk, graph, module_labels, dep_map) do
+    chunk_entry_label = chunk.modules |> List.first() |> then(&module_labels[&1])
+
     chunk.modules
     |> Enum.flat_map(fn importer ->
-      module_chunk_imports(importer, chunk.id, graph, module_labels, dep_map)
+      module_chunk_imports(
+        importer,
+        chunk_entry_label,
+        chunk.id,
+        graph,
+        module_labels,
+        dep_map
+      )
     end)
     |> Map.new()
   end
 
-  defp module_chunk_imports(importer, current_chunk_id, graph, module_labels, dep_map) do
+  defp module_chunk_imports(
+         importer,
+         chunk_entry_label,
+         current_chunk_id,
+         graph,
+         module_labels,
+         dep_map
+       ) do
     importer_label = module_labels[importer]
     deps = Map.get(dep_map, importer, %DuskmoonBundler.Builder.Dependencies{})
 
@@ -377,11 +393,21 @@ defmodule DuskmoonBundler.Builder.Output do
       with chunk_id when is_binary(chunk_id) <- Map.get(graph.module_to_chunk, dep),
            false <- chunk_id == current_chunk_id,
            dep_label when is_binary(dep_label) <- module_labels[dep] do
-        [{"./" <> relative_label(importer_label, dep_label), chunk_id}]
+        [
+          {"./" <> relative_label(importer_label, dep_label), chunk_id},
+          {module_specifier(chunk_entry_label, dep_label), chunk_id}
+        ]
       else
         _ -> []
       end
     end)
+  end
+
+  defp module_specifier(from_label, to_label) do
+    case relative_label(from_label, to_label) do
+      "." <> _ = relative -> relative
+      relative -> "./" <> relative
+    end
   end
 
   defp relative_label(from_label, to_label) do

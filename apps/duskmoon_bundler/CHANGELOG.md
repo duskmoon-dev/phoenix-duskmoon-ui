@@ -13,6 +13,7 @@
 - Added `json_codec` as a runtime dependency.
 
 ### Fixed
+- ESM code-split builds now rewrite Rolldown-normalized cross-chunk npm imports to emitted chunk URLs instead of leaving package specifiers in the output.
 - Generated installs now start `:duskmoon_bundler` in test, ensuring endpoints with code reloading enabled also start the DevServer cache and HMR supervision tree.
 - HMR websocket no longer drops idle connections after 60 seconds. The browser client now sends a periodic `{"type":"ping"}` heartbeat, and the server replies with `{"type":"pong"}`, preventing Bandit's websocket `read_timeout` from closing an otherwise idle socket. The client also tracks pongs and force-reconnects if the link goes half-open. This eliminates the spurious `[DuskmoonBundler] Disconnected. Reconnecting...` console noise observed on long-lived demo/dev pages with no file changes.
 

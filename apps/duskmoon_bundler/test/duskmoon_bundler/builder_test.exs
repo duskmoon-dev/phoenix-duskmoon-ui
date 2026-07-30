@@ -1183,6 +1183,75 @@ defmodule DuskmoonBundler.BuilderTest do
       assert js =~ "fake-widget"
     end
 
+    test "minified ESM rewrites normalized cross-chunk npm imports" do
+      el_base_dir =
+        Path.join(@fixture_dir, "node_modules/@duskmoon-dev/el-base/dist/esm")
+
+      elements_dir =
+        Path.join(@fixture_dir, "node_modules/@duskmoon-dev/elements/dist/esm")
+
+      File.mkdir_p!(el_base_dir)
+      File.mkdir_p!(elements_dir)
+
+      File.write!(
+        Path.join(@fixture_dir, "node_modules/@duskmoon-dev/el-base/package.json"),
+        ~s({"name":"@duskmoon-dev/el-base","type":"module","exports":{"import":"./dist/esm/index.js"}})
+      )
+
+      File.write!(
+        Path.join(el_base_dir, "index.js"),
+        "export const register = () => { globalThis.__elBase = 'bundled-el-base' };\n"
+      )
+
+      File.write!(
+        Path.join(@fixture_dir, "node_modules/@duskmoon-dev/elements/package.json"),
+        ~s({"name":"@duskmoon-dev/elements","type":"module","exports":{"import":"./dist/esm/index.js"}})
+      )
+
+      File.write!(
+        Path.join(elements_dir, "index.js"),
+        """
+        import { register } from '@duskmoon-dev/el-base'
+        export const registerAll = () => {
+          register()
+          import('./lazy.js')
+        }
+        """
+      )
+
+      File.write!(
+        Path.join(elements_dir, "lazy.js"),
+        """
+        import { register } from '@duskmoon-dev/el-base'
+        register()
+        """
+      )
+
+      File.write!(Path.join(@fixture_dir, "src/minified_esm_app.ts"), """
+      import { registerAll } from '@duskmoon-dev/elements'
+      registerAll()
+      """)
+
+      {:ok, result} =
+        DuskmoonBundler.Builder.build(
+          entry: Path.join(@fixture_dir, "src/minified_esm_app.ts"),
+          outdir: @outdir,
+          format: :esm,
+          hash: false,
+          minify: true,
+          sourcemap: false,
+          node_modules: Path.join(@fixture_dir, "node_modules")
+        )
+
+      js =
+        result.chunks
+        |> Enum.map_join("\n", &File.read!(&1.path))
+
+      assert js =~ "bundled-el-base"
+      refute js =~ "@duskmoon-dev/el-base"
+      refute js =~ "@duskmoon-dev/elements"
+    end
+
     test "plugin content_type overrides file extension dispatch" do
       File.write!(Path.join(@fixture_dir, "src/data.custom"), """
       export const value = 42;
