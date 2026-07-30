@@ -131,7 +131,16 @@ defmodule NPM.Cache do
   end
 
   defp with_lock(name, version, fun) do
-    :global.trans({__MODULE__, {name, version}}, fun, [node()], :infinity)
+    :global.trans(lock_id(name, version), fun, [node()], :infinity)
+  end
+
+  @doc false
+  def __lock_id__(name, version, requester \\ self()) do
+    lock_id(name, version, requester)
+  end
+
+  defp lock_id(name, version, requester \\ self()) do
+    {{__MODULE__, name, version}, requester}
   end
 
   defp write_complete_marker!(dest) do

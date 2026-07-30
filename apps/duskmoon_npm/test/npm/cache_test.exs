@@ -105,6 +105,13 @@ defmodule NPM.CacheTest do
     assert Cache.cached?("partial-package", "1.0.0")
   end
 
+  test "uses each package version as a lock resource and the process as requester" do
+    requester = make_ref()
+
+    assert Cache.__lock_id__("package", "1.2.3", requester) ==
+             {{Cache, "package", "1.2.3"}, requester}
+  end
+
   defp restore_env(key, nil), do: System.delete_env(key)
   defp restore_env(key, value), do: System.put_env(key, value)
 
