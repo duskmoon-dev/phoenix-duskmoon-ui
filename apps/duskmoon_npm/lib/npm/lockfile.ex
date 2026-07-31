@@ -182,17 +182,72 @@ defmodule NPM.Lockfile do
   def policy_matches?(nil), do: false
 
   def policy_matches?(policy) when is_map(policy) do
-    policy["block_exotic_subdeps"] == Config.block_exotic_subdeps?() and
+    policy_mismatch_reasons(policy) == []
+  end
+
+  @doc "Explain why a recorded lockfile policy does not match current settings."
+  @spec policy_mismatch_reasons(map() | nil) :: [String.t()]
+  def policy_mismatch_reasons(nil), do: ["no policy recorded in lockfile"]
+
+  def policy_mismatch_reasons(policy) when is_map(policy) do
+    current = current_policy()
+
+    []
+    |> maybe_mismatch_reason(
+      policy["block_exotic_subdeps"] == current["block_exotic_subdeps"],
+      "block_exotic_subdeps: lockfile=#{inspect(policy["block_exotic_subdeps"])} current=#{inspect(current["block_exotic_subdeps"])}"
+    )
+    |> maybe_mismatch_reason(
       MapSet.subset?(
         MapSet.new(policy["exotic_deps"] || []),
-        MapSet.new(Config.exotic_deps())
-      ) and
+        MapSet.new(current["exotic_deps"] || [])
+      ),
+      "exotic_deps not covered by current allow-list"
+    )
+    |> maybe_mismatch_reason(
       MapSet.subset?(
         MapSet.new(policy["allowed_registries"] || []),
-        MapSet.new(RegistryPolicy.allowed_origins())
-      ) and
-      policy["allow_registry_redirects"] == Config.allow_registry_redirects?()
+        MapSet.new(current["allowed_registries"] || [])
+      ),
+      "allowed_registries: lockfile=#{inspect(policy["allowed_registries"] || [])} current=#{inspect(current["allowed_registries"] || [])}"
+    )
+    |> maybe_mismatch_reason(
+      policy["allow_registry_redirects"] == current["allow_registry_redirects"],
+      "allow_registry_redirects: lockfile=#{inspect(policy["allow_registry_redirects"])} current=#{inspect(current["allow_registry_redirects"])}"
+    )
   end
+
+  @doc """
+  Rewrite only the recorded security policy in an existing lockfile.
+
+  Used after a cache-backed install when dependency versions still match but the
+  active registry/security settings have changed.
+  """
+  @spec refresh_policy(String.t()) :: :ok | {:error, term()}
+  def refresh_policy(path \\ @default_path) do
+    case read_json(path) do
+      {:ok, data} ->
+        updated =
+          case data do
+            %{@npm_ex_metadata => meta} when is_map(meta) ->
+              put_in(data, [@npm_ex_metadata, "policy"], current_policy())
+
+            _ ->
+              Map.put(data, @npm_ex_metadata, %{"policy" => current_policy()})
+          end
+
+        File.write(path, NPM.JSON.encode_pretty(updated))
+
+      {:error, :enoent} ->
+        {:error, :enoent}
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  defp maybe_mismatch_reason(reasons, true, _message), do: reasons
+  defp maybe_mismatch_reason(reasons, false, message), do: reasons ++ [message]
 
   @doc "Parse a raw packages map into lockfile entries."
   @spec parse_packages(map()) :: t()

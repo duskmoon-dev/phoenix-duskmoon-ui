@@ -9,6 +9,10 @@ defmodule NPM.Registry do
   """
 
   @max_retries 3
+  @connect_timeout 30_000
+  @pool_timeout 120_000
+  @receive_timeout 120_000
+  @scoped_finch_options_req "0.7.0"
 
   @type packument :: %{
           name: String.t(),
@@ -64,10 +68,16 @@ defmodule NPM.Registry do
     RegistryPolicy.validate_url!(url)
 
     result =
-      Req.get(url,
-        headers: headers,
-        decode_body: false,
-        redirect: NPM.Config.allow_registry_redirects?()
+      Req.get(
+        url,
+        Keyword.merge(
+          [
+            headers: headers,
+            decode_body: false,
+            redirect: NPM.Config.allow_registry_redirects?()
+          ],
+          request_options()
+        )
       )
 
     case classify_result(result) do
@@ -81,6 +91,32 @@ defmodule NPM.Registry do
 
       {_, error} ->
         error
+    end
+  end
+
+  defp request_options do
+    adapter_options =
+      if Version.compare(req_version(), @scoped_finch_options_req) == :lt do
+        [
+          connect_options: [timeout: @connect_timeout],
+          pool_timeout: @pool_timeout
+        ]
+      else
+        [
+          finch: [
+            conn_opts: [transport_opts: [timeout: @connect_timeout]],
+            pool_timeout: @pool_timeout
+          ]
+        ]
+      end
+
+    [receive_timeout: @receive_timeout, retry: false] ++ adapter_options
+  end
+
+  defp req_version do
+    case Application.spec(:req, :vsn) do
+      nil -> "0.0.0"
+      version -> to_string(version)
     end
   end
 

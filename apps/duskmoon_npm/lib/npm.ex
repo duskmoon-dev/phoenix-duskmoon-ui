@@ -276,24 +276,17 @@ defmodule NPM do
   end
 
   defp lockfile_matches?(lockfile, deps) do
-    lockfile_covers_dependencies?(lockfile, deps) and
+    lockfile_root_deps_satisfied?(lockfile, deps) and
       lockfile_dependency_records_complete?(lockfile)
   end
 
-  defp lockfile_covers_dependencies?(lockfile, deps) do
+  defp lockfile_root_deps_satisfied?(lockfile, deps) do
     Enum.all?(deps, fn {name, range} ->
       case Map.get(lockfile, name) do
         nil -> false
         entry -> lockfile_entry_satisfies_range?(entry, range)
       end
-    end) and
-      Enum.all?(lockfile, fn {name, _entry} ->
-        Map.has_key?(deps, name) or
-          Enum.any?(lockfile, fn {_, e} ->
-            Map.has_key?(e.dependencies, name) or
-              Map.has_key?(Map.get(e, :optional_dependencies, %{}), name)
-          end)
-      end)
+    end)
   end
 
   defp lockfile_entry_satisfies_range?(_entry, range) when range in ["", "*", "latest"],
@@ -326,22 +319,65 @@ defmodule NPM do
     validate_direct_exotic_deps!(deps)
     {:ok, old_lockfile} = NPM.Lockfile.read()
 
+    matches? = old_lockfile != %{} and lockfile_matches?(old_lockfile, deps)
+    policy_ok? = lockfile_policy_current?()
+    policy_reasons = lockfile_policy_mismatch_reasons()
+    cache_ok? = matches? and cache_covers_lockfile?(old_lockfile)
+    nm_intact? = matches? and node_modules_intact?(old_lockfile, local_links)
+
     cond do
       old_lockfile == %{} ->
         resolve_and_install(deps, old_lockfile, local_links)
 
-      lockfile_matches?(old_lockfile, deps) and lockfile_policy_current?() and
-          node_modules_intact?(old_lockfile, local_links) ->
+      matches? and policy_ok? and nm_intact? ->
         Mix.shell().info("Already up to date.")
         :ok
 
-      lockfile_matches?(old_lockfile, deps) and lockfile_policy_current?() ->
+      matches? and policy_ok? ->
         Mix.shell().info("Installing from current package-lock.json.")
         link_from_lockfile(old_lockfile, local_links)
 
+      matches? and cache_ok? ->
+        warn_policy_mismatch(policy_reasons)
+        Mix.shell().info("Installing from cached packages without re-resolving.")
+
+        with :ok <- link_from_lockfile(old_lockfile, local_links) do
+          _ = NPM.Lockfile.refresh_policy()
+          :ok
+        end
+
       true ->
+        if policy_reasons != [] and matches? do
+          warn_policy_mismatch(policy_reasons)
+          Mix.shell().info("Cache incomplete — re-resolving dependencies.")
+        end
+
         resolve_and_install(deps, old_lockfile, local_links)
     end
+  end
+
+  defp lockfile_policy_mismatch_reasons do
+    case NPM.Lockfile.read_policy() do
+      {:ok, nil} -> []
+      {:ok, policy} -> NPM.Lockfile.policy_mismatch_reasons(policy)
+      _ -> ["unable to read lockfile policy"]
+    end
+  end
+
+  defp warn_policy_mismatch(reasons) do
+    Mix.shell().info("Lockfile security policy differs from current settings:")
+
+    Enum.each(reasons, fn reason ->
+      Mix.shell().info("  - #{reason}")
+    end)
+  end
+
+  defp cache_covers_lockfile?(lockfile) do
+    skipped = Linker.skipped_packages(lockfile)
+
+    Enum.all?(lockfile, fn {name, entry} ->
+      MapSet.member?(skipped, name) or NPM.Cache.cached?(name, entry.version)
+    end)
   end
 
   defp validate_direct_exotic_deps!(deps) do
@@ -437,14 +473,16 @@ defmodule NPM do
       Mix.shell().info("Fetching #{to_fetch} package#{if to_fetch != 1, do: "s", else: ""}...")
     end
 
+    strategy = Linker.strategy()
+
     {link_us, result} =
       :timer.tc(fn ->
-        with :ok <- Linker.link(lockfile, @node_modules, :copy, skipped),
+        with :ok <- Linker.link(lockfile, @node_modules, strategy, skipped),
              :ok <-
                Linker.link_nested_lockfile(
                  nested_lockfile,
                  @node_modules,
-                 :copy,
+                 strategy,
                  skipped
                ) do
           NPM.Install.Linker.link_local_packages(local_links, @node_modules)
@@ -471,8 +509,13 @@ defmodule NPM do
   defp registry_package_intact?(name) do
     package_dir = Path.join(@node_modules, name)
 
-    match?({:ok, %File.Stat{type: :directory}}, File.lstat(package_dir)) and
-      File.exists?(Path.join(package_dir, "package.json"))
+    case File.lstat(package_dir) do
+      {:ok, %File.Stat{type: type}} when type in [:directory, :symlink] ->
+        File.exists?(Path.join(package_dir, "package.json"))
+
+      _ ->
+        false
+    end
   end
 
   defp plural(map) do

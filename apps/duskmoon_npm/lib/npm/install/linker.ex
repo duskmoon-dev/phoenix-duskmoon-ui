@@ -10,7 +10,7 @@ defmodule NPM.Install.Linker do
   as possible, only nesting when version conflicts occur.
   """
 
-  @default_cache_concurrency 4
+  @default_cache_concurrency 16
   @link_concurrency 16
 
   @type strategy :: :symlink | :copy
@@ -77,6 +77,9 @@ defmodule NPM.Install.Linker do
   end
 
   @doc false
+  def strategy, do: default_strategy()
+
+  @doc false
   @spec link_nested_lockfile(
           %{String.t() => NPM.Lockfile.entry()},
           String.t(),
@@ -89,42 +92,77 @@ defmodule NPM.Install.Linker do
         strategy \\ default_strategy(),
         flat_skipped \\ MapSet.new()
       ) do
-    nested_lockfile
-    |> Enum.sort_by(fn {location, _entry} -> location_depth(location) end)
-    |> Enum.reduce_while({:ok, MapSet.new()}, fn {location, entry}, {:ok, skipped_locations} ->
-      with {:ok, name} <- NPM.Lockfile.nested_package_name(location) do
-        cond do
-          nested_under_skipped?(location, flat_skipped, skipped_locations) ->
-            {:cont, {:ok, MapSet.put(skipped_locations, location)}}
-
-          Map.get(entry, :optional, false) and
-              not platform_compatible?(name, entry.version) ->
-            {:cont, {:ok, MapSet.put(skipped_locations, location)}}
-
-          true ->
-            case NPM.Cache.ensure(name, entry.version, entry.tarball, entry.integrity,
-                   optional?: Map.get(entry, :optional, false)
-                 ) do
-              {:ok, :missing_optional} ->
-                {:cont, {:ok, MapSet.put(skipped_locations, location)}}
-
-              {:ok, _cache_result} ->
-                cache_path = NPM.Cache.package_dir(name, entry.version)
-                target = nested_target(nm_dir, location)
-                :ok = link_package(cache_path, target, strategy)
-                {:cont, {:ok, skipped_locations}}
-
-              {:error, reason} ->
-                {:halt, {:error, reason}}
-            end
+    result =
+      nested_lockfile
+      |> Enum.group_by(fn {location, _entry} -> location_depth(location) end)
+      |> Enum.sort_by(&elem(&1, 0))
+      |> Enum.reduce_while({:ok, MapSet.new()}, fn {_depth, entries},
+                                                   {:ok, skipped_locations} ->
+        case link_nested_depth(entries, nm_dir, strategy, flat_skipped, skipped_locations) do
+          {:ok, new_skipped} -> {:cont, {:ok, new_skipped}}
+          {:error, reason} -> {:halt, {:error, reason}}
         end
-      else
-        :error -> {:halt, {:error, {:invalid_nested_package_location, location}}}
-      end
-    end)
-    |> case do
+      end)
+
+    case result do
       {:ok, _skipped_locations} -> :ok
       error -> error
+    end
+  end
+
+  defp link_nested_depth(entries, nm_dir, strategy, flat_skipped, skipped_locations) do
+    entries
+    |> Task.async_stream(
+      fn {location, entry} ->
+        link_nested_entry(location, entry, nm_dir, strategy, flat_skipped, skipped_locations)
+      end,
+      max_concurrency: @link_concurrency,
+      ordered: false,
+      timeout: :infinity
+    )
+    |> Enum.reduce_while({:ok, skipped_locations}, fn
+      {:ok, {:ok, :linked}}, {:ok, skipped} ->
+        {:cont, {:ok, skipped}}
+
+      {:ok, {:ok, {:skip, location}}}, {:ok, skipped} ->
+        {:cont, {:ok, MapSet.put(skipped, location)}}
+
+      {:ok, {:error, reason}}, _ ->
+        {:halt, {:error, reason}}
+
+      {:exit, reason}, _ ->
+        {:halt, {:error, reason}}
+    end)
+  end
+
+  defp link_nested_entry(location, entry, nm_dir, strategy, flat_skipped, skipped_locations) do
+    with {:ok, name} <- NPM.Lockfile.nested_package_name(location) do
+      cond do
+        nested_under_skipped?(location, flat_skipped, skipped_locations) ->
+          {:ok, {:skip, location}}
+
+        Map.get(entry, :optional, false) and not platform_compatible?(name, entry.version) ->
+          {:ok, {:skip, location}}
+
+        true ->
+          case NPM.Cache.ensure(name, entry.version, entry.tarball, entry.integrity,
+                 optional?: Map.get(entry, :optional, false)
+               ) do
+            {:ok, :missing_optional} ->
+              {:ok, {:skip, location}}
+
+            {:ok, _cache_result} ->
+              cache_path = NPM.Cache.package_dir(name, entry.version)
+              target = nested_target(nm_dir, location)
+              :ok = link_package(cache_path, target, strategy)
+              {:ok, :linked}
+
+            {:error, reason} ->
+              {:error, reason}
+          end
+      end
+    else
+      :error -> {:error, {:invalid_nested_package_location, location}}
     end
   end
 
@@ -141,6 +179,7 @@ defmodule NPM.Install.Linker do
                optional?: optional?
              ) do
           {:ok, :missing_optional} -> {:skip, name}
+          {:ok, path} -> {:ok, path}
           other -> other
         end
       end,
@@ -172,7 +211,6 @@ defmodule NPM.Install.Linker do
       |> Enum.reject(fn {name, _version} -> MapSet.member?(skipped, name) end)
 
     expected_names = MapSet.new(tree, &elem(&1, 0))
-
     prune(node_modules_dir, expected_names)
 
     with :ok <-
@@ -521,18 +559,23 @@ defmodule NPM.Install.Linker do
   end
 
   defp default_strategy do
-    :copy
+    case System.get_env("NPM_EX_LINK_STRATEGY") do
+      "copy" -> :copy
+      "symlink" -> :symlink
+      nil -> :symlink
+      _ -> :symlink
+    end
   end
 
   defp cache_concurrency do
     case System.get_env("NPM_EX_CACHE_CONCURRENCY") do
       nil ->
-        @default_cache_concurrency
+        max(@default_cache_concurrency, System.schedulers_online() * 2)
 
       value ->
         case Integer.parse(value) do
           {concurrency, ""} when concurrency > 0 -> concurrency
-          _ -> @default_cache_concurrency
+          _ -> max(@default_cache_concurrency, System.schedulers_online() * 2)
         end
     end
   end

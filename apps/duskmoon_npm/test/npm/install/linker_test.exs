@@ -75,8 +75,10 @@ defmodule NPM.Install.LinkerTest do
     installed_importer = Path.join(node_modules, importer)
     installed_sibling = Path.join(node_modules, sibling)
 
-    assert {:ok, %File.Stat{type: :directory}} = File.lstat(installed_importer)
-    assert {:ok, %File.Stat{type: :directory}} = File.lstat(installed_sibling)
+    assert {:ok, %File.Stat{type: importer_type}} = File.lstat(installed_importer)
+    assert {:ok, %File.Stat{type: sibling_type}} = File.lstat(installed_sibling)
+    assert importer_type in [:directory, :symlink]
+    assert sibling_type in [:directory, :symlink]
     assert File.read!(Path.join(installed_importer, "index.js")) =~ sibling
 
     assert File.read!(Path.join(installed_importer, "package.json")) ==

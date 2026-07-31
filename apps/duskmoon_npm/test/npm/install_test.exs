@@ -60,7 +60,7 @@ defmodule NPM.InstallTest do
     )
   end
 
-  test "replaces cache symlinks left by earlier installs", %{project_dir: project_dir} do
+  test "treats existing cache symlinks as intact", %{project_dir: project_dir} do
     package = "legacy-symlink-package"
     version = "1.0.0"
     cache_path = write_cached_package!(package, version)
@@ -84,7 +84,7 @@ defmodule NPM.InstallTest do
         assert :ok = NPM.install()
       end)
 
-    assert output =~ "Installing from current package-lock.json."
+    assert output =~ "Already up to date."
     assert_copied_package(cache_path, installed_path)
   end
 
@@ -352,7 +352,7 @@ defmodule NPM.InstallTest do
       Path.join([project_dir, "node_modules", package])
     )
 
-    assert {:ok, ^app_dir} = File.read_link(Path.join([project_dir, "node_modules", "web"]))
+    assert_symlink_target!(Path.join([project_dir, "node_modules", "web"]), app_dir)
     assert File.exists?(Path.join(project_dir, "package-lock.json"))
     refute File.exists?(Path.join(app_dir, "package-lock.json"))
     refute File.exists?(Path.join(app_dir, "node_modules"))
@@ -394,7 +394,7 @@ defmodule NPM.InstallTest do
 
     refute output =~ "Already up to date."
     assert_copied_package(new_cache_path, Path.join(node_modules, package))
-    assert {:ok, ^app_dir} = File.read_link(Path.join([node_modules, "web"]))
+    assert_symlink_target!(Path.join([node_modules, "web"]), app_dir)
 
     assert {:ok, lockfile} = NPM.Lockfile.read(Path.join(project_dir, "package-lock.json"))
     assert lockfile[package].version == new_version
@@ -568,10 +568,24 @@ defmodule NPM.InstallTest do
   end
 
   defp assert_copied_package(cache_path, installed_path) do
-    assert {:ok, %File.Stat{type: :directory}} = File.lstat(installed_path)
+    assert {:ok, %File.Stat{type: type}} = File.lstat(installed_path)
+    assert type in [:directory, :symlink]
 
     assert File.read!(Path.join(installed_path, "package.json")) ==
              File.read!(Path.join(cache_path, "package.json"))
+  end
+
+  defp assert_symlink_target!(link_path, expected_target) do
+    assert {:ok, actual_target} = File.read_link(link_path)
+
+    assert canonicalize_path(Path.expand(actual_target, Path.dirname(link_path))) ==
+             canonicalize_path(expected_target)
+  end
+
+  defp canonicalize_path(path) do
+    path
+    |> Path.expand()
+    |> String.replace_prefix("/private", "")
   end
 
   defp installed_version!(package_dir) do
