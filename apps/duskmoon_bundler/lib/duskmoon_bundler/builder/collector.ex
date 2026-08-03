@@ -8,7 +8,7 @@ defmodule DuskmoonBundler.Builder.Collector do
 
   Returns `{:ok, modules, dep_map, workers}` where:
   - `modules` is `[{abs_path, label, source}]` in dependency order
-  - `dep_map` is `%{abs_path => %{static: [abs_path], dynamic: [abs_path]}}`
+  - `dep_map` tracks static, dynamic, and CommonJS dependencies by absolute path
   - `workers` is `%{importer_path => %{specifier => worker_abs_path}}`
   """
   def collect(entry_path, ctx) do
@@ -100,10 +100,10 @@ defmodule DuskmoonBundler.Builder.Collector do
            state.ctx.plugins,
            graph_source != source
          ) do
-      {:ok, %{imports: typed_imports, workers: worker_specs}} ->
+      {:ok, %{imports: typed_imports, requires: requires, workers: worker_specs}} ->
         state = %{
           state
-          | dep_map: Map.put(state.dep_map, abs_path, split_imports(typed_imports))
+          | dep_map: Map.put(state.dep_map, abs_path, split_imports(typed_imports, requires))
         }
 
         {state, worker_specs} = resolve_workers(worker_specs, abs_path, state)
@@ -179,7 +179,8 @@ defmodule DuskmoonBundler.Builder.Collector do
         deps = %{
           deps
           | static: replace_specifier(deps.static, specifier, resolved_path),
-            dynamic: replace_specifier(deps.dynamic, specifier, resolved_path)
+            dynamic: replace_specifier(deps.dynamic, specifier, resolved_path),
+            requires: replace_specifier(deps.requires, specifier, resolved_path)
         }
 
         Map.put(dep_map, importer, deps)
@@ -343,7 +344,7 @@ defmodule DuskmoonBundler.Builder.Collector do
     end
   end
 
-  defp split_imports(typed_imports) do
+  defp split_imports(typed_imports, requires) do
     {statics, dynamics} =
       Enum.reduce(typed_imports, {[], []}, fn
         {:static, spec}, {s, d} -> {[spec | s], d}
@@ -352,7 +353,8 @@ defmodule DuskmoonBundler.Builder.Collector do
 
     %DuskmoonBundler.Builder.Dependencies{
       static: Enum.reverse(statics),
-      dynamic: Enum.reverse(dynamics)
+      dynamic: Enum.reverse(dynamics),
+      requires: requires
     }
   end
 end

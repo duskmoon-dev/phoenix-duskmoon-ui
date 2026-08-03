@@ -1475,6 +1475,67 @@ defmodule DuskmoonBundler.BuilderTest do
       refute js =~ ~r/\brequire\s*\(/
     end
 
+    test "resolves shared React imports from nested react-dom modules when code splitting" do
+      File.mkdir_p!(Path.join(@fixture_dir, "node_modules/react"))
+      File.mkdir_p!(Path.join(@fixture_dir, "node_modules/react-dom/cjs"))
+
+      File.write!(
+        Path.join(@fixture_dir, "node_modules/react/package.json"),
+        ~s({"name":"react","main":"index.js"})
+      )
+
+      File.write!(
+        Path.join(@fixture_dir, "node_modules/react/index.js"),
+        "const singleton = 'react-singleton'; exports.createElement = function() { return 'react-element' }; exports.useState = function() { return singleton }\n"
+      )
+
+      File.write!(
+        Path.join(@fixture_dir, "node_modules/react-dom/package.json"),
+        ~s({"name":"react-dom","exports":{"./client":"./client.js"}})
+      )
+
+      File.write!(
+        Path.join(@fixture_dir, "node_modules/react-dom/client.js"),
+        "module.exports = require('./cjs/react-dom-client.production.js')\n"
+      )
+
+      File.write!(
+        Path.join(@fixture_dir, "node_modules/react-dom/cjs/react-dom-client.production.js"),
+        "var React = require('react'); exports.createRoot = function() { return React }\n"
+      )
+
+      File.write!(Path.join(@fixture_dir, "src/react_component.ts"), """
+      import { createElement, useState } from 'react'
+      export function ReproComponent() { return createElement('p', null, useState()) }
+      """)
+
+      File.write!(Path.join(@fixture_dir, "src/react_app.ts"), """
+      import { createElement } from 'react'
+      import { createRoot } from 'react-dom/client'
+      const root = createRoot()
+      void import('./react_component').then(({ ReproComponent }) => {
+        root.render(createElement(ReproComponent))
+      })
+      """)
+
+      assert {:ok, result} =
+               DuskmoonBundler.Builder.build(
+                 entry: Path.join(@fixture_dir, "src/react_app.ts"),
+                 outdir: @outdir,
+                 minify: true,
+                 sourcemap: false,
+                 node_modules: Path.join(@fixture_dir, "node_modules")
+               )
+
+      assert result.chunks == []
+
+      js = File.read!(result.js.path)
+      assert js =~ "react-element"
+      assert js =~ "ReproComponent"
+      assert length(Regex.scan(~r/react-singleton/, js)) == 1
+      refute js =~ ~r/\brequire\s*\(/, js
+    end
+
     test "resolves package subpath without exports field" do
       File.mkdir_p!(Path.join(@fixture_dir, "node_modules/subpath-pkg/lib"))
 
