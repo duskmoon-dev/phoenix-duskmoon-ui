@@ -96,8 +96,7 @@ defmodule NPM.Install.Linker do
       nested_lockfile
       |> Enum.group_by(fn {location, _entry} -> location_depth(location) end)
       |> Enum.sort_by(&elem(&1, 0))
-      |> Enum.reduce_while({:ok, MapSet.new()}, fn {_depth, entries},
-                                                   {:ok, skipped_locations} ->
+      |> Enum.reduce_while({:ok, MapSet.new()}, fn {_depth, entries}, {:ok, skipped_locations} ->
         case link_nested_depth(entries, nm_dir, strategy, flat_skipped, skipped_locations) do
           {:ok, new_skipped} -> {:cont, {:ok, new_skipped}}
           {:error, reason} -> {:halt, {:error, reason}}
