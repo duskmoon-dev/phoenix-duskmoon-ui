@@ -192,29 +192,14 @@ jobs:
       matrix:
         target:
           - target: aarch64-linux-gnu
-            arch: aarch64
-            os_tag: linux
-            abi: gnu
             os: ubuntu-22.04
           - target: aarch64-macos-none
-            arch: aarch64
-            os_tag: macos
-            abi: none
             os: macos-15
           - target: x86_64-freebsd-none
-            arch: x86_64
-            os_tag: freebsd
-            abi: none
             os: ubuntu-22.04
           - target: x86_64-linux-gnu
-            arch: x86_64
-            os_tag: linux
-            abi: gnu
             os: ubuntu-22.04
           - target: x86_64-macos-none
-            arch: x86_64
-            os_tag: macos
-            abi: none
             os: macos-15-intel
 
     steps:
@@ -247,11 +232,16 @@ jobs:
         env:
           QUICKBEAM_BUILD: '1'
           DUSKMOON_BUILD_NATIVE_FROM_SOURCE: '1'
-          # Keep same-host builds from inheriting the runner's CPU features.
-          TARGET_ARCH: ${{ matrix.target.arch }}
-          TARGET_OS: ${{ matrix.target.os_tag }}
-          TARGET_ABI: ${{ matrix.target.abi }}
         run: |
+          # Keep the same-host Linux build from inheriting the runner's CPU
+          # features. Cross-target builds must let Zigler perform host sema
+          # before it applies the requested target to the final artifact.
+          if [[ "${{ matrix.target.target }}" == "x86_64-linux-gnu" ]]; then
+            export TARGET_ARCH=x86_64
+            export TARGET_OS=linux
+            export TARGET_ABI=gnu
+          fi
+
           mix zigler_precompiled.build lib/quickbeam/native.ex \
             --target ${{ matrix.target.target }} \
             --version ${{ inputs.version }} \
