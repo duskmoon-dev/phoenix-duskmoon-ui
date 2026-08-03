@@ -192,14 +192,29 @@ jobs:
       matrix:
         target:
           - target: aarch64-linux-gnu
+            arch: aarch64
+            os_tag: linux
+            abi: gnu
             os: ubuntu-22.04
           - target: aarch64-macos-none
+            arch: aarch64
+            os_tag: macos
+            abi: none
             os: macos-15
           - target: x86_64-freebsd-none
+            arch: x86_64
+            os_tag: freebsd
+            abi: none
             os: ubuntu-22.04
           - target: x86_64-linux-gnu
+            arch: x86_64
+            os_tag: linux
+            abi: gnu
             os: ubuntu-22.04
           - target: x86_64-macos-none
+            arch: x86_64
+            os_tag: macos
+            abi: none
             os: macos-15-intel
 
     steps:
@@ -232,11 +247,32 @@ jobs:
         env:
           QUICKBEAM_BUILD: '1'
           DUSKMOON_BUILD_NATIVE_FROM_SOURCE: '1'
+          # Keep same-host builds from inheriting the runner's CPU features.
+          TARGET_ARCH: ${{ matrix.target.arch }}
+          TARGET_OS: ${{ matrix.target.os_tag }}
+          TARGET_ABI: ${{ matrix.target.abi }}
         run: |
           mix zigler_precompiled.build lib/quickbeam/native.ex \
             --target ${{ matrix.target.target }} \
             --version ${{ inputs.version }} \
             --out ../../artifacts
+
+      - name: Verify portable x86_64 instruction baseline
+        if: matrix.target.target == 'x86_64-linux-gnu'
+        run: |
+          set -euo pipefail
+
+          inspect_dir="$(mktemp -d)"
+          trap 'rm -rf "${inspect_dir}"' EXIT
+
+          tar xzf artifacts/Elixir.QuickBEAM.Native-v${{ inputs.version }}-x86_64-linux-gnu.so.tar.gz \
+            -C "${inspect_dir}"
+          objdump -d "${inspect_dir}/Elixir.QuickBEAM.Native.so" > "${inspect_dir}/disassembly"
+
+          if grep -Eq '%[yz]mm' "${inspect_dir}/disassembly"; then
+            echo "QuickBEAM x86_64 artifact contains AVX or AVX-512 instructions" >&2
+            exit 1
+          fi
 
       - name: Upload artifact to GitHub Release
         uses: softprops/action-gh-release@v3
