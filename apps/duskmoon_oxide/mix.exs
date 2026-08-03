@@ -1,7 +1,7 @@
 defmodule Oxide.MixProject do
   use Mix.Project
 
-  @version "9.9.5"
+  @version "9.9.6"
   @source_url "https://github.com/duskmoon-dev/phoenix-duskmoon-ui"
   @upstream_url "https://github.com/elixir-volt/oxide_ex"
 
