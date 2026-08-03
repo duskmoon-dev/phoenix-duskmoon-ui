@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Build precompiled NIFs for an explicit CPU baseline so x86_64 artifacts run without AVX-512.
+
 ## 0.10.18
 
 - Update `oxc` to 0.17.1.
