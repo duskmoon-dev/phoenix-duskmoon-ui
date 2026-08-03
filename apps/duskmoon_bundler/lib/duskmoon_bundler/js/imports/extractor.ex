@@ -9,15 +9,22 @@ defmodule DuskmoonBundler.JS.ImportExtractor do
     with {:ok, imports} <- OXC.select(source, filename, :import_sources),
          {:ok, require_calls} <- select_require_calls(source, filename, opts),
          {:ok, workers} <- select_workers(source, filename) do
-      typed = Enum.map(imports, &{&1.type, &1.specifier}) ++ require_calls
-      {:ok, %DuskmoonBundler.JS.ImportExtractor.Result{imports: typed, workers: workers}}
+      requires = Enum.map(require_calls, & &1.specifier)
+      typed = Enum.map(imports, &{&1.type, &1.specifier}) ++ Enum.map(requires, &{:static, &1})
+
+      {:ok,
+       %DuskmoonBundler.JS.ImportExtractor.Result{
+         imports: typed,
+         requires: requires,
+         workers: workers
+       }}
     end
   end
 
   defp select_require_calls(source, filename, opts) do
     if Keyword.get(opts, :include_require, false) do
       case OXC.select(source, filename, :require_calls) do
-        {:ok, require_calls} -> {:ok, Enum.map(require_calls, &{:static, &1.specifier})}
+        {:ok, require_calls} -> {:ok, require_calls}
         {:error, _} = error -> error
       end
     else

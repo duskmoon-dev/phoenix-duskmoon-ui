@@ -191,7 +191,8 @@ defmodule DuskmoonBundler.Builder do
 
       use_chunks =
         code_splitting and
-          (has_dynamic_imports?(dep_map) or build_ctx.chunks != %{})
+          (has_dynamic_imports?(dep_map) or build_ctx.chunks != %{}) and
+          not has_cross_chunk_require?(entry, modules, dep_map, build_ctx.chunks)
 
       if use_chunks do
         Output.build_chunks(entry, name, compiled, {modules, dep_map}, out)
@@ -221,6 +222,22 @@ defmodule DuskmoonBundler.Builder do
 
   defp has_dynamic_imports?(dep_map) do
     Enum.any?(dep_map, fn {_, %{dynamic: dyn}} -> dyn != [] end)
+  end
+
+  defp has_cross_chunk_require?(entry, modules, dep_map, manual_chunks) do
+    graph =
+      DuskmoonBundler.ChunkGraph.build(entry, modules, dep_map, manual_chunks: manual_chunks)
+
+    Enum.any?(dep_map, fn {importer, deps} ->
+      importer_chunk = graph.module_to_chunk[importer]
+
+      Enum.any?(Map.get(deps, :requires, []), fn dependency ->
+        dependency_chunk = graph.module_to_chunk[dependency]
+
+        is_binary(importer_chunk) and is_binary(dependency_chunk) and
+          importer_chunk != dependency_chunk
+      end)
+    end)
   end
 
   defp build_worker_results(workers, ctx, build_ctx) do
