@@ -24,23 +24,32 @@ defmodule Mix.Tasks.Npm.Verify do
         case NPM.Workspace.read_all() do
           {:ok, project} ->
             expected = expected_packages(lockfile, project.local_links)
-            expected |> NPM.NodeModules.diff() |> report_diff(map_size(expected))
+            skipped = NPM.Install.Linker.skipped_packages(lockfile)
+
+            expected
+            |> NPM.NodeModules.diff()
+            |> ignore_missing(skipped)
+            |> report_diff(map_size(expected) - MapSet.size(skipped))
 
           {:error, reason} ->
-            Mix.shell().error("Failed: #{inspect(reason)}")
+            Mix.raise("npm.verify failed: #{inspect(reason)}")
         end
 
       {:error, reason} ->
-        Mix.shell().error("Failed: #{inspect(reason)}")
+        Mix.raise("npm.verify failed: #{inspect(reason)}")
     end
   end
 
   def run(_) do
-    Mix.shell().error("Usage: mix npm.verify")
+    Mix.raise("Usage: mix npm.verify")
   end
 
   defp expected_packages(lockfile, local_links) do
     Map.merge(lockfile, Map.new(local_links, fn {name, _path} -> {name, %{}} end))
+  end
+
+  defp ignore_missing({missing, extra}, skipped) do
+    {Enum.reject(missing, &MapSet.member?(skipped, &1)), extra}
   end
 
   defp report_diff({[], []}, count) do
@@ -49,6 +58,7 @@ defmodule Mix.Tasks.Npm.Verify do
 
   defp report_diff({missing, extra}, _count) do
     Enum.each(missing, &Mix.shell().error("  missing: #{&1}"))
-    Enum.each(extra, &Mix.shell().info("  extra: #{&1}"))
+    Enum.each(extra, &Mix.shell().error("  extra: #{&1}"))
+    Mix.raise("node_modules does not match lockfile")
   end
 end
