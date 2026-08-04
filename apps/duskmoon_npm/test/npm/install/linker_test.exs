@@ -6,6 +6,8 @@ defmodule NPM.Install.LinkerTest do
 
   setup do
     old_cache_dir = Application.get_env(:duskmoon_npm, :cache_dir)
+    old_link_strategy = System.get_env("NPM_EX_LINK_STRATEGY")
+    System.delete_env("NPM_EX_LINK_STRATEGY")
 
     tmp_dir =
       Path.join([
@@ -20,10 +22,23 @@ defmodule NPM.Install.LinkerTest do
 
     on_exit(fn ->
       restore_app_env(:cache_dir, old_cache_dir)
+      restore_system_env("NPM_EX_LINK_STRATEGY", old_link_strategy)
       File.rm_rf!(tmp_dir)
     end)
 
     {:ok, tmp_dir: tmp_dir}
+  end
+
+  describe "strategy/0" do
+    test "defaults to copy and preserves explicit symlink opt-in" do
+      assert Linker.strategy() == :copy
+
+      System.put_env("NPM_EX_LINK_STRATEGY", "symlink")
+      assert Linker.strategy() == :symlink
+
+      System.put_env("NPM_EX_LINK_STRATEGY", "invalid")
+      assert Linker.strategy() == :copy
+    end
   end
 
   describe "__parent_entry_version__/1" do
@@ -75,10 +90,8 @@ defmodule NPM.Install.LinkerTest do
     installed_importer = Path.join(node_modules, importer)
     installed_sibling = Path.join(node_modules, sibling)
 
-    assert {:ok, %File.Stat{type: importer_type}} = File.lstat(installed_importer)
-    assert {:ok, %File.Stat{type: sibling_type}} = File.lstat(installed_sibling)
-    assert importer_type in [:directory, :symlink]
-    assert sibling_type in [:directory, :symlink]
+    assert {:ok, %File.Stat{type: :directory}} = File.lstat(installed_importer)
+    assert {:ok, %File.Stat{type: :directory}} = File.lstat(installed_sibling)
     assert File.read!(Path.join(installed_importer, "index.js")) =~ sibling
 
     assert File.read!(Path.join(installed_importer, "package.json")) ==
@@ -241,4 +254,7 @@ defmodule NPM.Install.LinkerTest do
 
   defp restore_app_env(key, nil), do: Application.delete_env(:duskmoon_npm, key)
   defp restore_app_env(key, value), do: Application.put_env(:duskmoon_npm, key, value)
+
+  defp restore_system_env(key, nil), do: System.delete_env(key)
+  defp restore_system_env(key, value), do: System.put_env(key, value)
 end

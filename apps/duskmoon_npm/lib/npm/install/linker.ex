@@ -561,8 +561,8 @@ defmodule NPM.Install.Linker do
     case System.get_env("NPM_EX_LINK_STRATEGY") do
       "copy" -> :copy
       "symlink" -> :symlink
-      nil -> :symlink
-      _ -> :symlink
+      nil -> :copy
+      _ -> :copy
     end
   end
 
