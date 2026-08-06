@@ -387,10 +387,11 @@ defmodule NPM do
   defp node_modules_intact?(lockfile, local_links) do
     skipped = Linker.skipped_packages(lockfile)
     linkable_lockfile = linkable_lockfile(lockfile, skipped)
+    strategy = Linker.strategy()
 
     lockfile_intact? =
       Enum.all?(linkable_lockfile, fn {name, _entry} ->
-        registry_package_intact?(name)
+        registry_package_intact?(Path.join(@node_modules, name), strategy)
       end)
 
     local_links_intact? =
@@ -403,7 +404,7 @@ defmodule NPM do
         {:ok, nested_lockfile} ->
           Enum.all?(nested_lockfile, fn {location, _entry} ->
             nested_location_skipped?(location, skipped) or
-              Path.join(location, "package.json") |> File.exists?()
+              registry_package_intact?(location, strategy)
           end)
 
         {:error, _reason} ->
@@ -506,11 +507,12 @@ defmodule NPM do
     Enum.reject(lockfile, fn {name, _entry} -> MapSet.member?(skipped, name) end)
   end
 
-  defp registry_package_intact?(name) do
-    package_dir = Path.join(@node_modules, name)
-
+  defp registry_package_intact?(package_dir, strategy) do
     case File.lstat(package_dir) do
-      {:ok, %File.Stat{type: type}} when type in [:directory, :symlink] ->
+      {:ok, %File.Stat{type: :directory}} ->
+        File.exists?(Path.join(package_dir, "package.json"))
+
+      {:ok, %File.Stat{type: :symlink}} when strategy == :symlink ->
         File.exists?(Path.join(package_dir, "package.json"))
 
       _ ->

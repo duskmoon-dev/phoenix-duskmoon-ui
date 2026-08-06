@@ -6,6 +6,8 @@ defmodule NPM.InstallTest do
   setup do
     old_cwd = File.cwd!()
     old_cache_dir = Application.get_env(:duskmoon_npm, :cache_dir)
+    old_link_strategy = System.get_env("NPM_EX_LINK_STRATEGY")
+    System.delete_env("NPM_EX_LINK_STRATEGY")
 
     tmp_dir =
       Path.join([
@@ -24,6 +26,7 @@ defmodule NPM.InstallTest do
     on_exit(fn ->
       File.cd!(old_cwd)
       restore_app_env(:cache_dir, old_cache_dir)
+      restore_system_env("NPM_EX_LINK_STRATEGY", old_link_strategy)
       File.rm_rf!(tmp_dir)
     end)
 
@@ -60,7 +63,9 @@ defmodule NPM.InstallTest do
     )
   end
 
-  test "treats existing cache symlinks as intact", %{project_dir: project_dir} do
+  test "relinks existing cache symlinks with the default copy strategy", %{
+    project_dir: project_dir
+  } do
     package = "legacy-symlink-package"
     version = "1.0.0"
     cache_path = write_cached_package!(package, version)
@@ -84,8 +89,33 @@ defmodule NPM.InstallTest do
         assert :ok = NPM.install()
       end)
 
-    assert output =~ "Already up to date."
+    assert output =~ "Installing from current package-lock.json."
     assert_copied_package(cache_path, installed_path)
+  end
+
+  test "keeps existing cache symlinks with explicit symlink strategy", %{
+    project_dir: project_dir
+  } do
+    System.put_env("NPM_EX_LINK_STRATEGY", "symlink")
+    package = "explicit-symlink-package"
+    version = "1.0.0"
+    cache_path = write_cached_package!(package, version)
+
+    write_package!(project_dir, %{
+      "name" => "explicit_symlink_project",
+      "dependencies" => %{package => version}
+    })
+
+    assert :ok = NPM.Lockfile.write(%{package => lock_entry(package, version)})
+
+    installed_path = Path.join([project_dir, "node_modules", package])
+    File.mkdir_p!(Path.dirname(installed_path))
+    File.ln_s!(cache_path, installed_path)
+
+    output = capture_io(fn -> assert :ok = NPM.install() end)
+
+    assert output =~ "Already up to date."
+    assert_symlink_target!(installed_path, cache_path)
   end
 
   test "re-resolves a lockfile with missing transitive package records", %{
@@ -568,8 +598,7 @@ defmodule NPM.InstallTest do
   end
 
   defp assert_copied_package(cache_path, installed_path) do
-    assert {:ok, %File.Stat{type: type}} = File.lstat(installed_path)
-    assert type in [:directory, :symlink]
+    assert {:ok, %File.Stat{type: :directory}} = File.lstat(installed_path)
 
     assert File.read!(Path.join(installed_path, "package.json")) ==
              File.read!(Path.join(cache_path, "package.json"))
@@ -597,4 +626,7 @@ defmodule NPM.InstallTest do
 
   defp restore_app_env(key, nil), do: Application.delete_env(:duskmoon_npm, key)
   defp restore_app_env(key, value), do: Application.put_env(:duskmoon_npm, key, value)
+
+  defp restore_system_env(key, nil), do: System.delete_env(key)
+  defp restore_system_env(key, value), do: System.put_env(key, value)
 end

@@ -10,6 +10,7 @@
 - Propagate non-zero exit codes from `mix npm.run` and `mix npm.exec` to the shell
 - Accept lockfiles without a policy section in `--frozen` install
 - Include `optionalDependencies` in lockfile consistency check for `--frozen` install
+- Default registry package installs to copies and relink legacy cache symlinks so ESM package binaries resolve sibling dependencies from project `node_modules`
 
 ## 0.7.3
 
