@@ -195,6 +195,20 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SelectTest do
     assert result =~ "Blue"
   end
 
+  test "selects options whose values are in the multiple value list" do
+    result =
+      render_component(&dm_select/1, %{
+        name: "labels[]",
+        value: ["bug", "feature"],
+        multiple: true,
+        options: [{"bug", "Bug"}, {"docs", "Documentation"}, {"feature", "Feature"}]
+      })
+
+    assert result =~ ~r/<option value="bug" selected(?:="selected")?>/
+    refute result =~ ~r/<option value="docs" selected(?:="selected")?>/
+    assert result =~ ~r/<option value="feature" selected(?:="selected")?>/
+  end
+
   test "renders select with label_class" do
     result =
       render_component(&dm_select/1, %{
