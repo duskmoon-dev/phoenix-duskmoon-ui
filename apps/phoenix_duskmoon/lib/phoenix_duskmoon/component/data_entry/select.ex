@@ -134,7 +134,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
   defp render_options(%{options: options} = assigns) when is_list(options) do
     ~H"""
     <option :if={@prompt} value="">{@prompt}</option>
-    <option :for={{value, label} <- @options} value={value} selected={@value == value}>
+    <option :for={{value, label} <- @options} value={value} selected={selected?(@value, value)}>
       {label}
     </option>
     """
@@ -146,4 +146,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Select do
     {render_slot(@inner_block)}
     """
   end
+
+  defp selected?(values, value) when is_list(values), do: value in values
+  defp selected?(selected_value, value), do: selected_value == value
 end
