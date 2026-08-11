@@ -142,34 +142,40 @@ jobs:
         run: npm install --ignore-scripts --no-audit --no-fund --package-lock=false --registry=https://registry.npmjs.org/
 
       - name: Generate native checksum files
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
+
+          native_assets_dir="${RUNNER_TEMP}/native-release-assets"
+          mkdir -p "${native_assets_dir}"
 
           (
             cd apps/duskmoon_oxc
             DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1 mix compile --force
-            mix rustler_precompiled.download OXC.Native --all --print
-            mix rustler_precompiled.download OXC.Format.Native --all --print
-            mix rustler_precompiled.download OXC.Lint.Native --all --print
           )
 
           (
             cd apps/duskmoon_oxide
             DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1 mix compile --force
-            mix rustler_precompiled.download Oxide.Native --all --print
           )
 
           (
             cd apps/duskmoon_vize
             DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1 mix compile --force
-            mix rustler_precompiled.download Vize.Native --all --print
           )
 
           (
             cd apps/duskmoon_quickbeam
             DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1 mix compile --force
-            mix zigler_precompiled.download QuickBEAM.Native --all --print
           )
+
+          gh release download "v${{ inputs.version }}" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --dir "${native_assets_dir}"
+
+          elixir .github/scripts/generate_native_checksums.exs \
+            "${{ inputs.version }}" "${native_assets_dir}"
 
       - name: Verify native checksum files
         env:
