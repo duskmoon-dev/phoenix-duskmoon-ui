@@ -31,12 +31,26 @@ jobs:
 
       - name: Determine version tag
         id: version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${{ github.event.inputs.version }}"
           if [ -z "$VERSION" ]; then
             VERSION="${{ github.event.inputs.git-ref }}"
           fi
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+          LATEST_RELEASE="$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq .tagName)"
+          {
+            echo 'tags<<EOF'
+            echo "docker.io/gsmlg/duskmoon-storybook:${VERSION}"
+            echo "ghcr.io/duskmoon-dev/duskmoon-storybook:${VERSION}"
+            if [ "v${VERSION}" = "$LATEST_RELEASE" ]; then
+              echo "docker.io/gsmlg/duskmoon-storybook:latest"
+              echo "ghcr.io/duskmoon-dev/duskmoon-storybook:latest"
+            fi
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -64,10 +78,6 @@ jobs:
           push: true
           build-args: |
             RELEASE_VERSION=${{ steps.version.outputs.version }}
-          tags: |
-            docker.io/gsmlg/duskmoon-storybook:${{ steps.version.outputs.version }}
-            docker.io/gsmlg/duskmoon-storybook:latest
-            ghcr.io/duskmoon-dev/duskmoon-storybook:${{ steps.version.outputs.version }}
-            ghcr.io/duskmoon-dev/duskmoon-storybook:latest
+          tags: ${{ steps.version.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
