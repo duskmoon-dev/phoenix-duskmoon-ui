@@ -657,6 +657,85 @@ defmodule DuskmoonBundler.BuilderTest do
       refute manifest["dynamic-entry-lazy.js"]["isEntry"]
     end
 
+    test "code splitting keeps every export from disconnected common modules" do
+      File.write!(
+        Path.join(@fixture_dir, "src/shared-default.ts"),
+        "export default 'default-value'"
+      )
+
+      File.write!(
+        Path.join(@fixture_dir, "src/shared-schema.ts"),
+        "export const defaultSchema = 'schema-value'"
+      )
+
+      for name <- ["one", "two"] do
+        File.write!(Path.join(@fixture_dir, "src/lazy-#{name}.ts"), """
+        import sharedDefault from './shared-default'
+        import { defaultSchema } from './shared-schema'
+        export const value = '#{name}-' + sharedDefault + '-' + defaultSchema
+        """)
+      end
+
+      File.write!(Path.join(@fixture_dir, "src/common_exports_entry.ts"), """
+      export const loadOne = () => import('./lazy-one').then((mod) => mod.value)
+      export const loadTwo = () => import('./lazy-two').then((mod) => mod.value)
+      """)
+
+      {:ok, result} =
+        DuskmoonBundler.Builder.build(
+          entry: Path.join(@fixture_dir, "src/common_exports_entry.ts"),
+          outdir: @outdir,
+          name: "common-exports",
+          format: :esm,
+          hash: false,
+          minify: true,
+          sourcemap: false
+        )
+
+      node = System.find_executable("node") || flunk("node executable not found")
+      entry_url = "file://#{result.js.path}"
+
+      assert {output, 0} =
+               System.cmd(
+                 node,
+                 [
+                   "--input-type=module",
+                   "--eval",
+                   "globalThis.document = { querySelector: () => null, createElement: () => ({}), head: { appendChild: () => {} } }; globalThis.window = { dispatchEvent: () => {} }; globalThis.CustomEvent = class {}; const m = await import('#{entry_url}'); console.log(await m.loadOne()); console.log(await m.loadTwo())"
+                 ],
+                 env: [{"NODE_NO_WARNINGS", "1"}],
+                 stderr_to_stdout: true
+               )
+
+      assert output == "one-default-value-schema-value\ntwo-default-value-schema-value\n"
+    end
+
+    test "no code splitting inlines literal dynamic imports" do
+      File.write!(
+        Path.join(@fixture_dir, "src/no_split_lazy.ts"),
+        "export const value = 'inlined'"
+      )
+
+      File.write!(Path.join(@fixture_dir, "src/no_split_entry.ts"), """
+      export const load = () => import('./no_split_lazy').then((mod) => mod.value)
+      """)
+
+      assert {:ok, result} =
+               DuskmoonBundler.Builder.build(
+                 entry: Path.join(@fixture_dir, "src/no_split_entry.ts"),
+                 outdir: @outdir,
+                 name: "no-split",
+                 format: :esm,
+                 hash: false,
+                 minify: true,
+                 sourcemap: false,
+                 code_splitting: false
+               )
+
+      assert result.chunks == []
+      assert File.read!(result.js.path) =~ "inlined"
+    end
+
     test "code splitting records async chunk css in manifest and preloads it" do
       File.write!(Path.join(@fixture_dir, "src/lazy.css"), ".lazy { color: red }")
 

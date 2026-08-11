@@ -11,7 +11,8 @@ use rolldown::{
     TreeshakeOptions,
 };
 use rolldown_common::{
-    AssetFilenamesOutputOption, ChunkFilenamesOutputOption, ModuleType, Output, StrOrBytes,
+    AssetFilenamesOutputOption, ChunkFilenamesOutputOption, CodeSplittingMode, ModuleType, Output,
+    StrOrBytes,
 };
 use rustc_hash::FxHashMap;
 use rustler::{Binary, Encoder, Env, Error, ListIterator, NifMap, NifResult, SerdeTerm, Term};
@@ -271,12 +272,15 @@ fn build_bundle_options(
     external_specifiers: Vec<String>,
     file: Option<String>,
 ) -> BundlerOptions {
+    let code_splitting = file.is_some().then_some(CodeSplittingMode::Bool(false));
+
     BundlerOptions {
         input: Some(input),
         cwd: Some(cwd.to_path_buf()),
         external: (!external_specifiers.is_empty()).then(|| IsExternal::from(external_specifiers)),
         dir: opts.outdir.clone(),
         file,
+        code_splitting,
         format: Some(match opts.format.as_str() {
             "esm" => OutputFormat::Esm,
             "cjs" => OutputFormat::Cjs,

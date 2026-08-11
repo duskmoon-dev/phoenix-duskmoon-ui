@@ -423,6 +423,7 @@ defmodule DuskmoonBundler.Builder.Output do
         {:cont, {:ok, acc}}
       else
         chunk_js = Rewriter.rewrite_external_imports(chunk_js, ctx)
+        chunk_js = add_chunk_facade(chunk_js, chunk_id, chunk)
         {chunk_js, dynamic_import_placeholder} = Rewriter.protect_dynamic_imports(chunk_js)
 
         external =
@@ -475,6 +476,37 @@ defmodule DuskmoonBundler.Builder.Output do
   end
 
   defp chunk_entry_label([{label, _code} | _]), do: label
+
+  defp add_chunk_facade([_single] = js_files, _chunk_id, _chunk), do: js_files
+
+  defp add_chunk_facade(js_files, chunk_id, %{type: type}) when type in [:common, :manual] do
+    {first_label, _code} = hd(js_files)
+    facade_label = Path.join(Path.dirname(first_label), "__duskmoon_#{chunk_id}_entry__.js")
+
+    exports =
+      Enum.map_join(js_files, "\n", fn {label, _code} ->
+        specifier = module_specifier(facade_label, label)
+        "export * from #{Jason.encode!(specifier)};"
+      end)
+
+    default_export =
+      Enum.find_value(js_files, fn {label, code} ->
+        if default_export?(code) do
+          "export { default } from #{Jason.encode!(module_specifier(facade_label, label))};\n"
+        end
+      end)
+
+    [{facade_label, (default_export || "") <> exports} | js_files]
+  end
+
+  defp add_chunk_facade(js_files, _chunk_id, _chunk), do: js_files
+
+  defp default_export?(code) do
+    case OXC.parse(code, "chunk.js") do
+      {:ok, ast} -> Enum.any?(ast.body, &(&1.type == :export_default_declaration))
+      {:error, _} -> false
+    end
+  end
 
   defp select_chunk_files(module_paths, js_map, module_labels) do
     module_paths
