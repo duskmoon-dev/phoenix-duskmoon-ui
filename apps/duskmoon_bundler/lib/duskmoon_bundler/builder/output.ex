@@ -85,6 +85,15 @@ defmodule DuskmoonBundler.Builder.Output do
              ctx,
              graph,
              dep_map
+           ),
+         :ok <-
+           validate_chunk_links(
+             chunk_bundles,
+             graph,
+             module_labels,
+             name,
+             hash,
+             dep_map
            ) do
       css_opts = Keyword.put(bundle_opts, :asset_url_prefix, asset_url_prefix)
 
@@ -158,6 +167,131 @@ defmodule DuskmoonBundler.Builder.Output do
       end
     end
   end
+
+  defp validate_chunk_links(chunk_bundles, graph, module_labels, name, hash, dep_map) do
+    url_map = chunk_url_map(chunk_bundles, graph.chunks, name, hash)
+
+    chunks =
+      Map.new(chunk_bundles, fn {chunk_id, {code, _sourcemap}} ->
+        chunk = graph.chunks[chunk_id]
+        import_map = chunk_import_map(chunk, graph, module_labels, dep_map)
+        code = Rewriter.rewrite_chunk_imports(code, import_map, url_map)
+        {"./#{url_map[chunk_id]}", code}
+      end)
+
+    exports = Map.new(chunks, fn {url, code} -> {url, chunk_exports(code)} end)
+
+    missing_exports =
+      Enum.flat_map(chunks, fn {url, code} -> missing_chunk_exports(url, code, exports) end)
+      |> Enum.uniq()
+
+    if missing_exports == [] do
+      :ok
+    else
+      {:error, {:invalid_chunk_links, missing_exports}}
+    end
+  end
+
+  defp chunk_exports(code) do
+    case OXC.parse(code, "chunk.js") do
+      {:ok, ast} ->
+        Enum.reduce(ast.body, {MapSet.new(), false}, fn
+          %{type: :export_default_declaration}, {exports, wildcard?} ->
+            {MapSet.put(exports, "default"), wildcard?}
+
+          %{type: :export_named_declaration, specifiers: specifiers, declaration: declaration},
+          {exports, wildcard?} ->
+            names = Enum.map(specifiers, &ast_name(&1.exported)) ++ declaration_names(declaration)
+            {Enum.reduce(names, exports, &MapSet.put(&2, &1)), wildcard?}
+
+          %{type: :export_all_declaration}, {exports, _wildcard?} ->
+            {exports, true}
+
+          _node, acc ->
+            acc
+        end)
+
+      {:error, _errors} ->
+        {MapSet.new(), false}
+    end
+  end
+
+  defp missing_chunk_exports(importer, code, exports) do
+    case OXC.parse(code, "chunk.js") do
+      {:ok, ast} ->
+        Enum.flat_map(ast.body, fn
+          %{type: :import_declaration, source: %{value: source}, specifiers: specifiers}
+          when is_binary(source) ->
+            missing_import_specifiers(importer, source, specifiers, exports)
+
+          %{type: :export_named_declaration, source: %{value: source}, specifiers: specifiers}
+          when is_binary(source) ->
+            missing_export_specifiers(importer, source, specifiers, exports)
+
+          _node ->
+            []
+        end)
+
+      {:error, errors} ->
+        [{importer, :parse_error, errors}]
+    end
+  end
+
+  defp missing_import_specifiers(importer, source, specifiers, exports) do
+    required =
+      Enum.flat_map(specifiers, fn
+        %{type: :import_default_specifier} -> ["default"]
+        %{type: :import_specifier, imported: imported} -> [ast_name(imported)]
+        %{type: :import_namespace_specifier} -> []
+        _specifier -> []
+      end)
+
+    missing_names(importer, source, required, exports)
+  end
+
+  defp missing_export_specifiers(importer, source, specifiers, exports) do
+    required = Enum.map(specifiers, &ast_name(&1.local))
+    missing_names(importer, source, required, exports)
+  end
+
+  defp missing_names(importer, source, required, exports) do
+    case Map.fetch(exports, source) do
+      {:ok, {available, false}} ->
+        required
+        |> Enum.reject(&MapSet.member?(available, &1))
+        |> Enum.map(&{importer, source, &1})
+
+      _missing_or_wildcard ->
+        []
+    end
+  end
+
+  defp declaration_names(nil), do: []
+  defp declaration_names(%{id: id}) when not is_nil(id), do: [ast_name(id)]
+
+  defp declaration_names(%{declarations: declarations}) do
+    Enum.flat_map(declarations, fn %{id: id} -> pattern_names(id) end)
+  end
+
+  defp declaration_names(_declaration), do: []
+
+  defp pattern_names(%{type: :identifier} = identifier), do: [ast_name(identifier)]
+  defp pattern_names(%{elements: elements}), do: Enum.flat_map(elements, &pattern_names/1)
+
+  defp pattern_names(%{properties: properties}) do
+    Enum.flat_map(properties, fn
+      %{value: value} -> pattern_names(value)
+      %{argument: argument} -> pattern_names(argument)
+      _property -> []
+    end)
+  end
+
+  defp pattern_names(%{argument: argument}), do: pattern_names(argument)
+  defp pattern_names(nil), do: []
+  defp pattern_names(_pattern), do: []
+
+  defp ast_name(%{name: name}) when is_binary(name), do: name
+  defp ast_name(%{value: value}) when is_binary(value), do: value
 
   defp finalize_chunk_urls(
          chunk_bundles,

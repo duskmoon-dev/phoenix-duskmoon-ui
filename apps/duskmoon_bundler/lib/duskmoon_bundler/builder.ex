@@ -195,7 +195,17 @@ defmodule DuskmoonBundler.Builder do
           not has_cross_chunk_require?(entry, modules, dep_map, build_ctx.chunks)
 
       if use_chunks do
-        Output.build_chunks(entry, name, compiled, {modules, dep_map}, out)
+        case Output.build_chunks(entry, name, compiled, {modules, dep_map}, out) do
+          {:error, {:invalid_chunk_links, missing_exports}} ->
+            Logger.warning(
+              "falling back to a single bundle because code splitting produced invalid imports: #{inspect(missing_exports)}"
+            )
+
+            Output.build_single(entry, name, compiled, out)
+
+          result ->
+            result
+        end
       else
         Output.build_single(entry, name, compiled, out)
       end

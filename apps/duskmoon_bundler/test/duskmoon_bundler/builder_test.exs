@@ -710,6 +710,65 @@ defmodule DuskmoonBundler.BuilderTest do
       assert output == "one-default-value-schema-value\ntwo-default-value-schema-value\n"
     end
 
+    test "code splitting does not emit imports for ambiguous common exports" do
+      File.write!(Path.join(@fixture_dir, "src/shared-markdown.ts"), """
+      export const html = 'markdown-html'
+      export const svg = 'markdown-svg'
+      export const stringify = 'markdown-stringify'
+      """)
+
+      File.write!(Path.join(@fixture_dir, "src/shared-renderer.ts"), """
+      export const html = 'renderer-html'
+      export const svg = 'renderer-svg'
+      export const stringify = 'renderer-stringify'
+      """)
+
+      for name <- ["one", "two"] do
+        File.write!(Path.join(@fixture_dir, "src/ambiguous-#{name}.ts"), """
+        import { html, svg, stringify } from './shared-markdown'
+        import { html as rendererHtml } from './shared-renderer'
+        export const value = '#{name}-' + html + '-' + svg + '-' + stringify + '-' + rendererHtml
+        """)
+      end
+
+      File.write!(Path.join(@fixture_dir, "src/ambiguous_exports_entry.ts"), """
+      export const loadOne = () => import('./ambiguous-one').then((mod) => mod.value)
+      export const loadTwo = () => import('./ambiguous-two').then((mod) => mod.value)
+      """)
+
+      {:ok, result} =
+        DuskmoonBundler.Builder.build(
+          entry: Path.join(@fixture_dir, "src/ambiguous_exports_entry.ts"),
+          outdir: @outdir,
+          name: "ambiguous-exports",
+          format: :esm,
+          hash: false,
+          minify: true,
+          sourcemap: false
+        )
+
+      node = System.find_executable("node") || flunk("node executable not found")
+      entry_url = "file://#{result.js.path}"
+
+      assert result.chunks == []
+
+      assert {output, 0} =
+               System.cmd(
+                 node,
+                 [
+                   "--input-type=module",
+                   "--eval",
+                   "globalThis.document = { querySelector: () => null, createElement: () => ({}), head: { appendChild: () => {} } }; globalThis.window = { dispatchEvent: () => {} }; globalThis.CustomEvent = class {}; const m = await import('#{entry_url}'); console.log(await m.loadOne()); console.log(await m.loadTwo())"
+                 ],
+                 env: [{"NODE_NO_WARNINGS", "1"}],
+                 stderr_to_stdout: true
+               )
+
+      assert output ==
+               "one-markdown-html-markdown-svg-markdown-stringify-renderer-html\n" <>
+                 "two-markdown-html-markdown-svg-markdown-stringify-renderer-html\n"
+    end
+
     test "no code splitting inlines literal dynamic imports" do
       File.write!(
         Path.join(@fixture_dir, "src/no_split_lazy.ts"),
