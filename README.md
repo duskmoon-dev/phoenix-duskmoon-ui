@@ -141,7 +141,7 @@ Components that require hooks:
 ## Available Components
 
 - **Action**: buttons, dropdowns, links, menus, toggles
-- **Data Display**: accordion, avatar, badge, card, chip, collapse, flash, git repository, list, markdown, markdown body, pagination, popover, progress, skeleton, stat, table, timeline, tooltip
+- **Data Display**: accordion, avatar, badge, card, chip, collapse, datetime, flash, git repository, list, markdown, markdown body, pagination, popover, progress, skeleton, stat, table, timeline, tooltip
 - **Data Entry**: autocomplete, cascader, checkbox, compact input, file upload, form, input, multi-select, OTP input, PIN input, radio, rating, segment control, select, slider, switch, textarea, time input, tree select
 - **Feedback**: dialog, loading, snackbar, toast
 - **Navigation**: actionbar, appbar, bottom nav, breadcrumb, left menu, navbar, nested menu, page footer, page header, stepper, steps, tabs

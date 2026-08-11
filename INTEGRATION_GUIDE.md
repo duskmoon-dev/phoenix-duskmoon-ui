@@ -126,6 +126,7 @@ For advanced theming, you can import additional CSS modules:
 - **Table**: `<.dm_table>` - Styled data tables
 - **Pagination**: `<.dm_pagination>` - Page navigation
 - **Flash**: `<.dm_flash>` - Flash message notifications
+- **Datetime**: `<.dm_datetime>` - ISO date and datetime formatting with time-zone conversion
 - **Markdown**: `<.dm_markdown>` - Client-rendered Markdown custom element
 - **Markdown Body**: `<.dm_markdown_body>` - Server-rendered MDEx content with GFM, color chips, front matter, hard line breaks, and Mermaid
 

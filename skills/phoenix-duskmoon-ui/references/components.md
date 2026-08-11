@@ -294,6 +294,16 @@ Slots: `inner_block` (required), `icon`
 
 Slots: `trigger` (required), `content` (required)
 
+### `dm_datetime/1` — Datetime
+
+| Attr | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | string | `""` | ISO date or datetime to display |
+| `format` | string | `"YYYY-MM-DD HH:mm"` | Token-based output format |
+| `time_zone` | string | nil | IANA time zone for values with `Z` or an explicit offset |
+
+Supported tokens are `YYYY`, `YY`, `M`, `MM`, `D`, `DD`, `H`, `HH`, `h`, `hh`, `m`, `mm`, `s`, `ss`, `SSS`, `A`, and `a`. Text inside square brackets is literal. Date-only and offsetless values remain wall-clock values; values with `Z` or an explicit offset are converted to `time_zone`, or to the browser's local time zone when it is omitted.
+
 ### `dm_flash/1` + `dm_flash_group/1` — Flash
 
 **dm_flash:**

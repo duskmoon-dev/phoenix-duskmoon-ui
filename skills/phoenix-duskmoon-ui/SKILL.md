@@ -147,6 +147,7 @@ For full component catalog with all attributes and slots, see
 | `dm_chat` / `dm_chat_bubble` / `dm_chat_input` / `dm_chat_reasoning` / `dm_chat_tool` / `dm_chat_typing` | DataDisplay.Chat | LLM-oriented chat primitives (message, bubble, input, reasoning, tool, typing indicator) |
 | `dm_chip` | DataDisplay.Chip | Deletable chip/tag |
 | `dm_collapse` / `dm_collapse_group` | DataDisplay.Collapse | Single collapsible panel |
+| `dm_datetime` | DataDisplay.Datetime | ISO date and datetime formatter with time-zone conversion |
 | `dm_flash` / `dm_flash_group` | DataDisplay.Flash | Flash messages |
 | `dm_list` | DataDisplay.List | Structured list with icons and subtitles |
 | `dm_markdown` | DataDisplay.Markdown | Client-rendered Markdown custom element |

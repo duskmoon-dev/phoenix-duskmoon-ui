@@ -41,6 +41,7 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/data-display/card", DataDisplayController, :card
     get "/data-display/chat", DataDisplayController, :chat
     get "/data-display/chip", DataDisplayController, :chip
+    get "/data-display/datetime", DataDisplayController, :datetime
     get "/data-display/flash", DataDisplayController, :flash
     get "/data-display/git-repository-header", DataDisplayController, :git_repository_header
     get "/data-display/git-repository-nav", DataDisplayController, :git_repository_nav

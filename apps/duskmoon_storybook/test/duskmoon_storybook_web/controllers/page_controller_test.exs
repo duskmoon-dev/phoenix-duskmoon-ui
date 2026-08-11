@@ -6,6 +6,8 @@ defmodule DuskmoonStorybookWeb.PageControllerTest do
     html = html_response(conn, 200)
 
     assert html =~ "Components"
+    assert html =~ ~s[href="/components/data-display/datetime"]
+    assert html =~ "Datetime"
     assert html =~ ~s[href="/components/data-display/markdown-body"]
     assert html =~ "Markdown Body"
   end

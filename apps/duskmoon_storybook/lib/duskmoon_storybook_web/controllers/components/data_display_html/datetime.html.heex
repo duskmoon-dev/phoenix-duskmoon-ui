@@ -1,0 +1,51 @@
+<.dm_breadcrumb class="px-4">
+  <:crumb to={~p"/components/data-display/datetime"}>Data Display</:crumb>
+  <:crumb>Datetime</:crumb>
+</.dm_breadcrumb>
+
+<.dm_card class="w-full h-full overflow-auto" body_class="p-4">
+  <:title class="flex flex-row justify-center items-center gap-3">
+    <span class="text-4xl text-primary">Datetime</span>
+    <span class="text-sm opacity-60">dm_datetime</span>
+  </:title>
+
+  <.dm_markdown content={"""
+  ## Overview
+  Display ISO dates and datetimes with token-based formatting. Values with `Z`
+  or an explicit offset can be converted to an IANA time zone.
+
+  ## Usage
+  ```heex
+  <.dm_datetime
+    value="2026-08-11T14:30:45Z"
+    format="DD/MM/YYYY [at] h:mm A"
+    time_zone="Asia/Shanghai"
+  />
+  ```
+
+  Supported tokens include `YYYY`, `MM`, `DD`, `HH`, `hh`, `mm`, `ss`,
+  `SSS`, `A`, and `a`. Wrap literal text in square brackets.
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Default format</h3>
+  <.dm_datetime id="datetime-default" value="2026-08-11T14:30:45Z" />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Custom format and time zone</h3>
+  <div class="flex flex-col gap-2">
+    <.dm_datetime
+      id="datetime-utc"
+      value="2026-08-11T14:30:45Z"
+      format="DD/MM/YYYY [at] h:mm A"
+      time_zone="UTC"
+    />
+    <.dm_datetime
+      id="datetime-shanghai"
+      value="2026-08-11T14:30:45Z"
+      format="DD/MM/YYYY [at] h:mm A"
+      time_zone="Asia/Shanghai"
+    />
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Date only</h3>
+  <.dm_datetime id="datetime-date-only" value="2026-08-11" format="DD/MM/YYYY" />
+</.dm_card>

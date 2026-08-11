@@ -79,6 +79,12 @@
       },
       %{
         kind: :story,
+        name: "Datetime",
+        path: "/data_display/datetime",
+        module: Storybook.DataDisplay.Datetime
+      },
+      %{
+        kind: :story,
         name: "Flash",
         path: "/data_display/flash",
         module: Storybook.DataDisplay.Flash

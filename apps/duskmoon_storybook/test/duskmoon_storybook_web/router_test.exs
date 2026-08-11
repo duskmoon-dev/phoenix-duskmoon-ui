@@ -77,4 +77,17 @@ defmodule DuskmoonStorybookWeb.RouterTest do
       assert Enum.empty?(LazyHTML.query(hardbreaks_disabled, "br"))
     end
   end
+
+  describe "datetime data display route" do
+    test "renders datetime examples with format and time-zone attributes", %{conn: conn} do
+      conn = get(conn, "/components/data-display/datetime")
+      html = html_response(conn, 200)
+
+      assert html =~ "Datetime"
+      assert html =~ "dm_datetime"
+      assert html =~ ~s[id="datetime-default"]
+      assert html =~ ~s|format="DD/MM/YYYY [at] h:mm A"|
+      assert html =~ ~s[time-zone="Asia/Shanghai"]
+    end
+  end
 end

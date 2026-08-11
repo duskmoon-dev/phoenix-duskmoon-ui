@@ -50,6 +50,7 @@ defmodule PhoenixDuskmoon.Mixfile do
             PhoenixDuskmoon.Component.DataDisplay.Card,
             PhoenixDuskmoon.Component.DataDisplay.Chip,
             PhoenixDuskmoon.Component.DataDisplay.Collapse,
+            PhoenixDuskmoon.Component.DataDisplay.Datetime,
             PhoenixDuskmoon.Component.DataDisplay.Flash,
             PhoenixDuskmoon.Component.DataDisplay.GitRepository,
             PhoenixDuskmoon.Component.DataDisplay.List,

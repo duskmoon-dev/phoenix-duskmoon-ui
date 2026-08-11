@@ -67,6 +67,7 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.DataDisplay.Badge
       import PhoenixDuskmoon.Component.DataDisplay.Card
       import PhoenixDuskmoon.Component.DataDisplay.Chat
+      import PhoenixDuskmoon.Component.DataDisplay.Datetime
       import PhoenixDuskmoon.Component.DataDisplay.Flash
       import PhoenixDuskmoon.Component.DataDisplay.GitRepository
       import PhoenixDuskmoon.Component.DataDisplay.List

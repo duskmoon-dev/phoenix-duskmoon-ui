@@ -167,6 +167,7 @@ const duskmoonElementRegistrars = {
   "el-dm-code-block": () => import("@duskmoon-dev/el-code-block/register"),
   "el-dm-code-engine": registerCodeEngineElement,
   "el-dm-datepicker": () => import("@duskmoon-dev/el-datepicker/register"),
+  "el-dm-datetime": () => import("@duskmoon-dev/el-datetime/register"),
   "el-dm-dialog": () => import("@duskmoon-dev/el-dialog/register"),
   "el-dm-drawer": () => import("@duskmoon-dev/el-drawer/register"),
   "el-dm-file-upload": () => import("@duskmoon-dev/el-file-upload/register"),
