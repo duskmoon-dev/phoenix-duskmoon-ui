@@ -178,6 +178,7 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           tag_name: v${{ inputs.version }}
+          draft: ${{ ! inputs.allow-existing-release-overwrite }}
           files: ${{ steps.build-crate.outputs.file-path }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -268,6 +269,7 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           tag_name: v${{ inputs.version }}
+          draft: ${{ ! inputs.allow-existing-release-overwrite }}
           files: artifacts/*.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
