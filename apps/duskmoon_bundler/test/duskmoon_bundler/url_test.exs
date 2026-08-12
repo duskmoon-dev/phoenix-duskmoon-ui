@@ -24,6 +24,10 @@ defmodule DuskmoonBundler.URLTest do
       assert DuskmoonBundler.URL.split_query("/assets/app.js?raw#hash") ==
                {"/assets/app.js", "raw"}
     end
+
+    test "preserves package import specifiers" do
+      assert DuskmoonBundler.URL.split_query("#minpath") == {"#minpath", ""}
+    end
   end
 
   describe "append_query/2 and append_fragment/2" do

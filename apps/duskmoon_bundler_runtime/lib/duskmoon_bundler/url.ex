@@ -15,6 +15,8 @@ defmodule DuskmoonBundler.URL do
     end
   end
 
+  def split_query("#" <> _ = specifier), do: {specifier, ""}
+
   def split_query(url) do
     uri = URI.parse(url)
     path = URI.to_string(%{uri | query: nil, fragment: nil})
