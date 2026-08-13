@@ -1321,6 +1321,53 @@ defmodule DuskmoonBundler.BuilderTest do
       assert js =~ "fake-widget"
     end
 
+    test "single bundle resolves package import aliases for browsers" do
+      package_dir = Path.join(@fixture_dir, "node_modules/package-imports-lib")
+      File.mkdir_p!(Path.join(package_dir, "lib"))
+
+      File.write!(
+        Path.join(package_dir, "package.json"),
+        ~s({"name":"package-imports-lib","type":"module","main":"index.js","imports":{"#minpath":{"node":"./lib/minpath.js","default":"./lib/minpath.browser.js"}}})
+      )
+
+      File.write!(Path.join(package_dir, "index.js"), """
+      import { minpath } from '#minpath'
+      export const platform = minpath
+      """)
+
+      File.write!(Path.join(package_dir, "lib/minpath.js"), "export const minpath = 'node'")
+
+      File.write!(
+        Path.join(package_dir, "lib/minpath.browser.js"),
+        "export const minpath = 'browser'"
+      )
+
+      File.write!(Path.join(@fixture_dir, "src/package_imports_app.ts"), """
+      import { platform } from 'package-imports-lib'
+      console.log(platform)
+      """)
+
+      {:ok, result} =
+        DuskmoonBundler.Builder.build(
+          entry: Path.join(@fixture_dir, "src/package_imports_app.ts"),
+          outdir: @outdir,
+          format: :esm,
+          hash: false,
+          minify: true,
+          sourcemap: false,
+          code_splitting: false,
+          node_modules: Path.join(@fixture_dir, "node_modules")
+        )
+
+      js = File.read!(result.js.path)
+      refute js =~ "#minpath"
+
+      node = System.find_executable("node") || flunk("node executable not found")
+
+      assert {"browser\n", 0} =
+               System.cmd(node, [result.js.path], stderr_to_stdout: true)
+    end
+
     test "minified ESM rewrites normalized cross-chunk npm imports" do
       el_base_dir =
         Path.join(@fixture_dir, "node_modules/@duskmoon-dev/el-base/dist/esm")
