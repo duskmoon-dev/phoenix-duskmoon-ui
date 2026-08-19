@@ -179,13 +179,16 @@ For advanced theming, you can import additional CSS modules:
 ### Modal Dialog
 
 ```heex
-<.dm_modal id="confirm-dialog" show={@show_modal}>
-  <:header>Confirm Action</:header>
-
-  <p>Are you sure you want to proceed?</p>
-
+<.dm_modal id="confirm-dialog">
+  <:trigger :let={id}>
+    <.dm_btn variant="primary" command="show-modal" commandfor={id}>Open</.dm_btn>
+  </:trigger>
+  <:title>Confirm Action</:title>
+  <:body>
+    <p>Are you sure you want to proceed?</p>
+  </:body>
   <:footer>
-    <.dm_btn phx-click="cancel">Cancel</.dm_btn>
+    <.dm_btn command="close" commandfor="confirm-dialog">Cancel</.dm_btn>
     <.dm_btn variant="primary" phx-click="confirm">Confirm</.dm_btn>
   </:footer>
 </.dm_modal>

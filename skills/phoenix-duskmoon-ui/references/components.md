@@ -32,18 +32,18 @@ Three clauses: standard, confirm dialog, noise effect.
 | `disabled` | boolean | false | |
 | `noise` | boolean | false | Activates noise-effect button |
 | `content` | string | "" | Button text (for noise variant) |
-| `confirm` | string | "" | Confirmation message (activates dialog variant) |
-| `confirm_title` | string | "" | Dialog title |
+| `confirm` | string | "" | Confirmation message (activates confirm popover) |
+| `confirm_title` | string | "" | Popover title |
 | `confirm_text` | string | "Yes" | Confirm button text |
 | `cancel_text` | string | "Cancel" | Cancel button text |
 | `confirm_class` | any | nil | |
 | `cancel_class` | any | nil | |
 | `show_cancel_action` | boolean | true | |
-| `confirm_dialog_label` | string | "Confirmation" | Accessible fallback label |
+| `confirm_label` | string | "Confirmation" | Accessible fallback label |
 
 Slots: `inner_block` (required), `prefix`, `suffix`, `confirm_action`
 
-Global attrs: includes `phx-click`, `phx-target`, `phx-value-id`, `phx-disable-with`, `name`, `value`, `type`, `form`
+Global attrs: includes `phx-click`, `phx-target`, `phx-value-id`, `phx-disable-with`, `name`, `value`, `type`, `form`, `command`, `commandfor`
 
 Hook: Uses `WebComponentHook` when `phx-click` is present.
 
@@ -727,15 +727,16 @@ Slots: `topbar` (attrs: `class`), `bottombar` (attrs: `class`)
 
 ### `dm_modal/1` — Dialog
 
+Native HTML `<dialog>` with `@duskmoon-dev/core` dialog CSS. Open/close via Invoker Commands (`command` / `commandfor`).
+
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `id` | any | | Required |
+| `id` | any | auto | |
 | `hide_close` | boolean | false | |
 | `position` | string | nil | nil, top, middle, bottom |
-| `backdrop` | boolean | false | |
 | `size` | string | nil | nil, xs, sm, md, lg, xl |
-| `responsive` | boolean | false | |
-| `no_backdrop` | boolean | false | |
+| `close_label` | string | "Close" | |
+| `dialog_label` | string | "Dialog" | Accessible fallback when no title |
 
 Slots: `trigger`, `title` (attrs: `class`), `body` (required, attrs: `class`), `footer` (attrs: `class`)
 

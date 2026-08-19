@@ -9,19 +9,20 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
     [%{inner_block: fn _, _ -> text end}]
   end
 
-  test "renders basic modal with el-dm-dialog element" do
+  test "renders basic modal with native dialog element" do
     result = render_component(&dm_modal/1, %{body: body("Modal content")})
 
-    assert result =~ "<el-dm-dialog"
+    assert result =~ "<dialog"
+    assert result =~ "dialog-box"
     assert result =~ "Modal content"
-    assert result =~ "</el-dm-dialog>"
+    assert result =~ "</dialog>"
+    refute result =~ "el-dm-dialog"
   end
 
-  test "renders dialog with role and aria-modal attributes" do
+  test "renders dialog with dialog class" do
     result = render_component(&dm_modal/1, %{body: body()})
 
-    assert result =~ ~s[role="dialog"]
-    assert result =~ ~s[aria-modal="true"]
+    assert result =~ ~s[class="dialog]
   end
 
   test "renders modal with custom id" do
@@ -36,7 +37,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
     assert result =~ ~s[id="modal-]
   end
 
-  test "renders modal with title slot in header" do
+  test "renders modal with title in dialog-header" do
     result =
       render_component(&dm_modal/1, %{
         title: [%{inner_block: fn _, _ -> "Dialog Title" end}],
@@ -44,7 +45,8 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
       })
 
     assert result =~ "Dialog Title"
-    assert result =~ ~s[slot="header"]
+    assert result =~ "dialog-header"
+    assert result =~ "dialog-title"
   end
 
   test "renders modal with title class" do
@@ -61,6 +63,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
     result = render_component(&dm_modal/1, %{body: body("Body text here")})
 
     assert result =~ "Body text here"
+    assert result =~ "dialog-body"
   end
 
   test "renders modal with body class" do
@@ -80,7 +83,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
       })
 
     assert result =~ "Footer actions"
-    assert result =~ ~s[slot="footer"]
+    assert result =~ "dialog-footer"
   end
 
   test "renders modal with footer class" do
@@ -94,48 +97,42 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
   end
 
   test "renders modal with close button by default" do
-    result = render_component(&dm_modal/1, %{body: body()})
+    result = render_component(&dm_modal/1, %{id: "close-test", body: body()})
 
-    assert result =~ ~s[method="dialog"]
-    assert result =~ "el-dm-button"
+    assert result =~ "dialog-close"
+    assert result =~ ~s[command="close"]
+    assert result =~ ~s[commandfor="close-test"]
   end
 
   test "renders modal with hidden close button" do
     result = render_component(&dm_modal/1, %{hide_close: true, body: body()})
 
-    refute result =~ ~s[method="dialog"]
+    refute result =~ "dialog-close"
+    refute result =~ ~s[command="close"]
   end
 
-  test "renders modal with backdrop blur" do
-    result = render_component(&dm_modal/1, %{backdrop: true, body: body()})
+  test "renders modal with position classes" do
+    assert render_component(&dm_modal/1, %{position: "top", body: body()}) =~ "dialog-top"
+    assert render_component(&dm_modal/1, %{position: "bottom", body: body()}) =~ "dialog-bottom"
 
-    assert result =~ ~s[backdrop="blur"]
+    middle = render_component(&dm_modal/1, %{position: "middle", body: body()})
+    refute middle =~ "dialog-top"
+    refute middle =~ "dialog-bottom"
   end
 
-  test "renders modal without backdrop by default" do
-    result = render_component(&dm_modal/1, %{body: body()})
+  test "renders modal with size classes" do
+    assert render_component(&dm_modal/1, %{size: "sm", body: body()}) =~ "dialog-sm"
+    assert render_component(&dm_modal/1, %{size: "lg", body: body()}) =~ "dialog-lg"
+    assert render_component(&dm_modal/1, %{size: "xl", body: body()}) =~ "dialog-xl"
 
-    refute result =~ ~s[backdrop="blur"]
-  end
-
-  test "renders modal with position" do
-    for position <- ~w(top middle bottom) do
-      result = render_component(&dm_modal/1, %{position: position, body: body()})
-      assert result =~ ~s[position="#{position}"]
-    end
-  end
-
-  test "renders modal with size" do
-    for size <- ~w(xs sm md lg xl) do
+    for size <- ~w(xs md) do
       result = render_component(&dm_modal/1, %{size: size, body: body()})
-      assert result =~ ~s[size="#{size}"]
+      refute result =~ "dialog-xs"
+      refute result =~ "dialog-md"
+      refute result =~ "dialog-sm"
+      refute result =~ "dialog-lg"
+      refute result =~ "dialog-xl"
     end
-  end
-
-  test "renders modal with responsive" do
-    result = render_component(&dm_modal/1, %{responsive: true, body: body()})
-
-    assert result =~ "responsive"
   end
 
   test "renders modal with custom class" do
@@ -165,16 +162,17 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
     assert result =~ "Open test-modal"
   end
 
-  test "renders modal without title header when no title" do
-    result = render_component(&dm_modal/1, %{body: body()})
+  test "renders modal without title header when no title and hide_close" do
+    result = render_component(&dm_modal/1, %{hide_close: true, body: body()})
 
-    refute result =~ ~s[slot="header"]
+    refute result =~ "dialog-header"
+    refute result =~ "dialog-title"
   end
 
   test "renders modal without footer when no footer slot" do
     result = render_component(&dm_modal/1, %{body: body()})
 
-    refute result =~ ~s[slot="footer"]
+    refute result =~ "dialog-footer"
   end
 
   test "renders modal with title, body, and footer combined" do
@@ -190,22 +188,23 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
     assert result =~ "OK Cancel"
   end
 
-  test "renders modal with backdrop and position combined" do
+  test "renders modal with size and position combined" do
     result =
       render_component(&dm_modal/1, %{
-        backdrop: true,
         position: "bottom",
+        size: "lg",
         body: body()
       })
 
-    assert result =~ ~s[backdrop="blur"]
-    assert result =~ ~s[position="bottom"]
+    assert result =~ "dialog-bottom"
+    assert result =~ "dialog-lg"
   end
 
-  test "renders modal without position by default" do
+  test "renders modal without position class by default" do
     result = render_component(&dm_modal/1, %{body: body()})
 
-    refute result =~ ~s[position="]
+    refute result =~ "dialog-top"
+    refute result =~ "dialog-bottom"
   end
 
   test "renders close button with aria-label Close" do
@@ -217,8 +216,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
   test "renders modal without trigger when trigger slot omitted" do
     result = render_component(&dm_modal/1, %{body: body()})
 
-    # No trigger-related content outside the dialog
-    assert result =~ "<el-dm-dialog"
+    assert result =~ "<dialog"
   end
 
   test "renders modal with multiple body slots" do
@@ -234,35 +232,13 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
     assert result =~ "Body part 2"
   end
 
-  test "renders modal backdrop attribute absent when backdrop false" do
-    result = render_component(&dm_modal/1, %{backdrop: false, body: body()})
-
-    # When backdrop is false, `@backdrop && "blur"` evaluates to false,
-    # and Phoenix suppresses the attribute entirely
-    refute result =~ "backdrop="
-  end
-
-  test "renders modal with responsive and size combined" do
-    result =
-      render_component(&dm_modal/1, %{
-        responsive: true,
-        size: "lg",
-        body: body()
-      })
-
-    assert result =~ "responsive"
-    assert result =~ ~s[size="lg"]
-  end
-
   test "renders modal with all options combined" do
     result =
       render_component(&dm_modal/1, %{
         id: "full-modal",
         class: "custom-modal",
-        backdrop: true,
-        position: "middle",
-        size: "md",
-        responsive: true,
+        position: "top",
+        size: "lg",
         title: [%{class: "title-cls", inner_block: fn _, _ -> "Title" end}],
         body: [%{class: "body-cls", inner_block: fn _, _ -> "Body" end}],
         footer: [%{class: "footer-cls", inner_block: fn _, _ -> "Footer" end}],
@@ -271,10 +247,8 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
 
     assert result =~ ~s[id="full-modal"]
     assert result =~ "custom-modal"
-    assert result =~ ~s[backdrop="blur"]
-    assert result =~ ~s[position="middle"]
-    assert result =~ ~s[size="md"]
-    assert result =~ "responsive"
+    assert result =~ "dialog-top"
+    assert result =~ "dialog-lg"
     assert result =~ "Title"
     assert result =~ "title-cls"
     assert result =~ "Body"
@@ -296,9 +270,6 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
 
     assert result =~ "Title One"
     assert result =~ "Title Two"
-    # Each title gets its own span with slot="header"
-    header_count = length(String.split(result, ~s[slot="header"])) - 1
-    assert header_count == 2
   end
 
   test "renders modal with multiple footer slots" do
@@ -313,27 +284,6 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
 
     assert result =~ "Action A"
     assert result =~ "Action B"
-    footer_count = length(String.split(result, ~s[slot="footer"])) - 1
-    assert footer_count == 2
-  end
-
-  test "renders modal close button with aria-label" do
-    result = render_component(&dm_modal/1, %{body: body()})
-
-    assert result =~ ~s[aria-label="Close"]
-    assert result =~ ~s[method="dialog"]
-  end
-
-  test "renders modal without title slot when not provided" do
-    result = render_component(&dm_modal/1, %{body: body()})
-
-    refute result =~ ~s[slot="header"]
-  end
-
-  test "renders modal without footer slot when not provided" do
-    result = render_component(&dm_modal/1, %{body: body()})
-
-    refute result =~ ~s[slot="footer"]
   end
 
   test "renders modal with aria-labelledby pointing to title" do
@@ -374,30 +324,6 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
     assert result =~ ~s[aria-label="Dismiss"]
   end
 
-  test "renders modal with no-backdrop" do
-    result = render_component(&dm_modal/1, %{no_backdrop: true, body: body()})
-
-    assert result =~ "no-backdrop"
-  end
-
-  test "renders modal without no-backdrop by default" do
-    result = render_component(&dm_modal/1, %{body: body()})
-
-    refute result =~ "no-backdrop"
-  end
-
-  test "renders modal with no_backdrop and backdrop combined" do
-    result =
-      render_component(&dm_modal/1, %{
-        no_backdrop: true,
-        backdrop: true,
-        body: body()
-      })
-
-    assert result =~ "no-backdrop"
-    assert result =~ ~s[backdrop="blur"]
-  end
-
   test "renders aria-label fallback when no title slot provided" do
     result =
       render_component(&dm_modal/1, %{
@@ -432,12 +358,9 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
         body: body()
       })
 
-    # aria-labelledby points to the first title's id
     assert result =~ ~s[aria-labelledby="multi-title-title"]
-    # Only one element should have the id (no duplicate IDs)
     id_count = length(String.split(result, ~s[id="multi-title-title"])) - 1
     assert id_count == 1
-    # Both titles still render
     assert result =~ "Primary Title"
     assert result =~ "Subtitle"
   end

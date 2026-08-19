@@ -2,7 +2,7 @@ defmodule Storybook.Feedback.Dialog do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.Feedback.Dialog.dm_modal/1
-  def description, do: "Modal dialog for alerts, confirmations, and custom content."
+  def description, do: "Native HTML dialog modal with Invoker Commands API."
 
   def imports do
     [{PhoenixDuskmoon.Component.Action.Button, [dm_btn: 1]}]
@@ -18,42 +18,17 @@ defmodule Storybook.Feedback.Dialog do
         },
         slots: [
           """
+          <:trigger :let={id}>
+            <.dm_btn variant="primary" command="show-modal" commandfor={id}>Open</.dm_btn>
+          </:trigger>
           <:title>Confirm Action</:title>
           <:body>
             <p>Are you sure you want to proceed?</p>
           </:body>
           <:footer>
-            <.dm_btn variant="ghost">Cancel</.dm_btn>
-            <.dm_btn variant="primary">Confirm</.dm_btn>
+            <.dm_btn variant="ghost" command="close" commandfor="dialog-default">Cancel</.dm_btn>
+            <.dm_btn variant="primary" command="close" commandfor="dialog-default">Confirm</.dm_btn>
           </:footer>
-          """
-        ]
-      },
-      %Variation{
-        id: :no_backdrop,
-        description: "Modal without backdrop overlay",
-        attributes: %{
-          id: "dialog-no-backdrop",
-          no_backdrop: true
-        },
-        slots: [
-          """
-          <:title>No Backdrop</:title>
-          <:body><p>This modal has no backdrop overlay.</p></:body>
-          """
-        ]
-      },
-      %Variation{
-        id: :with_backdrop_blur,
-        description: "Modal with backdrop blur effect",
-        attributes: %{
-          id: "dialog-blur",
-          backdrop: true
-        },
-        slots: [
-          """
-          <:title>Backdrop Blur</:title>
-          <:body><p>Background is blurred behind the modal.</p></:body>
           """
         ]
       },
@@ -66,27 +41,13 @@ defmodule Storybook.Feedback.Dialog do
         },
         slots: [
           """
+          <:trigger :let={id}>
+            <.dm_btn command="show-modal" commandfor={id}>Open</.dm_btn>
+          </:trigger>
           <:title>No Close Button</:title>
           <:body><p>The X close button is hidden.</p></:body>
           <:footer>
-            <.dm_btn variant="primary">OK</.dm_btn>
-          </:footer>
-          """
-        ]
-      },
-      %Variation{
-        id: :responsive,
-        description: "Responsive modal (full-screen on mobile)",
-        attributes: %{
-          id: "dialog-responsive",
-          responsive: true
-        },
-        slots: [
-          """
-          <:title>Responsive Modal</:title>
-          <:body><p>This modal is full-screen on small viewports.</p></:body>
-          <:footer>
-            <.dm_btn variant="ghost">Close</.dm_btn>
+            <.dm_btn variant="primary" command="close" commandfor="dialog-no-close">OK</.dm_btn>
           </:footer>
           """
         ]
@@ -95,12 +56,15 @@ defmodule Storybook.Feedback.Dialog do
         id: :sizes,
         description: "Size variants",
         variations:
-          for {size, label} <- [{"xs", "XS"}, {"sm", "SM"}, {"lg", "LG"}, {"xl", "XL"}] do
+          for {size, label} <- [{"sm", "SM"}, {"lg", "LG"}, {"xl", "XL"}] do
             %Variation{
               id: String.to_atom("size_#{size}"),
               attributes: %{id: "dialog-#{size}", size: size},
               slots: [
                 """
+                <:trigger :let={id}>
+                  <.dm_btn command="show-modal" commandfor={id}>#{label}</.dm_btn>
+                </:trigger>
                 <:title>#{label} Dialog</:title>
                 <:body><p>#{label} sized modal.</p></:body>
                 """
@@ -118,6 +82,9 @@ defmodule Storybook.Feedback.Dialog do
               attributes: %{id: "dialog-#{position}", position: position},
               slots: [
                 """
+                <:trigger :let={id}>
+                  <.dm_btn command="show-modal" commandfor={id}>#{String.capitalize(position)}</.dm_btn>
+                </:trigger>
                 <:title>#{String.capitalize(position)} Position</:title>
                 <:body><p>Modal anchored to the #{position} of the viewport.</p></:body>
                 """
@@ -136,9 +103,7 @@ defmodule Storybook.Feedback.Dialog do
         type: :select,
         options: [
           {nil, "Default"},
-          {"xs", "XS"},
           {"sm", "SM"},
-          {"md", "MD"},
           {"lg", "LG"},
           {"xl", "XL"}
         ],
@@ -155,24 +120,6 @@ defmodule Storybook.Feedback.Dialog do
           {"bottom", "Bottom"}
         ],
         default: nil
-      },
-      %{
-        id: :backdrop,
-        label: "Backdrop",
-        type: :boolean,
-        default: false
-      },
-      %{
-        id: :no_backdrop,
-        label: "No Backdrop",
-        type: :boolean,
-        default: false
-      },
-      %{
-        id: :responsive,
-        label: "Responsive",
-        type: :boolean,
-        default: false
       },
       %{
         id: :hide_close,

@@ -273,7 +273,7 @@ When working on Phoenix projects that use the Phoenix Duskmoon UI library:
 - `<.dm_page_header>` - Page title section
 - `<.dm_breadcrumb>` - Navigation breadcrumbs
 - `<.dm_tab>` - Tabbed content areas
-- `<.dm_modal>` - Dialog modals with `:header`, `:footer` slots
+- `<.dm_modal>` - Dialog modals with `:trigger`, `:title`, `:body`, `:footer` slots (native `<dialog>` + Command API)
 
 ### CSS Integration
 Projects need these CSS imports:

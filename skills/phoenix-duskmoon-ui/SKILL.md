@@ -191,7 +191,7 @@ For full component catalog with all attributes and slots, see
 
 | Function | Module | Description |
 |----------|--------|-------------|
-| `dm_modal` | Feedback.Dialog | Modal dialog with trigger/title/body/footer slots |
+| `dm_modal` | Feedback.Dialog | Native `<dialog>` modal with Command API + trigger/title/body/footer slots |
 | `dm_loading_spinner` / `dm_loading_ex` | Feedback.Loading | Loading indicators |
 | `dm_toast` / `dm_toast_container` | Feedback.Toast | Toast notifications |
 | `dm_snackbar` / `dm_snackbar_container` | Feedback.Snackbar | Snackbar messages |
@@ -338,10 +338,15 @@ Import via `use PhoenixDuskmoon.ArtComponent`.
 
 <%!-- Modal --%>
 <.dm_modal id="confirm-modal">
-  <:trigger><.dm_btn>Open</.dm_btn></:trigger>
+  <:trigger :let={id}>
+    <.dm_btn command="show-modal" commandfor={id}>Open</.dm_btn>
+  </:trigger>
   <:title>Confirm</:title>
   <:body>Are you sure?</:body>
-  <:footer><.dm_btn variant="primary" phx-click="confirm">Yes</.dm_btn></:footer>
+  <:footer>
+    <.dm_btn command="close" commandfor="confirm-modal">Cancel</.dm_btn>
+    <.dm_btn variant="primary" phx-click="confirm">Yes</.dm_btn>
+  </:footer>
 </.dm_modal>
 
 <%!-- Art components --%>

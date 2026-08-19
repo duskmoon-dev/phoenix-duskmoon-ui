@@ -2,7 +2,10 @@ defmodule Storybook.Action.Button do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.Action.Button.dm_btn/1
-  def description, do: "Button component wrapping el-dm-button with color/style variants, sizes, shapes, loading/disabled states, prefix/suffix slots, confirm dialog, and noise effect."
+
+  def description,
+    do:
+      "Button component wrapping el-dm-button with color/style variants, sizes, shapes, loading/disabled states, prefix/suffix slots, confirm popover, and noise effect."
 
   def variations do
     [
@@ -39,7 +42,12 @@ defmodule Storybook.Action.Button do
         id: :sizes,
         description: "All size variants — xs, sm, md, lg",
         variations:
-          for {size, label} <- [{"xs", "Extra Small"}, {"sm", "Small"}, {"md", "Medium"}, {"lg", "Large"}] do
+          for {size, label} <- [
+                {"xs", "Extra Small"},
+                {"sm", "Small"},
+                {"md", "Medium"},
+                {"lg", "Large"}
+              ] do
             %Variation{
               id: String.to_atom(size),
               attributes: %{variant: "primary", size: size},
@@ -115,7 +123,7 @@ defmodule Storybook.Action.Button do
       # ── Confirm Dialog ────────────────────────────────────────────────
       %VariationGroup{
         id: :confirm,
-        description: "Confirm dialog variants",
+        description: "Confirm popover variants",
         variations: [
           %Variation{
             id: :remove,
@@ -149,7 +157,7 @@ defmodule Storybook.Action.Button do
       # ── Confirm Dialog Customization ───────────────────────────────
       %VariationGroup{
         id: :confirm_customization,
-        description: "Confirm dialog with custom button text, classes, and no-cancel option",
+        description: "Confirm popover with custom button text, classes, and no-cancel option",
         variations: [
           %Variation{
             id: :custom_button_text,
@@ -164,7 +172,7 @@ defmodule Storybook.Action.Button do
           },
           %Variation{
             id: :no_cancel_button,
-            description: "Confirm dialog without cancel button",
+            description: "Confirm popover without cancel button",
             attributes: %{
               variant: "success",
               confirm: "Your changes have been saved.",
@@ -175,11 +183,11 @@ defmodule Storybook.Action.Button do
           },
           %Variation{
             id: :custom_dialog_label,
-            description: "Confirm dialog with custom accessible label",
+            description: "Confirm popover with custom accessible label",
             attributes: %{
               variant: "primary",
               confirm: "Do you want to publish this post?",
-              confirm_dialog_label: "Publish confirmation"
+              confirm_label: "Publish confirmation"
             },
             slots: ["Publish"]
           }

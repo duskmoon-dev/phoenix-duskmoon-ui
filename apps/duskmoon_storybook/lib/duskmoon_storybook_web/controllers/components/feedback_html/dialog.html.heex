@@ -11,17 +11,21 @@
 
   <% md_content = """
   ## Overview
-  Modal dialog component for overlaying content. Wraps `<el-dm-dialog>` custom element.
+  Modal dialog using the native HTML `<dialog>` element and `@duskmoon-dev/core` dialog CSS.
+  Open and close with the Invoker Commands API (`command` / `commandfor`).
 
   ## Usage
   ```elixir
   <.dm_modal id="my-modal">
-    <:trigger :let={dialog_id}>
-      <.dm_btn variant="primary" onclick={"document.getElementById('\#{dialog_id}').show()"}>Open</.dm_btn>
+    <:trigger :let={id}>
+      <.dm_btn variant="primary" command="show-modal" commandfor={id}>Open</.dm_btn>
     </:trigger>
     <:title>Modal Title</:title>
     <:body>Modal content here</:body>
-    <:footer><.dm_btn variant="primary">Confirm</.dm_btn></:footer>
+    <:footer>
+      <.dm_btn command="close" commandfor="my-modal">Cancel</.dm_btn>
+      <.dm_btn variant="primary">Confirm</.dm_btn>
+    </:footer>
   </.dm_modal>
   ```
   """ %>
@@ -29,8 +33,8 @@
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Basic Modal</h3>
   <.dm_modal id="demo-modal-basic">
-    <:trigger :let={dialog_id}>
-      <.dm_btn variant="primary" onclick={"document.getElementById('#{dialog_id}').show()"}>
+    <:trigger :let={id}>
+      <.dm_btn variant="primary" command="show-modal" commandfor={id}>
         Open Modal
       </.dm_btn>
     </:trigger>
@@ -39,15 +43,18 @@
       <p>This is a basic modal dialog with a title, body, and footer.</p>
     </:body>
     <:footer>
-      <.dm_btn variant="primary" size="sm">Confirm</.dm_btn>
+      <.dm_btn command="close" commandfor="demo-modal-basic" size="sm">Cancel</.dm_btn>
+      <.dm_btn variant="primary" size="sm" command="close" commandfor="demo-modal-basic">
+        Confirm
+      </.dm_btn>
     </:footer>
   </.dm_modal>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
   <div class="flex flex-wrap gap-4">
     <.dm_modal id="demo-modal-sm" size="sm">
-      <:trigger :let={dialog_id}>
-        <.dm_btn variant="outline" onclick={"document.getElementById('#{dialog_id}').show()"}>
+      <:trigger :let={id}>
+        <.dm_btn variant="outline" command="show-modal" commandfor={id}>
           Small
         </.dm_btn>
       </:trigger>
@@ -57,21 +64,9 @@
       </:body>
     </.dm_modal>
 
-    <.dm_modal id="demo-modal-md" size="md">
-      <:trigger :let={dialog_id}>
-        <.dm_btn variant="outline" onclick={"document.getElementById('#{dialog_id}').show()"}>
-          Medium
-        </.dm_btn>
-      </:trigger>
-      <:title>Medium Modal</:title>
-      <:body>
-        <p>A medium modal dialog.</p>
-      </:body>
-    </.dm_modal>
-
     <.dm_modal id="demo-modal-lg" size="lg">
-      <:trigger :let={dialog_id}>
-        <.dm_btn variant="outline" onclick={"document.getElementById('#{dialog_id}').show()"}>
+      <:trigger :let={id}>
+        <.dm_btn variant="outline" command="show-modal" commandfor={id}>
           Large
         </.dm_btn>
       </:trigger>
@@ -80,18 +75,44 @@
         <p>A large modal dialog.</p>
       </:body>
     </.dm_modal>
+
+    <.dm_modal id="demo-modal-xl" size="xl">
+      <:trigger :let={id}>
+        <.dm_btn variant="outline" command="show-modal" commandfor={id}>
+          Extra Large
+        </.dm_btn>
+      </:trigger>
+      <:title>Extra Large Modal</:title>
+      <:body>
+        <p>An extra large modal dialog.</p>
+      </:body>
+    </.dm_modal>
   </div>
 
-  <h3 class="text-xl font-semibold mt-8 mb-4">With Backdrop</h3>
-  <.dm_modal id="demo-modal-backdrop" backdrop={true}>
-    <:trigger :let={dialog_id}>
-      <.dm_btn variant="accent" onclick={"document.getElementById('#{dialog_id}').show()"}>
-        Backdrop Blur
-      </.dm_btn>
-    </:trigger>
-    <:title>Backdrop Modal</:title>
-    <:body>
-      <p>This modal has a blurred backdrop effect.</p>
-    </:body>
-  </.dm_modal>
+  <h3 class="text-xl font-semibold mt-8 mb-4">Positions</h3>
+  <div class="flex flex-wrap gap-4">
+    <.dm_modal id="demo-modal-top" position="top">
+      <:trigger :let={id}>
+        <.dm_btn variant="accent" command="show-modal" commandfor={id}>
+          Top
+        </.dm_btn>
+      </:trigger>
+      <:title>Top Modal</:title>
+      <:body>
+        <p>This modal appears near the top of the viewport.</p>
+      </:body>
+    </.dm_modal>
+
+    <.dm_modal id="demo-modal-bottom" position="bottom">
+      <:trigger :let={id}>
+        <.dm_btn variant="accent" command="show-modal" commandfor={id}>
+          Bottom
+        </.dm_btn>
+      </:trigger>
+      <:title>Bottom Modal</:title>
+      <:body>
+        <p>This modal appears near the bottom of the viewport.</p>
+      </:body>
+    </.dm_modal>
+  </div>
 </.dm_card>
