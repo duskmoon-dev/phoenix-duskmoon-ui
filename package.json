@@ -23,8 +23,8 @@
     ],
     "dependencies": {
         "@duskmoon-dev/art-elements": "1.6.0",
-        "@duskmoon-dev/core": "1.17.2",
-        "@duskmoon-dev/css-art": "1.17.2",
+        "@duskmoon-dev/core": "1.18.0",
+        "@duskmoon-dev/css-art": "1.18.0",
         "@duskmoon-dev/el-accordion": "1.6.0",
         "@duskmoon-dev/el-alert": "1.6.0",
         "@duskmoon-dev/el-art-gemini-input": "1.6.0",
