@@ -383,7 +383,6 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
     """
   end
 
-  defp page_url(nil, _marker, _page), do: nil
   defp page_url(url, marker, page), do: String.replace(url, marker, "#{page}")
 
   defp pagination_class("sm"), do: "pagination pagination-sm"

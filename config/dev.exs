@@ -25,7 +25,7 @@ config :duskmoon_storybook, DuskmoonStorybookWeb.Storybook,
   compilation_debug: true
 
 config :duskmoon_bundler, :lint,
-  tsgolint: "apps/duskmoon_bundler/node_modules/.bin/tsgolint",
+  tsgolint: Path.expand("../node_modules/.bin/tsgolint", __DIR__),
   cwd: Path.expand("../apps/duskmoon_bundler", __DIR__)
 
 # Do not include metadata nor timestamps in development logs

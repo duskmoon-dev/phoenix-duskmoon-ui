@@ -2,7 +2,7 @@
   "name": "duskmoon-bundler",
   "private": true,
   "devDependencies": {
-    "oxlint-tsgolint": "0.25.0"
+    "oxlint-tsgolint": "7.0.2001"
   },
   "scripts": {
     "postinstall": "chmod +x node_modules/@oxlint-tsgolint/*/tsgolint 2>/dev/null || true"

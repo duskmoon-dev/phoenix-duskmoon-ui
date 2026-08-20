@@ -137,7 +137,7 @@ pub const WorkerState = struct {
             }
         }
         if (min_deadline) |d| {
-            const now = std.time.nanoTimestamp();
+            const now = types.nanoTimestamp();
             if (d <= now) return 0;
             return @intCast(d - now);
         }
@@ -145,7 +145,7 @@ pub const WorkerState = struct {
     }
 
     pub fn fire_expired_timers(self: *WorkerState) void {
-        const now = std.time.nanoTimestamp();
+        const now = types.nanoTimestamp();
 
         var expired_buf: [64]u64 = undefined;
         var expired_count: usize = 0;
@@ -175,7 +175,7 @@ pub const WorkerState = struct {
                 // Re-check: callback may have removed this timer via clearInterval
                 if (self.timers.getPtr(id)) |live_entry| {
                     if (interval) |iv| {
-                        live_entry.deadline = std.time.nanoTimestamp() + @as(i128, iv);
+                        live_entry.deadline = types.nanoTimestamp() + @as(i128, iv);
                     } else {
                         qjs.JS_FreeValue(self.ctx, live_entry.callback);
                         _ = self.timers.remove(id);
@@ -700,7 +700,7 @@ pub const WorkerState = struct {
 
             const timer_ns = self.next_timer_timeout_ns();
             const sleep_ns: u64 = if (timer_ns) |t| @min(t, 1_000_000) else 1_000_000;
-            std.Thread.sleep(sleep_ns);
+            types.sleep(sleep_ns);
         }
 
         result.ok = false;
@@ -883,7 +883,7 @@ pub const WorkerState = struct {
 
     pub fn set_deadline(self: *WorkerState, timeout_ns: u64) void {
         if (timeout_ns > 0) {
-            self.rd.deadline = std.time.nanoTimestamp() + @as(i128, timeout_ns);
+            self.rd.deadline = types.nanoTimestamp() + @as(i128, timeout_ns);
         }
     }
 
@@ -906,7 +906,7 @@ pub const WorkerState = struct {
 fn interrupt_handler(_: ?*qjs.JSRuntime, user_data: ?*anyopaque) callconv(.c) c_int {
     const rd: *types.RuntimeData = @ptrCast(@alignCast(user_data));
     if (rd.deadline) |deadline| {
-        if (std.time.nanoTimestamp() > deadline) return 1;
+        if (types.nanoTimestamp() > deadline) return 1;
     }
     return 0;
 }
@@ -938,7 +938,7 @@ pub fn worker_main(rd: *types.RuntimeData, owner_pid: beam.pid) void {
         .rd = rd,
         .pending_calls = std.AutoHashMap(u64, PendingCall).init(gpa),
         .timers = std.AutoHashMap(u64, TimerEntry).init(gpa),
-        .start_time = std.time.nanoTimestamp(),
+        .start_time = types.nanoTimestamp(),
         .max_reductions = 0,
     };
     defer state.deinit();

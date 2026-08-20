@@ -45,7 +45,7 @@ fn set_timer_common(ctx: ?*qjs.JSContext, argc: c_int, argv: [*c]qjs.JSValue, is
 
     self.timers.put(id, .{
         .callback = callback,
-        .deadline = std.time.nanoTimestamp() + @as(i128, delay_ns),
+        .deadline = types.nanoTimestamp() + @as(i128, delay_ns),
         .interval_ns = if (is_interval) delay_ns else null,
     }) catch {
         qjs.JS_FreeValue(ctx, callback);

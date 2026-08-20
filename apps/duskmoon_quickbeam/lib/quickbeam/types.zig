@@ -1,23 +1,117 @@
 pub const std = @import("std");
 pub const beam = @import("beam");
 pub const e = @import("erl_nif");
-pub const qjs = @cImport(@cInclude("quickjs.h"));
+pub const qjs = @import("qjs");
 
 pub const gpa = std.heap.c_allocator;
 
-pub var class_ids_mutex: std.Thread.Mutex = .{};
+fn threadedIo() std.Io {
+    return std.Io.Threaded.global_single_threaded.io();
+}
+
+pub const Mutex = struct {
+    inner: std.Io.Mutex = .init,
+
+    pub fn lock(self: *Mutex) void {
+        self.inner.lockUncancelable(threadedIo());
+    }
+
+    pub fn unlock(self: *Mutex) void {
+        self.inner.unlock(threadedIo());
+    }
+};
+
+pub const Condition = struct {
+    inner: std.Io.Event = .unset,
+
+    pub fn wait(self: *Condition, mutex: *Mutex) void {
+        self.inner.reset();
+        mutex.unlock();
+        defer mutex.lock();
+        self.inner.waitUncancelable(threadedIo());
+    }
+
+    pub fn timedWait(self: *Condition, mutex: *Mutex, nanoseconds: u64) error{Timeout}!void {
+        const timeout: std.Io.Timeout = .{ .duration = .{
+            .clock = .awake,
+            .raw = .fromNanoseconds(nanoseconds),
+        } };
+
+        self.inner.reset();
+        mutex.unlock();
+        defer mutex.lock();
+        self.inner.waitTimeout(threadedIo(), timeout) catch |err| switch (err) {
+            error.Timeout => return error.Timeout,
+            error.Canceled => unreachable,
+        };
+    }
+
+    pub fn signal(self: *Condition) void {
+        self.inner.set(threadedIo());
+    }
+
+    pub fn broadcast(self: *Condition) void {
+        self.inner.set(threadedIo());
+    }
+};
+
+pub const ResetEvent = struct {
+    inner: std.Io.Event = .unset,
+
+    pub fn isSet(self: *const ResetEvent) bool {
+        return self.inner.isSet();
+    }
+
+    pub fn set(self: *ResetEvent) void {
+        self.inner.set(threadedIo());
+    }
+
+    pub fn timedWait(self: *ResetEvent, nanoseconds: u64) error{Timeout}!void {
+        const timeout: std.Io.Timeout = .{ .duration = .{
+            .clock = .awake,
+            .raw = .fromNanoseconds(nanoseconds),
+        } };
+
+        self.inner.waitTimeout(threadedIo(), timeout) catch |err| switch (err) {
+            error.Timeout => return error.Timeout,
+            error.Canceled => unreachable,
+        };
+    }
+
+    pub fn reset(self: *ResetEvent) void {
+        self.inner.reset();
+    }
+};
+
+pub fn nanoTimestamp() i128 {
+    return @intCast(std.Io.Clock.awake.now(threadedIo()).nanoseconds);
+}
+
+pub fn sleep(nanoseconds: u64) void {
+    std.Io.sleep(
+        threadedIo(),
+        .fromNanoseconds(nanoseconds),
+        .awake,
+    ) catch unreachable;
+}
+
+pub fn random(buffer: []u8) void {
+    std.Io.random(threadedIo(), buffer);
+}
+
+pub var class_ids_mutex: Mutex = .{};
 
 pub const SyncCallSlot = struct {
     result_json: []const u8 = "",
     result_env: ?*e.ErlNifEnv = null,
     result_term: ?e.ErlNifTerm = null,
     ok: bool = false,
-    done: std.Thread.ResetEvent = .{},
+    done: ResetEvent = .{},
 };
 
 pub const RuntimeData = struct {
-    mutex: std.Thread.Mutex,
-    cond: std.Thread.Condition,
+    mutex: Mutex,
+    cond: Condition,
     queue_head: ?*MessageNode,
     queue_tail: ?*MessageNode,
     stopped: bool,
@@ -26,7 +120,7 @@ pub const RuntimeData = struct {
     max_stack_size: usize = 8 * 1024 * 1024,
     max_convert_depth: u32 = 32,
     max_convert_nodes: u32 = 10_000,
-    sync_slots_mutex: std.Thread.Mutex = .{},
+    sync_slots_mutex: Mutex = .{},
     sync_slots: std.AutoHashMapUnmanaged(u64, *SyncCallSlot) = .{},
     deadline: ?i128 = null,
     shutting_down: std.atomic.Value(bool) = std.atomic.Value(bool).init(false),

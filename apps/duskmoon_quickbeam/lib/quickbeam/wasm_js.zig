@@ -31,7 +31,7 @@ const ContextState = struct {
 
 const ParsedHostImport = wasm_host_imports.ImportSpec;
 
-var states_mutex: std.Thread.Mutex = .{};
+var states_mutex: types.Mutex = .{};
 var states: std.AutoHashMapUnmanaged(usize, *ContextState) = .{};
 
 fn throw_error(ctx: *qjs.JSContext, msg: []const u8) qjs.JSValue {

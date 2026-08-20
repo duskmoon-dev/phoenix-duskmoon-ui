@@ -57,7 +57,7 @@ jobs:
         if: inputs.package_source == 'source'
         uses: goto-bus-stop/setup-zig@v2
         with:
-          version: 0.15.1
+          version: 0.16.0
 
       - name: Create package install project
         working-directory: ${{ runner.temp }}

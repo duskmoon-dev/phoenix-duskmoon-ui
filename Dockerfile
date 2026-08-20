@@ -25,7 +25,7 @@ rm -rf /var/lib/apt/lists/*
 mix local.hex --force
 mix local.rebar --force
 mix deps.get
-mix zig.get --version 0.15.2
+mix zig.get --version 0.16.0
 npm_ci_status=1
 for attempt in 1 2 3 4; do
   if mix npm.ci; then

@@ -13,7 +13,7 @@ const gpa = ct.gpa;
 fn interrupt_handler(_: ?*qjs.JSRuntime, user_data: ?*anyopaque) callconv(.c) c_int {
     const pd: *ct.PoolData = @ptrCast(@alignCast(user_data));
     if (pd.deadline) |deadline| {
-        if (std.time.nanoTimestamp() > deadline) return 1;
+        if (types.nanoTimestamp() > deadline) return 1;
     }
     return 0;
 }
@@ -219,7 +219,7 @@ fn handle_create_context(
         .rd = &entry.rd,
         .pending_calls = std.AutoHashMap(u64, worker.PendingCall).init(gpa),
         .timers = std.AutoHashMap(u64, worker.TimerEntry).init(gpa),
-        .start_time = std.time.nanoTimestamp(),
+        .start_time = types.nanoTimestamp(),
         .max_reductions = p.max_reductions,
     };
 
@@ -286,7 +286,7 @@ fn handle_ctx_eval(
     const entry = entry_ptr.*;
 
     if (p.timeout_ns > 0) {
-        pd.deadline = std.time.nanoTimestamp() + @as(i128, p.timeout_ns);
+        pd.deadline = types.nanoTimestamp() + @as(i128, p.timeout_ns);
     }
 
     // Pump resolve/reject messages from the pool queue into the context's rd queue
@@ -337,7 +337,7 @@ fn handle_ctx_call(
     const entry = entry_ptr.*;
 
     if (p.timeout_ns > 0) {
-        pd.deadline = std.time.nanoTimestamp() + @as(i128, p.timeout_ns);
+        pd.deadline = types.nanoTimestamp() + @as(i128, p.timeout_ns);
     }
 
     install_pump(pd, contexts, p.context_id, entry);

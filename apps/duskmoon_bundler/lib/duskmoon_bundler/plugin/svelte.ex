@@ -128,8 +128,7 @@ defmodule DuskmoonBundler.Plugin.Svelte do
     scripts
     |> Enum.with_index()
     |> Enum.reduce_while({:ok, %DuskmoonBundler.JS.ImportExtractor.Result{}}, fn {{extension,
-                                                                                   script},
-                                                                                  index},
+                                                                                   script}, index},
                                                                                  {:ok, acc} ->
       filename =
         path

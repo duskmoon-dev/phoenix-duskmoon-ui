@@ -155,7 +155,7 @@ defmodule PhoenixDuskmoon.Mixfile do
       {:mdex_mermaid, "~> 0.3.6"},
       {:plug, "~> 1.19", optional: true},
       {:jason, "~> 1.4"},
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+      {:ex_doc, ">= 0.0.0", runtime: false}
     ]
   end
 

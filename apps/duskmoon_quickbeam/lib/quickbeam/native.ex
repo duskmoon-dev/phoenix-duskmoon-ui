@@ -149,6 +149,11 @@ defmodule QuickBEAM.Native do
     zig_code_path: "quickbeam.zig",
     optimize: :env,
     c: [
+      headers: [
+        qjs: {:priv, "c_src/quickjs.h"},
+        lxb: {:priv, "c_src/lexbor_bridge.h"},
+        wamr: {:priv, "c_src/wamr_zig.h"}
+      ],
       include_dirs: [
         {:priv, "c_src"},
         {:priv, "c_src/lexbor/ports/posix"},

@@ -133,7 +133,7 @@ jobs:
       - name: Install Zig
         uses: goto-bus-stop/setup-zig@v2
         with:
-          version: 0.15.1
+          version: 0.16.0
 
       - name: Install Elixir dependencies
         run: mix deps.get
@@ -218,33 +218,33 @@ jobs:
           sed -i "s%{:duskmoon_hex_solver, in_umbrella: true}%{:duskmoon_hex_solver, \"~> ${VERSION}\"}%" apps/duskmoon_npm/mix.exs
           sed -i "s%{:duskmoon_oxc, in_umbrella: true}%{:duskmoon_oxc, \"~> ${VERSION}\"}%" apps/duskmoon_quickbeam/mix.exs
           sed -i "s%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, \"~> ${VERSION}\", optional: true}%" apps/duskmoon_quickbeam/mix.exs
-          # zig_doc depends on ex_doc without an :only restriction, so avoid a dev-only duplicate in the packaged mix.exs.
-          sed -i '/^[[:space:]]*{:ex_doc, .*only: :dev, runtime: false},\?$/d' apps/duskmoon_quickbeam/mix.exs
           sed -i "s%{:duskmoon_oxc, in_umbrella: true}%{:duskmoon_oxc, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i "s%{:duskmoon_vize, in_umbrella: true}%{:duskmoon_vize, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i "s%{:duskmoon_oxide, in_umbrella: true}%{:duskmoon_oxide, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i "s%{:duskmoon_quickbeam, in_umbrella: true}%{:duskmoon_quickbeam, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i "s%{:duskmoon_bundler_runtime, in_umbrella: true}%{:duskmoon_bundler_runtime, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
           sed -i "s%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
-          sed -i '/^[[:space:]]*{:ex_doc, .*only: :dev, runtime: false},\?$/d' apps/duskmoon_bundler/mix.exs
-          # A transitive production dep pulls ex_doc without an :only restriction, so avoid a dev-only duplicate.
-          sed -i '/^[[:space:]]*{:ex_doc, .*only: :dev, runtime: false},\?$/d' apps/phoenix_duskmoon/mix.exs
+          # Zigler 0.16 pulls its pinned ex_doc through zig_doc. Keep direct doc-only deps out of packages.
+          for mix_file in \
+            apps/duskmoon_hex_solver/mix.exs \
+            apps/duskmoon_npm/mix.exs \
+            apps/duskmoon_oxc/mix.exs \
+            apps/duskmoon_vize/mix.exs \
+            apps/duskmoon_oxide/mix.exs \
+            apps/duskmoon_quickbeam/mix.exs \
+            apps/duskmoon_bundler_runtime/mix.exs \
+            apps/duskmoon_bundler/mix.exs \
+            apps/phoenix_duskmoon/mix.exs; do
+            sed -i '/^[[:space:]]*{:ex_doc, .*runtime: false},\?$/d' "${mix_file}"
+            if grep -q "{:ex_doc," "${mix_file}"; then
+              echo "${mix_file} still contains a direct ex_doc dependency" >&2
+              exit 1
+            fi
+          done
           grep -q "{:duskmoon_hex_solver, \"~> ${VERSION}\"}" apps/duskmoon_npm/mix.exs
           grep -q "{:duskmoon_oxc, \"~> ${VERSION}\"}" apps/duskmoon_quickbeam/mix.exs
           grep -q "{:duskmoon_npm, \"~> ${VERSION}\", optional: true}" apps/duskmoon_quickbeam/mix.exs
           grep -A1 "{:zigler," apps/duskmoon_quickbeam/mix.exs | grep -q "optional: true, runtime: false"
-          if grep -q "{:ex_doc, .*only: :dev" apps/duskmoon_quickbeam/mix.exs; then
-            echo "QuickBEAM packaged mix.exs still contains a dev-only ex_doc dependency" >&2
-            exit 1
-          fi
-          if grep -q "{:ex_doc, .*only: :dev" apps/duskmoon_bundler/mix.exs; then
-            echo "Bundler packaged mix.exs still contains a dev-only ex_doc dependency" >&2
-            exit 1
-          fi
-          if grep -q "{:ex_doc, .*only: :dev" apps/phoenix_duskmoon/mix.exs; then
-            echo "PhoenixDuskmoon packaged mix.exs still contains a dev-only ex_doc dependency" >&2
-            exit 1
-          fi
           grep -q "{:duskmoon_oxc, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
           grep -q "{:duskmoon_vize, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
           grep -q "{:duskmoon_oxide, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs

@@ -44,7 +44,7 @@ jobs:
       - name: Install Zig
         uses: goto-bus-stop/setup-zig@v2
         with:
-          version: 0.15.1
+          version: 0.16.0
 
       - name: Set up Chrome
         id: setup-chrome
@@ -102,7 +102,7 @@ jobs:
       - name: Install Zig
         uses: goto-bus-stop/setup-zig@v2
         with:
-          version: 0.15.1
+          version: 0.16.0
 
       - name: Set up Chrome
         id: setup-chrome
@@ -280,7 +280,7 @@ jobs:
       - name: Install Zig
         uses: goto-bus-stop/setup-zig@v2
         with:
-          version: 0.15.1
+          version: 0.16.0
 
       - name: Restore dependencies cache
         uses: actions/cache@v5

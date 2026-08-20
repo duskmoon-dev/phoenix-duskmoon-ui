@@ -11,7 +11,7 @@ config :duskmoon_storybook, DuskmoonStorybookWeb.Endpoint,
 config :logger, level: :warning
 
 config :duskmoon_bundler, :lint,
-  tsgolint: "apps/duskmoon_bundler/node_modules/.bin/tsgolint",
+  tsgolint: Path.expand("../node_modules/.bin/tsgolint", __DIR__),
   cwd: Path.expand("../apps/duskmoon_bundler", __DIR__)
 
 config :duskmoon_bundler,

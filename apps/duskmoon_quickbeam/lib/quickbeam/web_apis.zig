@@ -50,7 +50,7 @@ fn get_random_values(
         return qjs.JS_ThrowTypeError(ctx, "Failed to get ArrayBuffer data");
 
     const slice = ptr[byte_offset .. byte_offset + byte_len];
-    std.crypto.random.bytes(slice);
+    types.random(slice);
 
     return qjs.JS_DupValue(ctx, argv[0]);
 }
@@ -115,7 +115,7 @@ fn performance_now(
     _: [*c]qjs.JSValue,
 ) callconv(.c) qjs.JSValue {
     const self: *worker.WorkerState = @ptrCast(@alignCast(qjs.JS_GetContextOpaque(ctx)));
-    const now = std.time.nanoTimestamp();
+    const now = types.nanoTimestamp();
     const elapsed_ns = now - self.start_time;
     const ms: f64 = @as(f64, @floatFromInt(elapsed_ns)) / 1_000_000.0;
     return qjs.JS_NewFloat64(ctx, ms);

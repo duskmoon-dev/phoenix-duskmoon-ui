@@ -74,7 +74,7 @@ defmodule Vize.MixProject do
     [
       {:rustler, "~> 0.38", runtime: false},
       {:rustler_precompiled, "~> 0.8", runtime: false},
-      {:ex_doc, "~> 0.40", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.39 or ~> 0.40", runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:ex_dna, "~> 1.5", only: [:dev, :test], runtime: false},

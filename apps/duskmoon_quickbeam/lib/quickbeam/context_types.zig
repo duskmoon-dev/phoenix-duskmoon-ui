@@ -133,8 +133,8 @@ pub const PoolMessageNode = struct {
 };
 
 pub const PoolData = struct {
-    mutex: std.Thread.Mutex,
-    cond: std.Thread.Condition,
+    mutex: types.Mutex,
+    cond: types.Condition,
     queue_head: ?*PoolMessageNode,
     queue_tail: ?*PoolMessageNode,
     stopped: bool,
@@ -146,7 +146,7 @@ pub const PoolData = struct {
     shutting_down: std.atomic.Value(bool) = std.atomic.Value(bool).init(false),
     deadline: ?i128 = null,
     // Maps context_id → pointer to context's RuntimeData (for sync call resolution)
-    rd_map_mutex: std.Thread.Mutex = .{},
+    rd_map_mutex: types.Mutex = .{},
     rd_map: std.AutoHashMapUnmanaged(ContextId, *types.RuntimeData) = .{},
 };
 
