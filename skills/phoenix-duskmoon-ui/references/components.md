@@ -274,6 +274,12 @@ Slots: `inner_block`, `name_slot`, `call`, `result`
 | `deletable` | boolean | false | |
 | `selected` | boolean | false | |
 | `disabled` | boolean | false | |
+| `href` | any | nil | Traditional link navigation |
+| `navigate` | string | nil | LiveView navigation |
+| `patch` | string | nil | LiveView patch navigation |
+| `replace` | boolean | false | Replace browser history for navigate/patch |
+| `delete_event` | any | nil | LiveView event or JS command for native removal mode |
+| `delete_label` | string | "Remove chip" | Accessible removal-button label |
 
 Slots: `inner_block` (required), `icon`
 

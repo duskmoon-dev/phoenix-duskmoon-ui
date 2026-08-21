@@ -11,12 +11,14 @@
 
   <.dm_markdown content={"""
   ## Overview
-  Chip component for displaying tags, filters, or selections. Wraps `<el-dm-chip>` custom element.
+  Chip component for displaying tags, filters, or selections. Standard chips wrap the
+  `<el-dm-chip>` custom element; navigation and LiveView removal use native accessible controls.
 
   ## Usage
   ```elixir
   <.dm_chip color="primary">Tag</.dm_chip>
-  <.dm_chip color="error" deletable>Remove</.dm_chip>
+  <.dm_chip href="/categories/elixir" color="primary">Elixir</.dm_chip>
+  <.dm_chip deletable delete_event="remove-category" delete_label="Remove category">Remove</.dm_chip>
   <.dm_chip color="success" selected>Active</.dm_chip>
   ```
   """} />
@@ -51,5 +53,23 @@
     <.dm_chip color="error" deletable>Deletable</.dm_chip>
     <.dm_chip color="success" selected>Selected</.dm_chip>
     <.dm_chip color="info" disabled>Disabled</.dm_chip>
+  </div>
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Semantic Navigation and Removal</h3>
+  <div class="flex flex-wrap gap-2">
+    <.dm_chip href={~p"/components/data-display/chip"} color="primary">
+      Chip documentation
+    </.dm_chip>
+    <.dm_chip
+      deletable
+      delete_event="remove-chip"
+      delete_label="Remove category"
+      color="error"
+    >
+      Removable
+    </.dm_chip>
+    <.dm_chip href={~p"/components/data-display/chip"} disabled>
+      Disabled link
+    </.dm_chip>
   </div>
 </.dm_card>

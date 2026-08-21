@@ -294,4 +294,163 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ChipTest do
     assert result =~ "my-chip"
     assert result =~ "Full"
   end
+
+  test "renders href navigation as one semantic link" do
+    result =
+      render_component(&dm_chip/1, %{
+        href: "/categories/elixir",
+        color: "primary",
+        target: "_blank",
+        rel: "noopener",
+        inner_block: inner_block("Elixir")
+      })
+
+    assert result =~ ~s[<a href="/categories/elixir"]
+    assert result =~ ~s[target="_blank"]
+    assert result =~ ~s[rel="noopener"]
+    assert result =~ "chip-clickable"
+    assert result =~ "chip-primary"
+    refute result =~ "el-dm-chip"
+    refute result =~ ~s[role="button"]
+  end
+
+  test "renders LiveView navigation with link semantics" do
+    result =
+      render_component(&dm_chip/1, %{
+        navigate: "/categories/phoenix",
+        inner_block: inner_block("Phoenix")
+      })
+
+    assert result =~ ~s[href="/categories/phoenix"]
+    assert result =~ ~s[data-phx-link="redirect"]
+    refute result =~ "el-dm-chip"
+  end
+
+  test "renders replaceable LiveView patch navigation with native classes" do
+    result =
+      render_component(&dm_chip/1, %{
+        patch: "/categories?page=2",
+        replace: true,
+        variant: "soft",
+        size: "sm",
+        selected: true,
+        class: "category-chip",
+        inner_block: inner_block("Page 2")
+      })
+
+    assert result =~ ~s[href="/categories?page=2"]
+    assert result =~ ~s[data-phx-link="patch"]
+    assert result =~ ~s[data-phx-link-state="replace"]
+    assert result =~ "chip-tonal"
+    assert result =~ "chip-sm"
+    assert result =~ "chip-selected"
+    assert result =~ "category-chip"
+  end
+
+  test "renders an accessible native removal callback" do
+    result =
+      render_component(&dm_chip/1, %{
+        deletable: true,
+        delete_event: "remove-category",
+        delete_label: "Remove Elixir category",
+        color: "error",
+        inner_block: inner_block("Elixir")
+      })
+
+    assert result =~ ~s[<span class="chip chip-error"]
+    assert result =~ ~s[<button type="button"]
+    assert result =~ ~s[class="chip-close"]
+    assert result =~ ~s[phx-click="remove-category"]
+    assert result =~ ~s[aria-label="Remove Elixir category"]
+    refute result =~ "el-dm-chip"
+    refute result =~ ~s[role="button"]
+  end
+
+  test "forwards LiveView delete target and values to the removal button" do
+    result =
+      render_component(&dm_chip/1, %{
+        deletable: true,
+        delete_event: "remove-category",
+        "phx-target": "#categories",
+        "phx-value-id": "42",
+        inner_block: inner_block("Elixir")
+      })
+
+    [_, button] = String.split(result, "<button", parts: 2)
+    [button_attrs, _] = String.split(button, ">", parts: 2)
+
+    assert button_attrs =~ ~s[phx-click="remove-category"]
+    assert button_attrs =~ ~s[phx-target="#categories"]
+    assert button_attrs =~ ~s[phx-value-id="42"]
+  end
+
+  test "accepts a LiveView JS delete command with values" do
+    result =
+      render_component(&dm_chip/1, %{
+        deletable: true,
+        delete_event: Phoenix.LiveView.JS.push("remove-category", value: %{id: 42}),
+        inner_block: inner_block("Elixir")
+      })
+
+    [_, button] = String.split(result, "<button", parts: 2)
+    [button_attrs, _] = String.split(button, ">", parts: 2)
+
+    assert button_attrs =~ "remove-category"
+    assert button_attrs =~ "&quot;id&quot;:42"
+  end
+
+  test "disables the native removal button with the chip" do
+    result =
+      render_component(&dm_chip/1, %{
+        deletable: true,
+        delete_event: "remove-category",
+        disabled: true,
+        inner_block: inner_block("Elixir")
+      })
+
+    assert result =~ ~s[aria-disabled="true"]
+
+    [_, button] = String.split(result, "<button", parts: 2)
+    [button_attrs, _] = String.split(button, ">", parts: 2)
+    assert button_attrs =~ "disabled"
+  end
+
+  test "keeps the custom element for legacy deletable chips without a callback" do
+    result =
+      render_component(&dm_chip/1, %{
+        deletable: true,
+        inner_block: inner_block("Legacy")
+      })
+
+    assert result =~ "<el-dm-chip"
+    assert result =~ "deletable"
+  end
+
+  test "native removal takes precedence over navigation" do
+    result =
+      render_component(&dm_chip/1, %{
+        href: "/categories/elixir",
+        deletable: true,
+        delete_event: "remove-category",
+        inner_block: inner_block("Elixir")
+      })
+
+    assert result =~ ~s[phx-click="remove-category"]
+    refute result =~ "<a "
+    refute result =~ "el-dm-chip"
+  end
+
+  test "renders disabled navigation as a noninteractive native chip" do
+    result =
+      render_component(&dm_chip/1, %{
+        href: "/categories/disabled",
+        disabled: true,
+        inner_block: inner_block("Disabled")
+      })
+
+    assert result =~ ~s[<span class="chip chip-clickable chip-disabled"]
+    assert result =~ ~s[aria-disabled="true"]
+    refute result =~ "<a "
+    refute result =~ "el-dm-chip"
+  end
 end
