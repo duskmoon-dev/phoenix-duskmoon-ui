@@ -2,12 +2,21 @@ defmodule DuskmoonBundler.JS.Transforms.GlobImportsTest do
   use ExUnit.Case, async: true
 
   @fixture_dir Path.expand("fixtures/glob", __DIR__)
+  @parent_fixture_dir Path.expand("fixtures/glob_parent", __DIR__)
 
   setup do
     File.mkdir_p!(Path.join(@fixture_dir, "pages"))
     File.write!(Path.join(@fixture_dir, "pages/home.ts"), "export const name = 'home'")
     File.write!(Path.join(@fixture_dir, "pages/about.ts"), "export const name = 'about'")
-    on_exit(fn -> File.rm_rf!(@fixture_dir) end)
+    File.mkdir_p!(@parent_fixture_dir)
+    File.write!(Path.join(@parent_fixture_dir, "home.ts"), "export const name = 'home'")
+    File.write!(Path.join(@parent_fixture_dir, "about.ts"), "export const name = 'about'")
+
+    on_exit(fn ->
+      File.rm_rf!(@fixture_dir)
+      File.rm_rf!(@parent_fixture_dir)
+    end)
+
     :ok
   end
 
@@ -39,6 +48,17 @@ defmodule DuskmoonBundler.JS.Transforms.GlobImportsTest do
       assert result =~ "() => import("
       refute result =~ "import.meta.glob"
     end
+
+    test "preserves parent-relative paths and exclusions" do
+      source =
+        "const modules = import.meta.glob(['../glob_parent/*.ts', '!../glob_parent/about.ts'])"
+
+      result = DuskmoonBundler.JS.Transforms.GlobImports.transform(source, @fixture_dir)
+
+      assert result =~ ~S("../glob_parent/home.ts":)
+      assert result =~ ~S|import("../glob_parent/home.ts")|
+      refute result =~ "glob_parent/about.ts"
+    end
   end
 
   describe "transform/2 eager" do
@@ -60,6 +80,17 @@ defmodule DuskmoonBundler.JS.Transforms.GlobImportsTest do
 
       assert result =~ "./pages/home.ts"
       refute result =~ "./pages/about.ts"
+    end
+
+    test "preserves parent-relative paths and exclusions" do
+      source =
+        "const modules = import.meta.glob(['../glob_parent/*.ts', '!../glob_parent/about.ts'], { eager: true })"
+
+      result = DuskmoonBundler.JS.Transforms.GlobImports.transform(source, @fixture_dir)
+
+      assert result =~ ~S(from "../glob_parent/home.ts")
+      assert result =~ ~S("../glob_parent/home.ts":)
+      refute result =~ "glob_parent/about.ts"
     end
 
     test "supports eager named imports" do
