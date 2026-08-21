@@ -415,7 +415,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '22'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Determine npm tag
@@ -430,8 +430,6 @@ jobs:
 
       - name: Publish to npm
         working-directory: apps/phoenix_duskmoon
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           VERSION="${{ inputs.version }}"
           if npm view "phoenix_duskmoon@${VERSION}" version >/dev/null 2>&1; then
