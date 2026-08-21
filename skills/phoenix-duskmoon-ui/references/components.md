@@ -32,7 +32,7 @@ Three clauses: standard, confirm dialog, noise effect.
 | `disabled` | boolean | false | |
 | `noise` | boolean | false | Activates noise-effect button |
 | `content` | string | "" | Button text (for noise variant) |
-| `confirm` | string | "" | Confirmation message (activates confirm popover) |
+| `confirm` | string | "" | Confirmation message (activates confirm modal) |
 | `confirm_title` | string | "" | Popover title |
 | `confirm_text` | string | "Yes" | Confirm button text |
 | `cancel_text` | string | "Cancel" | Cancel button text |

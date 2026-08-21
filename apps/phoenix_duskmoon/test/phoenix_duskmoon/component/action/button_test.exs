@@ -245,7 +245,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ "Submit form"
   end
 
-  test "renders button with confirmation popover" do
+  test "renders button with confirmation modal" do
     result =
       render_component(&dm_btn/1, %{
         confirm: "Are you sure?",
@@ -253,30 +253,48 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
       })
 
     assert result =~ ~s[<button]
-    assert result =~ ~s[command="show-popover"]
-    assert result =~ ~s[commandfor="confirm-popover-]
-    assert result =~ ~s[id="confirm-popover-]
-    assert result =~ ~s[popover]
-    assert result =~ "popover-bottom"
+    assert result =~ ~s[command="show-modal"]
+    assert result =~ ~s[commandfor="confirm-dialog-]
+    assert result =~ ~s[<dialog id="confirm-dialog-]
+    assert result =~ "dialog-sm"
     refute result =~ "el-dm-dialog"
-    refute result =~ "confirm-dialog"
     assert result =~ ~s[Are you sure?]
     assert result =~ ~s[Yes]
-    assert result =~ ~s[command="hide-popover"]
+    assert result =~ ~s[command="close"]
     assert result =~ ~s[Cancel]
   end
 
-  test "renders confirm popover with role dialog" do
+  test "renders confirmation as a native modal with safe focus management" do
+    result =
+      render_component(&dm_btn/1, %{
+        id: "remove",
+        confirm: "Remove?",
+        "phx-click": "remove",
+        inner_block: %{inner_block: fn _, _ -> "Remove" end}
+      })
+
+    assert result =~ ~s[command="show-modal"]
+    assert result =~ ~s[<dialog id="confirm-dialog-remove"]
+    assert result =~ ~s[autofocus]
+    assert result =~ ~s[data-dm-confirm-dialog="true"]
+    assert length(String.split(result, ~s[command="close"])) - 1 == 2
+    assert length(String.split(result, ~s[phx-click="remove"])) - 1 == 1
+    refute result =~ ~s[popover]
+    refute result =~ ~s[role="dialog"]
+  end
+
+  test "renders confirm modal with one implicit dialog role" do
     result =
       render_component(&dm_btn/1, %{
         confirm: "Are you sure?",
         inner_block: %{inner_block: fn _, _ -> "Delete" end}
       })
 
-    assert result =~ ~s[role="dialog"]
+    assert result =~ ~s[<dialog]
+    refute result =~ ~s[role="dialog"]
   end
 
-  test "confirm popover has aria-label fallback when no title" do
+  test "confirm modal has aria-label fallback when no title" do
     result =
       render_component(&dm_btn/1, %{
         confirm: "Are you sure?",
@@ -286,7 +304,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ ~s[aria-label="Confirmation"]
   end
 
-  test "confirm popover has aria-labelledby when title is provided" do
+  test "confirm modal has aria-labelledby when title is provided" do
     result =
       render_component(&dm_btn/1, %{
         id: "del-btn",
@@ -295,11 +313,11 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
         inner_block: %{inner_block: fn _, _ -> "Delete" end}
       })
 
-    assert result =~ ~s[aria-labelledby="confirm-popover-del-btn-title"]
+    assert result =~ ~s[aria-labelledby="confirm-dialog-del-btn-title"]
     refute result =~ ~s[aria-label="Confirmation"]
   end
 
-  test "renders button with confirmation popover and custom title" do
+  test "renders button with confirmation modal and custom title" do
     result =
       render_component(&dm_btn/1, %{
         confirm: "Are you sure?",
@@ -311,7 +329,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ ~s[Are you sure?]
   end
 
-  test "renders button with confirmation popover and custom classes" do
+  test "renders button with confirmation modal and custom classes" do
     result =
       render_component(&dm_btn/1, %{
         confirm: "Are you sure?",
@@ -324,7 +342,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ "my-cancel-class"
   end
 
-  test "renders button with confirmation popover without cancel action" do
+  test "renders button with confirmation modal without cancel action" do
     result =
       render_component(&dm_btn/1, %{
         confirm: "Are you sure?",
@@ -461,11 +479,11 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
       })
 
     assert result =~ ~s[id="del-btn"]
-    assert result =~ ~s[id="confirm-popover-del-btn"]
+    assert result =~ ~s[id="confirm-dialog-del-btn"]
     assert result =~ "Really delete?"
   end
 
-  test "renders button with confirm popover title only when title is non-empty" do
+  test "renders button with confirm modal title only when title is non-empty" do
     result =
       render_component(&dm_btn/1, %{
         confirm: "Sure?",
@@ -568,7 +586,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ "--color-primary: var(--color-error)"
   end
 
-  test "renders confirm popover Yes button passes rest attributes" do
+  test "renders confirm modal Yes button passes rest attributes" do
     result =
       render_component(&dm_btn/1, %{
         confirm: "Are you sure?",
@@ -579,6 +597,20 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ ~s[phx-click="delete"]
   end
 
+  test "confirm modal preserves a custom confirm command target" do
+    result =
+      render_component(&dm_btn/1, %{
+        confirm: "Continue?",
+        command: "show-modal",
+        commandfor: "next-dialog",
+        inner_block: %{inner_block: fn _, _ -> "Continue" end}
+      })
+
+    assert result =~ ~s[data-dm-confirm-action="true"]
+    assert result =~ ~s[command="show-modal"]
+    assert result =~ ~s[commandfor="next-dialog"]
+  end
+
   test "renders button without confirm when confirm is empty string" do
     result =
       render_component(&dm_btn/1, %{
@@ -587,7 +619,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
       })
 
     refute result =~ "el-dm-dialog"
-    refute result =~ "confirm-popover"
+    refute result =~ "confirm-dialog"
     assert result =~ "Normal Button"
   end
 
@@ -660,7 +692,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ "requestSubmit(submitter)"
   end
 
-  test "renders confirm popover with empty confirm_action shows default Yes button" do
+  test "renders confirm modal with empty confirm_action shows default Yes button" do
     result =
       render_component(&dm_btn/1, %{
         confirm: "Are you sure?",
@@ -673,7 +705,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ "Cancel"
   end
 
-  test "renders confirm popover with custom confirm_text" do
+  test "renders confirm modal with custom confirm_text" do
     result =
       render_component(&dm_btn/1, %{
         confirm: "Delete this?",
@@ -685,7 +717,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     refute result =~ ">Yes<"
   end
 
-  test "renders confirm popover with custom cancel_text" do
+  test "renders confirm modal with custom cancel_text" do
     result =
       render_component(&dm_btn/1, %{
         confirm: "Delete this?",
@@ -696,7 +728,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ "No"
   end
 
-  test "renders confirm popover with custom confirm_text and cancel_text" do
+  test "renders confirm modal with custom confirm_text and cancel_text" do
     result =
       render_component(&dm_btn/1, %{
         confirm: "Really?",

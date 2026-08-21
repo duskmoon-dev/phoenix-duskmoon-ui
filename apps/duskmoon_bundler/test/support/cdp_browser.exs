@@ -42,6 +42,10 @@ defmodule DuskmoonBundler.Integration.CDPBrowser do
     GenServer.call(browser, {:evaluate, page, expression, opts}, call_timeout(opts))
   end
 
+  def command(%Page{browser: browser} = page, method, params \\ %{}, opts \\ []) do
+    GenServer.call(browser, {:command, page, method, params, opts}, call_timeout(opts))
+  end
+
   @impl true
   def init(opts) do
     with {:ok, executable} <- chromium_executable(opts),
@@ -147,6 +151,15 @@ defmodule DuskmoonBundler.Integration.CDPBrowser do
 
       {:error, reason, state} ->
         {:reply, {:error, reason}, state}
+    end
+  end
+
+  def handle_call({:command, %Page{} = page, method, params, opts}, _from, state) do
+    timeout = timeout(opts)
+
+    case cdp_call(state, method, params, page.session_id, timeout) do
+      {:ok, result, state} -> {:reply, {:ok, result}, state}
+      {:error, reason, state} -> {:reply, {:error, reason}, state}
     end
   end
 

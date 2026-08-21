@@ -5,7 +5,7 @@ defmodule Storybook.Action.Button do
 
   def description,
     do:
-      "Button component wrapping el-dm-button with color/style variants, sizes, shapes, loading/disabled states, prefix/suffix slots, confirm popover, and noise effect."
+      "Button component wrapping el-dm-button with color/style variants, sizes, shapes, loading/disabled states, prefix/suffix slots, confirm modal, and noise effect."
 
   def variations do
     [
@@ -123,7 +123,7 @@ defmodule Storybook.Action.Button do
       # ── Confirm Dialog ────────────────────────────────────────────────
       %VariationGroup{
         id: :confirm,
-        description: "Confirm popover variants",
+        description: "Confirm modal variants",
         variations: [
           %Variation{
             id: :remove,
@@ -157,7 +157,7 @@ defmodule Storybook.Action.Button do
       # ── Confirm Dialog Customization ───────────────────────────────
       %VariationGroup{
         id: :confirm_customization,
-        description: "Confirm popover with custom button text, classes, and no-cancel option",
+        description: "Confirm modal with custom button text, classes, and no-cancel option",
         variations: [
           %Variation{
             id: :custom_button_text,
@@ -172,7 +172,7 @@ defmodule Storybook.Action.Button do
           },
           %Variation{
             id: :no_cancel_button,
-            description: "Confirm popover without cancel button",
+            description: "Confirm modal without cancel button",
             attributes: %{
               variant: "success",
               confirm: "Your changes have been saved.",
@@ -183,7 +183,7 @@ defmodule Storybook.Action.Button do
           },
           %Variation{
             id: :custom_dialog_label,
-            description: "Confirm popover with custom accessible label",
+            description: "Confirm modal with custom accessible label",
             attributes: %{
               variant: "primary",
               confirm: "Do you want to publish this post?",
