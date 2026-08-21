@@ -3,6 +3,7 @@ import { describe, expect, mock, test } from "bun:test";
 import {
 	copyTextToClipboard,
 	installClipboardBehavior,
+	installDialogBehavior,
 } from "../../assets/js/phoenix_duskmoon.js";
 
 function copyControl(value) {
@@ -114,5 +115,21 @@ describe("delegated clipboard behavior", () => {
 
 		expect(writeText).toHaveBeenCalledWith("protected value");
 		expect(document.execCommand).not.toHaveBeenCalled();
+	});
+});
+
+describe("delegated dialog behavior", () => {
+	test("installs one capturing confirm listener", () => {
+		const root = delegatedRoot();
+
+		installDialogBehavior(root);
+		installDialogBehavior(root);
+
+		expect(root.addEventListener).toHaveBeenCalledTimes(1);
+		expect(root.addEventListener).toHaveBeenCalledWith(
+			"click",
+			expect.any(Function),
+			true,
+		);
 	});
 });

@@ -4,7 +4,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
 
   Provides three button modes:
   - Standard button with variants and sizes
-  - Button with confirmation popover (Invoker Commands API)
+  - Button with confirmation modal (Invoker Commands API)
   - Noise effect button (decorative)
 
   When `command` / `commandfor` are set, renders a native `<button>` so the
@@ -24,6 +24,8 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
 
   """
   use Phoenix.Component
+
+  import PhoenixDuskmoon.Component.Feedback.Dialog, only: [dm_modal: 1]
 
   # The el-dm-button custom element only supports: primary, secondary, tertiary,
   # ghost, outline. For other variants (info, success, warning, error, accent, link)
@@ -50,7 +52,6 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
                     "}"
                   ]
                   |> Enum.join(" ")
-
   defp map_variant(nil), do: nil
   defp map_variant(v) when is_map_key(@variant_map, v), do: @variant_map[v]
   defp map_variant(v) when v in @color_override_variants, do: "primary"
@@ -137,18 +138,18 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   attr(:noise, :boolean, default: false, doc: "Use noise effect button style")
   attr(:content, :string, default: "", doc: "Content text for noise button")
 
-  # Confirm popover attributes
-  attr(:confirm, :string, default: "", doc: "Confirmation message (enables confirm popover)")
-  attr(:confirm_title, :string, default: "", doc: "Title for confirmation popover")
-  attr(:confirm_text, :string, default: "Yes", doc: "Text for the confirm button in popover")
-  attr(:cancel_text, :string, default: "Cancel", doc: "Text for the cancel button in popover")
+  # Confirm modal attributes
+  attr(:confirm, :string, default: "", doc: "Confirmation message (enables confirm modal)")
+  attr(:confirm_title, :string, default: "", doc: "Title for confirmation modal")
+  attr(:confirm_text, :string, default: "Yes", doc: "Text for the confirm button in modal")
+  attr(:cancel_text, :string, default: "Cancel", doc: "Text for the cancel button in modal")
   attr(:confirm_class, :any, default: nil, doc: "CSS class for confirm button")
   attr(:cancel_class, :any, default: nil, doc: "CSS class for cancel button")
-  attr(:show_cancel_action, :boolean, default: true, doc: "Show cancel button in popover")
+  attr(:show_cancel_action, :boolean, default: true, doc: "Show cancel button in modal")
 
   attr(:confirm_label, :string,
     default: "Confirmation",
-    doc: "Accessible fallback label for confirm popover when no title is set (i18n)"
+    doc: "Accessible fallback label for confirm modal when no title is set (i18n)"
   )
 
   attr(:rest, :global,
@@ -180,64 +181,57 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   @spec dm_btn(map()) :: Phoenix.LiveView.Rendered.t()
   def dm_btn(%{confirm: confirm} = assigns) when confirm != "" do
     id = assigns.id || "btn-#{System.unique_integer([:positive])}"
-    popover_id = "confirm-popover-#{id}"
-    anchor_name = "--anchor-#{popover_id}"
+    dialog_id = "confirm-dialog-#{id}"
 
     assigns =
       assigns
       |> assign(:id, id)
-      |> assign(:popover_id, popover_id)
-      |> assign(:anchor_name, anchor_name)
-      |> assign(:confirm_rest, Map.put_new(assigns.rest, "type", "button"))
+      |> assign(:dialog_id, dialog_id)
+      |> assign(:confirm_rest, confirm_rest(assigns.rest, dialog_id))
       |> assign_button_style()
       |> then(fn assigns ->
         assigns
         |> assign(:button_class, btn_class_list(assigns))
-        |> assign(
-          :trigger_style,
-          merge_styles(assigns.el_style, "anchor-name: #{anchor_name}")
-        )
+        |> assign(:trigger_style, assigns.el_style)
       end)
 
     ~H"""
-    <button
-      type="button"
-      id={@id}
-      class={@button_class}
-      style={@trigger_style}
-      command="show-popover"
-      commandfor={@popover_id}
-      disabled={@disabled || @loading}
-      aria-disabled={(@disabled || @loading) && "true"}
-      aria-busy={@loading && "true"}
-      aria-haspopup="dialog"
-      aria-expanded="false"
-      aria-controls={@popover_id}
+    <.dm_modal
+      id={@dialog_id}
+      hide_close
+      size="sm"
+      dialog_label={@confirm_label}
+      autofocus={!@show_cancel_action}
+      tabindex="-1"
+      data-dm-confirm-dialog="true"
     >
-      <span :for={prefix <- @prefix} class="inline-flex items-center">{render_slot(prefix)}</span>
-      {render_slot(@inner_block)}
-      <span :for={suffix <- @suffix} class="inline-flex items-center">{render_slot(suffix)}</span>
-    </button>
-    <div
-      id={@popover_id}
-      popover
-      class="popover popover-bottom"
-      style={"position-anchor: #{@anchor_name}"}
-      role="dialog"
-      aria-labelledby={@confirm_title != "" && "#{@popover_id}-title"}
-      aria-label={@confirm_title == "" && @confirm_label}
-      ontoggle="this.classList.toggle('popover-show', this.matches(':popover-open')); var b=this.previousElementSibling; if(b) b.setAttribute('aria-expanded', this.matches(':popover-open'))"
-    >
-      <p :if={@confirm_title != ""} id={"#{@popover_id}-title"} class="font-semibold mb-1">
-        {@confirm_title}
-      </p>
-      <p>{@confirm}</p>
-      <div class="flex justify-end gap-2 mt-3">
+      <:trigger :let={modal_id}>
+        <button
+          type="button"
+          id={@id}
+          class={@button_class}
+          style={@trigger_style}
+          command="show-modal"
+          commandfor={modal_id}
+          disabled={@disabled || @loading}
+          aria-disabled={(@disabled || @loading) && "true"}
+          aria-busy={@loading && "true"}
+          aria-haspopup="dialog"
+          aria-controls={modal_id}
+        >
+          <span :for={prefix <- @prefix} class="inline-flex items-center">{render_slot(prefix)}</span>
+          {render_slot(@inner_block)}
+          <span :for={suffix <- @suffix} class="inline-flex items-center">{render_slot(suffix)}</span>
+        </button>
+      </:trigger>
+      <:title :if={@confirm_title != ""}>{@confirm_title}</:title>
+      <:body><p>{@confirm}</p></:body>
+      <:footer>
         {render_slot(@confirm_action)}
         <button
           :if={@confirm_action == []}
-          type="button"
           class={["btn", "btn-primary", @confirm_class]}
+          data-dm-confirm-action="true"
           {@confirm_rest}
         >
           {@confirm_text}
@@ -246,13 +240,14 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
           :if={@show_cancel_action}
           type="button"
           class={["btn", "btn-ghost", @cancel_class]}
-          command="hide-popover"
-          commandfor={@popover_id}
+          autofocus
+          command="close"
+          commandfor={@dialog_id}
         >
           {@cancel_text}
         </button>
-      </div>
-    </div>
+      </:footer>
+    </.dm_modal>
     """
   end
 
@@ -303,6 +298,28 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
     """
   end
 
+  defp confirm_rest(rest, dialog_id) do
+    rest = put_new_rest_attr(rest, :type, "type", "button")
+
+    if has_rest_attr?(rest, :command, "command") ||
+         has_rest_attr?(rest, :commandfor, "commandfor") do
+      rest
+    else
+      rest
+      |> Map.put("command", "close")
+      |> Map.put("commandfor", dialog_id)
+    end
+  end
+
+  defp put_new_rest_attr(rest, atom_key, string_key, value) do
+    if has_rest_attr?(rest, atom_key, string_key),
+      do: rest,
+      else: Map.put(rest, string_key, value)
+  end
+
+  defp has_rest_attr?(rest, atom_key, string_key),
+    do: Map.has_key?(rest, atom_key) || Map.has_key?(rest, string_key)
+
   defp assign_button_style(assigns) do
     assigns
     |> assign_new(:id, fn -> nil end)
@@ -350,10 +367,6 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   defp has_command?(rest) do
     Map.has_key?(rest, "command") || Map.has_key?(rest, :command)
   end
-
-  defp merge_styles(nil, other), do: other
-  defp merge_styles("", other), do: other
-  defp merge_styles(first, second), do: "#{first}; #{second}"
 
   attr(:id, :any, default: nil)
   attr(:el_variant, :string, default: nil)
