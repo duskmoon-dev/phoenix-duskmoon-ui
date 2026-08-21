@@ -226,18 +226,37 @@ defmodule DuskmoonBundler.JS.Transforms.GlobImports do
   defp wildcard(pattern, base_dir, base) do
     key_base_dir = key_base_dir(base, base_dir)
 
-    Path.join(base_dir, pattern)
+    Path.expand(pattern, base_dir)
     |> Path.wildcard()
     |> Enum.map(fn path ->
       %DuskmoonBundler.JS.Transforms.GlobImports.File{
-        specifier: "./" <> Path.relative_to(path, base_dir),
-        key: "./" <> Path.relative_to(path, key_base_dir)
+        specifier: relative_specifier(path, base_dir),
+        key: relative_specifier(path, key_base_dir)
       }
     end)
   end
 
   defp key_base_dir(nil, base_dir), do: base_dir
   defp key_base_dir(base, base_dir), do: Path.expand(base, base_dir)
+
+  defp relative_specifier(path, from_dir) do
+    {from_rest, path_rest} =
+      drop_shared_segments(
+        Path.split(Path.expand(from_dir)),
+        Path.split(Path.expand(path))
+      )
+
+    relative_path =
+      (List.duplicate("..", length(from_rest)) ++ path_rest)
+      |> Enum.join("/")
+
+    if String.starts_with?(relative_path, "../"), do: relative_path, else: "./" <> relative_path
+  end
+
+  defp drop_shared_segments([segment | from_rest], [segment | path_rest]),
+    do: drop_shared_segments(from_rest, path_rest)
+
+  defp drop_shared_segments(from_rest, path_rest), do: {from_rest, path_rest}
 
   defp lazy_expansion(files, call) do
     files
