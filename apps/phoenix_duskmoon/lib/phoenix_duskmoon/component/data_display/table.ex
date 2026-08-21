@@ -114,10 +114,19 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
     <:col :let={r} label="Name">
       {r.name}
     </:col>
+
+    <:col
+      :let={r}
+      label="Select row"
+      header={~H[<input type="checkbox" aria-label="Select all rows" />]}
+    >
+      {r.name}
+    </:col>
     ```
     """
   ) do
     attr(:label, :string, doc: "table column title")
+    attr(:header, :any, doc: "rendered table column header content")
     attr(:label_class, :any, doc: "table column title CSS classes")
     attr(:class, :any, doc: "table row column class")
   end
@@ -170,7 +179,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Table do
             role="columnheader"
             scope="col"
             class={col[:label_class]}
-          >{col.label}</th>
+          >{col[:header] || col.label}</th>
         </tr>
       </thead>
       <tbody :if={@stream} id={@id && "#{@id}-stream-body"} phx-update="stream">

@@ -63,6 +63,30 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
     end
   end
 
+  defmodule InteractiveHeaderComponent do
+    use Phoenix.Component
+    import PhoenixDuskmoon.Component.DataDisplay.Table
+
+    attr(:data, :list, default: [])
+
+    def render(assigns) do
+      header =
+        ~H"""
+        <input type="checkbox" aria-label="Select all rows" aria-checked="mixed" />
+        """
+
+      assigns = assign(assigns, :header, header)
+
+      ~H"""
+      <.dm_table data={@data}>
+        <:col :let={row} label="Select row" header={@header}>
+          {row.name}
+        </:col>
+      </.dm_table>
+      """
+    end
+  end
+
   describe "dm_table component" do
     test "renders basic table with data" do
       result =
@@ -92,6 +116,18 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TableTest do
       assert result =~ ">Name<"
       assert result =~ ">Age<"
       assert result =~ ">City<"
+    end
+
+    test "renders interactive column header content while retaining the responsive label" do
+      result =
+        render_component(&InteractiveHeaderComponent.render/1, %{
+          data: @test_data
+        })
+
+      assert result =~ ~s[type="checkbox"]
+      assert result =~ ~s[aria-label="Select all rows"]
+      assert result =~ ~s[aria-checked="mixed"]
+      assert result =~ ~s[data-label="Select row"]
     end
 
     test "renders table with custom id and class" do
