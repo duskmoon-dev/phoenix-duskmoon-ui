@@ -149,7 +149,7 @@ defmodule PhoenixDuskmoon.Mixfile do
     [
       {:phoenix, "~> 1.8"},
       {:phoenix_html, "~> 4.0"},
-      {:phoenix_live_view, "~> 1.0"},
+      {:phoenix_live_view, "~> 1.1"},
       {:mdex, "~> 0.13.3"},
       {:mdex_gfm, "~> 0.2.0"},
       {:mdex_mermaid, "~> 0.3.6"},

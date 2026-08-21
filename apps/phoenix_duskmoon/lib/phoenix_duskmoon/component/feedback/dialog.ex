@@ -4,6 +4,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
   `@duskmoon-dev/core` dialog CSS.
 
   Open and close with the Invoker Commands API (`command` / `commandfor`).
+  The client-owned `open` attribute is preserved across LiveView patches.
 
   ## Examples
 
@@ -20,6 +21,8 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
 
   """
   use Phoenix.Component
+
+  alias Phoenix.LiveView.JS
 
   import PhoenixDuskmoon.Component.Icon.Icons
 
@@ -65,6 +68,11 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
     doc: "Accessible fallback label when no title slot is provided (i18n)"
   )
 
+  attr(:"phx-mounted", JS,
+    default: %JS{},
+    doc: "additional LiveView JS commands composed before preserving the open attribute"
+  )
+
   attr(:rest, :global)
 
   slot(:trigger, doc: "Element that opens the modal") do
@@ -87,6 +95,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
     assigns =
       assigns
       |> assign_new(:id, fn -> "modal-#{System.unique_integer([:positive])}" end)
+      |> assign(:mounted, preserve_open(assigns[:"phx-mounted"]))
 
     ~H"""
     {render_slot(@trigger, @id)}
@@ -95,6 +104,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
       class={["dialog", dialog_size(@size), dialog_position(@position), @class]}
       aria-labelledby={@title != [] && "#{@id}-title"}
       aria-label={@title == [] && @dialog_label}
+      phx-mounted={@mounted}
       {@rest}
     >
       <div class="dialog-box">
@@ -133,6 +143,10 @@ defmodule PhoenixDuskmoon.Component.Feedback.Dialog do
     </dialog>
     """
   end
+
+  defp preserve_open(%JS{} = mounted), do: JS.concat(mounted, JS.ignore_attributes("open"))
+  defp preserve_open(false), do: JS.ignore_attributes("open")
+  defp preserve_open(nil), do: JS.ignore_attributes("open")
 
   defp dialog_size("sm"), do: "dialog-sm"
   defp dialog_size("lg"), do: "dialog-lg"

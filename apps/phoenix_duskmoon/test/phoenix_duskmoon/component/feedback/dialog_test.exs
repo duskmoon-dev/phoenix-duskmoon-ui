@@ -5,6 +5,8 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
   import Phoenix.LiveViewTest
   import PhoenixDuskmoon.Component.Feedback.Dialog
 
+  alias Phoenix.LiveView.JS
+
   defp body(text \\ "Content") do
     [%{inner_block: fn _, _ -> text end}]
   end
@@ -149,6 +151,45 @@ defmodule PhoenixDuskmoon.Component.Feedback.DialogTest do
       })
 
     assert result =~ "data-testid=\"confirm-dialog\""
+  end
+
+  test "preserves the client-owned open attribute across LiveView patches" do
+    result = render_component(&dm_modal/1, %{id: "persistent-dialog", body: body()})
+
+    assert result =~
+             ~s|phx-mounted="[[&quot;ignore_attrs&quot;,{&quot;attrs&quot;:[&quot;open&quot;]}]]"|
+
+    refute result =~ ~s[phx-update="ignore"]
+  end
+
+  test "composes open preservation with a caller phx-mounted command" do
+    result =
+      render_component(&dm_modal/1, %{
+        id: "composed-dialog",
+        body: body(),
+        "phx-mounted": JS.add_class("mounted")
+      })
+
+    assert length(String.split(result, ~s[phx-mounted=])) - 1 == 1
+    assert result =~ "add_class"
+    assert result =~ "ignore_attrs"
+    assert result =~ "&quot;open&quot;"
+
+    {add_class_index, _} = :binary.match(result, "add_class")
+    {ignore_attrs_index, _} = :binary.match(result, "ignore_attrs")
+    assert add_class_index < ignore_attrs_index
+  end
+
+  test "preserves open when a conditional phx-mounted command is false" do
+    result =
+      render_component(&dm_modal/1, %{
+        id: "conditional-dialog",
+        body: body(),
+        "phx-mounted": false
+      })
+
+    assert result =~
+             ~s|phx-mounted="[[&quot;ignore_attrs&quot;,{&quot;attrs&quot;:[&quot;open&quot;]}]]"|
   end
 
   test "renders modal with trigger slot" do
