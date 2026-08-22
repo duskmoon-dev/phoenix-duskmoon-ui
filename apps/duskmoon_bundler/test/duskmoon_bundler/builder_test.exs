@@ -769,6 +769,82 @@ defmodule DuskmoonBundler.BuilderTest do
                  "two-markdown-html-markdown-svg-markdown-stringify-renderer-html\n"
     end
 
+    test "falls back when a common chunk would conflate default exports" do
+      File.write!(Path.join(@fixture_dir, "src/default-a.ts"), "export default 'default-a'")
+      File.write!(Path.join(@fixture_dir, "src/default-b.ts"), "export default 'default-b'")
+
+      File.write!(Path.join(@fixture_dir, "src/defaults-lazy.ts"), """
+      import a from './default-a'
+      import b from './default-b'
+      export const value = a + ':' + b
+      """)
+
+      File.write!(Path.join(@fixture_dir, "src/defaults-entry.ts"), """
+      import a from './default-a'
+      import b from './default-b'
+      export const value = a + ':' + b
+      export const load = () => import('./defaults-lazy').then((module) => module.value)
+      """)
+
+      assert {:ok, result} =
+               DuskmoonBundler.Builder.build(
+                 entry: Path.join(@fixture_dir, "src/defaults-entry.ts"),
+                 outdir: @outdir,
+                 name: "default-collision",
+                 format: :esm,
+                 hash: false,
+                 minify: false,
+                 sourcemap: false
+               )
+
+      assert result.chunks == []
+
+      node = System.find_executable("node") || flunk("node executable not found")
+      entry_url = "file://#{result.js.path}"
+
+      assert {"default-a:default-b\ndefault-a:default-b\n", 0} =
+               System.cmd(
+                 node,
+                 [
+                   "--input-type=module",
+                   "--eval",
+                   "const app = await import('#{entry_url}'); console.log(app.value); console.log(await app.load())"
+                 ],
+                 env: [{"NODE_NO_WARNINGS", "1"}],
+                 stderr_to_stdout: true
+               )
+    end
+
+    test "falls back when a common chunk would conflate a module namespace" do
+      File.write!(Path.join(@fixture_dir, "src/namespace-shared.ts"), """
+      export const value = 'namespace-value'
+      """)
+
+      File.write!(Path.join(@fixture_dir, "src/namespace-lazy.ts"), """
+      import * as shared from './namespace-shared'
+      export const lazyValue = shared.value
+      """)
+
+      File.write!(Path.join(@fixture_dir, "src/namespace-entry.ts"), """
+      import * as shared from './namespace-shared'
+      export const entryValue = shared.value
+      export const load = () => import('./namespace-lazy').then((module) => module.lazyValue)
+      """)
+
+      assert {:ok, result} =
+               DuskmoonBundler.Builder.build(
+                 entry: Path.join(@fixture_dir, "src/namespace-entry.ts"),
+                 outdir: @outdir,
+                 format: :esm,
+                 hash: false,
+                 minify: false,
+                 sourcemap: false
+               )
+
+      assert result.chunks == []
+      assert File.read!(result.js.path) =~ "namespace-value"
+    end
+
     test "no code splitting inlines literal dynamic imports" do
       File.write!(
         Path.join(@fixture_dir, "src/no_split_lazy.ts"),
@@ -1660,9 +1736,12 @@ defmodule DuskmoonBundler.BuilderTest do
       refute js =~ ~r/\brequire\s*\(/
     end
 
-    test "resolves shared React imports from nested react-dom modules when code splitting" do
+    test "preserves a lazy React App Clip glob as an async chunk" do
       File.mkdir_p!(Path.join(@fixture_dir, "node_modules/react"))
+      File.mkdir_p!(Path.join(@fixture_dir, "node_modules/react/cjs"))
       File.mkdir_p!(Path.join(@fixture_dir, "node_modules/react-dom/cjs"))
+      File.mkdir_p!(Path.join(@fixture_dir, "src/app_clip"))
+      File.mkdir_p!(Path.join(@fixture_dir, "src/notes_workspace"))
 
       File.write!(
         Path.join(@fixture_dir, "node_modules/react/package.json"),
@@ -1671,7 +1750,12 @@ defmodule DuskmoonBundler.BuilderTest do
 
       File.write!(
         Path.join(@fixture_dir, "node_modules/react/index.js"),
-        "const singleton = 'react-singleton'; exports.createElement = function() { return 'react-element' }; exports.useState = function() { return singleton }\n"
+        "module.exports = require('./cjs/react.production.js')\n"
+      )
+
+      File.write!(
+        Path.join(@fixture_dir, "node_modules/react/cjs/react.production.js"),
+        "const singleton = { token: 'react-singleton-object' }; exports.createElement = function(Component) { return Component() }; exports.useState = function() { return singleton }; exports.singleton = singleton\n"
       )
 
       File.write!(
@@ -1686,39 +1770,109 @@ defmodule DuskmoonBundler.BuilderTest do
 
       File.write!(
         Path.join(@fixture_dir, "node_modules/react-dom/cjs/react-dom-client.production.js"),
-        "var React = require('react'); exports.createRoot = function() { return React }\n"
+        "var React = require('react'); exports.createRoot = function() { return { render: function(value) { return (value[0] === React.singleton ? 'shared-react-singleton:' : 'different-react-singleton:') + value[1] } } }\n"
       )
 
-      File.write!(Path.join(@fixture_dir, "src/react_component.ts"), """
-      import { createElement, useState } from 'react'
-      export function ReproComponent() { return createElement('p', null, useState()) }
+      File.write!(Path.join(@fixture_dir, "src/notes_workspace/NotesWorkspace.tsx"), """
+      import { useState } from 'react'
+      export function NotesWorkspace() { return [useState(), 'notes-workspace-async'] }
       """)
 
-      File.write!(Path.join(@fixture_dir, "src/react_app.ts"), """
-      import { createElement } from 'react'
+      File.write!(Path.join(@fixture_dir, "src/app_clip/mount.ts"), """
+      const workspaceModules = import.meta.glob('../notes_workspace/NotesWorkspace.tsx')
+
+      export async function loadNotesWorkspace() {
+        const module = await workspaceModules['../notes_workspace/NotesWorkspace.tsx']()
+        return module.NotesWorkspace
+      }
+      """)
+
+      File.write!(Path.join(@fixture_dir, "src/react_app_clip.ts"), """
+      import React from 'react'
       import { createRoot } from 'react-dom/client'
-      const root = createRoot()
-      void import('./react_component').then(({ ReproComponent }) => {
-        root.render(createElement(ReproComponent))
-      })
+      import { loadNotesWorkspace } from './app_clip/mount'
+
+      export async function start() {
+        const NotesWorkspace = await loadNotesWorkspace()
+        return createRoot().render(React.createElement(NotesWorkspace))
+      }
       """)
 
       assert {:ok, result} =
                DuskmoonBundler.Builder.build(
-                 entry: Path.join(@fixture_dir, "src/react_app.ts"),
+                 entry: Path.join(@fixture_dir, "src/react_app_clip.ts"),
                  outdir: @outdir,
-                 minify: true,
+                 name: "react-app-clip",
+                 format: :iife,
+                 hash: false,
+                 minify: false,
                  sourcemap: false,
                  node_modules: Path.join(@fixture_dir, "node_modules")
+               )
+
+      assert [_entry, _common, _async] = result.chunks
+
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
+      assert [lazy_file] = manifest["react-app-clip.js"]["dynamicImports"]
+
+      entry_js = File.read!(result.js.path)
+      lazy_js = File.read!(Path.join(@outdir, lazy_file))
+      all_js = result.chunks |> Enum.map_join("\n", &File.read!(&1.path))
+
+      refute entry_js =~ "notes-workspace-async"
+      assert lazy_js =~ "notes-workspace-async"
+      assert length(Regex.scan(~r/react-singleton-object/, all_js)) == 1
+      refute all_js =~ ~r/\brequire\s*\(/
+
+      node = System.find_executable("node") || flunk("node executable not found")
+      entry_url = "file://#{result.js.path}"
+
+      assert {"shared-react-singleton:notes-workspace-async\n", 0} =
+               System.cmd(
+                 node,
+                 [
+                   "--input-type=module",
+                   "--eval",
+                   "globalThis.document = { querySelector: () => null, createElement: () => ({}), head: { appendChild: () => {} } }; globalThis.window = { dispatchEvent: () => {} }; globalThis.CustomEvent = class {}; const app = await import('#{entry_url}'); console.log(await app.start())"
+                 ],
+                 env: [{"NODE_NO_WARNINGS", "1"}],
+                 stderr_to_stdout: true
+               )
+    end
+
+    test "keeps a CommonJS entry intact when its shared require cannot be split" do
+      File.write!(Path.join(@fixture_dir, "src/cjs_shared.js"), """
+      module.exports = { value: 'shared-cjs-singleton' }
+      """)
+
+      File.write!(Path.join(@fixture_dir, "src/cjs_lazy.ts"), """
+      import shared from './cjs_shared'
+      export const lazyValue = 'lazy-' + shared.value
+      """)
+
+      File.write!(Path.join(@fixture_dir, "src/cjs_entry.js"), """
+      const shared = require('./cjs_shared')
+      globalThis.entryValue = 'entry-' + shared.value
+      void import('./cjs_lazy').then((module) => module.lazyValue)
+      """)
+
+      assert {:ok, result} =
+               DuskmoonBundler.Builder.build(
+                 entry: Path.join(@fixture_dir, "src/cjs_entry.js"),
+                 outdir: @outdir,
+                 format: :esm,
+                 hash: false,
+                 minify: false,
+                 sourcemap: false
                )
 
       assert result.chunks == []
 
       js = File.read!(result.js.path)
-      assert js =~ "react-element"
-      assert js =~ "ReproComponent"
-      assert length(Regex.scan(~r/react-singleton/, js)) == 1
-      refute js =~ ~r/\brequire\s*\(/, js
+      assert js =~ "entry-"
+      assert js =~ "lazy-"
+      assert js =~ "shared-cjs-singleton"
+      refute js =~ ~r/\brequire\s*\(/
     end
 
     test "resolves package subpath without exports field" do

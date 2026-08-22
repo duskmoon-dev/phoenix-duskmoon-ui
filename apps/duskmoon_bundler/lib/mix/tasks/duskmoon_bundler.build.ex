@@ -27,7 +27,8 @@ defmodule Mix.Tasks.DuskmoonBundler.Build do
     * `--no-code-splitting` — disable chunk splitting
     * `--no-tree-shaking` — preserve unused exports
     * `--mode` — build mode for env variables (default: `"production"`)
-    * `--format` — output format: `iife`, `esm`, or `cjs` (default from config)
+    * `--format` — standalone output format: `iife`, `esm`, or `cjs` (default from config).
+      Multi-file code-split output always uses ESM.
     * `--tailwind` — build Tailwind CSS
     * `--tailwind-css` — custom Tailwind input CSS file
     * `--tailwind-source` — source directory for Tailwind scanning (repeatable)

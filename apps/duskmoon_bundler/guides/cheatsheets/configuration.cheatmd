@@ -69,7 +69,8 @@ JS downlevel target.
 config :duskmoon_bundler, format: :iife
 ```
 
-Output format: `:iife`, `:esm`, or `:cjs`.
+Standalone output format: `:iife`, `:esm`, or `:cjs`. Multi-file code-split
+output always uses ESM so chunks can import each other.
 
 ### Minify
 

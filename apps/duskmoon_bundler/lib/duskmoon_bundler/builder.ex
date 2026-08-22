@@ -48,6 +48,8 @@ defmodule DuskmoonBundler.Builder do
     * `:asset_url_prefix` — public URL prefix for emitted asset references (default: `"/assets"`)
     * `:code_splitting` — split dynamic imports into separate chunks (default: `true`)
     * `:tree_shaking` — remove unused exports (default: `true`)
+    * `:format` — standalone output format (`:iife`, `:esm`, or `:cjs`).
+      Multi-file code-split output always uses ESM so chunks can import each other.
     * `:chunks` — manual chunk definitions, map of chunk name to list of patterns:
 
           chunks: %{"vendor" => ["vue", "vue-router"], "ui" => ["assets/src/components"]}

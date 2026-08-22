@@ -16,6 +16,9 @@ app-admin-c3d4e5f6.js  86 KB   (async)
 manifest.json           3 entries
 ```
 
+Multi-file code-split output uses ESM regardless of the standalone `format`
+setting because entry, common, and async chunks import each other.
+
 Shared modules between chunks are extracted into common chunks to avoid duplication. CSS imported by an async chunk is emitted beside that chunk, and CSS imported by shared chunks is tracked on the shared chunk.
 
 When a dynamic import has dependencies that would otherwise create a loading waterfall, DuskmoonBundler rewrites it through a small preload helper. The helper preloads imported JavaScript chunks and chunk-local CSS before executing the dynamic import.
