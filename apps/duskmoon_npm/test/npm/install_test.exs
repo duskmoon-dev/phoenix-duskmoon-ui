@@ -430,6 +430,42 @@ defmodule NPM.InstallTest do
     assert lockfile[package].version == new_version
   end
 
+  test "update re-resolves matching workspace lock entries", %{project_dir: project_dir} do
+    package = "workspace-update-package"
+    range = "^1.0.0"
+    old_version = "1.0.0"
+    new_version = "1.1.0"
+    write_cached_package!(package, old_version)
+    new_cache_path = write_cached_package!(package, new_version)
+    app_dir = Path.join([project_dir, "apps", "web"])
+
+    put_packument!(package, new_version)
+
+    write_package!(project_dir, %{
+      "name" => "workspace_root",
+      "private" => true,
+      "workspaces" => ["apps/*"]
+    })
+
+    write_package!(app_dir, %{
+      "name" => "web",
+      "version" => "1.0.0",
+      "dependencies" => %{package => range}
+    })
+
+    assert :ok = NPM.Lockfile.write(%{package => lock_entry(package, old_version)})
+    File.cd!(app_dir)
+
+    capture_io(fn ->
+      assert :ok = NPM.update()
+    end)
+
+    assert {:ok, %{^package => %{version: ^new_version}}} =
+             NPM.Lockfile.read(Path.join(project_dir, "package-lock.json"))
+
+    assert_copied_package(new_cache_path, Path.join([project_dir, "node_modules", package]))
+  end
+
   test "adds dependencies to workspace package and installs at workspace root", %{
     project_dir: project_dir
   } do
