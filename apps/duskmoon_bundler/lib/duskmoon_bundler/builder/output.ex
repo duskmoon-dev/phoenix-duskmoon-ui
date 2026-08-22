@@ -70,6 +70,10 @@ defmodule DuskmoonBundler.Builder.Output do
 
     File.mkdir_p!(outdir)
 
+    # Cross-file chunks communicate through static imports and exports. Standalone
+    # builds may use IIFE or CommonJS, but split output must remain ESM.
+    bundle_opts = Keyword.put(bundle_opts, :format, :esm)
+
     graph =
       DuskmoonBundler.ChunkGraph.build(entry, modules, dep_map, manual_chunks: manual_chunks)
 
@@ -557,28 +561,36 @@ defmodule DuskmoonBundler.Builder.Output do
         {:cont, {:ok, acc}}
       else
         chunk_js = Rewriter.rewrite_external_imports(chunk_js, ctx)
-        chunk_js = add_chunk_facade(chunk_js, chunk_id, chunk)
-        {chunk_js, dynamic_import_placeholder} = Rewriter.protect_dynamic_imports(chunk_js)
 
-        external =
-          Rewriter.external_chunk_imports(
-            chunk_js,
-            chunk_import_map(chunk, graph, module_labels, dep_map)
-          )
+        facade_requirements =
+          chunk_export_requirements(chunk_id, graph, js_map, module_labels, dep_map)
 
-        bundle_opts =
-          bundle_opts
-          |> Keyword.put(:entry, chunk_entry_label(chunk_js))
-          |> put_external_imports(external)
+        with nil <- facade_requirements_error(chunk_id, chunk, facade_requirements) do
+          chunk_js = add_chunk_facade(chunk_js, chunk_id, chunk, facade_requirements)
+          {chunk_js, dynamic_import_placeholder} = Rewriter.protect_dynamic_imports(chunk_js)
 
-        case bundle_js_files(chunk_js, bundle_opts) do
-          {:ok, result} ->
-            {code, sourcemap} = extract_bundle_result(result)
-            code = Rewriter.restore_dynamic_imports(code, dynamic_import_placeholder)
-            {:cont, {:ok, Map.put(acc, chunk_id, {code, sourcemap})}}
+          external =
+            Rewriter.external_chunk_imports(
+              chunk_js,
+              chunk_import_map(chunk, graph, module_labels, dep_map)
+            )
 
-          {:error, errors} ->
-            {:halt, {:error, {:chunk_bundle_failed, chunk_id, errors}}}
+          bundle_opts =
+            bundle_opts
+            |> Keyword.put(:entry, chunk_entry_label(chunk_js))
+            |> put_external_imports(external)
+
+          case bundle_js_files(chunk_js, bundle_opts) do
+            {:ok, result} ->
+              {code, sourcemap} = extract_bundle_result(result)
+              code = Rewriter.restore_dynamic_imports(code, dynamic_import_placeholder)
+              {:cont, {:ok, Map.put(acc, chunk_id, {code, sourcemap})}}
+
+            {:error, errors} ->
+              {:halt, {:error, {:chunk_bundle_failed, chunk_id, errors}}}
+          end
+        else
+          reason -> {:halt, {:error, {:invalid_chunk_links, [reason]}}}
         end
       end
     end)
@@ -611,9 +623,12 @@ defmodule DuskmoonBundler.Builder.Output do
 
   defp chunk_entry_label([{label, _code} | _]), do: label
 
-  defp add_chunk_facade([_single] = js_files, _chunk_id, _chunk), do: js_files
+  defp add_chunk_facade([_single] = js_files, _chunk_id, %{type: type}, _requirements)
+       when type not in [:common, :manual],
+       do: js_files
 
-  defp add_chunk_facade(js_files, chunk_id, %{type: type}) when type in [:common, :manual] do
+  defp add_chunk_facade(js_files, chunk_id, %{type: type}, requirements)
+       when type in [:common, :manual] do
     {first_label, _code} = hd(js_files)
     facade_label = Path.join(Path.dirname(first_label), "__duskmoon_#{chunk_id}_entry__.js")
 
@@ -623,24 +638,161 @@ defmodule DuskmoonBundler.Builder.Output do
         "export * from #{Jason.encode!(specifier)};"
       end)
 
-    default_export =
-      Enum.find_value(js_files, fn {label, code} ->
-        if default_export?(code) do
-          "export { default } from #{Jason.encode!(module_specifier(facade_label, label))};\n"
-        end
-      end)
-
-    [{facade_label, (default_export || "") <> exports} | js_files]
+    required_exports = facade_required_exports(js_files, facade_label, requirements)
+    facade = exports <> "\n" <> required_exports
+    [{facade_label, facade} | js_files]
   end
 
-  defp add_chunk_facade(js_files, _chunk_id, _chunk), do: js_files
+  defp add_chunk_facade(js_files, _chunk_id, _chunk, _requirements), do: js_files
 
-  defp default_export?(code) do
-    case OXC.parse(code, "chunk.js") do
-      {:ok, ast} -> Enum.any?(ast.body, &(&1.type == :export_default_declaration))
-      {:error, _} -> false
+  defp facade_requirements_error(chunk_id, %{type: type}, requirements)
+       when type in [:common, :manual] do
+    default_labels =
+      for {label, names} <- requirements, MapSet.member?(names, :default), do: label
+
+    namespace_labels =
+      for {label, names} <- requirements, MapSet.member?(names, :namespace), do: label
+
+    cond do
+      length(default_labels) > 1 ->
+        {:ambiguous_default_exports, chunk_id, Enum.sort(default_labels)}
+
+      namespace_labels != [] ->
+        {:ambiguous_namespace_exports, chunk_id, Enum.sort(namespace_labels)}
+
+      true ->
+        nil
     end
   end
+
+  defp facade_requirements_error(_chunk_id, _chunk, _requirements), do: nil
+
+  defp facade_required_exports(js_files, facade_label, requirements) do
+    available_labels = MapSet.new(js_files, &elem(&1, 0))
+
+    requirements =
+      requirements
+      |> Enum.filter(fn {label, _names} -> MapSet.member?(available_labels, label) end)
+      |> Enum.sort_by(&elem(&1, 0))
+
+    name_counts =
+      requirements
+      |> Enum.flat_map(fn {_label, names} ->
+        names
+        |> Enum.reject(&(&1 in [:default, :namespace]))
+      end)
+      |> Enum.frequencies()
+
+    Enum.map_join(requirements, fn {label, names} ->
+      names =
+        names
+        |> Enum.reject(&(&1 == :namespace))
+        |> Enum.filter(fn
+          :default -> true
+          name -> Map.get(name_counts, name) == 1
+        end)
+        |> Enum.sort()
+
+      if names == [] do
+        ""
+      else
+        specifier = module_specifier(facade_label, label)
+        exports = Enum.map_join(names, ", ", &module_export_name/1)
+        "export { #{exports} } from #{Jason.encode!(specifier)};\n"
+      end
+    end)
+  end
+
+  defp module_export_name(:default), do: "default"
+
+  defp module_export_name(name) do
+    if String.match?(name, ~r/^[A-Za-z_$][A-Za-z0-9_$]*$/) do
+      name
+    else
+      Jason.encode!(name)
+    end
+  end
+
+  defp chunk_export_requirements(chunk_id, graph, js_map, module_labels, dep_map) do
+    Enum.reduce(dep_map, %{}, fn {importer, deps}, requirements ->
+      importer_chunk = Map.get(graph.module_to_chunk, importer)
+      importer_label = Map.get(module_labels, importer)
+      code = Map.get(js_map, importer_label)
+
+      if importer_chunk == chunk_id or not is_binary(importer_label) or not is_binary(code) do
+        requirements
+      else
+        deps
+        |> Map.get(:static, [])
+        |> Kernel.++(Map.get(deps, :dynamic, []))
+        |> Enum.uniq()
+        |> Enum.reduce(requirements, fn dependency, acc ->
+          if Map.get(graph.module_to_chunk, dependency) == chunk_id do
+            dependency_label = Map.get(module_labels, dependency)
+
+            if is_binary(dependency_label) do
+              specifier = "./" <> relative_label(importer_label, dependency_label)
+              names = import_requirements(code, specifier)
+
+              if MapSet.size(names) == 0 do
+                acc
+              else
+                Map.update(acc, dependency_label, names, &MapSet.union(&1, names))
+              end
+            else
+              acc
+            end
+          else
+            acc
+          end
+        end)
+      end
+    end)
+  end
+
+  defp import_requirements(code, specifier) do
+    case OXC.parse(code, "chunk.js") do
+      {:ok, ast} ->
+        Enum.reduce(ast.body, MapSet.new(), fn
+          %{type: :import_declaration, source: %{value: ^specifier}, specifiers: specifiers},
+          acc ->
+            Enum.reduce(specifiers, acc, &put_import_requirement/2)
+
+          %{
+            type: :export_named_declaration,
+            source: %{value: ^specifier},
+            specifiers: specifiers
+          },
+          acc ->
+            Enum.reduce(specifiers, acc, fn specifier, names ->
+              MapSet.put(names, normalize_import_requirement(ast_name(specifier.local)))
+            end)
+
+          %{type: :export_all_declaration, source: %{value: ^specifier}}, acc ->
+            MapSet.put(acc, :namespace)
+
+          _node, acc ->
+            acc
+        end)
+
+      {:error, _errors} ->
+        MapSet.new()
+    end
+  end
+
+  defp put_import_requirement(%{type: :import_default_specifier}, names),
+    do: MapSet.put(names, :default)
+
+  defp put_import_requirement(%{type: :import_specifier, imported: imported}, names),
+    do: MapSet.put(names, normalize_import_requirement(ast_name(imported)))
+
+  defp put_import_requirement(%{type: :import_namespace_specifier}, names),
+    do: MapSet.put(names, :namespace)
+
+  defp put_import_requirement(_specifier, names), do: names
+
+  defp normalize_import_requirement("default"), do: :default
+  defp normalize_import_requirement(name), do: name
 
   defp select_chunk_files(module_paths, js_map, module_labels) do
     module_paths
