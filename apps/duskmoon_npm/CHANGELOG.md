@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- `mix npm.update` now re-resolves matching lock entries instead of reusing stale versions that still satisfy manifest ranges.
+
 ## 0.7.4
 
 ### Fixed
