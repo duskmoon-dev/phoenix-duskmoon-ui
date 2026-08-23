@@ -68,6 +68,65 @@ defmodule DuskmoonBundler.ChunkGraphTest do
       assert "/app/shared.ts" in common.modules
     end
 
+    test "keeps CommonJS require chains with a shared singleton" do
+      modules = [
+        {"/app/main.ts", "main.ts", ""},
+        {"/app/node_modules/react/index.js", "react/index.js", ""},
+        {"/app/node_modules/react-dom/client.js", "react-dom/client.js", ""},
+        {"/app/node_modules/react-dom/cjs/client.js", "react-dom/cjs/client.js", ""},
+        {"/app/lazy.ts", "lazy.ts", ""}
+      ]
+
+      react = "/app/node_modules/react/index.js"
+      react_dom = "/app/node_modules/react-dom/client.js"
+      react_dom_client = "/app/node_modules/react-dom/cjs/client.js"
+
+      dep_map = %{
+        "/app/main.ts" => %{
+          static: [react, react_dom],
+          dynamic: ["/app/lazy.ts"],
+          requires: []
+        },
+        react => %{static: [], dynamic: [], requires: []},
+        react_dom => %{static: [react_dom_client], dynamic: [], requires: [react_dom_client]},
+        react_dom_client => %{static: [react], dynamic: [], requires: [react]},
+        "/app/lazy.ts" => %{static: [react], dynamic: [], requires: []}
+      }
+
+      graph = ChunkGraph.build("/app/main.ts", modules, dep_map)
+
+      assert graph.module_to_chunk[react] == "common"
+      assert graph.module_to_chunk[react_dom] == "common"
+      assert graph.module_to_chunk[react_dom_client] == "common"
+      assert graph.module_to_chunk["/app/main.ts"] == "entry"
+      assert graph.module_to_chunk["/app/lazy.ts"] not in ["entry", "common"]
+    end
+
+    test "never extracts a CommonJS entry into the common chunk" do
+      react = "/app/node_modules/react/index.js"
+
+      modules = [
+        {"/app/main.js", "main.js", ""},
+        {react, "react/index.js", ""},
+        {"/app/lazy.ts", "lazy.ts", ""}
+      ]
+
+      dep_map = %{
+        "/app/main.js" => %{
+          static: [react],
+          dynamic: ["/app/lazy.ts"],
+          requires: [react]
+        },
+        react => %{static: ["/app/main.js"], dynamic: [], requires: ["/app/main.js"]},
+        "/app/lazy.ts" => %{static: [react], dynamic: [], requires: []}
+      }
+
+      graph = ChunkGraph.build("/app/main.js", modules, dep_map)
+
+      assert graph.module_to_chunk["/app/main.js"] == "entry"
+      assert graph.module_to_chunk[react] == "common"
+    end
+
     test "extracts modules shared by async chunks even when entry does not import them" do
       modules = [
         {"/app/main.ts", "main.ts", ""},

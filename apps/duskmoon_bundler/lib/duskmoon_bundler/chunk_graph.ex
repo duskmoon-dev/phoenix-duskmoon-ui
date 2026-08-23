@@ -75,7 +75,11 @@ defmodule DuskmoonBundler.ChunkGraph do
     shared =
       [entry_modules | Enum.map(async_chunks, &elem(&1, 2))]
       |> shared_modules()
-      |> Enum.reject(&MapSet.member?(dynamic_entry_set, &1))
+      |> MapSet.new()
+      |> MapSet.delete(entry_path)
+      |> expand_common_require_groups(dep_map, module_set, entry_path)
+      |> MapSet.difference(dynamic_entry_set)
+      |> MapSet.to_list()
 
     {entry_modules, common_chunk} =
       if shared == [] do
@@ -283,6 +287,37 @@ defmodule DuskmoonBundler.ChunkGraph do
     end)
     |> Enum.filter(fn {_module, count} -> count > 1 end)
     |> Enum.map(fn {module, _count} -> module end)
+  end
+
+  defp expand_common_require_groups(shared, dep_map, module_set, entry_path) do
+    expanded =
+      Enum.reduce(dep_map, shared, fn {module, deps}, acc ->
+        requires =
+          deps
+          |> Map.get(:requires, [])
+          |> Enum.filter(&MapSet.member?(module_set, &1))
+          |> Enum.reject(&(&1 == entry_path))
+
+        cond do
+          module == entry_path ->
+            acc
+
+          MapSet.member?(acc, module) ->
+            Enum.reduce(requires, acc, &MapSet.put(&2, &1))
+
+          Enum.any?(requires, &MapSet.member?(acc, &1)) and MapSet.member?(module_set, module) ->
+            MapSet.put(acc, module)
+
+          true ->
+            acc
+        end
+      end)
+
+    if MapSet.equal?(expanded, shared) do
+      shared
+    else
+      expand_common_require_groups(expanded, dep_map, module_set, entry_path)
+    end
   end
 
   defp append_unique(items, item) do
