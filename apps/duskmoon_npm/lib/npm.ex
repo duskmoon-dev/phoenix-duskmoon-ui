@@ -131,7 +131,7 @@ defmodule NPM do
     with_root_dir(fn ->
       with {:ok, project} <- NPM.Workspace.read_all(),
            {:ok, deps} <- NPM.Workspace.install_dependencies(project) do
-        do_install(deps, local_links: project.local_links)
+        do_install(deps, local_links: project.local_links, force_resolve: true)
       end
     end)
   end
@@ -240,7 +240,11 @@ defmodule NPM do
     if opts[:frozen] do
       frozen_install(deps, Keyword.get(opts, :local_links, %{}))
     else
-      full_install(deps, Keyword.get(opts, :local_links, %{}))
+      full_install(
+        deps,
+        Keyword.get(opts, :local_links, %{}),
+        Keyword.get(opts, :force_resolve, false)
+      )
     end
   end
 
@@ -315,7 +319,7 @@ defmodule NPM do
     Map.keys(entry.dependencies) ++ Map.keys(Map.get(entry, :optional_dependencies, %{}))
   end
 
-  defp full_install(deps, local_links) do
+  defp full_install(deps, local_links, force_resolve?) do
     validate_direct_exotic_deps!(deps)
     {:ok, old_lockfile} = NPM.Lockfile.read()
 
@@ -326,6 +330,9 @@ defmodule NPM do
     nm_intact? = matches? and node_modules_intact?(old_lockfile, local_links)
 
     cond do
+      force_resolve? ->
+        resolve_and_install(deps, old_lockfile, local_links)
+
       old_lockfile == %{} ->
         resolve_and_install(deps, old_lockfile, local_links)
 
