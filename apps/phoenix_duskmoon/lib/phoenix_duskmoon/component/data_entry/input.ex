@@ -313,6 +313,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Input do
   end
 
   defp dm_input_by_type(%{type: "select"} = assigns) do
+    assigns = assign_new(assigns, :value, fn -> nil end)
+
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @field_class]} phx-feedback-for={@name}>
       <.dm_label for={@id} class={@label_class}>{@label}</.dm_label>

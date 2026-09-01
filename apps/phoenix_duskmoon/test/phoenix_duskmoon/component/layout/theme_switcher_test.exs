@@ -159,6 +159,35 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcherTest do
     assert result =~ "Thème"
   end
 
+  test "renders an icon-only trigger slot while preserving switcher behavior" do
+    trigger = [
+      %{
+        __slot__: :trigger,
+        inner_block: fn _, _ ->
+          Phoenix.HTML.raw(~s(<svg data-testid="theme-icon" aria-hidden="true"></svg>))
+        end
+      }
+    ]
+
+    result =
+      render_component(&dm_theme_switcher/1, %{
+        button_text: "Text fallback",
+        class: "theme-controller-dropdown-icon",
+        select_theme_label: "Choose appearance",
+        trigger: trigger
+      })
+
+    assert result =~
+             ~r/<summary[^>]*aria-label="Choose appearance"[^>]*>.*data-testid="theme-icon".*<\/summary>/s
+
+    refute result =~ "Text fallback"
+    assert result =~ "theme-controller-dropdown-icon"
+    assert result =~ ~s[phx-hook="ThemeSwitcher"]
+    assert result =~ ~s[value="default"]
+    assert result =~ ~s[value="sunshine"]
+    assert result =~ ~s[value="moonlight"]
+  end
+
   test "renders with custom auto_label" do
     result = render_component(&dm_theme_switcher/1, %{auto_label: "Automatique"})
 

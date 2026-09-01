@@ -2,13 +2,16 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   @moduledoc """
   Button component using el-dm-button custom element.
 
-  Provides three button modes:
+  Provides four button modes:
   - Standard button with variants and sizes
+  - Native submit button for forms that must work without JavaScript
   - Button with confirmation modal (Invoker Commands API)
   - Noise effect button (decorative)
 
   When `command` / `commandfor` are set, renders a native `<button>` so the
   Invoker Commands API works (custom element hosts are not valid invokers).
+  Set `native_submit` to render a native `<button type="submit">` without the
+  custom element submit bridge.
 
   ## Examples
 
@@ -17,6 +20,8 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       <.dm_btn variant="primary" size="lg">Primary</.dm_btn>
 
       <.dm_btn variant="error" confirm="Are you sure?">Delete</.dm_btn>
+
+      <.dm_btn native_submit variant="primary">Save</.dm_btn>
 
       <.dm_btn command="show-modal" commandfor="my-modal">Open</.dm_btn>
 
@@ -74,6 +79,8 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
 
       <.dm_btn navigate="/dashboard" variant="ghost">Dashboard</.dm_btn>
 
+      <.dm_btn native_submit variant="primary">Save</.dm_btn>
+
       <.dm_btn confirm="Are you sure?" confirm_title="Confirm Action">Delete</.dm_btn>
 
   """
@@ -113,6 +120,11 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
 
   attr(:loading, :boolean, default: false, doc: "Show loading state")
   attr(:disabled, :boolean, default: false, doc: "Disable the button")
+
+  attr(:native_submit, :boolean,
+    default: false,
+    doc: "Render a native submit button for forms that must work without JavaScript"
+  )
 
   attr(:navigate, :string,
     default: nil,
@@ -187,7 +199,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       assigns
       |> assign(:id, id)
       |> assign(:dialog_id, dialog_id)
-      |> assign(:confirm_rest, confirm_rest(assigns.rest, dialog_id))
+      |> assign(:confirm_rest, confirm_rest(assigns.rest, dialog_id, assigns.native_submit))
       |> assign_button_style()
       |> then(fn assigns ->
         assigns
@@ -251,6 +263,14 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
     """
   end
 
+  def dm_btn(%{native_submit: true} = assigns) do
+    assigns = assign_native_submit_button(assigns)
+
+    ~H"""
+    <.button_native {assigns} />
+    """
+  end
+
   def dm_btn(%{noise: true} = assigns) do
     assigns =
       assigns
@@ -298,8 +318,11 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
     """
   end
 
-  defp confirm_rest(rest, dialog_id) do
-    rest = put_new_rest_attr(rest, :type, "type", "button")
+  defp confirm_rest(rest, dialog_id, native_submit) do
+    rest =
+      if native_submit,
+        do: put_rest_attr(rest, :type, "type", "submit"),
+        else: put_new_rest_attr(rest, :type, "type", "button")
 
     if has_rest_attr?(rest, :command, "command") ||
          has_rest_attr?(rest, :commandfor, "commandfor") do
@@ -315,6 +338,12 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
     if has_rest_attr?(rest, atom_key, string_key),
       do: rest,
       else: Map.put(rest, string_key, value)
+  end
+
+  defp put_rest_attr(rest, atom_key, string_key, value) do
+    rest
+    |> Map.delete(atom_key)
+    |> Map.put(string_key, value)
   end
 
   defp has_rest_attr?(rest, atom_key, string_key),
@@ -342,6 +371,16 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
     assigns
     |> assign(:rest, rest_without_onclick(assigns.rest, submit_onclick))
     |> assign(:submit_onclick, submit_onclick)
+    |> assign_button_style()
+    |> then(fn assigns ->
+      assign(assigns, :button_class, btn_class_list(assigns))
+    end)
+  end
+
+  defp assign_native_submit_button(assigns) do
+    assigns
+    |> assign(:rest, put_rest_attr(assigns.rest, :type, "type", "submit"))
+    |> assign(:submit_onclick, nil)
     |> assign_button_style()
     |> then(fn assigns ->
       assign(assigns, :button_class, btn_class_list(assigns))

@@ -3,6 +3,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
 
   require Phoenix.LiveViewTest
   import Phoenix.LiveViewTest
+  import Phoenix.Component
   import PhoenixDuskmoon.Component.DataEntry.Input
 
   describe "generic input type" do
@@ -93,6 +94,27 @@ defmodule PhoenixDuskmoon.Component.DataEntry.InputTest do
 
       assert result =~ ~s[<option]
       assert result =~ "Choose an option"
+    end
+
+    test "renders select with prompt when the optional value is omitted" do
+      assigns = %{}
+
+      result =
+        rendered_to_string(~H"""
+          <.dm_input
+            id="github-account"
+            name="import[github_identity_id]"
+            type="select"
+            prompt="Choose an account"
+            options={[{"Github:octocat", 41}]}
+          />
+        """)
+
+      assert result =~ ~s[id="github-account"]
+      assert result =~ ~s{name="import[github_identity_id]"}
+
+      assert result =~
+               ~r{<option value="">Choose an account</option>\s*<option value="41">Github:octocat</option>}
     end
 
     test "renders select with multiple attribute" do

@@ -179,6 +179,74 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonBrowserTest do
              """)
   end
 
+  test "native submit mode submits without the component JavaScript runtime", %{page: page} do
+    save =
+      render_component(&dm_btn/1, %{
+        native_submit: true,
+        id: "save-settings",
+        form: "settings-form",
+        name: "action",
+        value: "save",
+        inner_block: %{inner_block: fn _, _ -> "Save" end}
+      })
+
+    delete =
+      render_component(&dm_btn/1, %{
+        native_submit: true,
+        id: "delete-settings",
+        form: "settings-form",
+        name: "action",
+        value: "delete",
+        confirm: "Delete these settings?",
+        inner_block: %{inner_block: fn _, _ -> "Delete" end}
+      })
+
+    html =
+      "<!doctype html><html lang=\"en\"><body><form id=\"settings-form\">#{save}#{delete}</form></body></html>"
+
+    url = "data:text/html;base64," <> Base.encode64(html)
+
+    :ok = CDPBrowser.goto(page, url)
+
+    assert {:ok,
+            %{
+              "confirmOpened" => true,
+              "directType" => "submit",
+              "submissions" => [
+                %{"name" => "action", "value" => "save"},
+                %{"name" => "action", "value" => "delete"}
+              ]
+            }} =
+             CDPBrowser.evaluate(page, """
+             (() => {
+               const form = document.getElementById("settings-form")
+               const save = document.getElementById("save-settings")
+               const deleteTrigger = document.getElementById("delete-settings")
+               const dialog = document.getElementById("confirm-dialog-delete-settings")
+               const submissions = []
+
+               form.addEventListener("submit", (event) => {
+                 event.preventDefault()
+                 submissions.push({
+                   name: event.submitter.name,
+                   value: event.submitter.value
+                 })
+               })
+
+               save.click()
+               deleteTrigger.click()
+               const confirmOpened = dialog.open && dialog.matches(":modal")
+               dialog.querySelector("[data-dm-confirm-action]").click()
+
+               return {
+                 directType: save.type,
+                 confirmOpened,
+                 submissions
+               }
+             })()
+             """)
+  end
+
   defp dispatch_key(page, key, code, key_code, modifiers \\ 0) do
     params = %{
       "key" => key,

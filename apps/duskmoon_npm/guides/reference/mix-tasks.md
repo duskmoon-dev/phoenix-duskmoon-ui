@@ -16,7 +16,7 @@ npm_ex exposes npm-like workflows as Mix tasks.
 | `mix npm.update package` | update one package |
 | `mix npm.remove package` | remove a package |
 | `mix npm.prune` | remove extraneous packages |
-| `mix npm.rebuild` | clean and reinstall from lockfile |
+| `mix npm.rebuild` | clean root and workspace-local installs, then reinstall from lockfile |
 
 ## Inspect dependency state
 
@@ -53,7 +53,8 @@ npm_ex exposes npm-like workflows as Mix tasks.
 
 | Task | Purpose |
 | --- | --- |
-| `mix npm.verify` / `mix npm.check` | verify `node_modules` matches `package-lock.json` |
+| `mix npm.verify` | verify root `node_modules` matches the lockfile and no workspace-local install shadows it |
+| `mix npm.check` | run basic manifest, lockfile, and install-presence checks |
 | `mix npm.audit` | npm registry vulnerability audit |
 | `mix npm.audit --osv` | online OSV malicious-package audit |
 | `mix npm.audit --compromised` | offline malicious-package DB audit |

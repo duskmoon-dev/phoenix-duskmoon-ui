@@ -20,6 +20,9 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
       <.dm_theme_switcher />
       <.dm_theme_switcher theme="moonlight" />
       <.dm_theme_switcher button_text="Thème" auto_label="Auto" light_label="Clair" dark_label="Sombre" />
+      <.dm_theme_switcher class="theme-controller-dropdown-icon" select_theme_label="Select theme">
+        <:trigger><.dm_mdi name="theme-light-dark" aria-hidden="true" /></:trigger>
+      </.dm_theme_switcher>
 
   """
   @doc type: :component
@@ -38,6 +41,8 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
   attr(:dark_label, :string, default: "Moonlight", doc: "Label for the dark theme option")
   attr(:rest, :global, doc: "additional HTML attributes")
 
+  slot(:trigger, doc: "Optional trigger content; replaces button_text when provided")
+
   def dm_theme_switcher(assigns) do
     assigns =
       assigns
@@ -55,7 +60,11 @@ defmodule PhoenixDuskmoon.Component.Layout.ThemeSwitcher do
       {@rest}
     >
       <summary class="theme-controller-trigger" aria-label={@select_theme_label} aria-haspopup="menu">
-        {@button_text}
+        <%= if @trigger == [] do %>
+          {@button_text}
+        <% else %>
+          {render_slot(@trigger)}
+        <% end %>
       </summary>
       <div class="theme-controller-menu" role="radiogroup" aria-label={@select_theme_label}>
         <input

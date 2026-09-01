@@ -98,6 +98,7 @@ Components that require hooks:
 <.dm_btn variant="primary">Click me</.dm_btn>
 <.dm_btn variant="secondary" loading={@loading}>Loading</.dm_btn>
 <.dm_btn variant="error" shape="circle">×</.dm_btn>
+<.dm_btn native_submit variant="primary">Submit without JavaScript</.dm_btn>
 ```
 
 ### Cards
@@ -135,6 +136,7 @@ Components that require hooks:
 | `shape`   | `square`, `circle` |
 | `loading` | boolean |
 | `disabled`| boolean |
+| `native_submit` | boolean; render a native no-JavaScript submit control |
 | `class`   | additional CSS classes |
 
 

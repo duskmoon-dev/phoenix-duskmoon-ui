@@ -93,6 +93,49 @@ defmodule Mix.Tasks.Npm.VerifyTest do
     assert output =~ "extra: extra"
   end
 
+  test "raises when workspace node_modules can shadow a root package" do
+    package = "@duskmoon-dev/core"
+    workspace_dir = Path.join(["apps", "sigma_web"])
+
+    write_package!(".", %{
+      "name" => "sigma",
+      "private" => true,
+      "workspaces" => ["apps/*"]
+    })
+
+    write_package!(workspace_dir, %{
+      "name" => "sigma-web",
+      "version" => "1.0.0",
+      "dependencies" => %{package => "1.18.4"}
+    })
+
+    write_lockfile!(%{package => lock_entry()})
+
+    write_package!(Path.join(["node_modules", package]), %{
+      "name" => package,
+      "version" => "1.18.4"
+    })
+
+    write_package!(Path.join(["node_modules", "sigma-web"]), %{
+      "name" => "sigma-web",
+      "version" => "1.0.0"
+    })
+
+    write_package!(Path.join([workspace_dir, "node_modules", package]), %{
+      "name" => package,
+      "version" => "1.17.0"
+    })
+
+    output =
+      capture_io(:stderr, fn ->
+        assert_raise Mix.Error, ~r/node_modules does not match lockfile/, fn ->
+          Mix.Tasks.Npm.Verify.run([])
+        end
+      end)
+
+    assert output =~ "shadowing: apps/sigma_web/node_modules/@duskmoon-dev/core"
+  end
+
   test "raises when the lockfile cannot be read" do
     File.mkdir_p!("package-lock.json")
 
@@ -103,6 +146,11 @@ defmodule Mix.Tasks.Npm.VerifyTest do
 
   defp write_lockfile!(lockfile) do
     assert :ok = NPM.Lockfile.write(lockfile)
+  end
+
+  defp write_package!(dir, data) do
+    File.mkdir_p!(dir)
+    File.write!(Path.join(dir, "package.json"), NPM.JSON.encode_pretty(data))
   end
 
   defp lock_entry(opts \\ []) do

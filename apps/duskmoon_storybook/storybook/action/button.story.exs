@@ -92,6 +92,18 @@ defmodule Storybook.Action.Button do
         ]
       },
 
+      # ── Native Form Submission ───────────────────────────────────────
+      %Variation{
+        id: :native_submit,
+        description: "Native form submit control that works without JavaScript",
+        attributes: %{
+          native_submit: true,
+          variant: "primary",
+          form: "settings-form"
+        },
+        slots: ["Save without JavaScript"]
+      },
+
       # ── Slots ─────────────────────────────────────────────────────────
       %VariationGroup{
         id: :slots,
@@ -261,6 +273,12 @@ defmodule Storybook.Action.Button do
       %{
         id: :disabled,
         label: "Disabled",
+        type: :boolean,
+        default: false
+      },
+      %{
+        id: :native_submit,
+        label: "Native submit",
         type: :boolean,
         default: false
       }
