@@ -653,6 +653,58 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ ~s[value="save"]
   end
 
+  test "renders opt-in native submit control for no-JS forms" do
+    result =
+      render_component(&dm_btn/1, %{
+        native_submit: true,
+        id: "save-settings",
+        variant: "error",
+        size: "lg",
+        shape: "square",
+        class: "settings-submit",
+        form: "settings-form",
+        name: "action",
+        value: "save",
+        "aria-label": "Save settings",
+        "data-testid": "settings-submit",
+        inner_block: %{inner_block: fn _, _ -> "Save" end}
+      })
+
+    assert [_] = Regex.scan(~r/<button\b/, result)
+    assert result =~ ~s[type="submit"]
+    assert result =~ ~s[class="btn btn-primary btn-lg btn-square settings-submit"]
+    assert result =~ "--color-primary: var(--color-error)"
+    assert result =~ ~s[form="settings-form"]
+    assert result =~ ~s[name="action"]
+    assert result =~ ~s[value="save"]
+    assert result =~ ~s[aria-label="Save settings"]
+    assert result =~ ~s[data-testid="settings-submit"]
+    refute result =~ "<el-dm-button"
+    refute result =~ "requestSubmit"
+  end
+
+  test "native submit confirmation keeps the confirmed action as the submitter" do
+    result =
+      render_component(&dm_btn/1, %{
+        native_submit: true,
+        id: "delete-settings",
+        variant: "error",
+        confirm: "Delete these settings?",
+        form: "settings-form",
+        name: "action",
+        value: "delete",
+        inner_block: %{inner_block: fn _, _ -> "Delete" end}
+      })
+
+    assert result =~ ~s[command="show-modal"]
+    assert result =~ ~s[data-dm-confirm-action="true"]
+    assert [_] = Regex.scan(~r/<button\b[^>]*type="submit"[^>]*>/, result)
+    assert result =~ ~s[form="settings-form"]
+    assert result =~ ~s[name="action"]
+    assert result =~ ~s[value="delete"]
+    refute result =~ "requestSubmit"
+  end
+
   test "renders submit button with native form submit bridge" do
     result =
       render_component(&dm_btn/1, %{

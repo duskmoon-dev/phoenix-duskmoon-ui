@@ -5,6 +5,7 @@
 ### Fixed
 
 - `mix npm.update` now re-resolves matching lock entries instead of reusing stale versions that still satisfy manifest ranges.
+- Remove workspace-local installs during `mix npm.rebuild` and reject them during `mix npm.verify` before they can shadow root lockfile packages.
 
 ## 0.7.4
 

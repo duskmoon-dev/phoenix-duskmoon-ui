@@ -6,8 +6,9 @@ defmodule Mix.Tasks.Npm.Verify do
 
       mix npm.verify
 
-  Reports missing and extraneous packages. Useful for CI
-  to ensure `mix npm.get` was run after lockfile changes.
+  Reports missing and extraneous packages, plus packages in workspace-local
+  `node_modules/` directories that can shadow the root installation. Useful
+  for CI to ensure `mix npm.get` was run after lockfile changes.
   """
 
   use Mix.Task
@@ -21,16 +22,17 @@ defmodule Mix.Tasks.Npm.Verify do
         Mix.shell().info("No lockfile. Nothing to verify.")
 
       {:ok, lockfile} ->
-        case NPM.Workspace.read_all() do
-          {:ok, project} ->
-            expected = expected_packages(lockfile, project.local_links)
-            skipped = NPM.Install.Linker.skipped_packages(lockfile)
+        with {:ok, project} <- NPM.Workspace.read_all(),
+             {:ok, manifests} <- NPM.Workspace.manifests() do
+          expected = expected_packages(lockfile, project.local_links)
+          skipped = NPM.Install.Linker.skipped_packages(lockfile)
+          shadowing = workspace_shadowing_packages(manifests)
 
-            expected
-            |> NPM.NodeModules.diff()
-            |> ignore_missing(skipped)
-            |> report_diff(map_size(expected) - MapSet.size(skipped))
-
+          expected
+          |> NPM.NodeModules.diff()
+          |> ignore_missing(skipped)
+          |> report_diff(shadowing, map_size(expected) - MapSet.size(skipped))
+        else
           {:error, reason} ->
             Mix.raise("npm.verify failed: #{inspect(reason)}")
         end
@@ -52,13 +54,30 @@ defmodule Mix.Tasks.Npm.Verify do
     {Enum.reject(missing, &MapSet.member?(skipped, &1)), extra}
   end
 
-  defp report_diff({[], []}, count) do
+  defp workspace_shadowing_packages(manifests) do
+    root_dir = manifests |> Enum.find(& &1.root?) |> Map.fetch!(:dir)
+
+    manifests
+    |> Enum.reject(& &1.root?)
+    |> Enum.flat_map(fn manifest ->
+      node_modules = Path.join(manifest.dir, "node_modules")
+      relative_dir = Path.relative_to(node_modules, root_dir)
+
+      node_modules
+      |> NPM.NodeModules.installed()
+      |> Enum.map(&Path.join(relative_dir, &1))
+    end)
+    |> Enum.sort()
+  end
+
+  defp report_diff({[], []}, [], count) do
     Mix.shell().info("node_modules matches lockfile (#{count} packages)")
   end
 
-  defp report_diff({missing, extra}, _count) do
+  defp report_diff({missing, extra}, shadowing, _count) do
     Enum.each(missing, &Mix.shell().error("  missing: #{&1}"))
     Enum.each(extra, &Mix.shell().error("  extra: #{&1}"))
+    Enum.each(shadowing, &Mix.shell().error("  shadowing: #{&1}"))
     Mix.raise("node_modules does not match lockfile")
   end
 end

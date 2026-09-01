@@ -26,6 +26,15 @@ defmodule Storybook.Layout.ThemeSwitcher do
         attributes: %{
           theme: "moonlight"
         }
+      },
+      %Variation{
+        id: :icon_only,
+        description: "Compact icon-only trigger with an accessible name",
+        attributes: %{
+          class: "theme-controller-dropdown-icon",
+          select_theme_label: "Select theme"
+        },
+        slots: [~s(<:trigger><span aria-hidden="true">◐</span></:trigger>)]
       }
     ]
   end
