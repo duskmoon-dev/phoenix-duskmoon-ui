@@ -22,6 +22,7 @@
  * - ThemeSwitcher: Theme toggle with localStorage persistence
  * - Spotlight: Keyboard shortcut (Cmd/Ctrl+K) for spotlight search
  * - PageHeader: Intersection observer for scroll-based effects
+ * - DuskmoonPopover: Optional server-controlled native popover state
  */
 
 // Core hooks for custom element integration
@@ -31,3 +32,4 @@ export { WebComponentHook, FormElementHook } from '../phoenix_duskmoon.js';
 export { ThemeSwitcher } from './theme_switcher.js';
 export { Spotlight } from './spotlight.js';
 export { PageHeader } from './page_header.js';
+export { DuskmoonPopover } from './duskmoon_popover.js';

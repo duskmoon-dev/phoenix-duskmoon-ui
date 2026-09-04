@@ -8,8 +8,8 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   - Button with confirmation modal (Invoker Commands API)
   - Noise effect button (decorative)
 
-  When `command` / `commandfor` are set, renders a native `<button>` so the
-  Invoker Commands API works (custom element hosts are not valid invokers).
+  When `command` / `commandfor` or `interestfor` are set, renders a native
+  `<button>` so the invoker APIs work (custom element hosts are not valid invokers).
   Set `native_submit` to render a native `<button type="submit">` without the
   custom element submit bridge.
 
@@ -166,7 +166,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
 
   attr(:rest, :global,
     include:
-      ~w(phx-click phx-target phx-value-id phx-disable-with name value type form command commandfor),
+      ~w(phx-click phx-target phx-value-id phx-disable-with name value type form command commandfor interestfor),
     doc: "Additional HTML attributes"
   )
 
@@ -297,24 +297,24 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       is_binary(assigns.navigate) || is_binary(assigns.patch) ||
         (!is_nil(assigns.href) && assigns.href != "#")
 
-    command? = has_command?(assigns.rest)
+    invoker? = has_invoker?(assigns.rest)
 
     assigns =
       assigns
       |> then(fn assigns ->
         cond do
           link? -> assign_button_style(assigns)
-          command? -> assign_native_button(assigns)
+          invoker? -> assign_native_button(assigns)
           true -> assign_button_element(assigns)
         end
       end)
       |> assign(:link?, link?)
-      |> assign(:command?, command?)
+      |> assign(:invoker?, invoker?)
 
     ~H"""
     <.button_link :if={@link?} {assigns} />
-    <.button_native :if={!@link? && @command?} {assigns} />
-    <.button_element :if={!@link? && !@command?} {assigns} />
+    <.button_native :if={!@link? && @invoker?} {assigns} />
+    <.button_element :if={!@link? && !@invoker?} {assigns} />
     """
   end
 
@@ -403,8 +403,9 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
     ]
   end
 
-  defp has_command?(rest) do
-    Map.has_key?(rest, "command") || Map.has_key?(rest, :command)
+  defp has_invoker?(rest) do
+    Map.has_key?(rest, "command") || Map.has_key?(rest, :command) ||
+      Map.has_key?(rest, "interestfor") || Map.has_key?(rest, :interestfor)
   end
 
   attr(:id, :any, default: nil)

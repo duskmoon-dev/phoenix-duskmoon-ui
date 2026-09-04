@@ -1,47 +1,25 @@
 defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
   @moduledoc """
-  Tooltip component for displaying additional information on hover.
+  Tooltip component using a native hint popover and interest invoker.
+
+  The inner block receives attributes that must be spread onto the trigger.
 
   ## Examples
 
-      <.dm_tooltip content="Click to save changes">
-        <.dm_btn variant="primary">Save</.dm_btn>
+      <.dm_tooltip id="save-help" content="Click to save changes" :let={trigger_attrs}>
+        <.dm_btn {trigger_attrs}>Save</.dm_btn>
       </.dm_tooltip>
 
-      <.dm_tooltip content="This action cannot be undone" position="bottom" color="warning">
-        <.dm_btn variant="error">Delete</.dm_btn>
-      </.dm_tooltip>
-
-      <.dm_tooltip content="Press Ctrl+S to save" position="right" color="info">
-        <.dm_mdi name="information" />
-      </.dm_tooltip>
-
-  ## Attributes
-
-  * `content` - Tooltip text content (required)
-  * `position` - Tooltip position: top, bottom, left, right (default: top)
-  * `color` - Tooltip color: primary, secondary, tertiary, accent, info, success, warning, error (default: primary)
-  * `open` - Force tooltip to be open
-  * `class` - Additional CSS classes
-
-  ## Slots
-
-  * `:inner_block` - Content that triggers the tooltip (required)
   """
 
   use Phoenix.Component
   import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
-  Renders a tooltip that appears on hover over the child element.
-
-  ## Examples
-
-      <.dm_tooltip content="Save changes"><.dm_btn>Save</.dm_btn></.dm_tooltip>
-      <.dm_tooltip content="Warning" position="bottom" color="warning">Hover me</.dm_tooltip>
+  Renders a native tooltip associated with an interest invoker.
   """
   @doc type: :component
-  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:id, :any, default: nil, doc: "HTML id used as the tooltip id prefix")
   attr(:content, :string, required: true, doc: "tooltip text content")
 
   attr(:position, :string,
@@ -56,41 +34,52 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
     doc: "tooltip color variant"
   )
 
-  attr(:open, :boolean, default: false, doc: "force the tooltip to be visible")
-  attr(:class, :any, default: nil, doc: "additional CSS classes")
+  attr(:open, :boolean,
+    default: nil,
+    doc: "optional server-controlled visibility; omit for browser-owned interest state"
+  )
+
+  attr(:class, :any, default: nil, doc: "additional CSS classes on the tooltip surface")
   attr(:rest, :global)
 
   slot(:inner_block, required: true, doc: "element the tooltip is attached to")
 
   def dm_tooltip(assigns) do
+    id = assigns.id || "tooltip-#{System.unique_integer([:positive])}"
+    tooltip_id = if assigns.id, do: "#{id}-tooltip", else: id
+    anchor_name = "--anchor-#{tooltip_id}"
+
     assigns =
       assigns
       |> assign(:color, css_color(assigns.color))
-      |> assign_new(:rid, fn -> System.unique_integer([:positive]) end)
-
-    tooltip_id =
-      if assigns[:id] && assigns[:id] != false,
-        do: "#{assigns[:id]}-tooltip",
-        else: "tooltip-#{assigns.rid}"
-
-    assigns = assign(assigns, :tooltip_id, tooltip_id)
+      |> assign(:tooltip_id, tooltip_id)
+      |> assign(:popover_mode, if(is_nil(assigns.open), do: "hint", else: "manual"))
+      |> assign(:controlled_open, controlled_open(assigns.open))
+      |> assign(:trigger_attrs, %{
+        "aria-describedby" => tooltip_id,
+        "interestfor" => tooltip_id,
+        "style" => "anchor-name: #{anchor_name}",
+        "title" => assigns.content
+      })
+      |> assign(:surface_style, "position-anchor: #{anchor_name}")
 
     ~H"""
-    <div
-      id={@id}
-      class={[
-        "tooltip",
-        "tooltip-#{@position}",
-        "tooltip-#{@color}",
-        @open && "tooltip-open",
-        @class
-      ]}
-      aria-describedby={@tooltip_id}
+    {render_slot(@inner_block, @trigger_attrs)}
+    <span
+      id={@tooltip_id}
+      popover={@popover_mode}
+      phx-hook="DuskmoonPopover"
+      data-open={@controlled_open}
+      class={["tooltip", "tooltip-#{@position}", "tooltip-#{@color}", @class]}
+      style={@surface_style}
+      role="tooltip"
       {@rest}
     >
-      {render_slot(@inner_block)}
-      <span id={@tooltip_id} class="tooltip-content" role="tooltip">{@content}</span>
-    </div>
+      {@content}
+    </span>
     """
   end
+
+  defp controlled_open(nil), do: nil
+  defp controlled_open(open), do: to_string(open)
 end

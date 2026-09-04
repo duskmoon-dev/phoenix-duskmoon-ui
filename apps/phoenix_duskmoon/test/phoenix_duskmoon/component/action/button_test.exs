@@ -639,6 +639,18 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     refute result =~ "el-dm-button"
   end
 
+  test "renders button with interestfor as a native interest invoker" do
+    result =
+      render_component(&dm_btn/1, %{
+        interestfor: "save-tooltip",
+        inner_block: %{inner_block: fn _, _ -> "Save" end}
+      })
+
+    assert result =~ ~s[<button]
+    assert result =~ ~s[interestfor="save-tooltip"]
+    refute result =~ "el-dm-button"
+  end
+
   test "renders button with form-related global attributes" do
     result =
       render_component(&dm_btn/1, %{

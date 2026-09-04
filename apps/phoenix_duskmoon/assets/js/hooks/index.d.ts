@@ -43,3 +43,6 @@ export declare const Spotlight: LiveViewHook<HTMLDialogElement>;
 
 /** Page-header visibility observer. */
 export declare const PageHeader: LiveViewHook;
+
+/** Synchronizes an explicitly controlled native popover with LiveView state. */
+export declare const DuskmoonPopover: LiveViewHook<HTMLElement>;

@@ -55,7 +55,6 @@ el-dm-nested-menu,
 el-dm-otp-input,
 el-dm-pagination,
 el-dm-pin-input,
-el-dm-popover,
 el-dm-pro-data-grid,
 el-dm-progress,
 el-dm-segment-control,
@@ -66,8 +65,7 @@ el-dm-switch,
 el-dm-table,
 el-dm-tabs,
 el-dm-theme-controller,
-el-dm-time-input,
-el-dm-tooltip {
+el-dm-time-input {
   /* Brand colors */
   --color-primary: inherit;
   --color-primary-content: inherit;
@@ -221,24 +219,4 @@ el-dm-pagination {
 el-dm-bottom-navigation {
   --color-border: var(--color-outline-variant);
   --color-text-secondary: var(--color-on-surface-variant);
-}
-
-/**
- * el-dm-popover arrow fix for left/right placements.
- * Upstream bug: shadow DOM CSS uses wrong border-hiding for left/right
- * arrow directions (copies top/bottom values instead of computing correctly).
- * Fix via ::part(arrow) until upstream resolves it.
- */
-el-dm-popover[placement^="left"]::part(arrow) {
-  border-top: 1px solid var(--color-outline) !important;
-  border-right: 1px solid var(--color-outline) !important;
-  border-bottom: none !important;
-  border-left: none !important;
-}
-
-el-dm-popover[placement^="right"]::part(arrow) {
-  border-bottom: 1px solid var(--color-outline) !important;
-  border-left: 1px solid var(--color-outline) !important;
-  border-top: none !important;
-  border-right: none !important;
 }

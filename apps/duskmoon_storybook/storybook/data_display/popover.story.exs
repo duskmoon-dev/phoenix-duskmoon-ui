@@ -2,36 +2,40 @@ defmodule Storybook.DataDisplay.Popover do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataDisplay.Popover.dm_popover/1
-  def description, do: "Popover component for contextual overlays."
+
+  def description,
+    do: "Native HTML popover with command-based triggering and CSS anchor positioning."
 
   def variations do
     [
       %Variation{
         id: :default,
-        description: "Click-triggered popover",
+        description: "Native auto popover opened by an HTML command",
         attributes: %{
-          id: "pop-default",
-          trigger_mode: "click"
+          id: "pop-default"
         },
         slots: [
           """
-          <:trigger>Click me</:trigger>
+          <:trigger :let={trigger_attrs}>
+            <button type="button" class="btn btn-primary" {trigger_attrs}>Click me</button>
+          </:trigger>
           Popover content here
           """
         ]
       },
       %Variation{
-        id: :hover,
-        description: "Hover-triggered with top placement",
+        id: :top_example,
+        description: "Popover with top placement",
         attributes: %{
-          id: "pop-hover",
-          trigger_mode: "hover",
+          id: "pop-top",
           placement: "top"
         },
         slots: [
           """
-          <:trigger>Hover me</:trigger>
-          Appears on hover
+          <:trigger :let={trigger_attrs}>
+            <button type="button" class="btn btn-secondary" {trigger_attrs}>Open above</button>
+          </:trigger>
+          Anchored above the command invoker.
           """
         ]
       },
@@ -40,43 +44,15 @@ defmodule Storybook.DataDisplay.Popover do
         description: "Arrow pointing to trigger element",
         attributes: %{
           id: "pop-arrow",
-          trigger_mode: "click",
           placement: "bottom",
           arrow: true
         },
         slots: [
           """
-          <:trigger>With arrow</:trigger>
+          <:trigger :let={trigger_attrs}>
+            <button type="button" class="btn" {trigger_attrs}>With arrow</button>
+          </:trigger>
           This popover has an arrow pointing to the trigger.
-          """
-        ]
-      },
-      %Variation{
-        id: :focus_trigger,
-        description: "Focus-triggered from an input element",
-        attributes: %{
-          id: "pop-focus",
-          trigger_mode: "focus"
-        },
-        slots: [
-          """
-          <:trigger><input type="text" placeholder="Focus me" class="input" /></:trigger>
-          Shown when the input is focused.
-          """
-        ]
-      },
-      %Variation{
-        id: :open_by_default,
-        description: "Initially open popover",
-        attributes: %{
-          id: "pop-open",
-          trigger_mode: "click",
-          open: true
-        },
-        slots: [
-          """
-          <:trigger>Always open</:trigger>
-          This popover starts open.
           """
         ]
       },
@@ -86,30 +62,36 @@ defmodule Storybook.DataDisplay.Popover do
         variations: [
           %Variation{
             id: :top,
-            attributes: %{id: "pop-top", trigger_mode: "click", placement: "top"},
+            attributes: %{id: "pop-placement-top", placement: "top"},
             slots: [
               """
-              <:trigger>Top</:trigger>
+              <:trigger :let={trigger_attrs}>
+                <button type="button" class="btn" {trigger_attrs}>Top</button>
+              </:trigger>
               Placed above the trigger.
               """
             ]
           },
           %Variation{
             id: :left,
-            attributes: %{id: "pop-left", trigger_mode: "click", placement: "left"},
+            attributes: %{id: "pop-left", placement: "left"},
             slots: [
               """
-              <:trigger>Left</:trigger>
+              <:trigger :let={trigger_attrs}>
+                <button type="button" class="btn" {trigger_attrs}>Left</button>
+              </:trigger>
               Placed to the left.
               """
             ]
           },
           %Variation{
             id: :right,
-            attributes: %{id: "pop-right", trigger_mode: "click", placement: "right"},
+            attributes: %{id: "pop-right", placement: "right"},
             slots: [
               """
-              <:trigger>Right</:trigger>
+              <:trigger :let={trigger_attrs}>
+                <button type="button" class="btn" {trigger_attrs}>Right</button>
+              </:trigger>
               Placed to the right.
               """
             ]
@@ -122,40 +104,48 @@ defmodule Storybook.DataDisplay.Popover do
         variations: [
           %Variation{
             id: :top_start,
-            attributes: %{id: "pop-ts", trigger_mode: "click", placement: "top-start"},
+            attributes: %{id: "pop-ts", placement: "top-start"},
             slots: [
               """
-              <:trigger>Top-start</:trigger>
+              <:trigger :let={trigger_attrs}>
+                <button type="button" class="btn" {trigger_attrs}>Top-start</button>
+              </:trigger>
               Aligned to start edge, above.
               """
             ]
           },
           %Variation{
             id: :top_end,
-            attributes: %{id: "pop-te", trigger_mode: "click", placement: "top-end"},
+            attributes: %{id: "pop-te", placement: "top-end"},
             slots: [
               """
-              <:trigger>Top-end</:trigger>
+              <:trigger :let={trigger_attrs}>
+                <button type="button" class="btn" {trigger_attrs}>Top-end</button>
+              </:trigger>
               Aligned to end edge, above.
               """
             ]
           },
           %Variation{
             id: :bottom_start,
-            attributes: %{id: "pop-bs", trigger_mode: "click", placement: "bottom-start"},
+            attributes: %{id: "pop-bs", placement: "bottom-start"},
             slots: [
               """
-              <:trigger>Bottom-start</:trigger>
+              <:trigger :let={trigger_attrs}>
+                <button type="button" class="btn" {trigger_attrs}>Bottom-start</button>
+              </:trigger>
               Aligned to start edge, below.
               """
             ]
           },
           %Variation{
             id: :bottom_end,
-            attributes: %{id: "pop-be", trigger_mode: "click", placement: "bottom-end"},
+            attributes: %{id: "pop-be", placement: "bottom-end"},
             slots: [
               """
-              <:trigger>Bottom-end</:trigger>
+              <:trigger :let={trigger_attrs}>
+                <button type="button" class="btn" {trigger_attrs}>Bottom-end</button>
+              </:trigger>
               Aligned to end edge, below.
               """
             ]
@@ -167,17 +157,6 @@ defmodule Storybook.DataDisplay.Popover do
 
   def modifiers do
     [
-      %{
-        id: :trigger_mode,
-        label: "Trigger Mode",
-        type: :select,
-        options: [
-          {"click", "Click"},
-          {"hover", "Hover"},
-          {"focus", "Focus"}
-        ],
-        default: "click"
-      },
       %{
         id: :placement,
         label: "Placement",
@@ -199,12 +178,6 @@ defmodule Storybook.DataDisplay.Popover do
         label: "Arrow",
         type: :boolean,
         default: true
-      },
-      %{
-        id: :open,
-        label: "Open",
-        type: :boolean,
-        default: false
       }
     ]
   end

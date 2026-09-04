@@ -1,78 +1,60 @@
 defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
   use ExUnit.Case, async: true
 
-  require Phoenix.LiveViewTest
   import Phoenix.LiveViewTest
   import PhoenixDuskmoon.Component.DataDisplay.Tooltip
 
-  defp inner_block, do: %{inner_block: fn _, _ -> "Hover me" end}
+  defp inner_block do
+    %{
+      inner_block: fn _, attrs ->
+        escaped_attrs = attrs |> Phoenix.HTML.attributes_escape() |> Phoenix.HTML.safe_to_string()
+        Phoenix.HTML.raw(~s(<button type="button" #{escaped_attrs}>Hover me</button>))
+      end
+    }
+  end
 
-  test "renders basic tooltip with tooltip-content element" do
+  test "renders a native hint popover linked to an interest invoker" do
     result =
       render_component(&dm_tooltip/1, %{
+        id: "save-help",
         content: "Help text",
         inner_block: inner_block()
       })
 
-    assert result =~ "tooltip"
-    assert result =~ "tooltip-content"
-    assert result =~ "Help text"
+    assert result =~ ~s[interestfor="save-help-tooltip"]
+    assert result =~ ~s[aria-describedby="save-help-tooltip"]
+    assert result =~ ~s[id="save-help-tooltip"]
+    assert result =~ ~s[popover="hint"]
+    assert result =~ ~s[role="tooltip"]
+    assert result =~ ~s[title="Help text"]
+    refute result =~ "tooltip-content"
   end
 
-  test "renders default position top" do
+  test "generates a target id when one is omitted" do
     result =
       render_component(&dm_tooltip/1, %{
-        content: "Tip",
+        content: "Generated",
         inner_block: inner_block()
       })
 
-    assert result =~ "tooltip-top"
+    [_, id] = Regex.run(~r/interestfor="(tooltip-\d+)"/, result)
+    assert result =~ ~s[id="#{id}"]
   end
 
-  test "renders tooltip with position bottom" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Bottom tip",
-        position: "bottom",
-        inner_block: inner_block()
-      })
+  test "renders every position class" do
+    for position <- ~w(top bottom left right) do
+      result =
+        render_component(&dm_tooltip/1, %{
+          content: "Tip",
+          position: position,
+          inner_block: inner_block()
+        })
 
-    assert result =~ "tooltip-bottom"
+      assert result =~ "tooltip-#{position}"
+    end
   end
 
-  test "renders tooltip with position left" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Left tip",
-        position: "left",
-        inner_block: inner_block()
-      })
-
-    assert result =~ "tooltip-left"
-  end
-
-  test "renders tooltip with position right" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Right tip",
-        position: "right",
-        inner_block: inner_block()
-      })
-
-    assert result =~ "tooltip-right"
-  end
-
-  test "renders default color primary" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Tip",
-        inner_block: inner_block()
-      })
-
-    assert result =~ "tooltip-primary"
-  end
-
-  test "renders tooltip with all color variants" do
+  test "renders every color class" do
     for color <- ~w(primary secondary tertiary accent info success warning error) do
       result =
         render_component(&dm_tooltip/1, %{
@@ -81,12 +63,24 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
           inner_block: inner_block()
         })
 
-      css_class = if color == "accent", do: "tertiary", else: color
-      assert result =~ "tooltip-#{css_class}"
+      css_color = if color == "accent", do: "tertiary", else: color
+      assert result =~ "tooltip-#{css_color}"
     end
   end
 
-  test "renders tooltip with open state" do
+  test "uses matching CSS anchors" do
+    result =
+      render_component(&dm_tooltip/1, %{
+        id: "anchored",
+        content: "Tip",
+        inner_block: inner_block()
+      })
+
+    assert result =~ "anchor-name: --anchor-anchored-tooltip"
+    assert result =~ "position-anchor: --anchor-anchored-tooltip"
+  end
+
+  test "supports explicitly controlled open state through the LiveView hook" do
     result =
       render_component(&dm_tooltip/1, %{
         content: "Always visible",
@@ -94,306 +88,31 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
         inner_block: inner_block()
       })
 
-    assert result =~ "tooltip-open"
+    assert result =~ ~s[popover="manual"]
+    assert result =~ ~s[phx-hook="DuskmoonPopover"]
+    assert result =~ ~s[data-open="true"]
   end
 
-  test "renders tooltip without open class when open is false" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Normal tip",
-        open: false,
-        inner_block: inner_block()
-      })
-
-    refute result =~ "tooltip-open"
-  end
-
-  test "renders tooltip with custom class" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Custom",
-        class: "my-tooltip-class",
-        inner_block: inner_block()
-      })
-
-    assert result =~ "my-tooltip-class"
-  end
-
-  test "renders tooltip wrapping inner content in a div" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Tooltip text",
-        inner_block: inner_block()
-      })
-
-    assert result =~ "<div"
-    assert result =~ "</div>"
-  end
-
-  test "renders tooltip with special characters in content" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Press Ctrl+S to save",
-        inner_block: inner_block()
-      })
-
-    assert result =~ "tooltip-content"
-    assert result =~ "Press Ctrl+S to save"
-  end
-
-  test "renders tooltip with rest attributes" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Tip",
-        "data-testid": "my-tooltip",
-        "aria-describedby": "desc",
-        inner_block: inner_block()
-      })
-
-    assert result =~ "data-testid=\"my-tooltip\""
-    assert result =~ "aria-describedby=\"desc\""
-  end
-
-  test "renders tooltip with position and color combined" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Combined",
-        position: "bottom",
-        color: "warning",
-        inner_block: inner_block()
-      })
-
-    assert result =~ "tooltip-bottom"
-    assert result =~ "tooltip-warning"
-    assert result =~ "Combined"
-  end
-
-  test "renders tooltip with all options combined" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Full options",
-        position: "left",
-        color: "error",
-        open: true,
-        class: "extra-class",
-        inner_block: inner_block()
-      })
-
-    assert result =~ "tooltip-left"
-    assert result =~ "tooltip-error"
-    assert result =~ "tooltip-open"
-    assert result =~ "extra-class"
-    assert result =~ "Full options"
-  end
-
-  test "renders tooltip with HTML entities in content" do
+  test "escapes tooltip content" do
     result =
       render_component(&dm_tooltip/1, %{
         content: "Use < and > carefully",
         inner_block: inner_block()
       })
 
-    assert result =~ "tooltip-content"
-    assert result =~ "&lt;"
-    assert result =~ "&gt;"
+    assert result =~ "Use &lt; and &gt; carefully"
   end
 
-  test "renders tooltip with long content" do
-    long_text = String.duplicate("word ", 50) |> String.trim()
-
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: long_text,
-        inner_block: inner_block()
-      })
-
-    assert result =~ "tooltip-content"
-    assert result =~ "word"
-  end
-
-  test "renders tooltip with all positions in loop" do
-    for pos <- ~w(top bottom left right) do
-      result =
-        render_component(&dm_tooltip/1, %{
-          content: "Tip",
-          position: pos,
-          inner_block: inner_block()
-        })
-
-      assert result =~ "tooltip-#{pos}"
-    end
-  end
-
-  test "renders tooltip with inner block content" do
+  test "passes class and global attributes to the tooltip surface" do
     result =
       render_component(&dm_tooltip/1, %{
         content: "Tip",
+        class: "custom-tooltip",
+        "data-testid": "my-tooltip",
         inner_block: inner_block()
       })
 
-    assert result =~ "Hover me"
-  end
-
-  test "renders tooltip with rest attribute aria-describedby" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Help",
-        "aria-describedby": "help-text",
-        inner_block: inner_block()
-      })
-
-    assert result =~ ~s[aria-describedby="help-text"]
-  end
-
-  test "renders tooltip base class is always present" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Tip",
-        position: "bottom",
-        color: "warning",
-        open: true,
-        class: "extra",
-        inner_block: inner_block()
-      })
-
-    # The base "tooltip" class should always be in the class list
-    assert result =~ "tooltip "
-  end
-
-  test "renders tooltip with empty string content" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "",
-        inner_block: inner_block()
-      })
-
-    assert result =~ ~s[class="tooltip-content"]
-  end
-
-  test "renders tooltip without custom class by default" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Tip",
-        inner_block: inner_block()
-      })
-
-    # Should have base tooltip classes but not an extra custom class
-    assert result =~ "tooltip"
-    refute result =~ "my-custom"
-  end
-
-  test "renders tooltip without open class by default" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Tip",
-        inner_block: inner_block()
-      })
-
-    refute result =~ "tooltip-open"
-  end
-
-  test "renders tooltip with secondary color variant" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Secondary tip",
-        color: "secondary",
-        inner_block: inner_block()
-      })
-
-    assert result =~ "tooltip-secondary"
-    assert result =~ "Secondary tip"
-  end
-
-  test "renders tooltip with accent color variant" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Accent tip",
-        color: "accent",
-        inner_block: inner_block()
-      })
-
-    assert result =~ "tooltip-tertiary"
-  end
-
-  test "renders tooltip with success color variant" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Saved!",
-        color: "success",
-        inner_block: inner_block()
-      })
-
-    assert result =~ "tooltip-success"
-  end
-
-  test "renders tooltip with info color variant" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Info here",
-        color: "info",
-        inner_block: inner_block()
-      })
-
-    assert result =~ "tooltip-info"
-  end
-
-  test "renders tooltip with error color and open combined" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Error!",
-        color: "error",
-        open: true,
-        inner_block: inner_block()
-      })
-
-    assert result =~ "tooltip-error"
-    assert result =~ "tooltip-open"
-  end
-
-  test "renders tooltip with role=tooltip for accessibility" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Helpful text",
-        inner_block: inner_block()
-      })
-
-    assert result =~ ~s[role="tooltip"]
-  end
-
-  test "renders tooltip-content span with tooltip text" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Screen reader text",
-        inner_block: inner_block()
-      })
-
-    assert result =~ ~s[class="tooltip-content"]
-    assert result =~ ~s[role="tooltip"]
-    assert result =~ "Screen reader text"
-  end
-
-  test "tooltip span has id and wrapper has aria-describedby linking to it" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Linked tooltip",
-        id: "my-tip",
-        inner_block: inner_block()
-      })
-
-    assert result =~ ~s[aria-describedby="my-tip-tooltip"]
-    assert result =~ ~s[id="my-tip-tooltip"]
-  end
-
-  test "role=tooltip is on tooltip-content span, not on wrapper div" do
-    result =
-      render_component(&dm_tooltip/1, %{
-        content: "Tooltip text",
-        inner_block: inner_block()
-      })
-
-    # The wrapper div should NOT have role="tooltip"
-    # role="tooltip" should only be on the tooltip-content span
-    [wrapper | _] = String.split(result, "class=\"tooltip-content\"")
-    refute wrapper =~ ~s[role="tooltip"]
+    assert result =~ "custom-tooltip"
+    assert result =~ ~s[data-testid="my-tooltip"]
   end
 end

@@ -47,6 +47,7 @@ defmodule PhoenixDuskmoon.Component.Layout.BottomSheet do
   slot(:header, doc: "Header content above the drag handle")
   slot(:inner_block, doc: "Main sheet content")
 
+  # TODO(upstream): duskmoon-dev/duskmoonui#61
   def dm_bottom_sheet(assigns) do
     ~H"""
     <el-dm-bottom-sheet

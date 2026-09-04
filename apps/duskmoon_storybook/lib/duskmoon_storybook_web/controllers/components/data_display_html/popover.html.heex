@@ -11,16 +11,16 @@
 
   <% md_content = """
   ## Overview
-  Popover component wrapping the `el-dm-popover` custom element.
-  Displays floating content positioned relative to a trigger element.
-  Supports click, hover, and focus triggers, auto-flip positioning,
-  and an optional arrow indicator.
+  Native HTML popover using the Popover API and CSS Anchor Positioning.
+  The component connects its trigger and surface with an HTML
+  `command="toggle-popover"` / `commandfor` pair, so opening, closing,
+  light dismiss, and Escape handling do not require custom JavaScript.
 
   ## Usage
   ```elixir
   <.dm_popover>
-    <:trigger>
-      <.dm_btn variant="primary">Click me</.dm_btn>
+    <:trigger :let={trigger_attrs}>
+      <.dm_btn variant="primary" {trigger_attrs}>Click me</.dm_btn>
     </:trigger>
     <p>Popover content here.</p>
   </.dm_popover>
@@ -31,59 +31,49 @@
   <h3 class="text-xl font-semibold mt-8 mb-4">Basic Popover (Click)</h3>
   <div class="flex gap-4 mb-4">
     <.dm_popover>
-      <:trigger>
-        <.dm_btn variant="primary">Click me</.dm_btn>
+      <:trigger :let={trigger_attrs}>
+        <.dm_btn variant="primary" {trigger_attrs}>Click me</.dm_btn>
       </:trigger>
       <p class="p-3">This popover opens on click.</p>
     </.dm_popover>
   </div>
 
-  <h3 class="text-xl font-semibold mt-8 mb-4">Hover Trigger</h3>
+  <h3 class="text-xl font-semibold mt-8 mb-4">Top Placement</h3>
   <div class="flex gap-4 mb-4">
-    <.dm_popover trigger_mode="hover">
-      <:trigger>
-        <.dm_btn variant="secondary">Hover me</.dm_btn>
+    <.dm_popover placement="top">
+      <:trigger :let={trigger_attrs}>
+        <.dm_btn variant="secondary" {trigger_attrs}>Open Above</.dm_btn>
       </:trigger>
-      <p class="p-3">This popover opens on hover.</p>
-    </.dm_popover>
-  </div>
-
-  <h3 class="text-xl font-semibold mt-8 mb-4">Focus Trigger</h3>
-  <div class="flex gap-4 mb-4">
-    <.dm_popover trigger_mode="focus">
-      <:trigger>
-        <input type="text" placeholder="Focus me..." class="input input-bordered" />
-      </:trigger>
-      <p class="p-3">This popover opens on focus.</p>
+      <p class="p-3">This popover is anchored above its command invoker.</p>
     </.dm_popover>
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Placement Variants</h3>
   <div class="flex flex-wrap gap-4 mb-4">
     <.dm_popover placement="top">
-      <:trigger>
-        <.dm_btn variant="outline">Top</.dm_btn>
+      <:trigger :let={trigger_attrs}>
+        <.dm_btn variant="outline" {trigger_attrs}>Top</.dm_btn>
       </:trigger>
       <p class="p-3">Placed on top</p>
     </.dm_popover>
 
     <.dm_popover placement="bottom">
-      <:trigger>
-        <.dm_btn variant="outline">Bottom</.dm_btn>
+      <:trigger :let={trigger_attrs}>
+        <.dm_btn variant="outline" {trigger_attrs}>Bottom</.dm_btn>
       </:trigger>
       <p class="p-3">Placed on bottom</p>
     </.dm_popover>
 
     <.dm_popover placement="left">
-      <:trigger>
-        <.dm_btn variant="outline">Left</.dm_btn>
+      <:trigger :let={trigger_attrs}>
+        <.dm_btn variant="outline" {trigger_attrs}>Left</.dm_btn>
       </:trigger>
       <p class="p-3">Placed on left</p>
     </.dm_popover>
 
     <.dm_popover placement="right">
-      <:trigger>
-        <.dm_btn variant="outline">Right</.dm_btn>
+      <:trigger :let={trigger_attrs}>
+        <.dm_btn variant="outline" {trigger_attrs}>Right</.dm_btn>
       </:trigger>
       <p class="p-3">Placed on right</p>
     </.dm_popover>
@@ -92,15 +82,15 @@
   <h3 class="text-xl font-semibold mt-8 mb-4">Custom Offset</h3>
   <div class="flex gap-4 mb-4">
     <.dm_popover offset={0}>
-      <:trigger>
-        <.dm_btn variant="info">Offset 0</.dm_btn>
+      <:trigger :let={trigger_attrs}>
+        <.dm_btn variant="info" {trigger_attrs}>Offset 0</.dm_btn>
       </:trigger>
       <p class="p-3">No gap between trigger and popover.</p>
     </.dm_popover>
 
     <.dm_popover offset={20}>
-      <:trigger>
-        <.dm_btn variant="info">Offset 20</.dm_btn>
+      <:trigger :let={trigger_attrs}>
+        <.dm_btn variant="info" {trigger_attrs}>Offset 20</.dm_btn>
       </:trigger>
       <p class="p-3">20px gap between trigger and popover.</p>
     </.dm_popover>
@@ -109,20 +99,10 @@
   <h3 class="text-xl font-semibold mt-8 mb-4">Without Arrow</h3>
   <div class="flex gap-4 mb-4">
     <.dm_popover arrow={false}>
-      <:trigger>
-        <.dm_btn variant="warning">No Arrow</.dm_btn>
+      <:trigger :let={trigger_attrs}>
+        <.dm_btn variant="warning" {trigger_attrs}>No Arrow</.dm_btn>
       </:trigger>
       <p class="p-3">This popover has no arrow indicator.</p>
-    </.dm_popover>
-  </div>
-
-  <h3 class="text-xl font-semibold mt-8 mb-4">Initially Open</h3>
-  <div class="flex gap-4 mb-4">
-    <.dm_popover open placement="right">
-      <:trigger>
-        <.dm_btn variant="info">Already Open</.dm_btn>
-      </:trigger>
-      <p class="p-3">This popover starts open.</p>
     </.dm_popover>
   </div>
 </.dm_card>

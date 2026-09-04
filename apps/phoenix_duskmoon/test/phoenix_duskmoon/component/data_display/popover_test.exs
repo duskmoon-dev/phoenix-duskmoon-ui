@@ -5,201 +5,122 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PopoverTest do
   import PhoenixDuskmoon.Component.DataDisplay.Popover
 
   defp trigger_slot do
-    [%{__slot__: :trigger, inner_block: fn _, _ -> "Trigger" end}]
-  end
-
-  defp button_trigger_slot do
     [
       %{
         __slot__: :trigger,
-        inner_block: fn _, _ ->
-          Phoenix.HTML.raw(~s(<button type="button">Code</button>))
+        inner_block: fn _, attrs ->
+          escaped_attrs =
+            attrs |> Phoenix.HTML.attributes_escape() |> Phoenix.HTML.safe_to_string()
+
+          Phoenix.HTML.raw(~s(<button type="button" #{escaped_attrs}>Trigger</button>))
         end
       }
     ]
   end
 
-  describe "dm_popover basic rendering" do
-    test "renders el-dm-popover element" do
-      result = render_component(&dm_popover/1, %{trigger: trigger_slot()})
-      assert result =~ "<el-dm-popover"
-      assert result =~ "</el-dm-popover>"
-    end
+  defp inner_block(content \\ "Popover content") do
+    [%{__slot__: :inner_block, inner_block: fn _, _ -> content end}]
+  end
 
-    test "renders with custom id" do
-      result = render_component(&dm_popover/1, %{id: "my-popover", trigger: trigger_slot()})
-      assert result =~ ~s(id="my-popover")
-    end
+  test "renders a native popover controlled by an HTML command" do
+    result =
+      render_component(&dm_popover/1, %{
+        id: "account-popover",
+        trigger: trigger_slot(),
+        inner_block: inner_block()
+      })
 
-    test "renders with custom class" do
-      result = render_component(&dm_popover/1, %{class: "custom-pop", trigger: trigger_slot()})
-      assert result =~ "custom-pop"
-    end
+    assert result =~ ~s[command="toggle-popover"]
+    assert result =~ ~s[commandfor="account-popover"]
+    assert result =~ ~s[id="account-popover"]
+    assert result =~ ~s[popover="auto"]
+    assert result =~ ~s[aria-controls="account-popover"]
+    assert result =~ "Popover content"
+    refute result =~ "<el-dm-popover"
+  end
 
-    test "renders trigger slot" do
-      result = render_component(&dm_popover/1, %{trigger: trigger_slot()})
-      assert result =~ ~s(slot="trigger")
-      assert result =~ "Trigger"
-    end
+  test "generates a target id when one is omitted" do
+    result = render_component(&dm_popover/1, %{trigger: trigger_slot()})
+    [_, id] = Regex.run(~r/commandfor="(popover-\d+)"/, result)
 
-    test "renders inner_block content" do
+    assert result =~ ~s[id="#{id}"]
+  end
+
+  test "uses interestfor for hover and focus trigger modes" do
+    for trigger_mode <- ~w(hover focus) do
       result =
         render_component(&dm_popover/1, %{
-          trigger: trigger_slot(),
-          inner_block: [
-            %{__slot__: :inner_block, inner_block: fn _, _ -> "Popover content" end}
-          ]
+          id: "#{trigger_mode}-popover",
+          trigger_mode: trigger_mode,
+          trigger: trigger_slot()
         })
 
-      assert result =~ "Popover content"
+      assert result =~ ~s[interestfor="#{trigger_mode}-popover"]
+      refute result =~ ~s[command="toggle-popover"]
     end
   end
 
-  describe "dm_popover trigger modes" do
-    test "defaults to click trigger" do
-      result = render_component(&dm_popover/1, %{trigger: trigger_slot()})
-      assert result =~ ~s(trigger="click")
-    end
-
-    test "renders hover trigger" do
-      result =
-        render_component(&dm_popover/1, %{trigger_mode: "hover", trigger: trigger_slot()})
-
-      assert result =~ ~s(trigger="hover")
-    end
-
-    test "renders focus trigger" do
-      result =
-        render_component(&dm_popover/1, %{trigger_mode: "focus", trigger: trigger_slot()})
-
-      assert result =~ ~s(trigger="focus")
-    end
-  end
-
-  describe "dm_popover placement" do
-    test "defaults to bottom" do
-      result = render_component(&dm_popover/1, %{trigger: trigger_slot()})
-      assert result =~ ~s(placement="bottom")
-    end
-
+  test "maps every placement to native popover positioning classes" do
     for placement <-
           ~w(top bottom left right top-start top-end bottom-start bottom-end left-start left-end right-start right-end) do
-      test "renders #{placement} placement" do
-        result =
-          render_component(&dm_popover/1, %{
-            placement: unquote(placement),
-            trigger: trigger_slot()
-          })
+      result =
+        render_component(&dm_popover/1, %{
+          placement: placement,
+          trigger: trigger_slot()
+        })
 
-        assert result =~ ~s(placement="#{unquote(placement)}")
+      [position | alignment] = String.split(placement, "-", parts: 2)
+      assert result =~ "popover-#{position}"
+
+      if alignment != [] do
+        assert result =~ "popover-#{hd(alignment)}"
       end
     end
   end
 
-  describe "dm_popover offset" do
-    test "defaults to 8" do
-      result = render_component(&dm_popover/1, %{trigger: trigger_slot()})
-      assert result =~ ~s(offset="8")
-    end
+  test "uses CSS anchor positioning and the configured offset" do
+    result =
+      render_component(&dm_popover/1, %{
+        id: "positioned",
+        offset: 12,
+        trigger: trigger_slot()
+      })
 
-    test "renders custom offset" do
-      result =
-        render_component(&dm_popover/1, %{offset: 16, trigger: trigger_slot()})
-
-      assert result =~ ~s(offset="16")
-    end
+    assert result =~ "anchor-name: --anchor-positioned"
+    assert result =~ "position-anchor: --anchor-positioned; margin: 12px"
   end
 
-  describe "dm_popover arrow" do
-    test "arrow enabled by default" do
-      result = render_component(&dm_popover/1, %{trigger: trigger_slot()})
-      assert result =~ "arrow"
-    end
+  test "renders the optional arrow with the Core CSS contract" do
+    result = render_component(&dm_popover/1, %{trigger: trigger_slot()})
+    assert result =~ ~s[class="popover-arrow"]
 
-    test "arrow can be disabled" do
-      result =
-        render_component(&dm_popover/1, %{arrow: false, trigger: trigger_slot()})
-
-      refute result =~ ~s(arrow=")
-    end
+    result = render_component(&dm_popover/1, %{arrow: false, trigger: trigger_slot()})
+    assert result =~ "popover-no-arrow"
+    refute result =~ ~s[class="popover-arrow"]
   end
 
-  describe "dm_popover open state" do
-    test "not open by default" do
-      result = render_component(&dm_popover/1, %{trigger: trigger_slot()})
-      refute result =~ ~s( open=")
-    end
+  test "supports explicitly controlled open state through the LiveView hook" do
+    result =
+      render_component(&dm_popover/1, %{
+        id: "controlled",
+        open: true,
+        trigger: trigger_slot()
+      })
 
-    test "renders open when true" do
-      result =
-        render_component(&dm_popover/1, %{open: true, trigger: trigger_slot()})
-
-      assert result =~ "open"
-    end
+    assert result =~ ~s[popover="manual"]
+    assert result =~ ~s[phx-hook="DuskmoonPopover"]
+    assert result =~ ~s[data-open="true"]
   end
 
-  describe "dm_popover rest attrs" do
-    test "passes rest attributes through" do
-      result =
-        render_component(&dm_popover/1, %{
-          "data-testid": "info-pop",
-          trigger: trigger_slot()
-        })
+  test "passes class and global attributes to the popover surface" do
+    result =
+      render_component(&dm_popover/1, %{
+        class: "custom-pop",
+        "data-testid": "info-pop",
+        trigger: trigger_slot()
+      })
 
-      assert result =~ ~s(data-testid="info-pop")
-    end
-  end
-
-  describe "dm_popover trigger structure" do
-    test "trigger wrapper delegates restored focus to the authored control" do
-      result = render_component(&dm_popover/1, %{trigger: button_trigger_slot()})
-
-      assert result =~ ~s(<div slot="trigger")
-      assert result =~ ~s(tabindex="-1")
-      assert result =~ ~s(onfocus=")
-      assert result =~ "querySelector"
-      assert result =~ ".focus()"
-      assert result =~ ~s(<button type="button">Code</button>)
-    end
-
-    test "focus-triggered wrapper stays non-focusable so Escape does not reopen it" do
-      result =
-        render_component(&dm_popover/1, %{
-          trigger_mode: "focus",
-          trigger: button_trigger_slot()
-        })
-
-      refute result =~ ~s(tabindex="-1")
-      refute result =~ ~s(onfocus=")
-    end
-  end
-
-  describe "dm_popover combined attrs" do
-    test "renders with all attrs" do
-      result =
-        render_component(&dm_popover/1, %{
-          id: "info-pop",
-          class: "z-50",
-          trigger_mode: "hover",
-          placement: "top-start",
-          offset: 12,
-          arrow: true,
-          open: true,
-          trigger: [
-            %{__slot__: :trigger, inner_block: fn _, _ -> "Hover me" end}
-          ],
-          inner_block: [
-            %{__slot__: :inner_block, inner_block: fn _, _ -> "Info text" end}
-          ]
-        })
-
-      assert result =~ ~s(id="info-pop")
-      assert result =~ "z-50"
-      assert result =~ ~s(trigger="hover")
-      assert result =~ ~s(placement="top-start")
-      assert result =~ ~s(offset="12")
-      assert result =~ "Hover me"
-      assert result =~ "Info text"
-    end
+    assert result =~ "custom-pop"
+    assert result =~ ~s[data-testid="info-pop"]
   end
 end

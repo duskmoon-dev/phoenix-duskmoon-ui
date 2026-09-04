@@ -29,7 +29,7 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
     assert result =~ "Profile"
   end
 
-  test "renders trigger as button with popovertarget" do
+  test "renders trigger as button with an HTML popover command" do
     result =
       render_component(&dm_dropdown/1, %{
         trigger: trigger(),
@@ -37,7 +37,9 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
       })
 
     assert result =~ "<button"
-    assert result =~ "popovertarget="
+    assert result =~ ~s[command="toggle-popover"]
+    assert result =~ "commandfor="
+    refute result =~ "popovertarget="
   end
 
   test "renders trigger with aria-haspopup" do
@@ -266,10 +268,11 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
       })
 
     assert result =~ ~s[id="my-dropdown-popover"]
-    assert result =~ ~s[popovertarget="my-dropdown-popover"]
+    assert result =~ ~s[command="toggle-popover"]
+    assert result =~ ~s[commandfor="my-dropdown-popover"]
   end
 
-  test "renders matching popovertarget and content id" do
+  test "renders matching commandfor and content id" do
     result =
       render_component(&dm_dropdown/1, %{
         trigger: trigger(),
@@ -278,7 +281,7 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
 
     # Extract the popover id from the content div
     [_, popover_id] = Regex.run(~r/id="(dropdown-\d+)"/, result)
-    assert result =~ ~s[popovertarget="#{popover_id}"]
+    assert result =~ ~s[commandfor="#{popover_id}"]
   end
 
   test "renders matching anchor-name and position-anchor" do
@@ -329,19 +332,19 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
     assert result =~ "Delete"
     assert result =~ ~s[data-testid="full-dropdown"]
     assert result =~ ~s[id="full-dropdown-popover"]
-    assert result =~ ~s[popovertarget="full-dropdown-popover"]
+    assert result =~ ~s[commandfor="full-dropdown-popover"]
     assert result =~ ~s[aria-haspopup="menu"]
     assert result =~ ~s[role="menu"]
   end
 
-  test "trigger has aria-expanded false by default" do
+  test "does not render stale aria-expanded state" do
     result =
       render_component(&dm_dropdown/1, %{
         trigger: trigger(),
         content: content()
       })
 
-    assert result =~ ~s[aria-expanded="false"]
+    refute result =~ "aria-expanded"
   end
 
   test "trigger has aria-controls pointing to popover id" do

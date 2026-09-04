@@ -189,7 +189,14 @@ For advanced theming, you can import additional CSS modules:
   </:body>
   <:footer>
     <.dm_btn command="close" commandfor="confirm-dialog">Cancel</.dm_btn>
-    <.dm_btn variant="primary" phx-click="confirm">Confirm</.dm_btn>
+    <.dm_btn
+      variant="primary"
+      phx-click="confirm"
+      command="close"
+      commandfor="confirm-dialog"
+    >
+      Confirm
+    </.dm_btn>
   </:footer>
 </.dm_modal>
 ```

@@ -11,52 +11,47 @@
 
   <.dm_markdown content={"""
   ## Overview
-  Tooltip component for displaying additional information on hover.
+  Native hint popover for displaying additional information on hover or keyboard focus.
+  The component links its trigger and tooltip surface with `interestfor`, `popover="hint"`,
+  and CSS Anchor Positioning; no custom show/hide JavaScript is required.
 
   ## Usage
   ```elixir
-  <.dm_tooltip content="Helpful tip" position="top">
-    Hover me
+  <.dm_tooltip content="Helpful tip" position="top" :let={trigger_attrs}>
+    <.dm_btn {trigger_attrs}>Hover or focus me</.dm_btn>
   </.dm_tooltip>
   ```
   """} />
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Positions</h3>
   <div class="flex flex-wrap gap-8 items-center py-8">
-    <.dm_tooltip content="Top tooltip" position="top">
-      <.dm_btn variant="outline">Top</.dm_btn>
+    <.dm_tooltip :let={trigger_attrs} content="Top tooltip" position="top">
+      <.dm_btn variant="outline" {trigger_attrs}>Top</.dm_btn>
     </.dm_tooltip>
-    <.dm_tooltip content="Bottom tooltip" position="bottom">
-      <.dm_btn variant="outline">Bottom</.dm_btn>
+    <.dm_tooltip :let={trigger_attrs} content="Bottom tooltip" position="bottom">
+      <.dm_btn variant="outline" {trigger_attrs}>Bottom</.dm_btn>
     </.dm_tooltip>
-    <.dm_tooltip content="Left tooltip" position="left">
-      <.dm_btn variant="outline">Left</.dm_btn>
+    <.dm_tooltip :let={trigger_attrs} content="Left tooltip" position="left">
+      <.dm_btn variant="outline" {trigger_attrs}>Left</.dm_btn>
     </.dm_tooltip>
-    <.dm_tooltip content="Right tooltip" position="right">
-      <.dm_btn variant="outline">Right</.dm_btn>
+    <.dm_tooltip :let={trigger_attrs} content="Right tooltip" position="right">
+      <.dm_btn variant="outline" {trigger_attrs}>Right</.dm_btn>
     </.dm_tooltip>
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Colors</h3>
   <div class="flex flex-wrap gap-8 items-center py-8">
-    <.dm_tooltip content="Primary" color="primary">
-      <.dm_btn variant="primary">Primary</.dm_btn>
+    <.dm_tooltip :let={trigger_attrs} content="Primary" color="primary">
+      <.dm_btn variant="primary" {trigger_attrs}>Primary</.dm_btn>
     </.dm_tooltip>
-    <.dm_tooltip content="Secondary" color="secondary">
-      <.dm_btn variant="secondary">Secondary</.dm_btn>
+    <.dm_tooltip :let={trigger_attrs} content="Secondary" color="secondary">
+      <.dm_btn variant="secondary" {trigger_attrs}>Secondary</.dm_btn>
     </.dm_tooltip>
-    <.dm_tooltip content="Success" color="success">
-      <.dm_btn variant="success">Success</.dm_btn>
+    <.dm_tooltip :let={trigger_attrs} content="Success" color="success">
+      <.dm_btn variant="success" {trigger_attrs}>Success</.dm_btn>
     </.dm_tooltip>
-    <.dm_tooltip content="Error" color="error">
-      <.dm_btn variant="error">Error</.dm_btn>
-    </.dm_tooltip>
-  </div>
-
-  <h3 class="text-xl font-semibold mt-8 mb-4">Always Open</h3>
-  <div class="flex flex-wrap gap-8 items-center py-8">
-    <.dm_tooltip content="I'm always visible" open={true}>
-      <.dm_btn variant="info">Always Open</.dm_btn>
+    <.dm_tooltip :let={trigger_attrs} content="Error" color="error">
+      <.dm_btn variant="error" {trigger_attrs}>Error</.dm_btn>
     </.dm_tooltip>
   </div>
 </.dm_card>

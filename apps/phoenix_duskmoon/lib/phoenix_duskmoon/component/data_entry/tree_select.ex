@@ -4,7 +4,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
 
   Renders a hierarchical select with expandable tree nodes, checkboxes
   for multi-select mode, and search. Options are structured as a tree
-  with nested `:children` lists.
+  with nested `:children` lists. The dropdown uses the native Popover API and
+  is toggled with an HTML command invoker.
 
   ## Examples
 
@@ -53,7 +54,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
   attr(:selected, :list, default: [], doc: "list of selected values")
   attr(:expanded, :list, default: [], doc: "list of expanded node values")
   attr(:placeholder, :string, default: nil, doc: "placeholder text")
-  attr(:open, :boolean, default: false, doc: "whether the dropdown is open")
+
+  attr(:open, :boolean,
+    default: nil,
+    doc: "optional server-controlled visibility; omit for browser-owned command state"
+  )
+
   attr(:multiple, :boolean, default: false, doc: "enable multi-select with checkboxes")
 
   attr(:size, :string,
@@ -116,6 +122,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
   end
 
   def dm_tree_select(assigns) do
+    id = assigns.id || "tree-select-#{System.unique_integer([:positive])}"
+    dropdown_id = "#{id}-dropdown"
+    anchor_name = "--anchor-#{id}"
     selected_set = MapSet.new(assigns.selected)
     expanded_set = MapSet.new(assigns.expanded)
     selected_labels = find_selected_labels(assigns.options, selected_set)
@@ -125,6 +134,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
 
     assigns =
       assigns
+      |> assign(:id, id)
+      |> assign(:dropdown_id, dropdown_id)
+      |> assign(:anchor_name, anchor_name)
+      |> assign(:popover_mode, if(is_nil(assigns.open), do: "auto", else: "manual"))
+      |> assign(:controlled_open, controlled_open(assigns.open))
       |> assign(:selected_set, selected_set)
       |> assign(:expanded_set, expanded_set)
       |> assign(:selected_labels, selected_labels)
@@ -137,7 +151,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
         "tree-select",
         @size && "tree-select-#{@size}",
         @variant && "tree-select-#{@variant}",
-        @open && "tree-select-open",
         (@error || @errors != []) && "tree-select-error",
         @disabled && "tree-select-disabled",
         @loading && "tree-select-loading",
@@ -149,14 +162,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
       {@rest}
     >
       <button
-        id={@id && "#{@id}-trigger"}
+        id={"#{@id}-trigger"}
         type="button"
         class="tree-select-trigger"
+        command="toggle-popover"
+        commandfor={@dropdown_id}
+        style={"anchor-name: #{@anchor_name}"}
         disabled={@disabled}
         aria-disabled={@disabled && "true"}
-        aria-expanded={to_string(@open)}
         aria-haspopup="tree"
-        aria-controls={@id && "#{@id}-dropdown"}
+        aria-controls={@dropdown_id}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={
           (@errors != [] && @id && "#{@id}-errors") ||
@@ -198,7 +213,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
         <span class="tree-select-arrow"></span>
       </button>
 
-      <div id={@id && "#{@id}-dropdown"} class="tree-select-dropdown">
+      <div
+        id={@dropdown_id}
+        popover={@popover_mode}
+        phx-hook="DuskmoonPopover"
+        data-open={@controlled_open}
+        class="tree-select-dropdown"
+        style={"position-anchor: #{@anchor_name}; position-area: bottom; width: anchor-size(width)"}
+      >
         <div :if={@searchable} class="tree-select-search">
           <input
             type="text"
@@ -235,6 +257,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelect do
     </div>
     """
   end
+
+  defp controlled_open(nil), do: nil
+  defp controlled_open(open), do: to_string(open)
 
   defp render_nodes(assigns) do
     ~H"""

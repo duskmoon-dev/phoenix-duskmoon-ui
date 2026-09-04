@@ -2,11 +2,15 @@ defmodule Storybook.DataDisplay.Tooltip do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataDisplay.Tooltip.dm_tooltip/1
-  def description, do: "Tooltip component for displaying additional information on hover."
+
+  def description,
+    do: "Native hint popover linked to its trigger with the Interest Invokers API."
 
   def imports do
-    [{PhoenixDuskmoon.Component.Action.Button, [dm_btn: 1]},
-     {PhoenixDuskmoon.Component.Icon.Icons, [dm_mdi: 1]}]
+    [
+      {PhoenixDuskmoon.Component.Action.Button, [dm_btn: 1]},
+      {PhoenixDuskmoon.Component.Icon.Icons, [dm_mdi: 1]}
+    ]
   end
 
   def variations do
@@ -15,7 +19,8 @@ defmodule Storybook.DataDisplay.Tooltip do
         id: :default,
         description: "Default top-positioned tooltip",
         attributes: %{content: "Click to save changes"},
-        slots: ["<.dm_btn variant=\"primary\">Save</.dm_btn>"]
+        let: :trigger_attrs,
+        slots: ["<.dm_btn variant=\"primary\" {trigger_attrs}>Save</.dm_btn>"]
       },
       %VariationGroup{
         id: :positions,
@@ -24,17 +29,20 @@ defmodule Storybook.DataDisplay.Tooltip do
           %Variation{
             id: :bottom,
             attributes: %{content: "Appears below", position: "bottom"},
-            slots: ["<.dm_btn variant=\"accent\">Bottom</.dm_btn>"]
+            let: :trigger_attrs,
+            slots: ["<.dm_btn variant=\"accent\" {trigger_attrs}>Bottom</.dm_btn>"]
           },
           %Variation{
             id: :left,
             attributes: %{content: "Appears on the left", position: "left"},
-            slots: ["<.dm_btn variant=\"info\">Left</.dm_btn>"]
+            let: :trigger_attrs,
+            slots: ["<.dm_btn variant=\"info\" {trigger_attrs}>Left</.dm_btn>"]
           },
           %Variation{
             id: :right,
             attributes: %{content: "Appears on the right", position: "right"},
-            slots: ["<.dm_btn variant=\"success\">Right</.dm_btn>"]
+            let: :trigger_attrs,
+            slots: ["<.dm_btn variant=\"success\" {trigger_attrs}>Right</.dm_btn>"]
           }
         ]
       },
@@ -45,32 +53,40 @@ defmodule Storybook.DataDisplay.Tooltip do
           %Variation{
             id: :primary,
             attributes: %{content: "Primary tooltip", color: "primary"},
-            slots: ["<.dm_btn variant=\"primary\">Primary</.dm_btn>"]
+            let: :trigger_attrs,
+            slots: ["<.dm_btn variant=\"primary\" {trigger_attrs}>Primary</.dm_btn>"]
           },
           %Variation{
             id: :secondary,
             attributes: %{content: "Secondary tooltip", color: "secondary"},
-            slots: ["<.dm_btn variant=\"secondary\">Secondary</.dm_btn>"]
+            let: :trigger_attrs,
+            slots: ["<.dm_btn variant=\"secondary\" {trigger_attrs}>Secondary</.dm_btn>"]
           },
           %Variation{
             id: :tertiary,
             attributes: %{content: "Tertiary tooltip", color: "tertiary"},
-            slots: ["<.dm_btn variant=\"ghost\">Tertiary</.dm_btn>"]
+            let: :trigger_attrs,
+            slots: ["<.dm_btn variant=\"ghost\" {trigger_attrs}>Tertiary</.dm_btn>"]
           },
           %Variation{
             id: :warning,
             attributes: %{content: "Warning message", color: "warning"},
-            slots: ["<.dm_btn variant=\"ghost\">Warning</.dm_btn>"]
+            let: :trigger_attrs,
+            slots: ["<.dm_btn variant=\"ghost\" {trigger_attrs}>Warning</.dm_btn>"]
           },
           %Variation{
             id: :error,
             attributes: %{content: "Cannot be undone", color: "error", position: "bottom"},
-            slots: ["<.dm_btn variant=\"error\">Delete</.dm_btn>"]
+            let: :trigger_attrs,
+            slots: ["<.dm_btn variant=\"error\" {trigger_attrs}>Delete</.dm_btn>"]
           },
           %Variation{
             id: :info,
             attributes: %{content: "Press Ctrl+S to save", color: "info", position: "right"},
-            slots: ["<.dm_mdi name=\"information\" />"]
+            let: :trigger_attrs,
+            slots: [
+              "<.dm_btn variant=\"ghost\" shape=\"square\" {trigger_attrs}><.dm_mdi name=\"information\" /></.dm_btn>"
+            ]
           }
         ]
       },
@@ -78,19 +94,14 @@ defmodule Storybook.DataDisplay.Tooltip do
         id: :with_icon,
         description: "Tooltip on an icon button",
         attributes: %{content: "Copy to clipboard", color: "success"},
+        let: :trigger_attrs,
         slots: [
           """
-          <.dm_btn variant="outline" shape="square">
+          <.dm_btn variant="outline" shape="square" {trigger_attrs}>
             <.dm_mdi name="content-copy" />
           </.dm_btn>
           """
         ]
-      },
-      %Variation{
-        id: :always_open,
-        description: "Always visible — open=true",
-        attributes: %{content: "This tooltip is always visible", color: "accent", open: true},
-        slots: ["<.dm_btn variant=\"ghost\">Always Open</.dm_btn>"]
       }
     ]
   end
@@ -124,12 +135,6 @@ defmodule Storybook.DataDisplay.Tooltip do
           {"error", "Error"}
         ],
         default: "primary"
-      },
-      %{
-        id: :open,
-        label: "Always Open",
-        type: :boolean,
-        default: false
       }
     ]
   end

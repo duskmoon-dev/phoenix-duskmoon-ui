@@ -28,6 +28,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
   ]
 
   describe "dm_tree_select/1" do
+    test "uses a native popover controlled by an HTML command" do
+      result = render_component(&dm_tree_select/1, %{id: "category"})
+
+      assert result =~ ~s[command="toggle-popover"]
+      assert result =~ ~s[commandfor="category-dropdown"]
+      assert result =~ ~s[id="category-dropdown"]
+      assert result =~ ~s[popover="auto"]
+      refute result =~ "tree-select-open"
+    end
+
     test "renders base tree-select structure" do
       result = render_component(&dm_tree_select/1, %{})
       assert result =~ "tree-select"
@@ -149,7 +159,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
 
     test "renders open state" do
       result = render_component(&dm_tree_select/1, %{open: true})
-      assert result =~ "tree-select-open"
+      assert result =~ ~s[popover="manual"]
+      assert result =~ ~s[data-open="true"]
     end
 
     test "renders error state" do
@@ -332,7 +343,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
 
       assert result =~ "tree-select-lg"
       assert result =~ "tree-select-filled"
-      assert result =~ "tree-select-open"
+      assert result =~ ~s[data-open="true"]
       assert result =~ "tree-select-error"
       assert result =~ "tree-select-multiple"
     end
@@ -367,15 +378,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
   end
 
   describe "accessibility" do
-    test "trigger has aria-expanded false when closed" do
+    test "trigger delegates expanded state to the browser" do
       result = render_component(&dm_tree_select/1, %{})
-      assert result =~ ~s(aria-expanded="false")
       assert result =~ ~s(aria-haspopup="tree")
+      assert result =~ ~s(command="toggle-popover")
+      refute result =~ "aria-expanded"
     end
 
-    test "trigger has aria-expanded true when open" do
+    test "controlled open state is represented on the popover" do
       result = render_component(&dm_tree_select/1, %{open: true})
-      assert result =~ ~s(aria-expanded="true")
+      assert result =~ ~s(data-open="true")
+      refute result =~ "aria-expanded"
     end
 
     test "options container has role tree" do
@@ -405,9 +418,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
       assert result =~ ~s(aria-labelledby="ts-trigger")
     end
 
-    test "no trigger id or aria-labelledby when no component id" do
+    test "generates a trigger id and labelledby relation when no component id is given" do
       result = render_component(&dm_tree_select/1, %{options: @tree_options})
-      refute result =~ "aria-labelledby"
+      [_, trigger_id] = Regex.run(~r/id="(tree-select-\d+-trigger)"/, result)
+      assert result =~ ~s[aria-labelledby="#{trigger_id}"]
     end
 
     test "trigger has aria-controls pointing to dropdown" do
@@ -416,9 +430,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
       assert result =~ ~s(id="ts-dropdown")
     end
 
-    test "no aria-controls when no component id" do
+    test "generates aria-controls when no component id is given" do
       result = render_component(&dm_tree_select/1, %{})
-      refute result =~ "aria-controls"
+      [_, dropdown_id] = Regex.run(~r/aria-controls="(tree-select-\d+-dropdown)"/, result)
+      assert result =~ ~s[id="#{dropdown_id}"]
     end
   end
 
@@ -534,14 +549,15 @@ defmodule PhoenixDuskmoon.Component.DataEntry.TreeSelectTest do
       assert result =~ ~s[aria-describedby="ts-helper"]
     end
 
-    test "no aria-describedby when no id" do
+    test "generates aria-describedby when no id is given" do
       result =
         render_component(&dm_tree_select/1, %{
           options: @tree_options,
           errors: ["is required"]
         })
 
-      refute result =~ "aria-describedby"
+      [_, errors_id] = Regex.run(~r/aria-describedby="(tree-select-\d+-errors)"/, result)
+      assert result =~ ~s[id="#{errors_id}"]
     end
   end
 

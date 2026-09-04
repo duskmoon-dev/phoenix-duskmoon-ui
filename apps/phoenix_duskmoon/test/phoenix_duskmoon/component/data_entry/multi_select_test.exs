@@ -11,6 +11,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
   ]
 
   describe "dm_multi_select/1" do
+    test "uses a native popover controlled by an HTML command" do
+      result = render_component(&dm_multi_select/1, %{id: "languages"})
+
+      assert result =~ ~s[command="toggle-popover"]
+      assert result =~ ~s[commandfor="languages-dropdown"]
+      assert result =~ ~s[id="languages-dropdown"]
+      assert result =~ ~s[popover="auto"]
+      refute result =~ "multi-select-open"
+    end
+
     test "renders base multi-select structure" do
       result = render_component(&dm_multi_select/1, %{})
       assert result =~ "multi-select"
@@ -77,7 +87,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
 
     test "renders open state" do
       result = render_component(&dm_multi_select/1, %{open: true})
-      assert result =~ "multi-select-open"
+      assert result =~ ~s[popover="manual"]
+      assert result =~ ~s[data-open="true"]
     end
 
     test "renders error state" do
@@ -445,7 +456,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
 
       assert result =~ "multi-select-lg"
       assert result =~ "multi-select-filled"
-      assert result =~ "multi-select-open"
+      assert result =~ ~s[data-open="true"]
       assert result =~ "multi-select-error"
     end
 
@@ -463,15 +474,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
   end
 
   describe "accessibility" do
-    test "trigger has aria-expanded false when closed" do
+    test "trigger delegates expanded state to the browser" do
       result = render_component(&dm_multi_select/1, %{})
-      assert result =~ ~s(aria-expanded="false")
       assert result =~ ~s(aria-haspopup="listbox")
+      assert result =~ ~s(command="toggle-popover")
+      refute result =~ "aria-expanded"
     end
 
-    test "trigger has aria-expanded true when open" do
+    test "controlled open state is represented on the popover" do
       result = render_component(&dm_multi_select/1, %{open: true})
-      assert result =~ ~s(aria-expanded="true")
+      assert result =~ ~s(data-open="true")
+      refute result =~ "aria-expanded"
     end
 
     test "options container has role listbox" do
@@ -495,9 +508,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       assert result =~ ~s(aria-labelledby="ms-trigger")
     end
 
-    test "no trigger id or aria-labelledby when no component id" do
+    test "generates a trigger id and labelledby relation when no component id is given" do
       result = render_component(&dm_multi_select/1, %{options: @options})
-      refute result =~ "aria-labelledby"
+      [_, trigger_id] = Regex.run(~r/id="(multi-select-\d+-trigger)"/, result)
+      assert result =~ ~s[aria-labelledby="#{trigger_id}"]
     end
 
     test "trigger has aria-controls pointing to dropdown" do
@@ -506,9 +520,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       assert result =~ ~s(id="ms-dropdown")
     end
 
-    test "no aria-controls when no component id" do
+    test "generates aria-controls when no component id is given" do
       result = render_component(&dm_multi_select/1, %{})
-      refute result =~ "aria-controls"
+      [_, dropdown_id] = Regex.run(~r/aria-controls="(multi-select-\d+-dropdown)"/, result)
+      assert result =~ ~s[id="#{dropdown_id}"]
     end
   end
 
@@ -649,14 +664,15 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelectTest do
       assert result =~ ~s[aria-describedby="ms-helper"]
     end
 
-    test "no aria-describedby when no id" do
+    test "generates aria-describedby when no id is given" do
       result =
         render_component(&dm_multi_select/1, %{
           options: @options,
           errors: ["is required"]
         })
 
-      refute result =~ "aria-describedby"
+      [_, errors_id] = Regex.run(~r/aria-describedby="(multi-select-\d+-errors)"/, result)
+      assert result =~ ~s[id="#{errors_id}"]
     end
   end
 

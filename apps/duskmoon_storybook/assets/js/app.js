@@ -182,7 +182,6 @@ const duskmoonElementRegistrars = {
   "el-dm-otp-input": () => import("@duskmoon-dev/el-otp-input/register"),
   "el-dm-pagination": () => import("@duskmoon-dev/el-pagination/register"),
   "el-dm-pin-input": () => import("@duskmoon-dev/el-pin-input/register"),
-  "el-dm-popover": () => import("@duskmoon-dev/el-popover/register"),
   "el-dm-pro-data-grid": () => import("@duskmoon-dev/el-pro-data-grid/register"),
   "el-dm-progress": () => import("@duskmoon-dev/el-progress/register"),
   "el-dm-segment-control": () => import("@duskmoon-dev/el-segment-control/register"),
@@ -193,8 +192,7 @@ const duskmoonElementRegistrars = {
   "el-dm-table": () => import("@duskmoon-dev/el-table/register"),
   "el-dm-tabs": () => import("@duskmoon-dev/el-tabs/register"),
   "el-dm-theme-controller": () => import("@duskmoon-dev/el-theme-controller/register"),
-  "el-dm-time-input": () => import("@duskmoon-dev/el-time-input/register"),
-  "el-dm-tooltip": () => import("@duskmoon-dev/el-tooltip/register")
+  "el-dm-time-input": () => import("@duskmoon-dev/el-time-input/register")
 };
 
 const duskmoonElementSelector = Object.keys(duskmoonElementRegistrars).join(",");

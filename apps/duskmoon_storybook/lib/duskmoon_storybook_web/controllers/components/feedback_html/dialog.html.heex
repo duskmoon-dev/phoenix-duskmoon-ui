@@ -24,7 +24,7 @@
     <:body>Modal content here</:body>
     <:footer>
       <.dm_btn command="close" commandfor="my-modal">Cancel</.dm_btn>
-      <.dm_btn variant="primary">Confirm</.dm_btn>
+      <.dm_btn variant="primary" command="close" commandfor="my-modal">Confirm</.dm_btn>
     </:footer>
   </.dm_modal>
   ```

@@ -7,7 +7,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
   selection) is handled by the parent LiveView via attrs.
 
   Options are provided as a list of maps with `:value` and `:label` keys,
-  plus optional `:description`, `:disabled`, and `:group` keys.
+  plus optional `:description`, `:disabled`, and `:group` keys. The dropdown
+  uses the native Popover API and is toggled with an HTML command invoker.
 
   ## Examples
 
@@ -58,7 +59,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
   attr(:options, :list, default: [], doc: "list of option maps with :value, :label keys")
   attr(:selected, :list, default: [], doc: "list of currently selected values")
   attr(:placeholder, :string, default: nil, doc: "placeholder text when nothing selected")
-  attr(:open, :boolean, default: false, doc: "whether the dropdown is open")
+
+  attr(:open, :boolean,
+    default: nil,
+    doc: "optional server-controlled visibility; omit for browser-owned command state"
+  )
 
   attr(:size, :string,
     default: nil,
@@ -173,6 +178,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
   end
 
   def dm_multi_select(assigns) do
+    id = assigns.id || "multi-select-#{System.unique_integer([:positive])}"
+    dropdown_id = "#{id}-dropdown"
+    anchor_name = "--anchor-#{id}"
     selected_set = MapSet.new(assigns.selected)
     selected_options = Enum.filter(assigns.options, &MapSet.member?(selected_set, &1[:value]))
     grouped_options = group_options(assigns.options)
@@ -193,6 +201,11 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
 
     assigns =
       assigns
+      |> assign(:id, id)
+      |> assign(:dropdown_id, dropdown_id)
+      |> assign(:anchor_name, anchor_name)
+      |> assign(:popover_mode, if(is_nil(assigns.open), do: "auto", else: "manual"))
+      |> assign(:controlled_open, controlled_open(assigns.open))
       |> assign(:selected_set, selected_set)
       |> assign(:selected_options, selected_options)
       |> assign(:grouped_options, grouped_options)
@@ -210,7 +223,6 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
         "multi-select",
         @size && "multi-select-#{@size}",
         @variant && "multi-select-#{@variant}",
-        @open && "multi-select-open",
         (@error || @errors != []) && "multi-select-error",
         @disabled && "multi-select-disabled",
         @loading && "multi-select-loading",
@@ -221,14 +233,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
       {@rest}
     >
       <button
-        id={@id && "#{@id}-trigger"}
+        id={"#{@id}-trigger"}
         type="button"
         class="multi-select-trigger"
+        command="toggle-popover"
+        commandfor={@dropdown_id}
+        style={"anchor-name: #{@anchor_name}"}
         disabled={@disabled}
         aria-disabled={@disabled && "true"}
-        aria-expanded={to_string(@open)}
         aria-haspopup="listbox"
-        aria-controls={@id && "#{@id}-dropdown"}
+        aria-controls={@dropdown_id}
         aria-invalid={@errors != [] && "true"}
         aria-describedby={
           (@errors != [] && @id && "#{@id}-errors") ||
@@ -262,7 +276,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
         <span class="multi-select-arrow"></span>
       </button>
 
-      <div id={@id && "#{@id}-dropdown"} class="multi-select-dropdown">
+      <div
+        id={@dropdown_id}
+        popover={@popover_mode}
+        phx-hook="DuskmoonPopover"
+        data-open={@controlled_open}
+        class="multi-select-dropdown"
+        style={"position-anchor: #{@anchor_name}; position-area: bottom; width: anchor-size(width)"}
+      >
         <div :if={@searchable || @creatable} class="multi-select-search">
           <input
             type="text"
@@ -318,6 +339,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MultiSelect do
     </div>
     """
   end
+
+  defp controlled_open(nil), do: nil
+  defp controlled_open(open), do: to_string(open)
 
   defp render_option(assigns) do
     selected = MapSet.member?(assigns.selected_set, assigns.opt[:value])

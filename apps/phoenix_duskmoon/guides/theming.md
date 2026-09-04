@@ -110,7 +110,8 @@ maps these to the standard theme tokens:
 - `el-dm-table` — bridges `--dm-color-*` namespace to `--color-*`
 - `el-dm-pagination` — bridges `--color-border`, `--color-text` to theme tokens
 - `el-dm-bottom-navigation` — bridges `--color-border`, `--color-text-secondary`
-- `el-dm-popover` — fixes upstream shadow DOM arrow positioning via `::part(arrow)`
+- Native popovers and hint tooltips inherit the same document-level theme tokens as other
+  light-DOM components; no shadow DOM bridge is required for their surfaces or arrows.
 
 ## CSS Class Naming (BEM)
 

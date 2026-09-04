@@ -153,13 +153,13 @@ For full component catalog with all attributes and slots, see
 | `dm_markdown` | DataDisplay.Markdown | Client-rendered Markdown custom element |
 | `dm_markdown_body` | DataDisplay.Markdown | Server-rendered MDEx Markdown with GFM, color chips, front matter, hard line breaks, and Mermaid |
 | `dm_pagination` / `dm_pagination_thin` | DataDisplay.Pagination | Page navigation |
-| `dm_popover` | DataDisplay.Popover | Contextual overlay with trigger |
+| `dm_popover` | DataDisplay.Popover | Native popover with Command API trigger |
 | `dm_progress` | DataDisplay.Progress | Linear/circular progress |
 | `dm_skeleton_*` | DataDisplay.Skeleton | 8 skeleton variants (text, avatar, card, table, list, form, comment, base) |
 | `dm_stat` | DataDisplay.Stat | Stat display with icon slot |
 | `dm_table` | DataDisplay.Table | Data table with streaming support |
 | `dm_timeline` | DataDisplay.Timeline | Vertical/horizontal timeline |
-| `dm_tooltip` | DataDisplay.Tooltip | Tooltip wrapper |
+| `dm_tooltip` | DataDisplay.Tooltip | Native hint popover with interest invoker trigger |
 
 ### Data Entry
 
@@ -345,7 +345,14 @@ Import via `use PhoenixDuskmoon.ArtComponent`.
   <:body>Are you sure?</:body>
   <:footer>
     <.dm_btn command="close" commandfor="confirm-modal">Cancel</.dm_btn>
-    <.dm_btn variant="primary" phx-click="confirm">Yes</.dm_btn>
+    <.dm_btn
+      variant="primary"
+      phx-click="confirm"
+      command="close"
+      commandfor="confirm-modal"
+    >
+      Yes
+    </.dm_btn>
   </:footer>
 </.dm_modal>
 

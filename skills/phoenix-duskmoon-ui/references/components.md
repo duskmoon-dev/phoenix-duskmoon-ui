@@ -33,7 +33,7 @@ Three clauses: standard, confirm dialog, noise effect.
 | `noise` | boolean | false | Activates noise-effect button |
 | `content` | string | "" | Button text (for noise variant) |
 | `confirm` | string | "" | Confirmation message (activates confirm modal) |
-| `confirm_title` | string | "" | Popover title |
+| `confirm_title` | string | "" | Dialog title |
 | `confirm_text` | string | "Yes" | Confirm button text |
 | `cancel_text` | string | "Cancel" | Cancel button text |
 | `confirm_class` | any | nil | |
@@ -380,15 +380,16 @@ Same core attrs as `dm_pagination` plus `loading`, `show_page_jumper`.
 
 ### `dm_popover/1` — Popover
 
+Native HTML popover controlled by `command="toggle-popover"` / `commandfor` and positioned with CSS anchors.
+
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
-| `open` | boolean | false | |
-| `trigger_mode` | string | "click" | click, hover, focus |
+| `open` | boolean | nil | Optional server-controlled state; prefer the yielded HTML command for user interaction |
 | `placement` | string | "bottom" | top, bottom, left, right, *-start, *-end |
 | `offset` | integer | 8 | |
 | `arrow` | boolean | true | |
 
-Slots: `trigger` (required), `inner_block`
+Slots: `trigger` (required; yields `command` / `commandfor` attrs), `inner_block`
 
 ### `dm_progress/1` — Progress
 
@@ -445,14 +446,16 @@ Slots: `item` (required) — attrs: `title`, `time`, `icon`, `color`, `completed
 
 ### `dm_tooltip/1` — Tooltip
 
+Native `popover="hint"` surface linked to its trigger with `interestfor` and CSS anchors.
+
 | Attr | Type | Default | Values |
 |------|------|---------|--------|
 | `content` | string | required | |
 | `position` | string | "top" | top, bottom, left, right |
 | `color` | string | "primary" | primary, secondary, tertiary, accent, info, success, warning, error |
-| `open` | boolean | false | |
+| `open` | boolean | nil | Optional server-controlled state; omit for browser-owned interest state |
 
-Slots: `inner_block` (required)
+Slots: `inner_block` (required; yields `interestfor`, `aria-describedby`, and fallback `title` attrs)
 
 ---
 

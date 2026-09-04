@@ -34,7 +34,7 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
   Renders a dropdown menu using the native Popover API with
   `@duskmoon-dev/core` popover CSS classes.
 
-  The trigger is rendered as a `<button>` with `popovertarget`,
+  The trigger is rendered as a `<button>` with `command="toggle-popover"`,
   providing native click-to-toggle and click-outside-to-dismiss
   behavior without JavaScript.
 
@@ -97,11 +97,11 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
         :for={trigger <- @trigger}
         id={"#{@popover_id}-trigger"}
         type="button"
-        popovertarget={@popover_id}
+        command="toggle-popover"
+        commandfor={@popover_id}
         style={"anchor-name: #{@anchor_name}"}
         class={["appearance-none bg-transparent border-0 p-0 m-0 cursor-pointer inline-flex text-inherit", trigger[:class]]}
         aria-haspopup="menu"
-        aria-expanded="false"
         aria-controls={@popover_id}
       >
         {render_slot(trigger)}
@@ -109,8 +109,7 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
       <div
         :for={content <- @content}
         id={@popover_id}
-        popover
-        ontoggle="this.classList.toggle('popover-show', this.matches(':popover-open')); var b=this.previousElementSibling; if(b) b.setAttribute('aria-expanded', this.matches(':popover-open'))"
+        popover="auto"
         class={[
           "popover popover-menu",
           popover_position(@position),
