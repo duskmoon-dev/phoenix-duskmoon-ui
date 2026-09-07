@@ -26,3 +26,11 @@
 - Uses `@duskmoon-dev/elements` for HTML Custom Elements (`<el-dm-*>` tags)
 - Use `bun` for all frontend package management (not npm/yarn)
 - The theme provides custom component styles and color variants via CSS custom properties
+
+## Agent note
+
+After we add new feature, change architecture or fix issues we write agent note.
+When save note to agent-note, should add labels:
+- `project: duskmoon`
+- `variant: phoenix`
+
