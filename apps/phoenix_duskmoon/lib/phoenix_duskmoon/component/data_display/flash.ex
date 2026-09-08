@@ -100,8 +100,15 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Flash do
         title={@disconnected_title}
         close={false}
         autoshow={false}
-        phx-disconnected={JS.add_class("toast-open", to: "#disconnected")}
-        phx-connected={JS.remove_class("toast-open", to: "#disconnected")}
+        aria-hidden="true"
+        phx-disconnected={
+          JS.set_attribute({"aria-hidden", "false"}, to: "#disconnected")
+          |> JS.add_class("toast-open", to: "#disconnected")
+        }
+        phx-connected={
+          JS.set_attribute({"aria-hidden", "true"}, to: "#disconnected")
+          |> JS.remove_class("toast-open", to: "#disconnected")
+        }
       >
         {@reconnecting_text} <.dm_bsi name="arrow-repeat" class="inline ml-1 w-3 h-3 animate-spin" aria-hidden="true" />
       </.dm_flash>

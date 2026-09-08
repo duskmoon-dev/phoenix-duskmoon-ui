@@ -6,6 +6,20 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.FlashTest do
   import PhoenixDuskmoon.Component.DataDisplay.Flash
 
   describe "dm_flash_group/1" do
+    test "reconnect toast starts hidden from assistive technology and synchronizes transitions" do
+      result = render_component(&dm_flash_group/1, %{flash: %{}})
+      [tag] = Regex.run(~r/<div id="disconnected"[^>]*>/, result)
+
+      assert tag =~ ~s(aria-hidden="true")
+
+      for {event, hidden} <- [{"phx-disconnected", "false"}, {"phx-connected", "true"}] do
+        [_, encoded] = Regex.run(~r/#{event}="([^"]+)"/, tag)
+        commands = encoded |> String.replace("&quot;", "\"") |> Jason.decode!()
+
+        assert ["set_attr", %{"attr" => ["aria-hidden", hidden], "to" => "#disconnected"}] in commands
+      end
+    end
+
     test "renders flash group with info message" do
       result =
         render_component(&dm_flash_group/1, %{
