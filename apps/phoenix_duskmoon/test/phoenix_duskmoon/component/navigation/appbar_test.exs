@@ -298,15 +298,24 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
     assert result =~ "UserArea"
   end
 
-  test "renders simple appbar with divider between menu and user_profile in mobile" do
+  test "renders simple appbar user profile once outside the collapsed mobile menu" do
     result =
       render_component(&dm_simple_appbar/1, %{
         title: "App",
-        menu: [%{to: "/a", inner_block: fn _, _ -> "A" end}],
-        user_profile: [%{inner_block: fn _, _ -> "U" end}]
+        user_profile: [
+          %{
+            inner_block: fn _, _ ->
+              Phoenix.HTML.raw(~s(<a id="admin-sign-out" href="/logout">Sign out</a>))
+            end
+          }
+        ]
       })
 
-    assert result =~ "divider"
+    assert [_before, _after] = String.split(result, ~s(id="admin-sign-out"))
+    [header, mobile_menu] = String.split(result, ~s(id="appbar-mobile-menu"))
+    assert header =~ ~s(id="admin-sign-out")
+    refute header =~ "hidden md:inline-flex"
+    refute mobile_menu =~ ~s(id="admin-sign-out")
   end
 
   test "renders appbar with all options combined" do

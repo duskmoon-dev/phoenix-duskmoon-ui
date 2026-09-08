@@ -18,7 +18,6 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
 
   import PhoenixDuskmoon.Component.Action.Link
   import PhoenixDuskmoon.Component.Icon.Icons
-  import PhoenixDuskmoon.Component.Layout.Divider
 
   @doc """
   Generates an appbar using `@duskmoon-dev/core` CSS classes.
@@ -105,6 +104,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
   @doc """
   Generates a simple responsive HTML appbar with mobile menu toggle.
 
+  The user profile is rendered once in the header at all screen sizes.
+
   ## Example
 
       <.dm_simple_appbar title="PhoenixDuskmoon">
@@ -175,7 +176,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
           </nav>
         </div>
         <div class="appbar-trailing">
-          <div class="hidden md:inline-flex">
+          <div class="inline-flex">
             {render_slot(@user_profile)}
           </div>
           <button
@@ -214,10 +215,6 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
         >
           {render_slot(menu)}
         </a>
-        <.dm_divider />
-        <div class="w-full text-center flex flex-col justify-start items-center">
-          {render_slot(@user_profile)}
-        </div>
       </div>
     </header>
     """
