@@ -70,6 +70,14 @@ jobs:
       - name: Install dependencies
         run: mix deps.get
 
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.13
+
+      - name: Install component packages for browser tests
+        run: bun install --frozen-lockfile
+
       - name: Run tests
         run: mix test
         env:
