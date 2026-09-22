@@ -1,6 +1,7 @@
 ---
 name: cmd-update-project-skill
 description: Regenerate the Phoenix Duskmoon UI or Duskmoon Bundler project skill from current source and documentation.
+disable-model-invocation: true
 ---
 
 # Update Project Skill

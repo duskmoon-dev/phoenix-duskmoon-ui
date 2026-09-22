@@ -1,6 +1,7 @@
 ---
 name: cmd-update-upstream-duskmoon-design
 description: Update @duskmoon-dev frontend packages, add or remove Phoenix components to match upstream design, verify the integration, and release a patch or minor version.
+disable-model-invocation: true
 ---
 
 # Update upstream Duskmoon design
