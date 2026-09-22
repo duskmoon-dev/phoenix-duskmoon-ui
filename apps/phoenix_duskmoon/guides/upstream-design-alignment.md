@@ -59,7 +59,7 @@ also pins Core, CSS Art, Elements and Art Elements to the same versions.
 | `@duskmoon-dev/el-time-input` | 1.7.2 | 1.7.6 |
 | `@duskmoon-dev/elements` | 1.7.2 | 1.7.6 |
 
-Elements 1.7.6 pins its aggregate dependencies to 1.7.6. Eleven direct packages
+Elements 1.7.6 pins its aggregate dependencies to 1.7.6. Ten direct packages
 have a newer published 1.8.0; their public types remain compatible. We register
 individual packages lazily in Storybook. Unpublished 1.8.0 aggregate components
 are not assumed available and no dependencies on them are introduced.
@@ -96,9 +96,9 @@ and theme exports now also include a CSS default condition.
 
 ## Elements and CSS Art
 
-All 43 directly used non-art leaf Elements packages were compared using their
-published old/new type contracts. Chat gains its timeline setting, scroll wrapper,
-and File attachment event contract. Chip gains semantic interaction attributes and
+All 43 directly declared non-art Elements packages, including `el-base`, were
+compared using their published old/new type contracts. Chat gains its timeline
+setting, scroll wrapper, and File attachment event contract. Chip gains semantic interaction attributes and
 `dm-click`, `dm-change`, and `dm-delete` events. Markdown input synchronizes its
 observed attributes upstream without requiring a Phoenix wrapper change.
 
@@ -106,14 +106,15 @@ Lazy registration recognizes standalone chat subcomponents, including chat scrol
 The existing code-engine registration behavior is preserved. Element theme selectors
 remain valid; the new chat scroll wrapper does not introduce host theme defaults.
 
-All 15 CSS Art files and all 15 art element public type contracts are unchanged.
+All 15 individual CSS Art stylesheets (excluding the aggregate `index.css`) and
+all 15 art element public type contracts are unchanged.
 Every used art stylesheet, registration and required bridge selector is already present.
 There are no removed art components and no new decorative wrappers are needed.
 
 ## Resolved compatibility code
 
 - Core #43: removed local collapse padding overrides; shipped CSS now handles the closed state.
-- Elements #65: removed the Object.values highlighting patch; shipped markdown imports oneDark explicitly.
+- Elements #65: removed the Object.values highlighting patch; shipped `el-code-engine` imports oneDark explicitly.
 - Elements #66: removed inline form submission from `dm_btn`; shipped button runtime submits once.
 - Elements #67/#68: native breadcrumb and pagination navigation remain intentional public APIs.
 - Elements #74: native chip paths remain for Phoenix navigation/patching and JS delete commands;
