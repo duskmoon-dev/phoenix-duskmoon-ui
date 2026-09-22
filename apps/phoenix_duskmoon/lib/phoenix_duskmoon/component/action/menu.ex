@@ -75,7 +75,8 @@ defmodule PhoenixDuskmoon.Component.Action.Menu do
   attr(:rest, :global)
   slot(:inner_block, required: true, doc: "Menu items")
 
-  # TODO(upstream): duskmoon-dev/duskmoonui#61
+  # Core now offers native styling too; retain the Elements methods and events
+  # used by existing Phoenix consumers.
   def dm_menu(assigns) do
     ~H"""
     <el-dm-menu

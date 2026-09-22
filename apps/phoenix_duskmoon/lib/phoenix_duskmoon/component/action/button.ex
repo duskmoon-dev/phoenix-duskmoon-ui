@@ -11,7 +11,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   When `command` / `commandfor` or `interestfor` are set, renders a native
   `<button>` so the invoker APIs work (custom element hosts are not valid invokers).
   Set `native_submit` to render a native `<button type="submit">` without the
-  custom element submit bridge.
+  custom element runtime.
 
   ## Examples
 
@@ -40,23 +40,6 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
     "link" => "ghost"
   }
   @color_override_variants ~w(info success warning error)
-  @submit_onclick [
-                    "if (!this.hasAttribute('disabled')) {",
-                    "const formId = this.getAttribute('form');",
-                    "const form = formId ? document.getElementById(formId) : this.closest('form');",
-                    "if (form) {",
-                    "const submitter = document.createElement('button');",
-                    "submitter.type = 'submit';",
-                    "submitter.hidden = true;",
-                    "if (this.hasAttribute('name')) submitter.name = this.getAttribute('name');",
-                    "if (this.hasAttribute('value')) submitter.value = this.getAttribute('value');",
-                    "form.appendChild(submitter);",
-                    "form.requestSubmit(submitter);",
-                    "submitter.remove();",
-                    "}",
-                    "}"
-                  ]
-                  |> Enum.join(" ")
   defp map_variant(nil), do: nil
   defp map_variant(v) when is_map_key(@variant_map, v), do: @variant_map[v]
   defp map_variant(v) when v in @color_override_variants, do: "primary"
@@ -356,21 +339,10 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
     |> assign(:el_style, variant_style(assigns.variant))
   end
 
-  defp assign_button_element(assigns) do
-    submit_onclick = submit_onclick(assigns.rest)
-
-    assigns
-    |> assign(:rest, rest_without_onclick(assigns.rest, submit_onclick))
-    |> assign(:submit_onclick, submit_onclick)
-    |> assign_button_style()
-  end
+  defp assign_button_element(assigns), do: assign_button_style(assigns)
 
   defp assign_native_button(assigns) do
-    submit_onclick = submit_onclick(assigns.rest)
-
     assigns
-    |> assign(:rest, rest_without_onclick(assigns.rest, submit_onclick))
-    |> assign(:submit_onclick, submit_onclick)
     |> assign_button_style()
     |> then(fn assigns ->
       assign(assigns, :button_class, btn_class_list(assigns))
@@ -380,7 +352,6 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   defp assign_native_submit_button(assigns) do
     assigns
     |> assign(:rest, put_rest_attr(assigns.rest, :type, "type", "submit"))
-    |> assign(:submit_onclick, nil)
     |> assign_button_style()
     |> then(fn assigns ->
       assign(assigns, :button_class, btn_class_list(assigns))
@@ -416,7 +387,6 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   attr(:disabled, :boolean, default: false)
   attr(:class, :any, default: nil)
   attr(:el_style, :string, default: nil)
-  attr(:submit_onclick, :string, default: nil)
   attr(:rest, :global)
   slot(:inner_block)
   slot(:prefix)
@@ -436,7 +406,6 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       class={@class}
       style={@el_style}
       phx-hook={if @rest["phx-click"], do: "WebComponentHook"}
-      onclick={@submit_onclick}
       {@rest}
     >
       <span :for={prefix <- @prefix} slot="prefix">{render_slot(prefix)}</span>
@@ -451,7 +420,6 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   attr(:el_style, :string, default: nil)
   attr(:loading, :boolean, default: false)
   attr(:disabled, :boolean, default: false)
-  attr(:submit_onclick, :string, default: nil)
   attr(:rest, :global)
   slot(:inner_block)
   slot(:prefix)
@@ -469,7 +437,6 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       disabled={@disabled || @loading}
       aria-disabled={(@disabled || @loading) && "true"}
       aria-busy={@loading && "true"}
-      onclick={@submit_onclick}
       {@rest}
     >
       <span :for={prefix <- @prefix} class="inline-flex items-center">{render_slot(prefix)}</span>
@@ -540,27 +507,5 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       key = to_string(key)
       key == "tabindex" || String.starts_with?(key, ["on", "phx-"])
     end)
-  end
-
-  # WORKAROUND(upstream): duskmoon-dev/duskmoon-elements#66
-  defp submit_onclick(rest) do
-    if rest_attr(rest, "type") == "submit" do
-      merge_onclick(rest_attr(rest, "onclick"), @submit_onclick)
-    end
-  end
-
-  defp rest_attr(rest, "type"), do: Map.get(rest, "type") || Map.get(rest, :type)
-  defp rest_attr(rest, "onclick"), do: Map.get(rest, "onclick") || Map.get(rest, :onclick)
-
-  defp merge_onclick(nil, submit_onclick), do: submit_onclick
-  defp merge_onclick("", submit_onclick), do: submit_onclick
-  defp merge_onclick(onclick, submit_onclick), do: "#{onclick}; #{submit_onclick}"
-
-  defp rest_without_onclick(rest, nil), do: rest
-
-  defp rest_without_onclick(rest, _submit_onclick) do
-    rest
-    |> Map.delete("onclick")
-    |> Map.delete(:onclick)
   end
 end

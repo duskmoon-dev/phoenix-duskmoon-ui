@@ -52,6 +52,8 @@ defmodule PhoenixDuskmoon.Component do
   def component do
     quote do
       # Action components
+      import PhoenixDuskmoon.Component.Action.Fab
+      import PhoenixDuskmoon.Component.Action.Swap
       import PhoenixDuskmoon.Component.Action.Button
       import PhoenixDuskmoon.Component.Action.Link
       import PhoenixDuskmoon.Component.Action.Dropdown
@@ -59,6 +61,11 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.Action.Toggle
 
       # Data Display components
+      import PhoenixDuskmoon.Component.DataDisplay.Carousel
+      import PhoenixDuskmoon.Component.DataDisplay.Countdown
+      import PhoenixDuskmoon.Component.DataDisplay.Diff
+      import PhoenixDuskmoon.Component.DataDisplay.Kbd
+      import PhoenixDuskmoon.Component.DataDisplay.RadialProgress
       import PhoenixDuskmoon.Component.DataDisplay.Accordion
       import PhoenixDuskmoon.Component.DataDisplay.Collapse
       import PhoenixDuskmoon.Component.DataDisplay.Avatar
@@ -72,6 +79,7 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.DataDisplay.GitRepository
       import PhoenixDuskmoon.Component.DataDisplay.List
       import PhoenixDuskmoon.Component.DataDisplay.Markdown
+      import PhoenixDuskmoon.Component.DataEntry.FilterGroup
       import PhoenixDuskmoon.Component.DataEntry.MarkdownInput
       import PhoenixDuskmoon.Component.DataDisplay.Pagination
       import PhoenixDuskmoon.Component.DataDisplay.Popover
@@ -110,6 +118,7 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.Feedback.Snackbar
 
       # Navigation components
+      import PhoenixDuskmoon.Component.Navigation.Megamenu
       import PhoenixDuskmoon.Component.Navigation.Actionbar
       import PhoenixDuskmoon.Component.Navigation.Appbar
       import PhoenixDuskmoon.Component.Navigation.BottomNav
@@ -124,6 +133,12 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.Navigation.Tab
 
       # Layout components
+      import PhoenixDuskmoon.Component.Layout.Hero
+      import PhoenixDuskmoon.Component.Layout.Indicator
+      import PhoenixDuskmoon.Component.Layout.Join
+      import PhoenixDuskmoon.Component.Layout.Mask
+      import PhoenixDuskmoon.Component.Layout.SidebarLayout
+      import PhoenixDuskmoon.Component.Layout.Stack
       import PhoenixDuskmoon.Component.Layout.BottomSheet
       import PhoenixDuskmoon.Component.Layout.Divider
       import PhoenixDuskmoon.Component.Layout.Drawer

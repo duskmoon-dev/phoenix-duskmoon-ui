@@ -29,6 +29,7 @@ defmodule PhoenixDuskmoon.Mixfile do
           "guides/theming.md",
           "guides/hooks.md",
           "guides/migrating-to-v9.md",
+          "guides/upstream-design-alignment.md",
           "CHANGELOG.md"
         ],
         groups_for_extras: [
@@ -37,6 +38,8 @@ defmodule PhoenixDuskmoon.Mixfile do
         ],
         groups_for_modules: [
           Action: [
+            PhoenixDuskmoon.Component.Action.Fab,
+            PhoenixDuskmoon.Component.Action.Swap,
             PhoenixDuskmoon.Component.Action.Button,
             PhoenixDuskmoon.Component.Action.Dropdown,
             PhoenixDuskmoon.Component.Action.Link,
@@ -44,6 +47,11 @@ defmodule PhoenixDuskmoon.Mixfile do
             PhoenixDuskmoon.Component.Action.Toggle
           ],
           "Data Display": [
+            PhoenixDuskmoon.Component.DataDisplay.Carousel,
+            PhoenixDuskmoon.Component.DataDisplay.Countdown,
+            PhoenixDuskmoon.Component.DataDisplay.Diff,
+            PhoenixDuskmoon.Component.DataDisplay.Kbd,
+            PhoenixDuskmoon.Component.DataDisplay.RadialProgress,
             PhoenixDuskmoon.Component.DataDisplay.Accordion,
             PhoenixDuskmoon.Component.DataDisplay.Avatar,
             PhoenixDuskmoon.Component.DataDisplay.Badge,
@@ -65,6 +73,7 @@ defmodule PhoenixDuskmoon.Mixfile do
             PhoenixDuskmoon.Component.DataDisplay.Tooltip
           ],
           "Data Entry": [
+            PhoenixDuskmoon.Component.DataEntry.FilterGroup,
             PhoenixDuskmoon.Component.DataEntry.Autocomplete,
             PhoenixDuskmoon.Component.DataEntry.Cascader,
             PhoenixDuskmoon.Component.DataEntry.Checkbox,
@@ -92,6 +101,7 @@ defmodule PhoenixDuskmoon.Mixfile do
             PhoenixDuskmoon.Component.Feedback.Toast
           ],
           Navigation: [
+            PhoenixDuskmoon.Component.Navigation.Megamenu,
             PhoenixDuskmoon.Component.Navigation.Actionbar,
             PhoenixDuskmoon.Component.Navigation.Appbar,
             PhoenixDuskmoon.Component.Navigation.BottomNav,
@@ -106,6 +116,12 @@ defmodule PhoenixDuskmoon.Mixfile do
             PhoenixDuskmoon.Component.Navigation.Tab
           ],
           Layout: [
+            PhoenixDuskmoon.Component.Layout.Hero,
+            PhoenixDuskmoon.Component.Layout.Indicator,
+            PhoenixDuskmoon.Component.Layout.Join,
+            PhoenixDuskmoon.Component.Layout.Mask,
+            PhoenixDuskmoon.Component.Layout.SidebarLayout,
+            PhoenixDuskmoon.Component.Layout.Stack,
             PhoenixDuskmoon.Component.Layout.BottomSheet,
             PhoenixDuskmoon.Component.Layout.Divider,
             PhoenixDuskmoon.Component.Layout.Drawer,

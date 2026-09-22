@@ -54,7 +54,8 @@ defmodule PhoenixDuskmoon.Component.Layout.Drawer do
   slot(:inner_block, required: true, doc: "Drawer body content")
   slot(:footer, doc: "Drawer footer content")
 
-  # TODO(upstream): duskmoon-dev/duskmoonui#61
+  # Core now offers native styling too; retain the Elements methods and events
+  # used by existing Phoenix consumers.
   def dm_drawer(assigns) do
     ~H"""
     <el-dm-drawer

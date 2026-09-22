@@ -2,7 +2,9 @@ defmodule Storybook.DataDisplay.Chip do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataDisplay.Chip.dm_chip/1
-  def description, do: "Compact label for categories, tags, and selections with color, size, and state variants."
+
+  def description,
+    do: "Compact label for categories, tags, and selections with color, size, and state variants."
 
   def variations do
     [
@@ -27,8 +29,16 @@ defmodule Storybook.DataDisplay.Chip do
         id: :variants,
         description: "Fill style variants",
         variations: [
-          %Variation{id: :outlined, attributes: %{variant: "outlined", color: "primary"}, slots: ["Outlined"]},
-          %Variation{id: :soft, attributes: %{variant: "soft", color: "secondary"}, slots: ["Soft"]}
+          %Variation{
+            id: :outlined,
+            attributes: %{variant: "outlined", color: "primary"},
+            slots: ["Outlined"]
+          },
+          %Variation{
+            id: :soft,
+            attributes: %{variant: "soft", color: "secondary"},
+            slots: ["Soft"]
+          }
         ]
       },
       %VariationGroup{
@@ -44,9 +54,21 @@ defmodule Storybook.DataDisplay.Chip do
         id: :states,
         description: "Interactive states",
         variations: [
-          %Variation{id: :deletable, attributes: %{color: "error", deletable: true}, slots: ["Remove me"]},
-          %Variation{id: :selected, attributes: %{color: "success", selected: true}, slots: ["Active"]},
-          %Variation{id: :disabled, attributes: %{color: "info", disabled: true}, slots: ["Disabled"]}
+          %Variation{
+            id: :deletable,
+            attributes: %{color: "error", deletable: true, delete_label: "Remove category"},
+            slots: ["Remove me"]
+          },
+          %Variation{
+            id: :selected,
+            attributes: %{color: "success", selectable: true, selected: true},
+            slots: ["Active"]
+          },
+          %Variation{
+            id: :disabled,
+            attributes: %{color: "info", disabled: true},
+            slots: ["Disabled"]
+          }
         ]
       }
     ]

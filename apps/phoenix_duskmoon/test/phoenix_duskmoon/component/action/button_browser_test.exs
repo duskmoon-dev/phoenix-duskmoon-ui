@@ -247,6 +247,68 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonBrowserTest do
              """)
   end
 
+  test "registered element submits once with submitter data and respects validation", %{
+    page: page
+  } do
+    component =
+      render_component(&dm_btn/1, %{
+        id: "save-element",
+        type: "submit",
+        form: "element-form",
+        name: "action",
+        value: "save",
+        inner_block: %{inner_block: fn _, _ -> "Save" end}
+      })
+
+    package =
+      Path.expand(
+        "../../../../../../node_modules/@duskmoon-dev/el-button/dist/esm/register.js",
+        __DIR__
+      )
+
+    {runtime, 0} = System.cmd("bun", ["build", package, "--target=browser", "--format=iife"])
+
+    html = """
+    <!doctype html><html lang="en"><body>
+    <form id="element-form"><input name="title" required></form>
+    #{component}<script>#{runtime}</script></body></html>
+    """
+
+    :ok = CDPBrowser.goto(page, "data:text/html;base64," <> Base.encode64(html))
+
+    assert {:ok,
+            %{
+              "registered" => true,
+              "invalidCount" => 0,
+              "count" => 1,
+              "submitter" => %{"name" => "action", "value" => "save"}
+            }} =
+             CDPBrowser.evaluate(page, """
+             (() => {
+               const host = document.getElementById("save-element")
+               const form = document.getElementById("element-form")
+               const button = host.shadowRoot.querySelector("button")
+               let count = 0
+               let submitter
+               form.addEventListener("submit", event => {
+                 event.preventDefault()
+                 count++
+                 submitter = {name: event.submitter.name, value: event.submitter.value}
+               })
+               button.click()
+               const invalidCount = count
+               form.elements.title.value = "Weekend plan"
+               button.click()
+               host.disabled = true
+               host.click()
+               host.disabled = false
+               host.loading = true
+               host.click()
+               return {registered: !!customElements.get("el-dm-button"), invalidCount, count, submitter}
+             })()
+             """)
+  end
+
   defp dispatch_key(page, key, code, key_code, modifiers \\ 0) do
     params = %{
       "key" => key,

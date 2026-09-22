@@ -1,3 +1,21 @@
+# Unreleased
+
+### Added
+
+- Native Core components: carousel, countdown, diff, keyboard keys, radial progress,
+  floating actions, swap, filter group, hero, indicator, join, mask, sidebar layout,
+  stack and megamenu, with Storybook examples.
+- Chat scroll container and timeline setting; chip interaction attributes and events.
+
+### Changed
+
+- Pin published DuskMoon dependencies to current exact versions: Core/CSS Art
+  1.19.9, Elements/Art Elements 1.7.6 and current individual element versions.
+- Use Core spinner/stat styles and remove resolved collapse, highlighting and
+  duplicate form-submission workarounds. Preserve existing navigation and overlay APIs.
+- Load Storybook JavaScript as an ES module and resolve workspace assets independently
+  of the umbrella reloader's working directory, including hoisted production dependencies.
+
 # [9.0.0-rc.1](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v9.0.0-rc.0...v9.0.0-rc.1) (2026-02-28)
 
 

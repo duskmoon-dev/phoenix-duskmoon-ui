@@ -61,7 +61,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Breadcrumb do
         if(assigns.separator in [nil, ""], do: "/", else: assigns.separator)
       )
 
-    # WORKAROUND(upstream): duskmoon-dev/duskmoon-elements#67
+    # Keep breadcrumb links available during server rendering and before registration.
     ~H"""
     <nav
       id={@id}

@@ -168,4 +168,31 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ChatTest do
     assert result =~ ~s[class="text-primary"]
     assert result =~ "</el-dm-chat-typing>"
   end
+
+  test "scroll container preserves direct message children and assistant timeline identifiers" do
+    assigns = %{}
+
+    result =
+      rendered_to_string(~H"""
+      <.dm_chat_scroll id="conversation" class="h-96" label="Support conversation" indicator_label="Responses">
+        <.dm_chat id="reply-one" timeline={1} author="Assistant">First response</.dm_chat>
+        <.dm_chat align="end">Follow-up question</.dm_chat>
+        <.dm_chat id="reply-two" timeline={24} author="Assistant">Last response</.dm_chat>
+      </.dm_chat_scroll>
+      """)
+
+    document = LazyHTML.from_fragment(result)
+
+    assert 1 ==
+             Enum.count(
+               LazyHTML.query(
+                 document,
+                 "el-dm-chat-scroll[label='Support conversation'][indicator-label='Responses']"
+               )
+             )
+
+    assert Enum.count(LazyHTML.query(document, "el-dm-chat-scroll > el-dm-chat")) == 3
+    assert ["1", "24"] == LazyHTML.attribute(LazyHTML.query(document, "el-dm-chat"), "timeline")
+    assert LazyHTML.text(document) =~ "Follow-up question"
+  end
 end

@@ -23,22 +23,23 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
   test "renders base layout classes" do
     result = render_component(&dm_stat/1, %{title: "Test", value: "0"})
 
-    assert result =~ "flex"
-    assert result =~ "gap-3"
-    assert result =~ "p-4"
+    document = LazyHTML.from_fragment(result)
+    assert LazyHTML.text(LazyHTML.query(document, "dl.stat > dt.stat-title")) == "Test"
+
+    assert LazyHTML.text(LazyHTML.query(document, "dl.stat > dd.stat-value")) |> String.trim() ==
+             "0"
   end
 
-  test "title has text-on-surface-variant class" do
+  test "title has stat-title class" do
     result = render_component(&dm_stat/1, %{title: "Label", value: "42"})
 
-    assert result =~ "text-on-surface-variant"
+    assert result =~ "stat-title"
   end
 
-  test "value has font-semibold tracking-tight" do
+  test "value has upstream stat value class" do
     result = render_component(&dm_stat/1, %{title: "Test", value: "99"})
 
-    assert result =~ "font-semibold"
-    assert result =~ "tracking-tight"
+    assert result =~ "stat-value"
   end
 
   test "renders with description" do
@@ -67,7 +68,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
         color: "error"
       })
 
-    assert result =~ "text-error"
+    assert result =~ "stat-error"
   end
 
   test "renders all color options" do
@@ -79,7 +80,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
           color: color
         })
 
-      assert result =~ "text-#{color}"
+      assert result =~ "stat-#{color}"
     end
   end
 
@@ -91,14 +92,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
         color: "accent"
       })
 
-    assert result =~ "text-tertiary"
+    assert result =~ "stat-tertiary"
   end
 
   test "renders without color by default" do
     result = render_component(&dm_stat/1, %{title: "Test", value: "0"})
 
-    refute result =~ "text-primary"
-    refute result =~ "text-error"
+    refute result =~ "stat-primary"
+    refute result =~ "stat-error"
   end
 
   test "renders description with color for success/error/warning" do
@@ -112,7 +113,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
         })
 
       # description <p> should also get the color
-      assert result =~ "text-#{color}"
+      assert result =~ "stat-#{color}"
     end
   end
 
@@ -196,7 +197,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
     result = render_component(&dm_stat/1, %{title: "Test", value: "0"})
 
     # The icon div uses :if={@icon != []} so it should be absent
-    refute result =~ "shrink-0"
+    refute result =~ "stat-figure"
   end
 
   test "renders icon with color" do
@@ -214,11 +215,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
   test "description does not get color for primary/secondary/tertiary/accent/info" do
     # accent maps to tertiary in CSS output
     color_css_map = %{
-      "primary" => "text-primary",
-      "secondary" => "text-secondary",
-      "tertiary" => "text-tertiary",
-      "accent" => "text-tertiary",
-      "info" => "text-info"
+      "primary" => "stat-primary",
+      "secondary" => "stat-secondary",
+      "tertiary" => "stat-tertiary",
+      "accent" => "stat-tertiary",
+      "info" => "stat-info"
     }
 
     for color <- ~w(primary secondary tertiary accent info) do
@@ -273,7 +274,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
     assert result =~ "&lt;"
   end
 
-  test "description has text-sm text-on-surface-variant by default" do
+  test "description has text-sm stat-title by default" do
     result =
       render_component(&dm_stat/1, %{
         title: "Test",
@@ -285,7 +286,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
     assert result =~ "some info"
   end
 
-  test "icon wrapper has shrink-0 class" do
+  test "icon wrapper has stat-figure class" do
     result =
       render_component(&dm_stat/1, %{
         title: "Test",
@@ -293,6 +294,6 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.StatTest do
         icon: %{inner_block: fn _, _ -> "icon-content" end}
       })
 
-    assert result =~ "shrink-0"
+    assert result =~ "stat-figure"
   end
 end

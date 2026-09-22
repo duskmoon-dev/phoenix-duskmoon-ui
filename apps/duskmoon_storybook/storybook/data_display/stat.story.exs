@@ -2,7 +2,10 @@ defmodule Storybook.DataDisplay.Stat do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataDisplay.Stat.dm_stat/1
-  def description, do: "Statistic display with title, value, and optional description slots for dashboards and summaries."
+
+  def description,
+    do:
+      "Core stat layout with semantic description lists, theme colors, and an optional decorative figure."
 
   def variations do
     [
@@ -30,22 +33,49 @@ defmodule Storybook.DataDisplay.Stat do
         id: :colors,
         description: "Color variants",
         variations: [
-          %Variation{id: :primary, attributes: %{title: "Sessions", value: "892", color: "primary"}},
-          %Variation{id: :secondary, attributes: %{title: "Page Views", value: "15.2K", color: "secondary"}},
-          %Variation{id: :tertiary, attributes: %{title: "Plans", value: "57", color: "tertiary"}},
-          %Variation{id: :accent, attributes: %{title: "Bookmarks", value: "348", color: "accent"}},
+          %Variation{
+            id: :primary,
+            attributes: %{title: "Sessions", value: "892", color: "primary"}
+          },
+          %Variation{
+            id: :secondary,
+            attributes: %{title: "Page Views", value: "15.2K", color: "secondary"}
+          },
+          %Variation{
+            id: :tertiary,
+            attributes: %{title: "Plans", value: "57", color: "tertiary"}
+          },
+          %Variation{
+            id: :accent,
+            attributes: %{title: "Bookmarks", value: "348", color: "accent"}
+          },
           %Variation{id: :info, attributes: %{title: "Pending", value: "42", color: "info"}},
           %Variation{
             id: :success,
-            attributes: %{title: "Growth", value: "+24%", color: "success", description: "Up from 18%"}
+            attributes: %{
+              title: "Growth",
+              value: "+24%",
+              color: "success",
+              description: "Up from 18%"
+            }
           },
           %Variation{
             id: :warning,
-            attributes: %{title: "Response", value: "450ms", color: "warning", description: "Above target"}
+            attributes: %{
+              title: "Response",
+              value: "450ms",
+              color: "warning",
+              description: "Above target"
+            }
           },
           %Variation{
             id: :error,
-            attributes: %{title: "Errors", value: "3.2%", color: "error", description: "Above threshold"}
+            attributes: %{
+              title: "Errors",
+              value: "3.2%",
+              color: "error",
+              description: "Above threshold"
+            }
           }
         ]
       },
@@ -54,8 +84,14 @@ defmodule Storybook.DataDisplay.Stat do
         description: "Size variants",
         variations: [
           %Variation{id: :small, attributes: %{title: "Uptime", value: "99.9%", size: "sm"}},
-          %Variation{id: :medium, attributes: %{title: "CPU", value: "67%", size: "md", color: "info"}},
-          %Variation{id: :large, attributes: %{title: "Sales", value: "$1.2M", size: "lg", color: "primary"}}
+          %Variation{
+            id: :medium,
+            attributes: %{title: "CPU", value: "67%", size: "md", color: "info"}
+          },
+          %Variation{
+            id: :large,
+            attributes: %{title: "Sales", value: "$1.2M", size: "lg", color: "primary"}
+          }
         ]
       }
     ]
