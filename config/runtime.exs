@@ -5,6 +5,9 @@ if System.get_env("PHX_SERVER") do
 end
 
 if config_env() == :prod do
+  config :duskmoon_storybook, DuskmoonStorybookWeb.Endpoint,
+    url: [host: System.get_env("HOST", "duskmoon-storybook.gsmlg.dev")]
+
   # Only require SECRET_KEY_BASE when starting the server.
   # This allows mix tasks (e.g. mix prepublish) to run in prod mode
   # without needing the secret.
