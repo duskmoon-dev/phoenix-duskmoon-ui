@@ -1,3 +1,8 @@
+---
+name: update-duskmoon-upstream
+description: Route missing or broken Duskmoon CSS styles to upstream packages and track the dependency fix.
+---
+
 # Duskmoon Upstream Style Dependencies
 
 This skill documents the correct approach for handling CSS styles in Phoenix Duskmoon UI - all styles should come from upstream packages, not be maintained locally.

@@ -1,21 +1,24 @@
+---
+name: cmd-update-project-skill
+description: Regenerate the Phoenix Duskmoon UI or Duskmoon Bundler project skill from current source and documentation.
+---
+
 # Update Project Skill
 
 Re-analyze project source and regenerate one or more files under `skills/`.
 
 ## User Input
 
-```text
-$ARGUMENTS
-```
+Use the invoking user request as input.
 
 ## Target Selection
 
-- If `$ARGUMENTS` contains `all`, update both project skills.
-- Else if `$ARGUMENTS` contains `duskmoon_bundler` or `duskmoon-bundler`, update only
+- If the user request contains `all`, update both project skills.
+- Else if the user request contains `duskmoon_bundler` or `duskmoon-bundler`, update only
   `skills/duskmoon_bundler/`.
-- Else if `$ARGUMENTS` contains `phoenix-duskmoon-ui`, `phoenix_duskmoon`, or
+- Else if the user request contains `phoenix-duskmoon-ui`, `phoenix_duskmoon`, or
   `phoenix-duskmoon`, update only `skills/phoenix-duskmoon-ui/`.
-- Else if `$ARGUMENTS` is empty, update `skills/phoenix-duskmoon-ui/` for backward
+- Else if the user request is empty, update `skills/phoenix-duskmoon-ui/` for backward
   compatibility.
 
 Only touch files for the selected target skill(s).
