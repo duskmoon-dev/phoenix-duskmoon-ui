@@ -19,6 +19,7 @@ config :duskmoon_storybook, DuskmoonStorybookWeb.Storybook,
   otp_app: :duskmoon_storybook,
   title: "Phoenix Duskmoon UI Storybook",
   js_path: "/assets/js/app.js",
+  js_script_type: "module",
   css_path: "/assets/css/app.css"
 
 config :duskmoon_bundler,
@@ -52,7 +53,11 @@ config :duskmoon_bundler, :duskmoon_storybook,
   root: "apps/duskmoon_storybook/assets",
   entry: "apps/duskmoon_storybook/assets/js/app.js",
   outdir: "apps/duskmoon_storybook/priv/static/assets",
-  resolve_dirs: ["apps", "deps"],
+  resolve_dirs: [
+    Path.expand("../node_modules", __DIR__),
+    Path.expand("../apps", __DIR__),
+    Path.expand("../deps", __DIR__)
+  ],
   vendor_source: [
     "@duskmoon-dev/el-chat/register",
     "@duskmoon-dev/el-markdown",

@@ -26,6 +26,15 @@ defmodule DuskmoonStorybookWeb.RouterTest do
     end
   end
 
+  test "custom element stories load the application as an ES module", %{conn: conn} do
+    html = conn |> get("/storybook/data_display/chat_scroll") |> html_response(200)
+    document = LazyHTML.from_document(html)
+    scripts = LazyHTML.query(document, "script[type=module][src^='/assets/js/app.js']")
+
+    assert Enum.count(scripts) == 1
+    assert Enum.count(LazyHTML.query(document, "el-dm-chat-scroll")) == 1
+  end
+
   describe "git repository data display routes" do
     test "renders issue 78 component gallery pages", %{conn: conn} do
       pages = [

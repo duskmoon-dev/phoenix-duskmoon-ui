@@ -15,7 +15,7 @@ defmodule DuskmoonStorybookWeb.Endpoint do
   if code_reloading? do
     plug DuskmoonBundler.DevServer,
       profile: :duskmoon_storybook,
-      root: "apps/duskmoon_storybook/assets/js",
+      root: Path.expand("../../assets/js", __DIR__),
       prefix: "/assets/js"
   end
 
