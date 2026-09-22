@@ -717,7 +717,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     refute result =~ "requestSubmit"
   end
 
-  test "renders submit button with native form submit bridge" do
+  test "delegates form submission to the registered button element" do
     result =
       render_component(&dm_btn/1, %{
         type: "submit",
@@ -727,11 +727,13 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
         inner_block: %{inner_block: fn _, _ -> "Save" end}
       })
 
-    assert result =~ "document.createElement"
-    assert result =~ "requestSubmit(submitter)"
-    assert result =~ "submitter.name"
-    assert result =~ "submitter.value"
-    assert result =~ "getAttribute(&#39;form&#39;)"
+    assert result =~ "<el-dm-button"
+    assert result =~ ~s[type="submit"]
+    assert result =~ ~s[form="note-form"]
+    assert result =~ ~s[name="action"]
+    assert result =~ ~s[value="save"]
+    refute result =~ "requestSubmit"
+    refute result =~ "onclick="
   end
 
   test "does not render submit bridge for non-submit buttons" do
@@ -744,7 +746,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     refute result =~ "requestSubmit"
   end
 
-  test "merges custom onclick with submit bridge" do
+  test "preserves custom onclick without injecting another submit handler" do
     result =
       render_component(&dm_btn/1, %{
         type: "submit",
@@ -753,7 +755,7 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
       })
 
     assert result =~ "window.beforeSubmit()"
-    assert result =~ "requestSubmit(submitter)"
+    refute result =~ "requestSubmit"
   end
 
   test "renders confirm modal with empty confirm_action shows default Yes button" do

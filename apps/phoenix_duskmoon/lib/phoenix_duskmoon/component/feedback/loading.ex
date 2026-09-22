@@ -21,7 +21,7 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
   import PhoenixDuskmoon.Component.Helpers, only: [css_color: 1]
 
   @doc """
-  Generates a simple loading spinner.
+  Generates a spinner using the upstream Core loading styles, including reduced-motion support.
 
   ## Examples
 
@@ -65,9 +65,9 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
     >
       <span
         class={[
-          "block rounded-full animate-spin border-2 border-current border-t-transparent",
-          spinner_size(@size),
-          spinner_color(@variant)
+          "loading loading-spinner",
+          "loading-#{@size}",
+          "loading-#{@variant}"
         ]}
         aria-hidden="true"
       ></span>
@@ -75,19 +75,6 @@ defmodule PhoenixDuskmoon.Component.Feedback.Loading do
     </div>
     """
   end
-
-  defp spinner_size("xs"), do: "w-4 h-4"
-  defp spinner_size("sm"), do: "w-5 h-5"
-  defp spinner_size("md"), do: "w-6 h-6"
-  defp spinner_size("lg"), do: "w-8 h-8"
-
-  defp spinner_color("primary"), do: "text-primary"
-  defp spinner_color("secondary"), do: "text-secondary"
-  defp spinner_color("tertiary"), do: "text-tertiary"
-  defp spinner_color("info"), do: "text-info"
-  defp spinner_color("success"), do: "text-success"
-  defp spinner_color("warning"), do: "text-warning"
-  defp spinner_color("error"), do: "text-error"
 
   @doc """
   Generates an advanced animated particle loading effect.

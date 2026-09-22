@@ -3,7 +3,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Stat do
   Stat component for displaying key metrics and statistics.
 
   A simple data display component that shows a label, value, and optional
-  description. Built with Tailwind utility classes and theme color variables.
+  description. Uses the upstream Core stat layout and theme colors.
 
   ## Examples
 
@@ -59,27 +59,24 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Stat do
     assigns = assign(assigns, :color, css_color(assigns.color))
 
     ~H"""
-    <div
+    <dl
       id={@id}
       class={[
-        "flex gap-3 p-4",
+        "stat",
+        @color && "stat-#{@color}",
         @class
       ]}
       {@rest}
     >
-      <div :if={@icon != []} class={["shrink-0", value_color(@color)]}>
+      <dt class={["stat-title", title_size(@size)]}>{@title}</dt>
+      <dd class={["stat-value", value_size(@size)]}>{@value}</dd>
+      <dd :if={@description} class={["stat-desc text-sm", desc_color(@color)]}>
+        {@description}
+      </dd>
+      <dd :if={@icon != []} class={["stat-figure", value_color(@color)]} aria-hidden="true">
         {render_slot(@icon)}
-      </div>
-      <dl>
-        <dt class={["text-on-surface-variant", title_size(@size)]}>{@title}</dt>
-        <dd class={["font-semibold tracking-tight", value_color(@color), value_size(@size)]}>
-          {@value}
-        </dd>
-        <dd :if={@description} class={["text-sm text-on-surface-variant", desc_color(@color)]}>
-          {@description}
-        </dd>
-      </dl>
-    </div>
+      </dd>
+    </dl>
     """
   end
 

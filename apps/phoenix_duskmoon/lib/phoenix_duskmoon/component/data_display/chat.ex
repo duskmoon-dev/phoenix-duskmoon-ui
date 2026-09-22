@@ -40,6 +40,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Chat do
   attr(:author, :string, default: nil, doc: "message author")
   attr(:time, :string, default: nil, doc: "message timestamp")
   attr(:status, :string, default: nil, doc: "delivery/status text")
+
+  attr(:timeline, :integer,
+    default: nil,
+    values: [nil | Enum.to_list(1..24)],
+    doc: "assistant reply position in a chat scroll container"
+  )
+
   attr(:actions, :string, default: nil, doc: "comma-separated quick action labels")
   attr(:content, :string, default: nil, doc: "markdown message content")
 
@@ -70,6 +77,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Chat do
       time={@time}
       status={@status}
       actions={@actions}
+      timeline={@timeline}
       content={@content}
       class={@class}
       phx-hook={@hook}
@@ -81,6 +89,38 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Chat do
       <span :for={actions <- @actions_slot} slot="actions">{render_slot(actions)}</span>
       {render_slot(@inner_block)}
     </el-dm-chat>
+    """
+  end
+
+  @doc """
+  Renders a scrollable conversation with navigation indicators for assistant replies.
+
+  Place `dm_chat` messages directly in this slot and assign unique `timeline` values
+  from 1 through 24 to assistant replies. User messages (`align="end"`) are excluded.
+  Set a height on the container, for example `class="h-96"`.
+  """
+  @doc type: :component
+  attr(:id, :any, default: nil, doc: "HTML id attribute")
+  attr(:class, :any, default: nil, doc: "additional CSS classes and container height")
+  attr(:label, :string, default: "Conversation", doc: "accessible scroll region label")
+
+  attr(:indicator_label, :string,
+    default: "Assistant replies",
+    doc: "accessible navigation label"
+  )
+
+  attr(:rest, :global)
+  slot(:inner_block, required: true, doc: "chat messages")
+
+  def dm_chat_scroll(assigns) do
+    ~H"""
+    <el-dm-chat-scroll
+      id={@id}
+      class={@class}
+      label={@label}
+      indicator-label={@indicator_label}
+      {@rest}
+    >{render_slot(@inner_block)}</el-dm-chat-scroll>
     """
   end
 
@@ -118,6 +158,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Chat do
 
   @doc """
   Renders a markdown chat input that emits `send` events from the custom element.
+
+  The browser event detail contains `value` and `files` (`File[]`). Handle binary
+  attachments in the application's upload flow; the LiveView event bridge does not
+  upload browser File objects. `clear_on_send` clears both content and attachments.
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")

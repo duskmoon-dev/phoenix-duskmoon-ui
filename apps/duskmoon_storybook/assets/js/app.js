@@ -93,37 +93,10 @@ function installCodeEngineLayoutWorkaround() {
     .observe(document.documentElement, { childList: true, subtree: true });
 }
 
-function withCodeEngineOneDarkThemeWorkaround(load) {
-  const objectValues = Object.values;
-
-  const patchedObjectValues = function patchedObjectValues(value) {
-    const values = objectValues(value);
-
-    // WORKAROUND(upstream): duskmoon-dev/duskmoon-elements#65
-    // el-code-engine picks the first non-string namespace export; one-dark exports
-    // a color map before the actual extension array.
-    if (value?.color && Array.isArray(value?.oneDark) && values.includes(value.color)) {
-      return [value.oneDark, ...values.filter((item) => item !== value.oneDark)];
-    }
-
-    return values;
-  };
-
-  Object.values = patchedObjectValues;
-
-  return Promise.resolve()
-    .then(load)
-    .finally(() => {
-      if (Object.values === patchedObjectValues) {
-        Object.values = objectValues;
-      }
-    });
-}
-
 function withCodeEngineWorkarounds(load) {
   installCodeEngineShadowStyleWorkaround();
 
-  return withCodeEngineOneDarkThemeWorkaround(load).then((result) => {
+  return Promise.resolve().then(load).then((result) => {
     installCodeEngineLayoutWorkaround();
     return result;
   });
@@ -162,6 +135,12 @@ const duskmoonElementRegistrars = {
   "el-dm-card": () => import("@duskmoon-dev/el-card/register"),
   "el-dm-cascader": () => import("@duskmoon-dev/el-cascader/register"),
   "el-dm-chat": () => import("@duskmoon-dev/el-chat/register"),
+  "el-dm-chat-bubble": () => import("@duskmoon-dev/el-chat/register"),
+  "el-dm-chat-input": () => import("@duskmoon-dev/el-chat/register"),
+  "el-dm-chat-reasoning": () => import("@duskmoon-dev/el-chat/register"),
+  "el-dm-chat-scroll": () => import("@duskmoon-dev/el-chat/register"),
+  "el-dm-chat-tool": () => import("@duskmoon-dev/el-chat/register"),
+  "el-dm-chat-typing": () => import("@duskmoon-dev/el-chat/register"),
   "el-dm-chip": () => import("@duskmoon-dev/el-chip/register"),
   "el-dm-circle-menu": () => import("@duskmoon-dev/el-circle-menu/register"),
   "el-dm-code-block": () => import("@duskmoon-dev/el-code-block/register"),

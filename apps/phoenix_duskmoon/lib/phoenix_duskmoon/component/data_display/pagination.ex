@@ -93,7 +93,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
 
   slot(:inner_block, required: false, doc: "optional extra content after the pagination controls")
 
-  # WORKAROUND(upstream): duskmoon-dev/duskmoon-elements#68
+  # Native controls preserve Phoenix patch/navigate links and LiveView event attributes.
   def dm_pagination(assigns) do
     {max_page, pages} = generate_pages(assigns.total, assigns.page_size, assigns.page_num)
 

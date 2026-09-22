@@ -14,13 +14,17 @@
 
   ```heex
   <.dm_chat author="Assistant" avatar="AI" color="primary" content="Hello." />
-  <.dm_chat_input name="message" duskmoon-send-send="send_message" />
+  <.dm_chat_scroll class="h-96">
+    <.dm_chat timeline={1} author="Assistant">First reply</.dm_chat>
+  </.dm_chat_scroll>
+  <.dm_chat_input id="message-composer" name="message" duskmoon-send-send="send_message" />
   ```
   """} />
 
-  <section class="mt-8 space-y-4 max-w-3xl">
+  <.dm_chat_scroll id="chat-conversation" class="mt-8 h-96 max-w-3xl" label="Example conversation">
     <.dm_chat
       author="Assistant"
+      timeline={1}
       avatar="AI"
       time="09:41"
       status="Streaming"
@@ -33,7 +37,7 @@
       Show the reasoning and tool-call states.
     </.dm_chat>
 
-    <.dm_chat author="Assistant" avatar="AI" color="tertiary" size="lg">
+    <.dm_chat author="Assistant" avatar="AI" color="tertiary" size="lg" timeline={2}>
       <.dm_chat_reasoning summary="Reasoning" open>
         I need to inspect the package API before wrapping the custom element.
         <:tool>
@@ -54,8 +58,11 @@
     <.dm_chat author="Assistant" avatar="AI" streaming>
       <.dm_chat_typing />
     </.dm_chat>
+  </.dm_chat_scroll>
 
+  <section class="mt-8 max-w-3xl">
     <.dm_chat_input
+      id="chat-composer"
       name="message"
       placeholder="Send a message..."
       send_label="Send"

@@ -453,4 +453,37 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ChipTest do
     refute result =~ "<a "
     refute result =~ "el-dm-chip"
   end
+
+  test "exposes the accessible element selection and deletion contract" do
+    result =
+      render_component(&dm_chip/1, %{
+        id: "filter",
+        selectable: true,
+        selected: true,
+        deletable: true,
+        delete_label: "Remove Elixir filter",
+        "duskmoon-send-dm-change": "filter_changed",
+        "duskmoon-send-dm-delete": "filter_removed",
+        inner_block: inner_block("Elixir")
+      })
+
+    document = LazyHTML.from_fragment(result)
+
+    assert 1 ==
+             Enum.count(LazyHTML.query(document, "el-dm-chip[selectable][selected][deletable]"))
+
+    assert ["Remove Elixir filter"] ==
+             LazyHTML.attribute(LazyHTML.query(document, "el-dm-chip"), "delete-label")
+
+    assert ["WebComponentHook"] ==
+             LazyHTML.attribute(LazyHTML.query(document, "el-dm-chip"), "phx-hook")
+
+    assert ["filter_changed"] ==
+             LazyHTML.attribute(LazyHTML.query(document, "el-dm-chip"), "duskmoon-send-dm-change")
+
+    assert ["filter_removed"] ==
+             LazyHTML.attribute(LazyHTML.query(document, "el-dm-chip"), "duskmoon-send-dm-delete")
+
+    assert Enum.empty?(LazyHTML.query(document, "button"))
+  end
 end

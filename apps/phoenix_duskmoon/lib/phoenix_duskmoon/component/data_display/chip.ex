@@ -26,6 +26,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Chip do
   * `variant` - Chip variant: filled, outlined, soft (default: filled)
   * `color` - Chip color: primary, secondary, tertiary, success, warning, error, info
   * `size` - Chip size: sm, md, lg (default: md)
+  * `clickable` - Render an action button emitting `dm-click`
+  * `selectable` - Render a toggle button emitting `dm-change`
   * `deletable` - Whether the chip shows a delete button (default: false)
   * `selected` - Whether the chip is in selected state (default: false)
   * `disabled` - Whether the chip is disabled (default: false)
@@ -72,6 +74,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Chip do
   )
 
   attr(:size, :string, default: "md", values: ["sm", "md", "lg"], doc: "chip size")
+  attr(:clickable, :boolean, default: false, doc: "render an action button")
+  attr(:selectable, :boolean, default: false, doc: "render a selectable toggle button")
   attr(:deletable, :boolean, default: false, doc: "show a delete button on the chip")
   attr(:selected, :boolean, default: false, doc: "mark the chip as selected")
   attr(:disabled, :boolean, default: false, doc: "disable the chip")
@@ -107,22 +111,31 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Chip do
   )
 
   attr(:rest, :global,
-    include: ~w(download hreflang referrerpolicy rel target type),
+    include:
+      ~w(download hreflang referrerpolicy rel target type duskmoon-send-dm-click duskmoon-send-dm-change duskmoon-send-dm-delete),
     doc: "additional HTML attributes"
   )
 
   slot(:inner_block, required: true, doc: "chip label text")
   slot(:icon, doc: "leading icon content")
 
-  # WORKAROUND(upstream): duskmoon-dev/duskmoon-elements#74
-  # Native modes avoid nested links and inaccessible delete controls until the
-  # custom element provides equivalent semantic APIs.
+  # Native modes preserve Phoenix navigation, JS commands, and phx-value attributes.
+  # The element owns ordinary action, selection, and accessible removal behavior.
   def dm_chip(assigns) do
     mode = chip_mode(assigns)
     {rest, delete_rest} = split_delete_rest(mode, assigns.rest)
 
     assigns =
       assigns
+      |> assign(
+        :hook,
+        if(
+          Enum.any?(assigns.rest, fn {key, _} ->
+            String.starts_with?(to_string(key), "duskmoon-send-")
+          end),
+          do: "WebComponentHook"
+        )
+      )
       |> assign(:mode, mode)
       |> assign(:chip_class, chip_class(assigns))
       |> assign(:rest, rest)
@@ -178,7 +191,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Chip do
       variant={@variant}
       color={@color}
       size={@size}
+      clickable={@clickable}
+      selectable={@selectable}
       deletable={@deletable}
+      delete-label={@delete_label}
+      phx-hook={@hook}
       selected={@selected}
       disabled={@disabled}
       aria-disabled={@disabled && "true"}

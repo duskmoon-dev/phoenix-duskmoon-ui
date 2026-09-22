@@ -2,7 +2,9 @@ defmodule Storybook.Feedback.LoadingSpinner do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.Feedback.Loading.dm_loading_spinner/1
-  def description, do: "Simple spinning loader with optional text."
+
+  def description,
+    do: "Core CSS spinner with theme colors, optional status text, and reduced-motion support."
 
   def variations do
     [

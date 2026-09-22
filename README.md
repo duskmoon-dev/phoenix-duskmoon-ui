@@ -142,14 +142,43 @@ Components that require hooks:
 
 ## Available Components
 
-- **Action**: buttons, dropdowns, links, menus, toggles
-- **Data Display**: accordion, avatar, badge, card, chip, collapse, datetime, flash, git repository, list, markdown, markdown body, pagination, popover, progress, skeleton, stat, table, timeline, tooltip
-- **Data Entry**: autocomplete, cascader, checkbox, compact input, file upload, form, input, multi-select, OTP input, PIN input, radio, rating, segment control, select, slider, switch, textarea, time input, tree select
+- **Action**: buttons, dropdowns, floating actions, links, menus, swaps, toggles
+- **Data Display**: accordion, avatar, badge, card, carousel, chat, chat scroll, chip, collapse, countdown, datetime, diff, keyboard keys, flash, git repository, list, markdown, markdown body, pagination, popover, progress, radial progress, skeleton, stat, table, timeline, tooltip
+- **Data Entry**: autocomplete, cascader, checkbox, compact input, file upload, filter group, form, input, multi-select, OTP input, PIN input, radio, rating, segment control, select, slider, switch, textarea, time input, tree select
 - **Feedback**: dialog, loading, snackbar, toast
-- **Navigation**: actionbar, appbar, bottom nav, breadcrumb, left menu, navbar, nested menu, page footer, page header, stepper, steps, tabs
-- **Layout**: bottom sheet, divider, drawer, theme switcher
+- **Navigation**: actionbar, appbar, bottom nav, breadcrumb, left menu, megamenu, navbar, nested menu, page footer, page header, stepper, steps, tabs
+- **Layout**: bottom sheet, divider, drawer, hero, indicator, join, mask, sidebar layout, stack, theme switcher
 - **CSS Art**: button noise, eclipse, plasma ball, signature, snow, spotlight search
 
+
+## Upstream design alignment
+
+The current frontend uses Core/CSS Art 1.19.9 and Elements/Art Elements 1.7.6.
+Individually published element dependencies are pinned to their current versions;
+see the [contract audit](apps/phoenix_duskmoon/guides/upstream-design-alignment.md) for the exact set.
+
+The new Core primitives render native HTML and use the packaged CSS. Applications
+own countdown timing, filter state, progress values and layout state. Carousel uses
+native scrolling, swap uses a checkbox, floating actions and megamenu
+use the browser Popover API. No element registration is needed for these primitives.
+
+```heex
+<.dm_indicator>
+  <:indicator><span class="badge badge-primary">3</span></:indicator>
+  <button type="button" class="btn">Inbox</button>
+</.dm_indicator>
+
+<.dm_sidebar_layout>
+  <:sidebar><nav aria-label="Workspace">Workspace links</nav></:sidebar>
+  <main>Page content</main>
+</.dm_sidebar_layout>
+```
+
+Existing `dm_menu`, `dm_drawer` and `dm_bottom_sheet` retain their Elements methods
+and events. `dm_loading_spinner` now follows Core's reduced-motion behavior, and
+`dm_stat` uses its semantic stat layout. Chat scroll and chip event examples are
+available in Storybook. Browser `File` objects from chat events require the
+application's upload mechanism; they cannot be sent as LiveView JSON payloads.
 
 ## Live Storybook
 
