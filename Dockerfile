@@ -1,4 +1,5 @@
 FROM rust:1-trixie AS rust
+FROM oven/bun:1.3.13 AS bun
 
 FROM elixir:1.19-otp-28 AS builder
 
@@ -14,6 +15,7 @@ ENV PATH="/usr/local/cargo/bin:${PATH}"
 
 COPY --from=rust /usr/local/cargo /usr/local/cargo
 COPY --from=rust /usr/local/rustup /usr/local/rustup
+COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
 COPY . /build
 WORKDIR /build
 
@@ -25,16 +27,16 @@ rm -rf /var/lib/apt/lists/*
 mix local.hex --force
 mix local.rebar --force
 mix deps.get
-mix zig.get --version 0.16.0
-npm_ci_status=1
+bun_install_status=1
 for attempt in 1 2 3 4; do
-  if mix npm.ci; then
-    npm_ci_status=0
+  if bun install --frozen-lockfile; then
+    bun_install_status=0
     break
   fi
   sleep $((attempt * 5))
 done
-test "$npm_ci_status" -eq 0
+test "$bun_install_status" -eq 0
+mix zig.get --version 0.16.0
 export MATCH_STRING="s%@version \"[^\"]\+\"%@version \"${RELEASE_VERSION}\"%"
 sed -i "$MATCH_STRING" mix.exs;
 sed -i "$MATCH_STRING" apps/duskmoon_storybook/mix.exs;
