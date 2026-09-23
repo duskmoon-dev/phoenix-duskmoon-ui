@@ -37,7 +37,7 @@ jobs:
     steps:
       - name: Checkout source packages
         if: inputs.package_source == 'source'
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.git_ref }}
 
@@ -216,7 +216,7 @@ jobs:
     steps:
       - name: Checkout source packages
         if: inputs.package_source == 'source'
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.git_ref }}
 
