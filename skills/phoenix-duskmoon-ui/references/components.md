@@ -459,6 +459,40 @@ Slots: `inner_block` (required; yields `interestfor`, `aria-describedby`, and fa
 
 ---
 
+### `dm_react_chat/1` — React Streaming Chat
+
+`dm_react_chat` mounts a React transcript with `phx-update="ignore"`. React owns
+draft state, markdown rendering, scrolling, streaming messages, retry/stop
+controls, and tool/action displays. LiveView owns authorization, persistence,
+task lifecycle, and event routing. Keep the initial `messages` snapshot stable
+and push deltas with `push_event/3` instead of rerendering the transcript for
+each token.
+
+The hook is opt-in:
+
+```javascript
+import { DuskmoonReactChat } from "phoenix_duskmoon/react-chat";
+hooks: { ...DuskmoonHooks, DuskmoonReactChat }
+```
+
+| Attr | Type | Default | Values |
+|------|------|---------|--------|
+| `id` | string | required | Stable mount identifier |
+| `conversation_id` | string | required | Conversation key used for event routing |
+| `messages` | list | `[]` | Initial JSON message snapshot |
+| `label` | string | `"Conversation"` | Accessible section label |
+| `event` | string | `"chat:event"` | Server event name |
+| `target` | any | nil | Optional LiveView target |
+| `class` | any | nil | Container classes |
+
+Server events use `chat.snapshot`, `chat.message`, `chat.delta`, `chat.tool`,
+`chat.complete`, `chat.error`, and `chat.reset`. Each event carries
+`conversation_id`, `message_id` where applicable, and a monotonic `sequence`.
+The client ignores duplicates and requests `chat.sync` after a sequence gap or
+reconnect. Client commands are `chat.send`, `chat.stop`, `chat.retry`, and
+`chat.action`; replies should acknowledge with `%{status: "ok"}` or return an
+error message. Batch token pushes at roughly 30–50 ms or a bounded chunk size.
+
 ## Data Entry
 
 ### `dm_react_form/1` and `dm_react_field/1` — React JSON Form

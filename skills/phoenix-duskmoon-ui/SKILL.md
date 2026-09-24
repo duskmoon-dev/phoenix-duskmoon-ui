@@ -84,6 +84,13 @@ import { DuskmoonReactForm } from "phoenix_duskmoon/react-form";
 hooks: { ...DuskmoonHooks, DuskmoonReactForm }
 ```
 
+For React-owned streaming chat, import the chat hook separately:
+
+```javascript
+import { DuskmoonReactChat } from "phoenix_duskmoon/react-chat";
+hooks: { ...DuskmoonHooks, DuskmoonReactChat }
+```
+
 ### 4. Register custom elements
 
 ```javascript
@@ -119,6 +126,7 @@ Simple primitives such as `kbd`, `mask`, `stack`, `join`, `indicator`, and `hero
 | `Spotlight` | Spotlight search component | Cmd/Ctrl+K keyboard shortcut |
 | `PageHeader` | `dm_page_header` | IntersectionObserver for scroll-based nav |
 | `DuskmoonReactForm` | `dm_react_form` | Mounts `@duskmoon-dev/components` fields and sends typed JSON |
+| `DuskmoonReactChat` | `dm_react_chat` | React-owned transcript and streaming state with LiveView event bridge |
 
 ## Component Quick Reference
 
@@ -153,6 +161,7 @@ For full component catalog with all attributes and slots, see
 | `dm_badge` | DataDisplay.Badge | Label badge with color variants |
 | `dm_card` / `dm_async_card` | DataDisplay.Card | Content card with title/action slots |
 | `dm_chat` / `dm_chat_bubble` / `dm_chat_input` / `dm_chat_reasoning` / `dm_chat_tool` / `dm_chat_typing` | DataDisplay.Chat | LLM-oriented chat primitives (message, bubble, input, reasoning, tool, typing indicator) |
+| `dm_react_chat` | DataDisplay.ReactChat | Opt-in React transcript for streaming chat; LiveView owns authorization and persistence |
 | `dm_chip` | DataDisplay.Chip | Deletable chip/tag |
 | `dm_collapse` / `dm_collapse_group` | DataDisplay.Collapse | Single collapsible panel |
 | `dm_datetime` | DataDisplay.Datetime | ISO date and datetime formatter with time-zone conversion |
@@ -399,5 +408,6 @@ to convert an Ecto changeset, and push `dm:form:reset` to replace the draft.
 | `phoenix_duskmoon/css` | `priv/static/phoenix_duskmoon.css` |
 | `phoenix_duskmoon/components` | `priv/static/phoenix_duskmoon.css` |
 | `phoenix_duskmoon/react-form` | React form hook and field bridge |
+| `phoenix_duskmoon/react-chat` | React streaming chat hook and components |
 | `phoenix_duskmoon/svg/mdi/*.svg` | `priv/mdi/svg/*.svg` |
 | `phoenix_duskmoon/svg/bsi/*.svg` | `priv/bsi/svg/*.svg` |
