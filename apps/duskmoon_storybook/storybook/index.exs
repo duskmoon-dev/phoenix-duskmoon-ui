@@ -460,12 +460,6 @@
       },
       %{
         kind: :story,
-        name: "Nested Menu",
-        path: "/navigation/nested_menu",
-        module: Storybook.Navigation.NestedMenu
-      },
-      %{
-        kind: :story,
         name: "Page Footer",
         path: "/navigation/page_footer",
         module: Storybook.Navigation.PageFooter
@@ -481,12 +475,6 @@
         name: "Stepper",
         path: "/navigation/stepper",
         module: Storybook.Navigation.Stepper
-      },
-      %{
-        kind: :story,
-        name: "Steps",
-        path: "/navigation/steps",
-        module: Storybook.Navigation.Steps
       },
       %{
         kind: :story,

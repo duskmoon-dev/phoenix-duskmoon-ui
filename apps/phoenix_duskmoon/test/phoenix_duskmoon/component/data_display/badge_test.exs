@@ -7,18 +7,19 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
 
   defp inner_block(text), do: %{inner_block: fn _, _ -> text end}
 
-  test "renders basic badge with el-dm-badge element" do
+  test "renders basic badge with native badge" do
     result = render_component(&dm_badge/1, %{inner_block: inner_block("New")})
 
-    assert result =~ "<el-dm-badge"
+    refute result =~ "el-dm-badge"
+    assert result =~ "<span"
     assert result =~ "New"
-    assert result =~ "</el-dm-badge>"
+    assert result =~ "</span>"
   end
 
   test "renders badge with default color primary" do
     result = render_component(&dm_badge/1, %{inner_block: inner_block("Tag")})
 
-    assert result =~ ~s[color="primary"]
+    assert result =~ "badge-primary"
   end
 
   test "renders badge with all variant color options" do
@@ -29,7 +30,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
           inner_block: inner_block("Badge")
         })
 
-      assert result =~ ~s[color="#{variant}"]
+      assert result =~
+               if(variant == "ghost",
+                 do: "bg-transparent border border-transparent text-inherit",
+                 else: "badge-#{variant}"
+               )
     end
   end
 
@@ -40,14 +45,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Accent")
       })
 
-    assert result =~ ~s[color="tertiary"]
-    refute result =~ ~s[color="accent"]
+    assert result =~ "badge-tertiary"
+    refute result =~ "badge-accent"
   end
 
   test "renders badge with default size md" do
     result = render_component(&dm_badge/1, %{inner_block: inner_block("Tag")})
 
-    assert result =~ ~s[size="md"]
+    assert result =~ "badge-md"
   end
 
   test "renders badge with all size options" do
@@ -58,7 +63,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
           inner_block: inner_block("Badge")
         })
 
-      assert result =~ ~s[size="#{size}"]
+      assert result =~ "badge-#{if size == "xs", do: "md", else: size}"
     end
   end
 
@@ -69,7 +74,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Outline")
       })
 
-    assert result =~ ~s[variant="outlined"]
+    assert result =~ "badge-outlined"
   end
 
   test "renders badge without variant attribute by default" do
@@ -85,7 +90,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Soft")
       })
 
-    assert result =~ ~s[variant="soft"]
+    assert result =~ "badge-soft"
   end
 
   test "renders badge soft takes precedence over outline" do
@@ -96,14 +101,14 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Both")
       })
 
-    assert result =~ ~s[variant="soft"]
-    refute result =~ ~s[variant="outlined"]
+    assert result =~ "badge-soft"
+    refute result =~ "badge-outlined"
   end
 
   test "renders badge without soft by default" do
     result = render_component(&dm_badge/1, %{inner_block: inner_block("Tag")})
 
-    refute result =~ ~s[variant="soft"]
+    refute result =~ "badge-soft"
   end
 
   test "renders badge with soft and each color" do
@@ -115,8 +120,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
           inner_block: inner_block("Soft")
         })
 
-      assert result =~ ~s[color="#{variant}"]
-      assert result =~ ~s[variant="soft"]
+      assert result =~
+               if(variant == "ghost",
+                 do: "bg-transparent border border-transparent text-inherit",
+                 else: "badge-#{variant}"
+               )
+
+      assert result =~ "badge-soft"
     end
   end
 
@@ -156,8 +166,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Error")
       })
 
-    assert result =~ ~s[color="error"]
-    assert result =~ ~s[size="lg"]
+    assert result =~ "badge-error"
+    assert result =~ "badge-lg"
   end
 
   test "renders badge with all options combined" do
@@ -170,9 +180,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Full")
       })
 
-    assert result =~ ~s[color="warning"]
-    assert result =~ ~s[size="sm"]
-    assert result =~ ~s[variant="outlined"]
+    assert result =~ "badge-warning"
+    assert result =~ "badge-sm"
+    assert result =~ "badge-outlined"
     assert result =~ "extra"
     assert result =~ "Full"
   end
@@ -184,7 +194,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Neutral")
       })
 
-    assert result =~ ~s[color="neutral"]
+    assert result =~ "badge-neutral"
     assert result =~ "Neutral"
   end
 
@@ -195,7 +205,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Ghost")
       })
 
-    assert result =~ ~s[color="ghost"]
+    assert result =~ "bg-transparent border border-transparent text-inherit"
   end
 
   test "renders badge with outline false explicitly" do
@@ -205,7 +215,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("No outline")
       })
 
-    assert result =~ "<el-dm-badge"
+    refute result =~ "el-dm-badge"
+    assert result =~ "<span"
     refute result =~ ~s[variant=]
     assert result =~ "No outline"
   end
@@ -219,8 +230,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
           inner_block: inner_block("Outlined")
         })
 
-      assert result =~ ~s[color="#{variant}"]
-      assert result =~ ~s[variant="outlined"]
+      assert result =~
+               if(variant == "ghost",
+                 do: "bg-transparent border border-transparent text-inherit",
+                 else: "badge-#{variant}"
+               )
+
+      assert result =~ "badge-outlined"
     end
   end
 
@@ -232,8 +248,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Tiny Error")
       })
 
-    assert result =~ ~s[color="error"]
-    assert result =~ ~s[size="xs"]
+    assert result =~ "badge-error"
+    assert result =~ "badge-md"
     assert result =~ "Tiny Error"
   end
 
@@ -245,8 +261,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Big Success")
       })
 
-    assert result =~ ~s[color="success"]
-    assert result =~ ~s[size="lg"]
+    assert result =~ "badge-success"
+    assert result =~ "badge-lg"
   end
 
   test "renders badge with accent variant mapping to tertiary" do
@@ -256,7 +272,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Accent")
       })
 
-    assert result =~ ~s[color="tertiary"]
+    assert result =~ "badge-tertiary"
   end
 
   test "renders badge with secondary variant" do
@@ -266,7 +282,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Secondary")
       })
 
-    assert result =~ ~s[color="secondary"]
+    assert result =~ "badge-secondary"
     assert result =~ "Secondary"
   end
 
@@ -277,17 +293,18 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Small")
       })
 
-    assert result =~ ~s[size="sm"]
+    assert result =~ "badge-sm"
   end
 
-  test "renders badge as el-dm-badge custom element" do
+  test "renders badge as native badge" do
     result = render_component(&dm_badge/1, %{inner_block: inner_block("Tag")})
 
-    assert result =~ "<el-dm-badge"
-    assert result =~ "</el-dm-badge>"
+    refute result =~ "el-dm-badge"
+    assert result =~ "<span"
+    assert result =~ "</span>"
   end
 
-  test "renders badge with class on el-dm-badge element" do
+  test "renders badge with class on native badge" do
     result =
       render_component(&dm_badge/1, %{
         class: "badge-extra",
@@ -295,7 +312,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
       })
 
     assert result =~ "badge-extra"
-    assert result =~ "<el-dm-badge"
+    refute result =~ "el-dm-badge"
+    assert result =~ "<span"
   end
 
   test "renders badge with ghost variant and content" do
@@ -305,7 +323,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Ghost Badge")
       })
 
-    assert result =~ ~s[color="ghost"]
+    assert result =~ "bg-transparent border border-transparent text-inherit"
     assert result =~ "Ghost Badge"
   end
 
@@ -326,7 +344,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Tiny")
       })
 
-    assert result =~ ~s[size="xs"]
+    assert result =~ "badge-md"
   end
 
   test "renders badge with outline and color combined" do
@@ -338,9 +356,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Alert")
       })
 
-    assert result =~ ~s[color="error"]
-    assert result =~ ~s[variant="outlined"]
-    assert result =~ ~s[size="lg"]
+    assert result =~ "badge-error"
+    assert result =~ "badge-outlined"
+    assert result =~ "badge-lg"
     assert result =~ "Alert"
   end
 
@@ -351,14 +369,15 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Pill")
       })
 
-    assert result =~ "pill"
+    assert result =~ "rounded-full"
     assert result =~ "Pill"
   end
 
   test "renders badge without pill by default" do
     result = render_component(&dm_badge/1, %{inner_block: inner_block("Tag")})
 
-    assert result =~ "<el-dm-badge"
+    refute result =~ "el-dm-badge"
+    assert result =~ "<span"
   end
 
   test "renders badge with dot indicator" do
@@ -374,7 +393,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
   test "renders badge without dot by default" do
     result = render_component(&dm_badge/1, %{inner_block: inner_block("Tag")})
 
-    assert result =~ "<el-dm-badge"
+    refute result =~ "el-dm-badge"
+    assert result =~ "<span"
   end
 
   test "renders badge with pill and dot combined" do
@@ -386,15 +406,15 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Alert")
       })
 
-    assert result =~ "pill"
+    assert result =~ "rounded-full"
     assert result =~ "dot"
-    assert result =~ ~s[color="error"]
+    assert result =~ "badge-error"
   end
 
   test "renders badge closing tag" do
     result = render_component(&dm_badge/1, %{inner_block: inner_block("Close")})
 
-    assert result =~ "</el-dm-badge>"
+    assert result =~ "</span>"
   end
 
   test "renders badge with soft and accent mapping" do
@@ -405,8 +425,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Soft Accent")
       })
 
-    assert result =~ ~s[color="tertiary"]
-    assert result =~ ~s[variant="soft"]
+    assert result =~ "badge-tertiary"
+    assert result =~ "badge-soft"
     assert result =~ "Soft Accent"
   end
 
@@ -417,7 +437,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Not soft")
       })
 
-    refute result =~ ~s[variant="soft"]
+    refute result =~ "badge-soft"
   end
 
   test "renders badge with soft and all options combined" do
@@ -431,10 +451,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.BadgeTest do
         inner_block: inner_block("Full Soft")
       })
 
-    assert result =~ ~s[color="success"]
-    assert result =~ ~s[variant="soft"]
-    assert result =~ ~s[size="lg"]
-    assert result =~ "pill"
+    assert result =~ "badge-success"
+    assert result =~ "badge-soft"
+    assert result =~ "badge-lg"
+    assert result =~ "rounded-full"
     assert result =~ "custom"
     assert result =~ "Full Soft"
   end

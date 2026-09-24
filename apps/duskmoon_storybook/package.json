@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "phoenix_html": "file:../../deps/phoenix_html",
-    "phoenix_duskmoon": "file:../phoenix_duskmoon"
+    "phoenix_duskmoon": "workspace:*"
   },
   "devDependencies": {
     "postcss": "8.5.26"

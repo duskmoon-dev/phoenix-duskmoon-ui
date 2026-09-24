@@ -3,6 +3,152 @@
 This audit compares published npm tarballs, public types, runtime code and release
 notes, rather than assuming compatibility from package names. Checked 2026-09-22.
 
+## Core-first cleanup (2026-09-24)
+
+This cleanup supersedes the wrapper inventory in the earlier synchronization below.
+It intentionally removes public APIs; consumers must migrate before upgrading.
+
+| Removed API | Replacement |
+| --- | --- |
+| `dm_kbd` | `<kbd class="kbd kbd-sm">Ctrl</kbd>` |
+| `dm_mask` | `<img class="mask mask-hexagon" src="/avatar.png" alt="Team avatar" />` |
+| `dm_stack` | `<div class="stack stack-end">...</div>`; retain content order and caller-owned `aria-hidden` / `inert` on decorative layers |
+| `dm_join` | `<div class="join join-horizontal" role="group" aria-label="Actions">...</div>`; use `join-vertical` for vertical groups and `join-item` on direct children |
+| `dm_indicator` | `.indicator` container with `.indicator-item.indicator-top.indicator-end`; preserve accessible status text |
+| `dm_hero` | `<section class="hero" aria-label="Welcome"><div class="hero-content">...</div></section>`; optional `.hero-overlay` is decorative |
+| `dm_steps` | `dm_stepper` with `:step` slots; map zero-based `current` to `active` and `completed`, and `orientation="vertical"` to `vertical` |
+| `dm_nested_menu`, `dm_nested_menu_item` | `dm_left_menu` and `dm_left_menu_group`; map groups to `:menu` slots and item state to stable IDs with `active` |
+
+Native Core primitives retain their upstream CSS without Phoenix modules, stories,
+or dedicated wrapper tests. Do not add a new wrapper merely to show a CSS class.
+
+```heex
+<.dm_stepper vertical clickable>
+  <:step :for={{step, index} <- Enum.with_index(@steps)}
+    label={step.label}
+    description={step[:description]}
+    active={index == @current}
+    completed={index < @current}
+    disabled={step[:disabled]}
+    on_click={JS.push("select-step", value: %{step: index})} />
+</.dm_stepper>
+```
+
+The LiveView handles `select-step` and owns `@current`; the old element's automatic
+client state and `change` event are not retained. The canonical Core stepper
+supports its documented color/variant set; old arbitrary colors/icons require an
+explicit application design rather than forwarding unsupported element attributes.
+
+```heex
+<.dm_left_menu nav_label="Workspace">
+  <:menu>
+    <.dm_left_menu_group active="reports">
+      <:title>Workspace</:title>
+      <:menu id="reports" to="/reports">Reports</:menu>
+    </.dm_left_menu_group>
+  </:menu>
+</.dm_left_menu>
+```
+
+LeftMenu uses Phoenix `navigate` links; it is the canonical grouped sidebar API.
+For standalone ordinary `href` lists or Core's compact/bordered modifiers, use native
+`<ul class="nested-menu nested-menu-bordered nested-menu-compact">` markup.
+The duplicate Steps/NestedMenu Storybook pages and routes are removed.
+
+`dm_badge`, `dm_card`, and `dm_async_card` keep their Phoenix attributes and slots,
+but render native Core markup without element registration or shadow DOM.
+Update custom selectors, `::part` styling and DOM queries accordingly:
+
+- Badge uses `.badge`, color, outlined/soft and dot classes. `soft` takes precedence
+  over `outline`. `accent` remains mapped to tertiary. Ghost uses transparent
+  Tailwind utilities; `xs` retains the former default-size fallback (`badge-md`),
+  and `pill` uses `rounded-full` (Core badges are already rounded). Dot labels are
+  visually hidden but remain accessible. Dot dimensions follow Core.
+- Card uses `.card`, `.card-image`, `.card-body`, `.card-title`, `.card-actions`.
+  `body_class` now styles the actual Core body rather than a nested wrapper.
+  Padding maps to Core's `--card-p`; shadow uses literal Tailwind utilities.
+  `interactive` retains focus and Enter/Space click activation on the card itself;
+  nested native controls retain their own keyboard handling.
+- Async loading keeps image/content skeletons; failures show the existing alert;
+  success passes the loaded result to body and action slots. One shared native
+  card layout renders all states.
+
+Storybook removes 27 unused/obsolete lazy registrar entries (24 already unused,
+plus badge/card/stepper), and 25 root direct package declarations (the two unused art entries were transitive).
+Elements/Art Elements aggregates remain part of the public dependency contract,
+so those packages can still be installed transitively. Theme bridge support for
+other direct custom-element consumers remains; only badge/card/stepper selectors
+are removed. Button and its registration are unchanged.
+
+The local Tailwind loader now preserves the official `theme, base, components,
+utilities` layer order when expanding `@import "tailwindcss"`. Without it, Core
+component rules loaded after utilities masked card shadows and ghost badges.
+This fixes the loader rather than adding local component CSS overrides.
+
+Cleanup validation:
+
+- 169 focused Phoenix component tests and 13 Storybook tests passed.
+- All 15 Tailwind tests passed, including layer precedence before/after minification.
+- Changed-file formatting, warnings-as-errors compilation and both asset builds passed.
+  Storybook retains its existing single-bundle fallback for ambiguous split exports.
+- Desktop Chrome confirmed native Badge/Card rendering, both themes, ghost transparency,
+  card padding/image/shadow variants, Enter/Space activation, and a single click from
+  a nested native button. Stepper uses named native buttons; old navigation links are absent.
+  No console warnings/errors on the checked Card page.
+- The earlier full-suite icon/QuickBEAM/CDP timeouts below remain unresolved; the full
+  suite was not rerun for cleanup. The focused tests are not a claim of full-suite success.
+
+## 2026-09-24 synchronization (before cleanup)
+
+| Package | Before | Target / decision |
+| --- | --- | --- |
+| `@duskmoon-dev/core` | 1.19.9 | 1.19.10 |
+| `@duskmoon-dev/css-art` | 1.19.9 | 1.19.10 |
+| `@duskmoon-dev/elements` | 1.7.6 | 1.8.0 |
+| `@duskmoon-dev/art-elements` | 1.7.6 | 1.8.0 |
+| Declared `@duskmoon-dev/el-*` packages | 1.7.6 or 1.8.0 | 1.8.0 |
+| `@duskmoon-dev/components` | Not installed | Reviewed 0.3.1; no required React integration |
+| `@duskmoon-dev/art-components` | Not installed | Reviewed 0.3.1; existing CSS Art / element integration retained |
+
+The comparison uses published tarballs. Core changes the horizontal join selectors
+so they no longer affect vertical groups. CSS Art styles are unchanged. Existing
+Elements and Art Elements public types and ESM runtime code are unchanged after
+excluding generated source-path/debug comments; their dependency versions change.
+
+- **Update:** expose `dm_join orientation="vertical"` using Core's fixed CSS;
+  preserve horizontal as the default, and remove the obsolete upstream TODO.
+- **Keep existing implementations:** the new Elements exports for carousel,
+  countdown, diff, dropdown, fab, filter-group, footer, hero, indicator, join,
+  kbd, link, loading, mask, megamenu, radial-progress, range, sidebar-layout,
+  stack, stat, swap, toggle-switch, file-input and validator overlap existing
+  Core/native controls, layout or form behavior. They do not require new wrappers
+  or registrations in this synchronization.
+- **No new page wrappers:** console-page, home-page and sign-page are application
+  page-shell compositions, outside the current component synchronization scope.
+- **No removals:** no previously consumed upstream export was removed.
+- **React packages:** both use React/ReactDOM peers. Their exports were inventoried;
+  introducing a React island is unnecessary for the changed join/art contracts.
+
+Bun updates the root and Phoenix manifests and `bun.lock`. Storybook uses
+`workspace:*` for the Phoenix package so the lockfile no longer retains an old
+`file:` dependency snapshot with stale nested Duskmoon versions. The existing
+`package-lock.json` is an older npm snapshot and is not the update source.
+Validation for this synchronization:
+
+- Both configured bundles built in `MIX_ENV=test`; Storybook's bundler used its
+  single-bundle fallback after detecting ambiguous split exports.
+- `MIX_ENV=test mix compile --warnings-as-errors` and changed-file formatting passed.
+- Focused component and Storybook tests: 18 + 12 passed.
+- Desktop Chrome DevTools checks passed for join corners/orientation in both themes,
+  native button focus, Accordion registration/toggling, and Gemini Art registration/input.
+- The isolated join browser test (subsequently removed with the wrapper) was blocked by CDP timeouts. The existing
+  hoisted registrar browser test also timed out through the same helper.
+- The umbrella run (`mix test --max-failures 5`) did not pass: five Phoenix tests
+  timed out in icon loading and bundler tests timed out in QuickBEAM/CDP. The run
+  was interrupted after these failures; remaining tests were not completed.
+
+The following version inventory records the earlier 2026-09-22 synchronization.
+
 ## Exact dependency versions
 
 The root manifest pins every existing dependency below. The Phoenix npm manifest
@@ -121,12 +267,12 @@ There are no removed art components and no new decorative wrappers are needed.
   new Elements interactions are exposed for custom-element consumers.
 - Code Engine #9/#10: still open; existing marked workarounds remain.
 
-## Deferred upstream defect
+## Resolved vertical join defect
 
-Vertical join is not exposed by `dm_join`: Core 1.19.9 applies horizontal corner
-rules to vertical groups. [Core #63](https://github.com/duskmoon-dev/duskmoonui/issues/63)
-tracks the required upstream fix. The Phoenix component uses the verified horizontal
-contract and does not add local CSS to override it.
+Core 1.19.10 excludes vertical groups from its horizontal corner rules, resolving
+the shipped CSS defect tracked by [Core #63](https://github.com/duskmoon-dev/duskmoonui/issues/63).
+Native `.join.join-vertical` and `.join.join-horizontal` groups now use the fixed rules.
+Both orientations use upstream CSS without local overrides.
 
 Storybook now declares its application script as an ES module so the lazy element
 registrations execute on component story pages. Its development source root and

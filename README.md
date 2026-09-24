@@ -143,17 +143,17 @@ Components that require hooks:
 ## Available Components
 
 - **Action**: buttons, dropdowns, floating actions, links, menus, swaps, toggles
-- **Data Display**: accordion, avatar, badge, card, carousel, chat, chat scroll, chip, collapse, countdown, datetime, diff, keyboard keys, flash, git repository, list, markdown, markdown body, pagination, popover, progress, radial progress, skeleton, stat, table, timeline, tooltip
+- **Data Display**: accordion, avatar, badge, card, carousel, chat, chat scroll, chip, collapse, countdown, datetime, diff, flash, git repository, list, markdown, markdown body, pagination, popover, progress, radial progress, skeleton, stat, table, timeline, tooltip
 - **Data Entry**: autocomplete, cascader, checkbox, compact input, file upload, filter group, form, input, multi-select, OTP input, PIN input, radio, rating, segment control, select, slider, switch, textarea, time input, tree select
 - **Feedback**: dialog, loading, snackbar, toast
-- **Navigation**: actionbar, appbar, bottom nav, breadcrumb, left menu, megamenu, navbar, nested menu, page footer, page header, stepper, steps, tabs
-- **Layout**: bottom sheet, divider, drawer, hero, indicator, join, mask, sidebar layout, stack, theme switcher
+- **Navigation**: actionbar, appbar, bottom nav, breadcrumb, left menu, megamenu, navbar, page footer, page header, stepper, tabs
+- **Layout**: bottom sheet, divider, drawer, sidebar layout, theme switcher
 - **CSS Art**: button noise, eclipse, plasma ball, signature, snow, spotlight search
 
 
 ## Upstream design alignment
 
-The current frontend uses Core/CSS Art 1.19.9 and Elements/Art Elements 1.7.6.
+The current frontend uses Core/CSS Art 1.19.10 and Elements/Art Elements 1.8.0.
 Individually published element dependencies are pinned to their current versions;
 see the [contract audit](apps/phoenix_duskmoon/guides/upstream-design-alignment.md) for the exact set.
 
@@ -163,10 +163,10 @@ native scrolling, swap uses a checkbox, floating actions and megamenu
 use the browser Popover API. No element registration is needed for these primitives.
 
 ```heex
-<.dm_indicator>
-  <:indicator><span class="badge badge-primary">3</span></:indicator>
+<div class="indicator">
+  <span class="indicator-item badge badge-primary" aria-label="3 unread messages">3</span>
   <button type="button" class="btn">Inbox</button>
-</.dm_indicator>
+</div>
 
 <.dm_sidebar_layout>
   <:sidebar><nav aria-label="Workspace">Workspace links</nav></:sidebar>

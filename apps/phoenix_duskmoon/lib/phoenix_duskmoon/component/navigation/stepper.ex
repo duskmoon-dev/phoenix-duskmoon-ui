@@ -71,6 +71,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Stepper do
     attr(:error, :boolean, doc: "Whether this step has an error")
     attr(:disabled, :boolean, doc: "Whether this step is disabled")
     attr(:optional, :boolean, doc: "Whether this step is optional")
+    attr(:on_click, :any, doc: "Phoenix event name or JS command when clickable")
   end
 
   def dm_stepper(assigns) do
@@ -108,7 +109,17 @@ defmodule PhoenixDuskmoon.Component.Navigation.Stepper do
           aria-current={step[:active] && "step"}
           aria-disabled={step[:disabled] && "true"}
         >
-          <div class="stepper-step-button">
+          <button
+            :if={@clickable}
+            type="button"
+            class="stepper-step-button"
+            disabled={step[:disabled]}
+            aria-label={step[:label]}
+            phx-click={step[:on_click]}
+          >
+            <span class="stepper-step-icon">{idx + 1}</span>
+          </button>
+          <div :if={!@clickable} class="stepper-step-button">
             <span class="stepper-step-icon">{idx + 1}</span>
           </div>
           <span class="stepper-step-label">{step[:label]}</span>

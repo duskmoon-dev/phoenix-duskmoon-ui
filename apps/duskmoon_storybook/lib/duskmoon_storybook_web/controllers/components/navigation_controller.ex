@@ -33,19 +33,11 @@ defmodule DuskmoonStorybookWeb.Components.NavigationController do
     render(conn, :page_header, active_menu: "navigation-page-header")
   end
 
-  def steps(conn, _params) do
-    render(conn, :steps, active_menu: "navigation-steps")
-  end
-
   def tab(conn, _params) do
     render(conn, :tab, active_menu: "navigation-tab")
   end
 
   def stepper(conn, _params) do
     render(conn, :stepper, active_menu: "navigation-stepper")
-  end
-
-  def nested_menu(conn, _params) do
-    render(conn, :nested_menu, active_menu: "navigation-nested-menu")
   end
 end

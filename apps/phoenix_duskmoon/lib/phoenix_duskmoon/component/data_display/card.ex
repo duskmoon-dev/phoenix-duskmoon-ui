@@ -1,6 +1,6 @@
 defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
   @moduledoc """
-  Card component using el-dm-card custom element.
+  Card component using native markup and `@duskmoon-dev/core` classes.
 
   Provides card containers with optional header, content, and footer sections.
 
@@ -85,42 +85,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
   slot(:inner_block, required: false, doc: "Card body content")
 
   def dm_card(assigns) do
-    ~H"""
-    <el-dm-card
-      id={@id}
-      variant={@variant}
-      shadow={@shadow}
-      interactive={@interactive}
-      padding={@padding}
-      class={@class}
-      {@rest}
-    >
-      <img :if={@image} slot="image" src={@image} alt={@image_alt} />
-      <span
-        :for={title <- @title}
-        slot="header"
-        id={title[:id]}
-        class={title[:class]}
-      >
-        {render_slot(title)}
-      </span>
-      <%= if @body_class do %>
-        <div class={@body_class}>
-          {render_slot(@inner_block)}
-        </div>
-      <% else %>
-        {render_slot(@inner_block)}
-      <% end %>
-      <span
-        :for={action <- @action}
-        slot="footer"
-        id={action[:id]}
-        class={action[:class]}
-      >
-        {render_slot(action)}
-      </span>
-    </el-dm-card>
-    """
+    assigns = assign(assigns, loading_image: false, skeleton_class: nil, result: nil)
+    card_frame(assigns)
   end
 
   @doc """
@@ -167,67 +133,63 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Card do
 
   def dm_async_card(assigns) do
     ~H"""
-    <.async_result assign={@assign}>
+    <.async_result :let={result} assign={@assign}>
       <:loading>
-        <el-dm-card
-          id={@id}
-          variant={@variant}
-          shadow={@shadow}
-          interactive={@interactive}
-          padding={@padding}
-          class={@class}
-          {@rest}
-        >
-          <div :if={@image} slot="image" class={["skeleton skeleton-image", @skeleton_class]}></div>
-          <span :for={title <- @title} slot="header" id={title[:id]} class={title[:class]}>
-            {render_slot(title)}
-          </span>
+        <.card_frame {assigns} action={[]} image={nil} loading_image={!!@image} result={nil}>
           <div class={["skeleton w-full h-16", @skeleton_class]}></div>
-        </el-dm-card>
+        </.card_frame>
       </:loading>
       <:failed :let={reason}>
-        <el-dm-card
-          id={@id}
-          variant={@variant}
-          shadow={@shadow}
-          interactive={@interactive}
-          padding={@padding}
-          class={@class}
-          {@rest}
-        >
-          <span :for={title <- @title} slot="header" id={title[:id]} class={title[:class]}>
-            {render_slot(title)}
-          </span>
-          <.dm_alert variant="error">
-            {reason |> inspect()}
-          </.dm_alert>
-        </el-dm-card>
+        <.card_frame {assigns} action={[]} image={nil} loading_image={false} result={nil}>
+          <.dm_alert variant="error">{inspect(reason)}</.dm_alert>
+        </.card_frame>
       </:failed>
-      <el-dm-card
-        id={@id}
-        variant={@variant}
-        shadow={@shadow}
-        interactive={@interactive}
-        padding={@padding}
-        class={@class}
-        {@rest}
-      >
-        <img :if={@image} slot="image" src={@image} alt={@image_alt} />
-        <span :for={title <- @title} slot="header" id={title[:id]} class={title[:class]}>
-          {render_slot(title)}
-        </span>
-        <%= if @body_class do %>
-          <div class={@body_class}>
-            {render_slot(@inner_block, Map.get(@assign, :result))}
-          </div>
-        <% else %>
-          {render_slot(@inner_block, Map.get(@assign, :result))}
-        <% end %>
-        <span :for={action <- @action} slot="footer" id={action[:id]} class={action[:class]}>
-          {render_slot(action, Map.get(@assign, :result))}
-        </span>
-      </el-dm-card>
+      <.card_frame {assigns} loading_image={false} result={result}>
+        {render_slot(@inner_block, result)}
+      </.card_frame>
     </.async_result>
     """
   end
+
+  defp card_frame(assigns) do
+    assigns = assign(assigns, :padding_style, padding_style(assigns.padding))
+
+    ~H"""
+    <article
+      id={@id}
+      class={["card", @variant && "card-#{@variant}", shadow_class(@shadow), @interactive && "card-interactive", @class]}
+      role={@interactive && "button"}
+      tabindex={@interactive && "0"}
+      onkeydown={@interactive && "if(event.target===this && (event.key==='Enter' || event.key===' ')){event.preventDefault();this.click()}"}
+      {@rest}
+    >
+      <figure :if={@image} class="card-image"><img src={@image} alt={@image_alt} /></figure>
+      <div :if={@loading_image} class={["card-image skeleton skeleton-image h-48", @skeleton_class]}></div>
+      <div class={["card-body", @body_class]} style={@padding_style}>
+        <div :for={title <- @title} id={title[:id]} class={["card-title", title[:class]]}>
+          {render_slot(title)}
+        </div>
+        {render_slot(@inner_block)}
+        <div :for={action <- @action} id={action[:id]} class={["card-actions", action[:class]]}>
+          {render_slot(action, @result)}
+        </div>
+      </div>
+    </article>
+    """
+  end
+
+  # Literal utilities remain discoverable by Tailwind's source scanner.
+  defp shadow_class("none"), do: "shadow-none"
+  defp shadow_class("sm"), do: "shadow-sm"
+  defp shadow_class("md"), do: "shadow-md"
+  defp shadow_class("lg"), do: "shadow-lg"
+  defp shadow_class("xl"), do: "shadow-xl"
+  defp shadow_class("2xl"), do: "shadow-2xl"
+  defp shadow_class(_), do: nil
+
+  defp padding_style("none"), do: "--card-p: 0"
+  defp padding_style("sm"), do: "--card-p: 1rem"
+  defp padding_style("md"), do: "--card-p: 1.5rem"
+  defp padding_style("lg"), do: "--card-p: 2rem"
+  defp padding_style(_), do: nil
 end

@@ -324,4 +324,29 @@ defmodule PhoenixDuskmoon.Component.Navigation.StepperTest do
     result = render_component(&dm_stepper/1, %{step: basic_steps(), "data-testid": "my-stepper"})
     assert result =~ ~s[data-testid="my-stepper"]
   end
+
+  test "clickable steps expose named native buttons and Phoenix click commands" do
+    steps = [
+      %{label: "Account", on_click: Phoenix.LiveView.JS.push("select-step", value: %{step: 0})},
+      %{label: "Locked", disabled: true, on_click: "select-step"}
+    ]
+
+    html =
+      render_component(&dm_stepper/1, %{clickable: true, step: steps}) |> LazyHTML.from_fragment()
+
+    assert LazyHTML.attribute(LazyHTML.query(html, "button"), "type") == ["button", "button"]
+
+    assert LazyHTML.attribute(LazyHTML.query(html, "button"), "aria-label") == [
+             "Account",
+             "Locked"
+           ]
+
+    assert Enum.count(LazyHTML.query(html, "button[disabled]")) == 1
+    assert hd(LazyHTML.attribute(LazyHTML.query(html, "button"), "phx-click")) =~ "select-step"
+  end
+
+  test "display-only stepper adds no button tab stops" do
+    html = render_component(&dm_stepper/1, %{step: basic_steps()}) |> LazyHTML.from_fragment()
+    assert Enum.empty?(LazyHTML.query(html, "button"))
+  end
 end

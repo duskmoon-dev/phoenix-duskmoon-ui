@@ -866,18 +866,6 @@ Slots: `title` (required, attrs: `class`), `menu` (attrs: `id`, `class`, `to`, `
 
 Slots: `start_part`, `center_part`, `end_part`. Attrs: `start_class`, `center_class`, `end_class`.
 
-### `dm_nested_menu/1` + `dm_nested_menu_item/1` — Nested Menu
-
-**dm_nested_menu:**
-
-| Attr | Type | Default | Values |
-|------|------|---------|--------|
-| `size` | string | nil | nil, xs, sm, lg |
-| `bordered` | boolean | false | |
-| `compact` | boolean | false | |
-
-Slots: `title`, `item` (attrs: `to`, `active`, `disabled`), `group` (attrs: `title` required, `open`)
-
 ### `dm_page_footer/1` — Page Footer
 
 Slots: `section` (attrs: `class`, `title`, `title_class`, `body_class`), `copyright` (attrs: `class`, `title`, `title_class`, `body_class`), `inner_block`
@@ -903,17 +891,7 @@ Hook: **PageHeader** — IntersectionObserver for scroll-based nav opacity.
 | `size` | string | nil | nil, sm, lg |
 | `clickable` | boolean | false | |
 
-Slots: `step` (required) — attrs: `label` (required), `description`, `active`, `completed`, `error`, `disabled`, `optional`
-
-### `dm_steps/1` — Steps
-
-| Attr | Type | Default | Values |
-|------|------|---------|--------|
-| `current` | integer | 0 | |
-| `orientation` | string | "horizontal" | horizontal, vertical |
-| `color` | string | "primary" | primary, secondary, etc. |
-| `clickable` | boolean | false | |
-| `steps` | list | required | Maps with :label, :description, :icon |
+Slots: `step` (required) — attrs: `label` (required), `description`, `active`, `completed`, `error`, `disabled`, `optional`, `on_click` (Phoenix event name or JS command; requires `clickable`)
 
 ### `dm_tab/1` — Tab
 

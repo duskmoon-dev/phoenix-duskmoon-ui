@@ -95,7 +95,6 @@ import "@duskmoon-dev/elements/register";
 
 // Or register individually (smaller bundle)
 import "@duskmoon-dev/el-button/register";
-import "@duskmoon-dev/el-card/register";
 import "@duskmoon-dev/el-input/register";
 // ... add the elements you use
 ```

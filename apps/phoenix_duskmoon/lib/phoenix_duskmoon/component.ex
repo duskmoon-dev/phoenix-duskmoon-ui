@@ -64,7 +64,6 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.DataDisplay.Carousel
       import PhoenixDuskmoon.Component.DataDisplay.Countdown
       import PhoenixDuskmoon.Component.DataDisplay.Diff
-      import PhoenixDuskmoon.Component.DataDisplay.Kbd
       import PhoenixDuskmoon.Component.DataDisplay.RadialProgress
       import PhoenixDuskmoon.Component.DataDisplay.Accordion
       import PhoenixDuskmoon.Component.DataDisplay.Collapse
@@ -125,20 +124,13 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.Navigation.Breadcrumb
       import PhoenixDuskmoon.Component.Navigation.LeftMenu
       import PhoenixDuskmoon.Component.Navigation.Navbar
-      import PhoenixDuskmoon.Component.Navigation.NestedMenu
       import PhoenixDuskmoon.Component.Navigation.PageFooter
       import PhoenixDuskmoon.Component.Navigation.PageHeader
-      import PhoenixDuskmoon.Component.Navigation.Steps
       import PhoenixDuskmoon.Component.Navigation.Stepper
       import PhoenixDuskmoon.Component.Navigation.Tab
 
       # Layout components
-      import PhoenixDuskmoon.Component.Layout.Hero
-      import PhoenixDuskmoon.Component.Layout.Indicator
-      import PhoenixDuskmoon.Component.Layout.Join
-      import PhoenixDuskmoon.Component.Layout.Mask
       import PhoenixDuskmoon.Component.Layout.SidebarLayout
-      import PhoenixDuskmoon.Component.Layout.Stack
       import PhoenixDuskmoon.Component.Layout.BottomSheet
       import PhoenixDuskmoon.Component.Layout.Divider
       import PhoenixDuskmoon.Component.Layout.Drawer

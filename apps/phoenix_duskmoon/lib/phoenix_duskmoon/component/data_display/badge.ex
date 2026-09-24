@@ -2,7 +2,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Badge do
   @moduledoc """
   Badge component for status indicators and labels.
 
-  Uses the `el-dm-badge` custom element from duskmoon-elements.
+  Uses native markup and `@duskmoon-dev/core` badge classes.
+  `xs` retains the legacy default size; Core badges are already pill-shaped.
 
   ## Examples
 
@@ -71,30 +72,26 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Badge do
   slot(:inner_block, required: true, doc: "badge text or content")
 
   def dm_badge(assigns) do
-    element_variant =
-      cond do
-        assigns.soft -> "soft"
-        assigns.outline -> "outlined"
-        true -> nil
-      end
-
-    assigns =
-      assigns
-      |> assign(:element_color, css_color(assigns.variant))
-      |> assign(:element_variant, element_variant)
+    assigns = assign(assigns, :color, css_color(assigns.variant))
 
     ~H"""
-    <el-dm-badge
-      color={@element_color}
-      variant={@element_variant}
-      size={@size}
-      pill={@pill}
-      dot={@dot}
-      class={@class}
+    <span
+      role="status"
+      class={[
+        "badge",
+        if(@color == "ghost", do: "bg-transparent border border-transparent text-inherit", else: "badge-#{@color}"),
+        "badge-#{if @size == "xs", do: "md", else: @size}",
+        @soft && "badge-soft",
+        !@soft && @outline && "badge-outlined",
+        @pill && "rounded-full",
+        @dot && "badge-dot",
+        @class
+      ]}
       {@rest}
     >
-      {render_slot(@inner_block)}
-    </el-dm-badge>
+      <span :if={@dot} class="sr-only">{render_slot(@inner_block)}</span>
+      <%= if !@dot do %>{render_slot(@inner_block)}<% end %>
+    </span>
     """
   end
 end

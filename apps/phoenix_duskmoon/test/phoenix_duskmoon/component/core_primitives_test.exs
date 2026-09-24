@@ -8,13 +8,8 @@ defmodule PhoenixDuskmoon.Component.CorePrimitivesTest do
   import PhoenixDuskmoon.Component.DataDisplay.Carousel
   import PhoenixDuskmoon.Component.DataDisplay.Countdown
   import PhoenixDuskmoon.Component.DataDisplay.Diff
-  import PhoenixDuskmoon.Component.DataDisplay.Kbd
   import PhoenixDuskmoon.Component.DataDisplay.RadialProgress
   import PhoenixDuskmoon.Component.DataEntry.FilterGroup
-  import PhoenixDuskmoon.Component.Layout.Indicator
-  import PhoenixDuskmoon.Component.Layout.Join
-  import PhoenixDuskmoon.Component.Layout.Mask
-  import PhoenixDuskmoon.Component.Layout.Stack
 
   test "carousel keeps slide targets directly inside a named keyboard scroll region" do
     assigns = %{}
@@ -67,7 +62,11 @@ defmodule PhoenixDuskmoon.Component.CorePrimitivesTest do
       assert attribute(html, ".diff", "style") == ["--diff-position: #{expected}%"]
       assert attribute(html, ".diff > .diff-before > img", "alt") == ["Original design"]
       assert attribute(html, ".diff > .diff-after > img", "alt") == ["Updated design"]
-      assert Enum.empty?(LazyHTML.query(html, "[role=slider]"))
+      assert attribute(html, "input[type=range]", "value") == [to_string(expected)]
+      assert attribute(html, "input[type=range]", "min") == ["0"]
+      assert attribute(html, "input[type=range]", "max") == ["100"]
+      assert attribute(html, "input[type=range]", "aria-label") == ["Comparison"]
+      assert Enum.empty?(LazyHTML.query(html, "input[name]"))
     end
   end
 
@@ -84,87 +83,7 @@ defmodule PhoenixDuskmoon.Component.CorePrimitivesTest do
       |> LazyHTML.from_fragment()
 
     assert Enum.count(LazyHTML.query(html, ".diff-static > div")) == 2
-  end
-
-  test "indicator puts logical positions on each item without hiding meaningful content" do
-    assigns = %{}
-
-    html =
-      rendered_to_string(~H"""
-      <.dm_indicator dir="rtl">
-        <button type="button">Inbox</button>
-        <:indicator vertical="bottom" horizontal="start"><span aria-label="3 unread messages">3</span></:indicator>
-      </.dm_indicator>
-      """)
-      |> LazyHTML.from_fragment()
-
-    assert Enum.count(LazyHTML.query(html, ".indicator[dir=rtl] > button")) == 1
-
-    assert LazyHTML.text(
-             LazyHTML.query(html, ".indicator > .indicator-item.indicator-bottom.indicator-start")
-           )
-           |> String.trim() == "3"
-
-    assert Enum.empty?(LazyHTML.query(html, "[aria-hidden]"))
-  end
-
-  test "join preserves direct native controls and submission attributes" do
-    assigns = %{}
-
-    html =
-      rendered_to_string(~H"""
-      <.dm_join label="Search tools">
-        <input class="input join-item" name="q" value="moon" aria-label="Search" />
-        <button class="btn join-item" type="submit">Search</button>
-      </.dm_join>
-      """)
-      |> LazyHTML.from_fragment()
-
-    assert attribute(html, ".join-horizontal[role=group]", "aria-label") == ["Search tools"]
-    assert attribute(html, ".join > input.join-item", "name") == ["q"]
-    assert attribute(html, ".join > button.join-item", "type") == ["submit"]
-  end
-
-  test "kbd uses native semantics and escapes supplied content" do
-    assigns = %{key: "<Enter>"}
-
-    html =
-      rendered_to_string(~H"""
-      <.dm_kbd size="lg">{@key}</.dm_kbd>
-      """)
-      |> LazyHTML.from_fragment()
-
-    assert LazyHTML.text(LazyHTML.query(html, "kbd.kbd-lg")) == "<Enter>"
-    assert Enum.empty?(LazyHTML.query(html, "enter"))
-  end
-
-  test "mask preserves an image's alternative text" do
-    assigns = %{}
-
-    html =
-      rendered_to_string(~H"""
-      <.dm_mask shape="hexagon"><img src="/avatar.png" alt="Team avatar" /></.dm_mask>
-      """)
-      |> LazyHTML.from_fragment()
-
-    assert attribute(html, ".mask-hexagon > img", "alt") == ["Team avatar"]
-    assert Enum.empty?(LazyHTML.query(html, "[aria-hidden]"))
-  end
-
-  test "stack preserves foreground order and caller-owned decorative semantics" do
-    assigns = %{}
-
-    html =
-      rendered_to_string(~H"""
-      <.dm_stack direction="end">
-        <article>Current</article>
-        <article aria-hidden="true" inert>Decorative</article>
-      </.dm_stack>
-      """)
-      |> LazyHTML.from_fragment()
-
-    assert LazyHTML.text(LazyHTML.query(html, ".stack-end > :first-child")) == "Current"
-    assert Enum.count(LazyHTML.query(html, ".stack > article[aria-hidden=true][inert]")) == 1
+    assert Enum.empty?(LazyHTML.query(html, "input[type=range]"))
   end
 
   test "fab connects a native command trigger to an initially closed named popover" do
@@ -307,7 +226,8 @@ defmodule PhoenixDuskmoon.Component.CorePrimitivesTest do
       </.dm_diff>
       """)
 
-    assert length(Regex.scan(~r/ style=/, diff)) == 1
+    [container_tag] = Regex.run(~r/<div\b[^>]*>/, diff)
+    assert length(Regex.scan(~r/ style=/, container_tag)) == 1
 
     assert attribute(LazyHTML.from_fragment(diff), ".diff", "style") == [
              "--diff-ratio: 1 / 1; --diff-position: 60%"

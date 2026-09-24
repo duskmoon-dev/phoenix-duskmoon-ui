@@ -3,7 +3,7 @@
 Duskmoon UI component library for Phoenix LiveView applications.
 
 Phoenix Duskmoon UI provides 60+ ready-to-use LiveView components that render as
-HTML Custom Elements, powered by the `@duskmoon-dev/core` design system and
+native HTML or HTML Custom Elements, powered by the `@duskmoon-dev/core` design system and
 `@duskmoon-dev/elements` web component packages.
 
 ## Architecture
@@ -19,7 +19,7 @@ Phoenix LiveView
          │
          ▼
 ┌──────────────────┐
-│  Custom Elements │  ← <el-dm-button>, <el-dm-card> (rendering layer)
+│ HTML / Elements  │  ← .card, .badge, <el-dm-button> (rendering layer)
 │  (el-dm-* tags)  │
 └────────┬─────────┘
          │
@@ -31,8 +31,8 @@ Phoenix LiveView
 ```
 
 HEEX components provide a familiar Phoenix API (`attr/3`, `slot/2`, form field
-binding) while the rendering is handled by custom elements with shadow DOM
-encapsulation. The `@duskmoon-dev/core` design system provides all colors, typography,
+binding). Simple components render native HTML with Core classes; complex elements
+use custom elements with shadow DOM encapsulation. The `@duskmoon-dev/core` design system provides all colors, typography,
 spacing, and elevation tokens through CSS custom properties.
 
 ## Quick Install

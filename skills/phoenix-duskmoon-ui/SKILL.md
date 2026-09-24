@@ -79,7 +79,6 @@ Merge with your own hooks: `hooks: { ...DuskmoonHooks, ...MyHooks }`.
 
 ```javascript
 import "@duskmoon-dev/el-button/register";
-import "@duskmoon-dev/el-card/register";
 // ... register each el-* package you use
 ```
 
@@ -94,14 +93,12 @@ import "@duskmoon-dev/el-chat/register";
 ## Architecture (v9)
 
 ```
-HEEX Components (dm_btn, dm_card)
-       |
-Custom Elements (<el-dm-button>, <el-dm-card>)
-       |
-@duskmoon-dev/core (CSS variables, design tokens)
+HEEX components -> Core CSS/native HTML by default (dm_card, dm_badge)
+                -> Custom elements when needed (dm_btn -> el-dm-button)
 ```
 
-**CSS class naming (BEM):** `dm-component`, `dm-component--variant`, `dm-component__element`
+Use the shipped Core class names, e.g. `badge badge-primary` and `card card-bordered`.
+Simple primitives such as `kbd`, `mask`, `stack`, `join`, `indicator`, and `hero` use native HTML directly; do not add Phoenix wrappers for them.
 
 ## Hooks Reference
 
@@ -207,11 +204,9 @@ For full component catalog with all attributes and slots, see
 | `dm_breadcrumb` | Navigation.Breadcrumb | Breadcrumb trail |
 | `dm_left_menu` / `dm_left_menu_group` | Navigation.LeftMenu | Sidebar menu |
 | `dm_navbar` | Navigation.Navbar | Horizontal navbar (start/center/end) |
-| `dm_nested_menu` / `dm_nested_menu_item` | Navigation.NestedMenu | Nested collapsible menu |
 | `dm_page_footer` | Navigation.PageFooter | Page footer with sections |
 | `dm_page_header` | Navigation.PageHeader | Page header with scroll-aware nav (needs hook) |
 | `dm_stepper` | Navigation.Stepper | CSS-only stepper |
-| `dm_steps` | Navigation.Steps | Stepper via custom element |
 | `dm_tab` | Navigation.Tab | Tabbed content |
 
 ### Layout
