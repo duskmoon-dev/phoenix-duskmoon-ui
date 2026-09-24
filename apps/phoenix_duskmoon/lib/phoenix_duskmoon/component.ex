@@ -94,6 +94,7 @@ defmodule PhoenixDuskmoon.Component do
       import PhoenixDuskmoon.Component.DataEntry.CodeEngine
       import PhoenixDuskmoon.Component.DataEntry.FileUpload
       import PhoenixDuskmoon.Component.DataEntry.Form
+      import PhoenixDuskmoon.Component.DataEntry.ReactForm
       import PhoenixDuskmoon.Component.DataEntry.Checkbox
       import PhoenixDuskmoon.Component.DataEntry.CompactInput
       import PhoenixDuskmoon.Component.DataEntry.Input

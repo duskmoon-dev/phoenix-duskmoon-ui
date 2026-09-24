@@ -7,6 +7,7 @@
 
 @import "tailwindcss";
 @import "@duskmoon-dev/core/base.css";
+@import "@duskmoon-dev/components/styles.css";
 
 /* DuskMoon UI design system */
 @plugin "@duskmoon-dev/core/plugin";

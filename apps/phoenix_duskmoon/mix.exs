@@ -28,6 +28,7 @@ defmodule PhoenixDuskmoon.Mixfile do
           "guides/getting-started.md",
           "guides/theming.md",
           "guides/hooks.md",
+          "guides/react-forms.md",
           "guides/migrating-to-v9.md",
           "guides/upstream-design-alignment.md",
           "CHANGELOG.md"
@@ -79,6 +80,7 @@ defmodule PhoenixDuskmoon.Mixfile do
             PhoenixDuskmoon.Component.DataEntry.CompactInput,
             PhoenixDuskmoon.Component.DataEntry.FileUpload,
             PhoenixDuskmoon.Component.DataEntry.Form,
+            PhoenixDuskmoon.Component.DataEntry.ReactForm,
             PhoenixDuskmoon.Component.DataEntry.Input,
             PhoenixDuskmoon.Component.DataEntry.MultiSelect,
             PhoenixDuskmoon.Component.DataEntry.OtpInput,

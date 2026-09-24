@@ -8,7 +8,8 @@
     "./css": "./priv/static/assets/css/app.css",
     "./components": "./priv/static/assets/css/app.css",
     "./svg/mdi/*.svg": "./priv/mdi/svg/*.svg",
-    "./svg/bsi/*.svg": "./priv/bsi/svg/*.svg"
+    "./svg/bsi/*.svg": "./priv/bsi/svg/*.svg",
+    "./react-form": "./assets/js/react_form/index.js"
   },
   "scripts": {
     "build": "mix duskmoon_bundler.build phoenix_duskmoon",
@@ -36,9 +37,12 @@
   },
   "dependencies": {
     "@duskmoon-dev/art-elements": "1.8.0",
+    "@duskmoon-dev/components": "0.3.1",
     "@duskmoon-dev/core": "1.19.10",
     "@duskmoon-dev/css-art": "1.19.10",
-    "@duskmoon-dev/elements": "1.8.0"
+    "@duskmoon-dev/elements": "1.8.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
     "@mdi/svg": "7.4.47",

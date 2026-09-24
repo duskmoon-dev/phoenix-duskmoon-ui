@@ -254,6 +254,12 @@
       },
       %{
         kind: :story,
+        name: "React Form",
+        path: "/data_entry/react_form",
+        module: Storybook.DataEntry.ReactForm
+      },
+      %{
+        kind: :story,
         name: "Form Counter",
         path: "/data_entry/form_counter",
         module: Storybook.DataEntry.FormCounter

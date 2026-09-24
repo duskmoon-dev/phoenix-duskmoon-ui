@@ -1,8 +1,9 @@
 import "phoenix_html";
 import * as DuskmoonHooks from "phoenix_duskmoon/hooks";
+import { DuskmoonReactForm } from "phoenix_duskmoon/react-form";
 
 // Make Duskmoon hooks available in PhoenixStorybook LiveView iframes
-window.storybook = { Hooks: DuskmoonHooks };
+window.storybook = { Hooks: { ...DuskmoonHooks, DuskmoonReactForm } };
 
 let codeEngineShadowStyleWorkaroundInstalled = false;
 let codeEngineLayoutWorkaroundInstalled = false;
