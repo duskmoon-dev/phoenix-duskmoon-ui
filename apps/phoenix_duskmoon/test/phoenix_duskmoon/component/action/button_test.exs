@@ -893,4 +893,39 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
       refute result =~ ~s[aria-label="Confirmation"]
     end
   end
+
+  test "caller styles survive every styled button rendering path" do
+    for extra <- [
+          %{},
+          %{interestfor: "tip"},
+          %{native_submit: true},
+          %{href: "/save"},
+          %{href: "/save", disabled: true},
+          %{confirm: "Save?"}
+        ] do
+      html =
+        render_component(
+          &dm_btn/1,
+          Map.merge(
+            %{
+              id: "styled-button",
+              variant: "info",
+              style: "anchor-name: --save; color: red",
+              inner_block: %{inner_block: fn _, _ -> "Save" end}
+            },
+            extra
+          )
+        )
+
+      [style] =
+        html
+        |> LazyHTML.from_fragment()
+        |> LazyHTML.query("#styled-button")
+        |> LazyHTML.attribute("style")
+
+      assert style =~ "anchor-name: --save"
+      assert style =~ "color: red"
+      assert style =~ "--color-primary: var(--color-info)"
+    end
+  end
 end

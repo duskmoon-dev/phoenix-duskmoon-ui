@@ -1,6 +1,8 @@
 defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
   use ExUnit.Case, async: true
 
+  use Phoenix.Component
+  import PhoenixDuskmoon.Component.Action.Button
   import Phoenix.LiveViewTest
   import PhoenixDuskmoon.Component.DataDisplay.Tooltip
 
@@ -114,5 +116,24 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
 
     assert result =~ "custom-tooltip"
     assert result =~ ~s[data-testid="my-tooltip"]
+  end
+
+  test "dm_btn retains the tooltip anchor alongside its color variant styles" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(~H"""
+      <.dm_tooltip id="save-help" content="Save changes" :let={trigger_attrs}>
+        <.dm_btn variant="info" {trigger_attrs}>Save</.dm_btn>
+      </.dm_tooltip>
+      """)
+      |> LazyHTML.from_fragment()
+
+    [style] = LazyHTML.attribute(LazyHTML.query(html, "button"), "style")
+    assert style =~ "anchor-name: --anchor-save-help-tooltip"
+    assert style =~ "--color-primary: var(--color-info)"
+
+    assert LazyHTML.attribute(LazyHTML.query(html, "[role=tooltip]"), "style") ==
+             ["position-anchor: --anchor-save-help-tooltip"]
   end
 end

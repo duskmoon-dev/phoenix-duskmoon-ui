@@ -333,10 +333,17 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
     do: Map.has_key?(rest, atom_key) || Map.has_key?(rest, string_key)
 
   defp assign_button_style(assigns) do
+    # Keep caller-owned positioning (e.g. tooltip anchors) on the rendered trigger.
+    style =
+      [variant_style(assigns.variant), assigns.rest[:style] || assigns.rest["style"]]
+      |> Enum.reject(&(&1 in [nil, ""]))
+      |> Enum.join("; ")
+
     assigns
     |> assign_new(:id, fn -> nil end)
     |> assign(:el_variant, map_variant(assigns.variant))
-    |> assign(:el_style, variant_style(assigns.variant))
+    |> assign(:el_style, style)
+    |> assign(:rest, Map.drop(assigns.rest, [:style, "style"]))
   end
 
   defp assign_button_element(assigns), do: assign_button_style(assigns)
