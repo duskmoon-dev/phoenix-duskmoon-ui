@@ -145,6 +145,12 @@
       },
       %{
         kind: :story,
+        name: "React Chat",
+        path: "/data_display/react_chat",
+        module: Storybook.DataDisplay.ReactChat
+      },
+      %{
+        kind: :story,
         name: "Pagination",
         path: "/data_display/pagination",
         module: Storybook.DataDisplay.Pagination

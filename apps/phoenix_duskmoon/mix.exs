@@ -48,6 +48,7 @@ defmodule PhoenixDuskmoon.Mixfile do
             PhoenixDuskmoon.Component.Action.Toggle
           ],
           "Data Display": [
+            PhoenixDuskmoon.Component.DataDisplay.ReactChat,
             PhoenixDuskmoon.Component.DataDisplay.Carousel,
             PhoenixDuskmoon.Component.DataDisplay.Countdown,
             PhoenixDuskmoon.Component.DataDisplay.Diff,

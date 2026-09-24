@@ -9,7 +9,8 @@
     "./components": "./priv/static/assets/css/app.css",
     "./svg/mdi/*.svg": "./priv/mdi/svg/*.svg",
     "./svg/bsi/*.svg": "./priv/bsi/svg/*.svg",
-    "./react-form": "./assets/js/react_form/index.js"
+    "./react-form": "./assets/js/react_form/index.js",
+    "./react-chat": "./assets/js/react_chat/index.js"
   },
   "scripts": {
     "build": "mix duskmoon_bundler.build phoenix_duskmoon",
