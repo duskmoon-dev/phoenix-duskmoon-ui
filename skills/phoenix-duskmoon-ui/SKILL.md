@@ -44,6 +44,7 @@ end
 
 ```css
 @import "tailwindcss";
+@import "@duskmoon-dev/core/base.css";
 @plugin "@duskmoon-dev/core/plugin";
 @import "@duskmoon-dev/core/themes/sunshine";
 @import "@duskmoon-dev/core/themes/moonlight";

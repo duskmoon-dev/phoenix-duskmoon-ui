@@ -65,6 +65,7 @@ In your `assets/css/app.css`:
 @source "../../lib/**/*.ex";
 
 @import "tailwindcss";
+@import "@duskmoon-dev/core/base.css";
 @plugin "@duskmoon-dev/core/plugin";
 ```
 
@@ -78,7 +79,6 @@ In your `assets/js/app.js`, import the element packages you use:
 ```javascript
 // Register individual elements
 import "@duskmoon-dev/el-button/register";
-import "@duskmoon-dev/el-card/register";
 import "@duskmoon-dev/el-input/register";
 // ... add more as needed
 

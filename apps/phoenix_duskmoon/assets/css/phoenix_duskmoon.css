@@ -3,6 +3,7 @@
 @source "../../lib/**/*.ex";
 
 @import "tailwindcss";
+@import "@duskmoon-dev/core/base.css";
 
 /* DuskMoon UI design system — syntactic sugar for @duskmoon-dev/core */
 @plugin "@duskmoon-dev/core/plugin";

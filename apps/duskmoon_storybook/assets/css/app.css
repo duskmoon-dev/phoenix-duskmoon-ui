@@ -6,6 +6,7 @@
 @source '../../../phoenix_duskmoon/lib/**/*.*ex';
 
 @import "tailwindcss";
+@import "@duskmoon-dev/core/base.css";
 
 /* DuskMoon UI design system */
 @plugin "@duskmoon-dev/core/plugin";
@@ -76,4 +77,13 @@
 el-dm-code-engine {
   display: flex;
   flex-direction: column;
+}
+
+/* Native component previews use the same theme surface as their content. */
+@layer base {
+  .psb-sandbox {
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+    font-family: var(--font-sans);
+  }
 }

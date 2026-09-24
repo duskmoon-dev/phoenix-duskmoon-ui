@@ -63,19 +63,23 @@ and phoenix_duskmoon exports is replaced entirely.
 ```css
 /* ✅ v9 — ADD these instead */
 @import "tailwindcss";
+@import "@duskmoon-dev/core/base.css";
 @plugin "@duskmoon-dev/core/plugin";
+@import "@duskmoon-dev/core/components";
 ```
 
-The `@duskmoon-dev/core/plugin` directive registers the full design system with
-Tailwind v4: theme variables, component classes, and design tokens. The old
-`phoenix_duskmoon/theme` and `phoenix_duskmoon/components` CSS export paths no
-longer exist.
+The plugin registers Tailwind utilities for Core tokens; `base.css` supplies
+shared tokens such as `--radius-full`, and the components import supplies their
+styles. The bundled `phoenix_duskmoon/components` export includes these styles;
+use the imports above when configuring Core directly.
 
 **Optional**: Import built-in themes for light/dark mode support:
 
 ```css
 @import "tailwindcss";
+@import "@duskmoon-dev/core/base.css";
 @plugin "@duskmoon-dev/core/plugin";
+@import "@duskmoon-dev/core/components";
 @import "@duskmoon-dev/core/themes/sunshine";
 @import "@duskmoon-dev/core/themes/moonlight";
 ```
