@@ -42,6 +42,7 @@ Choose the smallest upstream integration that provides the required behavior:
 - For individual custom elements, prefer the matching published `@duskmoon-dev/el-*` package when the full registry is unnecessary. React components require an explicit JavaScript mount/unmount boundary compatible with LiveView; they are not HEEX components or custom-element tags.
 - Reuse upstream styles and behavior. Keep Phoenix wrappers only where they add meaningful Phoenix integration, semantics, slots, or behavior. Simple markup such as `<kbd class="kbd">` needs no wrapper or extra configuration.
 - Reuse the canonical component API rather than adding duplicate components for the same responsibility.
+- For complex forms, prefer `@duskmoon-dev/components` with React-owned state and JSON values. Use `dm_react_form` and its explicit LiveView event contract; backend handlers validate and persist JSON, while React handles field state and serialization. Keep `dm_form` for existing Phoenix-native forms.
 - Simplification must preserve required behavior: for example, interactive Diff needs a working slider, not only styled comparison panels. Verify actual interactions in Storybook, not just rendered markup or successful compilation.
 
 ### Upstream synchronization

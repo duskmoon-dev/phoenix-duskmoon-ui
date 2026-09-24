@@ -1,6 +1,6 @@
 # Component Reference
 
-Full attribute and slot reference for all phoenix_duskmoon components (v9.4.0).
+Full attribute and slot reference for all phoenix_duskmoon components (v9.14.0).
 Organized by category. Each entry lists the function name, key attributes
 (with defaults and allowed values), and slots.
 
@@ -460,6 +460,42 @@ Slots: `inner_block` (required; yields `interestfor`, `aria-describedby`, and fa
 ---
 
 ## Data Entry
+
+### `dm_react_form/1` and `dm_react_field/1` — React JSON Form
+
+`dm_react_form` keeps the nested HEEX structure and ordinary HTML controls while
+`dm_react_field` mounts controls from `@duskmoon-dev/components`. It requires the
+`DuskmoonReactForm` hook from `phoenix_duskmoon/react-form` and the Components CSS.
+
+**dm_react_form:**
+
+| Attr | Type | Default | Values |
+|------|------|---------|--------|
+| `id` | string | required | Stable hook/form identifier |
+| `values` | map | `%{}` | Initial typed JSON values |
+| `class` | any | nil | Container classes |
+| `rest` | global | | `phx-change`, `phx-submit`, `phx-target`, `phx-debounce`, `name`, `novalidate`, `autocomplete` |
+
+Slots: `inner_block` (required), containing normal HEEX and native HTML.
+
+**dm_react_field:**
+
+| Attr | Type | Default | Values |
+|------|------|---------|--------|
+| `name` | any | required | String or nested path list, for example `[:address, :city]` |
+| `type` | string | `"text"` | text, email, password, textarea, number, checkbox, select, multiselect |
+| `label` | string | nil | Accessible label |
+| `options` | list | `[]` | Select options |
+| `class` | any | nil | Placeholder classes |
+| `rest` | global | | Additional HTML attributes |
+
+Slots: none. React field names must be unique within one form.
+
+The event payload is `%{"id" => id, "values" => values, "revision" => revision}`;
+change events additionally include `"changed"`. Replies are `%{status: "ok"}` or
+`%{status: "error", errors: %{field => [message]}}`. Use
+`ReactForm.validation_reply/2` for Ecto changesets and `push_event/3` with
+`"dm:form:reset"` to reset a mounted form.
 
 All data entry components with a `field` attr accept `Phoenix.HTML.FormField` for automatic `id`/`name`/`value` extraction.
 

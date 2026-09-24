@@ -4,7 +4,7 @@ description: >
   Phoenix Duskmoon UI component library for Elixir/Phoenix LiveView applications.
   Use when building UIs with `phoenix_duskmoon` — covers installation, CSS/JS setup,
   component usage patterns (dm_* prefix), slots, form inputs, icons, CSS art,
-  and the v9 custom elements architecture. Trigger on: adding phoenix_duskmoon to a
+  React-owned JSON forms, and the v9 custom elements architecture. Trigger on: adding phoenix_duskmoon to a
   Phoenix project, using dm_* components, configuring themes, setting up hooks,
   or integrating @duskmoon-dev/core CSS design system.
 ---
@@ -14,17 +14,17 @@ description: >
 Elixir component library providing 80+ LiveView HEEX components that render as
 HTML Custom Elements (`<el-dm-*>`) styled by `@duskmoon-dev/core`.
 
-**Version: 9.4.0**
+**Version: 9.14.0**
 
 ## Installation
 
 ```elixir
 # mix.exs
-{:phoenix_duskmoon, "~> 9.4"}
+{:phoenix_duskmoon, "~> 9.14"}
 ```
 
 ```bash
-bun add @duskmoon-dev/core @duskmoon-dev/elements @duskmoon-dev/css-art @duskmoon-dev/art-elements
+bun add @duskmoon-dev/core @duskmoon-dev/css-art @duskmoon-dev/elements @duskmoon-dev/art-elements @duskmoon-dev/components react react-dom
 ```
 
 ## Setup
@@ -45,6 +45,7 @@ end
 ```css
 @import "tailwindcss";
 @import "@duskmoon-dev/core/base.css";
+@import "@duskmoon-dev/components/styles.css";
 @plugin "@duskmoon-dev/core/plugin";
 @import "@duskmoon-dev/core/themes/sunshine";
 @import "@duskmoon-dev/core/themes/moonlight";
@@ -74,6 +75,14 @@ let liveSocket = new LiveSocket("/live", Socket, {
 ```
 
 Merge with your own hooks: `hooks: { ...DuskmoonHooks, ...MyHooks }`.
+
+For React JSON forms, import the opt-in hook separately so ordinary applications
+do not load React unnecessarily:
+
+```javascript
+import { DuskmoonReactForm } from "phoenix_duskmoon/react-form";
+hooks: { ...DuskmoonHooks, DuskmoonReactForm }
+```
 
 ### 4. Register custom elements
 
@@ -109,6 +118,7 @@ Simple primitives such as `kbd`, `mask`, `stack`, `join`, `indicator`, and `hero
 | `ThemeSwitcher` | `dm_theme_switcher` | Theme toggle + localStorage persistence |
 | `Spotlight` | Spotlight search component | Cmd/Ctrl+K keyboard shortcut |
 | `PageHeader` | `dm_page_header` | IntersectionObserver for scroll-based nav |
+| `DuskmoonReactForm` | `dm_react_form` | Mounts `@duskmoon-dev/components` fields and sends typed JSON |
 
 ## Component Quick Reference
 
@@ -164,6 +174,7 @@ For full component catalog with all attributes and slots, see
 | Function | Module | Description |
 |----------|--------|-------------|
 | `dm_form` | DataEntry.Form | Form container + layout helpers (`dm_label`, `dm_error`, `dm_alert`, `dm_fieldset`, `dm_form_row`, `dm_form_grid`, `dm_form_section`, `dm_form_divider`, `dm_form_inline`, `dm_form_hint`, `dm_form_counter`) |
+| `dm_react_form` / `dm_react_field` | DataEntry.ReactForm | Nested HEEX form with React-owned fields and JSON `phx-change` / `phx-submit` |
 | `dm_input` | DataEntry.Input | Universal input (30+ types via `type` attr) |
 | `dm_compact_input` | DataEntry.CompactInput | Compact variant of input |
 | `dm_checkbox` | DataEntry.Checkbox | Checkbox with label |
@@ -247,6 +258,27 @@ Import via `use PhoenixDuskmoon.ArtComponent`.
 | `dm_art_synthwave_starfield` | ArtComponent.SynthwaveStarfield | Synthwave starfield |
 
 ## Usage Examples
+
+### React JSON form
+
+Use normal nested HEEX and native HTML alongside React fields. The backend receives
+`%{"id" => id, "values" => values, "revision" => revision}`; change payloads
+also include `changed` as a path list.
+
+```heex
+<.dm_react_form id="profile" values={@values}
+  phx-change="validate" phx-submit="save" phx-debounce="300">
+  <h2>Profile</h2>
+  <.dm_react_field name="name" type="text" label="Name" />
+  <.dm_react_field name={[:address, :city]} type="text" label="City" />
+  <input name="notes" class="input" />
+  <button type="submit" class="btn btn-primary">Save</button>
+</.dm_react_form>
+```
+
+Reply with `%{status: "ok"}` or `%{status: "error", errors: %{field => [message]}}`.
+Use `PhoenixDuskmoon.Component.DataEntry.ReactForm.validation_reply(changeset)`
+to convert an Ecto changeset, and push `dm:form:reset` to replace the draft.
 
 ```heex
 <%!-- Button with variant --%>
@@ -366,5 +398,6 @@ Import via `use PhoenixDuskmoon.ArtComponent`.
 | `phoenix_duskmoon/hooks` | `assets/js/hooks/index.js` |
 | `phoenix_duskmoon/css` | `priv/static/phoenix_duskmoon.css` |
 | `phoenix_duskmoon/components` | `priv/static/phoenix_duskmoon.css` |
+| `phoenix_duskmoon/react-form` | React form hook and field bridge |
 | `phoenix_duskmoon/svg/mdi/*.svg` | `priv/mdi/svg/*.svg` |
 | `phoenix_duskmoon/svg/bsi/*.svg` | `priv/bsi/svg/*.svg` |
