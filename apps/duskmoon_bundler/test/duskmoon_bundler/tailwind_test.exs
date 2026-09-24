@@ -24,6 +24,30 @@ defmodule DuskmoonBundler.TailwindTest do
   end
 
   describe "build/1" do
+    test "preserves Tailwind layer order when component CSS follows the import" do
+      for minify <- [false, true] do
+        {:ok, css} =
+          DuskmoonBundler.Tailwind.build(
+            sources: [%{base: @fixture_dir, pattern: "**/*.html"}],
+            css: "@import \"tailwindcss\"; @layer components { .card { display: block; } }",
+            minify: minify
+          )
+
+        # Minification may fold the order statement into ordered layer blocks.
+        layers =
+          Regex.scan(~r/@layer\s+([^;{]+)[;{]/, css, capture: :all_but_first)
+          |> Enum.flat_map(fn [names] -> String.split(names, ",") end)
+          |> Enum.map(&String.trim/1)
+          |> Enum.uniq()
+
+        assert "components" in layers
+        assert "utilities" in layers
+
+        assert Enum.find_index(layers, &(&1 == "components")) <
+                 Enum.find_index(layers, &(&1 == "utilities"))
+      end
+    end
+
     test "generates CSS from source files" do
       {:ok, css} =
         DuskmoonBundler.Tailwind.build(
