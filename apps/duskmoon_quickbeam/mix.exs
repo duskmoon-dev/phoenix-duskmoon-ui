@@ -80,7 +80,7 @@ defmodule QuickBEAM.MixProject do
       {:duskmoon_npm, in_umbrella: true},
       {:mint_web_socket, "~> 1.0"},
       {:nimble_pool, "~> 1.1"},
-      {:ex_doc, "~> 0.35", runtime: false}
+      {:ex_doc, "~> 0.40", runtime: false, override: true}
     ]
   end
 

@@ -6,6 +6,6 @@
     "phoenix_duskmoon": "workspace:*"
   },
   "devDependencies": {
-    "postcss": "8.5.26"
+    "postcss": "8.5.28"
   }
 }

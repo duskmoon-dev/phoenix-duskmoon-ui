@@ -161,14 +161,14 @@ defmodule PhoenixDuskmoon.Mixfile do
       {:phoenix, "~> 1.8"},
       {:phoenix_html, "~> 4.0"},
       {:phoenix_live_view, "~> 1.1"},
-      {:mdex, "~> 0.13.3"},
+      {:mdex, "~> 0.14"},
       {:mdex_gfm, "~> 0.2.0"},
       {:mdex_mermaid, "~> 0.3.6"},
       {:plug, "~> 1.19", optional: true},
       {:jason, "~> 1.4"},
       {:mint, "~> 1.9", only: :test},
       {:mint_web_socket, "~> 1.0", only: :test},
-      {:ex_doc, ">= 0.0.0", runtime: false}
+      {:ex_doc, "~> 0.40", runtime: false}
     ]
   end
 

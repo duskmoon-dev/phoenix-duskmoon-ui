@@ -22,7 +22,8 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
   end
 
   defp deps do
-    []
+    # zig_doc 0.7.0 pins ex_doc 0.39.1; keep the umbrella on current ExDoc.
+    [{:ex_doc, "~> 0.40", runtime: false, override: true}]
   end
 
   defp aliases do

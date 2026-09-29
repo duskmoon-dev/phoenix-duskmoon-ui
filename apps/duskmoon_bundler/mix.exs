@@ -58,7 +58,7 @@ defmodule DuskmoonBundler.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:ex_slop, "~> 0.4", only: [:dev, :test], runtime: false},
       {:ex_dna, "~> 1.1", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.35", runtime: false},
+      {:ex_doc, "~> 0.40", runtime: false, override: true},
       {:makeup_js, "~> 0.1", only: :dev, runtime: false},
       {:bandit, "~> 1.0", only: :test},
       {:mint, "~> 1.9"},
