@@ -13,6 +13,14 @@
     </:title>
     <:menu>
       <.dm_left_menu_group active={assigns[:active_menu]}>
+        <:title>Overview</:title>
+        <:menu id="components-index" to={~p"/components"}>
+          <.dm_mdi name="view-grid" class="w-4 h-4" /> All Components
+        </:menu>
+      </.dm_left_menu_group>
+    </:menu>
+    <:menu>
+      <.dm_left_menu_group active={assigns[:active_menu]}>
         <:title>Action</:title>
         <:menu id="action-button" to={~p"/components/action/button"}>
           <.dm_mdi name="button-pointer" class="w-4 h-4" /> Button
@@ -48,6 +56,9 @@
         </:menu>
         <:menu id="data-display-chat" to={~p"/components/data-display/chat"}>
           <.dm_mdi name="chat-outline" class="w-4 h-4" /> Chat
+        </:menu>
+        <:menu id="data-display-react-chat" to={~p"/components/data-display/react-chat"}>
+          <.dm_mdi name="message-processing-outline" class="w-4 h-4" /> React Chat
         </:menu>
         <:menu id="data-display-chip" to={~p"/components/data-display/chip"}>
           <.dm_mdi name="label" class="w-4 h-4" /> Chip
@@ -143,6 +154,9 @@
         </:menu>
         <:menu id="data-entry-form" to={~p"/components/data-entry/form"}>
           <.dm_mdi name="format-list-checks" class="w-4 h-4" /> Form
+        </:menu>
+        <:menu id="data-entry-react-form" to={~p"/components/data-entry/react-form"}>
+          <.dm_mdi name="form-textbox-password" class="w-4 h-4" /> React Form
         </:menu>
         <:menu id="data-entry-input" to={~p"/components/data-entry/input"}>
           <.dm_mdi name="form-textbox" class="w-4 h-4" /> Input

@@ -1,0 +1,50 @@
+<div class="w-full">
+  <.dm_card class="w-full" body_class="p-4 md:p-8">
+    <:title class="flex flex-col items-start gap-2 md:flex-row md:items-center md:justify-between">
+      <span class="text-4xl text-primary">Components</span>
+      <span class="text-sm opacity-60">PhoenixDuskmoon.Component · {@catalog |> length()} UI demos</span>
+    </:title>
+
+    <p class="max-w-3xl text-base opacity-70">
+      Browse the component gallery by category. Every card opens a real UI demonstration page;
+      React integrations use LiveView for server events, validation, and streaming state.
+    </p>
+
+    <div class="mt-8 flex flex-col gap-10">
+      <%= for {category, components} <- Enum.group_by(@catalog, & &1.category) |> Enum.sort_by(&elem(&1, 0)) do %>
+        <section id={"components-#{String.downcase(String.replace(category, " ", "-"))}"}>
+          <div class="mb-4 flex items-center gap-3">
+            <h2 class="text-2xl font-semibold">{category}</h2>
+            <span class="badge badge-ghost">{length(components)}</span>
+            <div class="h-px flex-1 bg-base-300"></div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <article
+              :for={component <- components}
+              class="card border border-base-300 bg-base-100 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <div class="card-body gap-3 p-5">
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="text-lg font-semibold">
+                    <.link navigate={component.path} class="text-primary hover:underline">
+                      {component.title}
+                    </.link>
+                  </h3>
+                  <.dm_mdi name="view-grid-outline" class="h-5 w-5 shrink-0 opacity-50" />
+                </div>
+                <code class="text-xs opacity-60">{component.function}</code>
+                <p class="min-h-12 text-sm opacity-70">{component.description}</p>
+                <div class="card-actions justify-end">
+                  <.link navigate={component.path}>
+                    <.dm_btn variant="ghost" size="sm">Open demo</.dm_btn>
+                  </.link>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+      <% end %>
+    </div>
+  </.dm_card>
+</div>

@@ -35,6 +35,18 @@ defmodule DuskmoonStorybookWeb.RouterTest do
     assert Enum.count(LazyHTML.query(document, "el-dm-chat-scroll")) == 1
   end
 
+  test "React component demos are available as LiveView pages", %{conn: conn} do
+    for {path, hook, title} <- [
+          {"/components/data-display/react-chat", "DuskmoonReactChat",
+           "React-owned streaming chat"},
+          {"/components/data-entry/react-form", "DuskmoonReactForm", "React JSON form"}
+        ] do
+      html = conn |> get(path) |> html_response(200)
+      assert html =~ hook
+      assert html =~ title
+    end
+  end
+
   describe "git repository data display routes" do
     test "renders issue 78 component gallery pages", %{conn: conn} do
       pages = [

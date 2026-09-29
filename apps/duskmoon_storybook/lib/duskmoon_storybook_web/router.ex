@@ -19,13 +19,16 @@ defmodule DuskmoonStorybookWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :page
-    get "/components", PageController, :page
+    get "/components", PageController, :components
 
     live_storybook("/storybook", backend_module: DuskmoonStorybookWeb.Storybook)
   end
 
   scope "/components", DuskmoonStorybookWeb.Components do
     pipe_through :browser
+
+    live "/data-display/react-chat", ReactChatLive
+    live "/data-entry/react-form", ReactFormLive
 
     # Action
     get "/action/button", ActionController, :button
