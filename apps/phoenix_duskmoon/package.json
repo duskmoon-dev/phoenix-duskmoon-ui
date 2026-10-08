@@ -37,11 +37,11 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@duskmoon-dev/art-elements": "1.8.0",
-    "@duskmoon-dev/components": "0.3.1",
-    "@duskmoon-dev/core": "1.19.10",
-    "@duskmoon-dev/css-art": "1.19.10",
-    "@duskmoon-dev/elements": "1.8.0",
+    "@duskmoon-dev/art-elements": "1.8.1",
+    "@duskmoon-dev/components": "0.4.1",
+    "@duskmoon-dev/core": "1.20.3",
+    "@duskmoon-dev/css-art": "1.20.3",
+    "@duskmoon-dev/elements": "1.8.1",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
