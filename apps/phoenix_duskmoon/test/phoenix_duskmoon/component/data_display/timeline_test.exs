@@ -108,6 +108,71 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TimelineTest do
   end
 
   describe "color variants" do
+    test "applies supported marker colors to the marker while retaining item classes" do
+      for {color, marker_color} <- [
+            {"secondary", "secondary"},
+            {"tertiary", "tertiary"},
+            {"accent", "tertiary"},
+            {"success", "success"},
+            {"error", "error"},
+            {"neutral", "neutral"},
+            {"base", "base"}
+          ],
+          icon <- [nil, "check"] do
+        result =
+          render_component(&dm_timeline/1, %{
+            item: [
+              %{
+                title: color,
+                color: color,
+                icon: icon,
+                inner_block: fn _, _ -> "Body" end,
+                __slot__: :item
+              }
+            ]
+          })
+
+        document = LazyHTML.from_fragment(result)
+
+        assert [_] =
+                 Enum.to_list(
+                   LazyHTML.query(
+                     document,
+                     ".timeline-item-#{marker_color} > .timeline-marker.timeline-marker-#{marker_color}"
+                   )
+                 )
+
+        marker_content = if icon, do: ".timeline-marker-icon", else: ".timeline-marker-dot"
+
+        assert [_] =
+                 Enum.to_list(
+                   LazyHTML.query(document, ".timeline-marker-#{marker_color} #{marker_content}")
+                 )
+
+        refute result =~ "timeline-marker-accent"
+      end
+    end
+
+    test "keeps item-only colors and default markers without unsupported marker classes" do
+      for color <- [nil, "primary", "warning", "info"] do
+        result =
+          render_component(&dm_timeline/1, %{
+            item: [
+              %{title: "Event", color: color, inner_block: fn _, _ -> "Body" end, __slot__: :item}
+            ]
+          })
+
+        document = LazyHTML.from_fragment(result)
+
+        assert [marker_class] =
+                 LazyHTML.attribute(LazyHTML.query(document, ".timeline-marker"), "class")
+
+        assert ["timeline-marker"] = String.split(marker_class)
+
+        if color, do: assert(result =~ "timeline-item-#{color}")
+      end
+    end
+
     test "renders timeline item with primary color" do
       result =
         render_component(&dm_timeline/1, %{

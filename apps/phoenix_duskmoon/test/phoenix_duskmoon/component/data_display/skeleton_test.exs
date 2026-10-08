@@ -300,7 +300,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
         })
 
       # text field
-      assert result =~ ~s[skeleton h-10 w-full]
+      assert result =~ ~s[skeleton skeleton-input]
       # textarea
       assert result =~ ~s[skeleton h-24 w-full]
       # checkbox
@@ -319,8 +319,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
       result = render_component(&dm_skeleton_form/1, %{fields: 5})
 
       # Auto-gen: ["text", "select", "textarea", "checkbox"] + 1 padded "text"
-      # text => h-10, textarea => h-24, checkbox => h-4 w-4
-      assert result =~ "skeleton h-10 w-full"
+      # text => skeleton-input, textarea => h-24, checkbox => h-4 w-4
+      assert result =~ "skeleton skeleton-input"
       assert result =~ "skeleton h-24 w-full"
       assert result =~ "skeleton h-4 w-4"
     end
@@ -341,7 +341,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
     test "renders form skeleton with 1 field auto-generates text type" do
       result = render_component(&dm_skeleton_form/1, %{fields: 1, show_submit: false})
 
-      assert result =~ "skeleton h-10 w-full"
+      assert result =~ "skeleton skeleton-input"
       assert result |> String.split("form-group") |> length() == 2
     end
 
@@ -353,8 +353,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
           show_submit: false
         })
 
-      # select renders same as text: h-10 w-full
-      assert result =~ "skeleton h-10 w-full"
+      # select renders same as text: skeleton-input
+      assert result =~ "skeleton skeleton-input"
     end
 
     test "renders form skeleton with unknown field type defaults to text size" do
@@ -365,8 +365,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.SkeletonTest do
           show_submit: false
         })
 
-      # Unknown type falls through to default: h-10 w-full
-      assert result =~ "skeleton h-10 w-full"
+      # Unknown type falls through to default: skeleton-input
+      assert result =~ "skeleton skeleton-input"
     end
   end
 

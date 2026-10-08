@@ -58,7 +58,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Timeline do
     attr(:time, :string, doc: "Item time/date text")
     attr(:icon, :string, doc: "MDI icon name for the marker")
 
-    attr(:color, :string, doc: "Item color: primary, secondary, success, warning, error")
+    attr(:color, :string,
+      doc:
+        "Item color: primary, secondary, tertiary, accent (tertiary), success, warning, error, neutral, base"
+    )
 
     attr(:completed, :boolean, doc: "Mark item as completed")
     attr(:active, :boolean, doc: "Mark item as the current/active item")
@@ -92,7 +95,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Timeline do
           item[:class]
         ]}
       >
-        <div class="timeline-marker">
+        <div class={[
+          "timeline-marker",
+          css_color(item[:color]) in ~w(secondary tertiary success error neutral base) &&
+            "timeline-marker-#{css_color(item[:color])}"
+        ]}>
           <.dm_mdi
             :if={item[:icon]}
             name={item[:icon]}

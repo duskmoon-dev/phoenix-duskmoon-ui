@@ -12,6 +12,9 @@
   <% md_content = """
   ## Overview
   Timeline component for displaying chronological events. Uses CSS classes from `@duskmoon-dev/core`.
+  Item colors include primary, secondary, tertiary, success, warning, error, neutral,
+  and base. The Phoenix `accent` color remains an alias for tertiary. Neutral and
+  base apply upstream marker colors to both dot and icon markers.
 
   ## Usage
   ```elixir
@@ -52,6 +55,12 @@
     </:item>
     <:item title="Failed" time="Step 4" color="error">
       This step encountered an error.
+    </:item>
+    <:item title="Neutral" color="neutral" icon="clock-outline">
+      Neutral marker with an icon.
+    </:item>
+    <:item title="Base" color="base">
+      Base marker with a dot.
     </:item>
     <:item title="Pending" time="Step 5">
       Waiting to start.

@@ -55,6 +55,7 @@
   | `readonly` | `boolean` | `false` | Make the editor read-only |
   | `upload_url` | `string` | `nil` | POST endpoint for file uploads |
   | `max_words` | `integer` | `nil` | Soft word cap shown in status bar |
+  | `auto_grow` | `boolean` | `false` | Grow with content; bounds use `--md-editor-min-height` / `--md-editor-max-height` (12rem / 24rem) |
   | `resize` | `string` | `nil` | Resize behavior: `none`, `vertical`, `horizontal`, `both` |
   | `live_preview` | `boolean` | `false` | Enable live preview rendering |
   | `debounce` | `integer` | `nil` | Debounce delay (ms) for preview |
@@ -76,6 +77,19 @@
       id="basic-editor"
       name="body"
       value="# Hello\n\nStart writing **markdown** here.\n\n- Item one\n- Item two\n"
+    />
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3">Grow with Content</h2>
+    <.dm_markdown_input
+      id="auto-grow-editor"
+      name="growing_body"
+      auto_grow
+      no_preview
+      resize="none"
+      style="--md-editor-min-height: 4rem; --md-editor-max-height: 16rem;"
+      placeholder="Type multiple lines to grow the editor…"
     />
   </section>
 

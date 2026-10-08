@@ -6,6 +6,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
   security code entry. Features circle shape, dots display mode,
   visibility toggle, and compact spacing.
 
+  Core 1.20 uses the shared OTP styles. The Phoenix API is unchanged, while
+  generated selectors use `otp-group`, `otp-label`, `otp-input`, and
+  `otp-input-field` in place of the former `pin-*` classes. Circle shape and
+  dots sizing use Tailwind utilities. Masking uses native password inputs.
+  Error colors remain supported; the former PIN error shake is no longer applied.
+
   ## Examples
 
       <.dm_pin_input length={4} />
@@ -80,7 +86,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
   attr(:dots, :boolean, default: false, doc: "display input as dots style")
   attr(:visible, :boolean, default: true, doc: "show entered values (false masks as dots)")
   attr(:disabled, :boolean, default: false, doc: "disable all fields")
-  attr(:error, :boolean, default: false, doc: "show error state with shake animation")
+  attr(:error, :boolean, default: false, doc: "show error state")
   attr(:errors, :list, default: [], doc: "list of error messages to display")
   attr(:success, :boolean, default: false, doc: "show success state")
   attr(:label, :string, default: nil, doc: "label text above the input")
@@ -122,7 +128,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
     <div
       id={@id}
       class={[
-        "pin-group",
+        "otp-group",
         @class
       ]}
       phx-feedback-for={@name}
@@ -138,24 +144,27 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInput do
       }
       {@rest}
     >
-      <label :if={@label} id={@id && "#{@id}-label"} class={["pin-label", @label_class]}>{@label}</label>
+      <label :if={@label} id={@id && "#{@id}-label"} class={["otp-label", @label_class]}>{@label}</label>
       <div class={[
-        "pin-input",
-        @size && "pin-input-#{@size}",
-        @color && "pin-input-#{@color}",
-        @variant && "pin-input-#{@variant}",
-        @shape && "pin-input-#{@shape}",
-        @compact && "pin-input-compact",
-        @dots && "pin-input-dots",
-        @visible && "pin-input-visible",
-        @disabled && "pin-input-disabled",
-        (@error || @errors != []) && "pin-input-error",
-        @success && "pin-input-success"
+        "otp-input",
+        @size && "otp-input-#{@size}",
+        @color && "otp-input-#{@color}",
+        @variant && "otp-input-#{@variant}",
+        @compact && "otp-input-compact",
+        (@error || @errors != []) && "otp-input-error",
+        @success && "otp-input-success"
       ]}>
         <input
           :for={i <- 1..@length}
-          type="text"
-          class="pin-input-field"
+          type={if(@visible, do: "text", else: "password")}
+          class={[
+            "otp-input-field",
+            @shape == "circle" && "rounded-full!",
+            @shape == "circle" && @size == "sm" && "h-10!",
+            @shape == "circle" && @size == "lg" && "h-14!",
+            @shape == "circle" && !@size && "h-12!",
+            @dots && "text-[2rem]! tracking-[-0.25rem]!"
+          ]}
           maxlength="1"
           inputmode="numeric"
           pattern="[0-9]"

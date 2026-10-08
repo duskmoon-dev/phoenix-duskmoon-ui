@@ -15,6 +15,13 @@
   Renders styled single-character input fields for PIN or security code entry.
   Features circle shape, dots display, visibility toggle, and compact spacing.
 
+  ## Core 1.20 Migration
+  The Phoenix attributes, field names, values, and accessible labels are preserved.
+  Generated CSS selectors now use `otp-group`, `otp-label`, `otp-input`, and
+  `otp-input-field` instead of the former `pin-*` selectors. Circle shape and
+  dots sizing use Tailwind utilities. `visible={false}` uses native password
+  fields. Error styling no longer includes the former PIN shake animation.
+
   ## Usage
   ```elixir
   <.dm_pin_input length={4} color="primary" />
@@ -69,8 +76,8 @@
   <h3 class="text-xl font-semibold mt-8 mb-4">Spacing and Display</h3>
   <div class="flex flex-col gap-4 mb-4">
     <.dm_pin_input length={6} compact label="Compact spacing" />
-    <.dm_pin_input length={6} dots label="Dots display" />
-    <.dm_pin_input length={4} visible={false} label="Hidden (masked)" />
+    <.dm_pin_input length={6} dots visible={false} value="123456" label="Dots display" />
+    <.dm_pin_input length={4} visible={false} value="1234" label="Hidden (masked)" />
     <.dm_pin_input length={4} visible label="Visible (shown)" />
   </div>
 
@@ -96,6 +103,8 @@
       color="secondary"
       variant="filled"
       dots
+      visible={false}
+      value="1234"
       label="Filled secondary dots"
     />
   </div>

@@ -15,6 +15,17 @@ defmodule Storybook.DataEntry.PinInput do
         }
       },
       %Variation{
+        id: :masked,
+        description: "Native password fields preserve PIN values and form names",
+        attributes: %{
+          length: 4,
+          visible: false,
+          name: "pin",
+          value: "1234",
+          label: "Masked PIN"
+        }
+      },
+      %Variation{
         id: :circle,
         description: "Circle-shaped PIN fields",
         attributes: %{
@@ -35,7 +46,8 @@ defmodule Storybook.DataEntry.PinInput do
             <.dm_pin_input length={4} shape="circle" label="Circle" />
             <.dm_pin_input length={4} variant="filled" label="Filled" />
             <.dm_pin_input length={6} compact={true} label="Compact" />
-            <.dm_pin_input length={4} dots={true} label="Dots" />
+            <.dm_pin_input length={4} dots={true} visible={false} value="1234" label="Dots" />
+            <.dm_pin_input length={4} size="lg" shape="circle" variant="filled" label="Large filled circle" />
           </div>
           """
         ]

@@ -430,11 +430,11 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Skeleton do
   defp build_field_classes(field_type, animation) do
     base_classes =
       case field_type do
-        "text" -> "skeleton h-10 w-full"
-        "select" -> "skeleton h-10 w-full"
+        "text" -> "skeleton skeleton-input"
+        "select" -> "skeleton skeleton-input"
         "textarea" -> "skeleton h-24 w-full"
         "checkbox" -> "skeleton h-4 w-4"
-        _ -> "skeleton h-10 w-full"
+        _ -> "skeleton skeleton-input"
       end
 
     [base_classes, animation_class(animation)]

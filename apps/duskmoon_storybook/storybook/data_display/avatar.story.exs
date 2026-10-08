@@ -17,27 +17,61 @@ defmodule Storybook.DataDisplay.Avatar do
         variations: [
           %Variation{
             id: :ring,
-            attributes: %{src: "https://picsum.photos/seed/user2/100/100.jpg", alt: "User", ring: true}
+            attributes: %{
+              src: "https://picsum.photos/seed/user2/100/100.jpg",
+              alt: "User",
+              ring: true
+            }
           },
           %Variation{
             id: :online,
-            attributes: %{src: "https://picsum.photos/seed/user3/100/100.jpg", alt: "User", online: true, ring: true}
+            attributes: %{
+              src: "https://picsum.photos/seed/user3/100/100.jpg",
+              alt: "User",
+              online: true,
+              ring: true
+            }
           },
           %Variation{
             id: :offline,
-            attributes: %{src: "https://picsum.photos/seed/user4/100/100.jpg", alt: "User", offline: true, ring: true}
+            attributes: %{
+              src: "https://picsum.photos/seed/user4/100/100.jpg",
+              alt: "User",
+              offline: true,
+              ring: true
+            }
           }
         ]
       },
       %VariationGroup{
         id: :sizes,
-        description: "Size variants",
+        description: "Size variants (including Core 2xl)",
         variations: [
-          %Variation{id: :xs, attributes: %{src: "https://picsum.photos/seed/user5/100/100.jpg", alt: "User", size: "xs"}},
-          %Variation{id: :sm, attributes: %{src: "https://picsum.photos/seed/user6/100/100.jpg", alt: "User", size: "sm"}},
+          %Variation{id: :xxl, attributes: %{name: "2XL", size: "2xl"}},
+          %Variation{
+            id: :xs,
+            attributes: %{
+              src: "https://picsum.photos/seed/user5/100/100.jpg",
+              alt: "User",
+              size: "xs"
+            }
+          },
+          %Variation{
+            id: :sm,
+            attributes: %{
+              src: "https://picsum.photos/seed/user6/100/100.jpg",
+              alt: "User",
+              size: "sm"
+            }
+          },
           %Variation{
             id: :lg,
-            attributes: %{src: "https://picsum.photos/seed/user7/100/100.jpg", alt: "User", size: "lg", ring: true}
+            attributes: %{
+              src: "https://picsum.photos/seed/user7/100/100.jpg",
+              alt: "User",
+              size: "lg",
+              ring: true
+            }
           },
           %Variation{
             id: :xl,
@@ -57,11 +91,20 @@ defmodule Storybook.DataDisplay.Avatar do
         variations: [
           %Variation{
             id: :square,
-            attributes: %{src: "https://picsum.photos/seed/user9/100/100.jpg", alt: "User", shape: "square", ring: true}
+            attributes: %{
+              src: "https://picsum.photos/seed/user9/100/100.jpg",
+              alt: "User",
+              shape: "square",
+              ring: true
+            }
           },
           %Variation{
             id: :rounded,
-            attributes: %{src: "https://picsum.photos/seed/user10/100/100.jpg", alt: "User", shape: "rounded"}
+            attributes: %{
+              src: "https://picsum.photos/seed/user10/100/100.jpg",
+              alt: "User",
+              shape: "rounded"
+            }
           }
         ]
       },
@@ -69,8 +112,14 @@ defmodule Storybook.DataDisplay.Avatar do
         id: :ring_colors,
         description: "Ring color variants",
         variations: [
-          %Variation{id: :ring_primary, attributes: %{name: "Ring", ring: true, ring_color: "primary"}},
-          %Variation{id: :ring_secondary, attributes: %{name: "Ring", ring: true, ring_color: "secondary"}}
+          %Variation{
+            id: :ring_primary,
+            attributes: %{name: "Ring", ring: true, ring_color: "primary"}
+          },
+          %Variation{
+            id: :ring_secondary,
+            attributes: %{name: "Ring", ring: true, ring_color: "secondary"}
+          }
         ]
       },
       %VariationGroup{

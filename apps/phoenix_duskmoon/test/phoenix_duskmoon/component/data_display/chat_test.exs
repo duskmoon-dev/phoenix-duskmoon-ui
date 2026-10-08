@@ -94,6 +94,42 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ChatTest do
     assert result =~ "clear-on-send"
   end
 
+  test "auto growth preserves the chat send event bridge and form values" do
+    field = Phoenix.Component.to_form(%{"message" => "Draft"}, as: "chat")[:message]
+
+    result =
+      render_component(&dm_chat_input/1, %{
+        field: field,
+        auto_grow: true,
+        "duskmoon-send-send": "send_message"
+      })
+
+    document = LazyHTML.from_fragment(result)
+
+    assert [_] =
+             Enum.to_list(
+               LazyHTML.query(
+                 document,
+                 "el-dm-chat-input[auto-grow][phx-hook='WebComponentHook']"
+               )
+             )
+
+    assert ["chat[message]"] =
+             LazyHTML.attribute(LazyHTML.query(document, "el-dm-chat-input"), "name")
+
+    assert ["Draft"] = LazyHTML.attribute(LazyHTML.query(document, "el-dm-chat-input"), "value")
+
+    assert ["send_message"] =
+             LazyHTML.attribute(
+               LazyHTML.query(document, "el-dm-chat-input"),
+               "duskmoon-send-send"
+             )
+
+    for attributes <- [%{}, %{auto_grow: false}] do
+      refute render_component(&dm_chat_input/1, attributes) =~ "auto-grow"
+    end
+  end
+
   test "renders chat input event bridge" do
     result =
       render_component(&dm_chat_input/1, %{

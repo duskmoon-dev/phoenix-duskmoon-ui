@@ -40,7 +40,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Avatar do
   attr(:alt, :string, default: nil, doc: "alt text for the image")
   attr(:name, :string, default: nil, doc: "user name for text-based avatar initials")
   attr(:placeholder_img, :any, default: nil, doc: "placeholder image URL or true for initials")
-  attr(:size, :string, default: "md", values: ["xs", "sm", "md", "lg", "xl"], doc: "avatar size")
+
+  attr(:size, :string,
+    default: "md",
+    values: ["xs", "sm", "md", "lg", "xl", "2xl"],
+    doc: "avatar size"
+  )
 
   attr(:shape, :string,
     default: "circle",

@@ -62,7 +62,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.AvatarTest do
     end
 
     test "renders all size options" do
-      for size <- ~w(xs sm md lg xl) do
+      for size <- ~w(xs sm md lg xl 2xl) do
         result = render_component(&dm_avatar/1, %{name: "T", size: size})
         assert result =~ "avatar-#{size}"
       end

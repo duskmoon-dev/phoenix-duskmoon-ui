@@ -17,8 +17,12 @@
   <.dm_chat_scroll class="h-96">
     <.dm_chat timeline={1} author="Assistant">First reply</.dm_chat>
   </.dm_chat_scroll>
-  <.dm_chat_input id="message-composer" name="message" duskmoon-send-send="send_message" />
+  <.dm_chat_input id="message-composer" name="message" auto_grow duskmoon-send-send="send_message" />
   ```
+
+  `auto_grow` is opt-in and disables manual resizing. Set the CSS properties
+  `--dm-chat-editor-min-height` and `--dm-chat-editor-max-height` to adjust its bounds
+  (defaults: 12rem and 24rem).
   """} />
 
   <.dm_chat_scroll id="chat-conversation" class="mt-8 h-96 max-w-3xl" label="Example conversation">
@@ -67,6 +71,8 @@
       placeholder="Send a message..."
       send_label="Send"
       clear_on_send
+      auto_grow
+      style="--dm-chat-editor-min-height: 4rem; --dm-chat-editor-max-height: 16rem;"
       duskmoon-send-send="send_message"
     />
   </section>

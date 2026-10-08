@@ -19,6 +19,18 @@ defmodule Storybook.DataEntry.MarkdownInput do
         }
       },
       %Variation{
+        id: :auto_grow,
+        description: "Write-only editor grows with content between 4rem and 16rem",
+        attributes: %{
+          name: "growing_body",
+          auto_grow: true,
+          no_preview: true,
+          resize: "none",
+          style: "--md-editor-min-height: 4rem; --md-editor-max-height: 16rem;",
+          value: "Start typing to grow this editor."
+        }
+      },
+      %Variation{
         id: :placeholder,
         description: "With placeholder text",
         attributes: %{
@@ -32,7 +44,8 @@ defmodule Storybook.DataEntry.MarkdownInput do
         attributes: %{
           name: "body",
           theme: "atom-one-dark",
-          value: "# Dark Theme\n\n```elixir\ndefmodule Example do\n  def hello, do: :world\nend\n```"
+          value:
+            "# Dark Theme\n\n```elixir\ndefmodule Example do\n  def hello, do: :world\nend\n```"
         }
       },
       %Variation{
@@ -79,6 +92,12 @@ defmodule Storybook.DataEntry.MarkdownInput do
           {"auto", "Auto"}
         ],
         default: nil
+      },
+      %{
+        id: :auto_grow,
+        label: "Auto Grow",
+        type: :boolean,
+        default: false
       },
       %{
         id: :no_mermaid,

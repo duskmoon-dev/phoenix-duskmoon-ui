@@ -47,6 +47,9 @@ defmodule Storybook.DataDisplay.Timeline do
           <:item title="Success" color="success" completed={true}>Completed</:item>
           <:item title="Warning" color="warning" active={true}>In progress</:item>
           <:item title="Error" color="error">Failed</:item>
+          <:item title="Tertiary" color="tertiary">Tertiary marker</:item>
+          <:item title="Neutral" color="neutral" icon="clock-outline">Neutral marker with icon</:item>
+          <:item title="Base" color="base">Base marker with dot</:item>
           """
         ]
       },

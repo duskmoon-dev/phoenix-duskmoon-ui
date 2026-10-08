@@ -111,6 +111,30 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MarkdownInputTest do
     refute result =~ "no-preview"
   end
 
+  test "auto growth is opt-in and preserves the form field contract" do
+    field = Phoenix.Component.to_form(%{"body" => "# Draft"}, as: "post")[:body]
+
+    result =
+      render_component(&dm_markdown_input/1, %{field: field, auto_grow: true, resize: "none"})
+
+    document = LazyHTML.from_fragment(result)
+
+    assert [_] =
+             Enum.to_list(
+               LazyHTML.query(document, "el-dm-markdown-input[auto-grow][resize='none']")
+             )
+
+    assert ["post[body]"] =
+             LazyHTML.attribute(LazyHTML.query(document, "el-dm-markdown-input"), "name")
+
+    assert ["# Draft"] =
+             LazyHTML.attribute(LazyHTML.query(document, "el-dm-markdown-input"), "value")
+
+    for attributes <- [%{}, %{auto_grow: false}] do
+      refute render_component(&dm_markdown_input/1, attributes) =~ "auto-grow"
+    end
+  end
+
   test "renders with custom class" do
     result = render_component(&dm_markdown_input/1, %{class: "h-96 w-full"})
 

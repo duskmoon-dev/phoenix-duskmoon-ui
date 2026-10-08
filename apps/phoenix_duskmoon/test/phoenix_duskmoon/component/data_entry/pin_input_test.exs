@@ -7,16 +7,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
   describe "dm_pin_input/1" do
     test "renders default 4-field pin input" do
       result = render_component(&dm_pin_input/1, %{})
-      assert result =~ "pin-group"
-      assert result =~ "pin-input"
-      assert result =~ "pin-input-field"
+      assert result =~ "otp-group"
+      assert result =~ "otp-input"
+      assert result =~ "otp-input-field"
       # Default length is 4
-      assert length(String.split(result, "pin-input-field")) - 1 == 4
+      assert length(String.split(result, "otp-input-field")) - 1 == 4
     end
 
     test "renders custom length" do
       result = render_component(&dm_pin_input/1, %{length: 6})
-      assert length(String.split(result, "pin-input-field")) - 1 == 6
+      assert length(String.split(result, "otp-input-field")) - 1 == 6
     end
 
     test "renders with id" do
@@ -27,27 +27,27 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
     test "renders size variants" do
       for size <- ["sm", "lg"] do
         result = render_component(&dm_pin_input/1, %{size: size})
-        assert result =~ "pin-input-#{size}"
+        assert result =~ "otp-input-#{size}"
       end
     end
 
     test "default size has no modifier class" do
       result = render_component(&dm_pin_input/1, %{})
-      refute result =~ "pin-input-sm"
-      refute result =~ "pin-input-lg"
+      refute result =~ "otp-input-sm"
+      refute result =~ "otp-input-lg"
     end
 
     test "renders color variants" do
       for color <- ~w(primary secondary tertiary info success warning error) do
         result = render_component(&dm_pin_input/1, %{color: color})
-        assert result =~ "pin-input-#{color}"
+        assert result =~ "otp-input-#{color}"
       end
     end
 
     test "maps accent color to tertiary" do
       result = render_component(&dm_pin_input/1, %{color: "accent"})
-      assert result =~ "pin-input-tertiary"
-      refute result =~ "pin-input-accent"
+      assert result =~ "otp-input-tertiary"
+      refute result =~ "otp-input-accent"
     end
 
     test "has role group with aria-label" do
@@ -76,48 +76,85 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
 
     test "renders filled variant" do
       result = render_component(&dm_pin_input/1, %{variant: "filled"})
-      assert result =~ "pin-input-filled"
+      assert result =~ "otp-input-filled"
     end
 
     test "renders circle shape" do
       result = render_component(&dm_pin_input/1, %{shape: "circle"})
-      assert result =~ "pin-input-circle"
+      assert result =~ "rounded-full!"
+      assert result =~ "h-12!"
     end
 
     test "renders compact spacing" do
       result = render_component(&dm_pin_input/1, %{compact: true})
-      assert result =~ "pin-input-compact"
+      assert result =~ "otp-input-compact"
     end
 
     test "renders dots display" do
       result = render_component(&dm_pin_input/1, %{dots: true})
-      assert result =~ "pin-input-dots"
+      assert result =~ "text-[2rem]!"
+      assert result =~ "tracking-[-0.25rem]!"
     end
 
-    test "renders visible toggle" do
-      result = render_component(&dm_pin_input/1, %{visible: true})
-      assert result =~ "pin-input-visible"
+    test "visible inputs use native text fields" do
+      document = LazyHTML.from_fragment(render_component(&dm_pin_input/1, %{visible: true}))
+
+      assert ["text", "text", "text", "text"] =
+               LazyHTML.attribute(LazyHTML.query(document, "input"), "type")
     end
 
-    test "no visible class when false" do
-      result = render_component(&dm_pin_input/1, %{visible: false})
-      refute result =~ "pin-input-visible"
+    test "hidden inputs use password fields without changing names, values or labels" do
+      field = Phoenix.Component.to_form(%{"pin" => "1234"}, as: "auth")[:pin]
+
+      document =
+        LazyHTML.from_fragment(render_component(&dm_pin_input/1, %{field: field, visible: false}))
+
+      inputs = LazyHTML.query(document, "input")
+
+      assert ["password", "password", "password", "password"] = LazyHTML.attribute(inputs, "type")
+
+      assert ["auth[pin][1]", "auth[pin][2]", "auth[pin][3]", "auth[pin][4]"] =
+               LazyHTML.attribute(inputs, "name")
+
+      assert ["1", "2", "3", "4"] = LazyHTML.attribute(inputs, "value")
+
+      assert ["PIN digit 1 of 4", "PIN digit 2 of 4", "PIN digit 3 of 4", "PIN digit 4 of 4"] =
+               LazyHTML.attribute(inputs, "aria-label")
+    end
+
+    test "circle fields keep square dimensions at every size including filled styles" do
+      for {size, height} <- [{nil, "h-12!"}, {"sm", "h-10!"}, {"lg", "h-14!"}] do
+        result =
+          render_component(&dm_pin_input/1, %{shape: "circle", size: size, variant: "filled"})
+
+        document = LazyHTML.from_fragment(result)
+
+        assert [first, second, third, fourth] =
+                 LazyHTML.attribute(LazyHTML.query(document, "input"), "class")
+
+        assert first == second and second == third and third == fourth
+        assert first =~ "rounded-full!"
+        assert first =~ height
+        assert result =~ "otp-input-filled"
+      end
     end
 
     test "renders error state" do
       result = render_component(&dm_pin_input/1, %{error: true})
-      assert result =~ "pin-input-error"
+      assert result =~ "otp-input-error"
     end
 
     test "renders success state" do
       result = render_component(&dm_pin_input/1, %{success: true})
-      assert result =~ "pin-input-success"
+      assert result =~ "otp-input-success"
     end
 
     test "renders disabled fields" do
       result = render_component(&dm_pin_input/1, %{disabled: true})
       assert result =~ "disabled"
-      assert result =~ "pin-input-disabled"
+
+      assert [_first, _second, _third, _fourth] =
+               Enum.to_list(LazyHTML.query(LazyHTML.from_fragment(result), "input:disabled"))
     end
 
     test "renders aria-disabled on group when disabled" do
@@ -127,13 +164,13 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
 
     test "renders enabled state without disabled styling" do
       result = render_component(&dm_pin_input/1, %{})
-      refute result =~ "pin-input-disabled"
+      refute result =~ "otp-input-disabled"
       refute result =~ "aria-disabled"
     end
 
     test "renders label" do
       result = render_component(&dm_pin_input/1, %{label: "Enter PIN"})
-      assert result =~ "pin-label"
+      assert result =~ "otp-label"
       assert result =~ "Enter PIN"
     end
 
@@ -196,16 +233,17 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
           error: true
         })
 
-      assert result =~ "pin-input-lg"
-      assert result =~ "pin-input-primary"
-      assert result =~ "pin-input-circle"
-      assert result =~ "pin-input-compact"
-      assert result =~ "pin-input-error"
+      assert result =~ "otp-input-lg"
+      assert result =~ "otp-input-primary"
+      assert result =~ "rounded-full!"
+      assert result =~ "h-14!"
+      assert result =~ "otp-input-compact"
+      assert result =~ "otp-input-error"
     end
 
     test "no label renders no label element" do
       result = render_component(&dm_pin_input/1, %{})
-      refute result =~ "pin-label"
+      refute result =~ "otp-label"
     end
 
     test "no helper or error renders no message" do
@@ -279,14 +317,14 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
       assert result =~ "Enter PIN"
     end
 
-    test "renders label with pin-label base class and label_class" do
+    test "renders label with otp-label base class and label_class" do
       result =
         render_component(&dm_pin_input/1, %{
           label: "PIN",
           label_class: "text-sm"
         })
 
-      assert result =~ "pin-label"
+      assert result =~ "otp-label"
       assert result =~ "text-sm"
     end
   end
@@ -299,7 +337,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
         })
 
       assert result =~ "is required"
-      assert result =~ "pin-input-error"
+      assert result =~ "otp-input-error"
     end
 
     test "does not render errors when list is empty" do
@@ -317,7 +355,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.PinInputTest do
           errors: ["invalid PIN"]
         })
 
-      assert result =~ "pin-input-error"
+      assert result =~ "otp-input-error"
     end
 
     test "errors list takes precedence over error_message" do

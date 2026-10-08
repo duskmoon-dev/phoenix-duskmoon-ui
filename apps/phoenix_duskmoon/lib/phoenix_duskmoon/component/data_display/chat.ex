@@ -162,6 +162,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Chat do
   The browser event detail contains `value` and `files` (`File[]`). Handle binary
   attachments in the application's upload flow; the LiveView event bridge does not
   upload browser File objects. `clear_on_send` clears both content and attachments.
+
+  Set `auto_grow` to grow the editor with content and disable manual resizing.
+  Its bounds use `--dm-chat-editor-min-height` and `--dm-chat-editor-max-height`
+  (defaults: 12rem and 24rem).
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
@@ -173,6 +177,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Chat do
   attr(:readonly, :boolean, default: false, doc: "make the input read-only")
   attr(:send_label, :string, default: "Send", doc: "send button label")
   attr(:clear_on_send, :boolean, default: false, doc: "clear the editor after send")
+  attr(:auto_grow, :boolean, default: false, doc: "grow the editor with its content")
   attr(:class, :any, default: nil, doc: "additional CSS classes")
 
   attr(:rest, :global,
@@ -202,6 +207,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Chat do
       readonly={@readonly}
       send-label={@send_label}
       clear-on-send={@clear_on_send}
+      auto-grow={@auto_grow}
       class={@class}
       phx-hook={@hook}
       {@rest}

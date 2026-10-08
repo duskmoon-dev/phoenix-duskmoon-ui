@@ -25,6 +25,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MarkdownInput do
   bottom bar. With `upload_url` files are POSTed immediately; without it
   they are kept locally and submitted as `{name}_files` form fields.
 
+  Set `auto_grow` to grow the write area with content. The upstream CSS properties
+  `--md-editor-min-height` and `--md-editor-max-height` control its bounds
+  (defaults: 12rem and 24rem). Use `resize="none"` to disable manual resizing.
+
   ## Examples
 
       <.dm_markdown_input name="body" value={@body} />
@@ -72,6 +76,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MarkdownInput do
     default: false,
     doc: "hide the preview tab and toolbar; write-only mode"
   )
+
+  attr(:auto_grow, :boolean, default: false, doc: "grow the write area with its content")
 
   attr(:upload_url, :string,
     default: nil,
@@ -134,6 +140,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MarkdownInput do
       theme={@theme}
       no-mermaid={@no_mermaid}
       no-preview={@no_preview}
+      auto-grow={@auto_grow}
       upload-url={@upload_url}
       max-words={@max_words}
       resize={@resize}
