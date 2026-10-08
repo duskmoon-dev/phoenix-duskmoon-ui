@@ -158,4 +158,63 @@ defmodule OXC.ParseTest do
                OXC.parse(generated, "generated.js")
     end
   end
+
+  @tag :tmp_dir
+  test "parses deep expressions without crashing while preserving strings and numbers", %{
+    tmp_dir: tmp_dir
+  } do
+    elixir = System.find_executable("elixir") || flunk("elixir executable not found")
+
+    child_script = ~S"""
+    System.fetch_env!("OXC_PARSE_CODE_PATHS")
+    |> Base.decode64!()
+    |> :erlang.binary_to_term()
+    |> Enum.reverse()
+    |> Code.prepend_paths()
+
+    expression = "2.075" <> String.duplicate(" + 1", 2000)
+    source = "const value = " <> expression <> ";" <> ~S(const marker = "\uD800";)
+
+    {:ok,
+     %{
+       body: [
+         %{declarations: [%{init: expression}]},
+         %{declarations: [%{init: %{value: <<0xED, 0xA0, 0x80>>, raw: ~S("\uD800")}}]}
+       ]
+     }} = OXC.parse(source, "deep-expression.js")
+
+    %{type: :literal, value: 2.075} =
+      Enum.reduce(1..2000, expression, fn _, %{
+        type: :binary_expression,
+        operator: "+",
+        left: left,
+        right: %{type: :literal, value: 1}
+      } -> left end)
+
+    IO.puts("deep-parse-ok: depth=2000, decimal=2.075, integer=1, surrogate=d800")
+    """
+
+    script_path = Path.join(tmp_dir, "deep_parse.exs")
+    File.write!(script_path, child_script)
+    code_paths = :code.get_path() |> :erlang.term_to_binary() |> Base.encode64()
+
+    assert {output, 0} =
+             System.cmd(
+               elixir,
+               ["--erl", "+S 2:2 +SDcpu 1 +SDio 1", script_path],
+               cd: tmp_dir,
+               env: [
+                 {"OXC_PARSE_CODE_PATHS", code_paths},
+                 {"ERL_FLAGS", nil},
+                 {"ERL_AFLAGS", nil},
+                 {"ERL_ZFLAGS", nil},
+                 {"ELIXIR_ERL_OPTIONS", nil},
+                 {"ERL_CRASH_DUMP", Path.join(tmp_dir, "erl_crash.dump")},
+                 {"ERL_CRASH_DUMP_SECONDS", "0"}
+               ],
+               stderr_to_stdout: true
+             )
+
+    assert output =~ "deep-parse-ok: depth=2000, decimal=2.075, integer=1, surrogate=d800"
+  end
 end

@@ -8,8 +8,8 @@ use oxc_semantic::SemanticBuilder;
 use oxc_span::SourceType;
 use oxc_transformer::{EnvOptions, JsxRuntime, TransformOptions, Transformer};
 use rustler::{Binary, Encoder, Env, Error, NifResult, OwnedBinary, SerdeTerm, Term};
-use serde::de::{self, DeserializeSeed, MapAccess, SeqAccess, Visitor};
-use serde::{Deserialize, Serialize};
+use serde::de::{self, Visitor};
+use serde::Serialize;
 use serde_json::value::RawValue;
 use std::fmt;
 use std::path::Path;
@@ -30,54 +30,44 @@ fn encode_ok<'a, T: Serialize>(env: Env<'a>, value: T) -> NifResult<Term<'a>> {
 }
 
 #[derive(Clone, Copy)]
-struct BeamTermSeed<'a> {
+struct BeamScalar<'a> {
     env: Env<'a>,
 }
 
-impl<'de, 'a> DeserializeSeed<'de> for BeamTermSeed<'a> {
-    type Value = Term<'a>;
-
-    fn deserialize<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
-    where
-        D: de::Deserializer<'de>,
-    {
+impl<'a> BeamScalar<'a> {
+    fn decode(self, raw: &str) -> Result<Term<'a>, serde_json::Error> {
         // JavaScript strings can contain lone UTF-16 surrogates. Deserialize
         // those as WTF-8 bytes, rather than requiring a Rust UTF-8 String.
-        // RawValue borrows the original JSON without normalizing its escapes.
-        let raw = <&RawValue>::deserialize(deserializer)?;
-        let mut deserializer = serde_json::Deserializer::from_str(raw.get());
-        deserializer.disable_recursion_limit();
+        let mut deserializer = serde_json::Deserializer::from_str(raw);
 
-        let result = if raw.get().starts_with('"') {
+        if raw.starts_with('"') {
             de::Deserializer::deserialize_bytes(&mut deserializer, self)
-        } else if matches!(raw.get().as_bytes().first(), Some(b'-' | b'0'..=b'9')) {
+        } else if matches!(raw.as_bytes().first(), Some(b'-' | b'0'..=b'9')) {
             // With arbitrary_precision enabled, deserialize_any represents
             // decimals through a private map. Number handles that internally;
             // only ordinary integer/float terms should cross the BEAM boundary.
-            let number =
-                serde_json::Number::deserialize(&mut deserializer).map_err(de::Error::custom)?;
+            let number: serde_json::Number = serde_json::from_str(raw)?;
             if let Some(value) = number.as_u64() {
                 return self.visit_u64(value);
             }
             if let Some(value) = number.as_i64() {
                 return self.visit_i64(value);
             }
-            return number
+            number
                 .as_f64()
                 .ok_or_else(|| de::Error::custom("JSON number out of range"))
-                .and_then(|value| self.visit_f64(value));
+                .and_then(|value| self.visit_f64(value))
         } else {
             de::Deserializer::deserialize_any(&mut deserializer, self)
-        };
-        result.map_err(de::Error::custom)
+        }
     }
 }
 
-impl<'de, 'a> Visitor<'de> for BeamTermSeed<'a> {
+impl<'de, 'a> Visitor<'de> for BeamScalar<'a> {
     type Value = Term<'a>;
 
     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-        formatter.write_str("a JSON value")
+        formatter.write_str("a JSON scalar")
     }
 
     fn visit_unit<E>(self) -> Result<Self::Value, E>
@@ -145,37 +135,127 @@ impl<'de, 'a> Visitor<'de> for BeamTermSeed<'a> {
         binary.as_mut_slice().copy_from_slice(value);
         Ok(binary.release(self.env).encode(self.env))
     }
+}
 
-    fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
-    where
-        A: SeqAccess<'de>,
-    {
-        let mut values = Vec::with_capacity(seq.size_hint().unwrap_or(0));
-        while let Some(value) = seq.next_element_seed(self)? {
-            values.push(value);
-        }
-        Ok(values.encode(self.env))
+struct JsonCursor<'j> {
+    remaining: &'j str,
+}
+
+impl<'j> JsonCursor<'j> {
+    fn peek(&mut self) -> Option<u8> {
+        self.remaining = self.remaining.trim_start_matches([' ', '\t', '\r', '\n']);
+        self.remaining.as_bytes().first().copied()
     }
 
-    fn visit_map<A>(self, mut map_access: A) -> Result<Self::Value, A::Error>
-    where
-        A: MapAccess<'de>,
-    {
-        let mut map = Term::map_new(self.env);
-        while let Some(key) = map_access.next_key::<String>()? {
-            let value = map_access.next_value_seed(self)?;
-            map = map
-                .map_put(key, value)
-                .map_err(|_| de::Error::custom("failed to encode JSON object as BEAM map"))?;
+    fn consume(&mut self, byte: u8) -> bool {
+        if self.peek() == Some(byte) {
+            self.remaining = &self.remaining[1..];
+            true
+        } else {
+            false
         }
-        Ok(map)
+    }
+
+    fn require(&mut self, byte: u8) -> Result<(), String> {
+        if self.consume(byte) {
+            Ok(())
+        } else {
+            Err(format!("Expected '{}' in ESTree JSON", char::from(byte)))
+        }
+    }
+
+    fn scalar(&mut self) -> Result<&'j str, String> {
+        // Containers are handled by heap-backed frames below. RawValue only
+        // scans a scalar here, preserving escapes without recursive traversal.
+        if matches!(self.peek(), Some(b'[' | b'{')) {
+            return Err("Expected a JSON scalar".to_string());
+        }
+        let mut stream =
+            serde_json::Deserializer::from_str(self.remaining).into_iter::<&RawValue>();
+        let raw = stream
+            .next()
+            .ok_or_else(|| "Unexpected end of ESTree JSON".to_string())?
+            .map_err(|error| error.to_string())?;
+        self.remaining = &self.remaining[stream.byte_offset()..];
+        Ok(raw.get())
+    }
+
+    fn key(&mut self) -> Result<String, String> {
+        let key = serde_json::from_str(self.scalar()?).map_err(|error| error.to_string())?;
+        self.require(b':')?;
+        Ok(key)
     }
 }
 
-fn json_str_to_term<'a>(env: Env<'a>, json: &str) -> Result<Term<'a>, serde_json::Error> {
-    let mut deserializer = serde_json::Deserializer::from_str(json);
-    deserializer.disable_recursion_limit();
-    BeamTermSeed { env }.deserialize(&mut deserializer)
+enum JsonFrame<'a> {
+    Array(Vec<Term<'a>>),
+    Object { map: Term<'a>, key: String },
+}
+
+fn json_str_to_term<'a>(env: Env<'a>, json: &str) -> Result<Term<'a>, String> {
+    // AST depth must not become native stack depth: generated expressions can
+    // exceed the dirty scheduler's stack. Keep both traversal state and decoded
+    // children on the heap, and all Env/Term access on this scheduler thread.
+    let mut cursor = JsonCursor { remaining: json };
+    let mut frames = Vec::new();
+    loop {
+        let mut term = if cursor.consume(b'[') {
+            if !cursor.consume(b']') {
+                frames.push(JsonFrame::Array(Vec::new()));
+                continue;
+            }
+            Vec::<Term<'a>>::new().encode(env)
+        } else if cursor.consume(b'{') {
+            let map = Term::map_new(env);
+            if !cursor.consume(b'}') {
+                frames.push(JsonFrame::Object {
+                    map,
+                    key: cursor.key()?,
+                });
+                continue;
+            }
+            map
+        } else {
+            BeamScalar { env }
+                .decode(cursor.scalar()?)
+                .map_err(|error| error.to_string())?
+        };
+
+        loop {
+            match frames.pop() {
+                Some(JsonFrame::Array(mut values)) => {
+                    values.push(term);
+                    if cursor.consume(b']') {
+                        term = values.encode(env);
+                        continue;
+                    }
+                    cursor.require(b',')?;
+                    frames.push(JsonFrame::Array(values));
+                }
+                Some(JsonFrame::Object { map, key }) => {
+                    let map = map
+                        .map_put(key, term)
+                        .map_err(|_| "Failed to encode JSON object as BEAM map".to_string())?;
+                    if cursor.consume(b'}') {
+                        term = map;
+                        continue;
+                    }
+                    cursor.require(b',')?;
+                    frames.push(JsonFrame::Object {
+                        map,
+                        key: cursor.key()?,
+                    });
+                }
+                None => {
+                    if cursor.peek().is_some() {
+                        return Err("Trailing characters in ESTree JSON".to_string());
+                    }
+                    return Ok(term);
+                }
+            }
+            break;
+        }
+    }
 }
 
 pub fn source_from_term<'a>(term: Term<'a>) -> NifResult<Binary<'a>> {
