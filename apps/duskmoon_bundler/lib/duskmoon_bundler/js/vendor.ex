@@ -46,6 +46,10 @@ defmodule DuskmoonBundler.JS.Vendor do
   """
   @spec prebundle(keyword()) :: {:ok, %{String.t() => String.t()}} | {:error, term()}
   def prebundle(opts) do
+    with_browser_signature_snapshot(fn -> do_prebundle(opts) end)
+  end
+
+  defp do_prebundle(opts) do
     root = Keyword.fetch!(opts, :root)
     force = Keyword.get(opts, :force, false)
     node_modules = opts[:node_modules] || NPM.Resolution.PackageResolver.find_node_modules(root)
@@ -76,6 +80,10 @@ defmodule DuskmoonBundler.JS.Vendor do
   @spec bundle_on_demand(String.t(), String.t() | nil, keyword()) ::
           {:ok, String.t()} | {:error, term()}
   def bundle_on_demand(specifier, node_modules, opts \\ []) do
+    with_browser_signature_snapshot(fn -> do_bundle_on_demand(specifier, node_modules, opts) end)
+  end
+
+  defp do_bundle_on_demand(specifier, node_modules, opts) do
     ensure_cache_dir()
 
     {plugins, resolve_dirs, module_types, source_specifiers, browser_token} =
@@ -288,8 +296,7 @@ defmodule DuskmoonBundler.JS.Vendor do
     do: {:ok, %{}}
 
   defp source_vendors(specifiers, module_dirs, force, plugins, module_types, source_specifiers) do
-    specifiers
-    |> Enum.reduce(%{}, fn specifier, acc ->
+    Enum.reduce_while(specifiers, {:ok, %{}}, fn specifier, {:ok, acc} ->
       case source_vendor(
              specifier,
              module_dirs,
@@ -299,11 +306,10 @@ defmodule DuskmoonBundler.JS.Vendor do
              source_specifiers,
              nil
            ) do
-        {:ok, path} -> Map.put(acc, specifier, path)
-        {:error, _} -> acc
+        {:ok, path} -> {:cont, {:ok, Map.put(acc, specifier, path)}}
+        {:error, _} = error -> {:halt, error}
       end
     end)
-    |> then(&{:ok, &1})
   end
 
   defp safe_bundle_vendors(
@@ -343,27 +349,23 @@ defmodule DuskmoonBundler.JS.Vendor do
          vendor_map
        ) do
     entries =
-      Enum.flat_map(specifiers, fn specifier ->
+      Enum.reduce_while(specifiers, {:ok, []}, fn specifier, {:ok, entries} ->
         case bundle_entry_for(specifier, module_dirs, plugins) do
-          {:ok, specifier, entry} -> [{specifier, entry}]
-          {:error, _} -> []
+          {:ok, specifier, entry} -> {:cont, {:ok, [{specifier, entry} | entries]}}
+          {:error, _} = error -> {:halt, error}
         end
       end)
 
-    case entries do
-      [] ->
-        {:ok, %{}}
-
-      entries ->
-        run_vendor_bundle(
-          entries,
-          specifiers,
-          module_dirs,
-          plugins,
-          module_types,
-          source_specifiers,
-          vendor_map
-        )
+    with {:ok, entries} <- entries do
+      run_vendor_bundle(
+        Enum.reverse(entries),
+        specifiers,
+        module_dirs,
+        plugins,
+        module_types,
+        source_specifiers,
+        vendor_map
+      )
     end
   end
 
@@ -387,7 +389,7 @@ defmodule DuskmoonBundler.JS.Vendor do
       |> Bundle.format(:esm)
       |> Bundle.resolve(
         conditions: DuskmoonBundler.JS.Resolution.browser_conditions(),
-        modules: module_dirs
+        modules: ["node_modules" | module_dirs]
       )
       |> Bundle.transform(
         define: %{"process.env.NODE_ENV" => ~s("development")},
@@ -436,22 +438,26 @@ defmodule DuskmoonBundler.JS.Vendor do
   end
 
   defp fallback_bundle_vendors(specifiers, module_dirs, plugins, module_types, source_specifiers) do
-    specifiers
-    |> Enum.reduce(%{}, fn specifier, acc ->
-      case bundle_vendor(
-             specifier,
-             module_dirs,
-             false,
-             plugins,
-             module_types,
-             source_specifiers,
-             nil
-           ) do
-        {:ok, path} -> Map.put(acc, specifier, path)
-        {:error, _} -> acc
-      end
-    end)
-    |> then(&{:ok, &1})
+    {vendor_map, errors} =
+      Enum.reduce(specifiers, {%{}, []}, fn specifier, {acc, errors} ->
+        case bundle_vendor(
+               specifier,
+               module_dirs,
+               false,
+               plugins,
+               module_types,
+               source_specifiers,
+               nil
+             ) do
+          {:ok, path} -> {Map.put(acc, specifier, path), errors}
+          {:error, reason} -> {acc, [{specifier, reason} | errors]}
+        end
+      end)
+
+    case errors do
+      [] -> {:ok, vendor_map}
+      errors -> {:error, {:vendor_bundle_failed, Enum.reverse(errors)}}
+    end
   end
 
   defp bundle_entry_for(specifier, module_dirs, plugins) do
@@ -531,7 +537,7 @@ defmodule DuskmoonBundler.JS.Vendor do
           |> Bundle.format(:esm)
           |> Bundle.resolve(
             conditions: DuskmoonBundler.JS.Resolution.browser_conditions(),
-            modules: module_dirs
+            modules: ["node_modules" | module_dirs]
           )
           |> Bundle.transform(
             define: %{"process.env.NODE_ENV" => ~s("development")},
@@ -1009,13 +1015,67 @@ defmodule DuskmoonBundler.JS.Vendor do
   end
 
   defp browser_signature(module_dirs, plugins, module_types, source_specifiers) do
+    key = {module_dirs, plugins, module_types, source_specifiers}
+
+    case Process.get({__MODULE__, :browser_signatures}) do
+      nil ->
+        build_browser_signature(module_dirs, plugins, module_types, source_specifiers)
+
+      signatures ->
+        case Map.fetch(signatures, key) do
+          {:ok, signature} ->
+            signature
+
+          :error ->
+            signature =
+              build_browser_signature(module_dirs, plugins, module_types, source_specifiers)
+
+            Process.put({__MODULE__, :browser_signatures}, Map.put(signatures, key, signature))
+            signature
+        end
+    end
+  end
+
+  defp with_browser_signature_snapshot(fun) do
+    key = {__MODULE__, :browser_signatures}
+    previous = Process.put(key, %{})
+
+    try do
+      fun.()
+    after
+      if is_nil(previous), do: Process.delete(key), else: Process.put(key, previous)
+    end
+  end
+
+  defp build_browser_signature(module_dirs, plugins, module_types, source_specifiers) do
     %{
       lockfiles: lockfile_signature(module_dirs),
       module_dirs: module_dirs,
+      resolve_modules: ["node_modules" | module_dirs],
+      nested_dependencies: nested_dependency_signature(module_dirs, plugins, module_types),
       module_types: module_types,
       plugins: Enum.map(plugins, &base_plugin_signature/1),
       vendor_source: List.wrap(source_specifiers)
     }
+  end
+
+  # Nested installations may change independently of the project's lockfile or
+  # the top-level entry. Include their manifests and source files in both hashes.
+  defp nested_dependency_signature(module_dirs, plugins, module_types) do
+    extensions =
+      [".css" | DuskmoonBundler.JS.Extensions.resolvable(plugins)] ++ Map.keys(module_types)
+
+    module_dirs
+    |> Enum.flat_map(fn dir ->
+      ["*/node_modules/**/*", "@*/*/node_modules/**/*"]
+      |> Enum.flat_map(&Path.wildcard(Path.join(dir, &1), match_dot: true))
+    end)
+    |> Enum.filter(&(Path.extname(&1) in extensions and File.regular?(&1)))
+    |> Enum.uniq()
+    |> Enum.sort()
+    |> Enum.map(&{&1, file_signature(&1)})
+    |> :erlang.term_to_binary()
+    |> then(&:crypto.hash(:sha256, &1))
   end
 
   defp base_plugin_signature({module, opts}), do: {module, opts}

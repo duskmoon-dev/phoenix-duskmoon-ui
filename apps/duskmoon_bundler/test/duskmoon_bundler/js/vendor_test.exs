@@ -324,6 +324,162 @@ defmodule DuskmoonBundler.JS.VendorTest do
     end
   end
 
+  describe "importer-relative nested dependencies" do
+    setup do
+      write_package("@vendor/core", "2.0.0", %{"." => "./index.js"})
+      write_package("@vendor/pin", "1.0.0", %{"." => "./index.js"})
+
+      write_package("@vendor/pin/node_modules/@vendor/core", "1.0.0", %{
+        "./pin" => "./pin.js"
+      })
+
+      File.write!(Path.join(@node_modules, "@vendor/core/index.js"), "export const root = true;")
+
+      File.write!(
+        Path.join(@node_modules, "@vendor/pin/index.js"),
+        "import { value } from '@vendor/core/pin'; export const pin = value;"
+      )
+
+      File.write!(nested_pin_path(), "export const value = 'nested-one';")
+
+      File.write!(
+        Path.join(@fixture_dir, "src/app.ts"),
+        "import { pin } from '@vendor/pin'; import { greet } from 'fake-lib'; console.log(pin, greet);"
+      )
+
+      :ok
+    end
+
+    test "multi-entry bundling uses the importer's nested version" do
+      assert {:ok, vendors} =
+               DuskmoonBundler.JS.Vendor.prebundle(
+                 root: Path.join(@fixture_dir, "src"),
+                 node_modules: @node_modules
+               )
+
+      assert Enum.sort(Map.keys(vendors)) == ["@vendor/pin", "fake-lib"]
+      assert {:ok, code} = DuskmoonBundler.JS.Vendor.read("@vendor/pin")
+      assert code =~ "nested-one"
+    end
+
+    test "per-package fallback bundles nested dependencies and reports failed vendors" do
+      write_package("broken-vendor", "1.0.0", %{"." => "./index.js"})
+      File.write!(Path.join(@node_modules, "broken-vendor/index.js"), "const = ;")
+
+      File.write!(
+        Path.join(@fixture_dir, "src/broken.ts"),
+        "import 'broken-vendor';"
+      )
+
+      assert {:error, _} =
+               DuskmoonBundler.JS.Vendor.prebundle(
+                 root: Path.join(@fixture_dir, "src"),
+                 node_modules: @node_modules
+               )
+
+      assert {:ok, code} = DuskmoonBundler.JS.Vendor.read("@vendor/pin")
+      assert code =~ "nested-one"
+    end
+
+    test "on-demand bundling uses the importer's nested version" do
+      assert {:ok, code} =
+               DuskmoonBundler.JS.Vendor.bundle_on_demand("@vendor/pin", @node_modules)
+
+      assert code =~ "nested-one"
+    end
+
+    test "nested dependency changes invalidate caches and browser hashes without a lockfile" do
+      opts = [node_modules: @node_modules]
+      assert {:ok, _} = DuskmoonBundler.JS.Vendor.bundle_on_demand("@vendor/pin", @node_modules)
+      assert {:ok, _} = DuskmoonBundler.JS.Vendor.read("@vendor/pin", opts)
+      first = DuskmoonBundler.JS.Vendor.browser_hash(opts)
+
+      File.write!(nested_pin_path(), "export const value = 'nested-two';")
+
+      refute DuskmoonBundler.JS.Vendor.current_browser_hash?(first, opts)
+      assert {:error, :not_found} = DuskmoonBundler.JS.Vendor.read("@vendor/pin", opts)
+
+      assert {:ok, code} =
+               DuskmoonBundler.JS.Vendor.bundle_on_demand("@vendor/pin", @node_modules)
+
+      assert code =~ "nested-two"
+      refute code =~ "nested-one"
+
+      second = DuskmoonBundler.JS.Vendor.browser_hash(opts)
+
+      write_package("@vendor/pin/node_modules/@vendor/core", "1.0.1", %{
+        "./pin" => "./pin.js"
+      })
+
+      refute DuskmoonBundler.JS.Vendor.browser_hash(opts) == second
+      assert {:error, :not_found} = DuskmoonBundler.JS.Vendor.read("@vendor/pin", opts)
+
+      write_package("@vendor/pin/node_modules/@vendor/core", "1.0.1", %{
+        "./pin" => "./next.js"
+      })
+
+      File.write!(
+        Path.join(Path.dirname(nested_pin_path()), "next.js"),
+        "export const value = 'nested-next';"
+      )
+
+      assert {:ok, _} =
+               DuskmoonBundler.JS.Vendor.prebundle(
+                 root: Path.join(@fixture_dir, "src"),
+                 node_modules: @node_modules
+               )
+
+      assert {:ok, code} = DuskmoonBundler.JS.Vendor.read("@vendor/pin", opts)
+      assert code =~ "nested-next"
+      refute code =~ "nested-two"
+
+      File.rm_rf!(Path.dirname(nested_pin_path()))
+      assert {:error, :not_found} = DuskmoonBundler.JS.Vendor.read("@vendor/pin", opts)
+
+      assert {:error, _} =
+               DuskmoonBundler.JS.Vendor.bundle_on_demand("@vendor/pin", @node_modules)
+    end
+
+    test "prebundling does not silently omit an unresolved required entry" do
+      File.write!(Path.join(@fixture_dir, "src/missing.ts"), "import 'missing-vendor';")
+
+      assert {:error, {:not_found, "missing-vendor"}} =
+               DuskmoonBundler.JS.Vendor.prebundle(
+                 root: Path.join(@fixture_dir, "src"),
+                 node_modules: @node_modules
+               )
+    end
+
+    test "prebundling does not silently omit an unresolved required source vendor" do
+      File.write!(Path.join(@fixture_dir, "src/missing.ts"), "import 'missing-source-vendor';")
+
+      assert {:error, {:not_found, "missing-source-vendor"}} =
+               DuskmoonBundler.JS.Vendor.prebundle(
+                 root: Path.join(@fixture_dir, "src"),
+                 node_modules: @node_modules,
+                 vendor_source: ["missing-source-vendor"]
+               )
+    end
+  end
+
+  defp write_package(name, version, exports) do
+    dir = Path.join(@node_modules, name)
+    File.mkdir_p!(dir)
+
+    File.write!(
+      Path.join(dir, "package.json"),
+      :json.encode(%{
+        "name" => name,
+        "version" => version,
+        "type" => "module",
+        "exports" => exports
+      })
+    )
+  end
+
+  defp nested_pin_path,
+    do: Path.join(@node_modules, "@vendor/pin/node_modules/@vendor/core/pin.js")
+
   describe "CJS package bundling" do
     setup do
       File.mkdir_p!(Path.join(@node_modules, "cjs-lib"))
