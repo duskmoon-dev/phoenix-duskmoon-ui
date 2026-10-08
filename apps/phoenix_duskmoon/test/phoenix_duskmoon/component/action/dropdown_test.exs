@@ -347,6 +347,23 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
     refute result =~ "aria-expanded"
   end
 
+  test "native dropdown requires no inline handlers or client state classes" do
+    result =
+      render_component(&dm_dropdown/1, %{
+        id: "csp-dropdown",
+        trigger: trigger(),
+        content: content()
+      })
+
+    refute result =~ ~r/\s+on\w+=/i
+    refute result =~ "<script"
+    refute result =~ "phx-hook"
+    refute result =~ "popover-show"
+    assert result =~ ~s[command="toggle-popover"]
+    assert result =~ ~s[commandfor="csp-dropdown-popover"]
+    assert result =~ ~s[popover="auto"]
+  end
+
   test "trigger has aria-controls pointing to popover id" do
     result =
       render_component(&dm_dropdown/1, %{

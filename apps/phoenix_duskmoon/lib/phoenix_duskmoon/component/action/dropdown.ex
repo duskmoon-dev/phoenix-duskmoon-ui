@@ -5,6 +5,11 @@ defmodule PhoenixDuskmoon.Component.Action.Dropdown do
   Uses the native HTML Popover API with CSS anchor positioning for
   click-to-toggle behavior without requiring JavaScript.
 
+  Native commands expose the trigger's expanded state to assistive technology,
+  and Core styles the open panel with `:popover-open`. No inline event handlers,
+  LiveView hook, or client runtime are needed, including in standalone pages
+  protected by `script-src 'self'`.
+
   ## Examples
 
       <.dm_dropdown>
