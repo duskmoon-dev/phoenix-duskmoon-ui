@@ -1,7 +1,115 @@
 # Upstream design alignment
 
 This audit compares published npm tarballs, public types, runtime code and release
-notes, rather than assuming compatibility from package names. Checked 2026-09-22.
+notes, rather than assuming compatibility from package names. Latest audit: 2026-10-08.
+
+## 2026-10-08 synchronization
+
+All six package families were checked against live npm metadata and shipped
+artifacts. Exact version pins in both manifests and the authoritative `bun.lock`
+are synchronized. Existing lockfile URL edits were preserved; no unrelated
+package versions changed. There is no npm lockfile in this checkout.
+
+| Package | Before | After / decision |
+| --- | --- | --- |
+| `@duskmoon-dev/core` | 1.19.10 | 1.20.3 |
+| `@duskmoon-dev/css-art` | 1.19.10 | 1.20.3 |
+| `@duskmoon-dev/elements` | 1.8.0 | 1.8.1 |
+| `@duskmoon-dev/art-elements` | 1.8.0 | 1.8.1 |
+| All 19 declared supporting `el-*` packages | 1.8.0 | 1.8.1 |
+| `@duskmoon-dev/components` | 0.3.1 | 0.4.1 |
+| `@duskmoon-dev/art-components` | Unused | Reviewed 0.4.1; retain CSS Art / art elements |
+
+### Component decisions
+
+All affected existing integrations take the **Update** path. No new public
+wrapper or removal is needed; the existing PIN API has a supported OTP styling
+replacement. Core/CSS Art remain the smallest paths for native components/art;
+Elements retain their custom-element event/form contracts, and React remains
+appropriate for the existing stateful form and streaming chat islands.
+
+| Integration | Package path | Decision and reason |
+| --- | --- | --- |
+| Avatar | Core | Update: expose shipped `size="2xl"` (6rem), retaining existing sizes |
+| Form skeleton | Core | Update: text/select/default fields use shipped `skeleton-input` sizing (2.75rem) |
+| PIN Input | Core OTP | Update: replace removed `pin-*` styles with supported `otp-*` selectors; keep public attrs, per-digit names/values, labels and errors; use native password masking and Tailwind circle/dots utilities |
+| Timeline | Core | Update: pass supported marker colors to the marker itself; add neutral/base examples; keep existing item classes and accent-to-tertiary compatibility |
+| Markdown Input / Chat Input | Elements | Update: optional `auto_grow={true}` emits `auto-grow`; defaults remain false; Chat forwards it to its Markdown editor |
+| React Chat | Components | Update: use published Chat Bubble/content, Tool, Status, Actions and Scroll primitives; navigate the latest 24 assistant replies with panel-local targets; retain LiveView mount/unmount and transport/state contracts |
+| React Form | Components | Update: wrap existing controls with published Form.Item and Form.ErrorList; link labels/errors to native inputs and Select triggers; add optional schema mode through published JsonSchemaForm/compileForm; retain typed nested JSON and LiveView events |
+| Core chat / native form controls | Core | Update imported CSS: bubble/tail/marker refinements and reserved OTP error space require no Phoenix markup change |
+| Dropdown / native overlays | Core | Update imported CSS: existing unique anchors and native hint/dialog APIs remain valid; `dm_modal` consumes unchanged `dialog` classes |
+| Themes / plugin | Core | Update Sunshine palette from published generated tokens; token names and ESM/CJS plugin files are unchanged; Moonlight is unchanged |
+| CSS Art / art elements | CSS Art / Art Elements | Update dependency versions; all 15 CSS Art files and used art-element contracts/registrations remain unchanged |
+
+PIN consumers with custom selectors must migrate `pin-group`, `pin-label`,
+`pin-input`, and `pin-input-field` to their `otp-*` counterparts. Circle/dots
+presentation uses Tailwind utilities, and `visible={false}` uses `type="password"`.
+The removed PIN error-shake animation is no longer supplied. Native OTP's new
+single-input presentation is additive; the established multi-field OTP/PIN form
+contract is retained.
+
+Elements exports, slots, events and registration entrypoints remain compatible.
+No registrar or theme-bridge changes are required. React/ReactDOM 19.3.0 and Core
+1.20.3 satisfy Components' published peer ranges. Existing Code Engine workarounds
+for upstream #9/#10 remain because their shipped runtime has not changed.
+
+### Validation and resolved upstream issues
+
+- Both configured production asset bundles build. Final assets contain the new
+  Avatar/Skeleton/Timeline selectors, native overlay rules, current Sunshine tokens
+  and editor registrations. Four orphan app-local installations still held older
+  versions after Bun installation; they were moved out of `node_modules`, followed
+  by a frozen installation and library rebuild, restoring current package resolution.
+  Storybook retains its existing
+  single-bundle fallback for ambiguous split exports.
+- Warnings-as-errors compilation and changed-file formatting pass.
+- Final umbrella suite: 3,667 tests and 2 doctests, zero failures.
+- JavaScript suite: 33 tests / 208 assertions, zero failures, including React Chat
+  composition/streaming/tool rendering and existing native overlay/state behavior.
+- Desktop Chromium verifies both themes for Avatar 2xl, form skeleton dimensions,
+  PIN circles/masking, Timeline neutral/base markers, editor auto growth and React
+  Chat. Chat Input forwards auto-grow and emits the unchanged `send` value/files
+  payload. React Form submits nested JSON through LiveView. Native hint tooltips
+  open on focus; native dialogs open modally and close on Escape. Checked pages
+  have no console warnings/errors.
+- Components 0.4.0 browser checks confirm tools and final content share one
+  Bubble, generating status appears during streaming, reply markers navigate
+  within a long transcript, manual scrolling is retained during updates, and
+  Jump to latest resumes following. Form label/error association, preset reset,
+  nested JSON submission and both themes pass. The dev vendor cache for Chat
+  required regeneration after its imported source changed; browser verification
+  uses the refreshed module.
+
+Components 0.4.0 resolves the earlier embedded Core chat stylesheet conflict:
+its shipped chat rules match Core 1.20.3 and the obsolete inset bubble outline is
+absent. Keep its stylesheet for React-only number/select/form/Markdown styles.
+No local chat CSS overrides are required.
+
+Components 0.4.1 resolves [React #79](https://github.com/duskmoon-dev/duskmoon-react/issues/79)
+by publishing `JsonSchemaForm` and `compileForm` at `./json-schema-form`, with AJV
+and format validation dependencies. The canonical `dm_react_form` now accepts
+`schema`: the upstream renderer owns one form and its fields, client validation,
+array controls and Submit/Reset actions. The ignored Phoenix mount has no parent
+form. Omitted values use schema defaults; explicit values keep their JSON types.
+The existing LiveView event contract, debounce, targets, revision checks and reset
+event remain supported. Nested/dotted backend errors are adapted to escaped JSON
+Pointer keys; single changes report the affected path, bulk changes its common
+parent. Reset clears pending changes and remounts the renderer to clear local
+errors. Disconnection cancels pending validation while preserving the draft. Replies from an older draft or a destroyed mount are ignored.
+
+[React #78](https://github.com/duskmoon-dev/duskmoon-react/issues/78) is also resolved:
+Select IDs, label and error attributes now reach the interactive trigger. The
+callsite TODOs for both issues are removed; no copied schema engine or local DOM
+workaround is needed.
+
+Desktop Chromium verifies schema defaults, nested objects and arrays, numeric
+Select values, booleans, required-field client validation and focus, backend
+pointer errors, typed submission, server presets and Reset. Classic fields and
+schema forms coexist without nested forms. Both themes and navigation between
+Form and Chat are checked with no console errors/warnings. The generated assets
+contain schema controls and upstream styles. The cached development React Form
+vendor module was regenerated before checking the new mount behavior.
 
 ## Core-first cleanup (2026-09-24)
 
