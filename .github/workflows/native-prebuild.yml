@@ -162,7 +162,7 @@ jobs:
 
       - name: Build Rust NIF
         id: build-crate
-        uses: philss/rustler-precompiled-action@v1
+        uses: philss/rustler-precompiled-action@67ed0cc2d6a423e4c4cd9ad651dcc6c90f802cdb # v1.1.5
         env:
           CARGO_TARGET_DIR: target
         with:
