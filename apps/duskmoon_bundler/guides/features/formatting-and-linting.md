@@ -4,7 +4,7 @@
 
 `DuskmoonBundler.Formatter` is a `mix format` plugin — JS/TS files are formatted alongside Elixir using oxfmt via NIF (~30× faster than Prettier).
 
-Add to `.formatter.exs`:
+For a new project, add to `.formatter.exs`:
 
 ```elixir
 [
@@ -17,13 +17,21 @@ Add to `.formatter.exs`:
 ]
 ```
 
-Or format manually:
+Or format all assets discovered by the standalone task:
 
 ```bash
 mix duskmoon_bundler.js.format
 ```
 
 ### Configuration
+
+With no configuration, the profile uses two-space indentation, an 80-column
+print width, semicolons, double quotes, trailing commas, spaces inside object
+braces, parentheses around arrow parameters, and LF line endings. Formatting
+normalizes the whole selected file, including spacing and line wrapping.
+
+To match a project that uses single quotes, omits semicolons and trailing commas,
+and wraps at 100 columns, put this in `config/config.exs`:
 
 ```elixir
 config :duskmoon_bundler, :format,
@@ -34,7 +42,79 @@ config :duskmoon_bundler, :format,
   arrow_parens: :always
 ```
 
-All [oxfmt options](https://hexdocs.pm/duskmoon_oxc/OXC.Format.html) are supported. Falls back to `.oxfmtrc.json` if no Elixir config is set.
+Use the [OXC.Format options](https://hexdocs.pm/duskmoon_oxc/OXC.Format.html) to
+choose the project's profile. Options reduce style differences but do not
+preserve arbitrary whitespace or provide changed-line-only formatting.
+
+If `config :duskmoon_bundler, :format` is unset, the formatter searches the
+working directory, then the configured assets directory, for `.oxfmtrc.json`,
+`.oxfmtrc`, `.prettierrc.json`, or `.prettierrc`, in that order. These files must
+contain JSON. For example, the equivalent `.oxfmtrc.json` is:
+
+```json
+{
+  "printWidth": 100,
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "none",
+  "arrowParens": "always"
+}
+```
+
+Elixir configuration takes precedence over the JSON file; the two are not
+merged. JavaScript configuration files and Prettier plugins are not loaded.
+
+### Incremental adoption in an existing Phoenix project
+
+Changing asset build tools does not require changing formatter configuration.
+Keep the existing JavaScript formatter during the build migration if desired,
+then adopt `DuskmoonBundler.Formatter` in a separate change:
+
+1. Choose and configure the formatting profile before converting files.
+2. Add the plugin while preserving the project's existing Elixir inputs and
+   formatter plugins. Add only individual adopted JS/TS files or a dedicated
+   directory of new files to `inputs`, rather than the entire assets tree:
+
+   ```elixir
+   [
+     plugins: [Phoenix.LiveView.HTMLFormatter, DuskmoonBundler.Formatter],
+     inputs: [
+       "{mix,.formatter}.exs",
+       "{config,lib,test}/**/*.{ex,exs,heex}",
+       "assets/js/hooks/new_hook.js"
+     ]
+   ]
+   ```
+
+   In an umbrella, configure this in the relevant app's `.formatter.exs`,
+   with paths relative to that app. Keep the root's `subdirectories` setting.
+
+3. Convert and review the selected file explicitly:
+
+   ```bash
+   mix format assets/js/hooks/new_hook.js
+   git diff -- assets/js/hooks/new_hook.js
+   mix format --check-formatted
+   ```
+
+   Commit the formatting conversion separately from functional changes.
+   Existing API/Admin assets omitted from `inputs` are left untouched by
+   argument-free `mix format` and are not checked by its CI check.
+4. Expand `inputs` one reviewed file or directory at a time. When all assets
+   have been converted, use a broad glob if desired. A one-time conversion of
+   the entire tree is also supported, but should be reviewed and committed as
+   its own formatting change.
+
+An explicit filename passed to `mix format` bypasses the `inputs` selection;
+avoid invoking it on unadopted files. `mix format --check-formatted` never
+writes files, but will report a selected unconverted file as unformatted.
+
+The standalone `mix duskmoon_bundler.js.format` and
+`mix duskmoon_bundler.js.check` tasks discover files using the bundler's
+`sources` and `ignore`, not `.formatter.exs` inputs. Do not add their broad
+formatting checks to CI until those discovered files have been converted.
+Use `mix format --check-formatted` for the incremental formatter gate; linting
+can still run separately with `mix duskmoon_bundler.lint`.
 
 ## Linting
 
