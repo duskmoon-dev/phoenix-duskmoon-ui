@@ -13,10 +13,12 @@
   ## Overview
   Repository header for forge-style pages. It renders owner/name identity,
   visibility, default ref, description, metadata, and action slots.
+  Set `owner_href` to make the owner a link to its organization or personal
+  namespace page. Omit it to retain the plain-text owner.
 
   ## Usage
   ```elixir
-  <.dm_git_repository_header owner="duskmoon-dev" name="phoenix-duskmoon-ui" visibility="public">
+  <.dm_git_repository_header owner="duskmoon-dev" owner_href="/duskmoon-dev" name="phoenix-duskmoon-ui" visibility="public">
     <:meta icon="source-commit">b91d64a</:meta>
     <:action><.dm_btn size="sm">Settings</.dm_btn></:action>
   </.dm_git_repository_header>
@@ -27,6 +29,7 @@
   <h3 class="text-xl font-semibold mt-8 mb-4">Repository Overview</h3>
   <.dm_git_repository_header
     owner="duskmoon-dev"
+    owner_href="https://github.com/duskmoon-dev"
     name="phoenix-duskmoon-ui"
     visibility="public"
     default_ref="main"

@@ -31,6 +31,54 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.GitRepositoryTest do
       assert result =~ "b91d64a"
       assert result =~ "Settings"
     end
+
+    test "links organization and personal owners without including the slash" do
+      for owner <- ["gsmlg-opt", "jonathan"] do
+        document =
+          render_component(&dm_git_repository_header/1, %{
+            owner: owner,
+            owner_href: "/#{owner}",
+            name: "agent-note"
+          })
+          |> LazyHTML.from_fragment()
+
+        link = LazyHTML.query(document, "h1 a")
+        assert LazyHTML.attribute(link, "href") == ["/#{owner}"]
+        assert LazyHTML.text(link) == owner
+        assert LazyHTML.attribute(link, "tabindex") == []
+        assert LazyHTML.text(LazyHTML.query(document, "h1")) =~ "#{owner}/"
+      end
+    end
+
+    test "keeps owners as plain text when no link is supplied" do
+      for owner_href <- [nil, ""] do
+        document =
+          render_component(&dm_git_repository_header/1, %{
+            owner: "gsmlg-opt",
+            owner_href: owner_href,
+            name: "agent-note"
+          })
+          |> LazyHTML.from_fragment()
+
+        assert LazyHTML.attribute(LazyHTML.query(document, "h1 a"), "href") == []
+        assert LazyHTML.text(LazyHTML.query(document, "h1")) =~ "gsmlg-opt/"
+      end
+    end
+
+    test "omits the owner link and slash when the owner is absent" do
+      for owner <- [nil, ""] do
+        document =
+          render_component(&dm_git_repository_header/1, %{
+            owner: owner,
+            owner_href: "/gsmlg-opt",
+            name: "agent-note"
+          })
+          |> LazyHTML.from_fragment()
+
+        assert LazyHTML.attribute(LazyHTML.query(document, "h1 a"), "href") == []
+        assert LazyHTML.text(LazyHTML.query(document, "h1")) |> String.trim() == "agent-note"
+      end
+    end
   end
 
   describe "dm_git_repository_nav/1" do

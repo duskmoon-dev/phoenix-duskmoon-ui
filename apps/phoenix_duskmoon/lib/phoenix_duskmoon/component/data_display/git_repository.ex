@@ -15,9 +15,12 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.GitRepository do
   Renders a repository header with identity, visibility, default ref, metadata,
   description, and actions.
 
+  Set `owner_href` to link the owner label to its namespace page. Without an
+  owner URL, the owner remains plain text.
+
   ## Examples
 
-      <.dm_git_repository_header owner="duskmoon-dev" name="phoenix-duskmoon-ui" visibility="public">
+      <.dm_git_repository_header owner="duskmoon-dev" owner_href="/duskmoon-dev" name="phoenix-duskmoon-ui" visibility="public">
         <:meta>Updated 2 minutes ago</:meta>
         <:action><.dm_link href="/settings">Settings</.dm_link></:action>
       </.dm_git_repository_header>
@@ -27,6 +30,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.GitRepository do
   attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:class, :any, default: nil, doc: "additional CSS classes")
   attr(:owner, :string, default: nil, doc: "repository owner or namespace")
+  attr(:owner_href, :string, default: nil, doc: "optional owner or namespace page URL")
   attr(:name, :string, required: true, doc: "repository name")
   attr(:visibility, :string, default: nil, doc: "repository visibility label")
   attr(:default_ref, :string, default: nil, doc: "default branch or ref name")
@@ -58,7 +62,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.GitRepository do
             <.dm_mdi name="source-repository" class="h-5 w-5 shrink-0 text-on-surface-variant" />
             <h1 class="min-w-0 break-all text-xl font-semibold leading-7 text-on-surface">
               <span :if={@owner not in [nil, ""]} class="font-normal text-on-surface-variant">
-                {@owner}/
+                <%= if @owner_href not in [nil, ""] do %><a href={@owner_href} class="hover:underline">{@owner}</a><% else %>{@owner}<% end %>/
               </span>{@name}
             </h1>
             <span

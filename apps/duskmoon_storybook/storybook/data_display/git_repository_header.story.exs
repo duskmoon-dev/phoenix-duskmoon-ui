@@ -1,10 +1,11 @@
 defmodule Storybook.DataDisplay.GitRepositoryHeader do
   use PhoenixStorybook.Story, :component
 
-  def function, do: &PhoenixDuskmoon.Component.DataDisplay.GitRepository.dm_git_repository_header/1
+  def function,
+    do: &PhoenixDuskmoon.Component.DataDisplay.GitRepository.dm_git_repository_header/1
 
   def description do
-    "Repository header with owner/name, visibility, default ref, metadata, and action slots."
+    "Repository header with optional owner navigation, visibility, default ref, metadata, and action slots."
   end
 
   def variations do
@@ -27,6 +28,16 @@ defmodule Storybook.DataDisplay.GitRepositoryHeader do
           <:action><a href="#" class="btn btn-sm">Settings</a></:action>
           """
         ]
+      },
+      %Variation{
+        id: :linked_owner,
+        description: "Owner label links to its organization or personal namespace",
+        attributes: %{
+          owner: "duskmoon-dev",
+          owner_href: "https://github.com/duskmoon-dev",
+          name: "phoenix-duskmoon-ui",
+          visibility: "public"
+        }
       }
     ]
   end
