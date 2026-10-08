@@ -13,6 +13,12 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   Set `native_submit` to render a native `<button type="submit">` without the
   custom element runtime.
 
+  With `confirm`, `interestfor`, `title`, and accessible labels/descriptions
+  also reach the visible trigger. Caller styles stay on that trigger. LiveView
+  events, hooks, and form submission attributes stay on the confirmed action,
+  whose ID is `\#{id}-confirm`. Labels are retained on the action as well;
+  tooltip targeting and anchor styles are not.
+
   ## Examples
 
       <.dm_btn>Click me</.dm_btn>
@@ -182,6 +188,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       assigns
       |> assign(:id, id)
       |> assign(:dialog_id, dialog_id)
+      |> assign(:trigger_rest, confirm_trigger_rest(assigns.rest))
       |> assign(:confirm_rest, confirm_rest(assigns.rest, dialog_id, assigns.native_submit))
       |> assign_button_style()
       |> then(fn assigns ->
@@ -213,6 +220,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
           aria-busy={@loading && "true"}
           aria-haspopup="dialog"
           aria-controls={modal_id}
+          {@trigger_rest}
         >
           <span :for={prefix <- @prefix} class="inline-flex items-center">{render_slot(prefix)}</span>
           {render_slot(@inner_block)}
@@ -225,6 +233,7 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
         {render_slot(@confirm_action)}
         <button
           :if={@confirm_action == []}
+          id={"#{@id}-confirm"}
           class={["btn", "btn-primary", @confirm_class]}
           data-dm-confirm-action="true"
           {@confirm_rest}
@@ -303,6 +312,11 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
 
   defp confirm_rest(rest, dialog_id, native_submit) do
     rest =
+      Map.reject(rest, fn {key, _value} ->
+        to_string(key) in ~w(interestfor aria-describedby title style)
+      end)
+
+    rest =
       if native_submit,
         do: put_rest_attr(rest, :type, "type", "submit"),
         else: put_new_rest_attr(rest, :type, "type", "button")
@@ -315,6 +329,12 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
       |> Map.put("command", "close")
       |> Map.put("commandfor", dialog_id)
     end
+  end
+
+  defp confirm_trigger_rest(rest) do
+    Map.filter(rest, fn {key, _value} ->
+      to_string(key) in ~w(interestfor title aria-label aria-labelledby aria-describedby)
+    end)
   end
 
   defp put_new_rest_attr(rest, atom_key, string_key, value) do

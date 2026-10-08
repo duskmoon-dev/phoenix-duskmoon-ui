@@ -136,4 +136,52 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipTest do
     assert LazyHTML.attribute(LazyHTML.query(html, "[role=tooltip]"), "style") ==
              ["position-anchor: --anchor-save-help-tooltip"]
   end
+
+  test "confirm tooltip describes the visible trigger without activating the action" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(~H"""
+      <.dm_tooltip id="delete-help" content="Delete" :let={trigger_attrs}>
+        <.dm_btn
+          id="delete-record"
+          variant="error"
+          {trigger_attrs}
+          aria-label="Delete record"
+          confirm="Delete this record?"
+          phx-click="delete"
+          phx-value-id="123"
+          phx-target="#records"
+        >
+          Delete
+        </.dm_btn>
+      </.dm_tooltip>
+      """)
+      |> LazyHTML.from_fragment()
+
+    trigger = LazyHTML.query(html, "#delete-record")
+    action = LazyHTML.query(html, "[data-dm-confirm-action]")
+
+    assert LazyHTML.attribute(trigger, "interestfor") == ["delete-help-tooltip"]
+    assert LazyHTML.attribute(trigger, "aria-describedby") == ["delete-help-tooltip"]
+    assert LazyHTML.attribute(trigger, "aria-label") == ["Delete record"]
+    assert LazyHTML.attribute(trigger, "title") == ["Delete"]
+    assert [style] = LazyHTML.attribute(trigger, "style")
+    assert style =~ "anchor-name: --anchor-delete-help-tooltip"
+    assert style =~ "--color-primary: var(--color-error)"
+    assert LazyHTML.attribute(trigger, "command") == ["show-modal"]
+    assert LazyHTML.attribute(trigger, "commandfor") == ["confirm-dialog-delete-record"]
+
+    for attribute <- ~w(phx-click phx-value-id phx-target) do
+      assert LazyHTML.attribute(trigger, attribute) == []
+    end
+
+    assert LazyHTML.attribute(action, "phx-click") == ["delete"]
+    assert LazyHTML.attribute(action, "phx-value-id") == ["123"]
+    assert LazyHTML.attribute(action, "phx-target") == ["#records"]
+
+    for attribute <- ~w(interestfor aria-describedby title style) do
+      assert LazyHTML.attribute(action, attribute) == []
+    end
+  end
 end

@@ -597,6 +597,27 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonTest do
     assert result =~ ~s[phx-click="delete"]
   end
 
+  test "confirmed action has a deterministic ID for its LiveView hook" do
+    html =
+      render_component(&dm_btn/1, %{
+        id: "close-terminal",
+        confirm: "Close?",
+        "phx-click": "terminal_close",
+        "phx-hook": "WebComponentHook",
+        inner_block: %{inner_block: fn _, _ -> "Close" end}
+      })
+      |> LazyHTML.from_fragment()
+
+    action = LazyHTML.query(html, "[data-dm-confirm-action]")
+    trigger = LazyHTML.query(html, "#close-terminal")
+
+    assert LazyHTML.attribute(action, "id") == ["close-terminal-confirm"]
+    assert LazyHTML.attribute(action, "phx-hook") == ["WebComponentHook"]
+    assert LazyHTML.attribute(action, "phx-click") == ["terminal_close"]
+    assert LazyHTML.attribute(trigger, "phx-hook") == []
+    assert LazyHTML.attribute(trigger, "phx-click") == []
+  end
+
   test "confirm modal preserves a custom confirm command target" do
     result =
       render_component(&dm_btn/1, %{

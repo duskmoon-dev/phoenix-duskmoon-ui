@@ -4,11 +4,39 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Tooltip do
 
   The inner block receives attributes that must be spread onto the trigger.
 
+  ## CSS compatibility and migration
+
+  The current package pins `@duskmoon-dev/core` 1.20.3 and renders the native
+  `.tooltip[popover]` contract. Use the bundled CSS or the Core version declared
+  by the installed package. Legacy 9.12.x tooltip wrappers and `.tooltip-content`
+  markup are incompatible with this CSS; upgrade the component and CSS together.
+
+  Replace a text-only inner block with a native button or anchor and spread the
+  slot attributes onto it. Put trigger attributes such as `tabindex` on that
+  element, not on `dm_tooltip`: global attributes on the component belong to the
+  tooltip surface. A closed hint popover stays outside normal layout; the
+  browser owns hover and keyboard-focus visibility. The slot's `title` provides
+  a native fallback in browsers without interest-invoker support.
+
   ## Examples
 
       <.dm_tooltip id="save-help" content="Click to save changes" :let={trigger_attrs}>
         <.dm_btn {trigger_attrs}>Save</.dm_btn>
       </.dm_tooltip>
+
+      <.dm_tooltip id="ttft-help" content="Time until the first generated token." :let={attrs}>
+        <button type="button" {attrs}>TTFT</button>
+      </.dm_tooltip>
+
+      <.dm_tooltip id="delete-help" content="Delete" :let={attrs}>
+        <.dm_btn id="delete-record" {attrs} aria-label="Delete record"
+          confirm="Delete this record?" phx-click="delete" phx-value-id="123">
+          Delete
+        </.dm_btn>
+      </.dm_tooltip>
+
+  Confirmation buttons keep tooltip targeting and anchor styles on the visible
+  trigger, while `phx-click` and `phx-value-*` stay on the confirmed action.
 
   """
 

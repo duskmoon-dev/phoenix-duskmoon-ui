@@ -102,6 +102,27 @@ defmodule Storybook.DataDisplay.Tooltip do
           </.dm_btn>
           """
         ]
+      },
+      %Variation{
+        id: :metric_heading,
+        description: "Keyboard-focusable metric heading; the description stays out of layout",
+        attributes: %{id: "ttft-help", content: "Time until the first generated token."},
+        let: :trigger_attrs,
+        slots: ["<button type=\"button\" class=\"btn btn-ghost\" {trigger_attrs}>TTFT</button>"]
+      },
+      %Variation{
+        id: :confirm_delete,
+        description: "Tooltip belongs to the visible Delete trigger, before confirmation",
+        attributes: %{id: "confirm-delete-help", content: "Delete record", color: "error"},
+        let: :trigger_attrs,
+        slots: [
+          """
+          <.dm_btn id="tooltip-confirm-delete" variant="error" {trigger_attrs}
+            aria-label="Delete record" confirm="Delete this record?">
+            Delete
+          </.dm_btn>
+          """
+        ]
       }
     ]
   end
