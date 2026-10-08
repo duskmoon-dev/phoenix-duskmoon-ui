@@ -3,7 +3,8 @@ defmodule Storybook.DataDisplay.ReactChat do
   import PhoenixDuskmoon.Component.DataDisplay.ReactChat
 
   def doc,
-    do: "React-owned transcript with batched streaming events and LiveView command handling."
+    do:
+      "React-owned transcript with upstream reply navigation, status and actions, plus batched LiveView streaming events."
 
   @impl true
   def mount(_, _, socket),
@@ -15,6 +16,19 @@ defmodule Storybook.DataDisplay.ReactChat do
              id: "welcome",
              role: "assistant",
              content: "Ask me to stream a response.",
+             status: "complete"
+           },
+           %{
+             id: "question",
+             role: "user",
+             content: "How do I navigate replies?",
+             status: "complete"
+           },
+           %{
+             id: "navigation",
+             role: "assistant",
+             content:
+               "Use the reply markers to navigate this panel, or Jump to latest to follow new content.",
              status: "complete"
            }
          ]

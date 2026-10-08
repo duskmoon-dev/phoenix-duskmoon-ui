@@ -4,6 +4,7 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
   use DuskmoonStorybookWeb, :live_view
 
   @form_id "react-profile"
+  @schema_form_id "react-schema-profile"
 
   @impl true
   def mount(_params, _session, socket) do
@@ -18,7 +19,12 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
        revision: 0,
        status: "Waiting for a change",
        last_changed: "-",
-       payload_size: byte_size(Jason.encode!(values))
+       payload_size: byte_size(Jason.encode!(values)),
+       schema: profile_schema(),
+       schema_submitted: nil,
+       schema_revision: 0,
+       schema_changed: "-",
+       schema_status: "Schema defaults ready"
      )}
   end
 
@@ -186,6 +192,48 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
           </section>
         </aside>
       </div>
+
+      <section class="card mt-8 border border-base-300 bg-base-100 shadow-sm">
+        <div class="card-body p-4 md:p-6">
+          <h2 class="text-xl font-semibold">JSON Schema profile</h2>
+          <p class="max-w-3xl text-sm opacity-70">
+            Pass a schema to dm_react_form to generate controls without field slots.
+            This form includes a nested object, editable member array, numeric plan enum,
+            required fields, and typed defaults. React validates the schema; the server
+            checks name availability. Try the workspace name "taken" for a backend error.
+          </p>
+          <.dm_react_form
+            id="react-schema-profile"
+            schema={@schema}
+            phx-change="validate-schema-profile"
+            phx-submit="save-schema-profile"
+            phx-debounce="180"
+            class="max-w-4xl"
+          />
+          <div class="flex flex-wrap items-center gap-4">
+            <button
+              id="schema-form-preset"
+              type="button"
+              class="btn btn-outline"
+              phx-click="load-schema-preset"
+            >
+              Load schema preset
+            </button>
+            <p id="schema-form-status" class="text-sm opacity-70">{@schema_status}</p>
+            <p class="font-mono text-xs opacity-60">
+              Revision: <span id="schema-form-revision">{@schema_revision}</span>
+            </p>
+            <p class="font-mono text-xs opacity-60">
+              Changed: <span id="schema-form-changed">{@schema_changed}</span>
+            </p>
+          </div>
+          <h3 class="font-semibold">Last saved schema JSON</h3>
+          <pre
+            id="schema-form-payload-preview"
+            class="max-h-64 overflow-auto rounded-lg bg-base-200 p-3 text-xs"
+          >{if @schema_submitted, do: Jason.encode!(@schema_submitted, pretty: true), else: "No schema submit yet"}</pre>
+        </div>
+      </section>
     </div>
     """
   end
@@ -247,6 +295,119 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
 
   def handle_event("reset-profile", _params, socket),
     do: {:noreply, reset_form(socket, default_values(), "Draft reset")}
+
+  def handle_event("validate-schema-profile", params, socket) do
+    errors = schema_errors(params["values"])
+
+    {:reply, schema_reply(errors),
+     assign(socket,
+       schema_revision: params["revision"],
+       schema_changed: Enum.join(params["changed"] || [], "."),
+       schema_status:
+         if(errors == %{}, do: "Valid schema draft", else: "Name availability error returned")
+     )}
+  end
+
+  def handle_event("save-schema-profile", params, socket) do
+    errors = schema_errors(params["values"])
+
+    if errors == %{} do
+      {:reply, %{status: "ok", message: "Schema profile saved"},
+       assign(socket,
+         schema_submitted: params["values"],
+         schema_revision: params["revision"],
+         schema_status: "Schema profile saved successfully"
+       )}
+    else
+      {:reply, schema_reply(errors),
+       assign(socket,
+         schema_revision: params["revision"],
+         schema_status: "Choose another workspace name"
+       )}
+    end
+  end
+
+  def handle_event("load-schema-preset", _params, socket) do
+    values = %{
+      "profile" => %{
+        "name" => "Platform team",
+        "plan" => 3,
+        "seats" => 12,
+        "notifications" => false
+      },
+      "members" => [%{"email" => "team@example.test"}, %{"email" => "ops@example.test"}]
+    }
+
+    {:noreply,
+     push_event(socket, "dm:form:reset", %{id: @schema_form_id, values: values})
+     |> assign(
+       schema_revision: socket.assigns.schema_revision + 1,
+       schema_changed: "preset",
+       schema_status: "Loaded schema preset"
+     )}
+  end
+
+  defp schema_errors(values) do
+    if get_in(values, ["profile", "name"]) == "taken",
+      do: %{"/profile/name" => "Workspace name is already reserved"},
+      else: %{}
+  end
+
+  defp schema_reply(errors) when errors == %{}, do: %{status: "ok"}
+  defp schema_reply(errors), do: %{status: "error", errors: errors}
+
+  defp profile_schema do
+    %{
+      "type" => "object",
+      "required" => ["profile", "members"],
+      "properties" => %{
+        "profile" => %{
+          "type" => "object",
+          "title" => "Workspace",
+          "required" => ["name", "plan", "seats"],
+          "properties" => %{
+            "name" => %{
+              "type" => "string",
+              "title" => "Workspace name",
+              "minLength" => 1,
+              "default" => "Moonlight team"
+            },
+            "plan" => %{
+              "type" => "integer",
+              "title" => "Plan",
+              "enum" => [1, 2, 3],
+              "default" => 2,
+              "x-widget" => "select",
+              "x-options" => [
+                %{"value" => 1, "label" => "Starter"},
+                %{"value" => 2, "label" => "Team"},
+                %{"value" => 3, "label" => "Enterprise"}
+              ]
+            },
+            "seats" => %{"type" => "integer", "title" => "Seats", "minimum" => 1, "default" => 3},
+            "notifications" => %{
+              "type" => "boolean",
+              "title" => "Email notifications",
+              "default" => true
+            }
+          }
+        },
+        "members" => %{
+          "type" => "array",
+          "title" => "Members",
+          "minItems" => 1,
+          "default" => [%{"email" => "ada@example.test"}],
+          "items" => %{
+            "type" => "object",
+            "required" => ["email"],
+            "properties" => %{
+              "email" => %{"type" => "string", "title" => "Member email", "format" => "email"}
+            }
+          }
+        }
+      }
+    }
+  end
 
   defp reset_form(socket, values, status) do
     push_event(socket, "dm:form:reset", %{id: @form_id, values: values})

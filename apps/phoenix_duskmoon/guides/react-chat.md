@@ -4,6 +4,16 @@ Use `dm_react_chat` for conversations with streaming responses. React owns the
 transcript, draft, markdown rendering, scrolling, and message actions. LiveView
 owns authorization, persistence, and the generation process.
 
+The transcript uses the published `@duskmoon-dev/components/chat` composition
+for message bubbles, streaming carets, tool disclosures, and action footers.
+Each reply keeps its tool disclosures inside a single `Chat.Bubble`, before
+the final Markdown in `.chat-bubble-content`, following the upstream LLM layout.
+The upstream status and action parts retain the generating notice and existing
+Copy, Retry, and custom actions. Reply markers navigate within the transcript
+panel using `Chat.ScrollIndicator`; they cover the latest 24 assistant replies,
+while all messages remain visible. Navigation preserves manual scroll position
+as streaming continues; use **Jump to latest** to resume following new content.
+
 ```heex
 <.dm_react_chat
   id="assistant-chat"

@@ -5,33 +5,62 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactForm do
 
   The form accepts ordinary HTML and `dm_react_field` children. React owns only
   the marked fields; the surrounding HEEX layout and native controls remain
-  ordinary HTML. `phx-change` and `phx-submit` retain their Phoenix event names.
+  ordinary HTML. Passing `schema` mounts the published `JsonSchemaForm` renderer
+  instead; React owns its controls and form. `phx-change` and `phx-submit` retain
+  their Phoenix event names in both modes.
   """
   use Phoenix.Component
 
   @field_types ~w(text email password textarea number checkbox select multiselect)
 
-  @doc "Renders a nested React JSON form without Phoenix form serialization."
+  @doc """
+  Renders a React JSON form without Phoenix form serialization.
+
+  Pass a JSON Schema map to use the upstream schema renderer, or provide HEEX
+  children for the classic form. Omitted `values` use schema defaults in schema
+  mode and an empty value map in classic mode. Schema mode supplies its own
+  Submit and Reset controls; optional slot content appears outside that form.
+  """
   @doc type: :component
   attr(:id, :string, required: true)
-  attr(:values, :map, default: %{}, doc: "Initial typed JSON values")
+  attr(:values, :map, default: nil, doc: "Initial typed JSON values; nil uses schema defaults")
+
+  attr(:schema, :map,
+    default: nil,
+    doc: "JSON Schema draft 2020-12 subset for the upstream renderer"
+  )
+
   attr(:class, :any, default: nil)
 
   attr(:rest, :global,
     include: ~w(autocomplete name novalidate phx-change phx-submit phx-target phx-debounce)
   )
 
-  slot(:inner_block, required: true)
+  slot(:inner_block, doc: "Classic form fields, or content outside the schema-owned form")
 
   def dm_react_form(assigns) do
-    values = Jason.encode!(assigns.values)
-    assigns = assign(assigns, :initial_values, values)
+    values =
+      if assigns.schema && is_nil(assigns.values),
+        do: nil,
+        else: Jason.encode!(assigns.values || %{})
+
+    assigns =
+      assigns
+      |> assign(:initial_values, values)
+      |> assign(:schema_json, assigns.schema && Jason.encode!(assigns.schema))
 
     ~H"""
-    <div id={@id} class={@class} phx-hook="DuskmoonReactForm" phx-update="ignore" data-initial-values={@initial_values} {@rest}>
-      <form data-dm-react-form novalidate>
+    <div id={@id} class={@class} phx-hook="DuskmoonReactForm" phx-update="ignore" data-initial-values={@initial_values} data-schema={@schema_json} {@rest}>
+      <%= if @schema do %>
+        <div data-dm-react-schema>
+          <span role="status">Loading…</span>
+        </div>
         {render_slot(@inner_block)}
-      </form>
+      <% else %>
+        <form data-dm-react-form novalidate>
+          {render_slot(@inner_block)}
+        </form>
+      <% end %>
     </div>
     """
   end

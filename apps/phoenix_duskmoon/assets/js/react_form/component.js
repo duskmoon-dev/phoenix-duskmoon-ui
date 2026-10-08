@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useId } from "react";
+import { Form } from "@duskmoon-dev/components/form";
 import { Input } from "@duskmoon-dev/components/input";
 import { InputNumber } from "@duskmoon-dev/components/input-number";
 import { Checkbox } from "@duskmoon-dev/components/checkbox";
@@ -7,8 +8,9 @@ import { Select } from "@duskmoon-dev/components/select";
 const h = React.createElement;
 
 export function ReactField({ config, value, errors, disabled, onChange }) {
+  const errorId = useId();
   const label = config.label || (Array.isArray(config.name) ? config.name.join(".") : config.name);
-  const common = { disabled, "aria-label": label, "aria-invalid": errors?.length ? "true" : undefined };
+  const common = { disabled, "aria-label": label, "aria-invalid": errors?.length ? "true" : undefined, "aria-describedby": errors?.length ? errorId : undefined };
   let control;
 
   switch (config.type) {
@@ -30,8 +32,9 @@ export function ReactField({ config, value, errors, disabled, onChange }) {
       control = h(Input, { ...common, type: config.type, value: value ?? "", onChange: (event) => onChange(event.target.value) });
   }
 
-  return h("label", { className: "form-item" },
-    label && h("span", { className: "form-item-label" }, label),
-    control,
-    errors?.map((error, index) => h("span", { className: "form-item-help form-item-error", role: "alert", key: index }, error)));
+  return h(Form.Item, {
+    label,
+    className: errors?.length ? "form-item-error" : undefined,
+    help: errors?.length ? h(Form.ErrorList, { id: errorId, errors, role: "alert" }) : undefined,
+  }, control);
 }

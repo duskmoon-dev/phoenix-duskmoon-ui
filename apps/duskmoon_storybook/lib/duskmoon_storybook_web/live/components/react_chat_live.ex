@@ -58,7 +58,9 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
             <div class="mb-4 flex items-center justify-between gap-4">
               <div>
                 <h2 class="text-xl font-semibold">Conversation playground</h2>
-                <p class="text-sm opacity-60">Try a prompt, then inspect the streamed tool state.</p>
+                <p class="text-sm opacity-60">
+                  Try a prompt, inspect the tool state, or jump between assistant replies.
+                </p>
               </div>
               <span class="font-mono text-xs opacity-50">conversation_id: demo</span>
             </div>
