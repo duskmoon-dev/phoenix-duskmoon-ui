@@ -554,19 +554,30 @@ defmodule DuskmoonBundler.Builder.Output do
   end
 
   defp build_chunk_bundles(chunks, js_map, module_labels, bundle_opts, ctx, graph, dep_map) do
+    requirements =
+      Map.new(chunks, fn {chunk_id, _chunk} ->
+        {chunk_id, chunk_export_requirements(chunk_id, graph, js_map, module_labels, dep_map)}
+      end)
+
+    default_aliases = chunk_default_aliases(chunks, requirements, js_map)
+
     Enum.reduce_while(chunks, {:ok, %{}}, fn {chunk_id, chunk}, {:ok, acc} ->
       chunk_js = select_chunk_files(chunk.modules, js_map, module_labels)
 
       if chunk_js == [] do
         {:cont, {:ok, acc}}
       else
-        chunk_js = Rewriter.rewrite_external_imports(chunk_js, ctx)
+        chunk_js =
+          chunk_js
+          |> Rewriter.rewrite_external_imports(ctx)
+          |> rewrite_chunk_defaults(default_aliases)
 
-        facade_requirements =
-          chunk_export_requirements(chunk_id, graph, js_map, module_labels, dep_map)
+        facade_requirements = requirements[chunk_id]
 
         with nil <- facade_requirements_error(chunk_id, chunk, facade_requirements) do
-          chunk_js = add_chunk_facade(chunk_js, chunk_id, chunk, facade_requirements)
+          chunk_js =
+            add_chunk_facade(chunk_js, chunk_id, chunk, facade_requirements, default_aliases)
+
           {chunk_js, dynamic_import_placeholder} = Rewriter.protect_dynamic_imports(chunk_js)
 
           external =
@@ -623,11 +634,11 @@ defmodule DuskmoonBundler.Builder.Output do
 
   defp chunk_entry_label([{label, _code} | _]), do: label
 
-  defp add_chunk_facade([_single] = js_files, _chunk_id, %{type: type}, _requirements)
+  defp add_chunk_facade([_single] = js_files, _chunk_id, %{type: type}, _requirements, _aliases)
        when type not in [:common, :manual],
        do: js_files
 
-  defp add_chunk_facade(js_files, chunk_id, %{type: type}, requirements)
+  defp add_chunk_facade(js_files, chunk_id, %{type: type}, requirements, default_aliases)
        when type in [:common, :manual] do
     {first_label, _code} = hd(js_files)
     facade_label = Path.join(Path.dirname(first_label), "__duskmoon_#{chunk_id}_entry__.js")
@@ -638,36 +649,73 @@ defmodule DuskmoonBundler.Builder.Output do
         "export * from #{Jason.encode!(specifier)};"
       end)
 
-    required_exports = facade_required_exports(js_files, facade_label, requirements)
+    required_exports =
+      facade_required_exports(js_files, facade_label, requirements, default_aliases)
+
     facade = exports <> "\n" <> required_exports
     [{facade_label, facade} | js_files]
   end
 
-  defp add_chunk_facade(js_files, _chunk_id, _chunk, _requirements), do: js_files
+  defp add_chunk_facade(js_files, _chunk_id, _chunk, _requirements, _aliases), do: js_files
+
+  defp chunk_default_aliases(chunks, requirements, js_map) do
+    reserved_names =
+      js_map
+      |> Enum.flat_map(fn {_label, code} ->
+        {exports, _wildcard?} = chunk_exports(code)
+        MapSet.to_list(exports)
+      end)
+      |> MapSet.new()
+
+    chunks
+    |> Enum.flat_map(fn {chunk_id, chunk} ->
+      labels =
+        for {label, names} <- requirements[chunk_id], MapSet.member?(names, :default), do: label
+
+      if chunk.type in [:common, :manual] and length(labels) > 1, do: labels, else: []
+    end)
+    |> Enum.sort()
+    |> Enum.reduce({%{}, reserved_names}, fn label, {aliases, reserved} ->
+      digest = :crypto.hash(:sha256, label) |> Base.encode16(case: :lower)
+      name = available_export_alias("__duskmoon_default_" <> digest, reserved)
+      {Map.put(aliases, label, name), MapSet.put(reserved, name)}
+    end)
+    |> elem(0)
+  end
+
+  defp available_export_alias(name, reserved) do
+    if MapSet.member?(reserved, name),
+      do: available_export_alias(name <> "_", reserved),
+      else: name
+  end
+
+  defp rewrite_chunk_defaults(js_files, default_aliases) do
+    # Imports within this chunk still refer to the original source modules.
+    external_aliases = Map.drop(default_aliases, Enum.map(js_files, &elem(&1, 0)))
+
+    Enum.map(js_files, fn {label, code} ->
+      aliases =
+        Map.new(external_aliases, fn {dependency_label, name} ->
+          {"./" <> relative_label(label, dependency_label), name}
+        end)
+
+      {label, Rewriter.rewrite_chunk_default_imports(code, aliases)}
+    end)
+  end
 
   defp facade_requirements_error(chunk_id, %{type: type}, requirements)
        when type in [:common, :manual] do
-    default_labels =
-      for {label, names} <- requirements, MapSet.member?(names, :default), do: label
-
     namespace_labels =
       for {label, names} <- requirements, MapSet.member?(names, :namespace), do: label
 
-    cond do
-      length(default_labels) > 1 ->
-        {:ambiguous_default_exports, chunk_id, Enum.sort(default_labels)}
-
-      namespace_labels != [] ->
-        {:ambiguous_namespace_exports, chunk_id, Enum.sort(namespace_labels)}
-
-      true ->
-        nil
-    end
+    if namespace_labels != [],
+      do: {:ambiguous_namespace_exports, chunk_id, Enum.sort(namespace_labels)},
+      else: nil
   end
 
   defp facade_requirements_error(_chunk_id, _chunk, _requirements), do: nil
 
-  defp facade_required_exports(js_files, facade_label, requirements) do
+  defp facade_required_exports(js_files, facade_label, requirements, default_aliases) do
     available_labels = MapSet.new(js_files, &elem(&1, 0))
 
     requirements =
@@ -697,13 +745,23 @@ defmodule DuskmoonBundler.Builder.Output do
         ""
       else
         specifier = module_specifier(facade_label, label)
-        exports = Enum.map_join(names, ", ", &module_export_name/1)
+
+        exports =
+          Enum.map_join(names, ", ", fn
+            :default ->
+              case Map.fetch(default_aliases, label) do
+                {:ok, name} -> "default as " <> name
+                :error -> "default"
+              end
+
+            name ->
+              module_export_name(name)
+          end)
+
         "export { #{exports} } from #{Jason.encode!(specifier)};\n"
       end
     end)
   end
-
-  defp module_export_name(:default), do: "default"
 
   defp module_export_name(name) do
     if String.match?(name, ~r/^[A-Za-z_$][A-Za-z0-9_$]*$/) do

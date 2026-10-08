@@ -65,6 +65,82 @@ defmodule DuskmoonBundler.Builder.Rewriter do
     end
   end
 
+  @doc "Preserve source-module default bindings when a chunk exposes them as named exports."
+  def rewrite_chunk_default_imports(code, aliases) when map_size(aliases) == 0, do: code
+
+  def rewrite_chunk_default_imports(code, aliases) do
+    case OXC.parse(code, "chunk.js") do
+      {:ok, ast} ->
+        patches =
+          Enum.flat_map(ast.body, fn
+            %{source: %{value: source}} = node when is_map_key(aliases, source) ->
+              default_import_patches(node, code, aliases[source])
+
+            _node ->
+              []
+          end)
+
+        if patches == [], do: code, else: DuskmoonBundler.JS.Patch.apply(code, patches)
+
+      {:error, _} ->
+        code
+    end
+  end
+
+  defp default_import_patches(%{type: :import_declaration} = node, code, name) do
+    has_default? =
+      Enum.any?(node.specifiers, fn
+        %{type: :import_default_specifier} -> true
+        %{type: :import_specifier, imported: imported} -> default_name?(imported)
+        _specifier -> false
+      end)
+
+    namespace? = Enum.any?(node.specifiers, &(&1.type == :import_namespace_specifier))
+
+    if has_default? and not namespace? do
+      bindings =
+        Enum.map_join(node.specifiers, ", ", fn
+          %{type: :import_default_specifier, local: local} ->
+            name <> " as " <> source_span(code, local)
+
+          %{type: :import_specifier, imported: imported, local: local} = specifier ->
+            if default_name?(imported),
+              do: name <> " as " <> source_span(code, local),
+              else: source_span(code, specifier)
+        end)
+
+      [
+        DuskmoonBundler.JS.Patch.new(
+          node.start,
+          node.source.start,
+          "import { #{bindings} } from "
+        )
+      ]
+    else
+      []
+    end
+  end
+
+  defp default_import_patches(%{type: :export_named_declaration} = node, code, name) do
+    Enum.flat_map(node.specifiers, fn specifier ->
+      if default_name?(specifier.local) do
+        replacement = name <> " as " <> source_span(code, specifier.exported)
+        [DuskmoonBundler.JS.Patch.replace_selector(specifier, replacement)]
+      else
+        []
+      end
+    end)
+  end
+
+  defp default_import_patches(_node, _code, _name), do: []
+
+  defp default_name?(%{name: "default"}), do: true
+  defp default_name?(%{value: "default"}), do: true
+  defp default_name?(_name), do: false
+
+  defp source_span(code, %{start: start, end: finish}),
+    do: binary_part(code, start, finish - start)
+
   def worker_map_for_modules(module_paths, ctx) do
     module_paths
     |> Enum.flat_map(fn importer -> ctx.workers |> Map.get(importer, %{}) |> Map.to_list() end)

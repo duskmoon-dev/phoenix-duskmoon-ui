@@ -769,21 +769,26 @@ defmodule DuskmoonBundler.BuilderTest do
                  "two-markdown-html-markdown-svg-markdown-stringify-renderer-html\n"
     end
 
-    test "falls back when a common chunk would conflate default exports" do
-      File.write!(Path.join(@fixture_dir, "src/default-a.ts"), "export default 'default-a'")
-      File.write!(Path.join(@fixture_dir, "src/default-b.ts"), "export default 'default-b'")
+    test "code splitting preserves each shared default export and its object identity" do
+      File.write!(Path.join(@fixture_dir, "src/default-a.ts"), """
+      export default { value: 'default-a', surrogate: '\\uD800' }
+      """)
+
+      File.write!(Path.join(@fixture_dir, "src/default-b.ts"), """
+      export default { value: 'default-b' }
+      """)
 
       File.write!(Path.join(@fixture_dir, "src/defaults-lazy.ts"), """
       import a from './default-a'
-      import b from './default-b'
-      export const value = a + ':' + b
+      import { default as b } from './default-b'
+      export const defaults = [a, b]
       """)
 
       File.write!(Path.join(@fixture_dir, "src/defaults-entry.ts"), """
       import a from './default-a'
       import b from './default-b'
-      export const value = a + ':' + b
-      export const load = () => import('./defaults-lazy').then((module) => module.value)
+      export const defaults = [a, b]
+      export const load = () => import('./defaults-lazy').then((module) => module.defaults)
       """)
 
       assert {:ok, result} =
@@ -797,18 +802,157 @@ defmodule DuskmoonBundler.BuilderTest do
                  sourcemap: false
                )
 
-      assert result.chunks == []
+      assert [_ | _] = result.chunks
+
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
+      assert [_ | _] = manifest["default-collision.js"]["imports"]
+      assert [_ | _] = manifest["default-collision.js"]["dynamicImports"]
 
       node = System.find_executable("node") || flunk("node executable not found")
       entry_url = "file://#{result.js.path}"
 
-      assert {"default-a:default-b\ndefault-a:default-b\n", 0} =
+      assert {"default-a:default-b\ndefault-a:default-b\ntrue:true:true\n55296:55296\n", 0} =
                System.cmd(
                  node,
                  [
                    "--input-type=module",
                    "--eval",
-                   "const app = await import('#{entry_url}'); console.log(app.value); console.log(await app.load())"
+                   """
+                   globalThis.document = { querySelector: () => null, createElement: () => ({}), head: { appendChild: () => {} } };
+                   globalThis.window = { dispatchEvent: () => {} };
+                   globalThis.CustomEvent = class {};
+                   const app = await import('#{entry_url}');
+                   const lazy = await app.load();
+                   console.log(app.defaults.map((value) => value.value).join(':'));
+                   console.log(lazy.map((value) => value.value).join(':'));
+                   console.log([app.defaults[0] === lazy[0], app.defaults[1] === lazy[1], lazy[0] !== lazy[1]].join(':'));
+                   console.log([app.defaults[0].surrogate.charCodeAt(0), lazy[0].surrogate.charCodeAt(0)].join(':'));
+                   """
+                 ],
+                 env: [{"NODE_NO_WARNINGS", "1"}],
+                 stderr_to_stdout: true
+               )
+    end
+
+    test "hashed minified chunks preserve shared default re-exports" do
+      File.write!(Path.join(@fixture_dir, "src/reexport-default-a.ts"), """
+      export default { value: 'default-a' }
+      """)
+
+      File.write!(Path.join(@fixture_dir, "src/reexport-default-b.ts"), """
+      export default { value: 'default-b' }
+      """)
+
+      File.write!(Path.join(@fixture_dir, "src/default-barrel.ts"), """
+      export { default } from './reexport-default-a'
+      """)
+
+      for name <- ["one", "two"] do
+        File.write!(Path.join(@fixture_dir, "src/reexport-lazy-#{name}.ts"), """
+        import a from './reexport-default-a'
+        import { default as b } from './reexport-default-b'
+        import forwarded from './default-barrel'
+        export const defaults = [a, b, forwarded]
+        """)
+      end
+
+      File.write!(Path.join(@fixture_dir, "src/reexport-entry.ts"), """
+      export const loadOne = () => import('./reexport-lazy-one').then((module) => module.defaults)
+      export const loadTwo = () => import('./reexport-lazy-two').then((module) => module.defaults)
+      """)
+
+      assert {:ok, result} =
+               DuskmoonBundler.Builder.build(
+                 entry: Path.join(@fixture_dir, "src/reexport-entry.ts"),
+                 outdir: @outdir,
+                 name: "reexport-defaults",
+                 format: :esm,
+                 hash: true,
+                 minify: true,
+                 sourcemap: false
+               )
+
+      assert [_ | _] = result.chunks
+
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
+      entry = manifest["reexport-defaults.js"]
+      assert entry["file"] == Path.basename(result.js.path)
+      assert [_, _] = entry["dynamicImports"]
+
+      for chunk <- entry["dynamicImports"] do
+        assert [_ | _] = manifest[chunk]["imports"]
+        assert File.regular?(Path.join(@outdir, manifest[chunk]["file"]))
+      end
+
+      node = System.find_executable("node") || flunk("node executable not found")
+      entry_url = "file://#{result.js.path}"
+
+      assert {"default-a:default-b:default-a\ndefault-a:default-b:default-a\ntrue:true:true:true:true\n",
+              0} =
+               System.cmd(
+                 node,
+                 [
+                   "--input-type=module",
+                   "--eval",
+                   """
+                   globalThis.document = { querySelector: () => null, createElement: () => ({}), head: { appendChild: () => {} } };
+                   globalThis.window = { dispatchEvent: () => {} };
+                   globalThis.CustomEvent = class {};
+                   const app = await import('#{entry_url}');
+                   const one = await app.loadOne();
+                   const two = await app.loadTwo();
+                   console.log(one.map((value) => value.value).join(':'));
+                   console.log(two.map((value) => value.value).join(':'));
+                   console.log([one[0] === two[0], one[1] === two[1], one[2] === two[2], one[0] === one[2], one[0] !== one[1]].join(':'));
+                   """
+                 ],
+                 env: [{"NODE_NO_WARNINGS", "1"}],
+                 stderr_to_stdout: true
+               )
+    end
+
+    test "manual chunks preserve aliased default imports and named default re-exports" do
+      lib_dir = Path.join(@fixture_dir, "src/manual-defaults")
+      File.mkdir_p!(lib_dir)
+      File.write!(Path.join(lib_dir, "a.ts"), "export default { value: 'manual-a' }")
+      File.write!(Path.join(lib_dir, "b.ts"), "export default { value: 'manual-b' }")
+
+      File.write!(Path.join(@fixture_dir, "src/manual-barrel.ts"), """
+      export { default as sharedA } from './manual-defaults/a'
+      """)
+
+      File.write!(Path.join(@fixture_dir, "src/manual-entry.ts"), """
+      import { sharedA } from './manual-barrel'
+      import { default as sharedB } from './manual-defaults/b'
+      export const defaults = [sharedA, sharedB]
+      """)
+
+      assert {:ok, result} =
+               DuskmoonBundler.Builder.build(
+                 entry: Path.join(@fixture_dir, "src/manual-entry.ts"),
+                 outdir: @outdir,
+                 name: "manual-defaults",
+                 chunks: %{"lib" => [lib_dir]},
+                 format: :esm,
+                 hash: false,
+                 minify: false,
+                 sourcemap: false
+               )
+
+      assert [_ | _] = result.chunks
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
+      assert ["manual-defaults-lib.js"] = manifest["manual-defaults.js"]["imports"]
+
+      node = System.find_executable("node") || flunk("node executable not found")
+      entry_url = "file://#{result.js.path}"
+
+      assert {"manual-a:manual-b:true\n", 0} =
+               System.cmd(
+                 node,
+                 [
+                   "--input-type=module",
+                   "--eval",
+                   "const { defaults } = await import('#{entry_url}'); console.log([defaults[0].value, defaults[1].value, defaults[0] !== defaults[1]].join(':'));"
                  ],
                  env: [{"NODE_NO_WARNINGS", "1"}],
                  stderr_to_stdout: true
