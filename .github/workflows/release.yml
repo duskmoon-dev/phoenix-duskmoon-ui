@@ -237,7 +237,7 @@ jobs:
             apps/duskmoon_bundler_runtime/mix.exs \
             apps/duskmoon_bundler/mix.exs \
             apps/phoenix_duskmoon/mix.exs; do
-            sed -i '/^[[:space:]]*{:ex_doc, .*runtime: false},\?$/d' "${mix_file}"
+            sed -i '/^[[:space:]]*{:ex_doc, .*runtime: false[^}]*},\?$/d' "${mix_file}"
             if grep -q "{:ex_doc," "${mix_file}"; then
               echo "${mix_file} still contains a direct ex_doc dependency" >&2
               exit 1
