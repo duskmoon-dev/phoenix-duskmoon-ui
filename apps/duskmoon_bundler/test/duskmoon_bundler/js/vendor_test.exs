@@ -460,6 +460,102 @@ defmodule DuskmoonBundler.JS.VendorTest do
                  vendor_source: ["missing-source-vendor"]
                )
     end
+
+    test "new nearer scoped installations invalidate a graph previously resolved at the root" do
+      opts = [node_modules: @node_modules]
+      write_package("@vendor/core", "2.0.0", %{"./pin" => "./pin.js"})
+      File.write!(Path.join(@node_modules, "@vendor/core/pin.js"), "export const value = 'root';")
+
+      for existing_scope <- [false, true] do
+        File.rm_rf!(Path.join(@node_modules, "@vendor/pin/node_modules"))
+
+        if existing_scope do
+          write_package("@vendor/pin/node_modules/@vendor/other", "1.0.0", %{})
+        end
+
+        assert {:ok, root} =
+                 DuskmoonBundler.JS.Vendor.bundle_on_demand("@vendor/pin", @node_modules)
+
+        assert root =~ "root"
+        previous = DuskmoonBundler.JS.Vendor.browser_hash(opts)
+
+        write_package("@vendor/pin/node_modules/@vendor/core", "1.0.0", %{
+          "./pin" => "./pin.js"
+        })
+
+        File.write!(nested_pin_path(), "export const value = 'new-nearer';")
+
+        refute DuskmoonBundler.JS.Vendor.current_browser_hash?(previous, opts)
+        assert {:error, :not_found} = DuskmoonBundler.JS.Vendor.read("@vendor/pin", opts)
+
+        assert {:ok, nearer} =
+                 DuskmoonBundler.JS.Vendor.bundle_on_demand("@vendor/pin", @node_modules)
+
+        assert nearer =~ "new-nearer"
+      end
+    end
+
+    test "tracks nested sources reached through a different transitive package" do
+      opts = [node_modules: @node_modules]
+      write_package("@vendor/transitive", "1.0.0", %{"." => "./index.js"})
+
+      write_package("@vendor/transitive/node_modules/@vendor/leaf", "1.0.0", %{
+        "./value" => "./value.js"
+      })
+
+      leaf = Path.join(@node_modules, "@vendor/transitive/node_modules/@vendor/leaf/value.js")
+      File.write!(leaf, "export const value = 'leaf-one';")
+
+      File.write!(
+        Path.join(@node_modules, "@vendor/transitive/index.js"),
+        "export { value } from '@vendor/leaf/value';"
+      )
+
+      File.write!(
+        Path.join(@node_modules, "@vendor/pin/index.js"),
+        "export { value as pin } from '@vendor/transitive';"
+      )
+
+      assert {:ok, _} = DuskmoonBundler.JS.Vendor.bundle_on_demand("@vendor/pin", @node_modules)
+      previous = DuskmoonBundler.JS.Vendor.browser_hash(opts)
+      File.write!(leaf, "export const value = 'leaf-two';")
+
+      refute DuskmoonBundler.JS.Vendor.current_browser_hash?(previous, opts)
+      assert {:error, :not_found} = DuskmoonBundler.JS.Vendor.read("@vendor/pin", opts)
+
+      assert {:ok, updated} =
+               DuskmoonBundler.JS.Vendor.bundle_on_demand("@vendor/pin", @node_modules)
+
+      assert updated =~ "leaf-two"
+    end
+
+    test "tracks an empty imported package when it later gains executable code" do
+      opts = [node_modules: @node_modules]
+      write_package("empty-vendor", "1.0.0", %{"." => "./index.js"})
+      path = Path.join(@node_modules, "empty-vendor/index.js")
+      replacement = "globalThis.vendorMarker = 'visible';"
+      File.write!(path, "//" <> String.duplicate(" ", byte_size(replacement) - 2))
+
+      File.write!(
+        Path.join(@node_modules, "@vendor/pin/index.js"),
+        "import 'empty-vendor'; export const pin = 1;"
+      )
+
+      assert {:ok, before} =
+               DuskmoonBundler.JS.Vendor.bundle_on_demand("@vendor/pin", @node_modules)
+
+      refute before =~ "visible"
+      previous = DuskmoonBundler.JS.Vendor.browser_hash(opts)
+      File.write!(path, replacement)
+
+      refute DuskmoonBundler.JS.Vendor.current_browser_hash?(previous, opts)
+      assert {:error, :not_found} = DuskmoonBundler.JS.Vendor.read("@vendor/pin", opts)
+
+      assert {:ok, after_change} =
+               DuskmoonBundler.JS.Vendor.bundle_on_demand("@vendor/pin", @node_modules)
+
+      assert after_change =~ "visible"
+    end
   end
 
   defp write_package(name, version, exports) do

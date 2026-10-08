@@ -1,5 +1,10 @@
 defmodule OXC.Bundle.Output do
-  @moduledoc "A generated bundle output chunk or asset."
+  @moduledoc """
+  A generated bundle output chunk or asset.
+
+  `module_ids` contains Rolldown's resolved module identifiers for a chunk,
+  including modules that produce no source-map mappings. Assets have no module IDs.
+  """
 
   defstruct type: nil,
             name: nil,
@@ -10,7 +15,8 @@ defmodule OXC.Bundle.Output do
             sourcemap: nil,
             imports: [],
             dynamic_imports: [],
-            exports: []
+            exports: [],
+            module_ids: []
 
   @type t :: %__MODULE__{}
 
@@ -27,7 +33,8 @@ defmodule OXC.Bundle.Output do
       sourcemap: Map.get(map, :sourcemap),
       imports: Map.get(map, :imports, []),
       dynamic_imports: Map.get(map, :dynamic_imports, []),
-      exports: Map.get(map, :exports, [])
+      exports: Map.get(map, :exports, []),
+      module_ids: Map.get(map, :module_ids, [])
     }
   end
 end

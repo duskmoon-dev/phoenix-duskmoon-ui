@@ -46,10 +46,6 @@ defmodule DuskmoonBundler.JS.Vendor do
   """
   @spec prebundle(keyword()) :: {:ok, %{String.t() => String.t()}} | {:error, term()}
   def prebundle(opts) do
-    with_browser_signature_snapshot(fn -> do_prebundle(opts) end)
-  end
-
-  defp do_prebundle(opts) do
     root = Keyword.fetch!(opts, :root)
     force = Keyword.get(opts, :force, false)
     node_modules = opts[:node_modules] || NPM.Resolution.PackageResolver.find_node_modules(root)
@@ -80,10 +76,6 @@ defmodule DuskmoonBundler.JS.Vendor do
   @spec bundle_on_demand(String.t(), String.t() | nil, keyword()) ::
           {:ok, String.t()} | {:error, term()}
   def bundle_on_demand(specifier, node_modules, opts \\ []) do
-    with_browser_signature_snapshot(fn -> do_bundle_on_demand(specifier, node_modules, opts) end)
-  end
-
-  defp do_bundle_on_demand(specifier, node_modules, opts) do
     ensure_cache_dir()
 
     {plugins, resolve_dirs, module_types, source_specifiers, browser_token} =
@@ -403,7 +395,17 @@ defmodule DuskmoonBundler.JS.Vendor do
       )
 
     case Bundle.run(bundle) do
-      {:ok, _result} ->
+      {:ok, result} ->
+        record_bundle_dependencies(
+          bundled_specifiers,
+          entries,
+          result,
+          module_dirs,
+          plugins,
+          module_types,
+          source_specifiers
+        )
+
         write_vendor_cache_metadata(
           bundled_specifiers,
           module_dirs,
@@ -551,7 +553,17 @@ defmodule DuskmoonBundler.JS.Vendor do
           )
 
         case Bundle.run(bundle) do
-          {:ok, _result} ->
+          {:ok, result} ->
+            record_bundle_dependencies(
+              [specifier],
+              [{specifier, entry}],
+              result,
+              module_dirs,
+              plugins,
+              module_types,
+              source_specifiers
+            )
+
             write_vendor_cache_metadata(
               [specifier],
               module_dirs,
@@ -620,6 +632,15 @@ defmodule DuskmoonBundler.JS.Vendor do
        ) do
     with {:ok, entry_path, _project_root} <- prebundle_entry(specifier, module_dirs, plugins),
          {:ok, source} <- File.read(entry_path),
+         :ok <-
+           record_dependency_paths(
+             [specifier],
+             [entry_path],
+             module_dirs,
+             plugins,
+             module_types,
+             source_specifiers
+           ),
          {:ok, code} <-
            DuskmoonBundler.JS.Transforms.Imports.rewrite(
              source,
@@ -1015,67 +1036,141 @@ defmodule DuskmoonBundler.JS.Vendor do
   end
 
   defp browser_signature(module_dirs, plugins, module_types, source_specifiers) do
-    key = {module_dirs, plugins, module_types, source_specifiers}
-
-    case Process.get({__MODULE__, :browser_signatures}) do
-      nil ->
-        build_browser_signature(module_dirs, plugins, module_types, source_specifiers)
-
-      signatures ->
-        case Map.fetch(signatures, key) do
-          {:ok, signature} ->
-            signature
-
-          :error ->
-            signature =
-              build_browser_signature(module_dirs, plugins, module_types, source_specifiers)
-
-            Process.put({__MODULE__, :browser_signatures}, Map.put(signatures, key, signature))
-            signature
-        end
-    end
-  end
-
-  defp with_browser_signature_snapshot(fun) do
-    key = {__MODULE__, :browser_signatures}
-    previous = Process.put(key, %{})
-
-    try do
-      fun.()
-    after
-      if is_nil(previous), do: Process.delete(key), else: Process.put(key, previous)
-    end
-  end
-
-  defp build_browser_signature(module_dirs, plugins, module_types, source_specifiers) do
     %{
       lockfiles: lockfile_signature(module_dirs),
       module_dirs: module_dirs,
       resolve_modules: ["node_modules" | module_dirs],
-      nested_dependencies: nested_dependency_signature(module_dirs, plugins, module_types),
+      dependency_tracking: :module_ids,
+      dependencies: dependency_signature(module_dirs, plugins, module_types, source_specifiers),
       module_types: module_types,
       plugins: Enum.map(plugins, &base_plugin_signature/1),
       vendor_source: List.wrap(source_specifiers)
     }
   end
 
-  # Nested installations may change independently of the project's lockfile or
-  # the top-level entry. Include their manifests and source files in both hashes.
-  defp nested_dependency_signature(module_dirs, plugins, module_types) do
-    extensions =
-      [".css" | DuskmoonBundler.JS.Extensions.resolvable(plugins)] ++ Map.keys(module_types)
+  # Track Rolldown's actual module graph rather than reading unrelated installed
+  # dependency trees on every request. These IDs also include empty modules that
+  # produce no source-map mappings. Ancestor manifests and lookup directory
+  # listings detect exports changes and newly installed nearer package versions.
+  defp record_bundle_dependencies(
+         specifiers,
+         entries,
+         result,
+         module_dirs,
+         plugins,
+         module_types,
+         source_specifiers
+       ) do
+    sources = Enum.flat_map(result.outputs, & &1.module_ids)
+    sources = sources ++ Enum.map(entries, fn {_specifier, entry} -> entry.import end)
 
-    module_dirs
-    |> Enum.flat_map(fn dir ->
-      ["*/node_modules/**/*", "@*/*/node_modules/**/*"]
-      |> Enum.flat_map(&Path.wildcard(Path.join(dir, &1), match_dot: true))
+    record_dependency_paths(
+      specifiers,
+      sources,
+      module_dirs,
+      plugins,
+      module_types,
+      source_specifiers
+    )
+  end
+
+  defp record_dependency_paths(
+         specifiers,
+         sources,
+         module_dirs,
+         plugins,
+         module_types,
+         source_specifiers
+       ) do
+    dir = dependency_dir(module_dirs, plugins, module_types, source_specifiers)
+    File.mkdir_p!(dir)
+
+    contents =
+      sources
+      |> Enum.filter(&File.regular?/1)
+      |> Enum.uniq()
+      |> Enum.sort()
+      |> :erlang.term_to_binary()
+
+    Enum.each(specifiers, fn specifier ->
+      path = Path.join(dir, encode_specifier(specifier) <> ".meta")
+      temp = path <> "." <> cache_nonce() <> ".tmp"
+
+      try do
+        File.write!(temp, contents)
+        File.rename!(temp, path)
+      after
+        File.rm(temp)
+      end
     end)
-    |> Enum.filter(&(Path.extname(&1) in extensions and File.regular?(&1)))
-    |> Enum.uniq()
-    |> Enum.sort()
-    |> Enum.map(&{&1, file_signature(&1)})
-    |> :erlang.term_to_binary()
-    |> then(&:crypto.hash(:sha256, &1))
+
+    :ok
+  end
+
+  defp dependency_dir(module_dirs, plugins, module_types, source_specifiers) do
+    key = :erlang.term_to_binary({module_dirs, plugins, module_types, source_specifiers})
+    hash = :crypto.hash(:sha256, key) |> Base.encode16(case: :lower)
+    Path.join([cache_dir(), "dependencies", hash])
+  end
+
+  defp dependency_signature(module_dirs, plugins, module_types, source_specifiers) do
+    dir = dependency_dir(module_dirs, plugins, module_types, source_specifiers)
+
+    sources =
+      case File.ls(dir) do
+        {:ok, entries} ->
+          entries
+          |> Enum.filter(&String.ends_with?(&1, ".meta"))
+          |> Enum.flat_map(&read_dependency_paths(Path.join(dir, &1)))
+          |> Enum.uniq()
+          |> Enum.sort()
+
+        {:error, _} ->
+          []
+      end
+
+    ancestors = sources |> Enum.flat_map(&ancestors(Path.dirname(&1))) |> Enum.uniq()
+    manifests = Enum.map(ancestors, &Path.join(&1, "package.json"))
+    lookup_dirs = Enum.map(ancestors, &Path.join(&1, "node_modules")) ++ module_dirs
+
+    %{
+      files: Enum.map(Enum.uniq(sources ++ manifests), &{&1, file_signature(&1)}),
+      lookup_dirs:
+        lookup_dirs |> Enum.uniq() |> Enum.sort() |> Enum.map(&{&1, directory_signature(&1)})
+    }
+  end
+
+  defp read_dependency_paths(path) do
+    with {:ok, contents} <- File.read(path),
+         sources when is_list(sources) <- :erlang.binary_to_term(contents, [:safe]) do
+      Enum.filter(sources, &is_binary/1)
+    else
+      _ -> []
+    end
+  rescue
+    ArgumentError -> []
+  end
+
+  defp directory_signature(path) do
+    case File.ls(path) do
+      {:ok, entries} ->
+        entries
+        |> Enum.sort()
+        |> Enum.map(fn entry ->
+          if String.starts_with?(entry, "@") do
+            {entry,
+             case File.ls(Path.join(path, entry)) do
+               {:ok, scoped} -> Enum.sort(scoped)
+               {:error, _} -> nil
+             end}
+          else
+            entry
+          end
+        end)
+
+      {:error, _} ->
+        nil
+    end
   end
 
   defp base_plugin_signature({module, opts}), do: {module, opts}
