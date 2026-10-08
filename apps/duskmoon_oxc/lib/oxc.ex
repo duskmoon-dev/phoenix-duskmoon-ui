@@ -46,6 +46,11 @@ defmodule OXC do
   Returns `{:ok, ast}` where `ast` is a map with atom keys, or
   `{:error, errors}` with a list of parse error maps.
 
+  JavaScript strings may contain lone UTF-16 surrogates. Their literal values
+  and template cooked values are returned as lossless WTF-8 binaries, which
+  are not valid UTF-8 strings. Ordinary Unicode values remain UTF-8, and
+  literal `:raw` fields preserve the source spelling.
+
   ## Examples
 
       iex> {:ok, ast} = OXC.parse("const x = 1", "test.js")
@@ -578,6 +583,10 @@ defmodule OXC do
   and produces formatted JavaScript source code using OXC's code generator.
 
   Handles operator precedence, indentation, and semicolon insertion.
+
+  Literal and template values support the lossless WTF-8 binaries returned by
+  `parse/2`. Import and re-export module sources must be valid UTF-8; unsupported
+  source strings return an error.
 
   ## Examples
 

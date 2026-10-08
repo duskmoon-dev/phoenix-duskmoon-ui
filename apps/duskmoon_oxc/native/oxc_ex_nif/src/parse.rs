@@ -7,9 +7,10 @@ use oxc_parser::{ParseOptions, Parser};
 use oxc_semantic::SemanticBuilder;
 use oxc_span::SourceType;
 use oxc_transformer::{EnvOptions, JsxRuntime, TransformOptions, Transformer};
-use rustler::{Binary, Encoder, Env, Error, NifResult, SerdeTerm, Term};
+use rustler::{Binary, Encoder, Env, Error, NifResult, OwnedBinary, SerdeTerm, Term};
 use serde::de::{self, DeserializeSeed, MapAccess, SeqAccess, Visitor};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
+use serde_json::value::RawValue;
 use std::fmt;
 use std::path::Path;
 
@@ -40,7 +41,35 @@ impl<'de, 'a> DeserializeSeed<'de> for BeamTermSeed<'a> {
     where
         D: de::Deserializer<'de>,
     {
-        deserializer.deserialize_any(self)
+        // JavaScript strings can contain lone UTF-16 surrogates. Deserialize
+        // those as WTF-8 bytes, rather than requiring a Rust UTF-8 String.
+        // RawValue borrows the original JSON without normalizing its escapes.
+        let raw = <&RawValue>::deserialize(deserializer)?;
+        let mut deserializer = serde_json::Deserializer::from_str(raw.get());
+        deserializer.disable_recursion_limit();
+
+        let result = if raw.get().starts_with('"') {
+            de::Deserializer::deserialize_bytes(&mut deserializer, self)
+        } else if matches!(raw.get().as_bytes().first(), Some(b'-' | b'0'..=b'9')) {
+            // With arbitrary_precision enabled, deserialize_any represents
+            // decimals through a private map. Number handles that internally;
+            // only ordinary integer/float terms should cross the BEAM boundary.
+            let number =
+                serde_json::Number::deserialize(&mut deserializer).map_err(de::Error::custom)?;
+            if let Some(value) = number.as_u64() {
+                return self.visit_u64(value);
+            }
+            if let Some(value) = number.as_i64() {
+                return self.visit_i64(value);
+            }
+            return number
+                .as_f64()
+                .ok_or_else(|| de::Error::custom("JSON number out of range"))
+                .and_then(|value| self.visit_f64(value));
+        } else {
+            de::Deserializer::deserialize_any(&mut deserializer, self)
+        };
+        result.map_err(de::Error::custom)
     }
 }
 
@@ -105,6 +134,16 @@ impl<'de, 'a> Visitor<'de> for BeamTermSeed<'a> {
         E: de::Error,
     {
         Ok(value.encode(self.env))
+    }
+
+    fn visit_bytes<E>(self, value: &[u8]) -> Result<Self::Value, E>
+    where
+        E: de::Error,
+    {
+        let mut binary = OwnedBinary::new(value.len())
+            .ok_or_else(|| de::Error::custom("failed to allocate JSON string binary"))?;
+        binary.as_mut_slice().copy_from_slice(value);
+        Ok(binary.release(self.env).encode(self.env))
     }
 
     fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>

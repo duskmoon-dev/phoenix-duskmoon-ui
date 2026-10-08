@@ -85,8 +85,58 @@ fn ident_name<'a>(b: AstBuilder<'a>, s: &str) -> IdentifierName<'a> {
     b.identifier_name(SPAN, b.ident(s))
 }
 
-fn str_lit<'a>(b: AstBuilder<'a>, s: &str) -> StringLiteral<'a> {
-    b.string_literal(SPAN, b.str(s), None)
+fn js_string_value(term: Term<'_>) -> R<(String, bool)> {
+    let binary = term
+        .decode_as_binary()
+        .map_err(|_| "Expected a JavaScript string binary".to_string())?;
+    let mut bytes = binary.as_slice();
+    if let Ok(value) = std::str::from_utf8(bytes) {
+        return Ok((value.to_string(), false));
+    }
+
+    // OXC marks lone UTF-16 surrogates as U+FFFD followed by four hex digits.
+    // Literal U+FFFD characters must also be escaped when this mode is active.
+    let mut value = String::with_capacity(bytes.len());
+    loop {
+        match std::str::from_utf8(bytes) {
+            Ok(suffix) => {
+                value.push_str(&suffix.replace('\u{fffd}', "\u{fffd}fffd"));
+                return Ok((value, true));
+            }
+            Err(error) => {
+                let prefix = std::str::from_utf8(&bytes[..error.valid_up_to()])
+                    .map_err(|_| "Invalid JavaScript string bytes".to_string())?;
+                value.push_str(&prefix.replace('\u{fffd}', "\u{fffd}fffd"));
+                bytes = &bytes[error.valid_up_to()..];
+                match bytes {
+                    [0xed, second @ 0xa0..=0xbf, third @ 0x80..=0xbf, rest @ ..] => {
+                        let surrogate =
+                            0xd000 | ((*second as u16 & 0x3f) << 6) | (*third as u16 & 0x3f);
+                        value.push('\u{fffd}');
+                        value.push_str(&format!("{surrogate:04x}"));
+                        bytes = rest;
+                    }
+                    _ => return err("Invalid UTF-8/WTF-8 JavaScript string bytes"),
+                }
+            }
+        }
+    }
+}
+
+fn beam_str_lit<'a>(b: AstBuilder<'a>, term: Term<'_>) -> R<StringLiteral<'a>> {
+    let (value, lone_surrogates) = js_string_value(term)?;
+    Ok(b.string_literal_with_lone_surrogates(SPAN, b.str(&value), None, lone_surrogates))
+}
+
+fn module_source_lit<'a>(b: AstBuilder<'a>, term: Term<'_>) -> R<StringLiteral<'a>> {
+    let binary = term
+        .decode_as_binary()
+        .map_err(|_| "Expected a module source string binary".to_string())?;
+    // OXC's module-source printer does not handle the lone-surrogate flag.
+    // Reject unsupported values instead of printing its internal marker text.
+    let value = std::str::from_utf8(binary.as_slice())
+        .map_err(|_| "Codegen does not support non-UTF-8 module source strings".to_string())?;
+    Ok(b.string_literal(SPAN, b.str(value), None))
 }
 
 fn opt_binding_id<'a>(b: AstBuilder<'a>, term: Term) -> Option<BindingIdentifier<'a>> {
@@ -348,8 +398,8 @@ fn build_expr<'a>(b: AstBuilder<'a>, term: Term) -> R<Expression<'a>> {
         ));
     }
     if ty == a::string_literal() {
-        let s = str_val(term, a::value());
-        return Ok(b.expression_string_literal(SPAN, oxc_s(b, &s), None));
+        let value = get(term, a::value()).ok_or("Missing string literal :value")?;
+        return Ok(Expression::StringLiteral(b.alloc(beam_str_lit(b, value)?)));
     }
     if ty == a::boolean_literal() {
         return Ok(b.expression_boolean_literal(SPAN, bool_val(term, a::value())));
@@ -606,10 +656,10 @@ fn build_generic_lit<'a>(b: AstBuilder<'a>, term: Term) -> R<Expression<'a>> {
             if let Ok(v) = t.decode::<i64>() {
                 return Ok(b.expression_numeric_literal(SPAN, v as f64, None, NumberBase::Decimal));
             }
-            if let Ok(v) = t.decode::<String>() {
-                return Ok(b.expression_string_literal(SPAN, oxc_s(b, &v), None));
+            if t.decode_as_binary().is_ok() {
+                return Ok(Expression::StringLiteral(b.alloc(beam_str_lit(b, t)?)));
             }
-            Ok(b.expression_null_literal(SPAN))
+            err("Unsupported literal value")
         }
     }
 }
@@ -703,15 +753,17 @@ fn build_quasis<'a>(b: AstBuilder<'a>, list: Vec<Term>) -> R<OxcVec<'a, Template
     for q in &list {
         let vt = get(*q, a::value()).unwrap_or(*q);
         let raw = str_val(vt, a::raw());
-        let cooked = opt(vt, a::cooked()).and_then(|t| t.decode::<String>().ok());
+        let cooked = opt(vt, a::cooked()).map(js_string_value).transpose()?;
+        let lone_surrogates = cooked.as_ref().is_some_and(|(_, lone)| *lone);
         let tail = bool_val(*q, a::tail());
-        out.push(b.template_element(
+        out.push(b.template_element_with_lone_surrogates(
             SPAN,
             TemplateElementValue {
                 raw: oxc_s(b, &raw),
-                cooked: cooked.as_deref().map(|s| oxc_s(b, s)),
+                cooked: cooked.as_ref().map(|(s, _)| oxc_s(b, s)),
             },
             tail,
+            lone_surrogates,
             false,
         ));
     }
@@ -889,11 +941,11 @@ fn build_class_body<'a>(b: AstBuilder<'a>, term: Term) -> R<ClassBody<'a>> {
 // ── Module declarations ──
 
 fn build_import<'a>(b: AstBuilder<'a>, term: Term) -> R<ModuleDeclaration<'a>> {
-    let src = str_val(
-        get(term, a::source()).ok_or("Missing import :source")?,
-        a::value(),
-    );
-    let sl = str_lit(b, &src);
+    let source = get(term, a::source()).ok_or("Missing import :source")?;
+    let sl = module_source_lit(
+        b,
+        get(source, a::value()).ok_or("Missing import source :value")?,
+    )?;
     let specs_list = list_val(term, a::specifiers());
     let specifiers = if specs_list.is_empty() {
         if get(term, a::specifiers()).is_none_or(|t| is_nil(t)) {
@@ -968,7 +1020,9 @@ fn build_export_named<'a>(b: AstBuilder<'a>, term: Term) -> R<ModuleDeclaration<
             ImportOrExportKind::Value,
         ));
     }
-    let source = opt(term, a::source()).map(|t| str_lit(b, &str_val(t, a::value())));
+    let source = opt(term, a::source())
+        .map(|t| module_source_lit(b, get(t, a::value()).ok_or("Missing export source :value")?))
+        .transpose()?;
     Ok(ModuleDeclaration::ExportNamedDeclaration(b.alloc(
         b.export_named_declaration(
             SPAN,
@@ -1035,20 +1089,15 @@ fn build_export_default<'a>(b: AstBuilder<'a>, term: Term) -> R<ModuleDeclaratio
 }
 
 fn build_export_all<'a>(b: AstBuilder<'a>, term: Term) -> R<ModuleDeclaration<'a>> {
-    let src = str_val(
-        get(term, a::source()).ok_or("Missing export :source")?,
-        a::value(),
-    );
+    let source = get(term, a::source()).ok_or("Missing export :source")?;
+    let source = module_source_lit(
+        b,
+        get(source, a::value()).ok_or("Missing export source :value")?,
+    )?;
     let exported = opt(term, a::exported())
         .map(|t| ModuleExportName::IdentifierName(ident_name(b, &str_val(t, a::name()))));
     Ok(ModuleDeclaration::ExportAllDeclaration(b.alloc(
-        b.export_all_declaration(
-            SPAN,
-            exported,
-            str_lit(b, &src),
-            NONE,
-            ImportOrExportKind::Value,
-        ),
+        b.export_all_declaration(SPAN, exported, source, NONE, ImportOrExportKind::Value),
     )))
 }
 
@@ -1276,8 +1325,8 @@ fn build_prop_key<'a>(b: AstBuilder<'a>, term: Term) -> R<PropertyKey<'a>> {
     if ty == a::literal() || ty == a::string_literal() {
         let vt = get(term, a::value());
         if let Some(t) = vt {
-            if let Ok(s) = t.decode::<String>() {
-                return Ok(PropertyKey::StringLiteral(b.alloc(str_lit(b, &s))));
+            if t.decode_as_binary().is_ok() {
+                return Ok(PropertyKey::StringLiteral(b.alloc(beam_str_lit(b, t)?)));
             }
             if let Ok(n) = t.decode::<f64>() {
                 return Ok(PropertyKey::NumericLiteral(b.alloc(NumericLiteral {
