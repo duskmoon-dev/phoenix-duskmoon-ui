@@ -141,9 +141,11 @@ defmodule QuickBEAM.Native do
     force_build: @build_from_source or System.get_env("QUICKBEAM_BUILD") in ["1", "true"],
     targets: ~w(
       aarch64-linux-gnu
+      aarch64-linux-musl
       aarch64-macos-none
       x86_64-freebsd-none
       x86_64-linux-gnu
+      x86_64-linux-musl
       x86_64-macos-none
     ),
     zig_code_path: "quickbeam.zig",

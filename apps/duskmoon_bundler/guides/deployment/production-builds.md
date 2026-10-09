@@ -30,6 +30,19 @@ Production builds run the same framework/plugin compilation pipeline as the dev 
 
 Phoenix releases that call `DuskmoonBundler.static_path/2` or `DuskmoonBundler.Preload.tags/2` only need `:duskmoon_bundler_runtime` at runtime. Keep `:duskmoon_bundler` available for build aliases with `runtime: Mix.env() in [:dev, :test]`; do not mark it `only: :dev`, because asset deploy aliases often run under `MIX_ENV=prod`. Starting the app in test ensures endpoints with code reloading enabled also start the DevServer cache and HMR supervision tree.
 
+## Alpine Linux
+
+Starting with 9.16.8, the published native dependencies provide musl binaries for
+both amd64 and arm64. Default `mix deps.get` and `mix deps.compile` select verified
+precompiled NIFs for OXC (including formatting and linting), Oxide, Vize and
+QuickBEAM. Alpine asset builds can run Bundler and Tailwind without Rust, Zig,
+GNU libc compatibility packages or native target overrides.
+
+The release workflow checks fresh Alpine consumers on both architectures using
+the published packages, including production JavaScript bundling and Tailwind
+class scanning/compilation. The build dependency/runtime split above still
+applies to the final Phoenix release.
+
 ## Public files in Phoenix apps
 
 For Phoenix projects, stable root files usually belong in `priv/static` and are served by Phoenix through `Plug.Static`. Examples include `favicon.ico`, `robots.txt`, web app manifests, and touch icons. Keep those files at the Phoenix level when possible.

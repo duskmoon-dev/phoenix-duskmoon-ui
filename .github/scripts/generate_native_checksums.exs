@@ -14,17 +14,21 @@ defmodule GenerateNativeChecksums do
   @rust_targets ~w(
     aarch64-apple-darwin
     aarch64-unknown-linux-gnu
+    aarch64-unknown-linux-musl
     x86_64-apple-darwin
     x86_64-pc-windows-gnu
     x86_64-unknown-freebsd
     x86_64-unknown-linux-gnu
+    x86_64-unknown-linux-musl
   )
 
   @quickbeam_targets ~w(
     aarch64-linux-gnu
+    aarch64-linux-musl
     aarch64-macos-none
     x86_64-freebsd-none
     x86_64-linux-gnu
+    x86_64-linux-musl
     x86_64-macos-none
   )
 

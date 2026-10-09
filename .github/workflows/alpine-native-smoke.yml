@@ -1,0 +1,42 @@
+name: Alpine Native Consumer
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Published version to verify on Alpine'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  alpine-consumer:
+    name: Alpine consumer / ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    steps:
+      - name: Checkout validation scripts
+        uses: actions/checkout@v7
+      - name: Verify published native packages without source-build tools
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: |
+          docker run --rm \
+            --volume "$PWD/.github/scripts:/validation:ro" \
+            elixir:1.18-otp-28-alpine \
+            sh /validation/alpine_native_smoke.sh "$RELEASE_VERSION"

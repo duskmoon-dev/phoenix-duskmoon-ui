@@ -473,11 +473,19 @@ jobs:
           - GitHub Release with native prebuilt artifacts
           EOF
 
+  alpine-native-smoke:
+    name: Verify Published Alpine Native Packages
+    needs: [ publish ]
+    if: ${{ needs.publish.result == 'success' }}
+    uses: ./.github/workflows/alpine-native-smoke.yml
+    with:
+      version: ${{ inputs.version }}
+
   trigger-docker:
     name: Trigger Docker Build
     runs-on: ubuntu-latest
-    needs: [ publish ]
-    if: ${{ always() && needs.publish.result == 'success' }}
+    needs: [ publish, alpine-native-smoke ]
+    if: ${{ always() && needs.publish.result == 'success' && needs.alpine-native-smoke.result == 'success' }}
 
     steps:
       - name: Trigger Docker workflow

@@ -136,6 +136,9 @@ jobs:
           - target: aarch64-unknown-linux-gnu
             os: ubuntu-22.04
             use-cross: true
+          - target: aarch64-unknown-linux-musl
+            os: ubuntu-22.04
+            use-cross: true
           - target: x86_64-apple-darwin
             os: macos-15-intel
             use-cross: false
@@ -148,6 +151,9 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-22.04
             use-cross: false
+          - target: x86_64-unknown-linux-musl
+            os: ubuntu-22.04
+            use-cross: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -165,6 +171,10 @@ jobs:
         uses: philss/rustler-precompiled-action@67ed0cc2d6a423e4c4cd9ad651dcc6c90f802cdb # v1.1.5
         env:
           CARGO_TARGET_DIR: target
+          # musl defaults to static CRT, which cannot produce a loadable cdylib.
+          # Target-specific flags also pass through cross without changing host builds.
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: '-C target-feature=-crt-static'
+          CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_RUSTFLAGS: '-C target-feature=-crt-static'
         with:
           project-name: ${{ matrix.crate.name }}
           project-version: ${{ inputs.version }}
@@ -173,6 +183,25 @@ jobs:
           use-cross: ${{ matrix.target.use-cross }}
           cross-version: from-source
           project-dir: ${{ matrix.crate.project-dir }}
+
+      - name: Verify musl shared library
+        if: endsWith(matrix.target.target, '-linux-musl')
+        env:
+          ARTIFACT: ${{ steps.build-crate.outputs.file-path }}
+        run: |
+          set -euo pipefail
+
+          inspect_dir="$(mktemp -d)"
+          trap 'rm -rf "${inspect_dir}"' EXIT
+          tar xzf "${ARTIFACT}" -C "${inspect_dir}"
+          library="$(find "${inspect_dir}" -name '*.so' -type f -print -quit)"
+          readelf -h "${library}" | grep -Eq 'Type: +DYN'
+          readelf -d "${library}" > "${inspect_dir}/dynamic"
+          grep -Eq 'NEEDED.*\[libc\.so\]' "${inspect_dir}/dynamic"
+          if grep -Eq 'NEEDED.*\[libc\.so\.6\]' "${inspect_dir}/dynamic"; then
+            echo "musl NIF unexpectedly links against glibc" >&2
+            exit 1
+          fi
 
       - name: Upload artifact to GitHub Release
         uses: softprops/action-gh-release@v3
@@ -194,11 +223,15 @@ jobs:
         target:
           - target: aarch64-linux-gnu
             os: ubuntu-22.04
+          - target: aarch64-linux-musl
+            os: ubuntu-22.04
           - target: aarch64-macos-none
             os: macos-15
           - target: x86_64-freebsd-none
             os: ubuntu-22.04
           - target: x86_64-linux-gnu
+            os: ubuntu-22.04
+          - target: x86_64-linux-musl
             os: ubuntu-22.04
           - target: x86_64-macos-none
             os: macos-15-intel
@@ -249,14 +282,14 @@ jobs:
             --out ../../artifacts
 
       - name: Verify portable x86_64 instruction baseline
-        if: matrix.target.target == 'x86_64-linux-gnu'
+        if: startsWith(matrix.target.target, 'x86_64-linux-')
         run: |
           set -euo pipefail
 
           inspect_dir="$(mktemp -d)"
           trap 'rm -rf "${inspect_dir}"' EXIT
 
-          tar xzf artifacts/Elixir.QuickBEAM.Native-v${{ inputs.version }}-x86_64-linux-gnu.so.tar.gz \
+          tar xzf artifacts/Elixir.QuickBEAM.Native-v${{ inputs.version }}-${{ matrix.target.target }}.so.tar.gz \
             -C "${inspect_dir}"
           objdump -d "${inspect_dir}/Elixir.QuickBEAM.Native.so" > "${inspect_dir}/disassembly"
 
