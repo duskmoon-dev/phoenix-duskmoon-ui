@@ -15,122 +15,94 @@ defmodule QuickBEAM.Fetch do
 
   @spec fetch([map()]) :: map()
   def fetch([%{"url" => url, "method" => method, "headers" => headers} = opts]) do
-    :ok = ensure_httpc_started()
     :ok = ensure_table()
-
     fetch_id = opts["fetchId"] || System.unique_integer([:positive])
-    body = opts["body"]
-    redirect = opts["redirect"] || "follow"
+    controller = HTTP.AbortController.new()
 
-    uri = URI.parse(url)
-    url_charlist = String.to_charlist(url)
+    if not :ets.insert_new(@table, {fetch_id, controller}) do
+      HTTP.AbortController.abort(controller)
+    end
 
-    req_headers =
-      Enum.map(headers, fn [k, v] -> {String.to_charlist(k), String.to_charlist(v)} end)
+    try do
+      if HTTP.AbortController.aborted?(controller), do: raise("fetch failed: :aborted")
 
-    http_opts = [
-      ssl: ssl_opts(uri.host),
-      autoredirect: redirect == "follow",
-      relaxed: true,
-      timeout: 30_000,
-      connect_timeout: 10_000
-    ]
+      case HTTP.fetch(url,
+             method: atomize_method(method),
+             headers: Enum.map(headers, fn [key, value] -> {key, value} end),
+             body: request_body(method, opts["body"]),
+             redirect: opts["redirect"] || "follow",
+             signal: controller,
+             timeout: 30_000,
+             connect_timeout: 10_000
+           )
+           |> HTTP.Promise.await() do
+        %HTTP.Response{} = response ->
+          %{
+            "status" => response.status,
+            "statusText" => response.status_text,
+            "headers" =>
+              Enum.map(HTTP.Headers.to_list(response.headers), fn {k, v} -> [k, v] end),
+            "body" => {:bytes, HTTP.Response.read_all(response)},
+            "url" => URI.to_string(response.url),
+            "redirected" => response.redirected
+          }
 
-    request = build_request(url_charlist, req_headers, method, body)
+        {:error, :request_timeout} ->
+          raise "fetch timed out"
 
-    case :httpc.request(
-           atomize_method(method),
-           request,
-           http_opts,
-           [sync: false, body_format: :binary],
-           :quickbeam
-         ) do
-      {:ok, request_id} ->
-        :ets.insert(@table, {fetch_id, request_id})
-
-        result =
-          receive do
-            {:http, {^request_id, {{_, status, reason}, resp_headers, resp_body}}} ->
-              %{
-                "status" => status,
-                "statusText" => List.to_string(reason),
-                "headers" =>
-                  Enum.map(resp_headers, fn {k, v} -> [to_string(k), to_string(v)] end),
-                "body" => {:bytes, IO.iodata_to_binary(resp_body)},
-                "url" => url,
-                "redirected" => false
-              }
-
-            {:http, {^request_id, {:error, reason}}} ->
-              raise "fetch failed: #{inspect(reason)}"
-          after
-            30_000 ->
-              cancel_httpc(request_id)
-              raise "fetch timed out"
-          end
-
-        :ets.delete(@table, fetch_id)
-        result
-
-      {:error, reason} ->
-        raise "fetch failed: #{inspect(reason)}"
+        {:error, reason} ->
+          raise "fetch failed: #{inspect(reason)}"
+      end
+    after
+      :ets.delete(@table, fetch_id)
+      Agent.stop(controller)
     end
   end
 
-  @spec cancel([integer()]) :: nil
-  def cancel([fetch_id]) when is_integer(fetch_id) do
-    case :ets.take(@table, fetch_id) do
-      [{^fetch_id, request_id}] -> cancel_httpc(request_id)
-      [] -> :ok
-    end
-
+  @spec cancel([integer() | String.t()]) :: nil
+  def cancel([fetch_id]) when is_integer(fetch_id) or is_binary(fetch_id) do
+    :ok = ensure_table()
+    cancel_request(fetch_id)
     nil
   end
 
-  defp cancel_httpc(request_id) do
-    :httpc.cancel_request(request_id, :quickbeam)
+  defp cancel_request(fetch_id) do
+    case :ets.lookup(@table, fetch_id) do
+      [{^fetch_id, controller}] when is_pid(controller) ->
+        HTTP.AbortController.abort(controller)
+
+      [{^fetch_id, {:cancelled, _ref}}] ->
+        :ok
+
+      [] ->
+        # Cancellation may arrive before the asynchronous bridge task starts.
+        cancelled = {:cancelled, make_ref()}
+
+        if :ets.insert_new(@table, {fetch_id, cancelled}) do
+          # Late cancellation after completion must not retain entries indefinitely.
+          :timer.apply_after(30_000, :ets, :match_delete, [@table, {fetch_id, cancelled}])
+        else
+          cancel_request(fetch_id)
+        end
+    end
   catch
-    :error, :badarg -> :ok
+    :exit, {:noproc, _} -> :ok
+    :exit, {:normal, _} -> :ok
   end
 
-  defp build_request(url, headers, method, body)
-       when method in ["GET", "HEAD", "OPTIONS", "DELETE"] or is_nil(body) do
-    {url, headers}
-  end
-
-  defp build_request(url, headers, _method, body) do
-    content_type =
-      Enum.find_value(headers, ~c"application/octet-stream", fn
-        {k, v} -> if :string.lowercase(k) == ~c"content-type", do: v
-      end)
-
-    {url, headers, content_type, to_binary(body)}
-  end
+  defp request_body(method, _body) when method in ["GET", "HEAD", "OPTIONS", "DELETE"], do: nil
+  defp request_body(_method, nil), do: nil
+  defp request_body(_method, body) when is_binary(body), do: body
+  defp request_body(_method, body) when is_list(body), do: :erlang.list_to_binary(body)
+  defp request_body(_method, _body), do: <<>>
 
   defp atomize_method(method) do
     Map.get(@known_methods, method) ||
       raise ArgumentError, "unsupported HTTP method: #{method}"
   end
 
-  defp to_binary(data) when is_binary(data), do: data
-  defp to_binary(data) when is_list(data), do: :erlang.list_to_binary(data)
-  defp to_binary(_), do: <<>>
-
-  defp ssl_opts(host) do
-    [
-      verify: :verify_peer,
-      cacerts: :public_key.cacerts_get(),
-      server_name_indication: String.to_charlist(host || ""),
-      customize_hostname_check: [
-        match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
-      ]
-    ]
-  end
-
   @doc false
-  def init do
-    ensure_table()
-  end
+  def init, do: ensure_table()
 
   defp ensure_table do
     if :ets.whereis(@table) == :undefined do
@@ -138,12 +110,9 @@ defmodule QuickBEAM.Fetch do
     end
 
     :ok
-  end
-
-  defp ensure_httpc_started do
-    case :inets.start(:httpc, profile: :quickbeam) do
-      {:ok, _} -> :ok
-      {:error, {:already_started, _}} -> :ok
-    end
+  rescue
+    ArgumentError ->
+      # Another bridge task may have initialized the named table concurrently.
+      if :ets.whereis(@table) == :undefined, do: reraise(ArgumentError, __STACKTRACE__), else: :ok
   end
 end

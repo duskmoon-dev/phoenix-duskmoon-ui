@@ -21,7 +21,7 @@ defmodule Mix.Tasks.Npm.Install do
 
   @impl true
   def run(args) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
     {opts, positional} = parse_args(args)
 
     case positional do

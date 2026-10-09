@@ -14,7 +14,7 @@ defmodule Mix.Tasks.Npm.Update do
 
   @impl true
   def run(args) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
 
     case args do
       [] -> NPM.update()

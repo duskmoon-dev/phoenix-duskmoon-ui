@@ -41,7 +41,7 @@ defmodule Mix.Tasks.Npm.Audit do
 
   @impl true
   def run(args) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
 
     {opts, argv, invalid} = OptionParser.parse(args, strict: @switches)
 
@@ -138,7 +138,7 @@ defmodule Mix.Tasks.Npm.Audit do
     payload = build_audit_payload(lockfile)
     url = "#{NPM.Registry.registry_url()}/-/npm/v1/security/audits"
 
-    case Req.post(url, json: payload) do
+    case NPM.HTTPClient.post(url, json: payload) do
       {:ok, %{status: 200, body: body}} ->
         print_audit_results(body)
 

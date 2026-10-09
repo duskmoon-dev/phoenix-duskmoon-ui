@@ -465,6 +465,38 @@ defmodule QuickBEAM.Context do
     {:noreply, state}
   end
 
+  def handle_info({:eventsource_open, id}, state) do
+    QuickBEAM.Native.pool_send_message(state.pool_resource, state.context_id, [
+      "__eventsource_open",
+      id
+    ])
+
+    {:noreply, state}
+  end
+
+  def handle_info({:eventsource_event, id, event}, state) do
+    QuickBEAM.Native.pool_send_message(state.pool_resource, state.context_id, [
+      "__eventsource_event",
+      id,
+      event.type,
+      event.data,
+      event.id
+    ])
+
+    {:noreply, state}
+  end
+
+  def handle_info({:eventsource_error, id, reason, ready_state}, state) do
+    QuickBEAM.Native.pool_send_message(state.pool_resource, state.context_id, [
+      "__eventsource_error",
+      id,
+      reason,
+      ready_state
+    ])
+
+    {:noreply, state}
+  end
+
   def handle_info({:DOWN, ref, :process, _pid, _reason}, state) do
     case Map.pop(state.workers, ref) do
       {nil, workers} ->

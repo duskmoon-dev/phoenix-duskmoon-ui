@@ -23,7 +23,11 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
 
   defp deps do
     # zig_doc 0.7.0 pins ex_doc 0.39.1; keep the umbrella on current ExDoc.
-    [{:ex_doc, "~> 0.40", runtime: false, override: true}]
+    [
+      {:ex_doc, "~> 0.40", runtime: false, override: true},
+      # Keep Plug available to both test servers and runtime umbrella applications.
+      {:plug, "~> 1.19"}
+    ]
   end
 
   defp aliases do

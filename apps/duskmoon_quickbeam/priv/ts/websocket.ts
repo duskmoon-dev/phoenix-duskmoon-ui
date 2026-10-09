@@ -184,6 +184,7 @@ class WebSocket extends EventTarget {
   }
 
   _onOpen(protocol: string): void {
+    if (this.#readyState !== WebSocket.CONNECTING) return
     this.#readyState = WebSocket.OPEN
     this.#protocol = protocol
     const event = new Event('open')

@@ -12,7 +12,7 @@ defmodule Mix.Tasks.Npm.Remove do
 
   @impl true
   def run([name]) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
 
     case NPM.remove(name) do
       :ok ->

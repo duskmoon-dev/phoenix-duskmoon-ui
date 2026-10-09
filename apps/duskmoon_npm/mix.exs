@@ -48,11 +48,12 @@ defmodule DuskmoonNpm.MixProject do
       {:duskmoon_hex_solver, in_umbrella: true},
       {:nimble_parsec, "~> 1.0", runtime: false},
       {:jason, "~> 1.4"},
-      {:req, "~> 0.5"},
+      {:http_fetch, "~> 0.17.1"},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:ex_slop, "~> 0.4", only: [:dev, :test], runtime: false},
       {:ex_dna, "~> 1.5", only: [:dev, :test], runtime: false},
+      {:bandit, "~> 1.0", only: :test},
       {:ex_doc, "~> 0.40", runtime: false}
     ]
   end

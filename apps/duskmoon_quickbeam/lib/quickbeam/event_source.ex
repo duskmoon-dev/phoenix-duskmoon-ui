@@ -1,117 +1,79 @@
 defmodule QuickBEAM.EventSource do
   @moduledoc false
+  use GenServer, restart: :temporary
 
   @spec open(list(), pid()) :: pid()
-  def open([url, id], caller_pid) do
-    parent = caller_pid
+  def open([url, id], owner) do
+    {:ok, pid} =
+      DynamicSupervisor.start_child(
+        QuickBEAM.NetworkSupervisor,
+        {__MODULE__, %{url: url, id: id, owner: owner}}
+      )
 
-    {:ok, task_pid} =
-      Task.start(fn ->
-        headers = [
-          {~c"Accept", ~c"text/event-stream"},
-          {~c"Cache-Control", ~c"no-cache"}
-        ]
-
-        url_charlist = String.to_charlist(url)
-
-        case :httpc.request(:get, {url_charlist, headers}, [], [{:sync, false}, {:stream, :self}]) do
-          {:ok, request_id} ->
-            send(parent, {:eventsource_open, id})
-            stream_loop(request_id, parent, id, "")
-
-          {:error, reason} ->
-            send(parent, {:eventsource_error, id, inspect(reason)})
-        end
-      end)
-
-    Process.monitor(task_pid)
-    task_pid
+    pid
   end
+
+  def start_link(options), do: GenServer.start_link(__MODULE__, options)
 
   @spec close([pid()]) :: nil
-  def close([task_pid]) do
-    Process.exit(task_pid, :normal)
+  def close([pid]) do
+    GenServer.stop(pid, :normal)
     nil
+  catch
+    :exit, {:noproc, _} -> nil
+    :exit, {:normal, _} -> nil
   end
 
-  defp stream_loop(request_id, parent, id, buffer) do
-    receive do
-      {:http, {^request_id, :stream_start, _headers}} ->
-        stream_loop(request_id, parent, id, buffer)
+  @impl true
+  def init(options) do
+    owner_ref = Process.monitor(options.owner)
+    {:ok, Map.merge(options, %{owner_ref: owner_ref, source: nil}), {:continue, :connect}}
+  end
 
-      {:http, {^request_id, :stream, chunk}} ->
-        new_buffer = buffer <> to_string(chunk)
-        {events, remaining} = parse_sse_events(new_buffer)
+  @impl true
+  def handle_continue(:connect, state) do
+    # Native.send_message queues events; it does not acknowledge JS consumption.
+    case HTTP.EventSource.new(state.url, owner: self(), delivery: :legacy) do
+      %HTTP.EventSource{} = source ->
+        {:noreply, Map.put(state, :source, source)}
 
-        for event <- events do
-          send(parent, {:eventsource_event, id, event})
-        end
-
-        stream_loop(request_id, parent, id, remaining)
-
-      {:http, {^request_id, :stream_end, _headers}} ->
-        send(parent, {:eventsource_error, id, "connection closed"})
-
-      {:http, {^request_id, {:error, reason}}} ->
-        send(parent, {:eventsource_error, id, inspect(reason)})
-    after
-      30_000 ->
-        send(parent, {:eventsource_error, id, "timeout"})
+      {:error, reason} ->
+        send(state.owner, {:eventsource_error, state.id, inspect(reason), 2})
+        {:stop, :normal, state}
     end
   end
 
-  defp parse_sse_events(buffer) do
-    parts = String.split(buffer, "\n\n")
-
-    case parts do
-      [single] ->
-        {[], single}
-
-      chunks ->
-        {complete, [remaining]} = Enum.split(chunks, -1)
-
-        events =
-          for block <- complete,
-              block != "",
-              do: parse_sse_block(block)
-
-        {Enum.reject(events, &is_nil/1), remaining}
-    end
+  @impl true
+  def handle_info({HTTP.EventSource, _source, %HTTP.EventSource.Event.Open{}}, state) do
+    send(state.owner, {:eventsource_open, state.id})
+    {:noreply, state}
   end
 
-  defp parse_sse_block(block) do
-    lines = String.split(block, "\n")
+  def handle_info({HTTP.EventSource, _source, %HTTP.EventSource.Event.Message{} = event}, state) do
+    send(
+      state.owner,
+      {:eventsource_event, state.id,
+       %{type: event.type, data: event.data, id: event.last_event_id}}
+    )
 
-    Enum.reduce(lines, %{type: "message", data: [], id: nil}, fn line, acc ->
-      cond do
-        String.starts_with?(line, "data: ") ->
-          %{acc | data: acc.data ++ [String.trim_leading(line, "data: ")]}
-
-        String.starts_with?(line, "data:") ->
-          %{acc | data: acc.data ++ [String.trim_leading(line, "data:")]}
-
-        String.starts_with?(line, "event: ") ->
-          %{acc | type: String.trim_leading(line, "event: ")}
-
-        String.starts_with?(line, "event:") ->
-          %{acc | type: String.trim_leading(line, "event:")}
-
-        String.starts_with?(line, "id: ") ->
-          %{acc | id: String.trim_leading(line, "id: ")}
-
-        String.starts_with?(line, "id:") ->
-          %{acc | id: String.trim_leading(line, "id:")}
-
-        String.starts_with?(line, ":") ->
-          acc
-
-        true ->
-          acc
-      end
-    end)
-    |> then(fn
-      %{data: []} -> nil
-      %{data: data} = event -> %{event | data: Enum.join(data, "\n")}
-    end)
+    {:noreply, state}
   end
+
+  def handle_info({HTTP.EventSource, source, %HTTP.EventSource.Event.Error{} = event}, state) do
+    ready_state = HTTP.EventSource.ready_state(source)
+    send(state.owner, {:eventsource_error, state.id, inspect(event.reason), ready_state})
+
+    if ready_state == 2, do: {:stop, :normal, state}, else: {:noreply, state}
+  end
+
+  def handle_info({:DOWN, ref, :process, _pid, _reason}, %{owner_ref: ref} = state) do
+    {:stop, :normal, state}
+  end
+
+  @impl true
+  def terminate(_reason, %{source: %HTTP.EventSource{} = source}) do
+    HTTP.EventSource.close(source)
+  end
+
+  def terminate(_reason, _state), do: :ok
 end

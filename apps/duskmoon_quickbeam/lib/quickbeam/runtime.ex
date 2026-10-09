@@ -687,8 +687,9 @@ defmodule QuickBEAM.Runtime do
     {:noreply, state}
   end
 
-  def handle_info({:eventsource_error, id, reason}, state) do
-    QuickBEAM.Native.send_message(state.resource, ["__eventsource_error", id, reason])
+  def handle_info({:eventsource_error, id, reason, ready_state}, state) do
+    QuickBEAM.Native.send_message(state.resource, ["__eventsource_error", id, reason, ready_state])
+
     {:noreply, state}
   end
 

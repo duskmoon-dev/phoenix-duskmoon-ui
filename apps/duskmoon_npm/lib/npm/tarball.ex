@@ -7,9 +7,7 @@ defmodule NPM.Tarball do
 
   @max_retries 3
   @connect_timeout 30_000
-  @pool_timeout 120_000
   @receive_timeout 120_000
-  @scoped_finch_options_req "0.7.0"
 
   @doc """
   Download a tarball, verify its integrity, and extract to a directory.
@@ -41,7 +39,7 @@ defmodule NPM.Tarball do
   end
 
   defp fetch(tarball_url) do
-    case Req.get(tarball_url, request_options()) do
+    case NPM.HTTPClient.get(tarball_url, request_options()) do
       {:ok, %{status: status}} = response when status in 200..499 ->
         response
 
@@ -53,38 +51,8 @@ defmodule NPM.Tarball do
     end
   end
 
-  @doc false
-  @spec __request_options__(String.t()) :: keyword()
-  def __request_options__(req_version) do
-    adapter_options =
-      if Version.compare(req_version, @scoped_finch_options_req) == :lt do
-        [
-          connect_options: [timeout: @connect_timeout],
-          pool_timeout: @pool_timeout
-        ]
-      else
-        [
-          finch: [
-            conn_opts: [transport_opts: [timeout: @connect_timeout]],
-            pool_timeout: @pool_timeout
-          ]
-        ]
-      end
-
-    [
-      decode_body: false,
-      receive_timeout: @receive_timeout,
-      retry: false
-    ] ++ adapter_options
-  end
-
-  defp request_options, do: __request_options__(req_version())
-
-  defp req_version do
-    case Application.spec(:req, :vsn) do
-      nil -> "0.0.0"
-      version -> to_string(version)
-    end
+  defp request_options do
+    [decode_body: false, timeout: @receive_timeout, connect_timeout: @connect_timeout]
   end
 
   defp retry(tarball_url, integrity, dest_dir, reason, retries_left) do

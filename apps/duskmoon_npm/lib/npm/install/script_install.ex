@@ -20,7 +20,7 @@ defmodule NPM.Install.ScriptInstall do
 
   @spec install(map(), keyword()) :: :ok
   def install(deps, opts) when is_map(deps) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
 
     unless Keyword.get(opts, :__skip_project_check__, false) do
       if Mix.Project.get() do

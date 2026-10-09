@@ -15,7 +15,7 @@ defmodule Mix.Tasks.Npm.Verify do
 
   @impl true
   def run([]) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
 
     case NPM.Lockfile.read() do
       {:ok, lockfile} when lockfile == %{} ->

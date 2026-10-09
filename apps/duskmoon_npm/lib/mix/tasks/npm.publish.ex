@@ -22,7 +22,7 @@ defmodule Mix.Tasks.Npm.Publish do
 
   @impl true
   def run(args) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
 
     {opts, _, _} =
       OptionParser.parse(args, strict: [tag: :string, access: :string, dry_run: :boolean])
@@ -91,7 +91,7 @@ defmodule Mix.Tasks.Npm.Publish do
 
       body = build_publish_body(name, version, tag, access)
 
-      case Req.put(url, body: body, headers: auth_headers(token)) do
+      case NPM.HTTPClient.put(url, body: body, headers: auth_headers(token)) do
         {:ok, %{status: s}} when s in [200, 201] ->
           Mix.shell().info("Published #{name}@#{version}")
           :ok

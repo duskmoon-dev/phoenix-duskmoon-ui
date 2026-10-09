@@ -15,7 +15,7 @@ defmodule Mix.Tasks.Npm.Rebuild do
 
   @impl true
   def run([]) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
 
     case NPM.Workspace.manifests() do
       {:ok, manifests} ->

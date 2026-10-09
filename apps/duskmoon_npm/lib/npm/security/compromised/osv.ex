@@ -29,10 +29,10 @@ defmodule NPM.Security.Compromised.OSV do
 
     request = [
       json: query_body(package, version),
-      receive_timeout: Keyword.get(opts, :timeout, 10_000)
+      timeout: Keyword.get(opts, :timeout, 10_000)
     ]
 
-    case Req.post(endpoint, request) do
+    case NPM.HTTPClient.post(endpoint, request) do
       {:ok, %{status: status, body: %{"vulns" => vulns}}} when status in 200..299 ->
         {:ok, Enum.filter(vulns, &malicious_advisory?/1)}
 
@@ -53,10 +53,10 @@ defmodule NPM.Security.Compromised.OSV do
 
     request = [
       json: batch_body(unique_packages),
-      receive_timeout: Keyword.get(opts, :timeout, 30_000)
+      timeout: Keyword.get(opts, :timeout, 30_000)
     ]
 
-    case Req.post(endpoint, request) do
+    case NPM.HTTPClient.post(endpoint, request) do
       {:ok, %{status: status, body: %{"results" => results}}} when status in 200..299 ->
         {:ok, results_to_map(unique_packages, results)}
 

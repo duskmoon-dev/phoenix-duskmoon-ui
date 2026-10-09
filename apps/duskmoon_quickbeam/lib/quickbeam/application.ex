@@ -10,6 +10,7 @@ defmodule QuickBEAM.Application do
         id: :quickbeam_pg,
         start: {:pg, :start_link, [QuickBEAM.BroadcastChannel]}
       },
+      {DynamicSupervisor, strategy: :one_for_one, name: QuickBEAM.NetworkSupervisor},
       QuickBEAM.LockManager,
       QuickBEAM.WasmAPI
     ]

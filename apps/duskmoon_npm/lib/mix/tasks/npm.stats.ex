@@ -16,7 +16,7 @@ defmodule Mix.Tasks.Npm.Stats do
 
   @impl true
   def run([]) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
 
     with {:ok, project} <- NPM.Workspace.read_all(),
          {:ok, all_deps} <- NPM.Workspace.install_dependencies(project),

@@ -244,6 +244,8 @@ interface FetchResult {
   redirected: boolean
 }
 
+let nextFetchId = 0
+
 async function fetchImpl(input: string | Request, init?: RequestInit): Promise<Response> {
   const request = input instanceof Request ? input : new Request(input, init)
 
@@ -262,7 +264,8 @@ async function fetchImpl(input: string | Request, init?: RequestInit): Promise<R
     request.headers.set('content-type', bodyContentType)
   }
 
-  const fetchId = Date.now()
+  request.signal.throwIfAborted()
+  const fetchId = `${Date.now()}-${Math.random()}-${nextFetchId++}`
 
   const payload = {
     url: request.url,
@@ -273,20 +276,26 @@ async function fetchImpl(input: string | Request, init?: RequestInit): Promise<R
     fetchId
   }
 
-  const resultPromise = Beam.call('__fetch', payload) as Promise<FetchResult>
-
+  let onAbort: (() => void) | undefined
   const abortPromise = new Promise<never>((_, reject) => {
     if (request.signal.aborted) {
       reject(request.signal.reason)
       return
     }
-    request.signal.addEventListener('abort', () => {
+    onAbort = () => {
       Beam.callSync('__fetch_cancel', fetchId)
       reject(request.signal.reason)
-    }, { once: true })
+    }
+    request.signal.addEventListener('abort', onAbort, { once: true })
   })
 
-  const result = await Promise.race([resultPromise, abortPromise])
+  const resultPromise = Beam.call('__fetch', payload) as Promise<FetchResult>
+  let result: FetchResult
+  try {
+    result = await Promise.race([resultPromise, abortPromise])
+  } finally {
+    if (onAbort) request.signal.removeEventListener('abort', onAbort)
+  }
 
   return new Response(result.body instanceof Uint8Array ? result.body : null, {
     status: result.status,

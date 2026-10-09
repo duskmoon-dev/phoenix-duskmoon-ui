@@ -13,7 +13,7 @@ defmodule Mix.Tasks.Npm.Why do
 
   @impl true
   def run([name]) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
 
     with {:ok, lockfile} <- NPM.Lockfile.read(),
          {:ok, project} <- NPM.Workspace.read_all(),

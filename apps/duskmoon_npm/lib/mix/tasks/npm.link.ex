@@ -15,7 +15,7 @@ defmodule Mix.Tasks.Npm.Link do
 
   @impl true
   def run(args) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
     {opts, positional, _} = OptionParser.parse(args, strict: [copy: :boolean])
 
     case positional do

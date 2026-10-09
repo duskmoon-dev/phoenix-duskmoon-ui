@@ -78,7 +78,11 @@ defmodule QuickBEAM.MixProject do
       {:duskmoon_oxc, in_umbrella: true},
       {:rustler, "~> 0.36 or ~> 0.37 or ~> 0.38", optional: true, runtime: false},
       {:duskmoon_npm, in_umbrella: true},
-      {:mint_web_socket, "~> 1.0"},
+      {:http_fetch, "~> 0.17.1"},
+      {:http_event_source, "~> 0.17.1"},
+      {:http_web_socket, "~> 0.17.1"},
+      {:bandit, "~> 1.0", only: :test},
+      {:websock_adapter, "~> 0.5", only: :test},
       {:nimble_pool, "~> 1.1"},
       {:ex_doc, "~> 0.40", runtime: false, override: true}
     ]

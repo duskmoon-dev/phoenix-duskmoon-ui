@@ -14,7 +14,7 @@ defmodule Mix.Tasks.Npm.Search do
 
   @impl true
   def run(args) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
     {opts, terms, _} = OptionParser.parse(args, strict: [limit: :integer])
 
     case terms do
@@ -31,7 +31,7 @@ defmodule Mix.Tasks.Npm.Search do
   defp search(query, limit) do
     url = "#{NPM.Registry.registry_url()}/-/v1/search?text=#{URI.encode(query)}&size=#{limit}"
 
-    case Req.get(url) do
+    case NPM.HTTPClient.get(url) do
       {:ok, %{status: 200, body: body}} ->
         print_results(body)
 

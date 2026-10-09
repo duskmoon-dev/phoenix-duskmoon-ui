@@ -345,11 +345,11 @@ Standard browser APIs backed by BEAM primitives, not JS polyfills:
 
 | JS API | BEAM backend |
 |---|---|
-| `fetch`, `Request`, `Response`, `Headers` | `:httpc` |
+| `fetch`, `Request`, `Response`, `Headers` | `HTTP.fetch` (`http_fetch`) |
 | `document`, `querySelector`, `createElement` | lexbor (native C DOM) |
 | `URL`, `URLSearchParams` | `:uri_string` |
-| `EventSource` (SSE) | `:httpc` streaming |
-| `WebSocket` | `Mint.WebSocket` |
+| `EventSource` (SSE) | `HTTP.EventSource` (`http_event_source`) |
+| `WebSocket` | `HTTP.WebSocket` (`http_web_socket`) |
 | `Worker` | BEAM process per worker |
 | `BroadcastChannel` | `:pg` (distributed) |
 | `navigator.locks` | GenServer + monitors |
@@ -371,6 +371,15 @@ Standard browser APIs backed by BEAM primitives, not JS polyfills:
 | `performance.now` | Nanosecond precision |
 | `structuredClone` | QuickJS serialization |
 | `queueMicrotask` | `JS_EnqueueJob` |
+
+HTTP clients use HTTP/1 and OTP TLS by default. Fetch reads buffered or streamed
+response bodies as bytes and forwards AbortSignal cancellation to the network request.
+Upstream `http_fetch` decodes gzip and deflate HTTP content encodings; archive bytes
+without a Content-Encoding header remain intact.
+EventSource parsing, reconnect delays and Last-Event-ID tracking use the upstream
+client; transient errors leave JavaScript in CONNECTING, while terminal errors close it.
+EventSource and WebSocket use upstream legacy delivery because the native bridge
+queues messages without an acknowledgement of JavaScript consumption.
 
 ## Data conversion
 

@@ -15,7 +15,7 @@ defmodule Mix.Tasks.Npm.Token do
 
   @impl true
   def run(args) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
     {opts, _, _} = OptionParser.parse(args, strict: [verify: :boolean])
 
     token = resolve_token()
@@ -66,7 +66,7 @@ defmodule Mix.Tasks.Npm.Token do
   defp verify_token(token) do
     url = "#{NPM.Registry.registry_url()}/-/whoami"
 
-    case Req.get(url, headers: [authorization: "Bearer #{token}"]) do
+    case NPM.HTTPClient.get(url, headers: [authorization: "Bearer #{token}"]) do
       {:ok, %{status: 200, body: %{"username" => user}}} ->
         Mix.shell().info("Authenticated as: #{user}")
 

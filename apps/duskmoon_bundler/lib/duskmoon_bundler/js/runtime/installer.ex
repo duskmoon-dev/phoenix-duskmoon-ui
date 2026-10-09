@@ -14,7 +14,7 @@ defmodule DuskmoonBundler.JS.Runtime.Installer do
 
   @spec install!(map(), keyword()) :: %{install_dir: String.t(), node_modules: String.t()}
   def install!(packages, opts \\ []) when is_map(packages) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
 
     id = install_id(packages)
     install_dir = Keyword.get(opts, :install_dir, default_install_dir(id))

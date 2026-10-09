@@ -14,7 +14,7 @@ defmodule Mix.Tasks.Npm.Pack do
 
   @impl true
   def run([]) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
 
     case File.read("package.json") do
       {:ok, content} ->

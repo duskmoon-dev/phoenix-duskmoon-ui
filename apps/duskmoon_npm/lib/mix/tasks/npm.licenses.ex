@@ -18,7 +18,7 @@ defmodule Mix.Tasks.Npm.Licenses do
 
   @impl true
   def run(args) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
     {opts, _, _} = OptionParser.parse(args, strict: [summary: :boolean])
 
     licenses = collect_licenses("node_modules")

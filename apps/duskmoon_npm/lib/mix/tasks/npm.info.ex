@@ -14,7 +14,7 @@ defmodule Mix.Tasks.Npm.Info do
 
   @impl true
   def run([spec]) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
     {name, version} = parse_spec(spec)
     show_info(name, version)
   end

@@ -4,6 +4,8 @@
 
 ### Changed
 
+- Use `http_fetch` for registry metadata, tarballs, publishing, npm commands, and OSV checks, preserving caller-owned retries and registry redirect configuration.
+- Require `http_fetch` 0.17.1 or later for upstream gzip and deflate decoding of HTTP responses.
 - Require Elixir 1.18 or later.
 
 ### Fixed

@@ -48,6 +48,7 @@ class EventSource extends EventTarget {
   }
 
   _onOpen(): void {
+    if (this.readyState === 2) return
     this.readyState = 1
     const event = new Event('open')
     this.dispatchEvent(event)
@@ -63,8 +64,10 @@ class EventSource extends EventTarget {
     }
   }
 
-  _onError(reason: string): void {
-    this.readyState = 2
+  _onError(reason: string, readyState: EventSourceState): void {
+    if (this.readyState === 2) return
+    this.readyState = readyState
+    if (readyState === 2) eventSourceRegistry.delete(this.#id)
     const event = new ErrorEvent('error', { message: reason })
     this.dispatchEvent(event)
     this.onerror?.(event)
@@ -91,7 +94,7 @@ __qb_register_dispatcher((msg: unknown): boolean => {
     return true
   }
   if (type === '__eventsource_error') {
-    source._onError(rest[0] as string)
+    source._onError(rest[0] as string, rest[1] === 2 ? 2 : 0)
     return true
   }
   return false

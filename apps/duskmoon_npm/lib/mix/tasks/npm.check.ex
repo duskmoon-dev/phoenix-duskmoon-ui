@@ -18,7 +18,7 @@ defmodule Mix.Tasks.Npm.Check do
 
   @impl true
   def run([]) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
 
     checks = [
       check_package_json(),

@@ -13,7 +13,7 @@ defmodule Mix.Tasks.Npm.Fund do
 
   @impl true
   def run([]) do
-    Application.ensure_all_started(:req)
+    Application.ensure_all_started(:http_fetch)
 
     case NPM.Lockfile.read() do
       {:ok, lockfile} when lockfile == %{} ->
@@ -50,7 +50,7 @@ defmodule Mix.Tasks.Npm.Fund do
   defp fetch_funding(name) do
     url = "#{NPM.Registry.registry_url()}/#{String.replace(name, "/", "%2f")}"
 
-    case Req.get(url) do
+    case NPM.HTTPClient.get(url) do
       {:ok, %{status: 200, body: body}} ->
         {name, extract_funding(body)}
 
