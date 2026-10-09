@@ -46,12 +46,6 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/data-display/chip", DataDisplayController, :chip
     get "/data-display/datetime", DataDisplayController, :datetime
     get "/data-display/flash", DataDisplayController, :flash
-    get "/data-display/git-repository-header", DataDisplayController, :git_repository_header
-    get "/data-display/git-repository-nav", DataDisplayController, :git_repository_nav
-    get "/data-display/git-file-tree", DataDisplayController, :git_file_tree
-    get "/data-display/git-blob-viewer", DataDisplayController, :git_blob_viewer
-    get "/data-display/git-commit-diff", DataDisplayController, :git_commit_diff
-    get "/data-display/git-clone-box", DataDisplayController, :git_clone_box
     get "/data-display/markdown", DataDisplayController, :markdown
     get "/data-display/markdown-body", DataDisplayController, :markdown_body
     get "/data-display/pagination", DataDisplayController, :pagination

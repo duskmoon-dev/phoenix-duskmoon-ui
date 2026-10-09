@@ -14,6 +14,11 @@ Requires Elixir `>= 1.18` and `tailwindcss >= 4.0`.
 
 See the [docs](https://hexdocs.pm/phoenix_duskmoon/) for more information.
 
+The unreleased removal of Git repository components is a breaking API change.
+Applications using `dm_git_*` helpers or the Git clipboard runtime must migrate
+to application-owned components before upgrading; see the
+[Git component migration guide](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/blob/main/apps/phoenix_duskmoon/guides/migrating-git-components.md).
+
 
 ## Install
 
