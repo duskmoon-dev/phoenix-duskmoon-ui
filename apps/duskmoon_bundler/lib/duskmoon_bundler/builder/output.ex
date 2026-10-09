@@ -559,7 +559,7 @@ defmodule DuskmoonBundler.Builder.Output do
         {chunk_id, chunk_export_requirements(chunk_id, graph, js_map, module_labels, dep_map)}
       end)
 
-    default_aliases = chunk_default_aliases(chunks, requirements, js_map)
+    export_aliases = chunk_export_aliases(chunks, requirements, js_map)
 
     Enum.reduce_while(chunks, {:ok, %{}}, fn {chunk_id, chunk}, {:ok, acc} ->
       chunk_js = select_chunk_files(chunk.modules, js_map, module_labels)
@@ -570,13 +570,13 @@ defmodule DuskmoonBundler.Builder.Output do
         chunk_js =
           chunk_js
           |> Rewriter.rewrite_external_imports(ctx)
-          |> rewrite_chunk_defaults(default_aliases)
+          |> rewrite_chunk_exports(export_aliases)
 
         facade_requirements = requirements[chunk_id]
 
         with nil <- facade_requirements_error(chunk_id, chunk, facade_requirements) do
           chunk_js =
-            add_chunk_facade(chunk_js, chunk_id, chunk, facade_requirements, default_aliases)
+            add_chunk_facade(chunk_js, chunk_id, chunk, facade_requirements, export_aliases)
 
           {chunk_js, dynamic_import_placeholder} = Rewriter.protect_dynamic_imports(chunk_js)
 
@@ -638,7 +638,7 @@ defmodule DuskmoonBundler.Builder.Output do
        when type not in [:common, :manual],
        do: js_files
 
-  defp add_chunk_facade(js_files, chunk_id, %{type: type}, requirements, default_aliases)
+  defp add_chunk_facade(js_files, chunk_id, %{type: type}, requirements, export_aliases)
        when type in [:common, :manual] do
     {first_label, _code} = hd(js_files)
     facade_label = Path.join(Path.dirname(first_label), "__duskmoon_#{chunk_id}_entry__.js")
@@ -650,7 +650,7 @@ defmodule DuskmoonBundler.Builder.Output do
       end)
 
     required_exports =
-      facade_required_exports(js_files, facade_label, requirements, default_aliases)
+      facade_required_exports(js_files, facade_label, requirements, export_aliases)
 
     facade = exports <> "\n" <> required_exports
     [{facade_label, facade} | js_files]
@@ -658,7 +658,7 @@ defmodule DuskmoonBundler.Builder.Output do
 
   defp add_chunk_facade(js_files, _chunk_id, _chunk, _requirements, _aliases), do: js_files
 
-  defp chunk_default_aliases(chunks, requirements, js_map) do
+  defp chunk_export_aliases(chunks, requirements, js_map) do
     reserved_names =
       js_map
       |> Enum.flat_map(fn {_label, code} ->
@@ -669,16 +669,38 @@ defmodule DuskmoonBundler.Builder.Output do
 
     chunks
     |> Enum.flat_map(fn {chunk_id, chunk} ->
-      labels =
-        for {label, names} <- requirements[chunk_id], MapSet.member?(names, :default), do: label
+      requirements = requirements[chunk_id]
 
-      if chunk.type in [:common, :manual] and length(labels) > 1, do: labels, else: []
+      name_counts =
+        requirements
+        |> Enum.flat_map(fn {_label, names} -> Enum.reject(names, &(&1 == :namespace)) end)
+        |> Enum.frequencies()
+
+      if chunk.type in [:common, :manual] do
+        for {label, names} <- requirements,
+            name <- names,
+            name != :namespace,
+            Map.get(name_counts, name) > 1,
+            do: {label, name}
+      else
+        []
+      end
     end)
     |> Enum.sort()
-    |> Enum.reduce({%{}, reserved_names}, fn label, {aliases, reserved} ->
-      digest = :crypto.hash(:sha256, label) |> Base.encode16(case: :lower)
-      name = available_export_alias("__duskmoon_default_" <> digest, reserved)
-      {Map.put(aliases, label, name), MapSet.put(reserved, name)}
+    |> Enum.reduce({%{}, reserved_names}, fn {label, export}, {aliases, reserved} ->
+      {prefix, identity, export_name} =
+        case export do
+          :default -> {"__duskmoon_default_", label, "default"}
+          name -> {"__duskmoon_export_", label <> "\0" <> name, name}
+        end
+
+      digest = :crypto.hash(:sha256, identity) |> Base.encode16(case: :lower)
+      name = available_export_alias(prefix <> digest, reserved)
+
+      aliases =
+        Map.update(aliases, label, %{export_name => name}, &Map.put(&1, export_name, name))
+
+      {aliases, MapSet.put(reserved, name)}
     end)
     |> elem(0)
   end
@@ -689,9 +711,9 @@ defmodule DuskmoonBundler.Builder.Output do
       else: name
   end
 
-  defp rewrite_chunk_defaults(js_files, default_aliases) do
+  defp rewrite_chunk_exports(js_files, export_aliases) do
     # Imports within this chunk still refer to the original source modules.
-    external_aliases = Map.drop(default_aliases, Enum.map(js_files, &elem(&1, 0)))
+    external_aliases = Map.drop(export_aliases, Enum.map(js_files, &elem(&1, 0)))
 
     Enum.map(js_files, fn {label, code} ->
       aliases =
@@ -715,7 +737,7 @@ defmodule DuskmoonBundler.Builder.Output do
 
   defp facade_requirements_error(_chunk_id, _chunk, _requirements), do: nil
 
-  defp facade_required_exports(js_files, facade_label, requirements, default_aliases) do
+  defp facade_required_exports(js_files, facade_label, requirements, export_aliases) do
     available_labels = MapSet.new(js_files, &elem(&1, 0))
 
     requirements =
@@ -723,22 +745,10 @@ defmodule DuskmoonBundler.Builder.Output do
       |> Enum.filter(fn {label, _names} -> MapSet.member?(available_labels, label) end)
       |> Enum.sort_by(&elem(&1, 0))
 
-    name_counts =
-      requirements
-      |> Enum.flat_map(fn {_label, names} ->
-        names
-        |> Enum.reject(&(&1 in [:default, :namespace]))
-      end)
-      |> Enum.frequencies()
-
     Enum.map_join(requirements, fn {label, names} ->
       names =
         names
         |> Enum.reject(&(&1 == :namespace))
-        |> Enum.filter(fn
-          :default -> true
-          name -> Map.get(name_counts, name) == 1
-        end)
         |> Enum.sort()
 
       if names == [] do
@@ -747,15 +757,14 @@ defmodule DuskmoonBundler.Builder.Output do
         specifier = module_specifier(facade_label, label)
 
         exports =
-          Enum.map_join(names, ", ", fn
-            :default ->
-              case Map.fetch(default_aliases, label) do
-                {:ok, name} -> "default as " <> name
-                :error -> "default"
-              end
+          Enum.map_join(names, ", ", fn name ->
+            export_name = if name == :default, do: "default", else: name
+            original = module_export_name(export_name)
 
-            name ->
-              module_export_name(name)
+            case get_in(export_aliases, [label, export_name]) do
+              nil -> original
+              alias_name -> original <> " as " <> alias_name
+            end
           end)
 
         "export { #{exports} } from #{Jason.encode!(specifier)};\n"

@@ -13,6 +13,9 @@
 - Added `json_codec` as a runtime dependency.
 
 ### Fixed
+- Shared and manual chunks now preserve distinct named exports from different
+  modules, including colliding `stringify` functions used by Markdown packages,
+  without falling back to a single bundle.
 - Production JSON modules now preserve CommonJS `require()` values and ESM
   default/named exports, preventing AJV meta-schema ID collisions in schema forms.
   Development ESM responses and explicit JSON plugin transforms remain supported.
