@@ -9,6 +9,9 @@
 
 ### Changed
 
+- Update Elements, Art Elements and declared individual element packages to 1.9.0,
+  including Chat Scroll timeline fixes and Markdown's DOMPurify update. Remove the
+  retired `el-pin-input` theme selector; native `dm_pin_input` remains supported.
 - Require Elixir `>= 1.18` across all umbrella applications.
 - Use the `http_fetch`, `http_event_source`, and `http_web_socket` package family
   for npm requests and QuickBEAM outbound networking.
