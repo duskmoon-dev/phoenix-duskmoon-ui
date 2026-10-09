@@ -16,7 +16,7 @@ function flattenErrors(errors, prefix = [], result = {}) {
 
 export const DuskmoonReactForm = {
   mounted() {
-    this.revision = 0; this.roots = new Map(); this.disconnectedState = false;
+    this.revision = 0; this.roots = new Map(); this.fields = []; this.disconnectedState = false;
     this.schemaElement = this.el.querySelector("[data-dm-react-schema]");
     if (this.schemaElement) this.mountSchema();
     else this.mountForm();

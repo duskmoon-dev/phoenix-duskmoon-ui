@@ -85,6 +85,19 @@ function hook({ values, target, debounce = "0" } = {}) {
 }
 
 describe("Published schema form integration", () => {
+	test("failed schema initialization preserves its error and allows lifecycle cleanup", () => {
+		const instance = Object.assign(Object.create(DuskmoonReactForm), {
+			el: {
+				dataset: { schema: "{" },
+				querySelector: () => ({}),
+			},
+		});
+		expect(() => instance.mounted()).toThrow(SyntaxError);
+		expect(() => instance.disconnected()).not.toThrow();
+		expect(() => instance.reconnected()).not.toThrow();
+		expect(() => instance.destroyed()).not.toThrow();
+	});
+
 	test("renders upstream controls, typed defaults and linked backend errors", () => {
 		const compiled = compileForm(schema);
 		const values = compiled.initialValue();

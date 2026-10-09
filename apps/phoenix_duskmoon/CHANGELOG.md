@@ -19,6 +19,13 @@
 - Load Storybook JavaScript as an ES module and resolve workspace assets independently
   of the umbrella reloader's working directory, including hoisted production dependencies.
 
+### Fixed
+
+- Code Engine's temporary stylesheet fallback now works after minification and
+  preserves native adopted stylesheets for other components.
+- React form lifecycle cleanup no longer throws secondary errors after failed
+  initialization; the original schema error remains available.
+
 # [9.0.0-rc.1](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v9.0.0-rc.0...v9.0.0-rc.1) (2026-02-28)
 
 

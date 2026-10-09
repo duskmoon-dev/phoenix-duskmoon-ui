@@ -4,6 +4,7 @@ import { Socket } from "phoenix";
 import * as DuskmoonHooks from "phoenix_duskmoon/hooks";
 import { DuskmoonReactForm } from "phoenix_duskmoon/react-form";
 import { DuskmoonReactChat } from "phoenix_duskmoon/react-chat";
+import { installCodeEngineShadowStyleWorkaround } from "./code_engine.js";
 
 // Make Duskmoon hooks available in PhoenixStorybook LiveView iframes
 window.storybook = { Hooks: { ...DuskmoonHooks, DuskmoonReactForm, DuskmoonReactChat } };
@@ -20,48 +21,10 @@ if (!window.location.pathname.startsWith("/storybook") && !window.liveSocket) {
   window.liveSocket = liveSocket;
 }
 
-let codeEngineShadowStyleWorkaroundInstalled = false;
 let codeEngineLayoutWorkaroundInstalled = false;
 let codeEngineLayoutWorkaroundFrame = undefined;
 
 const codeEngineLayoutWorkaroundStyleId = "duskmoon-code-engine-layout-workaround";
-
-function getPropertyDescriptor(object, property) {
-  for (let current = object; current; current = Object.getPrototypeOf(current)) {
-    const descriptor = Object.getOwnPropertyDescriptor(current, property);
-    if (descriptor) return descriptor;
-  }
-
-  return undefined;
-}
-
-function installCodeEngineShadowStyleWorkaround() {
-  if (codeEngineShadowStyleWorkaroundInstalled || typeof ShadowRoot === "undefined") return;
-
-  const descriptor = getPropertyDescriptor(ShadowRoot.prototype, "adoptedStyleSheets");
-  if (!descriptor || !descriptor.configurable || !descriptor.get || !descriptor.set) return;
-
-  codeEngineShadowStyleWorkaroundInstalled = true;
-  Object.defineProperty(ShadowRoot.prototype, "adoptedStyleSheets", {
-    configurable: true,
-    get() {
-      // WORKAROUND(upstream): duskmoon-dev/code-engine#9
-      // CodeMirror's vendored StyleSet reuses adopted sheets with a constructor bug.
-      // Keep adoptedStyleSheets available to BaseElement so component styles still apply.
-      if (this.host?.localName === "el-dm-code-engine") {
-        const stack = new Error().stack || "";
-        if (stack.includes("StyleSet") || stack.includes("StyleModule.mount")) {
-          return undefined;
-        }
-      }
-
-      return descriptor.get.call(this);
-    },
-    set(value) {
-      descriptor.set.call(this, value);
-    }
-  });
-}
 
 function applyCodeEngineLayoutWorkaround(host) {
   const root = host.shadowRoot;
