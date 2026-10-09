@@ -32,7 +32,8 @@ Phoenix releases that call `DuskmoonBundler.static_path/2` or `DuskmoonBundler.P
 
 ## Alpine Linux
 
-Starting with 9.16.8, the published native dependencies provide musl binaries for
+Use 9.16.10 or later for Alpine: 9.16.9 has a QuickBEAM startup defect. The native
+dependencies provide musl binaries for
 both amd64 and arm64. Default `mix deps.get` and `mix deps.compile` select verified
 precompiled NIFs for OXC (including formatting and linting), Oxide, Vize and
 QuickBEAM. Alpine asset builds can run Bundler and Tailwind without Rust, Zig,

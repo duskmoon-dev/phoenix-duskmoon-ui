@@ -19,6 +19,8 @@ Published packages use precompiled NIFs on supported platforms, including Linux
 amd64 and arm64 with either GNU libc or musl (Alpine). Zig is only needed when
 building from source; use the repository's Zig 0.16 toolchain for source builds.
 
+Alpine consumers require 9.16.10 or later, which fixes QuickJS initialization on musl.
+
 ## Quick start
 
 ```elixir

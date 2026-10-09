@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Include the standard `offsetof` definition so QuickJS initialization does not abort on musl when checked native builds initialize garbage collection lists.
 - Build precompiled NIFs for an explicit CPU baseline so x86_64 artifacts run without AVX-512.
 
 ## 0.10.18
