@@ -16,6 +16,10 @@
 - Shared and manual chunks now preserve distinct named exports from different
   modules, including colliding `stringify` functions used by Markdown packages,
   without falling back to a single bundle.
+- Restore precompiled native dependencies on Alpine Linux for amd64 and arm64,
+  including OXC parsing/formatting/linting, Oxide, Vize and QuickBEAM. Releases
+  publish matching musl checksums and verify default compilation, bundling and
+  Tailwind in fresh Alpine consumers without source-build tools.
 - Production JSON modules now preserve CommonJS `require()` values and ESM
   default/named exports, preventing AJV meta-schema ID collisions in schema forms.
   Development ESM responses and explicit JSON plugin transforms remain supported.

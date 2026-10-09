@@ -24,6 +24,8 @@
 
 ### Fixed
 
+- Restore amd64/arm64 Alpine support across the native build toolchain, with
+  published musl binaries and checksums plus Alpine release validation.
 - Code Engine's temporary stylesheet fallback now works after minification and
   preserves native adopted stylesheets for other components.
 - React form lifecycle cleanup no longer throws secondary errors after failed

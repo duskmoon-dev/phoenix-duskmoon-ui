@@ -15,7 +15,9 @@ def deps do
 end
 ```
 
-Requires Zig 0.15+ (installed automatically by Zigler, or use system Zig).
+Published packages use precompiled NIFs on supported platforms, including Linux
+amd64 and arm64 with either GNU libc or musl (Alpine). Zig is only needed when
+building from source; use the repository's Zig 0.16 toolchain for source builds.
 
 ## Quick start
 
