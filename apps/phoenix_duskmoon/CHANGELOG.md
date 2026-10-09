@@ -9,6 +9,7 @@
 
 ### Changed
 
+- Require Elixir `>= 1.18` across all umbrella applications.
 - Pin published DuskMoon dependencies to current exact versions: Core/CSS Art
   1.19.9, Elements/Art Elements 1.7.6 and current individual element versions.
 - Use Core spinner/stat styles and remove resolved collapse, highlighting and

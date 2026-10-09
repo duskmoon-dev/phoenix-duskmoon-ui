@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Require Elixir 1.18 or later.
+
 ### Fixed
 
 - `mix npm.update` now re-resolves matching lock entries instead of reusing stale versions that still satisfy manifest ranges.

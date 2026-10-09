@@ -4,7 +4,7 @@ This guide walks through adding Phoenix Duskmoon UI to a Phoenix LiveView projec
 
 ## Prerequisites
 
-- Elixir ~> 1.15
+- Elixir >= 1.18
 - Phoenix ~> 1.8.1
 - Phoenix LiveView ~> 1.1.0
 - TailwindCSS >= 4.0

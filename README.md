@@ -10,7 +10,7 @@ Duskmoon UI component library for Phoenix LiveView applications.
 
 **v9**: Uses `@duskmoon-dev/core` CSS design system, HTML Custom Elements (`@duskmoon-dev/elements`), and Art Custom Elements (`@duskmoon-dev/art-elements`).
 
-Requires `tailwindcss >= 4.0`
+Requires Elixir `>= 1.18` and `tailwindcss >= 4.0`.
 
 See the [docs](https://hexdocs.pm/phoenix_duskmoon/) for more information.
 

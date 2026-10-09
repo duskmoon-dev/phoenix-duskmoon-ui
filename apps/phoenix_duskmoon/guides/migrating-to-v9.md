@@ -14,7 +14,7 @@ the CSS system has been replaced entirely.
 | Rendering | Plain HTML | HTML Custom Elements (`<el-dm-*>`) |
 | Module paths | `PhoenixDuskmoon.Component.Button` | `PhoenixDuskmoon.Component.Action.Button` |
 | Package manager | npm | Bun |
-| Elixir version | `~> 1.12` | `~> 1.15` |
+| Elixir version | `~> 1.12` | `>= 1.18` |
 
 ## Step-by-Step Migration
 
