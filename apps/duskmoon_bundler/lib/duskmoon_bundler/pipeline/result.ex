@@ -2,7 +2,7 @@ defmodule DuskmoonBundler.Pipeline.Result do
   @moduledoc """
   Compiled output returned by `DuskmoonBundler.Pipeline.compile/3`.
 
-  Pipeline results carry JavaScript or CSS code plus optional side-channel data
+  Pipeline results carry JavaScript, CSS, or preserved JSON plus optional side-channel data
   used by the dev server and production builder, such as sourcemaps, extracted
   CSS, SFC block hashes, and warnings from framework compilers.
   """
@@ -26,7 +26,7 @@ defmodule DuskmoonBundler.Pipeline.Result do
 
   defstruct code: "", type: :js, sourcemap: nil, css: nil, hashes: nil, warnings: []
 
-  @type type :: :js | :css
+  @type type :: :js | :css | :json
 
   @type t :: %__MODULE__{
           code: String.t(),

@@ -336,7 +336,7 @@ defmodule DuskmoonBundler.Builder do
      {Enum.reverse(js_files), Enum.reverse(css_parts), assets |> List.flatten() |> Enum.uniq()}}
   end
 
-  defp compile_module(module_id, _label, source, ctx) do
+  defp compile_module(module_id, label, source, ctx) do
     {path, query} = DuskmoonBundler.URL.split_query(module_id)
 
     cond do
@@ -367,7 +367,8 @@ defmodule DuskmoonBundler.Builder do
                import_source: ctx.import_source,
                define: ctx.define,
                plugins: ctx.plugins,
-               loaders: ctx.loaders
+               loaders: ctx.loaders,
+               preserve_json: Path.extname(label) == ".json"
              ) do
           {:ok, %{code: code, css: css}} -> {:ok, code, css, []}
           {:error, _} = error -> error

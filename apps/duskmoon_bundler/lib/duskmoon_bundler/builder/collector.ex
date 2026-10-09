@@ -277,7 +277,7 @@ defmodule DuskmoonBundler.Builder.Collector do
   end
 
   defp unique_label(_specifier, resolved_path, state) do
-    base_label = module_label(resolved_path, state.root)
+    base_label = module_label(resolved_path, state.root, state.ctx)
     label = deduplicate_label(base_label, resolved_path, state.used_labels)
 
     state = %{
@@ -289,7 +289,7 @@ defmodule DuskmoonBundler.Builder.Collector do
     {label, state}
   end
 
-  defp module_label(resolved_path, root) do
+  defp module_label(resolved_path, root, ctx) do
     {path, query} = DuskmoonBundler.URL.split_query(resolved_path)
     [relative_path | rest] = path |> String.split("/node_modules/") |> Enum.reverse()
 
@@ -309,10 +309,29 @@ defmodule DuskmoonBundler.Builder.Collector do
       |> with_query_suffix(query)
 
     cond do
-      Path.extname(label) == ".json" -> Path.rootname(label) <> ".json.js"
+      Path.extname(label) == ".json" -> json_label(label, path, ctx)
       Path.extname(label) in DuskmoonBundler.JS.Extensions.css() -> label <> ".js"
       query != "" -> label <> ".js"
       true -> label
+    end
+  end
+
+  defp json_label(label, path, ctx) do
+    # Plugins may replace JSON with JavaScript. Only the default data module
+    # keeps its extension so Rolldown supplies CommonJS JSON interop.
+    with {:ok, source, _content_type} <- read_module(path, ctx.plugins),
+         {:ok, %{type: :json}} <-
+           DuskmoonBundler.Pipeline.compile(path, source,
+             target: ctx.target,
+             import_source: ctx.import_source,
+             define: ctx.define,
+             plugins: ctx.plugins,
+             loaders: ctx.loaders,
+             preserve_json: true
+           ) do
+      label
+    else
+      _ -> label <> ".js"
     end
   end
 

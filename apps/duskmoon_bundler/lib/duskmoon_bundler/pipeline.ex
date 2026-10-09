@@ -29,6 +29,8 @@ defmodule DuskmoonBundler.Pipeline do
     * `:rewrite_import` — function `(specifier -> {:rewrite, new} | :keep)` for import rewriting
     * `:plugins` — list of `DuskmoonBundler.Plugin` modules to run
     * `:define` — compile-time replacements for `import.meta.env`
+    * `:preserve_json` — return unmodified JSON with type `:json` for the
+      production JSON loader; plugin-generated JavaScript retains type `:js`
   """
   @spec compile(String.t(), String.t(), keyword()) :: {:ok, compiled()} | {:error, term()}
   def compile(path, source, opts \\ []) do
@@ -70,12 +72,13 @@ defmodule DuskmoonBundler.Pipeline do
     with {:ok, compiled} <- result,
          compiled = normalize_result(compiled),
          compiled = apply_transforms(compiled, path, plugins),
+         compiled = preserve_json(compiled, ext, source, opts),
          {:ok, compiled} <- postprocess_javascript(compiled, path, opts) do
-      case Keyword.get(opts, :rewrite_import) do
-        rewrite_fn when is_function(rewrite_fn) ->
+      case {compiled.type, Keyword.get(opts, :rewrite_import)} do
+        {type, rewrite_fn} when type != :json and is_function(rewrite_fn) ->
           rewrite_compiled_imports(compiled, path, rewrite_fn)
 
-        nil ->
+        _ ->
           {:ok, compiled}
       end
     end
@@ -96,6 +99,17 @@ defmodule DuskmoonBundler.Pipeline do
     code = DuskmoonBundler.PluginRunner.transform(plugins, compiled.code, path)
     put_code(compiled, code)
   end
+
+  defp preserve_json(%{type: :js} = compiled, @json_ext, source, opts) do
+    if Keyword.get(opts, :preserve_json, false) and
+         compiled.code == "export default #{source};\n" do
+      %{compiled | type: :json, code: source, sourcemap: nil}
+    else
+      compiled
+    end
+  end
+
+  defp preserve_json(compiled, _ext, _source, _opts), do: compiled
 
   defp postprocess_javascript(%{type: :js} = compiled, path, opts) do
     filename = Path.basename(path)

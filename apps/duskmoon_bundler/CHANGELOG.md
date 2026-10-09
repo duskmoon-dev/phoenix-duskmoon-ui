@@ -13,6 +13,9 @@
 - Added `json_codec` as a runtime dependency.
 
 ### Fixed
+- Production JSON modules now preserve CommonJS `require()` values and ESM
+  default/named exports, preventing AJV meta-schema ID collisions in schema forms.
+  Development ESM responses and explicit JSON plugin transforms remain supported.
 - React App Clip production builds now preserve lazy `import.meta.glob()` chunks while co-locating shared CommonJS require groups, keeping singleton packages such as React intact across entry and async chunks.
 - Production builds now fall back to a single bundle when code splitting would move a CommonJS dependency across chunks, preserving singleton packages such as React and preventing unresolved `react-dom/client` imports.
 - ESM code-split builds now rewrite Rolldown-normalized cross-chunk npm imports to emitted chunk URLs instead of leaving package specifiers in the output.

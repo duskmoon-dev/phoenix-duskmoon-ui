@@ -328,6 +328,18 @@ defmodule DuskmoonBundler.PipelineTest do
       assert result.code =~ "export default"
       assert result.code =~ ~s("key")
     end
+
+    test "production mode preserves JSON data without running JavaScript import rewrites" do
+      source = ~s|{"key":"value","text":"import('./module.js')"}|
+
+      assert {:ok, %{type: :json, code: ^source}} =
+               DuskmoonBundler.Pipeline.compile("data.json", source,
+                 preserve_json: true,
+                 rewrite_import: fn _ ->
+                   flunk("JSON data must not rewrite JavaScript imports")
+                 end
+               )
+    end
   end
 
   describe "compile/3 with CSS Modules" do
