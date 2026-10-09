@@ -1,7 +1,69 @@
 # Upstream design alignment
 
 This audit compares published npm tarballs, public types, runtime code and release
-notes, rather than assuming compatibility from package names. Latest audit: 2026-10-08.
+notes, rather than assuming compatibility from package names. Latest audit: 2026-10-09.
+
+## 2026-10-09 synchronization
+
+All six package families were checked against published npm artifacts. Bun updates
+the exact pins in both manifests and the authoritative lockfile, preserving its
+pre-existing URL changes. No other JavaScript lockfile is present.
+
+| Package | Before | After / decision |
+| --- | --- | --- |
+| `@duskmoon-dev/core` / `css-art` | 1.20.3 | 1.20.3; shipped CSS, themes and plugin remain compatible |
+| `@duskmoon-dev/elements` / `art-elements` | 1.8.1 | 1.9.0 |
+| All 19 declared supporting `el-*` packages | 1.8.1 | 1.9.0 |
+| `@duskmoon-dev/components` | 0.4.1 | 0.4.1; retain existing React integrations |
+| `@duskmoon-dev/art-components` | Unused | Reviewed 0.4.1; no React art integration required |
+
+### Component decisions
+
+| Integration | Package path | Lifecycle and reason |
+| --- | --- | --- |
+| Chat / Chat Scroll | Individual `el-chat` registration | Update dependency: upstream preserves CSS timeline animation across hover/focus; existing attributes, slots, events and Phoenix API remain valid |
+| Markdown | Individual `el-markdown` registration | Update dependency: shipped DOMPurify advances from 3.3.3 to 3.4.16; rendering and streaming contracts are unchanged |
+| Remaining element wrappers | Individual `el-*` registration | Update dependencies: executable component code is unchanged; dependencies now use Core 1.20.3 |
+| Art wrappers | CSS Art / individual `el-art-*` registration | Update dependencies: all 15 art implementations and public contracts are unchanged; dependencies now use CSS Art 1.20.3 |
+| Retired `el-pin-input` integration | Core native OTP/PIN | Remove obsolete theme-bridge selector: Elements removes this export; `dm_pin_input` already uses native Core controls, so its public API remains intact |
+
+No new wrappers or wrapper removals are required. Ordinary and art aggregate
+packages now ship their previously missing root type declarations. All existing
+lazy registration entrypoints remain valid. React peers and mount/unmount
+boundaries remain compatible. Code Engine #9/#10 workarounds remain because the
+published editor runtime is unchanged.
+
+### Validation and limitations
+
+- Both configured asset bundles build; Storybook retains its existing single-file
+  fallback for ambiguous split exports. Generated CSS excludes the retired PIN
+  selector and includes current theme tokens; JavaScript includes updated element
+  registrations and Chat Scroll timeline rules.
+- Warnings-as-errors compilation, frozen Bun installation and diff checks pass.
+- The umbrella suite passes 3,719 tests and 2 doctests. The JavaScript suite passes
+  33 tests and 208 assertions.
+- Desktop Chromium checks against the built assets pass in both themes for Chat
+  Scroll timelines/hover/focus and reply navigation, Markdown rendering and
+  sanitization, native PIN masking, and Gemini input registration/input. Accordion,
+  native dialog and React Chat pages load without console errors.
+- Follow-up fixes resolve the two failures found in the production bundles.
+  Code Engine's stylesheet reuse bug in
+  [code-engine #9](https://github.com/duskmoon-dev/code-engine/issues/9) returns an
+  incomplete StyleSet for subsequent editor roots. Its existing workaround now
+  selects per-root style tags only for Code Engine, without relying on stack names
+  lost during minification or overriding native adopted stylesheets. Upstream
+  #9/#10 remain open; both workarounds are marked at their callsites.
+- The bundler preserves unmodified JSON modules as JSON so CommonJS `require`
+  receives the schema object, while ESM imports retain their expected exports.
+  This fixes AJV's empty meta-schema ID collisions. Plugin-generated JavaScript
+  keeps its existing processing. React form cleanup also initializes its field
+  list before mounting, preserving the original error if schema setup fails.
+- Follow-up validation passes 495 scoped tests and 2 doctests, plus 36 JavaScript
+  tests and 240 assertions; strict compilation, formatting and both asset builds
+  pass. Chromium verifies all seven editors, editing and dynamic mounts, plus
+  schema defaults, client/server validation, typed submission, presets, reset and
+  reconnect in both themes without console errors/warnings or nested forms.
+  Development vendor-cache failures were excluded by checking final static assets.
 
 ## 2026-10-08 synchronization
 
