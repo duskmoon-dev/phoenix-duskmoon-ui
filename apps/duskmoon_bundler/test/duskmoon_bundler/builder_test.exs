@@ -710,7 +710,7 @@ defmodule DuskmoonBundler.BuilderTest do
       assert output == "one-default-value-schema-value\ntwo-default-value-schema-value\n"
     end
 
-    test "code splitting does not emit imports for ambiguous common exports" do
+    test "code splitting preserves colliding named exports from common modules" do
       File.write!(Path.join(@fixture_dir, "src/shared-markdown.ts"), """
       export const html = 'markdown-html'
       export const svg = 'markdown-svg'
@@ -726,8 +726,8 @@ defmodule DuskmoonBundler.BuilderTest do
       for name <- ["one", "two"] do
         File.write!(Path.join(@fixture_dir, "src/ambiguous-#{name}.ts"), """
         import { html, svg, stringify } from './shared-markdown'
-        import { html as rendererHtml } from './shared-renderer'
-        export const value = '#{name}-' + html + '-' + svg + '-' + stringify + '-' + rendererHtml
+        import { html as rendererHtml, stringify as rendererStringify } from './shared-renderer'
+        export const value = '#{name}-' + html + '-' + svg + '-' + stringify + '-' + rendererHtml + '-' + rendererStringify
         """)
       end
 
@@ -750,7 +750,7 @@ defmodule DuskmoonBundler.BuilderTest do
       node = System.find_executable("node") || flunk("node executable not found")
       entry_url = "file://#{result.js.path}"
 
-      assert result.chunks == []
+      assert length(result.chunks) > 1
 
       assert {output, 0} =
                System.cmd(
@@ -765,8 +765,8 @@ defmodule DuskmoonBundler.BuilderTest do
                )
 
       assert output ==
-               "one-markdown-html-markdown-svg-markdown-stringify-renderer-html\n" <>
-                 "two-markdown-html-markdown-svg-markdown-stringify-renderer-html\n"
+               "one-markdown-html-markdown-svg-markdown-stringify-renderer-html-renderer-stringify\n" <>
+                 "two-markdown-html-markdown-svg-markdown-stringify-renderer-html-renderer-stringify\n"
     end
 
     test "code splitting preserves each shared default export and its object identity" do
@@ -953,6 +953,65 @@ defmodule DuskmoonBundler.BuilderTest do
                    "--input-type=module",
                    "--eval",
                    "const { defaults } = await import('#{entry_url}'); console.log([defaults[0].value, defaults[1].value, defaults[0] !== defaults[1]].join(':'));"
+                 ],
+                 env: [{"NODE_NO_WARNINGS", "1"}],
+                 stderr_to_stdout: true
+               )
+    end
+
+    test "manual chunks preserve colliding named re-exports and object identity" do
+      lib_dir = Path.join(@fixture_dir, "src/manual-names")
+      File.mkdir_p!(lib_dir)
+
+      for name <- ["a", "b"] do
+        File.write!(Path.join(lib_dir, "#{name}.ts"), """
+        export const value = { name: '#{name}' }
+        export default value
+        """)
+      end
+
+      File.write!(Path.join(@fixture_dir, "src/named-barrel.ts"), """
+      export { value as forwardedA } from './manual-names/a'
+      export { value as forwardedB } from './manual-names/b'
+      """)
+
+      File.write!(Path.join(@fixture_dir, "src/named-entry.ts"), """
+      import defaultA, { value as directA } from './manual-names/a'
+      import { value as directB } from './manual-names/b'
+      import { forwardedA, forwardedB } from './named-barrel'
+      export const values = [defaultA, directA, directB, forwardedA, forwardedB]
+      """)
+
+      assert {:ok, result} =
+               DuskmoonBundler.Builder.build(
+                 entry: Path.join(@fixture_dir, "src/named-entry.ts"),
+                 outdir: @outdir,
+                 name: "manual-names",
+                 chunks: %{"lib" => [lib_dir]},
+                 format: :esm,
+                 hash: true,
+                 minify: true,
+                 sourcemap: false
+               )
+
+      assert [_ | _] = result.chunks
+      manifest = @outdir |> Path.join("manifest.json") |> read_manifest_entries()
+      assert [chunk] = manifest["manual-names.js"]["imports"]
+      assert File.regular?(Path.join(@outdir, manifest[chunk]["file"]))
+
+      node = System.find_executable("node") || flunk("node executable not found")
+      entry_url = "file://#{result.js.path}"
+
+      assert {"a:b:true:true:true:true\n", 0} =
+               System.cmd(
+                 node,
+                 [
+                   "--input-type=module",
+                   "--eval",
+                   """
+                   const { values: [defaultA, directA, directB, forwardedA, forwardedB] } = await import('#{entry_url}');
+                   console.log([directA.name, directB.name, defaultA === directA, directA === forwardedA, directB === forwardedB, directA !== directB].join(':'));
+                   """
                  ],
                  env: [{"NODE_NO_WARNINGS", "1"}],
                  stderr_to_stdout: true
