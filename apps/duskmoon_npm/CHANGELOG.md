@@ -5,13 +5,14 @@
 ### Changed
 
 - Use `http_fetch` for registry metadata, tarballs, publishing, npm commands, and OSV checks, preserving caller-owned retries and registry redirect configuration.
-- Require `http_fetch` 0.17.1 or later for upstream gzip and deflate decoding of HTTP responses.
+- Use the coordinated `http_fetch` 0.18.x family for upstream response decoding and raw tarball downloads.
 - Require Elixir 1.18 or later.
 
 ### Fixed
 
 - `mix npm.update` now re-resolves matching lock entries instead of reusing stale versions that still satisfy manifest ranges.
-- Remove workspace-local installs during `mix npm.rebuild` and reject them during `mix npm.verify` before they can shadow root lockfile packages.
+- Validate and restore workspace-local package-lock resolutions during frozen installs, keeping distinct root/workspace versions and nested transitive dependencies without modifying the lockfile.
+- Restore declared workspace-local installs during `mix npm.rebuild` and accept them during `mix npm.verify`, while rejecting undeclared shadowing packages or mismatched nested versions.
 
 ## 0.7.4
 

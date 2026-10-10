@@ -527,7 +527,7 @@ defmodule NPM.Install.Linker do
     Path.join(nm_dir, relative_location)
   end
 
-  defp nested_target(nm_dir, location), do: Path.join(nm_dir, location)
+  defp nested_target(nm_dir, location), do: Path.join(Path.dirname(nm_dir), location)
 
   defp location_depth(location), do: location |> String.split("/") |> length()
 

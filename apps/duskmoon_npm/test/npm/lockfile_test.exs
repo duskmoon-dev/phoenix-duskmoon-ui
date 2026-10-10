@@ -163,6 +163,40 @@ defmodule NPM.LockfileTest do
     assert %{"@scope/pkg" => "2.0.0"} = NPM.Lockfile.PackageLock.packages(data)
   end
 
+  test "preserves scoped and unscoped workspace-local locations with nested transitives" do
+    locations = [
+      "apps/web/node_modules/@scope/core",
+      "apps/web/node_modules/tool",
+      "apps/web/node_modules/@scope/core/node_modules/child"
+    ]
+
+    write_json!("package-lock.json", %{
+      "lockfileVersion" => 3,
+      "packages" =>
+        Map.new(locations, &{&1, %{"version" => "1.20.4"}})
+        |> Map.put("node_modules/@scope/core", %{"version" => "1.20.3"})
+    })
+
+    assert {:ok, %{"@scope/core" => %{version: "1.20.3"}}} = NPM.Lockfile.read()
+    assert {:ok, nested} = NPM.Lockfile.read_nested()
+    assert Enum.sort(Map.keys(nested)) == Enum.sort(locations)
+    assert nested["apps/web/node_modules/@scope/core"].version == "1.20.4"
+
+    for location <- [
+          "../apps/web/node_modules/tool",
+          "/apps/web/node_modules/tool",
+          "apps/./web/node_modules/tool",
+          "apps/web/node_modules/@scope/.."
+        ] do
+      write_json!("package-lock.json", %{
+        "lockfileVersion" => 3,
+        "packages" => %{location => %{"version" => "1.0.0"}}
+      })
+
+      assert {:error, {:invalid_nested_package_location, ^location}} = NPM.Lockfile.read_nested()
+    end
+  end
+
   test "package-lock import skips workspace links and nested packages" do
     write_sample_package_lock!()
 

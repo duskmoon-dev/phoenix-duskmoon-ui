@@ -8,7 +8,7 @@ defmodule Mix.Tasks.Npm.Rebuild do
       mix npm.rebuild
 
   Unlike `mix npm.clean`, this also removes installs nested under declared npm
-  workspaces so they cannot shadow packages restored at the root.
+  workspaces, then restores their declared locations from the lockfile.
   """
 
   use Mix.Task

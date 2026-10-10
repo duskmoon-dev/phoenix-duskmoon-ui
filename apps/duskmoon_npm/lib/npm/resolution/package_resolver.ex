@@ -278,7 +278,13 @@ defmodule NPM.Resolution.PackageResolver do
 
       node_modules ->
         package_dir = Path.join(node_modules, package_name)
-        if File.dir?(package_dir), do: {:ok, package_dir}, else: :error
+        parent = Path.dirname(node_modules)
+
+        cond do
+          File.dir?(package_dir) -> {:ok, package_dir}
+          parent == Path.dirname(parent) -> :error
+          true -> package_root(package_name, Path.dirname(parent))
+        end
     end
   end
 

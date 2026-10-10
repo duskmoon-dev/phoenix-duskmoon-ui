@@ -75,6 +75,35 @@ defmodule NPM.Workspace do
     end
   end
 
+  @doc false
+  def frozen_dependencies(opts) do
+    with {:ok, root_dir} <- root_dir(),
+         {:ok, manifests} <- manifests(root_dir),
+         {:ok, local_links} <- collect_local_links(manifests) do
+      fields =
+        if opts[:production],
+          do: ["dependencies", "optionalDependencies"],
+          else: Enum.map(@dep_fields, &elem(&1, 1))
+
+      dependencies =
+        Map.new(manifests, fn manifest ->
+          location = if manifest.root?, do: "", else: Path.relative_to(manifest.dir, root_dir)
+
+          deps =
+            Enum.flat_map(fields, fn field ->
+              manifest.data
+              |> Map.get(field, %{})
+              |> map_entries()
+              |> Enum.reject(fn {name, range} -> local_dependency?(name, range, local_links) end)
+            end)
+
+          {location, deps}
+        end)
+
+      {:ok, dependencies, local_links}
+    end
+  end
+
   @doc """
   Returns the dependency map that should be resolved for install.
   """

@@ -83,9 +83,19 @@ defmodule NPM do
   @spec install(keyword()) :: :ok | {:error, term()}
   def install(opts \\ []) when is_list(opts) do
     with_root_dir(fn ->
-      with {:ok, project} <- NPM.Workspace.read_all(),
-           {:ok, deps} <- NPM.Workspace.install_dependencies(project, opts) do
-        do_install(deps, Keyword.put(opts, :local_links, project.local_links))
+      if opts[:frozen] do
+        with {:ok, dependencies, local_links} <- NPM.Workspace.frozen_dependencies(opts) do
+          if Enum.all?(dependencies, fn {_location, deps} -> deps == [] end) do
+            do_install(%{}, local_links: local_links)
+          else
+            frozen_install(dependencies, local_links)
+          end
+        end
+      else
+        with {:ok, project} <- NPM.Workspace.read_all(),
+             {:ok, deps} <- NPM.Workspace.install_dependencies(project, opts) do
+          do_install(deps, Keyword.put(opts, :local_links, project.local_links))
+        end
       end
     end)
   end
@@ -168,18 +178,16 @@ defmodule NPM do
   @spec get :: :ok | {:error, term()}
   def get do
     with_root_dir(fn ->
-      case NPM.Lockfile.read() do
-        {:ok, lockfile} when lockfile == %{} ->
+      with {:ok, lockfile} <- NPM.Lockfile.read(),
+           {:ok, nested_lockfile} <- NPM.Lockfile.read_nested() do
+        if lockfile == %{} and nested_lockfile == %{} do
           Mix.shell().info("No package-lock.json found, run `mix npm.install` first.")
           :ok
-
-        {:ok, lockfile} ->
-          with {:ok, project} <- NPM.Workspace.read_all() do
-            link_from_lockfile(lockfile, project.local_links)
+        else
+          with {:ok, _dependencies, local_links} <- NPM.Workspace.frozen_dependencies([]) do
+            link_from_lockfile(lockfile, local_links, nested_lockfile)
           end
-
-        error ->
-          error
+        end
       end
     end)
   end
@@ -237,26 +245,27 @@ defmodule NPM do
   end
 
   defp do_install(deps, opts) do
-    if opts[:frozen] do
-      frozen_install(deps, Keyword.get(opts, :local_links, %{}))
-    else
-      full_install(
-        deps,
-        Keyword.get(opts, :local_links, %{}),
-        Keyword.get(opts, :force_resolve, false)
-      )
-    end
+    full_install(
+      deps,
+      Keyword.get(opts, :local_links, %{}),
+      Keyword.get(opts, :force_resolve, false)
+    )
   end
 
   defp frozen_install(deps, local_links) do
-    case NPM.Lockfile.read() do
-      {:ok, lockfile} when lockfile == %{} ->
+    with {:ok, lockfile} <- NPM.Lockfile.read(),
+         {:ok, nested_lockfile} <- NPM.Lockfile.read_nested() do
+      if lockfile == %{} and nested_lockfile == %{} do
         Mix.shell().error("package-lock.json not found. Run `mix npm.install` first.")
         {:error, :no_lockfile}
+      else
+        locations =
+          Map.new(lockfile, fn {name, entry} -> {"node_modules/#{name}", entry} end)
+          |> Map.merge(nested_lockfile)
 
-      {:ok, lockfile} ->
-        if lockfile_matches?(lockfile, deps) and lockfile_policy_current?() do
-          link_from_lockfile(lockfile, local_links)
+        if frozen_dependencies_satisfied?(locations, deps) and
+             frozen_records_complete?(locations, local_links) and lockfile_policy_current?() do
+          link_from_lockfile(lockfile, local_links, nested_lockfile)
         else
           Mix.shell().error(
             "package-lock.json is out of date with package.json or current security policy.\n" <>
@@ -265,9 +274,50 @@ defmodule NPM do
 
           {:error, :frozen_lockfile}
         end
+      end
+    end
+  end
 
-      error ->
-        error
+  defp frozen_dependencies_satisfied?(locations, dependencies) do
+    Enum.all?(dependencies, fn {location, deps} ->
+      Enum.all?(deps, fn {name, range} ->
+        case frozen_dependency_entry(locations, location, name) do
+          nil -> false
+          entry -> lockfile_entry_satisfies_range?(entry, range)
+        end
+      end)
+    end)
+  end
+
+  defp frozen_records_complete?(locations, local_links) do
+    Enum.all?(locations, fn {location, entry} ->
+      deps = Map.to_list(entry.dependencies) ++ Map.to_list(entry.optional_dependencies)
+
+      Enum.all?(deps, fn {name, range} ->
+        Map.has_key?(local_links, name) or
+          case frozen_dependency_entry(locations, location, name) do
+            nil -> false
+            resolved -> lockfile_entry_satisfies_range?(resolved, range)
+          end
+      end)
+    end)
+  end
+
+  defp frozen_dependency_entry(locations, location, name) do
+    candidate =
+      if location == "", do: "node_modules/#{name}", else: "#{location}/node_modules/#{name}"
+
+    entry =
+      if Path.basename(location) == "node_modules", do: nil, else: Map.get(locations, candidate)
+
+    case entry do
+      nil when location != "" ->
+        parent = Path.dirname(location)
+        parent = if parent == ".", do: "", else: parent
+        frozen_dependency_entry(locations, parent, name)
+
+      entry ->
+        entry
     end
   end
 

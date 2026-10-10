@@ -319,19 +319,24 @@ defmodule NPM.Lockfile do
   end
 
   defp nested_package_location?(location) do
-    String.starts_with?(location, "node_modules/") and
-      location
-      |> String.split("/")
-      |> Enum.count(&(&1 == "node_modules"))
-      |> Kernel.>(1)
+    segments = String.split(location, "/")
+
+    "node_modules" in segments and
+      (not String.starts_with?(location, "node_modules/") or
+         Enum.count(segments, &(&1 == "node_modules")) > 1)
   end
 
   @doc false
   @spec nested_package_name(String.t()) :: {:ok, String.t()} | :error
   def nested_package_name(location) do
-    location
-    |> String.split("/", trim: false)
-    |> parse_nested_location([])
+    {prefix, packages} =
+      location |> String.split("/", trim: false) |> Enum.split_while(&(&1 != "node_modules"))
+
+    if Enum.all?(prefix, &(&1 not in ["", ".", ".."] and not String.contains?(&1, "\\"))) do
+      parse_nested_location(packages, if(prefix == [], do: [], else: [:workspace]))
+    else
+      :error
+    end
   end
 
   defp parse_nested_location(["node_modules" | rest], parents) do
@@ -588,9 +593,7 @@ defmodule NPM.Lockfile do
     get_in(data, [@npm_ex_metadata, "policy"]) || Map.get(data, "policy")
   end
 
-  defp package_lock?(data, packages) do
-    Map.get(data, "lockfileVersion") in [2, 3] and package_lock_packages?(packages)
-  end
+  defp package_lock?(data, _packages), do: Map.get(data, "lockfileVersion") in [2, 3]
 
   defp package_lock_packages?(packages) do
     Map.has_key?(packages, "") or Enum.any?(packages, fn {path, _} -> package_location?(path) end)
