@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Use the coordinated HTTP Fetch, EventSource, and WebSocket 0.18 family so consumers can use validated connection addresses and response streaming without dependency overrides.
 - Include the standard `offsetof` definition so QuickJS initialization does not abort on musl when checked native builds initialize garbage collection lists.
 - Build precompiled NIFs for an explicit CPU baseline so x86_64 artifacts run without AVX-512.
 
