@@ -56,7 +56,7 @@ defmodule DuskmoonBundler.Builder.Resolver do
         resolve_relative(specifier, importer, ctx)
 
       true ->
-        resolve_bare(specifier, ctx.node_modules, ctx.resolve_dirs, ctx.plugins)
+        resolve_bare(specifier, importer, ctx)
     end
   end
 
@@ -118,7 +118,34 @@ defmodule DuskmoonBundler.Builder.Resolver do
       Enum.any?(external, &String.starts_with?(specifier, &1 <> "/"))
   end
 
-  defp resolve_bare(specifier, node_modules, resolve_dirs, plugins) do
+  defp resolve_bare(specifier, importer, ctx) do
+    {importer_path, _query} = DuskmoonBundler.URL.split_query(importer)
+    {package_name, _subpath} = NPM.Resolution.PackageResolver.split_specifier(specifier)
+
+    dir =
+      importer_path
+      |> Path.dirname()
+      |> node_modules_dirs()
+      |> Enum.find(&File.dir?(Path.join(&1, package_name)))
+
+    case dir do
+      nil ->
+        resolve_configured_bare(specifier, ctx.node_modules, ctx.resolve_dirs, ctx.plugins)
+
+      dir ->
+        resolve_in_package(specifier, dir, Path.join(dir, package_name), ctx.plugins) ||
+          {:error, {:not_found, specifier}}
+    end
+  end
+
+  defp node_modules_dirs(dir) do
+    parent = Path.dirname(dir)
+    current = Path.join(dir, "node_modules")
+
+    if parent == dir, do: [current], else: [current | node_modules_dirs(parent)]
+  end
+
+  defp resolve_configured_bare(specifier, node_modules, resolve_dirs, plugins) do
     dirs = if node_modules, do: [node_modules | resolve_dirs], else: resolve_dirs
 
     Enum.find_value(dirs, :skip, fn dir ->
