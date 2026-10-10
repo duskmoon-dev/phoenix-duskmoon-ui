@@ -1,5 +1,12 @@
 # Unreleased
 
+### Breaking changes
+
+- Remove the six `dm_git_*` repository components, their automatic imports,
+  Storybook demos and delegated Git clipboard runtime. Git presentation is now
+  application-owned. There is no replacement published package; see
+  [the migration guide](guides/migrating-git-components.md) before upgrading.
+
 ### Added
 
 - Native Core components: carousel, countdown, diff, keyboard keys, radial progress,

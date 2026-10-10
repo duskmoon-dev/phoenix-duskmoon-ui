@@ -31,6 +31,7 @@ defmodule PhoenixDuskmoon.Mixfile do
           "guides/react-forms.md",
           "guides/migrating-to-v9.md",
           "guides/upstream-design-alignment.md",
+          "guides/migrating-git-components.md",
           "CHANGELOG.md"
         ],
         groups_for_extras: [
@@ -61,7 +62,6 @@ defmodule PhoenixDuskmoon.Mixfile do
             PhoenixDuskmoon.Component.DataDisplay.Collapse,
             PhoenixDuskmoon.Component.DataDisplay.Datetime,
             PhoenixDuskmoon.Component.DataDisplay.Flash,
-            PhoenixDuskmoon.Component.DataDisplay.GitRepository,
             PhoenixDuskmoon.Component.DataDisplay.List,
             PhoenixDuskmoon.Component.DataDisplay.Markdown,
             PhoenixDuskmoon.Component.DataDisplay.Pagination,
