@@ -136,10 +136,10 @@ defmodule NPM.HTTPClientTest do
     assert {"accept-encoding", "gzip, deflate"} in headers
   end
 
-  test "sends raw PUT bodies", %{url: url} do
+  test "sends raw iodata PUT bodies used by npm publishing", %{url: url} do
     assert {:ok, %{body: %{"version" => "1.0.0"}}} =
              NPM.HTTPClient.put(url <> "/echo",
-               body: ~s({"version":"1.0.0"}),
+               body: :json.encode(%{"version" => "1.0.0"}),
                headers: [{"content-type", "application/json"}, {"Accept-Encoding", "identity"}]
              )
 

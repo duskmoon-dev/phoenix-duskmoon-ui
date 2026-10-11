@@ -5,7 +5,7 @@
 ### Changed
 
 - Use `http_fetch` for registry metadata, tarballs, publishing, npm commands, and OSV checks, preserving caller-owned retries and registry redirect configuration.
-- Use the coordinated `http_fetch` 0.18.x family for upstream response decoding and raw tarball downloads.
+- Support the coordinated `http_fetch` 0.20.x family, preserving upstream response decoding, raw tarball bytes, registry retries, and publish upload bodies.
 - Require Elixir 1.18 or later.
 
 ### Fixed

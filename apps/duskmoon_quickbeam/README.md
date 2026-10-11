@@ -376,6 +376,7 @@ Standard browser APIs backed by BEAM primitives, not JS polyfills:
 | `structuredClone` | QuickJS serialization |
 | `queueMicrotask` | `JS_EnqueueJob` |
 
+The Fetch, EventSource, and WebSocket clients use the coordinated HTTP 0.20 family.
 HTTP clients use HTTP/1 and OTP TLS by default. Fetch reads buffered or streamed
 response bodies as bytes and forwards AbortSignal cancellation to the network request.
 Upstream `http_fetch` decodes gzip and deflate HTTP content encodings; archive bytes

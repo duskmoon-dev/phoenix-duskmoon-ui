@@ -15,6 +15,8 @@
 - Require Elixir `>= 1.18` across all umbrella applications.
 - Use the `http_fetch`, `http_event_source`, and `http_web_socket` package family
   for npm requests and QuickBEAM outbound networking.
+- Support the coordinated HTTP family 0.20.x across npm and QuickBEAM so
+  consumers can share the dependency graph without overrides.
 - Pin published DuskMoon dependencies to current exact versions: Core/CSS Art
   1.19.9, Elements/Art Elements 1.7.6 and current individual element versions.
 - Use Core spinner/stat styles and remove resolved collapse, highlighting and
