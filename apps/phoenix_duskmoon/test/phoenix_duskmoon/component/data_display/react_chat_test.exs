@@ -25,4 +25,26 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ReactChatTest do
 
     assert actions["send"] == "chat.send"
   end
+
+  test "serializes custom hook and application runtime/admission maps" do
+    html =
+      render_component(&dm_react_chat/1,
+        id: "composed",
+        conversation_id: "conv-1",
+        hook: "ApplicationChat",
+        metadata: %{session: "s1"},
+        runtime: %{active: true, phase: "tool_execution"},
+        admission: %{allowWhileStreaming: true},
+        target: "#component"
+      )
+
+    root = html |> LazyHTML.from_fragment() |> LazyHTML.query("#composed")
+    assert LazyHTML.attribute(root, "phx-hook") == ["ApplicationChat"]
+    assert LazyHTML.attribute(root, "data-target") == ["#component"]
+    [json] = LazyHTML.attribute(root, "data-chat")
+    snapshot = Jason.decode!(json)
+    assert snapshot["metadata"] == %{"session" => "s1"}
+    assert snapshot["runtime"] == %{"active" => true, "phase" => "tool_execution"}
+    assert snapshot["admission"] == %{"allowWhileStreaming" => true}
+  end
 end

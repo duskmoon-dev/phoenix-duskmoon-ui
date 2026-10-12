@@ -37,7 +37,7 @@ defmodule DuskmoonStorybookWeb.RouterTest do
 
   test "React component demos are available as LiveView pages", %{conn: conn} do
     for {path, hook, title} <- [
-          {"/components/data-display/react-chat", "DuskmoonReactChat",
+          {"/components/data-display/react-chat", "DuskmoonComposedChat",
            "React-owned streaming chat"},
           {"/components/data-entry/react-form", "DuskmoonReactForm", "React JSON form"}
         ] do

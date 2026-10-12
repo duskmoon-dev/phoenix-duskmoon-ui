@@ -1,7 +1,10 @@
-export function initialState(conversationId, messages = []) {
+export function initialState(conversationId, messages = [], application = {}) {
 	return {
 		conversationId,
 		messages,
+		metadata: application.metadata || {},
+		runtime: application.runtime || {},
+		admission: application.admission || {},
 		sequences: {},
 		error: null,
 		needsSync: false,
@@ -12,7 +15,7 @@ export function reduceChat(state, event) {
 	if (event?.conversation_id !== state.conversationId) return state;
 	if (["chat.snapshot", "chat.reset"].includes(event.type)) {
 		return {
-			...initialState(state.conversationId, event.messages || []),
+			...initialState(state.conversationId, event.messages || [], event),
 			sequences: event.sequences || {},
 		};
 	}
@@ -79,6 +82,9 @@ export function reduceChat(state, event) {
 	return {
 		...state,
 		messages,
+		metadata: event.metadata ?? state.metadata,
+		runtime: event.runtime ?? state.runtime,
+		admission: event.admission ?? state.admission,
 		sequences: { ...state.sequences, [event.message_id]: event.sequence },
 	};
 }

@@ -7,7 +7,7 @@ defmodule DuskmoonStorybookWeb.ReactDemoLiveTest do
     {:ok, view, html} = live(conn, "/components/data-display/react-chat")
 
     assert html =~ "React-owned streaming chat"
-    assert has_element?(view, "#react-chat-demo")
+    assert has_element?(view, "#react-chat-demo[phx-hook=DuskmoonComposedChat]")
     assert has_element?(view, "#chat-seed-long")
     assert has_element?(view, "#chat-reset")
 
@@ -16,6 +16,17 @@ defmodule DuskmoonStorybookWeb.ReactDemoLiveTest do
 
     html = view |> element("#chat-reset") |> render_click()
     assert html =~ "Conversation reset"
+  end
+
+  test "chat snapshot recovery retains custom rendering and admission state", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/components/data-display/react-chat")
+    render_hook(view, "chat.sync", %{"id" => "react-chat-demo"})
+    assert_push_event(view, "chat:event", snapshot)
+    assert snapshot.type == "chat.snapshot"
+    assert snapshot.runtime == %{active: false, phase: "idle"}
+    assert snapshot.admission == %{allowWhileStreaming: true}
+    assert hd(snapshot.messages).metadata.usage.tokens == 42
+    assert Enum.at(snapshot.messages, 1).attachments != []
   end
 
   test "form demo exposes presets and reset controls", %{conn: conn} do

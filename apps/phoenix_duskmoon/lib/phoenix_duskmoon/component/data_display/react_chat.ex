@@ -15,10 +15,13 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ReactChat do
   attr(:label, :string, default: "Conversation")
   attr(:conversation_id, :string, required: true)
   attr(:event, :string, default: "chat:event")
+  attr(:hook, :string, default: "DuskmoonReactChat")
+  attr(:metadata, :map, default: %{})
+  attr(:runtime, :map, default: %{})
+  attr(:admission, :map, default: %{})
   attr(:class, :any, default: nil)
   attr(:target, :any, default: nil)
   attr(:rest, :global, include: ~w(phx-submit phx-stop phx-target))
-  slot(:inner_block)
 
   def dm_react_chat(assigns) do
     snapshot =
@@ -27,6 +30,9 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ReactChat do
         messages: assigns.messages,
         label: assigns.label,
         event: assigns.event,
+        metadata: assigns.metadata,
+        runtime: assigns.runtime,
+        admission: assigns.admission,
         actions: %{
           send: "chat.send",
           stop: "chat.stop",
@@ -39,7 +45,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ReactChat do
     assigns = assign(assigns, :snapshot, snapshot)
 
     ~H"""
-    <div id={@id} class={@class} phx-hook="DuskmoonReactChat" phx-update="ignore" data-chat={@snapshot} data-target={@target} {@rest}>
+    <div id={@id} class={@class} phx-hook={@hook} phx-update="ignore" data-chat={@snapshot} data-target={@target} {@rest}>
       <div data-react-chat-loading role="status">Loading conversation…</div>
     </div>
     """

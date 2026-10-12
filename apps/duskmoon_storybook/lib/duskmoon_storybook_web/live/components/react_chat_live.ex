@@ -16,6 +16,8 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
        messages: initial_messages(),
        active_stream: nil,
        action_sequences: %{},
+       runtime: %{active: false, phase: "idle"},
+       admission: %{allowWhileStreaming: true},
        event_count: 0,
        stream_count: 0,
        status: "Ready for a prompt",
@@ -68,6 +70,9 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
               id={@chat_id}
               conversation_id={@conversation_id}
               messages={@messages}
+              hook="DuskmoonComposedChat"
+              runtime={@runtime}
+              admission={@admission}
               label="React streaming chat demonstration"
               class="h-[38rem] min-h-0 rounded-lg bg-base-200/50 p-3 md:p-5"
             />
@@ -134,7 +139,12 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
     if text == "" do
       {:reply, %{status: "error", message: "Enter a message first"}, socket}
     else
-      {:reply, %{status: "ok"}, start_stream(socket, text)}
+      if socket.assigns.active_stream do
+        {:reply, %{status: "ok", admission: "steering"}, append_user(socket, text)}
+      else
+        {:reply, %{status: "ok", admission: "new_turn"},
+         start_stream(append_user(socket, text), text)}
+      end
     end
   end
 
@@ -172,14 +182,21 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
 
         socket =
           socket
-          |> push_event("chat:event", Map.merge(event, base_event(message_id, sequence)))
+          |> apply_demo_event(Map.merge(event, base_event(message_id, sequence)))
           |> assign(
             event_count: socket.assigns.event_count + 1,
             last_event: event.type
           )
 
         if index + 1 < length(events) do
-          Process.send_after(self(), {:chat_stream_tick, message_id}, @stream_interval)
+          Process.send_after(
+            self(),
+            {:chat_stream_tick, message_id},
+            if(Map.get(event, :runtime, %{})[:phase] == "waiting_for_approval",
+              do: 900,
+              else: @stream_interval
+            )
+          )
 
           {:noreply,
            assign(socket,
@@ -190,7 +207,7 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
            assign(socket,
              active_stream: nil,
              status: "Response complete",
-             last_event: "chat.complete"
+             last_event: event.type
            )}
         end
 
@@ -215,6 +232,7 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
       active_stream: stream,
       stream_count: socket.assigns.stream_count + 1,
       status: "Streaming response",
+      runtime: %{active: true, phase: "provider_streaming"},
       last_event: "Waiting for chat.message"
     )
   end
@@ -228,19 +246,24 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
     socket =
       if stream.next_sequence == 0 do
         socket
-        |> push_event(
-          "chat:event",
+        |> apply_demo_event(
           Map.merge(Enum.at(stream.events, 0), base_event(stream.message_id, 1))
         )
-        |> push_event(
-          "chat:event",
-          base_event(stream.message_id, 2, %{type: "chat.complete", status: "cancelled"})
+        |> apply_demo_event(
+          base_event(stream.message_id, 2, %{
+            type: "chat.complete",
+            status: "cancelled",
+            runtime: %{active: false, phase: "cancelled"}
+          })
         )
       else
-        push_event(
+        apply_demo_event(
           socket,
-          "chat:event",
-          base_event(stream.message_id, sequence, %{type: "chat.complete", status: "cancelled"})
+          base_event(stream.message_id, sequence, %{
+            type: "chat.complete",
+            status: "cancelled",
+            runtime: %{active: false, phase: "cancelled"}
+          })
         )
       end
 
@@ -255,9 +278,8 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
   defp append_tool_event(socket, message_id, action) do
     sequence = Map.get(socket.assigns.action_sequences, message_id, 0) + 1
 
-    push_event(
+    apply_demo_event(
       socket,
-      "chat:event",
       base_event(message_id, sequence, %{
         type: "chat.tool",
         tool: %{
@@ -282,22 +304,84 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
       type: "chat.snapshot",
       conversation_id: @conversation_id,
       messages: socket.assigns.messages,
-      sequences: %{}
+      sequences: socket.assigns.action_sequences,
+      runtime: socket.assigns.runtime,
+      admission: socket.assigns.admission
     })
     |> assign(event_count: socket.assigns.event_count + 1, last_event: "chat.snapshot")
   end
 
   defp reset_conversation(socket, messages, status) do
     socket
-    |> assign(messages: messages, active_stream: nil, status: status, last_event: "chat.reset")
+    |> assign(
+      messages: messages,
+      active_stream: nil,
+      action_sequences: %{},
+      runtime: %{active: false, phase: "idle"},
+      status: status,
+      last_event: "chat.reset"
+    )
     |> push_event("chat:event", %{
       id: @chat_id,
       type: "chat.reset",
       conversation_id: @conversation_id,
       messages: messages,
-      sequences: %{}
+      sequences: %{},
+      runtime: %{active: false, phase: "idle"},
+      admission: socket.assigns.admission
     })
     |> assign(event_count: socket.assigns.event_count + 1)
+  end
+
+  # The fixture keeps canonical messages/sequences so chat.sync restores custom state.
+  defp apply_demo_event(socket, event) do
+    messages = socket.assigns.messages
+    index = Enum.find_index(messages, &(&1.id == event.message_id))
+    current = if index, do: Enum.at(messages, index), else: %{}
+
+    message =
+      case event.type do
+        "chat.message" ->
+          event.message
+
+        "chat.delta" ->
+          Map.update(current, :content, event.text, &(&1 <> event.text))
+
+        "chat.tool" ->
+          Map.put(
+            current,
+            :tools,
+            Enum.reject(Map.get(current, :tools, []), &(&1.id == event.tool.id)) ++ [event.tool]
+          )
+
+        "chat.complete" ->
+          Map.put(current, :status, event.status)
+      end
+
+    messages =
+      if index, do: List.replace_at(messages, index, message), else: messages ++ [message]
+
+    runtime = Map.get(event, :runtime, socket.assigns.runtime)
+
+    socket
+    |> assign(
+      messages: messages,
+      runtime: runtime,
+      action_sequences: Map.put(socket.assigns.action_sequences, event.message_id, event.sequence)
+    )
+    |> push_event("chat:event", Map.put(event, :runtime, runtime))
+  end
+
+  defp append_user(socket, text) do
+    id = "user-#{System.unique_integer([:positive])}"
+
+    apply_demo_event(
+      socket,
+      base_event(id, 1, %{
+        type: "chat.message",
+        message: %{id: id, role: "user", content: text, status: "complete"}
+      })
+    )
   end
 
   defp base_event(message_id, sequence, extra \\ %{}) do
@@ -327,6 +411,7 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
       %{type: "chat.delta", text: "I received **#{text}** and started a batched response. "},
       %{
         type: "chat.tool",
+        runtime: %{active: true, phase: "tool_execution"},
         tool: %{id: "search", name: "Knowledge search", status: "running", input: %{query: text}}
       },
       %{
@@ -347,7 +432,42 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
         text:
           "This final chunk demonstrates Markdown, tool state, and frame-scheduled React updates."
       },
-      %{type: "chat.complete", status: "complete"}
+      %{
+        type: "chat.complete",
+        status: "complete",
+        runtime: %{active: true, phase: "waiting_for_approval"}
+      },
+      %{
+        type: "chat.message",
+        runtime: %{active: false, phase: "complete"},
+        message: %{
+          id: message_id,
+          role: "assistant",
+          author: "Duskmoon",
+          status: "complete",
+          content:
+            "I received **#{text}** and started a batched response. The tool result is rendered alongside the message without a full LiveView diff. This final chunk demonstrates Markdown, tool state, and frame-scheduled React updates.",
+          tools: [
+            %{
+              id: "search",
+              name: "Knowledge search",
+              status: "success",
+              result: %{matches: 3, latency_ms: 42}
+            }
+          ],
+          metadata: %{
+            reasoning: "Checked the conversation and searched available context.",
+            usage: %{tokens: 128, duration_ms: 640},
+            summary: "Turn complete: one tool call and a streamed answer."
+          },
+          actions: [
+            %{id: "resend", label: "Resend", eligible: true},
+            %{id: "retry", label: "Checkpoint Retry", confirm: "Retry from this checkpoint?"},
+            %{id: "continue", label: "Continue", eligible: true},
+            %{id: "fork", label: "Fork", eligible: false}
+          ]
+        }
+      }
     ]
   end
 
@@ -360,6 +480,11 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
         status: "complete",
         content:
           "Welcome. Ask for a **streamed explanation**, a tool lookup, or a performance summary.",
+        metadata: %{
+          reasoning: "This panel uses a consumer composer and message renderer.",
+          usage: %{tokens: 42, duration_ms: 120},
+          summary: "A single summary belongs to this completed turn."
+        },
         actions: [%{id: "explain", label: "Explain architecture"}]
       },
       %{
@@ -367,7 +492,14 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
         role: "user",
         author: "You",
         status: "complete",
-        content: "Show the tool-call state."
+        content: "Show the tool-call state.",
+        attachments: [
+          %{
+            url:
+              "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='64'%3E%3Crect width='96' height='64' fill='%236755a8'/%3E%3C/svg%3E",
+            name: "Sample attachment"
+          }
+        ]
       },
       %{
         id: "tool-demo",
