@@ -49,6 +49,14 @@ defmodule DuskmoonBundler.JS.Runtime do
     end
   end
 
+  @doc """
+  Returns an existing named runtime or starts a new runtime.
+
+  Named runtimes created here are shared and unlinked from the calling process.
+  Callers must stop them with `stop/1` when they are no longer needed. Existing
+  runtimes retain their ownership, and unnamed runtimes remain linked to their
+  creator.
+  """
   @spec ensure!(keyword()) :: t()
   def ensure!(opts) do
     case Keyword.get(opts, :name) do
@@ -57,8 +65,13 @@ defmodule DuskmoonBundler.JS.Runtime do
 
       name ->
         case GenServer.whereis(name) do
-          pid when is_pid(pid) -> runtime_for_existing(name, pid, opts)
-          nil -> start!(opts)
+          pid when is_pid(pid) ->
+            runtime_for_existing(name, pid, opts)
+
+          nil ->
+            runtime = start!(opts)
+            Process.unlink(runtime.pid)
+            runtime
         end
     end
   end

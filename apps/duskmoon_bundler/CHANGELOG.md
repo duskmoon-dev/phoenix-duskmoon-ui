@@ -13,6 +13,8 @@
 - Added `json_codec` as a runtime dependency.
 
 ### Fixed
+- Lazily ensured named JavaScript runtimes now survive their creating caller's
+  shutdown, preventing concurrent framework compiler calls from losing the shared runtime.
 - Shared and manual chunks now preserve distinct named exports from different
   modules, including colliding `stringify` functions used by Markdown packages,
   without falling back to a single bundle.
