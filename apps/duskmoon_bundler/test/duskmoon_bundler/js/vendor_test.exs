@@ -31,6 +31,33 @@ defmodule DuskmoonBundler.JS.VendorTest do
   end
 
   describe "prebundle/1" do
+    test "failed lazy initialization does not publish a partial static graph" do
+      write_package("broken-initial-vendor", "1.0.0", %{"." => "./index.js"})
+      File.write!(Path.join(@node_modules, "broken-initial-vendor/index.js"), "const = ;")
+      File.write!(Path.join(@fixture_dir, "src/broken.js"), "import 'broken-initial-vendor';")
+
+      assert {:error, _} =
+               DuskmoonBundler.JS.Vendor.bundle_on_demand("fake-lib", @node_modules,
+                 root: Path.join(@fixture_dir, "src")
+               )
+
+      assert {:error, :not_found} = DuskmoonBundler.JS.Vendor.read("fake-lib")
+      assert {:error, :not_found} = DuskmoonBundler.JS.Vendor.read("broken-initial-vendor")
+    end
+
+    test "discovering unchanged dependencies preserves existing runtime URLs and cached entries" do
+      write_package("later-vendor", "1.0.0", %{"." => "./index.js"})
+      File.write!(Path.join(@node_modules, "later-vendor/index.js"), "export const later = true;")
+      opts = [node_modules: @node_modules]
+      initial_hash = DuskmoonBundler.JS.Vendor.browser_hash(opts)
+
+      assert {:ok, first} = DuskmoonBundler.JS.Vendor.bundle_on_demand("fake-lib", @node_modules)
+      assert DuskmoonBundler.JS.Vendor.browser_hash(opts) == initial_hash
+      assert {:ok, _} = DuskmoonBundler.JS.Vendor.bundle_on_demand("later-vendor", @node_modules)
+      assert DuskmoonBundler.JS.Vendor.browser_hash(opts) == initial_hash
+      assert {:ok, ^first} = DuskmoonBundler.JS.Vendor.read("fake-lib", opts)
+    end
+
     test "detects bare imports and bundles them" do
       {:ok, vendor_map} =
         DuskmoonBundler.JS.Vendor.prebundle(
@@ -794,6 +821,132 @@ defmodule DuskmoonBundler.JS.VendorTest do
   end
 
   describe "bundle_on_demand/2" do
+    test "refreshes optimized external URLs without replacing the compiled graph on restart" do
+      assert {:ok, _} =
+               DuskmoonBundler.JS.Vendor.prebundle(
+                 root: Path.join(@fixture_dir, "src"),
+                 node_modules: @node_modules
+               )
+
+      File.mkdir_p!(Path.join(@node_modules, "late-lib"))
+
+      File.write!(
+        Path.join(@node_modules, "late-lib/package.json"),
+        ~s({"name":"late-lib","main":"index.js","type":"module"})
+      )
+
+      File.write!(
+        Path.join(@node_modules, "late-lib/index.js"),
+        "import {greet} from 'fake-lib'; export const late = greet('late');"
+      )
+
+      opts = [node_modules: @node_modules, browser_token: "old-server"]
+
+      assert {:ok, code} =
+               DuskmoonBundler.JS.Vendor.bundle_on_demand("late-lib", @node_modules, opts)
+
+      assert code =~ "t=old-server"
+      assert {:ok, ^code} = DuskmoonBundler.JS.Vendor.read("late-lib", opts)
+
+      cached = File.read!(vendor_cache_path("late-lib.js"))
+
+      assert {:ok, refreshed} =
+               DuskmoonBundler.JS.Vendor.read(
+                 "late-lib",
+                 Keyword.put(opts, :browser_token, "new-server")
+               )
+
+      assert refreshed =~ "t=new-server"
+      refute refreshed =~ "t=old-server"
+      assert File.read!(vendor_cache_path("late-lib.js")) == cached
+
+      assert {:ok, restored} =
+               DuskmoonBundler.JS.Vendor.bundle_on_demand("late-lib", @node_modules,
+                 browser_token: "new-server"
+               )
+
+      refute restored =~ "t=old-server"
+      assert restored == refreshed
+      assert File.read!(vendor_cache_path("late-lib.js")) == cached
+    end
+
+    test "recovers a current vendor after a historical package was removed" do
+      File.mkdir_p!(Path.join(@node_modules, "removed-lib"))
+
+      File.write!(
+        Path.join(@node_modules, "removed-lib/package.json"),
+        ~s({"name":"removed-lib","main":"index.js","type":"module"})
+      )
+
+      File.write!(
+        Path.join(@node_modules, "removed-lib/index.js"),
+        "export const removed = true;"
+      )
+
+      app = Path.join(@fixture_dir, "src/app.ts")
+
+      File.write!(
+        app,
+        "import {greet} from 'fake-lib'; import {removed} from 'removed-lib'; console.log(greet, removed);"
+      )
+
+      assert {:ok, _} =
+               DuskmoonBundler.JS.Vendor.prebundle(
+                 root: Path.dirname(app),
+                 node_modules: @node_modules
+               )
+
+      File.rm_rf!(Path.join(@node_modules, "removed-lib"))
+      File.write!(app, "import {greet} from 'fake-lib'; console.log(greet);")
+
+      File.write!(
+        Path.join(@node_modules, "fake-lib/index.js"),
+        "export const greet = () => 'updated-current';"
+      )
+
+      assert {:ok, code} = DuskmoonBundler.JS.Vendor.bundle_on_demand("fake-lib", @node_modules)
+      assert code =~ "updated-current"
+
+      assert {:error, {:not_found, "removed-lib"}} =
+               DuskmoonBundler.JS.Vendor.bundle_on_demand("removed-lib", @node_modules)
+    end
+
+    test "does not synthesize CommonJS exports for local ESM exports identifiers" do
+      File.write!(
+        Path.join(@node_modules, "fake-lib/package.json"),
+        ~s({"name":"fake-lib","main":"index.js","type":"module"})
+      )
+
+      File.write!(
+        Path.join(@node_modules, "fake-lib/index.js"),
+        "const exports = {}; exports.extra = 1; export const value = exports.extra;"
+      )
+
+      assert [] ==
+               DuskmoonBundler.JS.PrebundleEntry.CommonJS.exports(
+                 Path.join(@node_modules, "fake-lib/index.js")
+               )
+
+      refute DuskmoonBundler.JS.PrebundleEntry.CommonJS.common_js?(
+               Path.join(@node_modules, "fake-lib/index.js")
+             )
+
+      assert {:ok, code} = DuskmoonBundler.JS.Vendor.bundle_on_demand("fake-lib", @node_modules)
+      assert code =~ "value"
+    end
+
+    test "discovers only literal CommonJS export properties" do
+      path = Path.join(@node_modules, "fake-lib/index.cjs")
+
+      File.write!(
+        path,
+        "const key = 'dynamic'; exports[key] = 1; exports['literal'] = 2; Object.defineProperty(exports, key, {value: 3}); module.exports.object = {value: 4};"
+      )
+
+      assert ["literal", "object"] == DuskmoonBundler.JS.PrebundleEntry.CommonJS.exports(path)
+      assert DuskmoonBundler.JS.PrebundleEntry.CommonJS.common_js?(path)
+    end
+
     test "bundles a specifier not caught by prebundle" do
       {:ok, code} = DuskmoonBundler.JS.Vendor.bundle_on_demand("fake-lib", @node_modules)
       assert code =~ "greet"
@@ -1058,7 +1211,6 @@ defmodule DuskmoonBundler.JS.VendorTest do
 
   defp vendor_cache_dir do
     Mix.Project.build_path()
-    |> Path.dirname()
     |> Path.join("duskmoon_bundler/vendor")
   end
 

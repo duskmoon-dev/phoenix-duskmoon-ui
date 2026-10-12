@@ -34,6 +34,20 @@ defmodule DuskmoonBundler.DevServerTest do
   end
 
   describe "HMR endpoints" do
+    test "runtime plug initialization preserves server identity across local modules and dependency changes" do
+      opts = [root: Path.join(@fixture_dir, "src"), prefix: "/assets"]
+      first = DuskmoonBundler.DevServer.init(opts)
+      first_conn = conn(:get, "/assets/app.ts") |> DuskmoonBundler.DevServer.call(first)
+      assert first_conn.resp_body =~ ~s|createHotContext("/assets/app.ts")|
+      File.write!(Path.join(@fixture_dir, "bun.lock"), "changed-runtime-dependencies")
+      second = DuskmoonBundler.DevServer.init(opts)
+      assert second.vendor_url_token == first.vendor_url_token
+      other = DuskmoonBundler.DevServer.init(Keyword.put(opts, :prefix, "/other-assets"))
+      refute other.vendor_url_token == first.vendor_url_token
+      other_conn = conn(:get, "/other-assets/app.ts") |> DuskmoonBundler.DevServer.call(other)
+      assert other_conn.resp_body =~ ~s|createHotContext("/other-assets/app.ts")|
+    end
+
     test "serves HMR client JS" do
       conn = call_dev_server("/@duskmoon_bundler/client.js")
 

@@ -76,7 +76,16 @@ defmodule DuskmoonBundler.DevServer do
       node_modules: node_modules,
       resolve_dirs: config.resolve_dirs,
       vendor_source: config.vendor_source,
-      vendor_url_token: vendor_url_token(),
+      vendor_url_token:
+        vendor_url_token({
+          profile,
+          expanded_root,
+          server_config.prefix,
+          plugins,
+          config.resolve_dirs,
+          module_types,
+          config.vendor_source
+        }),
       module_types: module_types,
       define:
         DuskmoonBundler.Env.define(
@@ -406,6 +415,7 @@ defmodule DuskmoonBundler.DevServer do
     file_path
     |> maybe_append_css_import_cache_key(css_import?)
     |> URL.append_query("vendor=#{vendor_hash(config)}")
+    |> URL.append_query("server=#{config.vendor_url_token}")
   end
 
   defp maybe_append_css_import_cache_key(file_path, true),
@@ -617,6 +627,7 @@ defmodule DuskmoonBundler.DevServer do
 
   defp vendor_opts(config) do
     [
+      root: config.root,
       node_modules: config.node_modules,
       plugins: config.plugins,
       resolve_dirs: config.resolve_dirs,
@@ -640,9 +651,26 @@ defmodule DuskmoonBundler.DevServer do
     )
   end
 
-  defp vendor_url_token do
-    8
-    |> :crypto.strong_rand_bytes()
+  defp vendor_url_token(identity) do
+    # Phoenix can initialize runtime plugs for every request. All modules served
+    # by the same configuration must retain one identity as dependencies evolve.
+    key = {__MODULE__, :vendor_url_nonce}
+
+    nonce =
+      :global.trans({key, self()}, fn ->
+        case :persistent_term.get(key, nil) do
+          nil ->
+            nonce = :crypto.strong_rand_bytes(16)
+            :persistent_term.put(key, nonce)
+            nonce
+
+          nonce ->
+            nonce
+        end
+      end)
+
+    :crypto.hash(:sha256, :erlang.term_to_binary({nonce, identity}))
+    |> binary_part(0, 12)
     |> Base.url_encode64(padding: false)
   end
 
