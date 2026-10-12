@@ -163,4 +163,74 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactFormTest do
              message: "Saved"
            }
   end
+
+  test "serializes supported control attributes and preserves wrapper globals" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(~H"""
+      <.dm_react_field
+        name="count"
+        type="number"
+        label="Seats"
+        disabled
+        placeholder="Enter seats"
+        autocomplete="off"
+        required
+        readonly
+        min={0}
+        max={10}
+        step={2}
+        rows={5}
+        id="seat-field"
+        class="full-width"
+        title="Seat allocation"
+        data-owner="billing"
+      />
+      """)
+
+    document = LazyHTML.from_fragment(html)
+    wrapper = LazyHTML.query(document, "#seat-field")
+    assert [json] = LazyHTML.attribute(wrapper, "data-dm-react-field")
+
+    assert %{
+             "name" => "count",
+             "type" => "number",
+             "label" => "Seats",
+             "disabled" => true,
+             "placeholder" => "Enter seats",
+             "autocomplete" => "off",
+             "required" => true,
+             "readonly" => true,
+             "min" => 0,
+             "max" => 10,
+             "step" => 2,
+             "rows" => 5
+           } = config = Jason.decode!(json)
+
+    refute Map.has_key?(config, "title")
+    refute Map.has_key?(config, "id")
+    refute Map.has_key?(config, "class")
+    refute Map.has_key?(config, "data-owner")
+    assert ["full-width dm-react-field"] = LazyHTML.attribute(wrapper, "class")
+    assert ["Seat allocation"] = LazyHTML.attribute(wrapper, "title")
+    assert ["billing"] = LazyHTML.attribute(wrapper, "data-owner")
+
+    for attribute <- ~w(disabled placeholder autocomplete required readonly min max step rows) do
+      assert [] = LazyHTML.attribute(wrapper, attribute)
+    end
+  end
+
+  test "field defaults preserve enabled editable optional controls" do
+    html = render_component(&dm_react_field/1, %{name: "name"})
+    document = LazyHTML.from_fragment(html)
+
+    assert [json] =
+             LazyHTML.attribute(
+               LazyHTML.query(document, "[data-dm-react-field]"),
+               "data-dm-react-field"
+             )
+
+    assert %{"disabled" => false, "required" => false, "readonly" => false} = Jason.decode!(json)
+  end
 end

@@ -65,12 +65,33 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactForm do
     """
   end
 
-  @doc "Marks one nested field for an upstream DuskMoon React control."
+  @doc """
+  Marks one nested field for an upstream DuskMoon React control.
+
+  Control attributes are serialized separately from wrapper globals: `disabled`
+  applies to every field; `placeholder` to text, textarea, number and selection
+  fields; `autocomplete` and `readonly` to text, textarea and number fields;
+  `required` to all controls (selection triggers use `aria-required`); `min`,
+  `max` and `step` configure upstream numeric bounds and stepping; `rows` applies
+  to textarea. Numeric bounds and steps must be numbers.
+
+  `class`, `id` and other global attributes remain on the field wrapper.
+  Application-disabled controls stay disabled when LiveView reconnects.
+  """
   @doc type: :component
   attr(:name, :any, required: true, doc: "String or nested path list")
   attr(:type, :string, default: "text", values: @field_types)
   attr(:label, :string, default: nil)
   attr(:options, :list, default: [])
+  attr(:disabled, :boolean, default: false)
+  attr(:placeholder, :string, default: nil)
+  attr(:autocomplete, :string, default: nil)
+  attr(:required, :boolean, default: false)
+  attr(:readonly, :boolean, default: false)
+  attr(:min, :any, default: nil, doc: "Numeric lower bound for number fields")
+  attr(:max, :any, default: nil, doc: "Numeric upper bound for number fields")
+  attr(:step, :any, default: nil, doc: "Numeric step for number fields")
+  attr(:rows, :integer, default: nil, doc: "Visible rows for textarea fields")
   attr(:class, :any, default: nil)
   attr(:rest, :global)
 
@@ -79,12 +100,20 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactForm do
       assign(
         assigns,
         :field_config,
-        Jason.encode!(%{
-          name: assigns.name,
-          type: assigns.type,
-          label: assigns.label,
-          options: assigns.options
-        })
+        Jason.encode!(
+          Map.merge(
+            %{
+              name: assigns.name,
+              type: assigns.type,
+              label: assigns.label,
+              options: assigns.options
+            },
+            Map.take(
+              assigns,
+              ~w(disabled placeholder autocomplete required readonly min max step rows)a
+            )
+          )
+        )
       )
 
     ~H"""
