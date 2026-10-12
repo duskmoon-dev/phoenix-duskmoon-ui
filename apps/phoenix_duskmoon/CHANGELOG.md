@@ -6,6 +6,8 @@
   application metadata, runtime and admission state across snapshots and events.
 - Opt-in browser constraint validation for classic React forms with
   `novalidate={false}`; schema forms retain JSON Schema validation.
+- Independent classic React form layout through `form_class`, preserving outer
+  wrapper `class`; document the upstream schema-form styling limitation.
 - Native Core components: carousel, countdown, diff, keyboard keys, radial progress,
   floating actions, swap, filter group, hero, indicator, join, mask, sidebar layout,
   stack and megamenu, with Storybook examples.

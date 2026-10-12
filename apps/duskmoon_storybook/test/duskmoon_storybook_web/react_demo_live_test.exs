@@ -34,6 +34,7 @@ defmodule DuskmoonStorybookWeb.ReactDemoLiveTest do
 
     assert html =~ "React JSON form"
     assert has_element?(view, "#react-profile")
+    assert has_element?(view, "#react-profile.max-w-4xl > form.grid.gap-6[data-dm-react-form]")
     assert has_element?(view, "#form-preset-minimal")
     assert has_element?(view, "#form-reset")
 

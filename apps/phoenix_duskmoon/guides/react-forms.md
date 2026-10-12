@@ -15,6 +15,30 @@ render the published JSON Schema form.
 </.dm_react_form>
 ```
 
+## Form layout
+
+`class` belongs to the outer hook wrapper. Set `form_class` to put layout classes
+on the actual classic form, whose direct children are your fields and actions:
+
+```heex
+<.dm_react_form id="create-skill" class="max-w-xl" form_class="flex flex-wrap gap-2 items-end" phx-submit="create-skill">
+  <.dm_react_field name="name" label="Name" class="flex-1" />
+  <.dm_react_field name="scope" type="select" label="Scope" options={[%{value: "global", label: "Global"}]} />
+  <button type="submit" class="btn btn-primary">Create</button>
+</.dm_react_form>
+```
+
+Both class attributes accept Phoenix class lists. `form_class` is omitted by
+default. For vertical margin-based layouts such as `form_class="space-y-4"`, use
+`class="block"` on direct `dm_react_field` children: their markers are inline
+spans by default. Flex and grid layouts can use those markers directly as items.
+
+Schema mode does not apply `form_class`. Its React-owned upstream form has no
+class passthrough yet ([upstream #85](https://github.com/duskmoon-dev/duskmoon-react/issues/85)).
+`class` still styles the outer wrapper, and schema mode retains the upstream
+renderer's form layout. These presentation attributes do not change LiveView
+events or ownership.
+
 Marked fields use the published `@duskmoon-dev/components` 0.5.0 controls and
 `Form.Item` presentation. Text, email, password, textarea, number, and checkbox
 labels are associated with their input IDs. Select and multiselect labels and
@@ -185,6 +209,8 @@ The hook mounts the public `JsonSchemaForm` and `compileForm` exports from
 form, controls, Submit button, and Reset button. The Phoenix wrapper provides
 an ignored mount boundary without a parent form. Optional HEEX slot content
 appears beside the schema renderer, outside its form.
+`form_class` applies only to classic HEEX forms; schema forms keep their upstream
+layout until the renderer provides a native-form class API.
 
 Omit `values` to use the compiled schema's initial values and defaults. Pass
 `values={@values}` to start with an explicit typed JSON object; even `%{}` is an

@@ -59,6 +59,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactFormTest do
       render_component(&dm_react_form/1, %{
         id: "schema-profile",
         schema: schema,
+        class: "schema-wrapper",
+        form_class: "space-y-4",
         novalidate: false,
         "phx-change": "validate",
         "phx-submit": "save",
@@ -76,6 +78,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactFormTest do
     assert ["validate"] = LazyHTML.attribute(root, "phx-change")
     assert ["save"] = LazyHTML.attribute(root, "phx-submit")
     assert ["#editor"] = LazyHTML.attribute(root, "phx-target")
+    assert ["schema-wrapper"] = LazyHTML.attribute(root, "class")
+    assert [] = LazyHTML.attribute(root, "form_class")
+
+    assert [] =
+             LazyHTML.attribute(LazyHTML.query(document, "[data-dm-react-schema]"), "class")
+
     assert [] = LazyHTML.attribute(root, "novalidate")
     assert Enum.empty?(LazyHTML.query(document, "form"))
 
@@ -149,6 +157,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactFormTest do
              Enum.to_list(LazyHTML.query(document, "#classic-default > form[novalidate]"))
 
     assert [] = LazyHTML.attribute(LazyHTML.query(document, "#classic-default"), "novalidate")
+    assert [] = LazyHTML.attribute(LazyHTML.query(document, "#classic-default > form"), "class")
 
     assert ["Draft"] =
              LazyHTML.attribute(LazyHTML.query(document, "form input[name=notes]"), "value")
@@ -186,6 +195,40 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactFormTest do
     assert ["email"] = LazyHTML.attribute(LazyHTML.query(document, "input[name=email]"), "type")
     assert ["0"] = LazyHTML.attribute(LazyHTML.query(document, "input[name=importance]"), "min")
     assert ["1"] = LazyHTML.attribute(LazyHTML.query(document, "input[name=importance]"), "max")
+  end
+
+  test "classic form layout classes are independent of the hook wrapper" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(~H"""
+      <.dm_react_form
+        id="layout-form"
+        class={["hidden", "max-w-lg"]}
+        form_class={["flex", "gap-2", "items-end"]}
+        phx-submit="save"
+      >
+        <.dm_react_field name="name" label="Name" class="block flex-1" />
+        <button type="submit">Create</button>
+      </.dm_react_form>
+      """)
+
+    document = LazyHTML.from_fragment(html)
+    wrapper = LazyHTML.query(document, "#layout-form")
+    form = LazyHTML.query(document, "#layout-form > form[data-dm-react-form]")
+
+    assert ["hidden max-w-lg"] = LazyHTML.attribute(wrapper, "class")
+    assert ["flex gap-2 items-end"] = LazyHTML.attribute(form, "class")
+    assert ["DuskmoonReactForm"] = LazyHTML.attribute(wrapper, "phx-hook")
+    assert ["ignore"] = LazyHTML.attribute(wrapper, "phx-update")
+    assert ["save"] = LazyHTML.attribute(wrapper, "phx-submit")
+    assert [] = LazyHTML.attribute(form, "phx-submit")
+    assert [] = LazyHTML.attribute(wrapper, "form_class")
+
+    assert ["block flex-1 dm-react-field"] =
+             LazyHTML.attribute(LazyHTML.query(form, "[data-dm-react-field]"), "class")
+
+    assert "Create" = LazyHTML.text(LazyHTML.query(form, "button[type=submit]"))
   end
 
   test "formats changeset errors as JSON and supports success replies" do

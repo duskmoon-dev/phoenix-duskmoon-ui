@@ -42,6 +42,7 @@ export const DuskmoonReactForm = {
     this.renderSchema();
   },
   renderSchema() {
+    // TODO(upstream): duskmoon-dev/duskmoon-react#85 - JsonSchemaForm has no native form class prop.
     this.schemaRoot.render(React.createElement(ReactSchemaForm, {
       key: this.schemaRevision, compiled: this.compiledSchema, value: this.values,
       defaultValue: this.initialValues, errors: this.errors, disabled: this.disconnectedState,

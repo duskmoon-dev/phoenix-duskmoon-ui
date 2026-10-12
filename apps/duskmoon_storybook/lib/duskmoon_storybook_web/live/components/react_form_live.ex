@@ -69,166 +69,165 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
               phx-submit="save-profile"
               phx-debounce="180"
               class="max-w-4xl"
+              form_class="grid gap-6"
             >
-              <div class="grid gap-6">
-                <section>
-                  <h3 class="mb-3 text-lg font-semibold">Identity</h3>
-                  <div class="grid gap-4 md:grid-cols-2">
-                    <.dm_react_field
-                      name={[:profile, :name]}
-                      type="text"
-                      label="Display name"
-                      required
-                      placeholder="Your display name"
-                      autocomplete="name"
-                    />
-                    <.dm_react_field
-                      name={[:profile, :email]}
-                      type="email"
-                      label="Email"
-                      required
-                      placeholder="you@example.test"
-                      autocomplete="email"
-                    />
-                    <.dm_react_field
-                      name={[:profile, :role]}
-                      type="select"
-                      label="Role"
-                      options={role_options()}
-                      required
-                      placeholder="Choose a role"
-                    />
-                    <.dm_react_field
-                      name={[:profile, :seats]}
-                      type="number"
-                      label="Seats"
-                      min={1}
-                      max={100}
-                      step={1}
-                    />
-                    <.dm_react_field
-                      name={[:profile, :account_id]}
-                      type="text"
-                      label="Account ID"
-                      readonly
-                    />
-                    <.dm_react_field
-                      name={[:profile, :billing_contact]}
-                      type="text"
-                      label="Billing contact"
-                      disabled
-                    />
-                  </div>
-                </section>
+              <section>
+                <h3 class="mb-3 text-lg font-semibold">Identity</h3>
+                <div class="grid gap-4 md:grid-cols-2">
+                  <.dm_react_field
+                    name={[:profile, :name]}
+                    type="text"
+                    label="Display name"
+                    required
+                    placeholder="Your display name"
+                    autocomplete="name"
+                  />
+                  <.dm_react_field
+                    name={[:profile, :email]}
+                    type="email"
+                    label="Email"
+                    required
+                    placeholder="you@example.test"
+                    autocomplete="email"
+                  />
+                  <.dm_react_field
+                    name={[:profile, :role]}
+                    type="select"
+                    label="Role"
+                    options={role_options()}
+                    required
+                    placeholder="Choose a role"
+                  />
+                  <.dm_react_field
+                    name={[:profile, :seats]}
+                    type="number"
+                    label="Seats"
+                    min={1}
+                    max={100}
+                    step={1}
+                  />
+                  <.dm_react_field
+                    name={[:profile, :account_id]}
+                    type="text"
+                    label="Account ID"
+                    readonly
+                  />
+                  <.dm_react_field
+                    name={[:profile, :billing_contact]}
+                    type="text"
+                    label="Billing contact"
+                    disabled
+                  />
+                </div>
+              </section>
 
-                <section>
-                  <h3 class="mb-3 text-lg font-semibold">Preferences</h3>
-                  <div class="grid gap-4 md:grid-cols-2">
-                    <.dm_react_field
-                      name={[:preferences, :channels]}
-                      type="multiselect"
-                      label="Notification channels"
-                      options={channel_options()}
-                      placeholder="Choose notification channels"
+              <section>
+                <h3 class="mb-3 text-lg font-semibold">Preferences</h3>
+                <div class="grid gap-4 md:grid-cols-2">
+                  <.dm_react_field
+                    name={[:preferences, :channels]}
+                    type="multiselect"
+                    label="Notification channels"
+                    options={channel_options()}
+                    placeholder="Choose notification channels"
+                  />
+                  <label class="flex items-center gap-3 rounded-lg border border-base-300 p-3">
+                    <input
+                      name="preferences[newsletter]"
+                      type="checkbox"
+                      checked={@values["preferences"]["newsletter"]}
+                      class="checkbox"
                     />
-                    <label class="flex items-center gap-3 rounded-lg border border-base-300 p-3">
+                    <span>
+                      <span class="block font-medium">Weekly newsletter</span>
+                      <span class="block text-sm opacity-60">Native HTML control in the same JSON tree</span>
+                    </span>
+                  </label>
+                </div>
+                <fieldset class="mt-4">
+                  <legend class="mb-2 font-medium">Preferred tools</legend>
+                  <div class="flex flex-wrap gap-4">
+                    <label
+                      :for={
+                        {value, label} <- [
+                          {"file.read", "Read files"},
+                          {"file.write", "Write files"}
+                        ]
+                      }
+                      class="flex items-center gap-2"
+                    >
                       <input
-                        name="preferences[newsletter]"
+                        name="preferences[tools][]"
                         type="checkbox"
-                        checked={@values["preferences"]["newsletter"]}
+                        value={value}
+                        checked={value in @values["preferences"]["tools"]}
                         class="checkbox"
                       />
-                      <span>
-                        <span class="block font-medium">Weekly newsletter</span>
-                        <span class="block text-sm opacity-60">Native HTML control in the same JSON tree</span>
-                      </span>
+                      {label}
                     </label>
                   </div>
-                  <fieldset class="mt-4">
-                    <legend class="mb-2 font-medium">Preferred tools</legend>
-                    <div class="flex flex-wrap gap-4">
-                      <label
-                        :for={
-                          {value, label} <- [
-                            {"file.read", "Read files"},
-                            {"file.write", "Write files"}
-                          ]
-                        }
-                        class="flex items-center gap-2"
-                      >
-                        <input
-                          name="preferences[tools][]"
-                          type="checkbox"
-                          value={value}
-                          checked={value in @values["preferences"]["tools"]}
-                          class="checkbox"
-                        />
-                        {label}
-                      </label>
-                    </div>
-                  </fieldset>
-                </section>
+                </fieldset>
+              </section>
 
-                <section>
-                  <h3 class="mb-3 text-lg font-semibold">Native constraints</h3>
-                  <p class="mb-3 text-sm opacity-60">
-                    These native fields use browser validation before saving.
-                  </p>
-                  <div class="grid gap-4 md:grid-cols-2">
-                    <label class="grid gap-2">
-                      Workspace handle
-                      <input
-                        name="profile[handle]"
-                        value={@values["profile"]["handle"]}
-                        required
-                        pattern="[a-z][a-z0-9]*(-[a-z0-9]+)*"
-                        class="input"
-                      />
-                    </label>
-                    <label class="grid gap-2">
-                      Contact email
-                      <input
-                        name="profile[contact_email]"
-                        type="email"
-                        value={@values["profile"]["contact_email"]}
-                        required
-                        class="input"
-                      />
-                    </label>
-                    <label class="grid gap-2">
-                      Importance (0 to 1)
-                      <input
-                        name="profile[importance]"
-                        type="number"
-                        value={@values["profile"]["importance"]}
-                        min="0"
-                        max="1"
-                        step="0.1"
-                        class="input"
-                      />
-                    </label>
-                  </div>
-                </section>
-
-                <.dm_react_field
-                  name="notes"
-                  type="textarea"
-                  label="Notes"
-                  rows={4}
-                  placeholder="Add context for the team"
-                />
-
-                <div class="flex flex-wrap gap-3">
-                  <button type="submit" class="btn btn-primary">Save profile</button>
-                  <button
-                    id="form-reset"
-                    type="button"
-                    class="btn btn-outline"
-                    phx-click="reset-profile"
-                  >
-                    Reset local draft
-                  </button>
+              <section>
+                <h3 class="mb-3 text-lg font-semibold">Native constraints</h3>
+                <p class="mb-3 text-sm opacity-60">
+                  These native fields use browser validation before saving.
+                </p>
+                <div class="grid gap-4 md:grid-cols-2">
+                  <label class="grid gap-2">
+                    Workspace handle
+                    <input
+                      name="profile[handle]"
+                      value={@values["profile"]["handle"]}
+                      required
+                      pattern="[a-z][a-z0-9]*(-[a-z0-9]+)*"
+                      class="input"
+                    />
+                  </label>
+                  <label class="grid gap-2">
+                    Contact email
+                    <input
+                      name="profile[contact_email]"
+                      type="email"
+                      value={@values["profile"]["contact_email"]}
+                      required
+                      class="input"
+                    />
+                  </label>
+                  <label class="grid gap-2">
+                    Importance (0 to 1)
+                    <input
+                      name="profile[importance]"
+                      type="number"
+                      value={@values["profile"]["importance"]}
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      class="input"
+                    />
+                  </label>
                 </div>
+              </section>
+
+              <.dm_react_field
+                name="notes"
+                type="textarea"
+                label="Notes"
+                rows={4}
+                placeholder="Add context for the team"
+              />
+
+              <div class="flex flex-wrap gap-3">
+                <button type="submit" class="btn btn-primary">Save profile</button>
+                <button
+                  id="form-reset"
+                  type="button"
+                  class="btn btn-outline"
+                  phx-click="reset-profile"
+                >
+                  Reset local draft
+                </button>
               </div>
             </.dm_react_form>
           </div>
@@ -301,6 +300,7 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
             This form includes a nested object, editable member array, numeric plan enum,
             required fields, and typed defaults. React validates the schema; the server
             checks name availability. Try the workspace name "taken" for a backend error.
+            Schema mode retains the upstream layout; form_class styles classic forms only.
           </p>
           <.dm_react_form
             id="react-schema-profile"

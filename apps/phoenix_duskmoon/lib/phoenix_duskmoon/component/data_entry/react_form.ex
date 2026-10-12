@@ -23,6 +23,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactForm do
 
   Classic forms default to `novalidate`. Set `novalidate={false}` to check
   browser constraints before submission. Schema forms retain JSON validation.
+
+  `class` styles the outer hook wrapper. `form_class` styles the actual classic
+  form independently. Schema mode does not apply `form_class`: its upstream
+  React-owned form does not expose a class passthrough.
   """
   @doc type: :component
   attr(:id, :string, required: true)
@@ -34,6 +38,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactForm do
   )
 
   attr(:class, :any, default: nil)
+
+  attr(:form_class, :any,
+    default: nil,
+    doc: "Classes for the classic native form; not applied in schema mode"
+  )
+
   attr(:novalidate, :boolean, default: true, doc: "Skip browser validation in classic forms")
 
   attr(:rest, :global,
@@ -61,7 +71,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactForm do
         </div>
         {render_slot(@inner_block)}
       <% else %>
-        <form data-dm-react-form novalidate={@novalidate}>
+        <form {if @form_class, do: [class: @form_class], else: []} data-dm-react-form novalidate={@novalidate}>
           {render_slot(@inner_block)}
         </form>
       <% end %>
@@ -80,6 +90,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactForm do
   to textarea. Numeric bounds and steps must be numbers.
 
   `class`, `id` and other global attributes remain on the field wrapper.
+  Use `class="block"` on field markers for vertical margin-based form layouts.
   Application-disabled controls stay disabled when LiveView reconnects.
   """
   @doc type: :component
