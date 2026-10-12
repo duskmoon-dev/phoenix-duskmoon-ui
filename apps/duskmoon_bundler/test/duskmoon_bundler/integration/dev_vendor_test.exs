@@ -25,6 +25,9 @@ end
 defmodule DuskmoonBundler.Integration.DevVendorTest do
   use ExUnit.Case, async: false
   @moduletag :integration
+  @moduletag timeout: 120_000
+  # Cold dependency optimization can exceed 15 seconds on hosted CI runners.
+  @navigation_timeout 30_000
   alias DuskmoonBundler.Integration.CDPBrowser
   alias DuskmoonBundler.JS.Vendor
   @fixture_dir Path.expand("../fixtures/dev_vendor", __DIR__)
@@ -214,7 +217,7 @@ defmodule DuskmoonBundler.Integration.DevVendorTest do
     )
 
     check = fn page, port, config ->
-      :ok = CDPBrowser.goto(page, "http://127.0.0.1:#{port}/", timeout: 15_000)
+      :ok = CDPBrowser.goto(page, "http://127.0.0.1:#{port}/", timeout: @navigation_timeout)
 
       assert {:ok, %{"hooks" => true, "text" => "custom draft", "errors" => []}} =
                CDPBrowser.evaluate(
@@ -290,7 +293,7 @@ defmodule DuskmoonBundler.Integration.DevVendorTest do
     config: config,
     port: port
   } do
-    :ok = CDPBrowser.goto(page, "http://127.0.0.1:#{port}/", timeout: 15_000)
+    :ok = CDPBrowser.goto(page, "http://127.0.0.1:#{port}/", timeout: @navigation_timeout)
 
     assert {:ok, %{"hooks" => true, "cjs" => true, "text" => "custom draft", "summary" => true}} =
              CDPBrowser.evaluate(
@@ -434,7 +437,7 @@ defmodule DuskmoonBundler.Integration.DevVendorTest do
     config: config,
     port: port
   } do
-    :ok = CDPBrowser.goto(page, "http://127.0.0.1:#{port}/", timeout: 15_000)
+    :ok = CDPBrowser.goto(page, "http://127.0.0.1:#{port}/", timeout: @navigation_timeout)
     expected = %{"value" => 7, "nil" => true, "undef" => true, "portal" => true}
 
     assert {:ok, ^expected} =
@@ -490,7 +493,11 @@ defmodule DuskmoonBundler.Integration.DevVendorTest do
     {:ok, {_ip, restarted_port}} = ThousandIsland.listener_info(restarted_server)
     {:ok, restarted_page} = CDPBrowser.new_page(browser)
     on_exit(fn -> CDPBrowser.close_page(restarted_page) end)
-    :ok = CDPBrowser.goto(restarted_page, "http://127.0.0.1:#{restarted_port}/", timeout: 15_000)
+
+    :ok =
+      CDPBrowser.goto(restarted_page, "http://127.0.0.1:#{restarted_port}/",
+        timeout: @navigation_timeout
+      )
 
     assert {:ok, %{"contract" => ^expected, "errors" => []}} =
              CDPBrowser.evaluate(
