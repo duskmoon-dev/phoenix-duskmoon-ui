@@ -15,10 +15,10 @@ render the published JSON Schema form.
 </.dm_react_form>
 ```
 
-Marked fields use the published `@duskmoon-dev/components` 0.4.1 controls and
+Marked fields use the published `@duskmoon-dev/components` 0.5.0 controls and
 `Form.Item` presentation. Text, email, password, textarea, number, and checkbox
 labels are associated with their input IDs. Select and multiselect labels and
-error attributes reach their interactive trigger in Components 0.4.1.
+error attributes reach their interactive trigger.
 Server errors render through
 `Form.ErrorList` as an alert referenced by the field's `aria-describedby`; fields
 with errors also expose `aria-invalid`. Successful validation clears this state.
@@ -28,6 +28,42 @@ Use `type="number"` for numeric values (including zero, with an empty value as
 values; `type="multiselect"` preserves the selected values as an array. Text,
 email, password, and textarea fields retain string values.
 
+## Field attributes
+
+Pass supported control attributes directly to `dm_react_field`:
+
+```heex
+<.dm_react_field name="name" label="Name" required placeholder="Agent name" autocomplete="off" />
+<.dm_react_field name="seats" type="number" label="Seats" min={1} max={100} step={1} />
+<.dm_react_field name="reference" label="Reference" readonly />
+<.dm_react_field name="notes" type="textarea" label="Notes" rows={4} />
+```
+
+| Attribute | Supported controls |
+| --- | --- |
+| `disabled` | All field types; combines with the disconnected state |
+| `placeholder` | Text, email, password, textarea, number, select, multiselect |
+| `autocomplete` | Text, email, password, textarea, number |
+| `required` | Native input/textarea fields; select/multiselect use `aria-required` on the trigger |
+| `readonly` | Text, email, password, textarea, number |
+| `min`, `max`, `step` | Number bounds and stepping through upstream `InputNumber` |
+| `rows` | Textarea |
+
+These attributes reach the interactive control. Reconnection enables fields that
+were disabled by the connection while preserving an application's `disabled` value.
+`class` and remaining global attributes still belong to the field wrapper.
+The form uses JSON submission and `novalidate`; control attributes do not replace
+backend validation or authorization.
+
+Components 0.5.0 needs two temporary adapters: numeric `readonly` also disables
+its keyboard and step buttons ([upstream #82](https://github.com/duskmoon-dev/duskmoon-react/issues/82)),
+and required select state is applied to the mounted trigger
+([upstream #83](https://github.com/duskmoon-dev/duskmoon-react/issues/83)).
+Select required-state ARIA is therefore available after React mounts; rendering
+`ReactField` alone to static HTML does not supply that trigger attribute.
+
+## LiveView events
+
 React owns marked fields and serializes the complete value tree as JSON. Native
 controls are collected by name using the same nested path rules. The LiveView
 receives `%{"id" => id, "values" => values, "revision" => revision}` and a
@@ -35,6 +71,33 @@ change event also includes `"changed"` as a path list. Schema changes report the
 narrowest common path, such as `["profile", "name"]` for a single field or `[]`
 for a change across root properties. `phx-target` is passed to
 the normal LiveView `pushEventTo` path.
+
+## Native checkbox groups
+
+Use a name ending in `[]` for native checkboxes that represent selected values.
+Every checkbox in the group shares that name and supplies its own string `value`:
+
+```heex
+<.dm_react_form id="tools" phx-change="validate-tools" phx-submit="save-tools">
+  <label><input type="checkbox" name="tool_names[]" value="file.read" checked /> Read files</label>
+  <label><input type="checkbox" name="tool_names[]" value="file.write" /> Write files</label>
+  <label><input type="checkbox" name="agent[toolset_ids][]" value="development" checked /> Development tools</label>
+  <button type="submit">Save</button>
+</.dm_react_form>
+```
+
+The initial JSON is `%{"tool_names" => ["file.read"], "agent" =>
+%{"toolset_ids" => ["development"]}}`. Input and change events recompute the
+selected values for the complete group; clearing its last selection sends `[]`.
+The changed path excludes the array marker, for example `["agent", "toolset_ids"]`.
+A group with one checkbox still uses an array. A checkbox without `[]` keeps its
+boolean value, including `false` when unchecked.
+
+`dm:form:reset` accepts arrays at these paths and restores each checkbox by
+matching its `value`; an empty or omitted group value clears every checkbox.
+The native Reset button restores the form's original values. Use native grouped
+checkboxes for this representation; `dm_react_field type="checkbox"` remains a
+single boolean field.
 
 `phx-change` is debounced when `phx-debounce` is present. `phx-submit` sends the
 latest snapshot immediately. Reply with `%{status: "ok"}` or
@@ -51,7 +114,7 @@ replace the React draft and clear errors. React owns the ignored subtree after
 mount, so server updates inside it require an explicit reset event. Existing
 `dm_form` remains the Phoenix-native form for simple forms.
 
-Components 0.4.1 requires Core 1.20.3 or newer and React/ReactDOM 19 or newer.
+Components 0.5.0 requires Core 1.20.3 or newer and React/ReactDOM 19 or newer.
 Keep the Components stylesheet import for its React form and control styles.
 
 ## Schema forms

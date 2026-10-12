@@ -73,15 +73,50 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
                 <section>
                   <h3 class="mb-3 text-lg font-semibold">Identity</h3>
                   <div class="grid gap-4 md:grid-cols-2">
-                    <.dm_react_field name={[:profile, :name]} type="text" label="Display name" />
-                    <.dm_react_field name={[:profile, :email]} type="email" label="Email" />
+                    <.dm_react_field
+                      name={[:profile, :name]}
+                      type="text"
+                      label="Display name"
+                      required
+                      placeholder="Your display name"
+                      autocomplete="name"
+                    />
+                    <.dm_react_field
+                      name={[:profile, :email]}
+                      type="email"
+                      label="Email"
+                      required
+                      placeholder="you@example.test"
+                      autocomplete="email"
+                    />
                     <.dm_react_field
                       name={[:profile, :role]}
                       type="select"
                       label="Role"
                       options={role_options()}
+                      required
+                      placeholder="Choose a role"
                     />
-                    <.dm_react_field name={[:profile, :seats]} type="number" label="Seats" />
+                    <.dm_react_field
+                      name={[:profile, :seats]}
+                      type="number"
+                      label="Seats"
+                      min={1}
+                      max={100}
+                      step={1}
+                    />
+                    <.dm_react_field
+                      name={[:profile, :account_id]}
+                      type="text"
+                      label="Account ID"
+                      readonly
+                    />
+                    <.dm_react_field
+                      name={[:profile, :billing_contact]}
+                      type="text"
+                      label="Billing contact"
+                      disabled
+                    />
                   </div>
                 </section>
 
@@ -93,6 +128,7 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
                       type="multiselect"
                       label="Notification channels"
                       options={channel_options()}
+                      placeholder="Choose notification channels"
                     />
                     <label class="flex items-center gap-3 rounded-lg border border-base-300 p-3">
                       <input
@@ -107,16 +143,38 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
                       </span>
                     </label>
                   </div>
+                  <fieldset class="mt-4">
+                    <legend class="mb-2 font-medium">Preferred tools</legend>
+                    <div class="flex flex-wrap gap-4">
+                      <label
+                        :for={
+                          {value, label} <- [
+                            {"file.read", "Read files"},
+                            {"file.write", "Write files"}
+                          ]
+                        }
+                        class="flex items-center gap-2"
+                      >
+                        <input
+                          name="preferences[tools][]"
+                          type="checkbox"
+                          value={value}
+                          checked={value in @values["preferences"]["tools"]}
+                          class="checkbox"
+                        />
+                        {label}
+                      </label>
+                    </div>
+                  </fieldset>
                 </section>
 
-                <label class="form-control">
-                  <span class="label-text mb-2 font-medium">Notes</span>
-                  <textarea
-                    name="notes"
-                    class="textarea textarea-bordered min-h-28"
-                    placeholder="Add context for the team"
-                  >{@values["notes"]}</textarea>
-                </label>
+                <.dm_react_field
+                  name="notes"
+                  type="textarea"
+                  label="Notes"
+                  rows={4}
+                  placeholder="Add context for the team"
+                />
 
                 <div class="flex flex-wrap gap-3">
                   <button type="submit" class="btn btn-primary">Save profile</button>
@@ -442,9 +500,15 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
         "name" => "Ada Lovelace",
         "email" => "ada@example.test",
         "role" => "editor",
-        "seats" => 4
+        "seats" => 4,
+        "account_id" => "moon-001",
+        "billing_contact" => "Workspace administrator"
       },
-      "preferences" => %{"channels" => ["email", "slack"], "newsletter" => true},
+      "preferences" => %{
+        "channels" => ["email", "slack"],
+        "newsletter" => true,
+        "tools" => ["file.read"]
+      },
       "notes" => "Uses nested fields and native HTML together."
     }
   end
@@ -454,6 +518,7 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
     |> put_in(["profile", "email"], "new@example.test")
     |> put_in(["profile", "seats"], 1)
     |> put_in(["preferences", "channels"], ["email"])
+    |> put_in(["preferences", "tools"], [])
   end
 
   defp team_values do
@@ -461,6 +526,7 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
     |> put_in(["profile", "role"], "admin")
     |> put_in(["profile", "seats"], 24)
     |> put_in(["preferences", "channels"], ["email", "slack", "webhook"])
+    |> put_in(["preferences", "tools"], ["file.read", "file.write"])
   end
 
   defp role_options,

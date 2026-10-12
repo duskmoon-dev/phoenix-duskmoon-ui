@@ -32,6 +32,10 @@
 
 ### Fixed
 
+- Forward React form field attributes to their interactive controls and preserve
+  application-disabled fields when the LiveView connection recovers.
+- Preserve selected-value arrays for native checkbox groups named with `[]`,
+  including nested paths, empty selections and per-checkbox reset state.
 - Resolve production chunk imports by their importing module, preventing identical
   relative paths in unrelated packages from becoming missing browser assets.
 - Preserve lazy custom-element registration and resolve preload URLs relative to
