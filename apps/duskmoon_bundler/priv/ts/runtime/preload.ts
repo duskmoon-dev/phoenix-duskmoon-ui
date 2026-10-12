@@ -9,6 +9,7 @@ const __duskmoon_bundlerPreload = (load: () => Promise<unknown>, deps: string[])
     })
 
 function __duskmoon_bundlerPreloadDep(dep: string) {
+  dep = new URL(dep, import.meta.url).href
   if (__duskmoon_bundlerPreloaded.has(dep) || document.querySelector(`link[href=${JSON.stringify(dep)}]`)) {
     return Promise.resolve()
   }

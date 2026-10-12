@@ -499,45 +499,55 @@ defmodule DuskmoonBundler.Builder.Output do
   end
 
   defp chunk_import_map(chunk, graph, module_labels, dep_map) do
-    chunk_entry_label = chunk.modules |> List.first() |> then(&module_labels[&1])
-
-    chunk.modules
-    |> Enum.flat_map(fn importer ->
-      module_chunk_imports(
-        importer,
-        chunk_entry_label,
-        chunk.id,
-        graph,
-        module_labels,
-        dep_map
-      )
-    end)
-    |> Map.new()
+    for importer <- chunk.modules,
+        {label, chunk_id} <-
+          cross_chunk_dependencies(importer, chunk.id, graph, module_labels, dep_map),
+        into: %{},
+        do: {chunk_specifier(label), chunk_id}
   end
 
-  defp module_chunk_imports(
-         importer,
-         chunk_entry_label,
-         current_chunk_id,
-         graph,
-         module_labels,
-         dep_map
-       ) do
-    importer_label = module_labels[importer]
+  defp cross_chunk_dependencies(importer, current_chunk_id, graph, module_labels, dep_map) do
     deps = Map.get(dep_map, importer, %DuskmoonBundler.Builder.Dependencies{})
 
     (deps.static ++ deps.dynamic)
     |> Enum.flat_map(fn dep ->
       with chunk_id when is_binary(chunk_id) <- Map.get(graph.module_to_chunk, dep),
            false <- chunk_id == current_chunk_id,
-           dep_label when is_binary(dep_label) <- module_labels[dep] do
-        [
-          {"./" <> relative_label(importer_label, dep_label), chunk_id},
-          {module_specifier(chunk_entry_label, dep_label), chunk_id}
-        ]
+           label when is_binary(label) <- module_labels[dep] do
+        [{label, chunk_id}]
       else
         _ -> []
       end
+    end)
+  end
+
+  defp chunk_specifier(label), do: "__duskmoon_chunk__/" <> label
+
+  defp rewrite_chunk_specifiers(js_files, chunk, graph, module_labels, dep_map) do
+    paths = Map.new(module_labels, fn {path, label} -> {label, path} end)
+
+    Enum.map(js_files, fn {label, code} ->
+      rewrites =
+        for {dependency_label, _chunk_id} <-
+              cross_chunk_dependencies(paths[label], chunk.id, graph, module_labels, dep_map),
+            into: %{},
+            do:
+              {"./" <> relative_label(label, dependency_label), chunk_specifier(dependency_label)}
+
+      # Relative specifiers are importer-specific. Only these unique cross-chunk
+      # identities can safely be passed to Rolldown's chunk-wide external list.
+      code =
+        if rewrites == %{},
+          do: code,
+          else:
+            DuskmoonBundler.JS.Transforms.Imports.rewrite!(code, label, fn specifier ->
+              case Map.fetch(rewrites, specifier) do
+                {:ok, replacement} -> {:rewrite, replacement}
+                :error -> :keep
+              end
+            end)
+
+      {label, code}
     end)
   end
 
@@ -576,7 +586,9 @@ defmodule DuskmoonBundler.Builder.Output do
 
         with nil <- facade_requirements_error(chunk_id, chunk, facade_requirements) do
           chunk_js =
-            add_chunk_facade(chunk_js, chunk_id, chunk, facade_requirements, export_aliases)
+            chunk_js
+            |> add_chunk_facade(chunk_id, chunk, facade_requirements, export_aliases)
+            |> rewrite_chunk_specifiers(chunk, graph, module_labels, dep_map)
 
           {chunk_js, dynamic_import_placeholder} = Rewriter.protect_dynamic_imports(chunk_js)
 
@@ -588,7 +600,10 @@ defmodule DuskmoonBundler.Builder.Output do
 
           bundle_opts =
             bundle_opts
-            |> Keyword.put(:entry, chunk_entry_label(chunk_js))
+            |> Keyword.put(
+              :entry,
+              chunk_entry_label(chunk_js, chunk, graph, module_labels, dep_map)
+            )
             |> put_external_imports(external)
 
           case bundle_js_files(chunk_js, bundle_opts) do
@@ -632,7 +647,30 @@ defmodule DuskmoonBundler.Builder.Output do
     end)
   end
 
-  defp chunk_entry_label([{label, _code} | _]), do: label
+  defp chunk_entry_label(
+         js_files,
+         %{type: :async, id: id, modules: modules},
+         graph,
+         module_labels,
+         dep_map
+       ) do
+    # A dependency visited through another branch may precede this chunk's root
+    # in collector order. Bundling that dependency would omit root side effects.
+    dynamic_entries =
+      dep_map
+      |> Enum.flat_map(fn {_path, dependencies} -> dependencies.dynamic end)
+      |> MapSet.new()
+
+    entry =
+      Enum.find(modules, fn path ->
+        MapSet.member?(dynamic_entries, path) and graph.module_to_chunk[path] == id
+      end)
+
+    module_labels[entry] || elem(hd(js_files), 0)
+  end
+
+  defp chunk_entry_label([{label, _code} | _], _chunk, _graph, _module_labels, _dep_map),
+    do: label
 
   defp add_chunk_facade([_single] = js_files, _chunk_id, %{type: type}, _requirements, _aliases)
        when type not in [:common, :manual],
