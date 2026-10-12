@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { ReactField } from "./component.js";
 import { compileForm } from "@duskmoon-dev/components/json-schema-form";
 import { ReactSchemaForm, changedPath, schemaErrors } from "./schema.js";
-import { collectValues, fieldKey, getAt, pathOf, setAt } from "./values.js";
+import { collectValues, fieldKey, getAt, nativeValue, pathOf, setAt, setNativeValue } from "./values.js";
 function parseJSON(value, fallback = {}) { try { return JSON.parse(value); } catch { return fallback; } }
 function flattenErrors(errors, prefix = [], result = {}) {
   Object.entries(errors || {}).forEach(([key, value]) => {
@@ -76,10 +76,7 @@ export const DuskmoonReactForm = {
     });
   },
   nativeValue(element) {
-    if (element.type === "checkbox") return element.checked;
-    if (element.type === "number") return element.value === "" ? null : Number(element.value);
-    if (element.multiple) return [...element.selectedOptions].map((option) => option.value);
-    return element.value;
+    return nativeValue(element, this.native);
   },
   bindForm() {
     this.submitHandler = (event) => { event.preventDefault(); this.submit(); };
@@ -109,7 +106,7 @@ export const DuskmoonReactForm = {
     clearTimeout(this.changeTimer);
     this.values = structuredClone(values); this.errors = {}; this.revision++;
     if (this.schemaRoot) { this.schemaRevision++; this.renderAll(); return; }
-    this.native.forEach((element) => { if (element.type === "checkbox") element.checked = Boolean(getAt(this.values, element.name)); else element.value = getAt(this.values, element.name) ?? ""; }); this.renderAll();
+    this.native.forEach((element) => setNativeValue(element, getAt(this.values, element.name))); this.renderAll();
   },
   disconnected() { clearTimeout(this.changeTimer); this.disconnectedState = true; this.renderAll(); },
   reconnected() { this.disconnectedState = false; this.renderAll(); },

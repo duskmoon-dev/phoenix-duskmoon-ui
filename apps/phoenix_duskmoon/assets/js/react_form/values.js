@@ -17,13 +17,27 @@ export function setAt(values, name, value) {
   return result;
 }
 
+function isCheckboxGroup(element) {
+  return element.type === "checkbox" && element.name.endsWith("[]");
+}
+
+export function nativeValue(element, elements = [element]) {
+  if (isCheckboxGroup(element)) {
+    return elements.filter((control) => control.type === "checkbox" && control.name === element.name && control.checked)
+      .map((control) => control.value);
+  }
+  if (element.type === "checkbox") return Boolean(element.checked);
+  if (element.type === "number") return element.value === "" ? null : Number(element.value);
+  if (element.multiple) return [...element.selectedOptions].map((option) => option.value);
+  return element.value;
+}
+
+export function setNativeValue(element, value) {
+  if (element.type === "checkbox") {
+    element.checked = isCheckboxGroup(element) ? Array.isArray(value) && value.includes(element.value) : Boolean(value);
+  } else element.value = value ?? "";
+}
+
 export function collectValues(elements) {
-  return elements.reduce((values, element) => {
-    let value;
-    if (element.type === "checkbox") value = Boolean(element.checked);
-    else if (element.type === "number") value = element.value === "" ? null : Number(element.value);
-    else if (element.multiple) value = [...element.selectedOptions].map((option) => option.value);
-    else value = element.value;
-    return setAt(values, element.name, value);
-  }, {});
+  return elements.reduce((values, element) => setAt(values, element.name, nativeValue(element, elements)), {});
 }
