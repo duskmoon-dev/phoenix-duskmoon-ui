@@ -73,6 +73,14 @@ Example Phoenix web app manifest:
 
 npm_ex links workspace packages and local directory `file:` packages into the root `node_modules/` and resolves registry dependencies into `package-lock.json`. When `mix npm.install <package>` is run from a workspace package, the dependency is saved to that package's `package.json` while installation still happens at the workspace root.
 
+Ordinary install checks dependency ranges from each package's location, including
+nested versions, and repairs incomplete transitive locks. Install and update lock
+both required and optional dependency trees, so the resulting lock can be reused
+with `mix npm.install --frozen` under the same manifests and security policy.
+Optional dependency ranges replace duplicate required ranges, and the root
+manifest's supported flat `overrides` apply throughout transitive resolution and
+validation. Frozen install validates the graph without rewriting the lockfile.
+
 ## Common workflows
 
 ```sh

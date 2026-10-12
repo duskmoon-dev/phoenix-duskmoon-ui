@@ -349,6 +349,179 @@ defmodule NPM.InstallTest do
     assert installed_version!(nested_marked) == "16.3.0"
   end
 
+  test "install and update complete required and optional trees of nested versions", context do
+    write_nested_graph_fixture!(context.project_dir)
+
+    for operation <- [&NPM.install/0, &NPM.update/0] do
+      capture_io(fn -> assert :ok = operation.() end)
+      assert_complete_nested_graph!()
+
+      original_lock = File.read!("package-lock.json")
+      File.rm_rf!("node_modules")
+      capture_io(fn -> assert :ok = NPM.install(frozen: true) end)
+      assert File.read!("package-lock.json") == original_lock
+      assert_complete_nested_graph!()
+    end
+  end
+
+  test "optional dependency ranges replace duplicate required ranges", context do
+    package = "optional-override-parent"
+    leaf = "optional-override-leaf"
+
+    put_packument!(package, "1.0.0",
+      dependencies: %{leaf => "^1.0.0"},
+      optional_dependencies: %{leaf => "^2.0.0"}
+    )
+
+    put_packument_versions!(leaf, [{"1.0.0", []}, {"2.0.0", []}])
+    write_cached_package!(package, "1.0.0")
+    write_cached_package!(leaf, "2.0.0")
+    write_package!(context.project_dir, %{"dependencies" => %{package => "1.0.0"}})
+
+    for operation <- [&NPM.install/0, &NPM.update/0] do
+      capture_io(fn -> assert :ok = operation.() end)
+      assert {:ok, %{^leaf => %{version: "2.0.0"}}} = NPM.Lockfile.read()
+      assert {:ok, %{}} = NPM.Lockfile.read_nested()
+      assert installed_version!("node_modules/#{leaf}") == "2.0.0"
+      lock = File.read!("package-lock.json")
+      capture_io(fn -> assert :ok = NPM.install(frozen: true) end)
+      assert File.read!("package-lock.json") == lock
+    end
+  end
+
+  test "project overrides govern transitive ranges and stale lock validation", context do
+    package = "project-override-parent"
+    leaf = "project-override-leaf"
+    put_packument!(package, "1.0.0", dependencies: %{leaf => "^1.0.0"})
+    put_packument_versions!(leaf, [{"1.0.0", []}, {"2.0.0", []}])
+    write_cached_package!(package, "1.0.0")
+    write_cached_package!(leaf, "1.0.0")
+    write_cached_package!(leaf, "2.0.0")
+    manifest = %{"dependencies" => %{package => "1.0.0"}, "overrides" => %{leaf => "^2.0.0"}}
+    write_package!(context.project_dir, manifest)
+
+    for operation <- [&NPM.install/0, &NPM.update/0] do
+      capture_io(fn -> assert :ok = operation.() end)
+      assert {:ok, %{^leaf => %{version: "2.0.0"}}} = NPM.Lockfile.read()
+      assert {:ok, %{}} = NPM.Lockfile.read_nested()
+      assert installed_version!("node_modules/#{leaf}") == "2.0.0"
+      lock = File.read!("package-lock.json")
+      capture_io(fn -> assert :ok = NPM.install(frozen: true) end)
+      assert File.read!("package-lock.json") == lock
+      output = capture_io(fn -> assert :ok = NPM.install() end)
+      assert output =~ "Already up to date."
+    end
+
+    write_package!(context.project_dir, %{manifest | "overrides" => %{leaf => "^1.0.0"}})
+    stale_lock = File.read!("package-lock.json")
+    capture_io(:stderr, fn -> assert {:error, :frozen_lockfile} = NPM.install(frozen: true) end)
+    assert File.read!("package-lock.json") == stale_lock
+    capture_io(fn -> assert :ok = NPM.install() end)
+    assert {:ok, %{^leaf => %{version: "1.0.0"}}} = NPM.Lockfile.read()
+    capture_io(fn -> assert :ok = NPM.install(frozen: true) end)
+  end
+
+  test "project overrides govern required and optional expansion beneath nested records",
+       context do
+    write_nested_graph_fixture!(context.project_dir)
+    manifest = read_package!(context.project_dir)
+
+    put_packument_versions!("nested-optional", [
+      {"1.0.0", [dependencies: %{"nested-optional-leaf" => "1.0.0"}]},
+      {"2.0.0", [dependencies: %{"nested-optional-leaf" => "1.0.0"}]}
+    ])
+
+    write_cached_package!("nested-optional", "2.0.0")
+
+    overrides = %{
+      "internmap" => "^3.0.0",
+      "d3-path" => "^3.0.0",
+      "layout-base" => "^2.0.0",
+      "nested-optional" => "^2.0.0"
+    }
+
+    write_package!(context.project_dir, Map.put(manifest, "overrides", overrides))
+
+    for operation <- [&NPM.install/0, &NPM.update/0] do
+      capture_io(fn -> assert :ok = operation.() end)
+      assert {:ok, %{"packages" => packages}} = NPM.JSON.read_file("package-lock.json")
+
+      for {name, version} <- [
+            {"internmap", "3.0.0"},
+            {"d3-path", "3.1.0"},
+            {"layout-base", "2.0.1"}
+          ] do
+        assert packages["node_modules/#{name}"]["version"] == version
+
+        refute Enum.any?(packages, fn {location, _entry} ->
+                 location != "node_modules/#{name}" and String.ends_with?(location, "/#{name}")
+               end)
+      end
+
+      assert packages["node_modules/d3-sankey/node_modules/d3-array"]["dependencies"] ==
+               %{"internmap" => "^1.0.0"}
+
+      assert packages["node_modules/nested-optional"]["optional"] == true
+      assert packages["node_modules/nested-optional"]["version"] == "2.0.0"
+      lock = File.read!("package-lock.json")
+      File.rm_rf!("node_modules")
+      capture_io(fn -> assert :ok = NPM.install(frozen: true) end)
+      assert File.read!("package-lock.json") == lock
+    end
+  end
+
+  test "ordinary install repairs missing and incompatible nested dependency records", context do
+    write_nested_graph_fixture!(context.project_dir)
+    capture_io(fn -> assert :ok = NPM.install() end)
+
+    assert {:ok, %{"packages" => complete_packages} = document} =
+             NPM.JSON.read_file("package-lock.json")
+
+    for missing_name <- ["internmap", "layout-base", "d3-path"] do
+      packages =
+        Map.reject(complete_packages, fn {location, _entry} ->
+          String.ends_with?(location, "/#{missing_name}") and
+            location != "node_modules/#{missing_name}"
+        end)
+
+      File.write!(
+        "package-lock.json",
+        NPM.JSON.encode_pretty(%{document | "packages" => packages})
+      )
+
+      stale_lock = File.read!("package-lock.json")
+
+      capture_io(:stderr, fn ->
+        assert {:error, :frozen_lockfile} = NPM.install(frozen: true)
+      end)
+
+      assert File.read!("package-lock.json") == stale_lock
+      output = capture_io(fn -> assert :ok = NPM.install() end)
+      refute output =~ "Already up to date."
+      assert_complete_nested_graph!()
+      capture_io(fn -> assert :ok = NPM.install(frozen: true) end)
+    end
+  end
+
+  test "does not write a successful lock when an expanded dependency cannot resolve", context do
+    package = "unresolvable-optional-parent"
+    other_os = if NPM.Platform.current_os() == "darwin", do: "linux", else: "darwin"
+    optional = "unresolvable-#{other_os}-arm64"
+    put_packument!(package, "1.0.0", optional_dependencies: %{optional => "1.0.0"})
+    put_packument!(optional, "1.0.0", dependencies: %{"unresolvable-leaf" => "^2.0.0"})
+    put_packument!("unresolvable-leaf", "1.0.0")
+    write_package!(context.project_dir, %{"dependencies" => %{package => "1.0.0"}})
+
+    capture_io(fn ->
+      capture_io(:stderr, fn ->
+        assert {:error, :resolution_failed} = NPM.install()
+      end)
+    end)
+
+    refute File.exists?("package-lock.json")
+    refute File.exists?("node_modules")
+  end
+
   test "installs from workspace package using the workspace root", %{project_dir: project_dir} do
     package = "workspace-root-package"
     version = "1.0.0"
@@ -547,6 +720,91 @@ defmodule NPM.InstallTest do
              List.keyfind(Application.started_applications(), :ssl, 0)
 
     assert :ssl in Application.spec(:duskmoon_npm, :applications)
+  end
+
+  # Reduced Sigma graph: conflicting D3 and Cytoscape versions retain the ranges
+  # that previously produced missing internmap/layout-base and incompatible d3-path.
+  defp write_nested_graph_fixture!(project_dir) do
+    packages = [
+      {"d3", [{"7.0.0", [dependencies: %{"d3-array" => "^3.0.0"}]}]},
+      {"d3-sankey",
+       [{"0.12.3", [dependencies: %{"d3-array" => "^2.0.0", "d3-shape" => "^1.0.0"}]}]},
+      {"d3-array",
+       [
+         {"2.12.1",
+          [
+            dependencies: %{"internmap" => "^1.0.0"},
+            optional_dependencies: %{"nested-optional" => "1.0.0"}
+          ]},
+         {"3.2.4", [dependencies: %{"internmap" => "1 - 2"}]}
+       ]},
+      {"d3-shape",
+       [
+         {"1.3.7", [dependencies: %{"d3-path" => "1", "nested-bridge" => "1.0.0"}]},
+         {"3.2.0", [dependencies: %{"d3-path" => "^3.0.0"}]}
+       ]},
+      {"internmap", [{"1.0.0", []}, {"2.0.3", []}, {"3.0.0", []}]},
+      {"d3-path", [{"1.0.9", []}, {"3.1.0", []}]},
+      {"cytoscape-cose-bilkent", [{"4.1.0", [dependencies: %{"cose-base" => "^1.0.0"}]}]},
+      {"cytoscape-fcose", [{"2.2.0", [dependencies: %{"cose-base" => "^2.0.0"}]}]},
+      {"cose-base",
+       [
+         {"1.0.3", [dependencies: %{"layout-base" => "^1.0.0"}]},
+         {"2.2.0", [dependencies: %{"layout-base" => "^2.0.0"}]}
+       ]},
+      {"layout-base", [{"1.0.2", []}, {"2.0.1", []}]},
+      {"nested-optional", [{"1.0.0", [dependencies: %{"nested-optional-leaf" => "1.0.0"}]}]},
+      {"nested-optional-leaf", [{"1.0.0", [dependencies: %{"nested-optional" => "1.0.0"}]}]},
+      {"nested-bridge", [{"1.0.0", [dependencies: %{"d3-path" => "^3.0.0"}]}, {"2.0.0", []}]}
+    ]
+
+    Enum.each(packages, fn {name, versions} ->
+      put_packument_versions!(name, versions)
+      Enum.each(versions, fn {version, _opts} -> write_cached_package!(name, version) end)
+    end)
+
+    write_package!(project_dir, %{
+      "name" => "sigma_nested_regression",
+      "dependencies" => %{
+        "d3" => "7.0.0",
+        "d3-sankey" => "0.12.3",
+        "d3-shape" => "3.2.0",
+        "d3-path" => "3.1.0",
+        "internmap" => "3.0.0",
+        "layout-base" => "2.0.1",
+        "nested-bridge" => "2.0.0",
+        "cytoscape-cose-bilkent" => "4.1.0",
+        "cytoscape-fcose" => "2.2.0"
+      }
+    })
+  end
+
+  defp assert_complete_nested_graph! do
+    assert {:ok, %{"packages" => packages}} = NPM.JSON.read_file("package-lock.json")
+    sankey_array = "node_modules/d3-sankey/node_modules/d3-array"
+    sankey_shape = "node_modules/d3-sankey/node_modules/d3-shape"
+    bilkent_base = "node_modules/cytoscape-cose-bilkent/node_modules/cose-base"
+    fcose_base = "node_modules/cytoscape-fcose/node_modules/cose-base"
+
+    for {location, version} <- [
+          {sankey_array, "2.12.1"},
+          {"#{sankey_array}/node_modules/internmap", "1.0.0"},
+          {"#{sankey_shape}/node_modules/d3-path", "1.0.9"},
+          {"#{bilkent_base}/node_modules/layout-base", "1.0.2"},
+          {fcose_base, "2.2.0"},
+          {"#{sankey_shape}/node_modules/nested-bridge/node_modules/d3-path", "3.1.0"},
+          {"node_modules/d3-path", "3.1.0"},
+          {"node_modules/internmap", "3.0.0"}
+        ] do
+      assert packages[location]["version"] == version
+      refute packages[location]["optional"]
+      assert installed_version!(location) == version
+    end
+
+    for name <- ["nested-optional", "nested-optional-leaf"] do
+      assert packages["node_modules/#{name}"]["optional"] == true
+      assert installed_version!("node_modules/#{name}") == "1.0.0"
+    end
   end
 
   defp write_cached_package!(name, version) do
