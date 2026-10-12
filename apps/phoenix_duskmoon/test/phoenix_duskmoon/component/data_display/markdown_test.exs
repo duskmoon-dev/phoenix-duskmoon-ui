@@ -353,6 +353,29 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.MarkdownTest do
       refute result =~ ~s[<code class="language-mermaid">]
     end
 
+    test "Mermaid respects disabled raw HTML rendering" do
+      result =
+        render_component(&dm_markdown_body/1, %{
+          source: "<p>raw HTML</p>\n\n```mermaid\ngraph TD;\nA-->B;\n```",
+          plugins: [MDExMermaid],
+          options: [render: [unsafe: false]]
+        })
+
+      refute result =~ "<p>raw HTML</p>"
+      assert result =~ ~s[<pre id="mermaid-1" class="mermaid" phx-update="ignore">]
+      assert result =~ "A--&gt;B;"
+    end
+
+    test "escapes HTML embedded in Mermaid diagram source" do
+      result =
+        render_component(&dm_markdown_body/1, %{
+          source: "```mermaid\ngraph TD;\nA-->B</pre><script>alert('x')</script>\n```"
+        })
+
+      assert result =~ "&lt;/pre&gt;&lt;script&gt;alert(&#39;x&#39;)&lt;/script&gt;"
+      refute result =~ "<script>alert('x')</script>"
+    end
+
     test "enables hard line breaks by default" do
       result =
         render_component(&dm_markdown_body/1, %{

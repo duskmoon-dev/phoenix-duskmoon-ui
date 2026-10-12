@@ -163,7 +163,7 @@ defmodule PhoenixDuskmoon.Mixfile do
       {:phoenix_live_view, "~> 1.1"},
       {:mdex, "~> 0.14"},
       {:mdex_gfm, "~> 0.2.0"},
-      {:mdex_mermaid, "~> 0.3.6"},
+      {:mdex_mermaid, "~> 0.4.0"},
       {:plug, "~> 1.19", optional: true},
       {:jason, "~> 1.4"},
       {:mint, "~> 1.9", only: :test},
