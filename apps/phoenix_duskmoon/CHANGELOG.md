@@ -2,6 +2,8 @@
 
 ### Added
 
+- Public React Chat hook factory, custom composer and renderer integration, and
+  application metadata, runtime and admission state across snapshots and events.
 - Native Core components: carousel, countdown, diff, keyboard keys, radial progress,
   floating actions, swap, filter group, hero, indicator, join, mask, sidebar layout,
   stack and megamenu, with Storybook examples.
@@ -9,6 +11,10 @@
 
 ### Changed
 
+- Update Core/CSS Art to 1.20.4, Elements/Art Elements to 1.9.1 and React Components
+  to 0.5.0, with current supporting JavaScript and Hex dependencies.
+- Support HTTP 0.21.x alongside 0.20.x; the umbrella selects 0.21.3. Update MDEx
+  Mermaid to 0.4.0, which escapes diagram source and preserves explicit raw HTML options.
 - Update Elements, Art Elements and declared individual element packages to 1.9.0,
   including Chat Scroll timeline fixes and Markdown's DOMPurify update. Remove the
   retired `el-pin-input` theme selector; native `dm_pin_input` remains supported.
@@ -26,6 +32,16 @@
 
 ### Fixed
 
+- Resolve production chunk imports by their importing module, preventing identical
+  relative paths in unrelated packages from becoming missing browser assets.
+- Preserve lazy custom-element registration and resolve preload URLs relative to
+  the emitted bundle when Storybook pages use nested routes.
+- Preserve shared development vendor runtimes and CommonJS exports during cache
+  recovery and late imports, with separate vendor caches for each Mix environment
+  and a shared initial static graph. Keep vendor URLs stable during discovery and
+  refresh cached URLs when Phoenix initializes its asset plug or restarts.
+- Complete required and optional transitive dependencies of nested npm packages,
+  and repair incomplete existing lockfiles before reporting successful installation.
 - Restore amd64/arm64 Alpine support across the native build toolchain, with
   published musl binaries and checksums plus Alpine release validation.
 - Code Engine's temporary stylesheet fallback now works after minification and
