@@ -18,6 +18,7 @@ defmodule Storybook.DataEntry.ReactForm do
       <.dm_react_form
         id="react-profile"
         values={defaults()}
+        novalidate={false}
         phx-change="validate-profile"
         phx-submit="save-profile"
         phx-debounce="300"
@@ -33,7 +34,9 @@ defmodule Storybook.DataEntry.ReactForm do
             name="notes"
             class="input"
             value="Native HTML note"
+            required
           /> Notes</label>
+          <p class="text-sm opacity-70">The native Notes field is required before saving.</p>
           <button type="submit" class="btn btn-primary">Save</button>
           <button type="reset" class="btn btn-outline">Reset</button>
         </div>

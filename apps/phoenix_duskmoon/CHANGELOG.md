@@ -4,6 +4,8 @@
 
 - Public React Chat hook factory, custom composer and renderer integration, and
   application metadata, runtime and admission state across snapshots and events.
+- Opt-in browser constraint validation for classic React forms with
+  `novalidate={false}`; schema forms retain JSON Schema validation.
 - Native Core components: carousel, countdown, diff, keyboard keys, radial progress,
   floating actions, swap, filter group, hero, indicator, join, mask, sidebar layout,
   stack and megamenu, with Storybook examples.
@@ -36,6 +38,9 @@
   application-disabled fields when the LiveView connection recovers.
 - Preserve selected-value arrays for native checkbox groups named with `[]`,
   including nested paths, empty selections and per-checkbox reset state.
+- Read current native controls before React form submission, including
+  programmatically changed hidden inputs, and delegate events for replaced or
+  newly added controls while preserving React-owned values.
 - Resolve production chunk imports by their importing module, preventing identical
   relative paths in unrelated packages from becoming missing browser assets.
 - Preserve lazy custom-element registration and resolve preload URLs relative to

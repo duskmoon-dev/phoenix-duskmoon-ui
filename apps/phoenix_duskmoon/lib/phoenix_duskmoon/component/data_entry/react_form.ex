@@ -20,6 +20,9 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactForm do
   children for the classic form. Omitted `values` use schema defaults in schema
   mode and an empty value map in classic mode. Schema mode supplies its own
   Submit and Reset controls; optional slot content appears outside that form.
+
+  Classic forms default to `novalidate`. Set `novalidate={false}` to check
+  browser constraints before submission. Schema forms retain JSON validation.
   """
   @doc type: :component
   attr(:id, :string, required: true)
@@ -31,9 +34,10 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactForm do
   )
 
   attr(:class, :any, default: nil)
+  attr(:novalidate, :boolean, default: true, doc: "Skip browser validation in classic forms")
 
   attr(:rest, :global,
-    include: ~w(autocomplete name novalidate phx-change phx-submit phx-target phx-debounce)
+    include: ~w(autocomplete name phx-change phx-submit phx-target phx-debounce)
   )
 
   slot(:inner_block, doc: "Classic form fields, or content outside the schema-owned form")
@@ -57,7 +61,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactForm do
         </div>
         {render_slot(@inner_block)}
       <% else %>
-        <form data-dm-react-form novalidate>
+        <form data-dm-react-form novalidate={@novalidate}>
           {render_slot(@inner_block)}
         </form>
       <% end %>

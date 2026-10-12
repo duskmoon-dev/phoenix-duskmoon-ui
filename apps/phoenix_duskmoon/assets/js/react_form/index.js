@@ -26,10 +26,10 @@ export const DuskmoonReactForm = {
   },
   mountForm() {
     this.form = this.el.querySelector("[data-dm-react-form]");
-    const nativeValues = collectValues([...this.form.querySelectorAll("[name]")]);
+    this.fields = [...this.el.querySelectorAll("[data-dm-react-field]")];
+    const nativeValues = collectValues(this.nativeControls());
     this.values = { ...nativeValues, ...parseJSON(this.el.dataset.initialValues) };
     this.initialValues = structuredClone(this.values);
-    this.fields = [...this.el.querySelectorAll("[data-dm-react-field]")];
     const fieldKeys = this.fields.map((element) => fieldKey(parseJSON(element.dataset.dmReactField).name));
     if (new Set(fieldKeys).size !== fieldKeys.length) throw new Error("React form field names must be unique");
     this.mountFields(); this.bindNative(); this.bindForm();
@@ -68,15 +68,23 @@ export const DuskmoonReactForm = {
       onChange: (value) => this.change(config.name, value),
     }));
   },
-  bindNative() {
-    this.native = [...this.form.querySelectorAll("[name]")].filter((element) => !element.closest("[data-dm-react-field]"));
-    this.native.forEach((element) => {
-      const handler = () => this.change(element.name, this.nativeValue(element));
-      element.addEventListener("input", handler); element.addEventListener("change", handler); element.__dmReactHandler = handler;
+  nativeControls() {
+    const managedPaths = this.fields.map((element) => pathOf(parseJSON(element.dataset.dmReactField).name).map(String));
+    return [...this.form.querySelectorAll("input[name], select[name], textarea[name]")].filter((element) => {
+      if (element.closest("[data-dm-react-field]")) return false;
+      const path = pathOf(element.name).map(String);
+      return !managedPaths.some((managed) => managed.slice(0, Math.min(path.length, managed.length)).every((key, index) => key === path[index]));
     });
   },
+  bindNative() {
+    this.nativeHandler = (event) => {
+      const controls = this.nativeControls(); const element = event.target;
+      if (controls.includes(element)) this.change(element.name, nativeValue(element, controls));
+    };
+    this.form.addEventListener("input", this.nativeHandler); this.form.addEventListener("change", this.nativeHandler);
+  },
   nativeValue(element) {
-    return nativeValue(element, this.native);
+    return nativeValue(element, this.nativeControls());
   },
   bindForm() {
     this.submitHandler = (event) => { event.preventDefault(); this.submit(); };
@@ -91,7 +99,15 @@ export const DuskmoonReactForm = {
     const event = this.el.getAttribute("phx-change"); if (!event || this.disconnectedState) return;
     clearTimeout(this.changeTimer); this.changeTimer = setTimeout(() => this.send(event, name), Number(this.el.getAttribute("phx-debounce") || 0));
   },
-  submit() { clearTimeout(this.changeTimer); const event = this.el.getAttribute("phx-submit"); if (event && !this.disconnectedState) this.send(event); },
+  submit() {
+    clearTimeout(this.changeTimer); const event = this.el.getAttribute("phx-submit"); if (!event || this.disconnectedState) return;
+    if (this.form) {
+      if (this.form.noValidate === false && !this.form.reportValidity()) return;
+      const controls = this.nativeControls();
+      controls.forEach((element) => { this.values = setAt(this.values, element.name, nativeValue(element, controls)); });
+    }
+    this.send(event);
+  },
   send(event, changed) {
     const revision = ++this.revision; const values = this.values;
     const payload = { id: this.el.id, values, revision, ...(changed ? { changed: pathOf(changed) } : {}) };
@@ -106,9 +122,9 @@ export const DuskmoonReactForm = {
     clearTimeout(this.changeTimer);
     this.values = structuredClone(values); this.errors = {}; this.revision++;
     if (this.schemaRoot) { this.schemaRevision++; this.renderAll(); return; }
-    this.native.forEach((element) => setNativeValue(element, getAt(this.values, element.name))); this.renderAll();
+    this.nativeControls().forEach((element) => setNativeValue(element, getAt(this.values, element.name))); this.renderAll();
   },
   disconnected() { clearTimeout(this.changeTimer); this.disconnectedState = true; this.renderAll(); },
   reconnected() { this.disconnectedState = false; this.renderAll(); },
-  destroyed() { this.destroyedState = true; clearTimeout(this.changeTimer); this.schemaRoot?.unmount(); this.form?.removeEventListener("submit", this.submitHandler); this.form?.removeEventListener("reset", this.resetHandler); this.native?.forEach((element) => { element.removeEventListener("input", element.__dmReactHandler); element.removeEventListener("change", element.__dmReactHandler); }); this.roots.forEach(({ root }) => root.unmount()); },
+  destroyed() { this.destroyedState = true; clearTimeout(this.changeTimer); this.schemaRoot?.unmount(); this.form?.removeEventListener("submit", this.submitHandler); this.form?.removeEventListener("reset", this.resetHandler); this.form?.removeEventListener("input", this.nativeHandler); this.form?.removeEventListener("change", this.nativeHandler); this.roots.forEach(({ root }) => root.unmount()); },
 };

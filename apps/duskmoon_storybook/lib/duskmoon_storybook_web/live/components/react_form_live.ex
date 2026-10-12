@@ -64,6 +64,7 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
             <.dm_react_form
               id={@form_id}
               values={@values}
+              novalidate={false}
               phx-change="validate-profile"
               phx-submit="save-profile"
               phx-debounce="180"
@@ -166,6 +167,47 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
                       </label>
                     </div>
                   </fieldset>
+                </section>
+
+                <section>
+                  <h3 class="mb-3 text-lg font-semibold">Native constraints</h3>
+                  <p class="mb-3 text-sm opacity-60">
+                    These native fields use browser validation before saving.
+                  </p>
+                  <div class="grid gap-4 md:grid-cols-2">
+                    <label class="grid gap-2">
+                      Workspace handle
+                      <input
+                        name="profile[handle]"
+                        value={@values["profile"]["handle"]}
+                        required
+                        pattern="[a-z][a-z0-9]*(-[a-z0-9]+)*"
+                        class="input"
+                      />
+                    </label>
+                    <label class="grid gap-2">
+                      Contact email
+                      <input
+                        name="profile[contact_email]"
+                        type="email"
+                        value={@values["profile"]["contact_email"]}
+                        required
+                        class="input"
+                      />
+                    </label>
+                    <label class="grid gap-2">
+                      Importance (0 to 1)
+                      <input
+                        name="profile[importance]"
+                        type="number"
+                        value={@values["profile"]["importance"]}
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        class="input"
+                      />
+                    </label>
+                  </div>
                 </section>
 
                 <.dm_react_field
@@ -502,7 +544,10 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
         "role" => "editor",
         "seats" => 4,
         "account_id" => "moon-001",
-        "billing_contact" => "Workspace administrator"
+        "billing_contact" => "Workspace administrator",
+        "handle" => "moonlight-team",
+        "contact_email" => "team@example.test",
+        "importance" => 0.5
       },
       "preferences" => %{
         "channels" => ["email", "slack"],

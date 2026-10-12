@@ -59,6 +59,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactFormTest do
       render_component(&dm_react_form/1, %{
         id: "schema-profile",
         schema: schema,
+        novalidate: false,
         "phx-change": "validate",
         "phx-submit": "save",
         "phx-target": "#editor"
@@ -75,6 +76,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactFormTest do
     assert ["validate"] = LazyHTML.attribute(root, "phx-change")
     assert ["save"] = LazyHTML.attribute(root, "phx-submit")
     assert ["#editor"] = LazyHTML.attribute(root, "phx-target")
+    assert [] = LazyHTML.attribute(root, "novalidate")
     assert Enum.empty?(LazyHTML.query(document, "form"))
 
     assert [_] =
@@ -143,11 +145,47 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactFormTest do
     assert [_] =
              Enum.to_list(LazyHTML.query(document, "#classic-default > form[data-dm-react-form]"))
 
+    assert [_] =
+             Enum.to_list(LazyHTML.query(document, "#classic-default > form[novalidate]"))
+
+    assert [] = LazyHTML.attribute(LazyHTML.query(document, "#classic-default"), "novalidate")
+
     assert ["Draft"] =
              LazyHTML.attribute(LazyHTML.query(document, "form input[name=notes]"), "value")
 
     assert "Save" == LazyHTML.text(LazyHTML.query(document, "form button[type=submit]"))
     assert Enum.empty?(LazyHTML.query(document, "[data-dm-react-schema], form form"))
+  end
+
+  test "enables browser constraints on the classic inner form when novalidate is false" do
+    assigns = %{}
+
+    html =
+      rendered_to_string(~H"""
+      <.dm_react_form id="native-validation" novalidate={false} phx-submit="save">
+        <input name="title" required pattern="[A-Z]+" />
+        <input name="email" type="email" required />
+        <input name="importance" type="number" min="0" max="1" step="0.1" />
+        <button type="submit">Save</button>
+      </.dm_react_form>
+      """)
+
+    document = LazyHTML.from_fragment(html)
+
+    assert [_] =
+             Enum.to_list(
+               LazyHTML.query(document, "#native-validation > form[data-dm-react-form]")
+             )
+
+    assert Enum.empty?(LazyHTML.query(document, "[novalidate]"))
+    assert [_] = Enum.to_list(LazyHTML.query(document, "form input[name=title][required]"))
+
+    assert ["[A-Z]+"] =
+             LazyHTML.attribute(LazyHTML.query(document, "input[name=title]"), "pattern")
+
+    assert ["email"] = LazyHTML.attribute(LazyHTML.query(document, "input[name=email]"), "type")
+    assert ["0"] = LazyHTML.attribute(LazyHTML.query(document, "input[name=importance]"), "min")
+    assert ["1"] = LazyHTML.attribute(LazyHTML.query(document, "input[name=importance]"), "max")
   end
 
   test "formats changeset errors as JSON and supports success replies" do

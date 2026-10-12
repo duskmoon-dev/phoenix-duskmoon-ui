@@ -52,8 +52,9 @@ Pass supported control attributes directly to `dm_react_field`:
 These attributes reach the interactive control. Reconnection enables fields that
 were disabled by the connection while preserving an application's `disabled` value.
 `class` and remaining global attributes still belong to the field wrapper.
-The form uses JSON submission and `novalidate`; control attributes do not replace
-backend validation or authorization.
+The form uses JSON submission and defaults to `novalidate`. Set
+`novalidate={false}` for browser constraints before classic form submission, as
+described below. Control attributes do not replace backend validation or authorization.
 
 Components 0.5.0 needs two temporary adapters: numeric `readonly` also disables
 its keyboard and step buttons ([upstream #82](https://github.com/duskmoon-dev/duskmoon-react/issues/82)),
@@ -71,6 +72,48 @@ change event also includes `"changed"` as a path list. Schema changes report the
 narrowest common path, such as `["profile", "name"]` for a single field or `[]`
 for a change across root properties. `phx-target` is passed to
 the normal LiveView `pushEventTo` path.
+
+Native input/change events are delegated from the form, so controls added or
+replaced after mounting participate in change events. Submission reads current
+native controls again, including hidden inputs updated programmatically without
+an event. The snapshot preserves React-managed fields and native sibling paths;
+native controls cannot overwrite a React-owned path or its ancestors. Controls
+inside a React field are managed exclusively by React.
+
+```heex
+<.dm_react_form id="model-picker" phx-submit="save-model">
+  <.dm_react_field name={[:agent, :name]} label="Agent name" />
+  <input type="hidden" name="agent[provider]" value="default" />
+  <button type="submit">Save</button>
+</.dm_react_form>
+```
+
+A client hook can update or replace the hidden provider input; submission sends
+its current value together with the React-managed agent name. Removing a native
+control does not delete its previously collected value from the draft. Use
+`dm:form:reset` to replace the draft explicitly.
+
+## Browser constraints
+
+Classic forms keep their existing `novalidate={true}` default. Opt into browser
+constraint validation with `novalidate={false}`:
+
+```heex
+<.dm_react_form id="validated-profile" novalidate={false} phx-submit="save">
+  <input name="title" required pattern="[A-Z]+" />
+  <input name="email" type="email" required />
+  <input name="importance" type="number" min="0" max="1" step="0.1" />
+  <button type="submit">Save</button>
+</.dm_react_form>
+```
+
+The hook calls the inner form's `reportValidity()` before sending a submit event.
+Invalid controls receive browser feedback and block submission. Native `required`,
+`pattern`, email format, numeric bounds and steps follow browser semantics;
+rendered React inputs also participate where they expose native constraints.
+Custom select triggers use required-state ARIA and need application validation.
+Schema forms always use their JSON Schema validation; this classic-form option
+does not change that contract. Validate and authorize submitted values on the backend.
 
 ## Native checkbox groups
 
