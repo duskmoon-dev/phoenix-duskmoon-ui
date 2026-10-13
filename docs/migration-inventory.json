@@ -1564,12 +1564,13 @@
       "reason": "Toolchain-owned application, resource, skill or native release support"
     },
     {
-      "action": "move",
+      "action": "split",
       "source_path": "apps/duskmoon_bundler/test/duskmoon_bundler/integration/dev_vendor_test.exs",
-      "destination_path": "apps/duskmoon_bundler/test/duskmoon_bundler/integration/dev_vendor_test.exs",
+      "destination_path": "docs/migration-snapshot/apps/duskmoon_bundler/test/duskmoon_bundler/integration/dev_vendor_test.exs",
       "source_sha": "bca8e460adabe0454dd41125ed71a02662807767",
       "sha256": "05a9aae550506bd08328aa92cda09b309f9d62df17bdceba89b96aa0ea3e4c91",
-      "reason": "Toolchain-owned application, resource, skill or native release support"
+      "reason": "Original browser test retained as provenance snapshot; active UI hook/chat/form consumers remain in UI Storybook tests, generic bundler integration coverage stays with destination",
+      "source_retained_path": "apps/duskmoon_storybook/test/integration/dev_vendor_test.exs"
     },
     {
       "action": "move",
@@ -1868,12 +1869,13 @@
       "reason": "Toolchain-owned application, resource, skill or native release support"
     },
     {
-      "action": "move",
+      "action": "duplicate",
       "source_path": "apps/duskmoon_bundler/test/support/cdp_browser.exs",
       "destination_path": "apps/duskmoon_bundler/test/support/cdp_browser.exs",
       "source_sha": "bca8e460adabe0454dd41125ed71a02662807767",
       "sha256": "3ade19765d6485b6c81b9233ecfb0cc31c067cd080497a16374ec36b092cdb04",
-      "reason": "Toolchain-owned application, resource, skill or native release support"
+      "reason": "Browser driver shared by independent generic bundler and UI-specific regression tests",
+      "source_retained_path": "apps/phoenix_duskmoon/test/support/cdp_browser.exs"
     },
     {
       "action": "move",
