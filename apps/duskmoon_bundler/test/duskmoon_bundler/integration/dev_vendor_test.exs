@@ -225,16 +225,18 @@ defmodule DuskmoonBundler.Integration.DevVendorTest do
     check = fn page, port, config ->
       :ok = CDPBrowser.goto(page, "http://127.0.0.1:#{port}/", timeout: @navigation_timeout)
 
+      # A queued startup load event can precede cold vendor graph completion.
       assert {:ok, %{"hooks" => true, "text" => "custom draft", "errors" => []}} =
                CDPBrowser.evaluate(
                  page,
                  """
                  (async () => {
-                   for(let i=0;i<200 && !document.querySelector('textarea');i++) await new Promise(r=>setTimeout(r,20));
+                   const deadline = performance.now() + #{@navigation_timeout};
+                   while(!document.querySelector('textarea') && !window.moduleErrors?.length && performance.now() < deadline) await new Promise(r=>setTimeout(r,20));
                    return {hooks:window.contract?.hooks ?? false,text:document.querySelector('textarea')?.value ?? null,errors:window.moduleErrors};
                  })()
                  """,
-                 timeout: 10_000
+                 timeout: @navigation_timeout + 1_000
                )
 
       opts = [
