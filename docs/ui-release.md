@@ -6,7 +6,9 @@ is independently pinned by `BUNDLER_VERSION` and the complete eight-package Hex
 lock cohort. The public component package does not require the build toolchain.
 
 Commit a reviewed U version change before running **UI Release** (`release.yml`).
-Provide `version=U` and the complete immutable `source_sha`. The workflow never
+Select the dispatch ref whose head is that release commit and provide `version=U`
+and the complete immutable `source_sha`. A mismatch between workflow/source SHA
+fails, keeping the workflow definition and build inputs fixed together. The workflow never
 bumps B, builds native artifacts, generates checksums, or publishes toolchain
 packages. It resolves with `mix deps.get --check-locked`, checks the complete
 registry dependency cohort, and uses `scripts/with-precompiled-toolchain.sh`

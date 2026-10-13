@@ -36,7 +36,10 @@ jobs:
         env:
           RELEASE_VERSION: ${{ inputs.version }}
           SOURCE_SHA: ${{ inputs.source_sha }}
-        run: elixir .github/scripts/ui_release.exs plan "$RELEASE_VERSION" "$SOURCE_SHA"
+          WORKFLOW_SHA: ${{ github.sha }}
+        run: |
+          test "$WORKFLOW_SHA" = "$SOURCE_SHA" || { echo 'Dispatch workflow ref must point at source_sha' >&2; exit 1; }
+          elixir .github/scripts/ui_release.exs plan "$RELEASE_VERSION" "$SOURCE_SHA"
       - name: Locked toolchain, UI tests and hooks
         env:
           CHROME_BIN: ${{ steps.chrome.outputs.chrome-path }}
