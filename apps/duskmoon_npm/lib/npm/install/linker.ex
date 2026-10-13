@@ -70,8 +70,11 @@ defmodule NPM.Install.Linker do
         nm_dir \\ "node_modules",
         strategy \\ default_strategy()
       ) do
-    run_concurrently(nested_info, fn {nested_pkg, _} ->
-      original_deps = NPM.Resolver.get_original_deps(nested_pkg)
+    nested_info
+    |> Enum.map(fn {nested_pkg, _} ->
+      {nested_pkg, NPM.Resolver.get_original_deps(nested_pkg)}
+    end)
+    |> run_concurrently(fn {nested_pkg, original_deps} ->
       install_nested_for_parents(nested_pkg, original_deps, flat_lockfile, nm_dir, strategy)
     end)
   end

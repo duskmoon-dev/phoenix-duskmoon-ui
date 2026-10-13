@@ -61,6 +61,51 @@ defmodule NPM.Install.LinkerTest do
              )
   end
 
+  test "nested linking carries caller-saved ranges into parallel workers", %{tmp_dir: tmp_dir} do
+    info = %{
+      dependencies: %{},
+      optional_dependencies: %{},
+      peer_dependencies: %{},
+      peer_dependencies_meta: %{},
+      os: [],
+      cpu: [],
+      dist: %{tarball: "", integrity: ""}
+    }
+
+    NPM.PackumentCache.put("child", %{
+      name: "child",
+      versions: %{
+        "1.0.0" => info,
+        "2.0.0" => info
+      }
+    })
+
+    write_cached_package!("child", "1.0.0")
+    write_cached_package!("child", "2.0.0")
+
+    for {parent, version} <- [{"parent-a", "1.0.0"}, {"parent-b", "2.0.0"}] do
+      NPM.PackumentCache.put(parent, %{
+        name: parent,
+        versions: %{
+          "1.0.0" => %{info | dependencies: %{"child" => version}}
+        }
+      })
+    end
+
+    assert {:ok, resolved} = NPM.Resolver.resolve(%{"parent-a" => "1.0.0", "parent-b" => "1.0.0"})
+    {nested, flat} = Map.pop(resolved, :nested)
+    assert nested == %{"child" => :nested}
+    node_modules = Path.join(tmp_dir, "nested-consumer")
+    assert :ok = Linker.link_nested(nested, flat, node_modules)
+
+    for {parent, version} <- [{"parent-a", "1.0.0"}, {"parent-b", "2.0.0"}] do
+      manifest = Path.join([node_modules, parent, "node_modules", "child", "package.json"])
+      assert %{"version" => ^version} = manifest |> File.read!() |> NPM.JSON.decode!()
+    end
+
+    NPM.Resolver.clear_cache()
+  end
+
   test "copies cached packages so sibling dependencies resolve from node_modules", %{
     tmp_dir: tmp_dir
   } do

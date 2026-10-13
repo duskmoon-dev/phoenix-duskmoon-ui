@@ -6,7 +6,9 @@ defmodule NPM.Resolver do
   `HexSolver.Registry` implementation for npm packages.
 
   Bridges the npm registry to hex_solver's PubGrub dependency resolver.
-  Packuments are cached in an ETS table for the duration of a resolution.
+  Packuments and solver state are isolated in a caller-owned ETS table for the
+  duration of each resolution. Original dependency ranges remain available to
+  that caller through `get_original_deps/1` after the table is deleted.
   """
 
   @behaviour HexSolver.Registry
@@ -22,7 +24,8 @@ defmodule NPM.Resolver do
     end
   end
 
-  @table :npm_resolver_cache
+  @cache_key {__MODULE__, :cache}
+  @original_deps_key {__MODULE__, :original_deps}
   @max_nesting_depth 128
   @max_prefetch_depth 10
   @prefetch_concurrency 16
@@ -41,37 +44,69 @@ defmodule NPM.Resolver do
   @spec resolve(%{String.t() => String.t()}, keyword()) ::
           {:ok, %{String.t() => String.t()}} | {:error, String.t()}
   def resolve(root_deps, opts \\ [])
-  def resolve(root_deps, _opts) when map_size(root_deps) == 0, do: {:ok, %{}}
+
+  def resolve(root_deps, _opts) when map_size(root_deps) == 0 do
+    Process.delete(@original_deps_key)
+    {:ok, %{}}
+  end
 
   def resolve(root_deps, opts) do
-    ensure_cache()
-    clear_prerelease_requirements()
-    overrides = Keyword.get(opts, :overrides, %{})
-    if overrides != %{}, do: store_overrides(overrides)
-    store_resolver_opts(opts)
-    resolve_with_nesting(root_deps, MapSet.new(), %{}, 0, opts)
-  rescue
-    error in [ExoticDeps.Error, PrefetchError, RegistryPolicy.Error] ->
-      {:error, Exception.message(error)}
+    table = :ets.new(__MODULE__, [:set, :public])
+    previous_cache = Process.put(@cache_key, table)
+    Process.delete(@original_deps_key)
+
+    try do
+      overrides = Keyword.get(opts, :overrides, %{})
+      if overrides != %{}, do: store_overrides(overrides)
+      store_resolver_opts(opts)
+      result = resolve_with_nesting(root_deps, MapSet.new(), %{}, 0, opts)
+
+      if match?({:ok, _}, result) do
+        original_deps =
+          :ets.foldl(
+            fn
+              {{:__original_deps__, package}, deps}, acc -> Map.put(acc, package, deps)
+              _, acc -> acc
+            end,
+            %{},
+            table
+          )
+
+        Process.put(@original_deps_key, original_deps)
+      end
+
+      result
+    rescue
+      error in [ExoticDeps.Error, PrefetchError, RegistryPolicy.Error] ->
+        {:error, Exception.message(error)}
+    after
+      :ets.delete(table)
+
+      if previous_cache do
+        Process.put(@cache_key, previous_cache)
+      else
+        Process.delete(@cache_key)
+      end
+    end
   end
 
   defp store_resolver_opts(opts) do
-    :ets.insert(@table, {:__resolver_opts__, Keyword.take(opts, [:prefetch_timeout])})
+    :ets.insert(cache_table(), {:__resolver_opts__, Keyword.take(opts, [:prefetch_timeout])})
   end
 
   defp get_resolver_opts do
-    case :ets.lookup(@table, :__resolver_opts__) do
+    case :ets.lookup(cache_table(), :__resolver_opts__) do
       [{_, opts}] -> opts
       [] -> []
     end
   end
 
   defp store_overrides(overrides) do
-    :ets.insert(@table, {:__overrides__, overrides})
+    :ets.insert(cache_table(), {:__overrides__, overrides})
   end
 
   defp get_overrides do
-    case :ets.lookup(@table, :__overrides__) do
+    case :ets.lookup(cache_table(), :__overrides__) do
       [{_, overrides}] -> overrides
       [] -> %{}
     end
@@ -155,11 +190,11 @@ defmodule NPM.Resolver do
 
   defp put_excluded(excluded) do
     ensure_cache()
-    :ets.insert(@table, {:__excluded_packages__, excluded})
+    :ets.insert(cache_table(), {:__excluded_packages__, excluded})
   end
 
   defp get_excluded do
-    case :ets.lookup(@table, :__excluded_packages__) do
+    case :ets.lookup(cache_table(), :__excluded_packages__) do
       [{_, excluded}] -> excluded
       [] -> MapSet.new()
     end
@@ -167,21 +202,21 @@ defmodule NPM.Resolver do
 
   defp strip_excluded_from_cache(excluded) do
     # Delete excluded packages entirely from the cache
-    Enum.each(excluded, &:ets.delete(@table, &1))
+    Enum.each(excluded, &:ets.delete(cache_table(), &1))
 
     # Strip excluded deps from all cached packuments (skip non-packument entries)
     :ets.foldl(
       fn
         {_name, %{versions: _} = packument} = entry, acc ->
           stripped = strip_deps(packument, excluded)
-          if stripped != packument, do: :ets.insert(@table, put_elem(entry, 1, stripped))
+          if stripped != packument, do: :ets.insert(cache_table(), put_elem(entry, 1, stripped))
           acc
 
         _, acc ->
           acc
       end,
       :ok,
-      @table
+      cache_table()
     )
   end
 
@@ -271,12 +306,9 @@ defmodule NPM.Resolver do
 
   @doc false
   def get_original_deps(package) do
-    ensure_cache()
-
-    case :ets.lookup(@table, {:__original_deps__, package}) do
-      [{_, deps}] -> deps
-      [] -> %{}
-    end
+    @original_deps_key
+    |> Process.get(%{})
+    |> Map.get(package, %{})
   end
 
   defp collect_nested_versions(packages) do
@@ -299,10 +331,10 @@ defmodule NPM.Resolver do
             acc
         end,
         %{},
-        @table
+        cache_table()
       )
 
-    :ets.insert(@table, {{:__original_deps__, package}, parent_deps})
+    :ets.insert(cache_table(), {{:__original_deps__, package}, parent_deps})
   end
 
   defp find_dependents(name, %{versions: versions}, package, acc) do
@@ -318,10 +350,11 @@ defmodule NPM.Resolver do
   defp version_dependencies(%{"dependencies" => deps}) when is_map(deps), do: deps
   defp version_dependencies(_info), do: %{}
 
-  @doc "Clear the packument cache."
+  @doc "Clear the current caller's packument cache and saved original dependency ranges."
   @spec clear_cache() :: :ok
   def clear_cache do
-    if :ets.info(@table) != :undefined, do: :ets.delete_all_objects(@table)
+    if table = Process.delete(@cache_key), do: :ets.delete(table)
+    Process.delete(@original_deps_key)
     :ok
   end
 
@@ -385,13 +418,13 @@ defmodule NPM.Resolver do
     include_prerelease? = prerelease_requested?(packument.name)
     key = {:__sorted_versions__, packument.name, include_prerelease?}
 
-    case :ets.lookup(@table, key) do
+    case :ets.lookup(cache_table(), key) do
       [{^key, versions}] ->
         versions
 
       [] ->
         versions = do_parse_sorted_versions(packument, include_prerelease?)
-        :ets.insert(@table, {key, versions})
+        :ets.insert(cache_table(), {key, versions})
         versions
     end
   end
@@ -448,7 +481,7 @@ defmodule NPM.Resolver do
   defp validate_version(package, version_str, info) do
     key = {:__exotic_validation__, package, version_str}
 
-    case :ets.lookup(@table, key) do
+    case :ets.lookup(cache_table(), key) do
       [{^key, result}] ->
         result
 
@@ -461,7 +494,7 @@ defmodule NPM.Resolver do
             error in ExoticDeps.Error -> {:error, error}
           end
 
-        :ets.insert(@table, {key, result})
+        :ets.insert(cache_table(), {key, result})
         result
     end
   end
@@ -520,18 +553,14 @@ defmodule NPM.Resolver do
 
   defp normalize_range(range), do: NPMSemver.to_hex_constraint(range)
 
-  defp clear_prerelease_requirements do
-    :ets.match_delete(@table, {{:__prerelease_requested__, :_}, :_})
-  end
-
   defp track_prerelease_requirement(package, range) do
     if prerelease_range?(range) do
-      :ets.insert(@table, {{:__prerelease_requested__, package}, true})
+      :ets.insert(cache_table(), {{:__prerelease_requested__, package}, true})
     end
   end
 
   defp prerelease_requested?(package) do
-    :ets.member(@table, {:__prerelease_requested__, package})
+    :ets.member(cache_table(), {:__prerelease_requested__, package})
   end
 
   defp prerelease_range?(range) when is_binary(range) do
@@ -554,32 +583,39 @@ defmodule NPM.Resolver do
   # --- Cache ---
 
   defp ensure_cache do
-    if :ets.whereis(@table) == :undefined do
-      try do
-        :ets.new(@table, [:named_table, :set, :public])
-      rescue
-        ArgumentError -> :ok
-      end
+    cache_table()
+    :ok
+  end
+
+  defp cache_table do
+    case Process.get(@cache_key) do
+      nil ->
+        table = :ets.new(__MODULE__, [:set, :public])
+        Process.put(@cache_key, table)
+        table
+
+      table ->
+        table
     end
   end
 
   defp cached?(package) do
-    :ets.info(@table) != :undefined and :ets.member(@table, package)
+    :ets.info(cache_table()) != :undefined and :ets.member(cache_table(), package)
   end
 
   defp get_cached_packument(package) do
     ensure_cache()
 
-    case :ets.lookup(@table, package) do
+    case :ets.lookup(cache_table(), package) do
       [{^package, packument}] -> {:ok, packument}
       [] -> fetch_and_cache(package)
     end
   end
 
-  defp fetch_and_cache(package) do
+  defp fetch_and_cache(package, table \\ cache_table()) do
     case NPM.Registry.get_packument(package) do
       {:ok, packument} ->
-        :ets.insert(@table, {package, packument})
+        :ets.insert(table, {package, packument})
         {:ok, packument}
 
       error ->
@@ -590,8 +626,10 @@ defmodule NPM.Resolver do
   defp prefetch_packages([], _opts), do: :ok
 
   defp prefetch_packages(packages, opts) do
+    table = cache_table()
+
     packages
-    |> Task.async_stream(&safe_fetch_and_cache/1,
+    |> Task.async_stream(&safe_fetch_and_cache(&1, table),
       max_concurrency: @prefetch_concurrency,
       timeout: prefetch_timeout(opts),
       ordered: false,
@@ -600,8 +638,8 @@ defmodule NPM.Resolver do
     |> collect_prefetch_results()
   end
 
-  defp safe_fetch_and_cache(package) do
-    fetch_and_cache(package)
+  defp safe_fetch_and_cache(package, table) do
+    fetch_and_cache(package, table)
   rescue
     error -> {:error, {error, __STACKTRACE__}}
   catch
@@ -634,7 +672,7 @@ defmodule NPM.Resolver do
   end
 
   defp dep_names_from_cache(package) do
-    case :ets.lookup(@table, package) do
+    case :ets.lookup(cache_table(), package) do
       [{_, packument}] ->
         case latest_version_info(packument) do
           nil -> []

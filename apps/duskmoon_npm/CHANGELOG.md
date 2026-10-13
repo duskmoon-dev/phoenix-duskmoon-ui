@@ -10,6 +10,7 @@
 
 ### Fixed
 
+- Isolate dependency resolution caches and options so concurrent installations cannot lose their cache when another caller exits or clears it. Preserve nested dependency linking after resolution.
 - `mix npm.update` now re-resolves matching lock entries instead of reusing stale versions that still satisfy manifest ranges.
 - Validate and restore workspace-local package-lock resolutions during frozen installs, keeping distinct root/workspace versions and nested transitive dependencies without modifying the lockfile.
 - Restore declared workspace-local installs during `mix npm.rebuild` and accept them during `mix npm.verify`, while rejecting undeclared shadowing packages or mismatched nested versions.
