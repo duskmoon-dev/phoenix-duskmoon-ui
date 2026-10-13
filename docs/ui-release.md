@@ -79,8 +79,8 @@ adoption tests. `actionlint` v1.7.11 accepted every UI workflow. The U=9.16.16
 release plan listed exactly `phoenix_duskmoon`, no native builds and no toolchain
 publication, with B=9.16.16 and actual root lock hashes.
 
-`elixir .github/scripts/ui_package.exs stage /tmp/duskmoon-ui-release-stage`
-and `... smoke /tmp/duskmoon-ui-release-stage` built actual Hex/npm archives,
+`elixir .github/scripts/ui_package.exs stage /tmp/duskmoon-ui-release-stage-final`
+and `... smoke /tmp/duskmoon-ui-release-stage-final` built actual final Hex/npm archives,
 unpacked them outside the checkout, compiled the Hex contents with warnings as
 errors, verified the component/runtime-only application boundary and checked all
 npm exports from the packed archive. It passed. The retained manifest-v1

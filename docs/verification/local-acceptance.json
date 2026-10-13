@@ -1,0 +1,185 @@
+{
+  "checked_on": "2026-10-13",
+  "scope": "Local host acceptance; published B0 and source candidate B1 are separate evidence lanes",
+  "versions": {
+    "elixir": "1.18.5",
+    "otp": "28 (erts16.4.0.5)",
+    "bun": "1.3.13",
+    "rust": "1.95.0",
+    "zig": "0.16.0"
+  },
+  "ui_code_sha": "4df3ff78ff3c3c4b112ab6697df6c131f01de634",
+  "locks": {
+    "mix.lock": "2c9505f04c57290b3ccbe65206e59c78b5502f30573f15e952cea7f8b625af96",
+    "bun.lock": "ee6e7e13842917aadd9fcce9637fa53433045bc3bc6ace8a35262328953c8cb8",
+    "BUNDLER_VERSION": "be4084ffa13275c9d6ab86be7c89f8d76a2dbc2c6df71f4f3d37e175ad0f1df3"
+  },
+  "cold_ui": {
+    "source_sha": "c805bb89",
+    "snapshot": "/tmp/duskmoon-cold-ui.oJJn7A",
+    "command": "scripts/cold-ui-check.sh",
+    "result": "passed",
+    "logs": "/tmp/duskmoon-cold-ui-final.log",
+    "log_sha256": "a60b12478b08b50138357a3daa03fd0555aa9a0a7072f614e16167e016458d39",
+    "native_invocation_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "native_compiler_invocations": 0,
+    "notes": "Fresh deps/build/node_modules/Rustler/Zigler caches. No destination checkout used. Disposable p-[37px] Storybook class included in final CSS.",
+    "tests": {
+      "components": 3099,
+      "storybook": 22,
+      "js": 56,
+      "failures": 0
+    },
+    "measured_seconds": {
+      "components": 20.2,
+      "storybook": 34.9,
+      "component_css": 7.335,
+      "component_js": 0.025,
+      "storybook_css": 7.049,
+      "storybook_js": 51.465
+    },
+    "icons": {
+      "mdi": 7447,
+      "bsi": 2050
+    }
+  },
+  "candidate_ui": {
+    "version": "9.16.17",
+    "mode": "source/path full-eight-package closure",
+    "original_provenance": {
+      "warning": "Path/source candidate validation is separate from published precompiled consumer proof",
+      "mode": "candidate-source-full-cohort",
+      "ui_sha": "039a030aa9337f28d44a03585d5be94171b1f4e7",
+      "ui_patch_sha256": "ba3e1c9f3794324f73aa3cfc77d2d81bbb23cc9654ca7ec7f4e998540ea33c53",
+      "toolchain_stage_sha256": "95d0a64c1347409d0ffa4c7fe3a01669936321fd2b15c5feef2bcbb73a8414d1"
+    },
+    "disposable_resolved_mix_lock_sha256": "4f97291c6d9835ce20d8fa592e50c59aee7fd8169a09a323154e8353f47c5bc8",
+    "notes": [
+      "Added only disposable OXC native sentinel: valid JS containing __codex_candidate_native_probe__ returns false. Published B0 returns true.",
+      "No probe entered either Git repository. Copied later UI browser-readiness/config guard fixes into snapshot before asset builds.",
+      "Disposable candidate solver selected HTTP family0.21.5; UI/destination repository locks remain on existing0.21.3.",
+      "Candidate source compilation is not evidence of registry/precompiled B1 publication."
+    ],
+    "native_probe": {
+      "source_sha256": "5f12652f48418a8c26f02fb13d4c32caf8d96b3647726f7abe69c846c8ffd31d",
+      "binary_sha256": "80e85e711a0da1568c33164deac0cd8c75a8909685c4d48120d5e47025d2bd8a",
+      "candidate_result": false,
+      "published_b0_result": true,
+      "call": "OXC.valid?(\"globalThis.__codex_candidate_native_probe__ = 1;\", \"probe.js\")"
+    },
+    "result": "warnings-as-errors compile, full UI Elixir/JS suites, both assets/icons passed",
+    "tests": {
+      "components": 3099,
+      "storybook": 22,
+      "js": 56,
+      "failures": 0
+    },
+    "log_hashes": {
+      "duskmoon-ui-candidate-test.log": "e44e093e2a9fccb0069825cdd742784dc491bcd47e62889ad63cf72e0ab58fb2",
+      "duskmoon-ui-candidate-assets.log": "83343a62a0aec2d98bc2ba5e4deda6b0fd0d218c4191f70b2925d603a4462f23",
+      "duskmoon-ui-candidate-js.log": "601cff37a13436eb36c714b14cf475b39e1cd913ae42c8f53250d3edc06038aa"
+    },
+    "measured_seconds": {
+      "components": 36.4,
+      "storybook": 32.6,
+      "js": 2.33,
+      "storybook_js": 54.247
+    }
+  },
+  "alpine": {
+    "amd64": {
+      "result": "passed actual registry precompiled six-loader and production JS/Tailwind smoke",
+      "image": "elixir:1.18-otp-28-alpine",
+      "image_digest": "sha256:575a4e19c697f8eb58cf6d894f3155d4288832e31d1f9b485c61228c0bbca487",
+      "version": "9.16.16",
+      "log": "/tmp/duskmoon-b0-alpine-amd64-retry.log",
+      "log_sha256": "ad88321d5842217a72a3a7d6362913d8ecb1ed4fb9117e504278ab020698eb60",
+      "environment": {
+        "HEX_HTTP_TIMEOUT": 120,
+        "HEX_HTTP_CONCURRENCY": 1
+      },
+      "notes": "Fresh container with no cargo/rustc/zig. Initial attempt hit a Hex package timeout; retry completed."
+    },
+    "arm64": {
+      "result": "BLOCKED_ENV",
+      "log": "/tmp/duskmoon-b0-alpine-arm64.log",
+      "reason": "exec format error: host arm64 emulator absent. No privileged binfmt installation attempted."
+    }
+  },
+  "production": {
+    "release": "/tmp/duskmoon-ui-cutover/_build/prod/rel/storybook",
+    "applications": 51,
+    "result": "release set verified; local homepage and digested JS/CSS HTTP200; server stopped",
+    "notes": "Required runtime retained. No seven Duskmoon compiler apps. Rustler and RustlerPrecompiled remain MDEx requirements."
+  },
+  "existing_limitation": {
+    "issue": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/199",
+    "scope": "Published B0 omits .exs in template watch extensions. Phoenix story reload and production .exs scanning still work; explicit build recovers new story CSS."
+  },
+  "bundler_code_sha": "27cc3088ad427a751b84a52debc277c1162263d9",
+  "dev_storybook": {
+    "scope": "Published B0, live Storybook development server, fresh Storybook-only .heex class addition; custom-element host styles not asserted",
+    "startup": {
+      "connected": true,
+      "hooks": true,
+      "title": "Phoenix Duskmoon UI Storybook - Button"
+    },
+    "change": {
+      "utility": "p-[61px]",
+      "css_utility_absent_before": true,
+      "css_utility_present_after": true,
+      "served_css": "/assets/css/app.css",
+      "connected": true,
+      "events": [
+        {
+          "css": true,
+          "type": "update",
+          "url": "ws://127.0.0.1:4600/@duskmoon_bundler/ws"
+        }
+      ],
+      "hmrReceived": true
+    },
+    "native_compiler_invocations": 0,
+    "probe_log": {
+      "path": "/tmp/duskmoon-storybook-heex-smoke.log",
+      "sha256": "2699648df14f691473fd408b69050a7efbbca9dd01e5696534ff0fad0271fa33",
+      "bytes": 832
+    },
+    "probe_script": {
+      "path": "/tmp/duskmoon-storybook-heex-smoke.exs",
+      "sha256": "c09c6c680ad3db756fb57e370625f654df3fb650e0a11117970c62495734bc6f",
+      "bytes": 4047
+    },
+    "server_native_log": {
+      "path": "/tmp/duskmoon-storybook-dev-native-invocations.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "result": "passed; exit0",
+    "cleanup": "Disposable .heex removed; browser and owned development server stopped"
+  },
+  "ui_packages": {
+    "hex_tar_sha256": "9da474622cf6d39937284025e5978006d93d6db1423618148c8726e1ffa3eff5",
+    "npm_tar_sha256": "2fb216e056157cb2457a25d32d139106846e7bd4a288a632cc35749cc08f6f2a",
+    "result": "passed external unpacked Hex compile/runtime boundary and every npm export",
+    "stage": "/tmp/duskmoon-ui-release-stage-final",
+    "log": "/tmp/duskmoon-ui-package-smoke-final.log",
+    "log_sha256": "e667f698c3e0e86e58c700d92a55d91dc5d48f44b49f64d5d4d331cac23491be"
+  },
+  "automation_checks": {
+    "ui_policy_tests": 5,
+    "candidate_preparation_tests": 1,
+    "ui_release_pure_tests": 5,
+    "bundler_release_pure_tests": 7,
+    "bundler_upgrade_cli_tests": 3,
+    "workflow_validation": "both repositories actionlint1.7.11 passed",
+    "remote_release_execution": false,
+    "cross_repository_credentials": "unconfigured"
+  },
+  "remaining_gates": [
+    "Full B1 native47 matrix/final checksums/public archives/eight registry packages/registry glibc-musl verification and live pinned UI PR remain operational gates",
+    "Alpine arm64 runtime lacks local emulator; exec format error",
+    "Full Nix/devenv realization blocked by stalled/truncated remote nixpkgs fetch",
+    "No push/merge/tag/package publication/deployment/settings or secrets changes authorized; AGENTS-required upstream issue199 was created"
+  ]
+}
