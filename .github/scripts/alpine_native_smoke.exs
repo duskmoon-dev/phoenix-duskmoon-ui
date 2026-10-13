@@ -1,7 +1,24 @@
 # Exercise every native module, then actual production bundling and Tailwind.
 {:unix, :linux} = :os.type()
 system_arch = :erlang.system_info(:system_architecture) |> List.to_string()
-unless system_arch =~ "musl", do: raise("Expected Alpine musl, got #{system_arch}")
+
+if System.get_env("REQUIRE_MUSL") == "1" and not (system_arch =~ "musl"),
+  do: raise("Expected Alpine musl, got #{system_arch}")
+
+for module <- [
+      HexSolver,
+      NPM,
+      OXC,
+      Vize,
+      Oxide,
+      QuickBEAM,
+      DuskmoonBundler,
+      DuskmoonBundlerRuntime
+    ] do
+  unless Code.ensure_loaded?(module), do: raise("cohort module missing: #{inspect(module)}")
+end
+
+{:ok, %{}} = NPM.Resolver.resolve(%{})
 
 {:ok, _ast} = OXC.parse("export const answer: number = 42", "answer.ts")
 {:ok, formatted} = OXC.Format.run("const answer=42", "answer.js")

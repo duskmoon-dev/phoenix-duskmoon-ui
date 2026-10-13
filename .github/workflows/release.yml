@@ -1,505 +1,113 @@
-name: Release
-
+name: UI Release
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to release (e.g., 9.2.0)'
+        description: U already committed and synchronized in Hex/npm manifests
         required: true
         type: string
-      git-ref:
-        description: 'Git revision to release (branch, tag, or commit)'
+      source_sha:
+        description: Immutable 40-character UI commit SHA
         required: true
-        default: 'main'
         type: string
-      reuse-native-assets:
-        description: 'Reuse native assets already uploaded for this version'
-        required: true
-        default: false
-        type: boolean
-
-env:
-  ELIXIR_VERSION: '1.18'
-  OTP_VERSION: '28'
-  MIX_ENV: 'prod'
-
 permissions:
-  contents: write
-  packages: write
-  id-token: write
-  actions: write
-
+  contents: read
+concurrency:
+  group: ui-release-${{ inputs.version }}
+  cancel-in-progress: false
 jobs:
-  prepare-release:
-    name: Prepare v${{ inputs.version }}
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
+    timeout-minutes: 40
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
+      - uses: actions/checkout@v7
         with:
-          ref: ${{ inputs.git-ref }}
-
-      - name: Update version
-        run: |
-          VERSION="${{ inputs.version }}"
-          echo "Releasing version: ${VERSION}"
-          sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/phoenix_duskmoon/mix.exs
-          sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_bundler_runtime/mix.exs
-          sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_bundler/mix.exs
-          sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_quickbeam/mix.exs
-          sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_oxc/mix.exs
-          sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_oxide/mix.exs
-          sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_vize/mix.exs
-          sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_npm/mix.exs
-          sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" apps/duskmoon_hex_solver/mix.exs
-          sed -i "s%\"version\": \"[^\"]\+\"%\"version\": \"${VERSION}\"%" apps/phoenix_duskmoon/package.json
-          sed -i "s%@version \"[^\"]\+\"%@version \"${VERSION}\"%" mix.exs
-          sed -i "s%\"version\": \"[^\"]\+\"%\"version\": \"${VERSION}\"%" bun.lock
-
-      - name: Commit and tag
-        run: |
-          VERSION="${{ inputs.version }}"
-          if git ls-remote --exit-code --tags origin "refs/tags/v${VERSION}" >/dev/null 2>&1; then
-            echo "Tag v${VERSION} already exists; skipping version commit and tag creation"
-            exit 0
-          fi
-
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add apps/phoenix_duskmoon/mix.exs apps/duskmoon_bundler_runtime/mix.exs apps/duskmoon_bundler/mix.exs apps/duskmoon_quickbeam/mix.exs apps/duskmoon_oxc/mix.exs apps/duskmoon_oxide/mix.exs apps/duskmoon_vize/mix.exs apps/duskmoon_npm/mix.exs apps/duskmoon_hex_solver/mix.exs apps/phoenix_duskmoon/package.json mix.exs bun.lock
-          if git diff --cached --quiet; then
-            echo "No version changes to commit"
-          else
-            git commit -m "chore(version): bump to ${VERSION}"
-          fi
-          git tag "v${VERSION}"
-          git push origin HEAD:${{ inputs.git-ref }} "refs/tags/v${VERSION}"
-
-      - name: Create draft GitHub Release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          VERSION="${{ inputs.version }}"
-          if gh release view "v${VERSION}" >/dev/null 2>&1; then
-            echo "Release v${VERSION} already exists; skipping release creation"
-            exit 0
-          fi
-
-          if echo "${VERSION}" | grep -qE '[-]'; then
-            gh release create "v${VERSION}" --title "v${VERSION}" --draft --prerelease --generate-notes
-          else
-            gh release create "v${VERSION}" --title "v${VERSION}" --draft --generate-notes
-          fi
-
-  native-prebuild:
-    name: Build Native Precompiled Artifacts
-    needs: [ prepare-release ]
-    if: ${{ !inputs.reuse-native-assets }}
-    uses: ./.github/workflows/native-prebuild.yml
-    with:
-      version: ${{ inputs.version }}
-      git-ref: v${{ inputs.version }}
-    secrets: inherit
-
-  publish:
-    name: Publish v${{ inputs.version }}
-    runs-on: ubuntu-latest
-    needs: [ prepare-release, native-prebuild ]
-    if: ${{ always() && needs.prepare-release.result == 'success' && (needs.native-prebuild.result == 'success' || (inputs.reuse-native-assets && needs.native-prebuild.result == 'skipped')) }}
-    timeout-minutes: 45
-
-    steps:
-      - name: Checkout release tag
-        uses: actions/checkout@v7
+          ref: ${{ inputs.source_sha }}
+      - uses: erlef/setup-beam@v1
         with:
-          ref: v${{ inputs.version }}
-
-      - name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          elixir-version: ${{ env.ELIXIR_VERSION }}
-          otp-version: ${{ env.OTP_VERSION }}
-
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
+          elixir-version: '1.18'
+          otp-version: '28'
+      - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.3.13
-
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+      - uses: browser-actions/setup-chrome@v2
+        id: chrome
+      - name: Immutable UI-only release plan
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          SOURCE_SHA: ${{ inputs.source_sha }}
+        run: elixir .github/scripts/ui_release.exs plan "$RELEASE_VERSION" "$SOURCE_SHA"
+      - name: Locked toolchain, UI tests and hooks
+        env:
+          CHROME_BIN: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          mix deps.get --check-locked
+          elixir scripts/check-toolchain.exs
+          bun install --frozen-lockfile
+          scripts/with-precompiled-toolchain.sh mix compile --warnings-as-errors
+          scripts/with-precompiled-toolchain.sh mix test
+          bun test --cwd apps/phoenix_duskmoon
+      - name: UI and Storybook production assets
+        env:
+          MIX_ENV: prod
+        run: |
+          scripts/with-precompiled-toolchain.sh mix prepublish
+          scripts/with-precompiled-toolchain.sh mix duskmoon_bundler.build duskmoon_storybook
+          scripts/with-precompiled-toolchain.sh mix phx.digest
+          scripts/with-precompiled-toolchain.sh mix release storybook
+          elixir scripts/check-release-applications.exs _build/prod/rel/storybook
+          elixir .github/scripts/ui_package.exs stage "$RUNNER_TEMP/ui-package"
+          elixir .github/scripts/ui_package.exs smoke "$RUNNER_TEMP/ui-package"
+      - uses: actions/upload-artifact@v6
         with:
-          toolchain: stable
-
-      - name: Install Zig
-        uses: goto-bus-stop/setup-zig@v2
+          name: verified-ui-package
+          path: ${{ runner.temp }}/ui-package
+  publish:
+    needs: validate
+    environment: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
         with:
-          version: 0.16.0
-
-      - name: Install Elixir dependencies
-        run: mix deps.get
-
-      - name: Install JavaScript dependencies
-        run: bun install --frozen-lockfile --ignore-scripts --registry=https://registry.npmjs.org/
-
-      - name: Generate native checksum files
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-
-          native_assets_dir="${RUNNER_TEMP}/native-release-assets"
-          mkdir -p "${native_assets_dir}"
-
-          (
-            cd apps/duskmoon_oxc
-            DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1 mix compile --force
-          )
-
-          (
-            cd apps/duskmoon_oxide
-            DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1 mix compile --force
-          )
-
-          (
-            cd apps/duskmoon_vize
-            DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1 mix compile --force
-          )
-
-          (
-            cd apps/duskmoon_quickbeam
-            DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1 mix compile --force
-          )
-
-          gh release download "v${{ inputs.version }}" \
-            --repo "${GITHUB_REPOSITORY}" \
-            --dir "${native_assets_dir}"
-
-          elixir .github/scripts/generate_native_checksums.exs \
-            "${{ inputs.version }}" "${native_assets_dir}"
-
-      - name: Verify native checksum files
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          elixir .github/scripts/verify_native_checksums.exs "v${{ inputs.version }}" \
-            apps/duskmoon_oxc/checksum-Elixir.OXC.Native.exs \
-            apps/duskmoon_oxc/checksum-Elixir.OXC.Format.Native.exs \
-            apps/duskmoon_oxc/checksum-Elixir.OXC.Lint.Native.exs \
-            apps/duskmoon_oxide/checksum-Elixir.Oxide.Native.exs \
-            apps/duskmoon_vize/checksum-Elixir.Vize.Native.exs \
-            apps/duskmoon_quickbeam/checksum-QuickBEAM.Native.exs
-
-      - name: Prepare package assets
-        run: mix prepublish
-
-      - name: Prepare app mix.exs files for Hex publish
-        run: |
-          VERSION="${{ inputs.version }}"
-          MIX_BACKUP_DIR="${RUNNER_TEMP}/app_mix_exs"
-          mkdir -p "${MIX_BACKUP_DIR}"
-          cp apps/duskmoon_hex_solver/mix.exs "${MIX_BACKUP_DIR}/duskmoon_hex_solver.mix.exs"
-          cp apps/duskmoon_npm/mix.exs "${MIX_BACKUP_DIR}/duskmoon_npm.mix.exs"
-          cp apps/duskmoon_oxc/mix.exs "${MIX_BACKUP_DIR}/duskmoon_oxc.mix.exs"
-          cp apps/duskmoon_vize/mix.exs "${MIX_BACKUP_DIR}/duskmoon_vize.mix.exs"
-          cp apps/duskmoon_oxide/mix.exs "${MIX_BACKUP_DIR}/duskmoon_oxide.mix.exs"
-          cp apps/duskmoon_quickbeam/mix.exs "${MIX_BACKUP_DIR}/duskmoon_quickbeam.mix.exs"
-          cp apps/duskmoon_bundler_runtime/mix.exs "${MIX_BACKUP_DIR}/duskmoon_bundler_runtime.mix.exs"
-          cp apps/duskmoon_bundler/mix.exs "${MIX_BACKUP_DIR}/duskmoon_bundler.mix.exs"
-          cp apps/phoenix_duskmoon/mix.exs "${MIX_BACKUP_DIR}/phoenix_duskmoon.mix.exs"
-          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_hex_solver/mix.exs
-          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_npm/mix.exs
-          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_oxc/mix.exs
-          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_vize/mix.exs
-          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_oxide/mix.exs
-          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_quickbeam/mix.exs
-          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_bundler_runtime/mix.exs
-          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/duskmoon_bundler/mix.exs
-          sed -i '/^[[:space:]]*build_path: /d;/^[[:space:]]*config_path: /d;/^[[:space:]]*deps_path: /d;/^[[:space:]]*lockfile: /d' apps/phoenix_duskmoon/mix.exs
-          sed -i "s%{:duskmoon_hex_solver, in_umbrella: true}%{:duskmoon_hex_solver, \"~> ${VERSION}\"}%" apps/duskmoon_npm/mix.exs
-          sed -i "s%{:duskmoon_oxc, in_umbrella: true}%{:duskmoon_oxc, \"~> ${VERSION}\"}%" apps/duskmoon_quickbeam/mix.exs
-          sed -i "s%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, \"~> ${VERSION}\", optional: true}%" apps/duskmoon_quickbeam/mix.exs
-          sed -i "s%{:duskmoon_oxc, in_umbrella: true}%{:duskmoon_oxc, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
-          sed -i "s%{:duskmoon_vize, in_umbrella: true}%{:duskmoon_vize, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
-          sed -i "s%{:duskmoon_oxide, in_umbrella: true}%{:duskmoon_oxide, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
-          sed -i "s%{:duskmoon_quickbeam, in_umbrella: true}%{:duskmoon_quickbeam, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
-          sed -i "s%{:duskmoon_bundler_runtime, in_umbrella: true}%{:duskmoon_bundler_runtime, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
-          sed -i "s%{:duskmoon_npm, in_umbrella: true}%{:duskmoon_npm, \"~> ${VERSION}\"}%" apps/duskmoon_bundler/mix.exs
-          # Zigler 0.16 pulls its pinned ex_doc through zig_doc. Keep direct doc-only deps out of packages.
-          for mix_file in \
-            apps/duskmoon_hex_solver/mix.exs \
-            apps/duskmoon_npm/mix.exs \
-            apps/duskmoon_oxc/mix.exs \
-            apps/duskmoon_vize/mix.exs \
-            apps/duskmoon_oxide/mix.exs \
-            apps/duskmoon_quickbeam/mix.exs \
-            apps/duskmoon_bundler_runtime/mix.exs \
-            apps/duskmoon_bundler/mix.exs \
-            apps/phoenix_duskmoon/mix.exs; do
-            sed -i '/^[[:space:]]*{:ex_doc, .*runtime: false[^}]*},\?$/d' "${mix_file}"
-            if grep -q "{:ex_doc," "${mix_file}"; then
-              echo "${mix_file} still contains a direct ex_doc dependency" >&2
-              exit 1
-            fi
-          done
-          grep -q "{:duskmoon_hex_solver, \"~> ${VERSION}\"}" apps/duskmoon_npm/mix.exs
-          grep -q "{:duskmoon_oxc, \"~> ${VERSION}\"}" apps/duskmoon_quickbeam/mix.exs
-          grep -q "{:duskmoon_npm, \"~> ${VERSION}\", optional: true}" apps/duskmoon_quickbeam/mix.exs
-          grep -A1 "{:zigler," apps/duskmoon_quickbeam/mix.exs | grep -q "optional: true, runtime: false"
-          grep -q "{:duskmoon_oxc, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
-          grep -q "{:duskmoon_vize, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
-          grep -q "{:duskmoon_oxide, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
-          grep -q "{:duskmoon_quickbeam, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
-          grep -q "{:duskmoon_bundler_runtime, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
-          grep -q "{:duskmoon_npm, \"~> ${VERSION}\"}" apps/duskmoon_bundler/mix.exs
-          echo "MIX_BACKUP_DIR=${MIX_BACKUP_DIR}" >> "$GITHUB_ENV"
-
-      - name: Publish duskmoon_hex_solver to hex.pm
-        working-directory: apps/duskmoon_hex_solver
-        env:
-          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
-          MIX_ENV: prod
-        run: |
-          if mix hex.info duskmoon_hex_solver "${{ inputs.version }}" >/dev/null 2>&1; then
-            echo "duskmoon_hex_solver ${{ inputs.version }} is already published; skipping"
-          else
-            mix hex.publish package --yes --replace
-          fi
-
-      - name: Fetch duskmoon_npm Hex dependencies
-        working-directory: apps/duskmoon_npm
-        run: mix deps.get --only prod
-
-      - name: Publish duskmoon_npm to hex.pm
-        working-directory: apps/duskmoon_npm
-        env:
-          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
-          MIX_ENV: prod
-        run: |
-          if mix hex.info duskmoon_npm "${{ inputs.version }}" >/dev/null 2>&1; then
-            echo "duskmoon_npm ${{ inputs.version }} is already published; skipping"
-          else
-            mix hex.publish package --yes --replace
-          fi
-
-      - name: Fetch duskmoon_oxc Hex dependencies
-        working-directory: apps/duskmoon_oxc
-        run: mix deps.get --only prod
-
-      - name: Publish duskmoon_oxc to hex.pm
-        working-directory: apps/duskmoon_oxc
-        env:
-          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
-          MIX_ENV: prod
-        run: |
-          if mix hex.info duskmoon_oxc "${{ inputs.version }}" >/dev/null 2>&1; then
-            echo "duskmoon_oxc ${{ inputs.version }} is already published; skipping"
-          else
-            echo "Publishing duskmoon_oxc ${{ inputs.version }}"
-            mix hex.publish package --yes --replace
-          fi
-
-      - name: Fetch duskmoon_vize Hex dependencies
-        working-directory: apps/duskmoon_vize
-        run: mix deps.get --only prod
-
-      - name: Publish duskmoon_vize to hex.pm
-        working-directory: apps/duskmoon_vize
-        env:
-          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
-          MIX_ENV: prod
-        run: |
-          if mix hex.info duskmoon_vize "${{ inputs.version }}" >/dev/null 2>&1; then
-            echo "duskmoon_vize ${{ inputs.version }} is already published; skipping"
-          else
-            echo "Publishing duskmoon_vize ${{ inputs.version }}"
-            mix hex.publish package --yes --replace
-          fi
-
-      - name: Fetch duskmoon_oxide Hex dependencies
-        working-directory: apps/duskmoon_oxide
-        run: mix deps.get --only prod
-
-      - name: Publish duskmoon_oxide to hex.pm
-        working-directory: apps/duskmoon_oxide
-        env:
-          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
-          MIX_ENV: prod
-        run: |
-          if mix hex.info duskmoon_oxide "${{ inputs.version }}" >/dev/null 2>&1; then
-            echo "duskmoon_oxide ${{ inputs.version }} is already published; skipping"
-          else
-            echo "Publishing duskmoon_oxide ${{ inputs.version }}"
-            mix hex.publish package --yes --replace
-          fi
-
-      - name: Fetch duskmoon_quickbeam Hex dependencies
-        working-directory: apps/duskmoon_quickbeam
-        run: mix deps.get --only prod
-
-      - name: Publish duskmoon_quickbeam to hex.pm
-        working-directory: apps/duskmoon_quickbeam
-        env:
-          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
-          MIX_ENV: prod
-        run: |
-          if mix hex.info duskmoon_quickbeam "${{ inputs.version }}" >/dev/null 2>&1; then
-            echo "duskmoon_quickbeam ${{ inputs.version }} is already published; skipping"
-          else
-            echo "Publishing duskmoon_quickbeam ${{ inputs.version }}"
-            mix hex.publish package --yes --replace
-          fi
-
-      - name: Fetch duskmoon_bundler_runtime Hex dependencies
-        working-directory: apps/duskmoon_bundler_runtime
-        run: mix deps.get --only prod
-
-      - name: Publish duskmoon_bundler_runtime to hex.pm
-        working-directory: apps/duskmoon_bundler_runtime
-        env:
-          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
-          MIX_ENV: prod
-        run: |
-          if mix hex.info duskmoon_bundler_runtime "${{ inputs.version }}" >/dev/null 2>&1; then
-            echo "duskmoon_bundler_runtime ${{ inputs.version }} is already published; skipping"
-          else
-            mix hex.publish package --yes --replace
-          fi
-
-      - name: Fetch duskmoon_bundler Hex dependencies
-        working-directory: apps/duskmoon_bundler
-        run: mix deps.get --only prod
-
-      - name: Publish duskmoon_bundler to hex.pm
-        working-directory: apps/duskmoon_bundler
-        env:
-          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
-          MIX_ENV: prod
-        run: |
-          if mix hex.info duskmoon_bundler "${{ inputs.version }}" >/dev/null 2>&1; then
-            echo "duskmoon_bundler ${{ inputs.version }} is already published; skipping"
-          else
-            mix hex.publish package --yes --replace
-          fi
-
-      - name: Fetch phoenix_duskmoon Hex dependencies
-        working-directory: apps/phoenix_duskmoon
-        run: mix deps.get --only prod
-
-      - name: Publish phoenix_duskmoon to hex.pm
-        working-directory: apps/phoenix_duskmoon
-        env:
-          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
-          MIX_ENV: prod
-        run: |
-          if mix hex.info phoenix_duskmoon "${{ inputs.version }}" >/dev/null 2>&1; then
-            echo "phoenix_duskmoon ${{ inputs.version }} is already published; skipping"
-          else
-            mix hex.publish package --yes --replace
-          fi
-
-      - name: Restore local umbrella mix.exs files
-        if: always()
-        run: |
-          if [ -n "${MIX_BACKUP_DIR:-}" ] && [ -d "${MIX_BACKUP_DIR}" ]; then
-            cp "${MIX_BACKUP_DIR}/duskmoon_hex_solver.mix.exs" apps/duskmoon_hex_solver/mix.exs
-            cp "${MIX_BACKUP_DIR}/duskmoon_npm.mix.exs" apps/duskmoon_npm/mix.exs
-            cp "${MIX_BACKUP_DIR}/duskmoon_oxc.mix.exs" apps/duskmoon_oxc/mix.exs
-            cp "${MIX_BACKUP_DIR}/duskmoon_vize.mix.exs" apps/duskmoon_vize/mix.exs
-            cp "${MIX_BACKUP_DIR}/duskmoon_oxide.mix.exs" apps/duskmoon_oxide/mix.exs
-            cp "${MIX_BACKUP_DIR}/duskmoon_quickbeam.mix.exs" apps/duskmoon_quickbeam/mix.exs
-            cp "${MIX_BACKUP_DIR}/duskmoon_bundler_runtime.mix.exs" apps/duskmoon_bundler_runtime/mix.exs
-            cp "${MIX_BACKUP_DIR}/duskmoon_bundler.mix.exs" apps/duskmoon_bundler/mix.exs
-            cp "${MIX_BACKUP_DIR}/phoenix_duskmoon.mix.exs" apps/phoenix_duskmoon/mix.exs
-          fi
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
+          ref: ${{ inputs.source_sha }}
+      - uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.18'
+          otp-version: '28'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.13
+      - uses: actions/setup-node@v7
         with:
           node-version: '24'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Determine npm tag
-        id: npm-tag
-        run: |
-          VERSION="${{ inputs.version }}"
-          if echo "$VERSION" | grep -qE '[-]'; then
-            echo "tag=next" >> "$GITHUB_OUTPUT"
-          else
-            echo "tag=latest" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Publish to npm
-        working-directory: apps/phoenix_duskmoon
-        run: |
-          VERSION="${{ inputs.version }}"
-          if npm view "phoenix_duskmoon@${VERSION}" version >/dev/null 2>&1; then
-            echo "phoenix_duskmoon ${VERSION} is already published to npm; skipping"
-          else
-            npm publish --access public --provenance --tag ${{ steps.npm-tag.outputs.tag }}
-          fi
-
-      - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v3
+          registry-url: https://registry.npmjs.org
+      - uses: actions/download-artifact@v7
         with:
-          tag_name: v${{ inputs.version }}
-          name: v${{ inputs.version }}
-          generate_release_notes: true
-          draft: false
-          prerelease: ${{ contains(inputs.version, '-') }}
+          name: verified-ui-package
+          path: ${{ runner.temp }}/ui-package
+      - name: Publish only immutable U outputs
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Release summary
+          RELEASE_VERSION: ${{ inputs.version }}
+          SOURCE_SHA: ${{ inputs.source_sha }}
+          GH_TOKEN: ${{ github.token }}
+          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
         run: |
-          VERSION="${{ inputs.version }}"
-          cat >> "$GITHUB_STEP_SUMMARY" <<EOF
-          ## Release Summary
-
-          **Version**: v${VERSION}
-
-          ### Published:
-          - [Hex.pm: duskmoon_hex_solver](https://hex.pm/packages/duskmoon_hex_solver/${VERSION})
-          - [Hex.pm: duskmoon_npm](https://hex.pm/packages/duskmoon_npm/${VERSION})
-          - [Hex.pm: duskmoon_oxc](https://hex.pm/packages/duskmoon_oxc/${VERSION})
-          - [Hex.pm: duskmoon_vize](https://hex.pm/packages/duskmoon_vize/${VERSION})
-          - [Hex.pm: duskmoon_oxide](https://hex.pm/packages/duskmoon_oxide/${VERSION})
-          - [Hex.pm: duskmoon_quickbeam](https://hex.pm/packages/duskmoon_quickbeam/${VERSION})
-          - [Hex.pm: duskmoon_bundler_runtime](https://hex.pm/packages/duskmoon_bundler_runtime/${VERSION})
-          - [Hex.pm: duskmoon_bundler](https://hex.pm/packages/duskmoon_bundler/${VERSION})
-          - [Hex.pm: phoenix_duskmoon](https://hex.pm/packages/phoenix_duskmoon/${VERSION})
-          - [npm](https://www.npmjs.com/package/phoenix_duskmoon/v/${VERSION})
-          - GitHub Release with native prebuilt artifacts
-          EOF
-
-  alpine-native-smoke:
-    name: Verify Published Alpine Native Packages
-    needs: [ publish ]
-    if: ${{ needs.publish.result == 'success' }}
+          elixir .github/scripts/ui_release.exs publish "$RELEASE_VERSION" "$SOURCE_SHA" "$RUNNER_TEMP/ui-package"
+  alpine:
+    needs: publish
     uses: ./.github/workflows/alpine-native-smoke.yml
     with:
       version: ${{ inputs.version }}
-
-  trigger-docker:
-    name: Trigger Docker Build
-    runs-on: ubuntu-latest
-    needs: [ publish, alpine-native-smoke ]
-    if: ${{ always() && needs.publish.result == 'success' && needs.alpine-native-smoke.result == 'success' }}
-
-    steps:
-      - name: Trigger Docker workflow
-        uses: actions/github-script@v9
-        with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'docker.yml',
-              ref: 'main',
-              inputs: {
-                'git-ref': 'v${{ inputs.version }}',
-                'version': '${{ inputs.version }}'
-              }
-            });
-            console.log('Docker build workflow triggered for v${{ inputs.version }}');
+  storybook:
+    needs: [publish, alpine]
+    uses: ./.github/workflows/docker.yml
+    permissions:
+      contents: read
+      packages: write
+    with:
+      git-ref: ${{ inputs.source_sha }}
+      version: ${{ inputs.version }}
+    secrets: inherit

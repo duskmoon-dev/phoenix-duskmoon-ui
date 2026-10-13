@@ -1,6 +1,21 @@
 name: Docker
 
 on:
+  workflow_call:
+    inputs:
+      git-ref:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+    secrets:
+      DOCKERHUB_USER:
+        required: true
+      DOCKERHUB_PASSWD:
+        required: true
+      GHCR_TOKEN:
+        required: true
   workflow_dispatch:
     inputs:
       git-ref:
@@ -27,16 +42,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.inputs.git-ref }}
+          ref: ${{ inputs.git-ref }}
 
       - name: Determine version tag
         id: version
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION="${{ github.event.inputs.version }}"
+          VERSION="${{ inputs.version }}"
           if [ -z "$VERSION" ]; then
-            VERSION="${{ github.event.inputs.git-ref }}"
+            VERSION="${{ inputs.git-ref }}"
           fi
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
 

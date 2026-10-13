@@ -1,318 +1,39 @@
-name: Test
-
+name: UI Test
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
-
 permissions:
   contents: read
-
-env:
-  DUSKMOON_BUILD_NATIVE_FROM_SOURCE: '1'
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
 jobs:
   test:
-    name: Test (Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}})
+    name: UI browser and component tests / OTP ${{ matrix.otp }}
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
-        elixir: ['1.18']
         otp: ['27', '28']
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Set up Elixir
-        uses: erlef/setup-beam@v1
+      - uses: actions/checkout@v7
+      - uses: erlef/setup-beam@v1
         with:
-          elixir-version: ${{ matrix.elixir }}
+          elixir-version: '1.18'
           otp-version: ${{ matrix.otp }}
-
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-
-      - name: Install Zig
-        uses: goto-bus-stop/setup-zig@v2
-        with:
-          version: 0.16.0
-
-      - name: Set up Chrome
-        id: setup-chrome
-        uses: browser-actions/setup-chrome@v2
-
-      - name: Verify headless Chrome
-        run: |
-          set -euo pipefail
-          CHROME_BIN="${{ steps.setup-chrome.outputs.chrome-path }}"
-          echo "CHROME_BIN=${CHROME_BIN}" >> "$GITHUB_ENV"
-          "${CHROME_BIN}" --version
-          "${CHROME_BIN}" --headless --disable-gpu --no-sandbox --dump-dom about:blank >/dev/null
-
-      - name: Restore dependencies cache
-        uses: actions/cache@v6
-        with:
-          path: |
-            deps
-          key: ${{ runner.os }}-mix-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('**/mix.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-mix-${{ matrix.elixir }}-${{ matrix.otp }}-
-
-      - name: Install dependencies
-        run: mix deps.get
-
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.3.13
-
-      - name: Install component packages for browser tests
-        run: bun install --frozen-lockfile
-
-      - name: Run tests
-        run: mix test
-        env:
-          MIX_ENV: test
-
-  duskmoon-bundler:
-    name: Duskmoon Bundler Tests (Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        elixir: ['1.18']
-        otp: ['27', '28']
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          elixir-version: ${{ matrix.elixir }}
-          otp-version: ${{ matrix.otp }}
-
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-
-      - name: Install Zig
-        uses: goto-bus-stop/setup-zig@v2
-        with:
-          version: 0.16.0
-
-      - name: Set up Chrome
-        id: setup-chrome
-        uses: browser-actions/setup-chrome@v2
-
-      - name: Verify headless Chrome
+      - name: Install pinned dependencies
         run: |
-          set -euo pipefail
-          CHROME_BIN="${{ steps.setup-chrome.outputs.chrome-path }}"
-          echo "CHROME_BIN=${CHROME_BIN}" >> "$GITHUB_ENV"
-          "${CHROME_BIN}" --version
-          "${CHROME_BIN}" --headless --disable-gpu --no-sandbox --dump-dom about:blank >/dev/null
-
-      - name: Restore dependencies cache
-        uses: actions/cache@v6
-        with:
-          path: |
-            deps
-          key: ${{ runner.os }}-duskmoon-bundler-test-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('**/mix.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-duskmoon-bundler-test-${{ matrix.elixir }}-${{ matrix.otp }}-
-            ${{ runner.os }}-mix-${{ matrix.elixir }}-${{ matrix.otp }}-
-
-      - name: Install dependencies
-        run: mix deps.get
-
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: 1.3.13
-
-      - name: Install component packages for browser tests
-        run: bun install --frozen-lockfile
-
-      - name: Run duskmoon_bundler tests
-        run: mix test apps/duskmoon_bundler/test
+          mix deps.get --check-locked
+          elixir scripts/check-toolchain.exs
+          bun install --frozen-lockfile
+      - uses: browser-actions/setup-chrome@v2
+        id: chrome
+      - name: Browser and component regressions
         env:
           MIX_ENV: test
-
-  duskmoon-bundler-runtime:
-    name: Duskmoon Bundler Runtime Tests (Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        elixir: ['1.18']
-        otp: ['27', '28']
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          elixir-version: ${{ matrix.elixir }}
-          otp-version: ${{ matrix.otp }}
-
-      - name: Restore dependencies cache
-        uses: actions/cache@v6
-        with:
-          path: |
-            deps
-          key: ${{ runner.os }}-duskmoon-bundler-runtime-test-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('**/mix.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-duskmoon-bundler-runtime-test-${{ matrix.elixir }}-${{ matrix.otp }}-
-            ${{ runner.os }}-mix-${{ matrix.elixir }}-${{ matrix.otp }}-
-
-      - name: Install dependencies
-        run: mix deps.get
-
-      - name: Run duskmoon_bundler_runtime tests
-        working-directory: apps/duskmoon_bundler_runtime
-        run: mix test
-        env:
-          MIX_ENV: test
-
-  duskmoon-npm:
-    name: Duskmoon NPM Tests (Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        elixir: ['1.18']
-        otp: ['27', '28']
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          elixir-version: ${{ matrix.elixir }}
-          otp-version: ${{ matrix.otp }}
-
-      - name: Restore dependencies cache
-        uses: actions/cache@v6
-        with:
-          path: |
-            deps
-          key: ${{ runner.os }}-duskmoon-npm-test-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('**/mix.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-duskmoon-npm-test-${{ matrix.elixir }}-${{ matrix.otp }}-
-            ${{ runner.os }}-mix-${{ matrix.elixir }}-${{ matrix.otp }}-
-
-      - name: Install dependencies
-        run: mix deps.get
-
-      - name: Run duskmoon_npm tests
-        working-directory: apps/duskmoon_npm
-        run: mix test
-        env:
-          MIX_ENV: test
-
-  duskmoon-hex-solver:
-    name: Duskmoon Hex Solver Tests (Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        elixir: ['1.18']
-        otp: ['27', '28']
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          elixir-version: ${{ matrix.elixir }}
-          otp-version: ${{ matrix.otp }}
-
-      - name: Restore dependencies cache
-        uses: actions/cache@v6
-        with:
-          path: |
-            deps
-          key: ${{ runner.os }}-duskmoon-hex-solver-test-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('**/mix.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-duskmoon-hex-solver-test-${{ matrix.elixir }}-${{ matrix.otp }}-
-            ${{ runner.os }}-mix-${{ matrix.elixir }}-${{ matrix.otp }}-
-
-      - name: Install dependencies
-        run: mix deps.get
-
-      - name: Run duskmoon_hex_solver tests
-        working-directory: apps/duskmoon_hex_solver
-        run: mix test
-        env:
-          MIX_ENV: test
-
-  migrated-native-apps:
-    name: ${{ matrix.app }} Tests (Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        elixir: ['1.18']
-        otp: ['27', '28']
-        app:
-          - duskmoon_oxc
-          - duskmoon_vize
-          - duskmoon_oxide
-          - duskmoon_quickbeam
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          elixir-version: ${{ matrix.elixir }}
-          otp-version: ${{ matrix.otp }}
-
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-
-      - name: Install Zig
-        uses: goto-bus-stop/setup-zig@v2
-        with:
-          version: 0.16.0
-
-      - name: Restore dependencies cache
-        uses: actions/cache@v6
-        with:
-          path: |
-            deps
-          key: ${{ runner.os }}-${{ matrix.app }}-test-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('**/mix.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.app }}-test-${{ matrix.elixir }}-${{ matrix.otp }}-
-            ${{ runner.os }}-mix-${{ matrix.elixir }}-${{ matrix.otp }}-
-
-      - name: Install dependencies
-        run: mix deps.get
-
-      - name: Run ${{ matrix.app }} tests
-        working-directory: apps/${{ matrix.app }}
-        run: mix test
-        env:
-          MIX_ENV: test
+          CHROME_BIN: ${{ steps.chrome.outputs.chrome-path }}
+        run: scripts/with-precompiled-toolchain.sh mix test
