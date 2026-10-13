@@ -20,6 +20,7 @@ defmodule UIRelease do
       product: "phoenix_duskmoon",
       version: version,
       source_sha: sha,
+      source_dirty: ReleaseSupport.source_dirty?(),
       bundler_version: bundler,
       mix_lock_sha256: ReleaseSupport.digest("mix.lock"),
       bun_lock_sha256: ReleaseSupport.digest("bun.lock"),
@@ -39,6 +40,7 @@ defmodule UIRelease do
   end
 
   def publish(version, sha, stage) do
+    ReleaseSupport.clean_source!()
     provenance = plan(version, sha)
     stage = Path.expand(stage)
     ReleaseSupport.manifests!(Path.dirname(stage), [Path.basename(stage)], version)

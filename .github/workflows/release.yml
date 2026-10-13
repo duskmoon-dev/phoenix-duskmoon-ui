@@ -39,6 +39,7 @@ jobs:
           WORKFLOW_SHA: ${{ github.sha }}
         run: |
           test "$WORKFLOW_SHA" = "$SOURCE_SHA" || { echo 'Dispatch workflow ref must point at source_sha' >&2; exit 1; }
+          elixir -r .github/scripts/release_support.exs -e 'ReleaseSupport.clean_source!()'
           elixir .github/scripts/ui_release.exs plan "$RELEASE_VERSION" "$SOURCE_SHA"
       - name: Locked toolchain, UI tests and hooks
         env:
@@ -47,6 +48,8 @@ jobs:
           mix deps.get --check-locked
           elixir scripts/check-toolchain.exs
           bun install --frozen-lockfile
+          elixir scripts/native-policy-test.exs
+          elixir scripts/prepare-candidate-test.exs
           scripts/with-precompiled-toolchain.sh mix compile --warnings-as-errors
           scripts/with-precompiled-toolchain.sh mix test
           bun test --cwd apps/phoenix_duskmoon

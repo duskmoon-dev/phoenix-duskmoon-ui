@@ -17,6 +17,19 @@ defmodule ReleasePlanningTest do
     assert_raise RuntimeError, fn -> ReleaseSupport.order!(%{"a" => ["b"], "b" => ["a"]}) end
   end
 
+  test "native retry requires every final immutable asset digest" do
+    assets = Map.new(1..47, &{"asset-#{&1}.tar.gz", String.duplicate("a", 64)})
+    assert ReleaseSupport.reusable_native?(%{"native_assets" => assets})
+
+    refute ReleaseSupport.reusable_native?(%{
+             "native_assets" => Map.delete(assets, "asset-1.tar.gz")
+           })
+
+    refute ReleaseSupport.reusable_native?(%{
+             "native_assets" => Map.put(assets, "asset-1.tar.gz", "invalid")
+           })
+  end
+
   test "retry reuses matching output and refuses replacement" do
     assert :create = ReleaseSupport.immutable_action(nil, "sha256:a")
     assert :reuse = ReleaseSupport.immutable_action("sha256:a", "sha256:a")

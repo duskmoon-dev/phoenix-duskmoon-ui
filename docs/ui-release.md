@@ -17,7 +17,9 @@ assets. It inspects the actual Storybook `.rel` application list and tests an
 isolated staged UI consumer and npm exports. MDEx remains an independent native
 dependency; the zero-source-build guarantee applies to Duskmoon's toolchain.
 
-Dry-run planning and script validation have no publication side effects:
+Dry-run planning records `source_dirty` and has no publication side effects.
+Formal validation/publication requires a clean immutable source checkout:
+
 
 ```sh
 elixir .github/scripts/release_test.exs
@@ -71,7 +73,7 @@ credentials are separately configured in the destination; ordinary
 
 ## Migration verification recorded locally
 
-On 2026-10-13, `elixir .github/scripts/release_test.exs` passed all four
+On 2026-10-13, `elixir .github/scripts/release_test.exs` passed all five
 side-effect-free version/ref, package-order, immutable-retry and complete-cohort
 adoption tests. `actionlint` v1.7.11 accepted every UI workflow. The U=9.16.16
 release plan listed exactly `phoenix_duskmoon`, no native builds and no toolchain

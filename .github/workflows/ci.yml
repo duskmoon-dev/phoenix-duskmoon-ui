@@ -4,6 +4,8 @@ on:
   pull_request:
 permissions:
   contents: read
+env:
+  DUSKMOON_NATIVE_INVOCATION_LOG: /tmp/duskmoon-native-invocations.log
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -35,6 +37,8 @@ jobs:
           elixir scripts/check-toolchain.exs
           bun install --frozen-lockfile
       - run: elixir .github/scripts/release_test.exs
+      - run: elixir scripts/native-policy-test.exs
+      - run: elixir scripts/prepare-candidate-test.exs
       - run: scripts/with-precompiled-toolchain.sh mix format --check-formatted
       - run: scripts/with-precompiled-toolchain.sh mix compile --warnings-as-errors
       - run: bun test --cwd apps/phoenix_duskmoon

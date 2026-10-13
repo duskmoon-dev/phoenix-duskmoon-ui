@@ -33,6 +33,12 @@ defmodule ReleaseSupport do
     sha
   end
 
+  def source_dirty?, do: String.trim(cmd!("git", ["status", "--porcelain"])) != ""
+
+  def clean_source! do
+    if source_dirty?(), do: raise("formal release requires a clean immutable source checkout")
+  end
+
   def order!(graph) do
     visit = fn visit, app, active, done ->
       cond do
@@ -96,6 +102,16 @@ defmodule ReleaseSupport do
     state["public_assets_verified"] == true and state["registry_consumer_verified"] == true and
       state["musl_amd64_verified"] == true and state["musl_arm64_verified"] == true and
       Enum.sort(state["packages"] || []) == Enum.sort(@cohort)
+  end
+
+  def reusable_native?(state) do
+    assets = state["native_assets"] || %{}
+
+    map_size(assets) == 47 and
+      Enum.all?(assets, fn {name, hash} ->
+        Path.basename(name) == name and String.ends_with?(name, ".tar.gz") and
+          is_binary(hash) and hash =~ ~r/^[a-f0-9]{64}$/
+      end)
   end
 
   def http!(url, output) do
@@ -245,9 +261,13 @@ defmodule ReleaseSupport do
       name = Path.basename(path)
       wanted = "sha256:" <> digest(path)
 
-      case immutable_action(existing[name], wanted) do
-        :create -> cmd!("gh", ["release", "upload", tag, path, "--repo", repo])
-        :reuse -> IO.puts("Reusing immutable release asset #{name}")
+      if Map.has_key?(existing, name) do
+        # Some API responses omit advertised digests. The mandatory anonymous
+        # byte verification below still decides reuse; never upload over a name.
+        if is_binary(existing[name]), do: immutable_action(existing[name], wanted)
+        IO.puts("Reusing existing release asset #{name} pending byte verification")
+      else
+        cmd!("gh", ["release", "upload", tag, path, "--repo", repo])
       end
 
       downloaded =
