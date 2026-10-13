@@ -164,6 +164,11 @@ defmodule DuskmoonBundler.Integration.DevVendorTest do
     }
     """)
 
+    File.write!(
+      Path.join(@fixture_dir, "unreferenced_test.js"),
+      ~s(import { test } from "bun:test";)
+    )
+
     if context[:cjs] do
       File.write!(Path.join(@fixture_dir, "app.js"), """
       import callable from 'callable';
@@ -176,6 +181,7 @@ defmodule DuskmoonBundler.Integration.DevVendorTest do
 
     opts = [
       root: @fixture_dir,
+      entry: Path.join(@fixture_dir, "app.js"),
       prefix: "/assets",
       vendor_prebundle: context[:vendor_prebundle] != false,
       resolve_dirs: [Path.join(@project_root, "node_modules"), Path.join(@project_root, "apps")]

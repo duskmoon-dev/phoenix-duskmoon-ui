@@ -2,7 +2,7 @@ defmodule DuskmoonBundler.JS.Vendor do
   @moduledoc """
   Pre-bundle vendor (node_modules) dependencies for dev mode.
 
-  Scans source files with `OXC.select/3`, identifies bare specifiers
+  Follows application entries and their local static imports, identifies bare specifiers
   (non-relative, non-URL), resolves them through module directories, and
   bundles each into a single ESM file with `OXC.bundle/2`.
 
@@ -31,13 +31,15 @@ defmodule DuskmoonBundler.JS.Vendor do
   end
 
   @doc """
-  Scan source files and pre-bundle any bare npm imports.
+  Follow application entries and pre-bundle their reachable static npm imports.
 
   Returns a map of `specifier → vendor_path` for import rewriting.
 
   ## Options
 
-    * `:root` — source directory to scan
+    * `:root` — source directory containing the application
+    * `:entry` — entry path or list of paths; defaults to `app.*` in root, `js/` or `src/`
+    * `:aliases` — import aliases used by the application
     * `:node_modules` — path to node_modules (default: auto-detect)
     * `:resolve_dirs` — additional package directories to resolve from
     * `:vendor_source` — specifiers to serve as source ESM with import rewriting
@@ -54,7 +56,7 @@ defmodule DuskmoonBundler.JS.Vendor do
     module_types = Keyword.get(opts, :module_types, %{})
     source_specifiers = Keyword.get(opts, :vendor_source, [])
 
-    with {:ok, specifiers} <- scan_bare_imports(root, plugins),
+    with {:ok, specifiers} <- scan_bare_imports(root, plugins, opts),
          :ok <- ensure_cache_dir() do
       specifiers =
         specifiers
@@ -106,7 +108,7 @@ defmodule DuskmoonBundler.JS.Vendor do
             is_binary(root) and Enum.all?(known, &source_vendor?(&1, source_specifiers)) ->
               # Build the initial static application graph before any of its
               # modules escape to the browser. Dynamic imports remain lazy.
-              with {:ok, specifiers} <- scan_bare_imports(root, plugins, :static) do
+              with {:ok, specifiers} <- scan_bare_imports(root, plugins, opts) do
                 specifiers =
                   [specifier | specifiers]
                   |> Enum.map(&DuskmoonBundler.PluginRunner.prebundle_alias(plugins, &1))
@@ -286,42 +288,73 @@ defmodule DuskmoonBundler.JS.Vendor do
 
   # ── Scanning ──────────────────────────────────────────────────────
 
-  defp scan_bare_imports(root, plugins, mode \\ :all) do
-    exts = DuskmoonBundler.JS.Extensions.scannable(plugins)
-    source_files = collect_source_files(root, exts)
+  defp scan_bare_imports(root, plugins, opts) do
+    entries =
+      case opts[:entry] do
+        nil ->
+          for dir <- [root, Path.join(root, "js"), Path.join(root, "src")],
+              ext <- DuskmoonBundler.JS.Extensions.scannable(plugins),
+              path = Path.join(dir, "app" <> ext),
+              File.regular?(path),
+              do: path
 
-    specifiers =
-      Enum.flat_map(source_files, fn file ->
-        with {:ok, source} <- File.read(file),
-             {:ok, imports} <- extract_imports(source, file, plugins, mode) do
-          Enum.filter(imports, &NPM.Resolution.PackageResolver.bare?/1)
-        else
-          _ -> []
+        entry ->
+          entry |> List.wrap() |> Enum.map(&Path.expand/1)
+      end
+
+    ctx = %DuskmoonBundler.Builder.Context{
+      plugins: plugins,
+      aliases: Keyword.get(opts, :aliases, %{})
+    }
+
+    scan_source_files(entries, ctx, MapSet.new(), MapSet.new())
+  end
+
+  defp scan_source_files([], _ctx, _seen, specifiers), do: {:ok, MapSet.to_list(specifiers)}
+
+  defp scan_source_files([module_id | rest], ctx, seen, specifiers) do
+    {file, _query} = DuskmoonBundler.URL.split_query(module_id)
+
+    if MapSet.member?(seen, file) do
+      scan_source_files(rest, ctx, seen, specifiers)
+    else
+      with {:ok, source} <- File.read(file),
+           {:ok, imports} <- extract_imports(source, file, ctx.plugins, :static),
+           {:ok, files, specifiers} <- scan_imports(imports, file, ctx, specifiers) do
+        scan_source_files(files ++ rest, ctx, MapSet.put(seen, file), specifiers)
+      else
+        {:error, reason} -> {:error, {:scan_error, file, reason}}
+      end
+    end
+  end
+
+  defp scan_imports(imports, importer, ctx, specifiers) do
+    Enum.reduce_while(imports, {:ok, [], specifiers}, fn specifier, {:ok, files, specs} ->
+      {path_specifier, _query} = DuskmoonBundler.URL.split_query(specifier)
+
+      if NPM.Resolution.PackageResolver.bare?(path_specifier) and
+           DuskmoonBundler.JS.Resolver.resolve(path_specifier, ctx.aliases) == :pass do
+        {:cont, {:ok, files, MapSet.put(specs, path_specifier)}}
+      else
+        case DuskmoonBundler.Builder.Resolver.resolve(specifier, importer, ctx) do
+          {:ok, resolved} ->
+            {path, _query} = DuskmoonBundler.URL.split_query(resolved)
+
+            files =
+              if Path.extname(path) in DuskmoonBundler.JS.Extensions.scannable(ctx.plugins),
+                do: [resolved | files],
+                else: files
+
+            {:cont, {:ok, files, specs}}
+
+          :skip ->
+            {:cont, {:ok, files, specs}}
+
+          {:error, _} = error ->
+            {:halt, error}
         end
-      end)
-
-    {:ok, specifiers}
-  end
-
-  defp collect_source_files(dir, exts) do
-    case File.ls(dir) do
-      {:ok, entries} ->
-        Enum.flat_map(entries, &collect_source_entry(dir, &1, exts))
-
-      {:error, _} ->
-        []
-    end
-  end
-
-  defp collect_source_entry(dir, entry, exts) do
-    path = Path.join(dir, entry)
-
-    cond do
-      File.dir?(path) and entry in DuskmoonBundler.Paths.ignored_dirs() -> []
-      File.dir?(path) -> collect_source_files(path, exts)
-      Path.extname(entry) in exts -> [path]
-      true -> []
-    end
+      end
+    end)
   end
 
   defp extract_imports(source, path, plugins, mode) do
@@ -1389,7 +1422,7 @@ defmodule DuskmoonBundler.JS.Vendor do
       module_dirs: module_dirs,
       resolve_modules: ["node_modules" | module_dirs],
       dependency_tracking: :module_ids,
-      prebundle_format: 3,
+      prebundle_format: 4,
       dependencies: dependency_revision(module_dirs, plugins, module_types, source_specifiers),
       module_types: module_types,
       plugins: Enum.map(plugins, &base_plugin_signature/1),

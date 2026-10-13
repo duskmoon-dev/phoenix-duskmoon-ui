@@ -2,6 +2,7 @@ defmodule DuskmoonBundler.DevServer.Config do
   @moduledoc "Resolved runtime configuration for the development server plug."
 
   defstruct root: nil,
+            entry: nil,
             public_dir: nil,
             prefix: DuskmoonBundler.Paths.prefix(),
             target: "",

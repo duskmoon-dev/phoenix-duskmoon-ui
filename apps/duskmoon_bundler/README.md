@@ -78,6 +78,14 @@ config :duskmoon_bundler, :server,
   watch_dirs: ["lib/"]
 ```
 
+Development vendor optimization follows the configured `entry` paths and their reachable
+static imports, including local aliases and reexports. Unreferenced tests and scripts
+under the asset root do not enter the browser vendor graph. Dynamic imports stay lazy;
+`vendor_prebundle: false` builds the initial static graph on the first vendor request.
+Startup logs include any dependency that fails prebundling. A standalone DevServer
+root without an entry uses `app.*` in the root, `js/` or `src/`; pass `entry:` for other
+application filenames.
+
 `DuskmoonBundler.static_path/2` is provided by `duskmoon_bundler_runtime`. It resolves DuskmoonBundler-managed assets to source files in dev and content-hashed paths in production:
 
 ```heex

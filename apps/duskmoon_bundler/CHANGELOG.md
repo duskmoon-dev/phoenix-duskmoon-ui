@@ -13,6 +13,9 @@
 - Added `json_codec` as a runtime dependency.
 
 ### Fixed
+- Development vendor discovery follows configured application entries and reachable
+  static imports instead of scanning unrelated tests and scripts. Preserve lazy
+  dynamic imports and report prebundle dependency failures in development logs.
 - Lazily ensured named JavaScript runtimes now survive their creating caller's
   shutdown, preventing concurrent framework compiler calls from losing the shared runtime.
 - Shared and manual chunks now preserve distinct named exports from different

@@ -15,6 +15,7 @@ defmodule DuskmoonBundler.DevServer do
   ## Options
 
     * `:root` — source directory (required, e.g. `"assets/src"`)
+    * `:entry` — application entry path or list of paths for vendor discovery
     * `:prefix` — URL prefix to intercept (default: `"/assets"`)
     * `:target` — JS downlevel target (e.g. `:es2020`)
     * `:import_source` — JSX import source (e.g. `"vue"`)
@@ -47,6 +48,19 @@ defmodule DuskmoonBundler.DevServer do
     root = Keyword.get(opts, :root) || to_string(config.root)
     expanded_root = Path.expand(root)
 
+    configured_entries =
+      config.entry |> List.wrap() |> Enum.map(&configured_entry(&1, expanded_root, expanded_root))
+
+    entry =
+      if Keyword.has_key?(opts, :entry) do
+        opts[:entry] |> List.wrap() |> Enum.map(&Path.expand/1)
+      else
+        if Enum.all?(configured_entries, fn path ->
+             DuskmoonBundler.Path.inside?(path, expanded_root)
+           end),
+           do: configured_entries
+      end
+
     node_modules = NPM.Resolution.PackageResolver.find_node_modules(expanded_root)
     plugins = config.plugins
 
@@ -54,17 +68,20 @@ defmodule DuskmoonBundler.DevServer do
 
     if server_config.vendor_prebundle do
       prebundle_vendor(
-        expanded_root,
-        node_modules,
-        plugins,
-        config.resolve_dirs,
-        module_types,
-        config.vendor_source
+        root: expanded_root,
+        node_modules: node_modules,
+        plugins: plugins,
+        resolve_dirs: config.resolve_dirs,
+        module_types: module_types,
+        vendor_source: config.vendor_source,
+        entry: entry,
+        aliases: config.aliases
       )
     end
 
     %DuskmoonBundler.DevServer.Config{
       root: expanded_root,
+      entry: entry,
       public_dir: DuskmoonBundler.PublicDir.resolve(config.public_dir),
       prefix: server_config.prefix,
       target: to_string(config.target),
@@ -80,8 +97,10 @@ defmodule DuskmoonBundler.DevServer do
         vendor_url_token({
           profile,
           expanded_root,
+          entry,
           server_config.prefix,
           plugins,
+          config.aliases,
           config.resolve_dirs,
           module_types,
           config.vendor_source
@@ -576,21 +595,28 @@ defmodule DuskmoonBundler.DevServer do
 
   # ── Vendor pre-bundling ───────────────────────────────────────────
 
-  defp prebundle_vendor(root, node_modules, plugins, resolve_dirs, module_types, vendor_source) do
-    case DuskmoonBundler.JS.Vendor.prebundle(
-           root: root,
-           node_modules: node_modules,
-           plugins: plugins,
-           resolve_dirs: resolve_dirs,
-           module_types: module_types,
-           vendor_source: vendor_source
-         ) do
+  defp configured_entry(entry, root, dir) do
+    path = Path.expand(entry, dir)
+    parent = Path.dirname(dir)
+
+    cond do
+      DuskmoonBundler.Path.inside?(path, root) and File.dir?(Path.dirname(path)) -> path
+      parent != dir -> configured_entry(entry, root, parent)
+      true -> Path.expand(entry)
+    end
+  end
+
+  defp prebundle_vendor(opts) do
+    case DuskmoonBundler.JS.Vendor.prebundle(opts) do
       {:ok, vendor_map} when map_size(vendor_map) > 0 ->
         count = map_size(vendor_map)
         Logger.debug("[DuskmoonBundler] Pre-bundled #{count} vendor package(s)")
 
-      _ ->
+      {:ok, _vendor_map} ->
         :ok
+
+      {:error, reason} ->
+        Logger.error("[DuskmoonBundler] Vendor prebundle failed: #{inspect(reason)}")
     end
   end
 
@@ -628,6 +654,8 @@ defmodule DuskmoonBundler.DevServer do
   defp vendor_opts(config) do
     [
       root: config.root,
+      entry: config.entry,
+      aliases: config.aliases,
       node_modules: config.node_modules,
       plugins: config.plugins,
       resolve_dirs: config.resolve_dirs,

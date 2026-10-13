@@ -31,10 +31,155 @@ defmodule DuskmoonBundler.JS.VendorTest do
   end
 
   describe "prebundle/1" do
+    test "unreferenced Bun tests do not affect the application vendor graph" do
+      File.write!(
+        Path.join(@fixture_dir, "src/unreferenced_test.js"),
+        ~s(import { test } from "bun:test";)
+      )
+
+      assert {:ok, vendors} =
+               DuskmoonBundler.JS.Vendor.prebundle(
+                 root: Path.join(@fixture_dir, "src"),
+                 node_modules: @node_modules
+               )
+
+      assert Map.keys(vendors) == ["fake-lib"]
+      assert {:ok, code} = DuskmoonBundler.JS.Vendor.read("fake-lib")
+      assert code =~ "greet"
+      assert {:error, :not_found} = DuskmoonBundler.JS.Vendor.read("bun:test")
+    end
+
+    test "lazy initialization ignores unreferenced Bun tests" do
+      File.write!(
+        Path.join(@fixture_dir, "src/unreferenced_test.js"),
+        ~s(import { test } from "bun:test";)
+      )
+
+      assert {:ok, code} =
+               DuskmoonBundler.JS.Vendor.bundle_on_demand("fake-lib", @node_modules,
+                 root: Path.join(@fixture_dir, "src")
+               )
+
+      assert code =~ "greet"
+      assert {:error, :not_found} = DuskmoonBundler.JS.Vendor.read("bun:test")
+    end
+
+    test "reachable Bun imports remain actionable dependency errors" do
+      File.write!(Path.join(@fixture_dir, "src/app.ts"), "import './reachable_test.js';")
+      File.write!(Path.join(@fixture_dir, "src/reachable_test.js"), "import 'bun:test';")
+      opts = [root: Path.join(@fixture_dir, "src"), node_modules: @node_modules]
+
+      assert {:error, {:not_found, "bun:test"}} = DuskmoonBundler.JS.Vendor.prebundle(opts)
+
+      assert {:error, {:not_found, "bun:test"}} =
+               DuskmoonBundler.JS.Vendor.bundle_on_demand("fake-lib", @node_modules, opts)
+    end
+
+    test "uses cwd-relative explicit entry strings and lists instead of conventional app files" do
+      write_package("second-lib", "1.0.0", %{"." => "./index.js"})
+      File.write!(Path.join(@node_modules, "second-lib/index.js"), "export const second = true;")
+      File.write!(Path.join(@fixture_dir, "src/app.ts"), "import 'bun:test';")
+      File.write!(Path.join(@fixture_dir, "src/browser.js"), "import 'fake-lib';")
+      File.write!(Path.join(@fixture_dir, "src/other.ts"), "import 'second-lib';")
+      entry = Path.relative_to_cwd(Path.join(@fixture_dir, "src/browser.js"))
+      other = Path.relative_to_cwd(Path.join(@fixture_dir, "src/other.ts"))
+
+      assert {:ok, vendors} =
+               DuskmoonBundler.JS.Vendor.prebundle(
+                 root: Path.join(@fixture_dir, "src"),
+                 entry: entry,
+                 node_modules: @node_modules
+               )
+
+      assert Map.keys(vendors) == ["fake-lib"]
+      File.rm_rf!(vendor_cache_dir())
+
+      assert {:ok, vendors} =
+               DuskmoonBundler.JS.Vendor.prebundle(
+                 root: Path.join(@fixture_dir, "src"),
+                 entry: [entry, other],
+                 node_modules: @node_modules
+               )
+
+      assert Enum.sort(Map.keys(vendors)) == ["fake-lib", "second-lib"]
+    end
+
+    test "follows aliased local reexports and cycles without treating the alias as a vendor" do
+      File.mkdir_p!(Path.join(@fixture_dir, "src/nested"))
+
+      File.write!(
+        Path.join(@fixture_dir, "src/app.ts"),
+        "import { greet } from '@/nested/barrel'; console.log(greet);"
+      )
+
+      File.write!(
+        Path.join(@fixture_dir, "src/nested/barrel.ts"),
+        "export { greet } from './cycle';"
+      )
+
+      File.write!(
+        Path.join(@fixture_dir, "src/nested/cycle.ts"),
+        "import './barrel'; export { greet } from 'fake-lib';"
+      )
+
+      assert {:ok, vendors} =
+               DuskmoonBundler.JS.Vendor.prebundle(
+                 root: Path.join(@fixture_dir, "src"),
+                 aliases: %{"@" => Path.join(@fixture_dir, "src")},
+                 node_modules: @node_modules
+               )
+
+      assert Map.keys(vendors) == ["fake-lib"]
+    end
+
+    test "initial graphs leave dynamic local and vendor imports on demand" do
+      File.write!(Path.join(@fixture_dir, "src/unreferenced_test.js"), "import 'bun:test';")
+
+      File.write!(
+        Path.join(@fixture_dir, "src/app.ts"),
+        "import 'fake-lib'; window.load = () => import('./unreferenced_test.js'); window.vendor = () => import('missing-dynamic-vendor');"
+      )
+
+      for initialize <- [:prebundle, :on_demand] do
+        File.rm_rf!(vendor_cache_dir())
+        opts = [root: Path.join(@fixture_dir, "src"), node_modules: @node_modules]
+
+        case initialize do
+          :prebundle ->
+            assert {:ok, %{"fake-lib" => _}} = DuskmoonBundler.JS.Vendor.prebundle(opts)
+
+          :on_demand ->
+            assert {:ok, _} =
+                     DuskmoonBundler.JS.Vendor.bundle_on_demand("fake-lib", @node_modules, opts)
+        end
+
+        assert {:error, :not_found} = DuskmoonBundler.JS.Vendor.read("bun:test")
+        assert {:error, :not_found} = DuskmoonBundler.JS.Vendor.read("missing-dynamic-vendor")
+      end
+    end
+
+    test "reports local imports missing from a reachable application module" do
+      File.write!(
+        Path.join(@fixture_dir, "src/app.ts"),
+        "import 'fake-lib'; import './missing-local.js';"
+      )
+
+      opts = [root: Path.join(@fixture_dir, "src"), node_modules: @node_modules]
+
+      assert {:error, reason} = DuskmoonBundler.JS.Vendor.prebundle(opts)
+      assert inspect(reason) =~ "missing-local.js"
+
+      assert {:error, reason} =
+               DuskmoonBundler.JS.Vendor.bundle_on_demand("fake-lib", @node_modules, opts)
+
+      assert inspect(reason) =~ "missing-local.js"
+    end
+
     test "failed lazy initialization does not publish a partial static graph" do
       write_package("broken-initial-vendor", "1.0.0", %{"." => "./index.js"})
       File.write!(Path.join(@node_modules, "broken-initial-vendor/index.js"), "const = ;")
       File.write!(Path.join(@fixture_dir, "src/broken.js"), "import 'broken-initial-vendor';")
+      File.write!(Path.join(@fixture_dir, "src/app.ts"), "\nimport './broken.js';", [:append])
 
       assert {:error, _} =
                DuskmoonBundler.JS.Vendor.bundle_on_demand("fake-lib", @node_modules,
@@ -167,10 +312,12 @@ defmodule DuskmoonBundler.JS.VendorTest do
       assert shared_chunk =~ "singleton"
     end
 
-    test "skips relative imports" do
+    test "follows relative imports without exposing them as vendor entries" do
+      File.write!(Path.join(@fixture_dir, "src/app.ts"), "import './local';")
+
       File.write!(
         Path.join(@fixture_dir, "src/local.ts"),
-        "import { foo } from './app'"
+        "export { greet } from 'fake-lib';"
       )
 
       {:ok, vendor_map} =
@@ -179,7 +326,7 @@ defmodule DuskmoonBundler.JS.VendorTest do
           node_modules: @node_modules
         )
 
-      refute Map.has_key?(vendor_map, "./app")
+      assert Map.keys(vendor_map) == ["fake-lib"]
     end
 
     test "keeps previous cache files when a later optimization fails" do
@@ -398,6 +545,8 @@ defmodule DuskmoonBundler.JS.VendorTest do
         "import 'broken-vendor';"
       )
 
+      File.write!(Path.join(@fixture_dir, "src/app.ts"), "\nimport './broken';", [:append])
+
       assert {:error, _} =
                DuskmoonBundler.JS.Vendor.prebundle(
                  root: Path.join(@fixture_dir, "src"),
@@ -469,6 +618,7 @@ defmodule DuskmoonBundler.JS.VendorTest do
 
     test "prebundling does not silently omit an unresolved required entry" do
       File.write!(Path.join(@fixture_dir, "src/missing.ts"), "import 'missing-vendor';")
+      File.write!(Path.join(@fixture_dir, "src/app.ts"), "\nimport './missing';", [:append])
 
       assert {:error, {:not_found, "missing-vendor"}} =
                DuskmoonBundler.JS.Vendor.prebundle(
@@ -479,6 +629,7 @@ defmodule DuskmoonBundler.JS.VendorTest do
 
     test "prebundling does not silently omit an unresolved required source vendor" do
       File.write!(Path.join(@fixture_dir, "src/missing.ts"), "import 'missing-source-vendor';")
+      File.write!(Path.join(@fixture_dir, "src/app.ts"), "\nimport './missing';", [:append])
 
       assert {:error, {:not_found, "missing-source-vendor"}} =
                DuskmoonBundler.JS.Vendor.prebundle(
@@ -635,6 +786,8 @@ defmodule DuskmoonBundler.JS.VendorTest do
         "import { value } from 'cjs-lib'\nconsole.log(value)"
       )
 
+      File.write!(Path.join(@fixture_dir, "src/app.ts"), "\nimport './use-cjs';", [:append])
+
       :ok
     end
 
@@ -687,6 +840,10 @@ defmodule DuskmoonBundler.JS.VendorTest do
         "import { mode } from 'conditional-lib'\nconsole.log(mode)"
       )
 
+      File.write!(Path.join(@fixture_dir, "src/app.ts"), "\nimport './use-conditional';", [
+        :append
+      ])
+
       {:ok, _} =
         DuskmoonBundler.JS.Vendor.prebundle(
           root: Path.join(@fixture_dir, "src"),
@@ -729,6 +886,8 @@ defmodule DuskmoonBundler.JS.VendorTest do
         Path.join(@fixture_dir, "src/use-cross-dep.ts"),
         "import { b } from 'dep-b'\nconsole.log(b)"
       )
+
+      File.write!(Path.join(@fixture_dir, "src/app.ts"), "\nimport './use-cross-dep';", [:append])
 
       {:ok, _} =
         DuskmoonBundler.JS.Vendor.prebundle(

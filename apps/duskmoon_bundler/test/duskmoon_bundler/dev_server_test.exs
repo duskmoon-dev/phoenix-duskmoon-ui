@@ -2,6 +2,7 @@ defmodule DuskmoonBundler.DevServerTest do
   use ExUnit.Case, async: false
   import Plug.Test
   import Plug.Conn
+  import ExUnit.CaptureLog
 
   @fixture_dir Path.expand("fixtures", __DIR__)
 
@@ -82,6 +83,101 @@ defmodule DuskmoonBundler.DevServerTest do
   end
 
   describe "vendor modules" do
+    test "configured entry and aliases reach vendors without scanning unrelated Bun tests" do
+      package_dir = Path.join(@fixture_dir, "node_modules/entry-vendor")
+      File.mkdir_p!(package_dir)
+
+      File.write!(
+        Path.join(package_dir, "package.json"),
+        ~s({"name":"entry-vendor","main":"index.js","type":"module"})
+      )
+
+      File.write!(Path.join(package_dir, "index.js"), "export const value = 'reachable-entry';")
+      File.write!(Path.join(@fixture_dir, "src/app.ts"), "import 'bun:test';")
+
+      File.write!(
+        Path.join(@fixture_dir, "src/unreferenced_test.js"),
+        ~s(import { test } from "bun:test";)
+      )
+
+      File.write!(
+        Path.join(@fixture_dir, "src/browser.ts"),
+        "import { value } from '@/leaf'; console.log(value);"
+      )
+
+      File.write!(Path.join(@fixture_dir, "src/leaf.ts"), "export { value } from 'entry-vendor';")
+      entry = Path.relative_to_cwd(Path.join(@fixture_dir, "src/browser.ts"))
+
+      for prebundle <- [true, false] do
+        File.rm_rf!(Path.join(Mix.Project.build_path(), "duskmoon_bundler/vendor"))
+
+        config =
+          DuskmoonBundler.DevServer.init(
+            root: Path.join(@fixture_dir, "src"),
+            entry: entry,
+            aliases: %{"@" => Path.join(@fixture_dir, "src")},
+            prefix: "/assets",
+            vendor_prebundle: prebundle
+          )
+
+        app_conn = conn(:get, "/assets/browser.ts") |> DuskmoonBundler.DevServer.call(config)
+        assert app_conn.status == 200
+        assert app_conn.resp_body =~ "/assets/leaf.ts"
+
+        vendor_conn =
+          conn(:get, "/@vendor/entry-vendor.js") |> DuskmoonBundler.DevServer.call(config)
+
+        assert vendor_conn.status == 200
+        assert vendor_conn.resp_body =~ "reachable-entry"
+      end
+    end
+
+    test "standalone root overrides discover the conventional app without unreferenced tests" do
+      package_dir = Path.join(@fixture_dir, "node_modules/standalone-vendor")
+      File.mkdir_p!(package_dir)
+
+      File.write!(
+        Path.join(package_dir, "package.json"),
+        ~s({"name":"standalone-vendor","main":"index.js"})
+      )
+
+      File.write!(Path.join(package_dir, "index.js"), "export const value = 'standalone-entry';")
+      File.write!(Path.join(@fixture_dir, "src/app.ts"), "import 'standalone-vendor';")
+
+      File.write!(
+        Path.join(@fixture_dir, "src/unreferenced_test.js"),
+        ~s(import { test } from "bun:test";)
+      )
+
+      config =
+        DuskmoonBundler.DevServer.init(
+          root: Path.join(@fixture_dir, "src"),
+          prefix: "/assets",
+          vendor_prebundle: false
+        )
+
+      vendor_conn =
+        conn(:get, "/@vendor/standalone-vendor.js") |> DuskmoonBundler.DevServer.call(config)
+
+      assert vendor_conn.status == 200
+      assert vendor_conn.resp_body =~ "standalone-entry"
+    end
+
+    test "startup logs name the dependency that failed prebundling" do
+      File.write!(Path.join(@fixture_dir, "src/app.ts"), "import 'missing-startup-vendor';")
+
+      log =
+        capture_log(fn ->
+          DuskmoonBundler.DevServer.init(
+            root: Path.join(@fixture_dir, "src"),
+            vendor_prebundle: true
+          )
+        end)
+
+      assert log =~ "Vendor prebundle failed"
+      assert log =~ "missing-startup-vendor"
+    end
+
     test "serves shared optimized dependency chunks" do
       for package <- ["editor-a", "editor-b", "singleton-state"] do
         File.mkdir_p!(Path.join(@fixture_dir, "node_modules/#{package}"))
