@@ -39,6 +39,7 @@ defmodule DuskmoonBundler.JS.RuntimeTest do
 
     {creator, creator_ref, runtime} = start_from_transient_creator(:ensure!, opts)
     runtime_ref = Process.monitor(runtime.pid)
+    assert {:ok, 42} = QuickBEAM.eval(runtime.pid, "21 * 2")
     send(creator, :shutdown)
 
     assert_receive {:DOWN, ^creator_ref, :process, ^creator, :shutdown}
@@ -61,6 +62,8 @@ defmodule DuskmoonBundler.JS.RuntimeTest do
         )
 
       runtime_ref = Process.monitor(runtime.pid)
+      # A reply establishes the monitor before the creator's exit can reach the runtime.
+      assert {:ok, 42} = QuickBEAM.eval(runtime.pid, "21 * 2")
       send(creator, :shutdown)
 
       assert_receive {:DOWN, ^creator_ref, :process, ^creator, :shutdown}
@@ -73,6 +76,7 @@ defmodule DuskmoonBundler.JS.RuntimeTest do
       start_from_transient_creator(:ensure!, packages: %{}, install_dir: tmp_dir, apis: false)
 
     runtime_ref = Process.monitor(runtime.pid)
+    assert {:ok, 42} = QuickBEAM.eval(runtime.pid, "21 * 2")
     send(creator, :shutdown)
 
     assert_receive {:DOWN, ^creator_ref, :process, ^creator, :shutdown}
