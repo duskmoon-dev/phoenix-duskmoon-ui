@@ -10,15 +10,9 @@ config :duskmoon_storybook, DuskmoonStorybookWeb.Endpoint,
 # Print only warnings and errors during test
 config :logger, level: :warning
 
-config :duskmoon_bundler, :lint,
-  tsgolint: Path.expand("../node_modules/.bin/tsgolint", __DIR__),
-  cwd: Path.expand("../apps/duskmoon_bundler", __DIR__)
-
 config :duskmoon_bundler,
   file_system_backend: :fs_poll,
   file_system_interval: 50
-
-config :duskmoon_npm, registry: "https://registry.npmjs.org"
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime

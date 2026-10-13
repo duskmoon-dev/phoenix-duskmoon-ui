@@ -19,7 +19,7 @@ defmodule DuskmoonStorybookWeb.DevAssetsTest do
     assert [_, vendor_url] =
              Regex.run(~r/import "([^"]*phoenix_html\.js[^\"]*)"/, response.resp_body)
 
-    File.cd!(Path.join(@project_root, "apps/duskmoon_oxc"))
+    File.cd!(Path.join(@project_root, "apps/phoenix_duskmoon"))
     child_config = asset_config()
 
     child_response =

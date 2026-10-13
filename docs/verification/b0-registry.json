@@ -1,0 +1,761 @@
+{
+  "checked_on": "2026-10-13",
+  "version": "9.16.16",
+  "registry": {
+    "duskmoon_bundler": {
+      "meta": {
+        "elixir": ">= 1.18.0",
+        "app": "duskmoon_bundler",
+        "build_tools": [
+          "mix"
+        ]
+      },
+      "version": "9.16.16",
+      "checksum": "00d4099ed473e7c6f3893075c1f10198423d796ee9a984fb0df0dd4a46d798fe",
+      "url": "https://hex.pm/api/packages/duskmoon_bundler/releases/9.16.16",
+      "has_docs": false,
+      "inserted_at": "2026-10-13T10:45:35.858304Z",
+      "updated_at": "2026-10-13T10:45:35.858304Z",
+      "requirements": {
+        "dotenvy": {
+          "app": "dotenvy",
+          "optional": false,
+          "requirement": "~> 1.1"
+        },
+        "duskmoon_bundler_runtime": {
+          "app": "duskmoon_bundler_runtime",
+          "optional": false,
+          "requirement": "~> 9.16.16"
+        },
+        "duskmoon_npm": {
+          "app": "duskmoon_npm",
+          "optional": false,
+          "requirement": "~> 9.16.16"
+        },
+        "duskmoon_oxc": {
+          "app": "duskmoon_oxc",
+          "optional": false,
+          "requirement": "~> 9.16.16"
+        },
+        "duskmoon_oxide": {
+          "app": "duskmoon_oxide",
+          "optional": false,
+          "requirement": "~> 9.16.16"
+        },
+        "duskmoon_quickbeam": {
+          "app": "duskmoon_quickbeam",
+          "optional": false,
+          "requirement": "~> 9.16.16"
+        },
+        "duskmoon_vize": {
+          "app": "duskmoon_vize",
+          "optional": false,
+          "requirement": "~> 9.16.16"
+        },
+        "file_system": {
+          "app": "file_system",
+          "optional": false,
+          "requirement": "~> 1.0"
+        },
+        "glob_ex": {
+          "app": "glob_ex",
+          "optional": false,
+          "requirement": "~> 0.1"
+        },
+        "igniter": {
+          "app": "igniter",
+          "optional": true,
+          "requirement": "~> 0.5"
+        },
+        "jason": {
+          "app": "jason",
+          "optional": false,
+          "requirement": "~> 1.4"
+        },
+        "json_codec": {
+          "app": "json_codec",
+          "optional": false,
+          "requirement": "~> 0.2"
+        },
+        "lazy_html": {
+          "app": "lazy_html",
+          "optional": false,
+          "requirement": "~> 0.1.0"
+        },
+        "mint": {
+          "app": "mint",
+          "optional": false,
+          "requirement": "~> 1.9"
+        },
+        "mint_web_socket": {
+          "app": "mint_web_socket",
+          "optional": false,
+          "requirement": "~> 1.0"
+        },
+        "plug": {
+          "app": "plug",
+          "optional": false,
+          "requirement": "~> 1.16"
+        },
+        "rustler": {
+          "app": "rustler",
+          "optional": true,
+          "requirement": "~> 0.36 or ~> 0.37 or ~> 0.38"
+        },
+        "websock_adapter": {
+          "app": "websock_adapter",
+          "optional": false,
+          "requirement": "~> 0.5"
+        }
+      },
+      "html_url": "https://hex.pm/packages/duskmoon_bundler/9.16.16",
+      "retirement": null,
+      "publisher": {
+        "url": "https://hex.pm/api/users/gsmlg",
+        "email": "gsmlg.com@gmail.com",
+        "username": "gsmlg"
+      },
+      "package_url": "https://hex.pm/api/packages/duskmoon_bundler",
+      "oidc_claims": null,
+      "downloads": [],
+      "security_advisories": [],
+      "docs_html_url": null,
+      "configs": {
+        "erlang.mk": "dep_duskmoon_bundler = hex 9.16.16",
+        "mix.exs": "{:duskmoon_bundler, \"~> 9.16\"}",
+        "rebar.config": "{duskmoon_bundler, \"9.16.16\"}"
+      }
+    },
+    "duskmoon_bundler_runtime": {
+      "meta": {
+        "elixir": ">= 1.18.0",
+        "app": "duskmoon_bundler_runtime",
+        "build_tools": [
+          "mix"
+        ]
+      },
+      "version": "9.16.16",
+      "checksum": "89ac1479d4ae183186ba2bac5acc2c7042e46352044462bdc29f95e847a371c9",
+      "url": "https://hex.pm/api/packages/duskmoon_bundler_runtime/releases/9.16.16",
+      "has_docs": false,
+      "inserted_at": "2026-10-13T10:45:31.043449Z",
+      "updated_at": "2026-10-13T10:45:31.043449Z",
+      "requirements": {},
+      "html_url": "https://hex.pm/packages/duskmoon_bundler_runtime/9.16.16",
+      "retirement": null,
+      "publisher": {
+        "url": "https://hex.pm/api/users/gsmlg",
+        "email": "gsmlg.com@gmail.com",
+        "username": "gsmlg"
+      },
+      "package_url": "https://hex.pm/api/packages/duskmoon_bundler_runtime",
+      "oidc_claims": null,
+      "downloads": [],
+      "security_advisories": [],
+      "docs_html_url": null,
+      "configs": {
+        "erlang.mk": "dep_duskmoon_bundler_runtime = hex 9.16.16",
+        "mix.exs": "{:duskmoon_bundler_runtime, \"~> 9.16\"}",
+        "rebar.config": "{duskmoon_bundler_runtime, \"9.16.16\"}"
+      }
+    },
+    "duskmoon_oxc": {
+      "meta": {
+        "elixir": ">= 1.18.0",
+        "app": "duskmoon_oxc",
+        "build_tools": [
+          "mix"
+        ]
+      },
+      "version": "9.16.16",
+      "checksum": "0508326ffb34c1e537929160f1091f0db37b0b75f4c3dfb81a393f46774310da",
+      "url": "https://hex.pm/api/packages/duskmoon_oxc/releases/9.16.16",
+      "has_docs": false,
+      "inserted_at": "2026-10-13T10:45:18.081320Z",
+      "updated_at": "2026-10-13T10:45:18.081320Z",
+      "requirements": {
+        "jason": {
+          "app": "jason",
+          "optional": false,
+          "requirement": "~> 1.4"
+        },
+        "rustler": {
+          "app": "rustler",
+          "optional": false,
+          "requirement": "~> 0.38"
+        },
+        "rustler_precompiled": {
+          "app": "rustler_precompiled",
+          "optional": false,
+          "requirement": "~> 0.8"
+        }
+      },
+      "html_url": "https://hex.pm/packages/duskmoon_oxc/9.16.16",
+      "retirement": null,
+      "publisher": {
+        "url": "https://hex.pm/api/users/gsmlg",
+        "email": "gsmlg.com@gmail.com",
+        "username": "gsmlg"
+      },
+      "package_url": "https://hex.pm/api/packages/duskmoon_oxc",
+      "oidc_claims": null,
+      "downloads": [],
+      "security_advisories": [],
+      "docs_html_url": null,
+      "configs": {
+        "erlang.mk": "dep_duskmoon_oxc = hex 9.16.16",
+        "mix.exs": "{:duskmoon_oxc, \"~> 9.16\"}",
+        "rebar.config": "{duskmoon_oxc, \"9.16.16\"}"
+      }
+    },
+    "duskmoon_oxide": {
+      "meta": {
+        "elixir": ">= 1.18.0",
+        "app": "duskmoon_oxide",
+        "build_tools": [
+          "mix"
+        ]
+      },
+      "version": "9.16.16",
+      "checksum": "db256453e8fb4cb6fa72fb9618412efc389536a8a973bbb72a88f2fdfec44528",
+      "url": "https://hex.pm/api/packages/duskmoon_oxide/releases/9.16.16",
+      "has_docs": false,
+      "inserted_at": "2026-10-13T10:45:23.530311Z",
+      "updated_at": "2026-10-13T10:45:23.530311Z",
+      "requirements": {
+        "rustler": {
+          "app": "rustler",
+          "optional": false,
+          "requirement": "~> 0.38"
+        },
+        "rustler_precompiled": {
+          "app": "rustler_precompiled",
+          "optional": false,
+          "requirement": "~> 0.8"
+        }
+      },
+      "html_url": "https://hex.pm/packages/duskmoon_oxide/9.16.16",
+      "retirement": null,
+      "publisher": {
+        "url": "https://hex.pm/api/users/gsmlg",
+        "email": "gsmlg.com@gmail.com",
+        "username": "gsmlg"
+      },
+      "package_url": "https://hex.pm/api/packages/duskmoon_oxide",
+      "oidc_claims": null,
+      "downloads": [],
+      "security_advisories": [],
+      "docs_html_url": null,
+      "configs": {
+        "erlang.mk": "dep_duskmoon_oxide = hex 9.16.16",
+        "mix.exs": "{:duskmoon_oxide, \"~> 9.16\"}",
+        "rebar.config": "{duskmoon_oxide, \"9.16.16\"}"
+      }
+    },
+    "duskmoon_vize": {
+      "meta": {
+        "elixir": ">= 1.18.0",
+        "app": "duskmoon_vize",
+        "build_tools": [
+          "mix"
+        ]
+      },
+      "version": "9.16.16",
+      "checksum": "b19ba27d4f6d78222dea9f131bb621bb13d84523efefa0fa01ff0b8ec5c6f437",
+      "url": "https://hex.pm/api/packages/duskmoon_vize/releases/9.16.16",
+      "has_docs": false,
+      "inserted_at": "2026-10-13T10:45:20.815383Z",
+      "updated_at": "2026-10-13T10:45:20.815383Z",
+      "requirements": {
+        "rustler": {
+          "app": "rustler",
+          "optional": false,
+          "requirement": "~> 0.38"
+        },
+        "rustler_precompiled": {
+          "app": "rustler_precompiled",
+          "optional": false,
+          "requirement": "~> 0.8"
+        }
+      },
+      "html_url": "https://hex.pm/packages/duskmoon_vize/9.16.16",
+      "retirement": null,
+      "publisher": {
+        "url": "https://hex.pm/api/users/gsmlg",
+        "email": "gsmlg.com@gmail.com",
+        "username": "gsmlg"
+      },
+      "package_url": "https://hex.pm/api/packages/duskmoon_vize",
+      "oidc_claims": null,
+      "downloads": [],
+      "security_advisories": [],
+      "docs_html_url": null,
+      "configs": {
+        "erlang.mk": "dep_duskmoon_vize = hex 9.16.16",
+        "mix.exs": "{:duskmoon_vize, \"~> 9.16\"}",
+        "rebar.config": "{duskmoon_vize, \"9.16.16\"}"
+      }
+    },
+    "duskmoon_quickbeam": {
+      "meta": {
+        "elixir": ">= 1.18.0",
+        "app": "duskmoon_quickbeam",
+        "build_tools": [
+          "mix"
+        ]
+      },
+      "version": "9.16.16",
+      "checksum": "25170a85a4367828190620bda515f210cb606ccd68cd4bc26a9746dfaadfa0d1",
+      "url": "https://hex.pm/api/packages/duskmoon_quickbeam/releases/9.16.16",
+      "has_docs": false,
+      "inserted_at": "2026-10-13T10:45:28.600283Z",
+      "updated_at": "2026-10-13T10:45:28.600283Z",
+      "requirements": {
+        "duskmoon_npm": {
+          "app": "duskmoon_npm",
+          "optional": true,
+          "requirement": "~> 9.16.16"
+        },
+        "duskmoon_oxc": {
+          "app": "duskmoon_oxc",
+          "optional": false,
+          "requirement": "~> 9.16.16"
+        },
+        "http_event_source": {
+          "app": "http_event_source",
+          "optional": false,
+          "requirement": "~> 0.20.0 or ~> 0.21.0"
+        },
+        "http_fetch": {
+          "app": "http_fetch",
+          "optional": false,
+          "requirement": "~> 0.20.0 or ~> 0.21.0"
+        },
+        "http_web_socket": {
+          "app": "http_web_socket",
+          "optional": false,
+          "requirement": "~> 0.20.0 or ~> 0.21.0"
+        },
+        "jason": {
+          "app": "jason",
+          "optional": false,
+          "requirement": "~> 1.4"
+        },
+        "nimble_pool": {
+          "app": "nimble_pool",
+          "optional": false,
+          "requirement": "~> 1.1"
+        },
+        "rustler": {
+          "app": "rustler",
+          "optional": true,
+          "requirement": "~> 0.36 or ~> 0.37 or ~> 0.38"
+        },
+        "zigler": {
+          "app": "zigler",
+          "optional": true,
+          "requirement": "~> 0.16.0"
+        },
+        "zigler_precompiled": {
+          "app": "zigler_precompiled",
+          "optional": false,
+          "requirement": "~> 0.1.4"
+        }
+      },
+      "html_url": "https://hex.pm/packages/duskmoon_quickbeam/9.16.16",
+      "retirement": null,
+      "publisher": {
+        "url": "https://hex.pm/api/users/gsmlg",
+        "email": "gsmlg.com@gmail.com",
+        "username": "gsmlg"
+      },
+      "package_url": "https://hex.pm/api/packages/duskmoon_quickbeam",
+      "oidc_claims": null,
+      "downloads": [],
+      "security_advisories": [],
+      "docs_html_url": null,
+      "configs": {
+        "erlang.mk": "dep_duskmoon_quickbeam = hex 9.16.16",
+        "mix.exs": "{:duskmoon_quickbeam, \"~> 9.16\"}",
+        "rebar.config": "{duskmoon_quickbeam, \"9.16.16\"}"
+      }
+    },
+    "duskmoon_npm": {
+      "meta": {
+        "elixir": ">= 1.18.0",
+        "app": "duskmoon_npm",
+        "build_tools": [
+          "mix"
+        ]
+      },
+      "version": "9.16.16",
+      "checksum": "814087d39fa6956d26767194f9a45dffdbdbffb7103840362956c44e4c9873fc",
+      "url": "https://hex.pm/api/packages/duskmoon_npm/releases/9.16.16",
+      "has_docs": false,
+      "inserted_at": "2026-10-13T10:45:15.209651Z",
+      "updated_at": "2026-10-13T10:45:15.209651Z",
+      "requirements": {
+        "duskmoon_hex_solver": {
+          "app": "duskmoon_hex_solver",
+          "optional": false,
+          "requirement": "~> 9.16.16"
+        },
+        "http_fetch": {
+          "app": "http_fetch",
+          "optional": false,
+          "requirement": "~> 0.20.0 or ~> 0.21.0"
+        },
+        "jason": {
+          "app": "jason",
+          "optional": false,
+          "requirement": "~> 1.4"
+        },
+        "nimble_parsec": {
+          "app": "nimble_parsec",
+          "optional": false,
+          "requirement": "~> 1.0"
+        }
+      },
+      "html_url": "https://hex.pm/packages/duskmoon_npm/9.16.16",
+      "retirement": null,
+      "publisher": {
+        "url": "https://hex.pm/api/users/gsmlg",
+        "email": "gsmlg.com@gmail.com",
+        "username": "gsmlg"
+      },
+      "package_url": "https://hex.pm/api/packages/duskmoon_npm",
+      "oidc_claims": null,
+      "downloads": [],
+      "security_advisories": [],
+      "docs_html_url": null,
+      "configs": {
+        "erlang.mk": "dep_duskmoon_npm = hex 9.16.16",
+        "mix.exs": "{:duskmoon_npm, \"~> 9.16\"}",
+        "rebar.config": "{duskmoon_npm, \"9.16.16\"}"
+      }
+    },
+    "duskmoon_hex_solver": {
+      "meta": {
+        "elixir": ">= 1.18.0",
+        "app": "duskmoon_hex_solver",
+        "build_tools": [
+          "mix"
+        ]
+      },
+      "version": "9.16.16",
+      "checksum": "0dced1ee011d4efeae7db7871f71939a3a0774815ad782d46267dd72e9f5c269",
+      "url": "https://hex.pm/api/packages/duskmoon_hex_solver/releases/9.16.16",
+      "has_docs": false,
+      "inserted_at": "2026-10-13T10:45:11.189927Z",
+      "updated_at": "2026-10-13T10:45:11.189927Z",
+      "requirements": {},
+      "html_url": "https://hex.pm/packages/duskmoon_hex_solver/9.16.16",
+      "retirement": null,
+      "publisher": {
+        "url": "https://hex.pm/api/users/gsmlg",
+        "email": "gsmlg.com@gmail.com",
+        "username": "gsmlg"
+      },
+      "package_url": "https://hex.pm/api/packages/duskmoon_hex_solver",
+      "oidc_claims": null,
+      "downloads": [],
+      "security_advisories": [],
+      "docs_html_url": null,
+      "configs": {
+        "erlang.mk": "dep_duskmoon_hex_solver = hex 9.16.16",
+        "mix.exs": "{:duskmoon_hex_solver, \"~> 9.16\"}",
+        "rebar.config": "{duskmoon_hex_solver, \"9.16.16\"}"
+      }
+    }
+  },
+  "historical_release": {
+    "tag": "v9.16.16",
+    "draft": false,
+    "published_at": "2026-10-13T10:45:57Z",
+    "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/tag/v9.16.16",
+    "assets": [
+      {
+        "name": "Elixir.QuickBEAM.Native-v9.16.16-aarch64-linux-gnu.so.tar.gz",
+        "size": 7765030,
+        "digest": "sha256:4c289e6ae2d72bb4345b816c1193948abe32d0d7cb81e84fba94ef14841b6249",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/Elixir.QuickBEAM.Native-v9.16.16-aarch64-linux-gnu.so.tar.gz"
+      },
+      {
+        "name": "Elixir.QuickBEAM.Native-v9.16.16-aarch64-linux-musl.so.tar.gz",
+        "size": 7732431,
+        "digest": "sha256:6e1af3fa99e21ffabee318b0171dc3c7c3e16a15a5968e8a2d773850e23cf4f4",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/Elixir.QuickBEAM.Native-v9.16.16-aarch64-linux-musl.so.tar.gz"
+      },
+      {
+        "name": "Elixir.QuickBEAM.Native-v9.16.16-aarch64-macos-none.so.tar.gz",
+        "size": 4387113,
+        "digest": "sha256:2def70cbe0831b3ee414bfd7a6bebba2cfc6cccc618f99dc62b11bb0ea850fe9",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/Elixir.QuickBEAM.Native-v9.16.16-aarch64-macos-none.so.tar.gz"
+      },
+      {
+        "name": "Elixir.QuickBEAM.Native-v9.16.16-x86_64-freebsd-none.so.tar.gz",
+        "size": 7384103,
+        "digest": "sha256:5f0b7f0cbaf447cd1ab41b949c858ecdd93b4032418b85be19a6b3e184ef2278",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/Elixir.QuickBEAM.Native-v9.16.16-x86_64-freebsd-none.so.tar.gz"
+      },
+      {
+        "name": "Elixir.QuickBEAM.Native-v9.16.16-x86_64-linux-gnu.so.tar.gz",
+        "size": 10605440,
+        "digest": "sha256:426d77f51804a341c02eb542830099c39d996a8f67a5f0c9c301585ffd681c14",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/Elixir.QuickBEAM.Native-v9.16.16-x86_64-linux-gnu.so.tar.gz"
+      },
+      {
+        "name": "Elixir.QuickBEAM.Native-v9.16.16-x86_64-linux-musl.so.tar.gz",
+        "size": 10535331,
+        "digest": "sha256:735c845e26e65a795af3b5dd23637b263af586c58d47a91b8caaa776de23e07b",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/Elixir.QuickBEAM.Native-v9.16.16-x86_64-linux-musl.so.tar.gz"
+      },
+      {
+        "name": "Elixir.QuickBEAM.Native-v9.16.16-x86_64-macos-none.so.tar.gz",
+        "size": 3932428,
+        "digest": "sha256:c7a0d75fdf97a6d8f65155019e7596a3a00614f6f92e34e8909affa56fca8350",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/Elixir.QuickBEAM.Native-v9.16.16-x86_64-macos-none.so.tar.gz"
+      },
+      {
+        "name": "liboxc_ex_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz",
+        "size": 7632283,
+        "digest": "sha256:6641cddcc504a991c94a9bf3160d1fe3037a10cd2a21c1063d5e63df462826c4",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_ex_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz"
+      },
+      {
+        "name": "liboxc_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz",
+        "size": 8565984,
+        "digest": "sha256:27a348f0961bebc27ce8bb876bd30224bcdc752ea57cef9227782955f72389b8",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz"
+      },
+      {
+        "name": "liboxc_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz",
+        "size": 8563649,
+        "digest": "sha256:1fcfeb77a6fb5d89f6cd49c2e50f35737891f14329308bdb0e68360a41b426cb",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz"
+      },
+      {
+        "name": "liboxc_ex_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz",
+        "size": 7930638,
+        "digest": "sha256:e5a86faa11af4c295afb3f4466083eab4b6cf30de7ab325c7d08d559af641e22",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_ex_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz"
+      },
+      {
+        "name": "liboxc_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz",
+        "size": 8844342,
+        "digest": "sha256:d2a9933891419f84d454e1af87fa813501ab5ab85422157949eb74a164c513e0",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz"
+      },
+      {
+        "name": "liboxc_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz",
+        "size": 8428382,
+        "digest": "sha256:91c9c48cc1638d9dd80ed77f38038667dc6b04a0cc5f4deb25e5b7590d362679",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz"
+      },
+      {
+        "name": "liboxc_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz",
+        "size": 8865070,
+        "digest": "sha256:a19cdf37adc11e92199ba8da27a61693fd9aea73875d6686542346ceab791e6b",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz"
+      },
+      {
+        "name": "liboxc_fmt_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz",
+        "size": 1252971,
+        "digest": "sha256:3e57d807b4b5464b9858c6b254afef96a2a1a02d5e7a1e5e43b19eba4cffe25f",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_fmt_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz"
+      },
+      {
+        "name": "liboxc_fmt_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz",
+        "size": 1419885,
+        "digest": "sha256:74fccb68de3989085653b2d28b5ac6c4718e1b49eee354d5eed291448b9208e9",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_fmt_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz"
+      },
+      {
+        "name": "liboxc_fmt_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz",
+        "size": 1417290,
+        "digest": "sha256:e90d519ef49c33a0d2a0a3604d3a58e069f578226ba62dea26717596685b2d61",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_fmt_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz"
+      },
+      {
+        "name": "liboxc_fmt_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz",
+        "size": 1284374,
+        "digest": "sha256:51176068c21d636bd9ade434abb3d30262bd294bc3ccbcfe0990b44d470f8874",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_fmt_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz"
+      },
+      {
+        "name": "liboxc_fmt_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz",
+        "size": 1447225,
+        "digest": "sha256:a5817099ae3bab6cf98d85f7694e6ad779aac74bd67eaa6a2db390de643bfb7c",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_fmt_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz"
+      },
+      {
+        "name": "liboxc_fmt_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz",
+        "size": 1387400,
+        "digest": "sha256:396c88086c483669734656bb93c9ebe69d0b454398d26ac1821432ddde3d9d0f",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_fmt_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz"
+      },
+      {
+        "name": "liboxc_fmt_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz",
+        "size": 1450704,
+        "digest": "sha256:3027b8f49d3e4cd02eb4ce57951f725e5a32a690ea1a7a8eb369538625ea32ce",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_fmt_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz"
+      },
+      {
+        "name": "liboxc_lint_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz",
+        "size": 4226406,
+        "digest": "sha256:e633214bfdf3363c9ea5a38947656dc442dac587594ccebf10dbd5eb6abd9341",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_lint_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz"
+      },
+      {
+        "name": "liboxc_lint_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz",
+        "size": 4680932,
+        "digest": "sha256:f8923979b1391cb31520d78839ddc9a87f7179037de426be5e1cfffada38124f",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_lint_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz"
+      },
+      {
+        "name": "liboxc_lint_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz",
+        "size": 4682600,
+        "digest": "sha256:2fdd348e7a8dc583dfb142b165b290fcd08e39f8c2187e09a92ff1e6e86ac1a2",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_lint_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz"
+      },
+      {
+        "name": "liboxc_lint_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz",
+        "size": 4336262,
+        "digest": "sha256:8d301f79b2343768dd5b2936e2d95d4dc17a1a8a588daf1e0c53c5cbd75c1c75",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_lint_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz"
+      },
+      {
+        "name": "liboxc_lint_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz",
+        "size": 4843061,
+        "digest": "sha256:aa037d6241c58b8da2be9b586f1e9c29e4cdbfd12e7021156c57033e72e4d1bf",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_lint_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz"
+      },
+      {
+        "name": "liboxc_lint_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz",
+        "size": 4744615,
+        "digest": "sha256:b582ebe7cdc24ddc1407e687e02ce05975c60626123f510c711db5aa115584ac",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_lint_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz"
+      },
+      {
+        "name": "liboxc_lint_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz",
+        "size": 4829855,
+        "digest": "sha256:3c3906834b7b07df73e576e8164b8243f917cf3b8d20e4741246480341f6a57b",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_lint_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz"
+      },
+      {
+        "name": "liboxide_ex_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz",
+        "size": 1340973,
+        "digest": "sha256:1128e2630a04e0084495b14fa4b974d26efe4a9d362aa0161394b9ce63a4f02a",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxide_ex_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz"
+      },
+      {
+        "name": "liboxide_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz",
+        "size": 1521292,
+        "digest": "sha256:646942829941af9f1ece7e1cf89af6089e0f0e9a798986c9f11cfeadadc2e0b9",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxide_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz"
+      },
+      {
+        "name": "liboxide_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz",
+        "size": 1517861,
+        "digest": "sha256:a2f56a22087ff27b2e325a0182cc6285fea972f69890696b5cfeca8b8e734c18",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxide_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz"
+      },
+      {
+        "name": "liboxide_ex_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz",
+        "size": 1406324,
+        "digest": "sha256:a0e26a0a0d3b95aed29ff466a054daf0d7e3250f2fd1fe7cb652f7f7e5a0024b",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxide_ex_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz"
+      },
+      {
+        "name": "liboxide_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz",
+        "size": 1574522,
+        "digest": "sha256:ad2565675eb555f4d3528161c21afbfe5a549d21ebd530fc5a3583223486fc81",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxide_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz"
+      },
+      {
+        "name": "liboxide_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz",
+        "size": 1538316,
+        "digest": "sha256:25cba8c360d6239d34aaf88b64d9c0a3972e2b71e1deeb9ca0f7dc8b82099290",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxide_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz"
+      },
+      {
+        "name": "liboxide_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz",
+        "size": 1585384,
+        "digest": "sha256:0c096f7afe6e70b6704732c71bf4a90385219a6250e2ed9fe831a4b4eab58268",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxide_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz"
+      },
+      {
+        "name": "libvize_ex_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz",
+        "size": 8598521,
+        "digest": "sha256:eac1d7f9139de410fe2ec9bb234f7fe4054cca3e9f42a5484d70c8e3db80d12e",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/libvize_ex_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz"
+      },
+      {
+        "name": "libvize_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz",
+        "size": 9551455,
+        "digest": "sha256:bddbc6121cf3068a9ee0abeea8775a9d8b134b1b26d6a5e88b7420a6e8b6a803",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/libvize_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz"
+      },
+      {
+        "name": "libvize_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz",
+        "size": 9550304,
+        "digest": "sha256:e2e7c2293c737acb0f173d577066b200ce8f034b7f3bebeac88071fa62791af1",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/libvize_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz"
+      },
+      {
+        "name": "libvize_ex_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz",
+        "size": 9034427,
+        "digest": "sha256:1d225fce03bfba063b4eff9b26781e8bb2cd614cd3b491418e436497a08a4d1f",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/libvize_ex_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz"
+      },
+      {
+        "name": "libvize_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz",
+        "size": 9871615,
+        "digest": "sha256:95af2dc38405c039a60a44adc2ae2052a7060ff38951ea88fdbc38eec5093c57",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/libvize_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz"
+      },
+      {
+        "name": "libvize_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz",
+        "size": 9529709,
+        "digest": "sha256:19a646bc8a37c44784723b531e603e3f552a26dadb7ccf6564d9f40221608598",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/libvize_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz"
+      },
+      {
+        "name": "libvize_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz",
+        "size": 9908041,
+        "digest": "sha256:749d3706246d351109b4128544f4a24c8835d3157eb4383632ed619fa7c16efb",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/libvize_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz"
+      },
+      {
+        "name": "oxc_ex_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz",
+        "size": 13179646,
+        "digest": "sha256:bad4310a2c402e1bb91fba290b9e080b7e2e3566e28c1d4fdd9e4b6cf0d8b3f7",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/oxc_ex_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz"
+      },
+      {
+        "name": "oxc_fmt_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz",
+        "size": 2309155,
+        "digest": "sha256:37306a254443b6924e975b3335e914a74c9e6a8cbef2cdc2756b17b2aff8dbba",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/oxc_fmt_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz"
+      },
+      {
+        "name": "oxc_lint_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz",
+        "size": 11497029,
+        "digest": "sha256:43a1192fcfdc2e1499449a078408cd292d13cf35bc70f8bee966e06943d30147",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/oxc_lint_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz"
+      },
+      {
+        "name": "oxide_ex_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz",
+        "size": 2396945,
+        "digest": "sha256:97b393415515f003ec16955b40fe16e71a7c53b5c80e5e5cbe71845940ab69ed",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/oxide_ex_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz"
+      },
+      {
+        "name": "vize_ex_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz",
+        "size": 13340129,
+        "digest": "sha256:b6bf6c8d4ac14505cb688ed983d524018e24c9e061f7607916978956dc84e562",
+        "browser_download_url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/vize_ex_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz"
+      }
+    ]
+  }
+}

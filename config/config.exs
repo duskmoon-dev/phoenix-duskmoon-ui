@@ -22,11 +22,6 @@ config :duskmoon_storybook, DuskmoonStorybookWeb.Storybook,
   js_script_type: "module",
   css_path: "/assets/css/app.css"
 
-config :duskmoon_bundler,
-  namespace: DuskmoonBundler,
-  root: "apps/duskmoon_bundler/priv/ts",
-  entry: "apps/duskmoon_bundler/priv/ts/dev/hmr-client.ts"
-
 config :duskmoon_bundler, :phoenix_duskmoon,
   root: "apps/phoenix_duskmoon/assets",
   entry: "apps/phoenix_duskmoon/assets/js/phoenix_duskmoon.js",
@@ -95,3 +90,4 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 
 import_config "#{config_env()}.exs"
+DuskmoonUI.NativePolicy.validate!()

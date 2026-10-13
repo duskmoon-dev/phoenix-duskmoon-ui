@@ -1,12 +1,17 @@
+Code.require_file("scripts/native-policy.exs", __DIR__)
+DuskmoonUI.NativePolicy.validate!()
+
 defmodule PhoenixDuskmoon.Umbrella.MixProject do
   use Mix.Project
 
   # Umbrella version tracks phoenix_duskmoon package version
   @version "9.16.16"
+  @bundler_version File.read!(Path.join(__DIR__, "BUNDLER_VERSION")) |> String.trim()
 
   def project do
     [
       apps_path: "apps",
+      apps: [:phoenix_duskmoon, :duskmoon_storybook],
       version: @version,
       elixir: ">= 1.18.0",
       start_permanent: Mix.env() == :prod,
@@ -22,11 +27,17 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
   end
 
   defp deps do
-    # zig_doc 0.7.0 pins ex_doc 0.39.1; keep the umbrella on current ExDoc.
+    # Pin the entire build-tool cohort without adding it to the public component package.
     [
       {:ex_doc, "~> 0.40", runtime: false, override: true},
       # Keep Plug available to both test servers and runtime umbrella applications.
-      {:plug, "~> 1.19"}
+      {:plug, "~> 1.19"},
+      {:duskmoon_oxc, "== #{@bundler_version}", runtime: false},
+      {:duskmoon_oxide, "== #{@bundler_version}", runtime: false},
+      {:duskmoon_vize, "== #{@bundler_version}", runtime: false},
+      {:duskmoon_quickbeam, "== #{@bundler_version}", runtime: false},
+      {:duskmoon_npm, "== #{@bundler_version}", runtime: false},
+      {:duskmoon_hex_solver, "== #{@bundler_version}", runtime: false}
     ]
   end
 

@@ -18,8 +18,7 @@
     },
     "workspaces": [
         "apps/duskmoon_storybook",
-        "apps/phoenix_duskmoon",
-        "apps/duskmoon_bundler"
+        "apps/phoenix_duskmoon"
     ],
     "dependencies": {
         "@duskmoon-dev/art-elements": "1.9.1",

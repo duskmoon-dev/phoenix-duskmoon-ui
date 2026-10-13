@@ -21,6 +21,17 @@
 - Component naming: prefix with `dm_` (e.g., `dm_btn`, `dm_mdi`)
 - Umbrella project: run commands from root, they cascade to apps/* subdirectories
 
+## Toolchain ownership
+
+- This umbrella contains only `phoenix_duskmoon` and `duskmoon_storybook`.
+- Toolchain source, native builds, package staging and the bundler skill live in
+  `duskmoon-dev/duskmoon-bundler`. Keep ordinary UI work on the published Hex cohort
+  pinned by `BUNDLER_VERSION` and `mix.lock`, using strict precompiled mode.
+- Use `scripts/with-precompiled-toolchain.sh` for instrumented UI validation and
+  `scripts/check-release-applications.exs` to verify the actual Storybook release.
+- Candidate source integration is explicit and isolated through
+  `scripts/candidate-integration.sh`; it must not replace normal registry dependencies.
+
 ## Frontend Dependencies & Styling
 - Use `bun` for all frontend package management (not npm/yarn)
 - The theme provides custom component styles and color variants via CSS custom properties

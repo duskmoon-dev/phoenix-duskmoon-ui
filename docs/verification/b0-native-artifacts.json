@@ -1,0 +1,291 @@
+{
+  "checked_on": "2026-10-13",
+  "version": "9.16.16",
+  "verified_artifact_count": 47,
+  "duration_seconds": 270.57,
+  "scope": "Downloaded every published native archive anonymously and matched installed Hex checksum maps and GitHub release digests. Executed only local x86_64-linux-gnu; other target runtime execution is separate.",
+  "assets": [
+    {
+      "name": "Elixir.QuickBEAM.Native-v9.16.16-aarch64-linux-gnu.so.tar.gz",
+      "sha256": "4c289e6ae2d72bb4345b816c1193948abe32d0d7cb81e84fba94ef14841b6249",
+      "size": 7765030,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/Elixir.QuickBEAM.Native-v9.16.16-aarch64-linux-gnu.so.tar.gz"
+    },
+    {
+      "name": "Elixir.QuickBEAM.Native-v9.16.16-aarch64-linux-musl.so.tar.gz",
+      "sha256": "6e1af3fa99e21ffabee318b0171dc3c7c3e16a15a5968e8a2d773850e23cf4f4",
+      "size": 7732431,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/Elixir.QuickBEAM.Native-v9.16.16-aarch64-linux-musl.so.tar.gz"
+    },
+    {
+      "name": "Elixir.QuickBEAM.Native-v9.16.16-aarch64-macos-none.so.tar.gz",
+      "sha256": "2def70cbe0831b3ee414bfd7a6bebba2cfc6cccc618f99dc62b11bb0ea850fe9",
+      "size": 4387113,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/Elixir.QuickBEAM.Native-v9.16.16-aarch64-macos-none.so.tar.gz"
+    },
+    {
+      "name": "Elixir.QuickBEAM.Native-v9.16.16-x86_64-freebsd-none.so.tar.gz",
+      "sha256": "5f0b7f0cbaf447cd1ab41b949c858ecdd93b4032418b85be19a6b3e184ef2278",
+      "size": 7384103,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/Elixir.QuickBEAM.Native-v9.16.16-x86_64-freebsd-none.so.tar.gz"
+    },
+    {
+      "name": "Elixir.QuickBEAM.Native-v9.16.16-x86_64-linux-gnu.so.tar.gz",
+      "sha256": "426d77f51804a341c02eb542830099c39d996a8f67a5f0c9c301585ffd681c14",
+      "size": 10605440,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/Elixir.QuickBEAM.Native-v9.16.16-x86_64-linux-gnu.so.tar.gz"
+    },
+    {
+      "name": "Elixir.QuickBEAM.Native-v9.16.16-x86_64-linux-musl.so.tar.gz",
+      "sha256": "735c845e26e65a795af3b5dd23637b263af586c58d47a91b8caaa776de23e07b",
+      "size": 10535331,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/Elixir.QuickBEAM.Native-v9.16.16-x86_64-linux-musl.so.tar.gz"
+    },
+    {
+      "name": "Elixir.QuickBEAM.Native-v9.16.16-x86_64-macos-none.so.tar.gz",
+      "sha256": "c7a0d75fdf97a6d8f65155019e7596a3a00614f6f92e34e8909affa56fca8350",
+      "size": 3932428,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/Elixir.QuickBEAM.Native-v9.16.16-x86_64-macos-none.so.tar.gz"
+    },
+    {
+      "name": "liboxc_ex_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz",
+      "sha256": "6641cddcc504a991c94a9bf3160d1fe3037a10cd2a21c1063d5e63df462826c4",
+      "size": 7632283,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_ex_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz"
+    },
+    {
+      "name": "liboxc_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz",
+      "sha256": "27a348f0961bebc27ce8bb876bd30224bcdc752ea57cef9227782955f72389b8",
+      "size": 8565984,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz"
+    },
+    {
+      "name": "liboxc_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz",
+      "sha256": "1fcfeb77a6fb5d89f6cd49c2e50f35737891f14329308bdb0e68360a41b426cb",
+      "size": 8563649,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz"
+    },
+    {
+      "name": "liboxc_ex_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz",
+      "sha256": "e5a86faa11af4c295afb3f4466083eab4b6cf30de7ab325c7d08d559af641e22",
+      "size": 7930638,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_ex_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz"
+    },
+    {
+      "name": "liboxc_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz",
+      "sha256": "d2a9933891419f84d454e1af87fa813501ab5ab85422157949eb74a164c513e0",
+      "size": 8844342,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz"
+    },
+    {
+      "name": "liboxc_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz",
+      "sha256": "91c9c48cc1638d9dd80ed77f38038667dc6b04a0cc5f4deb25e5b7590d362679",
+      "size": 8428382,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz"
+    },
+    {
+      "name": "liboxc_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz",
+      "sha256": "a19cdf37adc11e92199ba8da27a61693fd9aea73875d6686542346ceab791e6b",
+      "size": 8865070,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz"
+    },
+    {
+      "name": "liboxc_fmt_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz",
+      "sha256": "3e57d807b4b5464b9858c6b254afef96a2a1a02d5e7a1e5e43b19eba4cffe25f",
+      "size": 1252971,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_fmt_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz"
+    },
+    {
+      "name": "liboxc_fmt_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz",
+      "sha256": "74fccb68de3989085653b2d28b5ac6c4718e1b49eee354d5eed291448b9208e9",
+      "size": 1419885,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_fmt_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz"
+    },
+    {
+      "name": "liboxc_fmt_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz",
+      "sha256": "e90d519ef49c33a0d2a0a3604d3a58e069f578226ba62dea26717596685b2d61",
+      "size": 1417290,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_fmt_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz"
+    },
+    {
+      "name": "liboxc_fmt_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz",
+      "sha256": "51176068c21d636bd9ade434abb3d30262bd294bc3ccbcfe0990b44d470f8874",
+      "size": 1284374,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_fmt_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz"
+    },
+    {
+      "name": "liboxc_fmt_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz",
+      "sha256": "a5817099ae3bab6cf98d85f7694e6ad779aac74bd67eaa6a2db390de643bfb7c",
+      "size": 1447225,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_fmt_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz"
+    },
+    {
+      "name": "liboxc_fmt_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz",
+      "sha256": "396c88086c483669734656bb93c9ebe69d0b454398d26ac1821432ddde3d9d0f",
+      "size": 1387400,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_fmt_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz"
+    },
+    {
+      "name": "liboxc_fmt_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz",
+      "sha256": "3027b8f49d3e4cd02eb4ce57951f725e5a32a690ea1a7a8eb369538625ea32ce",
+      "size": 1450704,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_fmt_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz"
+    },
+    {
+      "name": "liboxc_lint_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz",
+      "sha256": "e633214bfdf3363c9ea5a38947656dc442dac587594ccebf10dbd5eb6abd9341",
+      "size": 4226406,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_lint_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz"
+    },
+    {
+      "name": "liboxc_lint_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz",
+      "sha256": "f8923979b1391cb31520d78839ddc9a87f7179037de426be5e1cfffada38124f",
+      "size": 4680932,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_lint_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz"
+    },
+    {
+      "name": "liboxc_lint_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz",
+      "sha256": "2fdd348e7a8dc583dfb142b165b290fcd08e39f8c2187e09a92ff1e6e86ac1a2",
+      "size": 4682600,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_lint_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz"
+    },
+    {
+      "name": "liboxc_lint_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz",
+      "sha256": "8d301f79b2343768dd5b2936e2d95d4dc17a1a8a588daf1e0c53c5cbd75c1c75",
+      "size": 4336262,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_lint_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz"
+    },
+    {
+      "name": "liboxc_lint_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz",
+      "sha256": "aa037d6241c58b8da2be9b586f1e9c29e4cdbfd12e7021156c57033e72e4d1bf",
+      "size": 4843061,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_lint_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz"
+    },
+    {
+      "name": "liboxc_lint_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz",
+      "sha256": "b582ebe7cdc24ddc1407e687e02ce05975c60626123f510c711db5aa115584ac",
+      "size": 4744615,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_lint_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz"
+    },
+    {
+      "name": "liboxc_lint_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz",
+      "sha256": "3c3906834b7b07df73e576e8164b8243f917cf3b8d20e4741246480341f6a57b",
+      "size": 4829855,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxc_lint_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz"
+    },
+    {
+      "name": "liboxide_ex_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz",
+      "sha256": "1128e2630a04e0084495b14fa4b974d26efe4a9d362aa0161394b9ce63a4f02a",
+      "size": 1340973,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxide_ex_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz"
+    },
+    {
+      "name": "liboxide_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz",
+      "sha256": "646942829941af9f1ece7e1cf89af6089e0f0e9a798986c9f11cfeadadc2e0b9",
+      "size": 1521292,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxide_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz"
+    },
+    {
+      "name": "liboxide_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz",
+      "sha256": "a2f56a22087ff27b2e325a0182cc6285fea972f69890696b5cfeca8b8e734c18",
+      "size": 1517861,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxide_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz"
+    },
+    {
+      "name": "liboxide_ex_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz",
+      "sha256": "a0e26a0a0d3b95aed29ff466a054daf0d7e3250f2fd1fe7cb652f7f7e5a0024b",
+      "size": 1406324,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxide_ex_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz"
+    },
+    {
+      "name": "liboxide_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz",
+      "sha256": "ad2565675eb555f4d3528161c21afbfe5a549d21ebd530fc5a3583223486fc81",
+      "size": 1574522,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxide_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz"
+    },
+    {
+      "name": "liboxide_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz",
+      "sha256": "25cba8c360d6239d34aaf88b64d9c0a3972e2b71e1deeb9ca0f7dc8b82099290",
+      "size": 1538316,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxide_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz"
+    },
+    {
+      "name": "liboxide_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz",
+      "sha256": "0c096f7afe6e70b6704732c71bf4a90385219a6250e2ed9fe831a4b4eab58268",
+      "size": 1585384,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/liboxide_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz"
+    },
+    {
+      "name": "libvize_ex_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz",
+      "sha256": "eac1d7f9139de410fe2ec9bb234f7fe4054cca3e9f42a5484d70c8e3db80d12e",
+      "size": 8598521,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/libvize_ex_nif-v9.16.16-nif-2.15-aarch64-apple-darwin.so.tar.gz"
+    },
+    {
+      "name": "libvize_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz",
+      "sha256": "bddbc6121cf3068a9ee0abeea8775a9d8b134b1b26d6a5e88b7420a6e8b6a803",
+      "size": 9551455,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/libvize_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-gnu.so.tar.gz"
+    },
+    {
+      "name": "libvize_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz",
+      "sha256": "e2e7c2293c737acb0f173d577066b200ce8f034b7f3bebeac88071fa62791af1",
+      "size": 9550304,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/libvize_ex_nif-v9.16.16-nif-2.15-aarch64-unknown-linux-musl.so.tar.gz"
+    },
+    {
+      "name": "libvize_ex_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz",
+      "sha256": "1d225fce03bfba063b4eff9b26781e8bb2cd614cd3b491418e436497a08a4d1f",
+      "size": 9034427,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/libvize_ex_nif-v9.16.16-nif-2.15-x86_64-apple-darwin.so.tar.gz"
+    },
+    {
+      "name": "libvize_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz",
+      "sha256": "95af2dc38405c039a60a44adc2ae2052a7060ff38951ea88fdbc38eec5093c57",
+      "size": 9871615,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/libvize_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-freebsd.so.tar.gz"
+    },
+    {
+      "name": "libvize_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz",
+      "sha256": "19a646bc8a37c44784723b531e603e3f552a26dadb7ccf6564d9f40221608598",
+      "size": 9529709,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/libvize_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-gnu.so.tar.gz"
+    },
+    {
+      "name": "libvize_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz",
+      "sha256": "749d3706246d351109b4128544f4a24c8835d3157eb4383632ed619fa7c16efb",
+      "size": 9908041,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/libvize_ex_nif-v9.16.16-nif-2.15-x86_64-unknown-linux-musl.so.tar.gz"
+    },
+    {
+      "name": "oxc_ex_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz",
+      "sha256": "bad4310a2c402e1bb91fba290b9e080b7e2e3566e28c1d4fdd9e4b6cf0d8b3f7",
+      "size": 13179646,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/oxc_ex_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz"
+    },
+    {
+      "name": "oxc_fmt_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz",
+      "sha256": "37306a254443b6924e975b3335e914a74c9e6a8cbef2cdc2756b17b2aff8dbba",
+      "size": 2309155,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/oxc_fmt_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz"
+    },
+    {
+      "name": "oxc_lint_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz",
+      "sha256": "43a1192fcfdc2e1499449a078408cd292d13cf35bc70f8bee966e06943d30147",
+      "size": 11497029,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/oxc_lint_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz"
+    },
+    {
+      "name": "oxide_ex_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz",
+      "sha256": "97b393415515f003ec16955b40fe16e71a7c53b5c80e5e5cbe71845940ab69ed",
+      "size": 2396945,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/oxide_ex_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz"
+    },
+    {
+      "name": "vize_ex_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz",
+      "sha256": "b6bf6c8d4ac14505cb688ed983d524018e24c9e061f7607916978956dc84e562",
+      "size": 13340129,
+      "url": "https://github.com/duskmoon-dev/phoenix-duskmoon-ui/releases/download/v9.16.16/vize_ex_nif-v9.16.16-nif-2.15-x86_64-pc-windows-gnu.dll.tar.gz"
+    }
+  ]
+}

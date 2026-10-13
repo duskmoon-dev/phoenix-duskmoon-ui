@@ -1,4 +1,3 @@
-FROM rust:1-trixie AS rust
 FROM oven/bun:1.3.13 AS bun
 
 FROM elixir:1.19-otp-28 AS builder
@@ -6,15 +5,8 @@ FROM elixir:1.19-otp-28 AS builder
 ARG MIX_ENV=prod
 ARG RELEASE_VERSION=1.0.0
 
-ENV RUSTUP_HOME=/usr/local/rustup
-ENV CARGO_HOME=/usr/local/cargo
-ENV DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1
-ENV QUICKBEAM_BUILD=1
+ENV DUSKMOON_NATIVE_MODE=precompiled
 ENV NPM_EX_ALLOWED_REGISTRIES=https://registry.npmjs.org,https://npm.gsmlg.dev,https://nexus.gsmlg.net
-ENV PATH="/usr/local/cargo/bin:${PATH}"
-
-COPY --from=rust /usr/local/cargo /usr/local/cargo
-COPY --from=rust /usr/local/rustup /usr/local/rustup
 COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
 COPY . /build
 WORKDIR /build
@@ -36,15 +28,16 @@ for attempt in 1 2 3 4; do
   sleep $((attempt * 5))
 done
 test "$bun_install_status" -eq 0
-mix zig.get --version 0.16.0
 export MATCH_STRING="s%@version \"[^\"]\+\"%@version \"${RELEASE_VERSION}\"%"
 sed -i "$MATCH_STRING" mix.exs;
 sed -i "$MATCH_STRING" apps/duskmoon_storybook/mix.exs;
 sed -i "$MATCH_STRING" apps/phoenix_duskmoon/mix.exs;
-sed -i "$MATCH_STRING" apps/duskmoon_bundler_runtime/mix.exs;
-mix duskmoon_bundler.build duskmoon_storybook --target esnext
+elixir scripts/check-toolchain.exs
+scripts/with-precompiled-toolchain.sh mix compile --warnings-as-errors
+scripts/with-precompiled-toolchain.sh mix duskmoon_bundler.build duskmoon_storybook --target esnext
 mix phx.digest
 mix release storybook --version "${RELEASE_VERSION}"
+elixir scripts/check-release-applications.exs _build/prod/rel/storybook
 cp -r _build/prod/rel/storybook /app
 EOF
 

@@ -37,13 +37,8 @@ package-lock.json
 *.etf.gz
 
 # Generated QuickBEAM precompiled NIF copied during local compiles.
-/apps/duskmoon_quickbeam/priv/lib/
 
 # Generated Rust NIF output copied during local compiles.
-/apps/duskmoon_oxc/priv/native/
-/apps/duskmoon_oxc/target/
-/apps/duskmoon_oxc/native/*/target/
-/apps/duskmoon_oxide/priv/native/
-/apps/duskmoon_oxide/target/
-/apps/duskmoon_vize/priv/native/
-/apps/duskmoon_vize/target/
+# Instrumented native invocation logs and local candidate state.
+/native-invocations.log
+/apps/duskmoon_storybook/test/tmp/
