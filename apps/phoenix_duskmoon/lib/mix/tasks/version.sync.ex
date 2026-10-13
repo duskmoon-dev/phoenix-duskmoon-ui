@@ -37,7 +37,7 @@ defmodule Mix.Tasks.Version.Sync do
         "apps/phoenix_duskmoon/mix.exs"
       else
         # We're in a child app, go up to umbrella
-        "../../phoenix_duskmoon/mix.exs"
+        "../../apps/phoenix_duskmoon/mix.exs"
       end
 
     # Read version from phoenix_duskmoon mix.exs

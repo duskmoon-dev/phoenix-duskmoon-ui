@@ -1,4 +1,5 @@
 import Config
+Code.require_file("../scripts/native-policy.exs", __DIR__)
 
 config :duskmoon_storybook,
   namespace: DuskmoonStorybook,
@@ -90,4 +91,4 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 
 import_config "#{config_env()}.exs"
-DuskmoonUI.NativePolicy.validate!()
+DuskmoonUI.NativePolicy.validate_config!()

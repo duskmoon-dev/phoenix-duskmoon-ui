@@ -4,6 +4,13 @@ defmodule DuskmoonUI.NativePolicy do
   @flags ~w(DUSKMOON_BUILD_NATIVE_FROM_SOURCE OXC_EX_BUILD OXIDE_EX_BUILD VIZE_EX_BUILD QUICKBEAM_BUILD RUSTLER_PRECOMPILED_FORCE_BUILD_ALL ZIGLER_PRECOMPILED_FORCE_BUILD_ALL)
   @apps ~w(duskmoon_oxc duskmoon_oxide duskmoon_vize duskmoon_quickbeam)a
 
+  @doc "Validates settings being evaluated by Config before they enter application env."
+  def validate_config!(env \\ &System.get_env/1) do
+    validate!(env, fn app, key, default ->
+      Keyword.get(Config.read_config(app) || [], key, default)
+    end)
+  end
+
   @doc "Rejects source flags and compile configuration before any toolchain compilation."
   def validate!(env \\ &System.get_env/1, config \\ &Application.get_env/3) do
     mode = env.("DUSKMOON_NATIVE_MODE") || "precompiled"

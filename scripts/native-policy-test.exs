@@ -51,4 +51,20 @@ defmodule DuskmoonUI.NativePolicyTest do
                fn _, _, default -> default end
              )
   end
+
+  test "config evaluation rejects force builds before application env is loaded" do
+    for loader <- [:rustler_precompiled, :zigler_precompiled],
+        setting <- ["force_build_all: true", "force_build: [duskmoon_oxc: true]"] do
+      assert_raise RuntimeError, ~r/Strict precompiled toolchain conflicts/, fn ->
+        Config.Reader.eval!(
+          "native-conflict.exs",
+          """
+          import Config
+          config #{inspect(loader)}, #{setting}
+          DuskmoonUI.NativePolicy.validate_config!(fn _ -> nil end)
+          """
+        )
+      end
+    end
+  end
 end

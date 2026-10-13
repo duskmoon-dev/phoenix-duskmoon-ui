@@ -12,11 +12,12 @@ export DUSKMOON_NATIVE_MODE=source DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1 QUICKBEAM
 export MIX_DEPS_PATH="$candidate_root/ui/deps"
 export MIX_BUILD_PATH="$candidate_root/ui/_build/test" MIX_ENV=test
 mix deps.get
-mix zig.get --version 0.16.0
+# Provision Rust and Zig 0.16.0 through the destination development environment.
+# Running zig.get here initializes this project before it installs the SDK.
 bun install --frozen-lockfile
 mix compile --warnings-as-errors
 mix test
-mix duskmoon_bundler.build phoenix_duskmoon
+mix prepublish
 mix duskmoon_bundler.build duskmoon_storybook
 bun test --cwd apps/phoenix_duskmoon
 printf 'Candidate integration evidence: %s\n' "$candidate_root/ui/candidate-provenance.json"

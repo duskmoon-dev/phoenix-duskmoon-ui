@@ -72,7 +72,8 @@ native source compilations, not removal of all NIFs.
 
 ## Candidate integration
 
-For explicitly requested local toolchain development:
+For explicitly requested local toolchain development, first provision Rust and
+Zig 0.16.0 through the destination development environment, then run:
 
 ```sh
 scripts/candidate-integration.sh /absolute/path/to/duskmoon-bundler

@@ -39,6 +39,7 @@ path_deps =
 path_deps = path_deps ++ [{:zigler, "~> 0.16.0", [runtime: false]}]
 root_mix = Path.join(output, "mix.exs")
 content = File.read!(root_mix)
+content = Regex.replace(~r/^  @bundler_version.*\n/m, content, "")
 needle = "  defp deps do\n"
 
 unless String.contains?(content, needle),

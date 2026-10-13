@@ -303,16 +303,24 @@ defmodule DuskmoonBundler.Integration.DevVendorTest do
   } do
     :ok = CDPBrowser.goto(page, "http://127.0.0.1:#{port}/", timeout: @navigation_timeout)
 
-    assert {:ok, %{"hooks" => true, "cjs" => true, "text" => "custom draft", "summary" => true}} =
+    assert {:ok,
+            %{
+              "hooks" => true,
+              "cjs" => true,
+              "text" => "custom draft",
+              "summary" => true,
+              "errors" => []
+            }} =
              CDPBrowser.evaluate(
                page,
                """
                (async () => {
-                 for(let i=0;i<100 && !document.querySelector('textarea');i++) await new Promise(r=>setTimeout(r,20));
-                 return {hooks:window.contract?.hooks,cjs:window.contract?.cjs,text:document.querySelector('textarea')?.value,summary:document.body.textContent.includes('Turn summary')};
+                 const deadline = performance.now() + #{@navigation_timeout};
+                 while(!document.querySelector('textarea') && !window.moduleErrors?.length && performance.now() < deadline) await new Promise(r=>setTimeout(r,20));
+                 return {hooks:window.contract?.hooks,cjs:window.contract?.cjs,text:document.querySelector('textarea')?.value,summary:document.body.textContent.includes('Turn summary'),errors:window.moduleErrors};
                })()
                """,
-               timeout: 10_000
+               timeout: @navigation_timeout + 1_000
              )
 
     assert {:ok, %{"text" => "custom draft", "event" => "chat.send"}} =
