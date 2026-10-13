@@ -41,7 +41,12 @@ jobs:
       - run: elixir scripts/prepare-candidate-test.exs
       - run: scripts/with-precompiled-toolchain.sh mix format --check-formatted
       - run: scripts/with-precompiled-toolchain.sh mix compile --warnings-as-errors
-      - run: bun test --cwd apps/phoenix_duskmoon
+      - uses: browser-actions/setup-chrome@v2
+        id: chrome
+      - name: Hooks, forms and chat browser regressions
+        env:
+          CHROME_BIN: ${{ steps.chrome.outputs.chrome-path }}
+        run: bun test --cwd apps/phoenix_duskmoon
       - name: Production JS, CSS, icons and Storybook release
         env:
           MIX_ENV: prod
