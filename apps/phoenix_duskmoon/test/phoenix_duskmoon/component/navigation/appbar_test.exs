@@ -139,6 +139,39 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
   end
 
   describe "dm_simple_appbar/1" do
+    test "omits navigation for absent and empty menus while preserving brand and profile" do
+      for menu_assigns <- [%{}, %{menu: []}] do
+        result =
+          render_component(
+            &dm_simple_appbar/1,
+            Map.merge(
+              %{
+                id: "profile-bar",
+                title: "ProfileApp",
+                class: "appbar-primary",
+                logo: [%{inner_block: fn _, _ -> "Brand Logo" end}],
+                user_profile: [%{inner_block: fn _, _ -> "User Profile" end}],
+                "data-testid": "profile-header"
+              },
+              menu_assigns
+            )
+          )
+
+        assert result =~ ~s(id="profile-bar")
+        assert result =~ "ProfileApp"
+        assert result =~ "appbar-primary"
+        assert result =~ ~s(data-testid="profile-header")
+        assert [_before, _after] = String.split(result, "Brand Logo")
+        assert [_before, _after] = String.split(result, "User Profile")
+        refute result =~ "<nav"
+        refute result =~ ~s(role="navigation")
+        refute result =~ "<button"
+        refute result =~ "profile-bar-mobile-menu"
+        refute result =~ "aria-controls"
+        refute result =~ "aria-expanded"
+      end
+    end
+
     test "renders simple appbar with header element" do
       result = render_component(&dm_simple_appbar/1, %{title: "SimpleApp"})
 
@@ -174,7 +207,11 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
     end
 
     test "renders simple appbar with mobile menu toggle" do
-      result = render_component(&dm_simple_appbar/1, %{title: "App"})
+      result =
+        render_component(&dm_simple_appbar/1, %{
+          title: "App",
+          menu: [%{to: "/home", inner_block: fn _, _ -> "Home" end}]
+        })
 
       assert result =~ "appbar-mobile-menu"
       assert result =~ "md:hidden"
@@ -210,7 +247,11 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
     end
 
     test "renders mobile menu toggle with aria-label" do
-      result = render_component(&dm_simple_appbar/1, %{title: "App"})
+      result =
+        render_component(&dm_simple_appbar/1, %{
+          title: "App",
+          menu: [%{to: "/home", inner_block: fn _, _ -> "Home" end}]
+        })
 
       assert result =~ ~s[aria-label="Toggle mobile menu"]
     end
@@ -302,6 +343,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
     result =
       render_component(&dm_simple_appbar/1, %{
         title: "App",
+        menu: [%{to: "/home", inner_block: fn _, _ -> "Home" end}],
         user_profile: [
           %{
             inner_block: fn _, _ ->
@@ -428,7 +470,11 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
   end
 
   test "renders simple appbar mobile menu with onclick toggle" do
-    result = render_component(&dm_simple_appbar/1, %{title: "App"})
+    result =
+      render_component(&dm_simple_appbar/1, %{
+        title: "App",
+        menu: [%{to: "/home", inner_block: fn _, _ -> "Home" end}]
+      })
 
     assert result =~ "appbar-mobile-menu"
     assert result =~ "classList.toggle"
@@ -441,13 +487,21 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
   end
 
   test "renders simple appbar desktop nav hidden on mobile" do
-    result = render_component(&dm_simple_appbar/1, %{title: "App"})
+    result =
+      render_component(&dm_simple_appbar/1, %{
+        title: "App",
+        menu: [%{to: "/home", inner_block: fn _, _ -> "Home" end}]
+      })
 
     assert result =~ "hidden md:flex"
   end
 
   test "renders simple appbar mobile menu button with aria-expanded=false" do
-    result = render_component(&dm_simple_appbar/1, %{title: "App"})
+    result =
+      render_component(&dm_simple_appbar/1, %{
+        title: "App",
+        menu: [%{to: "/home", inner_block: fn _, _ -> "Home" end}]
+      })
 
     assert result =~ ~s[aria-expanded="false"]
     assert result =~ ~s[aria-controls="appbar-mobile-menu"]
@@ -455,14 +509,23 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
   end
 
   test "mobile menu div has role=navigation and aria-label" do
-    result = render_component(&dm_simple_appbar/1, %{title: "App"})
+    result =
+      render_component(&dm_simple_appbar/1, %{
+        title: "App",
+        menu: [%{to: "/home", inner_block: fn _, _ -> "Home" end}]
+      })
 
     assert result =~ ~s[id="appbar-mobile-menu"]
     assert result =~ ~s[role="navigation"]
   end
 
   test "mobile menu id derives from component id" do
-    result = render_component(&dm_simple_appbar/1, %{id: "site-nav", title: "App"})
+    result =
+      render_component(&dm_simple_appbar/1, %{
+        id: "site-nav",
+        title: "App",
+        menu: [%{to: "/home", inner_block: fn _, _ -> "Home" end}]
+      })
 
     assert result =~ ~s[id="site-nav-mobile-menu"]
     assert result =~ ~s[aria-controls="site-nav-mobile-menu"]
@@ -472,14 +535,19 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
     result =
       render_component(&dm_simple_appbar/1, %{
         title: "App",
-        toggle_menu_label: "Basculer le menu"
+        toggle_menu_label: "Basculer le menu",
+        menu: [%{to: "/home", inner_block: fn _, _ -> "Home" end}]
       })
 
     assert result =~ ~s[aria-label="Basculer le menu"]
   end
 
   test "mobile menu toggle button has type=button" do
-    result = render_component(&dm_simple_appbar/1, %{title: "App"})
+    result =
+      render_component(&dm_simple_appbar/1, %{
+        title: "App",
+        menu: [%{to: "/home", inner_block: fn _, _ -> "Home" end}]
+      })
 
     # The mobile menu toggle should have type="button"
     assert result =~ ~s[type="button"]
@@ -507,13 +575,22 @@ defmodule PhoenixDuskmoon.Component.Navigation.AppbarTest do
 
   describe "nav_label i18n" do
     test "default nav label is Main navigation" do
-      result = render_component(&dm_simple_appbar/1, %{title: "App"})
+      result =
+        render_component(&dm_simple_appbar/1, %{
+          title: "App",
+          menu: [%{to: "/home", inner_block: fn _, _ -> "Home" end}]
+        })
+
       assert result =~ ~s(aria-label="Main navigation")
     end
 
     test "custom nav_label" do
       result =
-        render_component(&dm_simple_appbar/1, %{title: "App", nav_label: "Navigation principale"})
+        render_component(&dm_simple_appbar/1, %{
+          title: "App",
+          nav_label: "Navigation principale",
+          menu: [%{to: "/home", inner_block: fn _, _ -> "Home" end}]
+        })
 
       assert result =~ ~s(aria-label="Navigation principale")
       refute result =~ ~s(aria-label="Main navigation")

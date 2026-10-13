@@ -105,6 +105,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
   Generates a simple responsive HTML appbar with mobile menu toggle.
 
   The user profile is rendered once in the header at all screen sizes.
+  Navigation and the mobile menu toggle are rendered only when menu entries are supplied.
 
   ## Example
 
@@ -160,7 +161,11 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
           <span class="appbar-title select-none font-bold hidden lg:inline-flex">
             {@title}
           </span>
-          <nav class="mx-12 hidden md:flex flex-row items-center gap-4" aria-label={@nav_label}>
+          <nav
+            :if={@menu != []}
+            class="mx-12 hidden md:flex flex-row items-center gap-4"
+            aria-label={@nav_label}
+          >
             <a
               :for={menu <- @menu}
               class={[
@@ -180,6 +185,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
             {render_slot(@user_profile)}
           </div>
           <button
+            :if={@menu != []}
             type="button"
             class="appbar-nav md:hidden"
             onclick={"document.getElementById('#{@menu_id}').classList.toggle('hidden'); this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true')"}
@@ -193,6 +199,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.Appbar do
         </div>
       </div>
       <div
+        :if={@menu != []}
         id={@menu_id}
         class={[
           "w-full flex flex-col",
