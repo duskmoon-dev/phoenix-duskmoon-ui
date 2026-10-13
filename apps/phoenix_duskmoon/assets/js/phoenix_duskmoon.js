@@ -11,13 +11,9 @@ const DM_EVENTS = [
   "dm-submit", "dm-select", "dm-close", "dm-open", "dm-toggle",
 ];
 
-const COPY_SELECTOR = "[data-copy-value]";
-const COPY_FEEDBACK_DURATION = 2000;
-const COPY_LISTENER = Symbol.for("phoenix-duskmoon.copy-listener");
 const DIALOG_SELECTOR = 'dialog[data-dm-confirm-dialog="true"]';
 const DIALOG_CONFIRM_SELECTOR = '[data-dm-confirm-action="true"]';
 const DIALOG_BEHAVIOR_LISTENERS = Symbol.for("phoenix-duskmoon.dialog-behavior-listeners");
-const copyFeedback = new WeakMap();
 
 /**
  * WebComponentHook - Universal LiveView ↔ Custom Element bridge
@@ -262,106 +258,6 @@ export const FormElementHook = {
   },
 };
 
-/** Copy text with the Clipboard API, falling back only when it is unavailable. */
-export async function copyTextToClipboard(value, environment = globalThis) {
-  const clipboard = environment.navigator?.clipboard;
-
-  if (typeof clipboard?.writeText === "function") {
-    await clipboard.writeText(value);
-    return;
-  }
-
-  const document = environment.document;
-
-  if (!document?.body || typeof document.execCommand !== "function") {
-    throw new Error("Clipboard API is unavailable");
-  }
-
-  const textArea = document.createElement("textarea");
-  const activeElement = document.activeElement;
-  textArea.value = value;
-  textArea.setAttribute("readonly", "");
-  textArea.style.position = "fixed";
-  textArea.style.opacity = "0";
-  document.body.appendChild(textArea);
-
-  try {
-    textArea.focus();
-    textArea.select();
-
-    if (!document.execCommand("copy")) {
-      throw new Error("Clipboard copy command failed");
-    }
-  } finally {
-    document.body.removeChild(textArea);
-    activeElement?.focus?.();
-  }
-}
-
-function copyStatus(button) {
-  const sibling = button.nextElementSibling;
-
-  if (sibling?.matches?.("[data-copy-status]")) {
-    return sibling;
-  }
-
-  return button.parentElement?.querySelector?.("[data-copy-status]") ?? null;
-}
-
-function showCopyFeedback(button, message, state, options) {
-  const label = button.querySelector?.("[data-copy-label]");
-  const status = copyStatus(button);
-  const previous = copyFeedback.get(button);
-  const cancelReset = options.cancelReset ?? globalThis.clearTimeout;
-  const scheduleReset = options.scheduleReset ?? globalThis.setTimeout;
-
-  if (previous?.timer !== undefined) {
-    cancelReset(previous.timer);
-  }
-
-  const originalLabel = previous?.originalLabel ?? label?.textContent ?? "Copy";
-
-  if (label) label.textContent = message;
-  if (status) status.textContent = message;
-  button.dataset.copyState = state;
-
-  const timer = scheduleReset(() => {
-    if (label) label.textContent = originalLabel;
-    if (status) status.textContent = "";
-    delete button.dataset.copyState;
-    copyFeedback.delete(button);
-  }, COPY_FEEDBACK_DURATION);
-
-  copyFeedback.set(button, { originalLabel, timer });
-}
-
-/** Handle clicks from any descendant of a generated copy control. */
-export async function handleClipboardClick(event, options = {}) {
-  const button = event.target?.closest?.(COPY_SELECTOR);
-
-  if (!button || button.disabled || button.getAttribute?.("aria-disabled") === "true") {
-    return;
-  }
-
-  const copy = options.copy ?? copyTextToClipboard;
-
-  try {
-    await copy(button.dataset.copyValue);
-    showCopyFeedback(button, button.dataset.copySuccess ?? "Copied", "success", options);
-  } catch (_error) {
-    showCopyFeedback(button, button.dataset.copyFailure ?? "Copy failed", "error", options);
-  }
-}
-
-/** Install one delegated listener so LiveView-patched copy controls also work. */
-export function installClipboardBehavior(root = globalThis.document, options = {}) {
-  if (!root?.addEventListener || root[COPY_LISTENER]) return;
-
-  const listener = (event) => handleClipboardClick(event, options);
-  root.addEventListener("click", listener);
-  root[COPY_LISTENER] = listener;
-}
-
 /** Close the current confirm dialog before submit/reset/custom command default actions. */
 export function handleDialogConfirmClick(event) {
   const path = event.composedPath?.() ?? [];
@@ -379,7 +275,6 @@ export function installDialogBehavior(root = globalThis.document) {
   root[DIALOG_BEHAVIOR_LISTENERS] = handleDialogConfirmClick;
 }
 
-installClipboardBehavior();
 installDialogBehavior();
 
 // Export to window for non-module usage

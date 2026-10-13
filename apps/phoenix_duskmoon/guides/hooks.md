@@ -19,9 +19,8 @@ let liveSocket = new LiveSocket("/live", Socket, {
 ```
 
 Importing `phoenix_duskmoon/hooks` also loads the package runtime, including the
-delegated clipboard behavior used by the Git repository components. Apps that
-use those server-rendered components without LiveView hooks can load only that
-runtime:
+CSP-safe delegated behavior for confirm dialogs. Apps that use server-rendered
+confirm dialogs without LiveView hooks can load only that runtime:
 
 ```javascript
 import "phoenix_duskmoon";
