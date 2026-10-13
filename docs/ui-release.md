@@ -66,3 +66,26 @@ upgrade PR/manual command. Review its actual `BUNDLER_VERSION`, `mix.lock` and
 Merge and the next UI release remain normal reviewed operations. Cross-repository
 credentials are separately configured in the destination; ordinary
 `GITHUB_TOKEN` does not perform the upgrade.
+
+## Migration verification recorded locally
+
+On 2026-10-13, `elixir .github/scripts/release_test.exs` passed all four
+side-effect-free version/ref, package-order, immutable-retry and complete-cohort
+adoption tests. `actionlint` v1.7.11 accepted every UI workflow. The U=9.16.16
+release plan listed exactly `phoenix_duskmoon`, no native builds and no toolchain
+publication, with B=9.16.16 and actual root lock hashes.
+
+`elixir .github/scripts/ui_package.exs stage /tmp/duskmoon-ui-release-stage`
+and `... smoke /tmp/duskmoon-ui-release-stage` built actual Hex/npm archives,
+unpacked them outside the checkout, compiled the Hex contents with warnings as
+errors, verified the component/runtime-only application boundary and checked all
+npm exports from the packed archive. It passed. The retained manifest-v1
+regression ran with `elixir .github/scripts/runtime_consumer.exs 9.16.16`:
+1 test, 0 failures. `bun test --cwd apps/phoenix_duskmoon` passed 56 tests.
+These are local package checks, not a live U publication or workflow-run claim.
+
+The small functional `release_support.exs` helper is intentionally duplicated in
+each repository so neither release pipeline depends on the other checkout.
+Both copies have their own script contract tests. Dependency/download caches are
+scoped by repository, locks, dependency mode, platform/libc and Elixir/OTP; the
+explicit cold UI acceptance helper bypasses caches.

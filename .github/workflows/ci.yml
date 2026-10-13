@@ -21,6 +21,14 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.3.13
+      - uses: actions/cache@v6
+        with:
+          path: deps
+          key: ${{ github.repository }}-${{ runner.os }}-${{ runner.arch }}-glibc-precompiled-elixir1.18-otp28-${{ hashFiles('mix.lock', 'BUNDLER_VERSION') }}
+      - uses: actions/cache@v6
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ github.repository }}-bun1.3.13-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('bun.lock') }}
       - name: Install pinned dependencies
         run: |
           mix deps.get --check-locked
