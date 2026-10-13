@@ -43,6 +43,10 @@
 
 ### Fixed
 
+- Hide the simple appbar's mobile toggle and navigation when no menu entries exist,
+  preserving its logo and user-profile slots.
+- Generate React Chat submission IDs on HTTP LAN origins with a cryptographic
+  UUIDv4 fallback when the native `crypto.randomUUID()` API is unavailable.
 - Forward React form field attributes to their interactive controls and preserve
   application-disabled fields when the LiveView connection recovers.
 - Preserve selected-value arrays for native checkbox groups named with `[]`,
