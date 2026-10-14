@@ -1,6 +1,6 @@
 {
   "name": "phoenix_duskmoon",
-  "version": "10.0.2",
+  "version": "10.0.3",
   "type": "module",
   "exports": {
     ".": "./priv/static/assets/js/phoenix_duskmoon.js",

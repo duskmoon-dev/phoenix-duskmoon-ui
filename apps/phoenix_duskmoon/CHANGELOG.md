@@ -1,3 +1,18 @@
+# [10.0.3](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.2...v10.0.3) (2026-10-15)
+
+### Fixed
+
+- Forward dynamically spread attributes and the `rest` map from `dm_left_menu_group`
+  menu slots to their native navigation anchors, enabling `dm_tooltip` composition
+  for sidebar links, resolving [UI request #202](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/202).
+- Preserve navigation, active/disabled state and keyboard behavior when combining
+  link attributes, including mixed string/atom keys and Phoenix navigation metadata.
+
+### Validation
+
+- Cover attribute forwarding, explicit overrides and per-link isolation, plus
+  browser hover, keyboard focus, icon-only accessible names and disabled-link Tab skipping.
+
 # [10.0.2](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.1...v10.0.2) (2026-10-14)
 
 ### Fixed
