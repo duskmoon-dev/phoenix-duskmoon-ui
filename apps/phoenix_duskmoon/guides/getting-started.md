@@ -18,7 +18,7 @@ This guide walks through adding Phoenix Duskmoon UI to a Phoenix LiveView projec
 # mix.exs
 defp deps do
   [
-    {:phoenix_duskmoon, "~> 9.0"}
+    {:phoenix_duskmoon, "~> 10.0"}
   ]
 end
 ```

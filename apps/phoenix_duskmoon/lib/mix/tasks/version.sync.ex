@@ -18,8 +18,8 @@ defmodule Mix.Tasks.Version.Sync do
 
   ## Note
 
-  Versions are automatically managed by semantic-release in CI.
-  This task is primarily for local development synchronization.
+  Commit the UI version before running the UI Release workflow.
+  This task synchronizes the umbrella and npm manifests with that version.
   """
 
   use Mix.Task

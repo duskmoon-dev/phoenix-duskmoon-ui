@@ -39,7 +39,7 @@ spacing, and elevation tokens through CSS custom properties.
 
 ```elixir
 # mix.exs
-{:phoenix_duskmoon, "~> 9.0"}
+{:phoenix_duskmoon, "~> 10.0"}
 ```
 
 ```bash

@@ -1,4 +1,26 @@
-# Unreleased
+# [10.0.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v9.16.16...v10.0.0) (2026-10-14)
+
+### Breaking changes
+
+- Move the eight build-toolchain applications, native sources, package staging
+  and toolchain release automation to the independent `duskmoon-bundler`
+  repository. Repository-local toolchain paths must migrate to the published
+  Hex packages or the explicit candidate integration helper. See
+  [the extraction guide](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/blob/main/docs/bundler-extraction.md).
+
+### Changed
+
+- Keep only the UI and Storybook applications in this umbrella. Ordinary UI
+  builds consume the verified, published Bundler 9.16.16 cohort with strict
+  precompiled native loading; UI JS, CSS and icons continue to build normally.
+- Release the UI Hex/npm packages together as version 10.0.0, independently of
+  the toolchain version, with isolated package-consumer and runtime checks.
+
+### Fixed
+
+- Preserve `mix version.sync` from both the umbrella root and UI application.
+
+# Earlier UI changes
 
 ### Breaking changes
 

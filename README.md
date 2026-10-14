@@ -8,15 +8,16 @@
 
 Duskmoon UI component library for Phoenix LiveView applications.
 
-**v9**: Uses `@duskmoon-dev/core` CSS design system, HTML Custom Elements (`@duskmoon-dev/elements`), and Art Custom Elements (`@duskmoon-dev/art-elements`).
+**v10**: Keeps the `@duskmoon-dev/core` design system and DuskMoon custom elements,
+with the build toolchain maintained and released independently in
+[duskmoon-bundler](https://github.com/duskmoon-dev/duskmoon-bundler).
 
 Requires Elixir `>= 1.18` and `tailwindcss >= 4.0`.
 
 See the [docs](https://hexdocs.pm/phoenix_duskmoon/) for more information.
 
-The unreleased removal of Git repository components is a breaking API change.
-Applications using `dm_git_*` helpers or the Git clipboard runtime must migrate
-to application-owned components before upgrading; see the
+Applications using the removed `dm_git_*` helpers or the Git clipboard runtime
+must migrate to application-owned components before upgrading; see the
 [Git component migration guide](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/blob/main/apps/phoenix_duskmoon/guides/migrating-git-components.md).
 
 
@@ -25,7 +26,7 @@ to application-owned components before upgrading; see the
 Add to `mix.exs`:
 
 ```elixir
-{:phoenix_duskmoon, "~> 9.0"},
+{:phoenix_duskmoon, "~> 10.0"},
 ```
 
 Install frontend packages:
@@ -148,7 +149,7 @@ Components that require hooks:
 ## Available Components
 
 - **Action**: buttons, dropdowns, floating actions, links, menus, swaps, toggles
-- **Data Display**: accordion, avatar, badge, card, carousel, chat, chat scroll, chip, collapse, countdown, datetime, diff, flash, git repository, list, markdown, markdown body, pagination, popover, progress, radial progress, skeleton, stat, table, timeline, tooltip
+- **Data Display**: accordion, avatar, badge, card, carousel, chat, chat scroll, chip, collapse, countdown, datetime, diff, flash, list, markdown, markdown body, pagination, popover, progress, radial progress, skeleton, stat, table, timeline, tooltip
 - **Data Entry**: autocomplete, cascader, checkbox, compact input, file upload, filter group, form, input, multi-select, OTP input, PIN input, radio, rating, segment control, select, slider, switch, textarea, time input, tree select
 - **Feedback**: dialog, loading, snackbar, toast
 - **Navigation**: actionbar, appbar, bottom nav, breadcrumb, left menu, megamenu, navbar, page footer, page header, stepper, tabs

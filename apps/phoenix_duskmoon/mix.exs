@@ -1,10 +1,10 @@
 defmodule PhoenixDuskmoon.Mixfile do
   use Mix.Project
 
-  # Version is automatically updated by semantic-release in CI
-  # Do not manually edit - use mix version.sync to sync from published version
+  # Commit the UI version before running the UI Release workflow.
+  # Use mix version.sync to synchronize the umbrella and npm manifests.
   @source_url "https://github.com/duskmoon-dev/phoenix-duskmoon-ui.git"
-  @version "9.16.16"
+  @version "10.0.0"
 
   def project do
     [
