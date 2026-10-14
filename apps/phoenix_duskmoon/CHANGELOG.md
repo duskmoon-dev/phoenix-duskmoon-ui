@@ -1,3 +1,25 @@
+# [10.0.1](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.0...v10.0.1) (2026-10-14)
+
+### Fixed
+
+- Retry npm registry metadata checks while a newly published version propagates,
+  and keep curl retry diagnostics separate from HTTP status parsing.
+
+### Validation
+
+- Add browser consumer coverage for bundle-relative production preloads on nested
+  routes, normalized URL deduplication and lazy CSS loading. The pinned Bundler
+  9.16.16 already includes the URL fix first published in 9.16.14; no toolchain
+  upgrade is required for [UI request #200](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/200).
+
+### Known issues
+
+- Storybook `.story.exs` changes still need an explicit asset rebuild when adding
+  new Tailwind utilities. The dependency fix is tracked in
+  [Bundler request #2](https://github.com/duskmoon-dev/duskmoon-bundler/issues/2);
+  [UI request #199](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/199)
+  awaits a fixed published cohort and UI adoption.
+
 # [10.0.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v9.16.16...v10.0.0) (2026-10-14)
 
 ### Breaking changes
