@@ -67,15 +67,19 @@ defmodule HexDocsPublicationTest do
     #!/bin/sh
     printf '%s\n' "$*" >> "$DOC_TEST_CURL_LOG"
     for url do :; done
-    test "$url" = 'https://hexdocs.pm/phoenix_duskmoon/10.0.0/index.html' || exit 91
+    test "$url" = "$DOC_TEST_URL" || exit 91
     if [ -f "$DOC_TEST_QUERY" ]; then
       status="$DOC_TEST_FINAL"
     else
       : > "$DOC_TEST_QUERY"
       status="$DOC_TEST_INITIAL"
     fi
+    case "$*" in
+      *--retry*)
+        if [ -n "$DOC_TEST_RETRY_STDERR" ]; then printf '%s\n' "$DOC_TEST_RETRY_STDERR" >&2; fi ;;
+    esac
     case "$*" in *--fail*) test "$status" = 200 || exit 22 ;; esac
-    printf '%s' "$status"
+    printf '%s' "${DOC_TEST_BODY:-$status}"
     """)
 
     File.write!(Path.join(bin, "mix"), """
@@ -89,12 +93,19 @@ defmodule HexDocsPublicationTest do
     esac
     """)
 
-    for tool <- ~w(curl mix), do: File.chmod!(Path.join(bin, tool), 0o755)
+    File.write!(Path.join(bin, "npm"), """
+    #!/bin/sh
+    printf '%s\n' "$*" >> "$DOC_TEST_NPM_LOG"
+    exit 93
+    """)
+
+    for tool <- ~w(curl mix npm), do: File.chmod!(Path.join(bin, tool), 0o755)
 
     %{
       root: root,
       tarball: tarball,
       mix_log: Path.join(root, "mix.log"),
+      npm_log: Path.join(root, "npm.log"),
       curl_log: Path.join(root, "curl.log"),
       env: [
         {"DOC_TEST_PATH", bin <> ":" <> System.fetch_env!("PATH")},
@@ -103,9 +114,13 @@ defmodule HexDocsPublicationTest do
         {"DOC_TEST_TARBALL", tarball},
         {"DOC_TEST_QUERY", Path.join(root, "queried")},
         {"DOC_TEST_MIX_LOG", Path.join(root, "mix.log")},
+        {"DOC_TEST_NPM_LOG", Path.join(root, "npm.log")},
         {"DOC_TEST_CURL_LOG", Path.join(root, "curl.log")},
         {"DOC_TEST_INITIAL", "404"},
         {"DOC_TEST_FINAL", "200"},
+        {"DOC_TEST_URL", "https://hexdocs.pm/phoenix_duskmoon/10.0.0/index.html"},
+        {"DOC_TEST_RETRY_STDERR", ""},
+        {"DOC_TEST_BODY", ""},
         {"DOC_TEST_MUTATE", "0"}
       ]
     }
@@ -124,6 +139,58 @@ defmodule HexDocsPublicationTest do
   test "retry reuses reachable versioned docs without a Mix command", ctx do
     {output, 0} = run(ctx, [{"DOC_TEST_INITIAL", "200"}])
     assert output =~ "Reusing reachable HexDocs phoenix_duskmoon 10.0.0"
+    refute File.exists?(ctx.mix_log)
+    assert File.read!(ctx.tarball) == "verified immutable UI package"
+  end
+
+  test "transient retry stderr does not contaminate the successful HexDocs status", ctx do
+    warning = "curl: (22) The requested URL returned error: 404"
+    {output, status} = run(ctx, [{"DOC_TEST_RETRY_STDERR", warning}])
+    assert status == 0, output
+    assert output =~ warning
+    assert output =~ "Published and verified HexDocs phoenix_duskmoon 10.0.0"
+    assert File.read!(ctx.tarball) == "verified immutable UI package"
+  end
+
+  test "npm readiness retries only metadata and ignores transient stderr", ctx do
+    metadata = %{"version" => "10.0.0", "dist" => %{"tarball" => "https://example.test/ui.tgz"}}
+
+    {output, status} =
+      run(
+        ctx,
+        [
+          {"DOC_TEST_URL", "https://registry.npmjs.org/phoenix_duskmoon/10.0.0"},
+          {"DOC_TEST_INITIAL", "200"},
+          {"DOC_TEST_BODY", JSON.encode!(metadata)},
+          {"DOC_TEST_RETRY_STDERR", "curl: (22) The requested URL returned error: 404"}
+        ],
+        "IO.puts(JSON.encode!(ReleaseSupport.npm_metadata!(\"phoenix_duskmoon\", \"10.0.0\")))"
+      )
+
+    assert status == 0, output
+    assert output =~ JSON.encode!(metadata)
+    assert [request] = String.split(File.read!(ctx.curl_log), "\n", trim: true)
+    assert request =~ "--retry 60 --retry-delay 5 --retry-all-errors"
+    assert request =~ "--max-time 30 --retry-max-time 300"
+    refute File.exists?(ctx.npm_log)
+    refute File.exists?(ctx.mix_log)
+    assert File.read!(ctx.tarball) == "verified immutable UI package"
+  end
+
+  test "npm readiness exhaustion fails without publishing or changing package bytes", ctx do
+    {output, status} =
+      run(
+        ctx,
+        [
+          {"DOC_TEST_URL", "https://registry.npmjs.org/phoenix_duskmoon/10.0.0"},
+          {"DOC_TEST_INITIAL", "404"}
+        ],
+        "ReleaseSupport.npm_metadata!(\"phoenix_duskmoon\", \"10.0.0\")"
+      )
+
+    assert status != 0
+    assert output =~ "failed (22)"
+    refute File.exists?(ctx.npm_log)
     refute File.exists?(ctx.mix_log)
     assert File.read!(ctx.tarball) == "verified immutable UI package"
   end
@@ -150,7 +217,11 @@ defmodule HexDocsPublicationTest do
     assert [_lookup] = String.split(File.read!(ctx.curl_log), "\n", trim: true)
   end
 
-  defp run(ctx, overrides \\ []) do
+  defp run(
+         ctx,
+         overrides \\ [],
+         expression \\ "ReleaseSupport.hex_docs_publish!(\"phoenix_duskmoon\", \"10.0.0\", System.fetch_env!(\"DOC_TEST_STAGE\"))"
+       ) do
     env = Map.new(ctx.env ++ overrides) |> Map.to_list()
 
     System.cmd(
@@ -160,7 +231,7 @@ defmodule HexDocsPublicationTest do
         """
         System.put_env("PATH", System.fetch_env!("DOC_TEST_PATH"))
         Code.require_file(System.fetch_env!("DOC_TEST_SUPPORT"))
-        ReleaseSupport.hex_docs_publish!("phoenix_duskmoon", "10.0.0", System.fetch_env!("DOC_TEST_STAGE"))
+        #{expression}
         """
       ],
       env: env,

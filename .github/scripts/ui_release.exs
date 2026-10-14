@@ -86,9 +86,7 @@ defmodule UIRelease do
         |> IO.write()
 
       "200" ->
-        metadata =
-          ReleaseSupport.cmd!("curl", ["--fail", "--silent", "--show-error", url])
-          |> JSON.decode!()
+        metadata = ReleaseSupport.npm_metadata!("phoenix_duskmoon", version)
 
         downloaded = npm <> ".registry"
         ReleaseSupport.http!(metadata["dist"]["tarball"], downloaded)
@@ -106,8 +104,7 @@ defmodule UIRelease do
 
     ReleaseSupport.verify_hex!("phoenix_duskmoon", version, hex)
 
-    metadata =
-      ReleaseSupport.cmd!("curl", ["--fail", "--silent", "--show-error", url]) |> JSON.decode!()
+    metadata = ReleaseSupport.npm_metadata!("phoenix_duskmoon", version)
 
     downloaded = npm <> ".verified"
 

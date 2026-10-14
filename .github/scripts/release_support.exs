@@ -192,6 +192,31 @@ defmodule ReleaseSupport do
     end
   end
 
+  def npm_metadata!(package, version) do
+    stable!(version)
+
+    cmd!(
+      "curl",
+      [
+        "--fail",
+        "--retry",
+        "60",
+        "--retry-delay",
+        "5",
+        "--retry-all-errors",
+        "--max-time",
+        "30",
+        "--retry-max-time",
+        "300",
+        "--silent",
+        "--show-error",
+        "https://registry.npmjs.org/#{package}/#{version}"
+      ],
+      stderr_to_stdout: false
+    )
+    |> JSON.decode!()
+  end
+
   def hex_docs_publish!(package, version, dir) do
     stable!(version)
     tarball = Path.join(dir, "#{package}-#{version}.tar")
@@ -220,22 +245,26 @@ defmodule ReleaseSupport do
         immutable_action(digest(tarball), expected)
 
         verified =
-          cmd!("curl", [
-            "--fail",
-            "--location",
-            "--retry",
-            "12",
-            "--retry-delay",
-            "5",
-            "--retry-all-errors",
-            "--silent",
-            "--show-error",
-            "--output",
-            "/dev/null",
-            "--write-out",
-            "%{http_code}",
-            url
-          ])
+          cmd!(
+            "curl",
+            [
+              "--fail",
+              "--location",
+              "--retry",
+              "12",
+              "--retry-delay",
+              "5",
+              "--retry-all-errors",
+              "--silent",
+              "--show-error",
+              "--output",
+              "/dev/null",
+              "--write-out",
+              "%{http_code}",
+              url
+            ],
+            stderr_to_stdout: false
+          )
 
         unless verified == "200", do: raise("HexDocs verification failed: HTTP #{verified}")
         IO.puts("Published and verified HexDocs #{package} #{version}")
