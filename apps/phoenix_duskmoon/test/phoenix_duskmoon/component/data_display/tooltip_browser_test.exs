@@ -5,6 +5,8 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipBrowserTest do
   import Phoenix.LiveViewTest
   import PhoenixDuskmoon.Component.Action.Button
   import PhoenixDuskmoon.Component.DataDisplay.Tooltip
+  import PhoenixDuskmoon.Component.Icon.Icons
+  import PhoenixDuskmoon.Component.Navigation.LeftMenu
 
   alias DuskmoonBundler.Integration.CDPBrowser
 
@@ -78,6 +80,63 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipBrowserTest do
     assert Enum.any?(nodes, fn node ->
              get_in(node, ["role", "value"]) == "button" &&
                get_in(node, ["description", "value"]) == "Helpful text"
+           end)
+  end
+
+  test "left menu links show tooltip hints on hover and keyboard focus", %{page: page} do
+    component = render_component(&tooltip_left_menu/1, %{})
+    :ok = load_fixture(page, component)
+
+    assert {:ok,
+            %{
+              "href" => "/admin/dashboard",
+              "active" => "page",
+              "target" => true,
+              "disabledTabIndex" => -1
+            }} =
+             CDPBrowser.evaluate(page, """
+             (() => {
+               const link = document.getElementById("dashboard-link")
+               return {
+                 href: link.getAttribute("href"),
+                 active: link.getAttribute("aria-current"),
+                 target: link.interestForElement === document.getElementById("dashboard-hint-tooltip"),
+                 disabledTabIndex: document.getElementById("private-link").tabIndex
+               }
+             })()
+             """)
+
+    :ok = hover_trigger(page, "dashboard-link")
+    assert_tooltip_visible(page, "dashboard-hint-tooltip")
+
+    assert {:ok, _} =
+             CDPBrowser.command(page, "Input.dispatchMouseEvent", %{
+               "type" => "mouseMoved",
+               "x" => 0,
+               "y" => 0
+             })
+
+    assert {:ok, true} =
+             CDPBrowser.evaluate(page, """
+             (async () => {
+               await new Promise((resolve) => setTimeout(resolve, 800))
+               document.querySelector("summary").focus()
+               return !document.getElementById("dashboard-hint-tooltip").matches(":popover-open")
+             })()
+             """)
+
+    :ok = dispatch_key(page, "Tab", "Tab", 9)
+    assert_tooltip_visible(page, "dashboard-hint-tooltip")
+
+    assert {:ok, true} =
+             CDPBrowser.evaluate(page, "document.activeElement.id === 'dashboard-link'")
+
+    assert {:ok, %{"nodes" => nodes}} = CDPBrowser.command(page, "Accessibility.getFullAXTree")
+
+    assert Enum.any?(nodes, fn node ->
+             get_in(node, ["role", "value"]) == "link" &&
+               get_in(node, ["name", "value"]) == "Dashboard" &&
+               get_in(node, ["description", "value"]) == "Dashboard"
            end)
   end
 
@@ -171,6 +230,32 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.TooltipBrowserTest do
       <.dm_btn id="delete-record" confirm="Delete this record?" phx-click="delete" {trigger_attrs}>
         Delete
       </.dm_btn>
+    </.dm_tooltip>
+    """
+  end
+
+  defp tooltip_left_menu(assigns) do
+    ~H"""
+    <.dm_tooltip id="dashboard-hint" content="Dashboard" position="right" :let={trigger_attrs}>
+      <.dm_left_menu_group active="dashboard">
+        <:title>Overview</:title>
+        <:menu
+          id="private"
+          to="/admin/private"
+          disabled={true}
+          rest={%{"aria-label" => "Private settings", id: "private-link"}}
+        >
+          <.dm_mdi name="lock" aria-hidden="true" />
+        </:menu>
+        <:menu
+          id="dashboard"
+          to="/admin/dashboard"
+          rest={%{"aria-label" => "Dashboard", id: "dashboard-link"}}
+          {trigger_attrs}
+        >
+          <.dm_mdi name="view-dashboard" aria-hidden="true" />
+        </:menu>
+      </.dm_left_menu_group>
     </.dm_tooltip>
     """
   end

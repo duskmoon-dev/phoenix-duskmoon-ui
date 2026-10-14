@@ -1,8 +1,10 @@
 defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
   use ExUnit.Case, async: true
 
+  use Phoenix.Component
   require Phoenix.LiveViewTest
   import Phoenix.LiveViewTest
+  import PhoenixDuskmoon.Component.DataDisplay.Tooltip
   import PhoenixDuskmoon.Component.Navigation.LeftMenu
 
   describe "dm_left_menu/1" do
@@ -171,6 +173,234 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
   end
 
   describe "dm_left_menu_group/1" do
+    test "forwards public tooltip trigger attributes from a raw menu slot to its native link" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(~H"""
+        <.dm_tooltip id="dashboard-hint" content="Dashboard" position="right" :let={trigger_attrs}>
+          <.dm_left_menu_group active="dashboard">
+            <:title>Overview</:title>
+            <:menu id="dashboard" to="/admin/dashboard" class="dashboard-link" {trigger_attrs}>
+              Dashboard
+            </:menu>
+            <:menu id="settings" to="/admin/settings">Settings</:menu>
+          </.dm_left_menu_group>
+        </.dm_tooltip>
+        """)
+        |> LazyHTML.from_fragment()
+
+      link = LazyHTML.query(html, ~s(a[href="/admin/dashboard"]))
+      assert LazyHTML.attribute(link, "aria-describedby") == ["dashboard-hint-tooltip"]
+      assert LazyHTML.attribute(link, "interestfor") == ["dashboard-hint-tooltip"]
+      assert LazyHTML.attribute(link, "style") == ["anchor-name: --anchor-dashboard-hint-tooltip"]
+      assert LazyHTML.attribute(link, "title") == ["Dashboard"]
+      assert LazyHTML.attribute(link, "data-phx-link") == ["redirect"]
+      assert LazyHTML.attribute(link, "data-phx-link-state") == ["push"]
+      assert LazyHTML.attribute(link, "class") == ["dashboard-link active"]
+      assert LazyHTML.attribute(link, "aria-current") == ["page"]
+      assert LazyHTML.attribute(link, "aria-disabled") == []
+      assert LazyHTML.attribute(link, "tabindex") == []
+
+      for selector <- ["details", "summary", "ul", "li", ~s(a[href="/admin/settings"])],
+          attribute <- ~w(aria-describedby interestfor style title) do
+        assert LazyHTML.attribute(LazyHTML.query(html, selector), attribute) == []
+      end
+
+      assert Enum.empty?(LazyHTML.query(html, "[inner_block], [__slot__], [__changed__], a[to]"))
+      assert LazyHTML.text(link) =~ "Dashboard"
+    end
+
+    test "forwards explicit rest attributes while retaining disabled and active link behavior" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(~H"""
+        <.dm_left_menu_group active="overview">
+          <:title>Settings</:title>
+          <:menu id="overview" to="/overview" class="overview-link">Overview</:menu>
+          <:menu
+            id="private"
+            to="/settings/private"
+            class="private-link"
+            disabled={true}
+            rest={%{
+              "id" => "private-trigger",
+              "aria-label" => "Private settings",
+              "data-tracking" => "private-settings",
+              "phx-click" => "audit-navigation",
+              "phx-value-section" => "private",
+              "style" => "color: rebeccapurple",
+              "title" => "Unavailable settings",
+              "tabindex" => "0"
+            }}
+          >
+            Private
+          </:menu>
+        </.dm_left_menu_group>
+        """)
+        |> LazyHTML.from_fragment()
+
+      disabled = LazyHTML.query(html, ~s(a[href="/settings/private"]))
+      assert LazyHTML.attribute(disabled, "id") == ["private-trigger"]
+      assert LazyHTML.attribute(disabled, "aria-label") == ["Private settings"]
+      assert LazyHTML.attribute(disabled, "data-tracking") == ["private-settings"]
+      assert LazyHTML.attribute(disabled, "phx-click") == ["audit-navigation"]
+      assert LazyHTML.attribute(disabled, "phx-value-section") == ["private"]
+      assert LazyHTML.attribute(disabled, "style") == ["color: rebeccapurple"]
+      assert LazyHTML.attribute(disabled, "title") == ["Unavailable settings"]
+      assert LazyHTML.attribute(disabled, "data-phx-link") == ["redirect"]
+      assert LazyHTML.attribute(disabled, "class") == ["private-link"]
+      assert LazyHTML.attribute(disabled, "aria-disabled") == ["true"]
+      assert LazyHTML.attribute(disabled, "aria-current") == []
+      assert LazyHTML.attribute(disabled, "tabindex") == ["-1"]
+
+      assert LazyHTML.attribute(LazyHTML.query(html, "li.disabled > a"), "href") ==
+               ["/settings/private"]
+
+      active = LazyHTML.query(html, ~s(a[href="/overview"]))
+      assert LazyHTML.attribute(active, "class") == ["overview-link active"]
+      assert LazyHTML.attribute(active, "aria-current") == ["page"]
+      assert LazyHTML.attribute(active, "tabindex") == []
+
+      for selector <- ["details", "summary", "ul", "li", ~s(a[href="/overview"])],
+          attribute <- ~w(aria-label data-tracking phx-click phx-value-section style title) do
+        assert LazyHTML.attribute(LazyHTML.query(html, selector), attribute) == []
+      end
+
+      assert Enum.empty?(
+               LazyHTML.query(
+                 html,
+                 "[inner_block], [__slot__], [__changed__], a[to], a[disabled]"
+               )
+             )
+
+      assert LazyHTML.text(disabled) =~ "Private"
+    end
+
+    test "forwards dynamic global attributes to an enabled native link" do
+      assigns = %{
+        link_attrs: %{
+          "aria-label" => "Account settings",
+          "data-tracking" => "account-settings",
+          "phx-click" => "audit-navigation",
+          "phx-value-section" => "account",
+          "style" => "color: rebeccapurple",
+          "title" => "Open account settings",
+          "tabindex" => "2"
+        }
+      }
+
+      html =
+        rendered_to_string(~H"""
+        <.dm_left_menu_group active="account">
+          <:title>Settings</:title>
+          <:menu id="account" to="/account" class="account-link" {@link_attrs}>
+            Account
+          </:menu>
+          <:menu id="help" to="/help">Help</:menu>
+        </.dm_left_menu_group>
+        """)
+        |> LazyHTML.from_fragment()
+
+      link = LazyHTML.query(html, ~s(a[href="/account"]))
+
+      for {attribute, value} <- assigns.link_attrs do
+        assert LazyHTML.attribute(link, attribute) == [value]
+
+        for selector <- ["details", "summary", "ul", "li", ~s(a[href="/help"])] do
+          assert LazyHTML.attribute(LazyHTML.query(html, selector), attribute) == []
+        end
+      end
+
+      assert LazyHTML.attribute(link, "data-phx-link") == ["redirect"]
+      assert LazyHTML.attribute(link, "data-phx-link-state") == ["push"]
+      assert LazyHTML.attribute(link, "class") == ["account-link active"]
+      assert LazyHTML.attribute(link, "aria-current") == ["page"]
+      assert LazyHTML.attribute(link, "aria-disabled") == []
+      assert LazyHTML.attribute(link, "id") == []
+
+      assert Enum.empty?(
+               LazyHTML.query(html, "[inner_block], [__slot__], [__changed__], a[to], a[rest]")
+             )
+    end
+
+    test "explicit rest attributes override dynamic attributes with equivalent string keys" do
+      assigns = %{
+        link_attrs: %{"title" => "Dynamic title", "style" => "color: red"}
+      }
+
+      html =
+        rendered_to_string(~H"""
+        <.dm_left_menu_group>
+          <:title>Settings</:title>
+          <:menu
+            id="account"
+            to="/account"
+            rest={%{title: "Explicit title", style: "color: blue"}}
+            {@link_attrs}
+          >
+            Account
+          </:menu>
+        </.dm_left_menu_group>
+        """)
+        |> LazyHTML.from_fragment()
+
+      link = LazyHTML.query(html, ~s(a[href="/account"]))
+      assert LazyHTML.attribute(link, "title") == ["Explicit title"]
+      assert LazyHTML.attribute(link, "style") == ["color: blue"]
+    end
+
+    test "rest attributes cannot override navigation, classes, or active and disabled state" do
+      raw_html =
+        render_component(&dm_left_menu_group/1, %{
+          active: "private",
+          title: [%{inner_block: fn _, _ -> "Settings" end}],
+          menu: [
+            %{
+              inner_block: fn _, _ -> "Private" end,
+              id: "private",
+              to: "/settings/private",
+              class: "private-link",
+              disabled: true,
+              rest: %{
+                :class => "override-class",
+                "navigate" => "/override-navigation",
+                :patch => "/override-patch",
+                "href" => "/override-href",
+                "aria-current" => "step",
+                :"aria-disabled" => "false",
+                "data-phx-link" => "patch",
+                :"data-phx-link-state" => "replace",
+                :tabindex => "0"
+              }
+            }
+          ]
+        })
+
+      [[raw_link]] = Regex.scan(~r/<a\b[^>]*href="\/settings\/private"[^>]*>/, raw_html)
+
+      assert Regex.scan(~r/\sdata-phx-link="[^"]*"/, raw_link) == [
+               [~s( data-phx-link="redirect")]
+             ]
+
+      assert Regex.scan(~r/\sdata-phx-link-state="[^"]*"/, raw_link) == [
+               [~s( data-phx-link-state="push")]
+             ]
+
+      html = LazyHTML.from_fragment(raw_html)
+      link = LazyHTML.query(html, "li.disabled > a")
+      assert LazyHTML.attribute(link, "href") == ["/settings/private"]
+      assert LazyHTML.attribute(link, "data-phx-link") == ["redirect"]
+      assert LazyHTML.attribute(link, "data-phx-link-state") == ["push"]
+      assert LazyHTML.attribute(link, "class") == ["private-link active"]
+      assert LazyHTML.attribute(link, "aria-current") == ["page"]
+      assert LazyHTML.attribute(link, "aria-disabled") == ["true"]
+      assert LazyHTML.attribute(link, "tabindex") == ["-1"]
+      assert LazyHTML.attribute(link, "navigate") == []
+      assert LazyHTML.attribute(link, "patch") == []
+    end
+
     test "renders as details element with summary" do
       result =
         render_component(&dm_left_menu_group/1, %{

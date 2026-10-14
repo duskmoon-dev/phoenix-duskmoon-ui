@@ -92,6 +92,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
   Renders as a `<details>` element with menu items as links inside.
   Designed to be used inside `dm_left_menu/1`.
 
+  Menu slots forward dynamically spread attributes to their navigation anchors,
+  including the trigger attributes yielded by `dm_tooltip/1`. For explicit global
+  attributes, use `rest={%{"aria-label" => "Dashboard"}}` on the menu slot.
+  Values in `rest` take precedence over equivalent dynamically spread attributes.
+  The slot's `id` identifies the active item; an HTML id can be supplied in `rest`.
+  Navigation, classes, active/disabled ARIA state, and disabled keyboard behavior
+  remain controlled by the menu component.
+
   ## Examples
 
       <.dm_left_menu_group active="mdi">
@@ -99,6 +107,13 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
         <:menu id="mdi" to={~p"/icons/mdi"}>MD Icon</:menu>
         <:menu id="bsi" to={~p"/icons/bsi"}>BS Icon</:menu>
       </.dm_left_menu_group>
+
+      <.dm_tooltip id="dashboard-hint" content="Dashboard" position="right" :let={trigger_attrs}>
+        <.dm_left_menu_group active="dashboard">
+          <:title>Overview</:title>
+          <:menu id="dashboard" to="/admin/dashboard" {trigger_attrs}>Dashboard</:menu>
+        </.dm_left_menu_group>
+      </.dm_tooltip>
 
       <.dm_left_menu_group open={false}>
         <:title>Settings</:title>
@@ -123,6 +138,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
     attr(:class, :any, doc: "menu item CSS classes")
     attr(:to, :string, doc: "navigation path")
     attr(:disabled, :boolean, doc: "disable the menu item")
+    attr(:rest, :map, doc: "Global HTML attributes for the navigation anchor")
   end
 
   def dm_left_menu_group(assigns) do
@@ -137,12 +153,12 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
           class={[m[:disabled] && "disabled"]}
         >
           <.link
+            {menu_link_attrs(m)}
             navigate={m[:to]}
             class={[
               m[:class],
               m[:id] == @active && @active != "" && "active"
             ]}
-            tabindex={m[:disabled] && "-1"}
             aria-current={m[:id] == @active && @active != "" && "page"}
             aria-disabled={m[:disabled] && "true"}
           >
@@ -152,5 +168,28 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
       </ul>
     </details>
     """
+  end
+
+  defp menu_link_attrs(menu) do
+    attrs =
+      menu
+      |> Map.drop([
+        :__changed__,
+        :__slot__,
+        :__given__,
+        :inner_block,
+        :id,
+        :class,
+        :to,
+        :disabled,
+        :rest
+      ])
+      |> Map.new(fn {key, value} -> {to_string(key), value} end)
+      |> Map.merge(Map.new(menu[:rest] || %{}, fn {key, value} -> {to_string(key), value} end))
+      |> Map.drop(
+        ~w(class navigate patch href aria-current aria-disabled data-phx-link data-phx-link-state)
+      )
+
+    if menu[:disabled], do: Map.put(attrs, "tabindex", "-1"), else: attrs
   end
 end

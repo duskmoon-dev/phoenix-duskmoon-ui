@@ -57,6 +57,32 @@
     </.dm_left_menu>
   </div>
 
+  <h3 class="text-xl font-semibold mt-8 mb-4">Menu Link Tooltips</h3>
+  <p class="mb-4">
+    Spread tooltip trigger attributes onto a menu slot to attach hover and keyboard-focus hints
+    to its navigation link. Use the slot's <code>rest</code> map for other global link attributes.
+  </p>
+  <div class="w-64 bg-base-200 rounded-lg">
+    <.dm_tooltip
+      :let={trigger_attrs}
+      id="left-menu-dashboard-hint"
+      content="Dashboard"
+      position="right"
+    >
+      <.dm_left_menu_group active="dashboard">
+        <:title>Workspace</:title>
+        <:menu
+          id="dashboard"
+          to={~p"/components/navigation/left-menu"}
+          rest={%{"aria-label" => "Dashboard"}}
+          {trigger_attrs}
+        >
+          <.dm_mdi name="view-dashboard" class="w-4 h-4" aria-hidden="true" />
+        </:menu>
+      </.dm_left_menu_group>
+    </.dm_tooltip>
+  </div>
+
   <h3 class="text-xl font-semibold mt-8 mb-4">Sizes</h3>
   <div class="flex flex-wrap gap-4">
     <div class="w-48 bg-base-200 rounded-lg">
