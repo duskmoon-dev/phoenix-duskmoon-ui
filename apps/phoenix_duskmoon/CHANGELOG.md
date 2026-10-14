@@ -1,3 +1,19 @@
+# [10.0.2](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.1...v10.0.2) (2026-10-14)
+
+### Fixed
+
+- Adopt the complete published Bundler 10.0.1 cohort so edits to Storybook
+  `.story.exs` templates rebuild Tailwind and apply new utilities through style
+  HMR, resolving [UI request #199](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/199).
+- Include Bundler's npm HTTPS bootstrap repair after Mix dependency compilation
+  prunes OTP code paths. UI builds continue to use strict precompiled native
+  artifacts from the independent toolchain release.
+
+### Validation
+
+- Add a browser consumer regression for new utilities introduced after watcher
+  startup, checking computed native-element styles without a page reload.
+
 # [10.0.1](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.0...v10.0.1) (2026-10-14)
 
 ### Fixed
