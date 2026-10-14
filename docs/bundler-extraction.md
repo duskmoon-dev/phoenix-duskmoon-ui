@@ -10,12 +10,14 @@ small two-application umbrella.
 The published B0 retains an existing development limitation: Storybook `.exs`
 changes reload through Phoenix, but its Tailwind watcher recognizes `.ex` and
 `.heex`, excluding `.exs`. Track the toolchain fix in
-[internal request #199](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/199).
+[Bundler internal request #2](https://github.com/duskmoon-dev/duskmoon-bundler/issues/2),
+with UI adoption tracked in
+[UI internal request #199](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/199).
 Production builds explicitly scan `.exs` and remain correct. Until a fixed B is
 published, regenerate assets after introducing new utilities in a story:
 
 ```sh
-# WORKAROUND(upstream): duskmoon-dev/phoenix-duskmoon-ui#199
+# WORKAROUND(upstream): duskmoon-dev/duskmoon-bundler#2
 scripts/with-precompiled-toolchain.sh mix duskmoon_bundler.build duskmoon_storybook
 ```
 
