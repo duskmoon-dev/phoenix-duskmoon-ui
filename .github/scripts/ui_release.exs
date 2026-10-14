@@ -32,7 +32,7 @@ defmodule UIRelease do
         "compile/tests/hooks/browser",
         "JS/CSS/icons",
         "staged consumer",
-        "Hex/npm U",
+        "Hex/npm U and versioned HexDocs",
         "UI release",
         "Storybook image"
       ]
@@ -122,7 +122,11 @@ defmodule UIRelease do
       File.rm(downloaded)
     end
 
-    IO.puts("UI Hex/npm release complete; U=#{version}, pinned B=#{provenance.bundler_version}")
+    ReleaseSupport.hex_docs_publish!("phoenix_duskmoon", version, stage)
+
+    IO.puts(
+      "UI Hex/npm/HexDocs release complete; U=#{version}, pinned B=#{provenance.bundler_version}"
+    )
   end
 end
 

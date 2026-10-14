@@ -192,6 +192,59 @@ defmodule ReleaseSupport do
     end
   end
 
+  def hex_docs_publish!(package, version, dir) do
+    stable!(version)
+    tarball = Path.join(dir, "#{package}-#{version}.tar")
+    expected = digest(tarball)
+    url = "https://hexdocs.pm/#{package}/#{version}/index.html"
+
+    status =
+      cmd!("curl", [
+        "--location",
+        "--silent",
+        "--show-error",
+        "--output",
+        "/dev/null",
+        "--write-out",
+        "%{http_code}",
+        url
+      ])
+
+    case status do
+      "200" ->
+        IO.puts("Reusing reachable HexDocs #{package} #{version}")
+
+      "404" ->
+        IO.write(cmd!("mix", ["deps.get"], cd: dir))
+        IO.write(cmd!("mix", ["hex.publish", "docs", "--yes"], cd: dir))
+        immutable_action(digest(tarball), expected)
+
+        verified =
+          cmd!("curl", [
+            "--fail",
+            "--location",
+            "--retry",
+            "12",
+            "--retry-delay",
+            "5",
+            "--retry-all-errors",
+            "--silent",
+            "--show-error",
+            "--output",
+            "/dev/null",
+            "--write-out",
+            "%{http_code}",
+            url
+          ])
+
+        unless verified == "200", do: raise("HexDocs verification failed: HTTP #{verified}")
+        IO.puts("Published and verified HexDocs #{package} #{version}")
+
+      other ->
+        raise("HexDocs lookup failed: HTTP #{other}")
+    end
+  end
+
   def public_release!(repo, version, sha, files) do
     stable!(version)
     sha!(sha)

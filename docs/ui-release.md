@@ -52,8 +52,10 @@ immutable UI release assets, then publishes exactly U to both registries. It
 never uses `--replace`, asset overwrite, a moved tag, or a push to main. Existing
 matching bytes are reused; conflicting bytes stop publication. The public
 GitHub release may therefore exist while a registry publish is still pending;
-completion means both registries, Alpine consumers and the Storybook image
-workflow succeeded. Assets and `ui-release.json` record source/lock/package
+completion means both registries, the versioned HexDocs site, Alpine consumers
+and the Storybook image workflow succeeded. Missing versioned docs are published
+separately; retries reuse reachable docs and verify the staged Hex archive stayed
+unchanged. Assets and `ui-release.json` record source/lock/package
 hashes. U release tags remain in this repository; historical native releases
 and their bytes remain untouched.
 
