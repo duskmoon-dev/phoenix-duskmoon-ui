@@ -78,7 +78,6 @@ config :duskmoon_bundler, :duskmoon_storybook,
     watch_dirs: [
       "apps/duskmoon_storybook/assets",
       "apps/duskmoon_storybook/lib",
-      # TODO(upstream): duskmoon-dev/duskmoon-bundler#2 (.exs Tailwind hot updates)
       "apps/duskmoon_storybook/storybook",
       "apps/phoenix_duskmoon/assets",
       "apps/phoenix_duskmoon/lib"

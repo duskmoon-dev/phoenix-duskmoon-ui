@@ -7,19 +7,12 @@ The UI repository owns `phoenix_duskmoon` and `duskmoon_storybook`. The independ
 Application, module, Hex and npm names remain unchanged. The UI root remains a
 small two-application umbrella.
 
-The published B0 retains an existing development limitation: Storybook `.exs`
-changes reload through Phoenix, but its Tailwind watcher recognizes `.ex` and
-`.heex`, excluding `.exs`. Track the toolchain fix in
-[Bundler internal request #2](https://github.com/duskmoon-dev/duskmoon-bundler/issues/2),
-with UI adoption tracked in
-[UI internal request #199](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/199).
-Production builds explicitly scan `.exs` and remain correct. Until a fixed B is
-published, regenerate assets after introducing new utilities in a story:
-
-```sh
-# WORKAROUND(upstream): duskmoon-dev/duskmoon-bundler#2
-scripts/with-precompiled-toolchain.sh mix duskmoon_bundler.build duskmoon_storybook
-```
+The adopted Bundler **10.0.1** fixes
+[Bundler internal request #2](https://github.com/duskmoon-dev/duskmoon-bundler/issues/2)
+and [UI internal request #199](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/199):
+editing a Storybook `.story.exs` template now rebuilds Tailwind and applies new
+utilities through style HMR. The initial B0 watcher omitted `.exs`; its manual
+asset-rebuild workaround is no longer required.
 
 ## Bootstrap and versions
 
@@ -31,11 +24,14 @@ is in `docs/verification/`; executable regression results are recorded in
 still points to the UI repository's `v9.16.16`. Historical tags, releases and assets
 remain untouched.
 
-`BUNDLER_VERSION` pins B, and the root `mix.lock` fixes the actual eight-package
-cohort. The first independent bundler release candidate is B1 **9.16.17**, above
-the current registry versions and checked as unused. It is unpublished. Its new
-artifacts belong to `duskmoon-bundler/releases/download/v9.16.17`; its loaders must
-never reuse historical binaries under that new version.
+`BUNDLER_VERSION` now pins B **10.0.1**, and the root `mix.lock` fixes the actual
+eight-package Hex cohort. Its native artifacts are published by
+`duskmoon-bundler/releases/download/v10.0.1`, from source
+`3bffa78eada45a34c0d20b7207d1db504f6768e7`. The
+[published-release verification](https://github.com/duskmoon-dev/duskmoon-bundler/actions/runs/38558387833)
+passed all 47 native archives, eight Hex tarballs and fresh glibc/Alpine consumers;
+its validation revision is separate from the immutable package source. The
+adoption record is `docs/bundler-upgrades/v10.0.1.json`.
 
 U is the synchronized `phoenix_duskmoon` Hex/npm version. B is the synchronized
 eight-package toolchain version. Updating B does not bump U; normal UI release
