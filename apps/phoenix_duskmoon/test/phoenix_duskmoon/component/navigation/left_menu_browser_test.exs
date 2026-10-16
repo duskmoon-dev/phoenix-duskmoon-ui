@@ -13,7 +13,19 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuBrowserTest do
     {:ok, browser} = CDPBrowser.start_link()
     on_exit(fn -> CDPBrowser.stop(browser) end)
     root = Path.expand("../../../../../../", __DIR__)
-    css = File.read!(Path.join(root, "apps/duskmoon_storybook/priv/static/assets/css/app.css"))
+    css_path = Path.join(root, "apps/duskmoon_storybook/assets/css/app.css")
+    {:ok, _} = Application.ensure_all_started(:duskmoon_bundler)
+
+    {:ok, css} =
+      DuskmoonBundler.Tailwind.build(
+        css: File.read!(css_path),
+        css_base: Path.dirname(css_path),
+        sources: [
+          %{base: Path.join(root, "apps/phoenix_duskmoon/lib"), pattern: "**/*.ex"},
+          %{base: __DIR__, pattern: "left_menu_browser_test.exs"}
+        ]
+      )
+
     hook = File.read!(Path.join(root, "apps/phoenix_duskmoon/assets/js/hooks/left_menu.js"))
     %{browser: browser, css: css, hook: hook}
   end
