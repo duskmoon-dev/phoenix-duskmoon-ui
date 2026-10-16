@@ -1,3 +1,25 @@
+# [10.0.4](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.3...v10.0.4) (2026-10-16)
+
+### Added
+
+- Extend `dm_left_menu` with a collapsible icon rail, fixed header/footer, native
+  link tooltips and optional saved collapse preference.
+- Own persistent sidebar LiveViews and active-page synchronization through the
+  `sticky` data API, preserving scroll and group state across LiveView navigation,
+  browser history and reconnects. Document CSS sticky positioning and reload limits.
+
+### Changed
+
+- Use the public left-menu component for the Storybook Components gallery,
+  retaining all 68 destinations and their active states through LiveView navigation.
+- Keep the sidebar toggle visible below the app bar on narrow and short viewports,
+  and handle pagination, chip removal, chat sends and theme selection in the demos.
+
+### Validation
+
+- Cover component data contracts, persistent-child lifecycle, hook synchronization,
+  accessible icon rails, tooltips, every gallery route and interactive demo events.
+
 # [10.0.3](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.2...v10.0.3) (2026-10-15)
 
 ### Fixed
