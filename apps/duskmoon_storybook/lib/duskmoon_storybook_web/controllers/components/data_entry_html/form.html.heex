@@ -172,7 +172,7 @@
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Complete Form Example</h3>
   <div class="max-w-md">
-    <.dm_form for={@conn} action={~p"/"} method="get" class="flex flex-col gap-4">
+    <.dm_form action={~p"/"} method="get" class="flex flex-col gap-4">
       <.dm_label for="demo-name">Name</.dm_label>
       <.dm_input name="demo-name" value="" placeholder="Enter your name" />
       <.dm_label for="demo-email">Email</.dm_label>

@@ -19,7 +19,7 @@ defmodule DuskmoonStorybookWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :page
-    get "/components", PageController, :components
+    live "/components", Components.PageLive
 
     live_storybook("/storybook", backend_module: DuskmoonStorybookWeb.Storybook)
   end
@@ -31,83 +31,84 @@ defmodule DuskmoonStorybookWeb.Router do
     live "/data-entry/react-form", ReactFormLive
 
     # Action
-    get "/action/button", ActionController, :button
-    get "/action/link", ActionController, :link
-    get "/action/dropdown", ActionController, :dropdown
-    get "/action/menu", ActionController, :menu
-    get "/action/toggle", ActionController, :toggle
+    live "/action/button", PageLive
+    live "/action/link", PageLive
+    live "/action/dropdown", PageLive
+    live "/action/menu", PageLive
+    live "/action/toggle", PageLive
 
     # Data Display
-    get "/data-display/accordion", DataDisplayController, :accordion
-    get "/data-display/avatar", DataDisplayController, :avatar
-    get "/data-display/badge", DataDisplayController, :badge
-    get "/data-display/card", DataDisplayController, :card
-    get "/data-display/chat", DataDisplayController, :chat
-    get "/data-display/chip", DataDisplayController, :chip
-    get "/data-display/datetime", DataDisplayController, :datetime
-    get "/data-display/flash", DataDisplayController, :flash
-    get "/data-display/markdown", DataDisplayController, :markdown
-    get "/data-display/markdown-body", DataDisplayController, :markdown_body
-    get "/data-display/pagination", DataDisplayController, :pagination
-    get "/data-display/progress", DataDisplayController, :progress
-    get "/data-display/skeleton", DataDisplayController, :skeleton
-    get "/data-display/stat", DataDisplayController, :stat
-    get "/data-display/table", DataDisplayController, :table
-    get "/data-display/timeline", DataDisplayController, :timeline
-    get "/data-display/tooltip", DataDisplayController, :tooltip
-    get "/data-display/popover", DataDisplayController, :popover
-    get "/data-display/list", DataDisplayController, :list
-    get "/data-display/collapse", DataDisplayController, :collapse
+    live "/data-display/accordion", PageLive
+    live "/data-display/avatar", PageLive
+    live "/data-display/badge", PageLive
+    live "/data-display/card", PageLive
+    live "/data-display/chat", PageLive
+    live "/data-display/chip", PageLive
+    live "/data-display/datetime", PageLive
+    live "/data-display/flash", PageLive
+    live "/data-display/markdown", PageLive
+    live "/data-display/markdown-body", PageLive
+    live "/data-display/pagination", PageLive
+    live "/data-display/progress", PageLive
+    live "/data-display/skeleton", PageLive
+    live "/data-display/stat", PageLive
+    live "/data-display/table", PageLive
+    live "/data-display/timeline", PageLive
+    live "/data-display/tooltip", PageLive
+    live "/data-display/popover", PageLive
+    live "/data-display/list", PageLive
+    live "/data-display/collapse", PageLive
 
     # Data Entry
-    get "/data-entry/autocomplete", DataEntryController, :autocomplete
-    get "/data-entry/checkbox", DataEntryController, :checkbox
-    get "/data-entry/compact-input", DataEntryController, :compact_input
-    get "/data-entry/file-upload", DataEntryController, :file_upload
-    get "/data-entry/form", DataEntryController, :form
-    get "/data-entry/input", DataEntryController, :input
-    get "/data-entry/otp-input", DataEntryController, :otp_input
-    get "/data-entry/rating", DataEntryController, :rating
-    get "/data-entry/radio", DataEntryController, :radio
-    get "/data-entry/segment-control", DataEntryController, :segment_control
-    get "/data-entry/select", DataEntryController, :select
-    get "/data-entry/slider", DataEntryController, :slider
-    get "/data-entry/switch", DataEntryController, :switch
-    get "/data-entry/textarea", DataEntryController, :textarea
-    get "/data-entry/time-input", DataEntryController, :time_input
-    get "/data-entry/pin-input", DataEntryController, :pin_input
-    get "/data-entry/multi-select", DataEntryController, :multi_select
-    get "/data-entry/tree-select", DataEntryController, :tree_select
-    get "/data-entry/cascader", DataEntryController, :cascader
-    get "/data-entry/markdown-input", DataEntryController, :markdown_input
-    get "/data-entry/code-engine", DataEntryController, :code_engine
+    live "/data-entry/autocomplete", PageLive
+    live "/data-entry/checkbox", PageLive
+    live "/data-entry/compact-input", PageLive
+    live "/data-entry/file-upload", PageLive
+    live "/data-entry/form", PageLive
+    live "/data-entry/input", PageLive
+    live "/data-entry/otp-input", PageLive
+    live "/data-entry/rating", PageLive
+    live "/data-entry/radio", PageLive
+    live "/data-entry/segment-control", PageLive
+    live "/data-entry/select", PageLive
+    live "/data-entry/slider", PageLive
+    live "/data-entry/switch", PageLive
+    live "/data-entry/textarea", PageLive
+    live "/data-entry/time-input", PageLive
+    live "/data-entry/pin-input", PageLive
+    live "/data-entry/multi-select", PageLive
+    live "/data-entry/tree-select", PageLive
+    live "/data-entry/cascader", PageLive
+    live "/data-entry/markdown-input", PageLive
+    live "/data-entry/code-engine", PageLive
 
     # Feedback
-    get "/feedback/dialog", FeedbackController, :dialog
-    get "/feedback/loading", FeedbackController, :loading
-    get "/feedback/toast", FeedbackController, :toast
-    get "/feedback/snackbar", FeedbackController, :snackbar
+    live "/feedback/dialog", PageLive
+    live "/feedback/loading", PageLive
+    live "/feedback/toast", PageLive
+    live "/feedback/snackbar", PageLive
 
     # Navigation
-    get "/navigation/actionbar", NavigationController, :actionbar
-    get "/navigation/appbar", NavigationController, :appbar
-    get "/navigation/bottom-nav", NavigationController, :bottom_nav
-    get "/navigation/breadcrumb", NavigationController, :breadcrumb
-    get "/navigation/left-menu", NavigationController, :left_menu
-    get "/navigation/navbar", NavigationController, :navbar
-    get "/navigation/page-footer", NavigationController, :page_footer
-    get "/navigation/page-header", NavigationController, :page_header
-    get "/navigation/stepper", NavigationController, :stepper
-    get "/navigation/tab", NavigationController, :tab
+    live "/navigation/left-menu/live/:page", LeftMenuLive
+    live "/navigation/actionbar", PageLive
+    live "/navigation/appbar", PageLive
+    live "/navigation/bottom-nav", PageLive
+    live "/navigation/breadcrumb", PageLive
+    live "/navigation/left-menu", PageLive
+    live "/navigation/navbar", PageLive
+    live "/navigation/page-footer", PageLive
+    live "/navigation/page-header", PageLive
+    live "/navigation/stepper", PageLive
+    live "/navigation/tab", PageLive
 
     # Layout
-    get "/layout/bottom-sheet", LayoutController, :bottom_sheet
-    get "/layout/divider", LayoutController, :divider
-    get "/layout/drawer", LayoutController, :drawer
-    get "/layout/theme-switcher", LayoutController, :theme_switcher
+    live "/layout/bottom-sheet", PageLive
+    live "/layout/divider", PageLive
+    live "/layout/drawer", PageLive
+    live "/layout/theme-switcher", PageLive
 
     # Icon
-    get "/icon/icons", IconController, :icons
+    live "/icon/icons", PageLive
   end
 
   scope "/art-component", DuskmoonStorybookWeb do

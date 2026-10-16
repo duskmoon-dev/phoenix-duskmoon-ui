@@ -12,6 +12,7 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
 
     {:ok,
      assign(socket,
+       active_menu: "data-entry-react-form",
        form_id: @form_id,
        values: values,
        submitted: nil,

@@ -11,6 +11,7 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
   def mount(_params, _session, socket) do
     {:ok,
      assign(socket,
+       active_menu: "data-display-react-chat",
        chat_id: @chat_id,
        conversation_id: @conversation_id,
        messages: initial_messages(),

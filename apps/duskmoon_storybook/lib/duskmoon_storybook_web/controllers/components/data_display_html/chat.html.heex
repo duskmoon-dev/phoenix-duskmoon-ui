@@ -62,6 +62,17 @@
     <.dm_chat author="Assistant" avatar="AI" streaming>
       <.dm_chat_typing />
     </.dm_chat>
+
+    <.dm_chat
+      :for={{message, index} <- Enum.with_index(@chat_messages, 1)}
+      id={"chat-sent-#{index}"}
+      align="end"
+      author="You"
+      avatar="JG"
+      variant="filled"
+      color="secondary"
+      content={message}
+    />
   </.dm_chat_scroll>
 
   <section class="mt-8 max-w-3xl">

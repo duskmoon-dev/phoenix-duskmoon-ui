@@ -79,18 +79,20 @@ defmodule DuskmoonStorybookWeb.PageController do
   end
 
   def components(conn, _params) do
-    catalog =
-      Enum.map(@component_catalog, fn {category, title, path, function} ->
-        %{
-          category: category,
-          title: title,
-          path: path,
-          function: function,
-          description: description(function)
-        }
-      end)
+    render(conn, :components, catalog: catalog(), active_menu: "components-index")
+  end
 
-    render(conn, :components, catalog: catalog, active_menu: "components-index")
+  @doc "Returns the component gallery entries shared by its HTTP and LiveView hosts."
+  def catalog do
+    Enum.map(@component_catalog, fn {category, title, path, function} ->
+      %{
+        category: category,
+        title: title,
+        path: path,
+        function: function,
+        description: description(function)
+      }
+    end)
   end
 
   defp description("dm_react_chat"),

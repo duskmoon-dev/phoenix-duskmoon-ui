@@ -1,6 +1,6 @@
 # JavaScript Hooks
 
-Phoenix Duskmoon UI provides five LiveView hooks for client-side interactions
+Phoenix Duskmoon UI provides LiveView hooks for client-side interactions
 that cannot be handled server-side. Some components require specific hooks to
 function correctly.
 
@@ -35,9 +35,11 @@ import {
   ThemeSwitcher,
   Spotlight,
   PageHeader,
+  DuskmoonLeftMenu,
+  DuskmoonLeftMenuNavigation,
 } from "phoenix_duskmoon/hooks";
 
-let hooks = { WebComponentHook, FormElementHook, ThemeSwitcher, Spotlight, PageHeader };
+let hooks = { WebComponentHook, FormElementHook, ThemeSwitcher, Spotlight, PageHeader, DuskmoonLeftMenu, DuskmoonLeftMenuNavigation };
 ```
 
 ## Hook Reference
@@ -127,6 +129,30 @@ Phoenix's standard form feedback timing.
   proportional to scroll position
 - Cleans up the observer on destroy
 
+### DuskmoonLeftMenu
+
+**Purpose**: Keeps collapse, group and scroll state in a collapsible `dm_left_menu`.
+
+Use a stable menu `id` and stable group IDs. The hook restores the menu's scroll
+through `redirect`, `initial` and `patch` page-loading updates, keeps group choices
+when expanding, and enables native link tooltips in the icon rail. `storage_key`
+optionally persists the collapsed preference across reloads.
+
+### DuskmoonLeftMenuNavigation
+
+**Purpose**: Synchronizes `active` with the component-owned persistent menu child.
+
+Use `<.dm_left_menu id="sidebar" sticky socket={@socket} groups={@menu_groups} active={@active_nav} />`
+with a stable `id` in the shared LiveView layout. The component attaches both
+left-menu hooks automatically once the package hooks are registered in LiveSocket.
+Applications do not need a sidebar LiveView, synchronization hook or event handler.
+
+Changing only `active` preserves the child and its scroll state; an empty string
+clears highlighting. Configuration changes create a new child so menu data stays
+current. Full reloads reset in-memory scroll and group state. See the
+[left menu guide](left-menu.md) for the data format, bounded sticky layout and
+persistence behavior.
+
 ## Components Requiring Hooks
 
 | Component | Required Hook | What Breaks Without It |
@@ -134,5 +160,7 @@ Phoenix's standard form feedback timing.
 | `<.dm_theme_switcher />` | ThemeSwitcher | Theme choice not persisted across page loads |
 | `<.dmf_spotlight />` | Spotlight | Keyboard shortcut (Cmd/Ctrl+K) doesn't work |
 | `<.dm_page_header />` | PageHeader | Scroll-based nav visibility doesn't trigger |
+| `<.dm_left_menu collapsible />` | DuskmoonLeftMenu | Collapse toggle and navigation scroll preservation do not run |
+| `<.dm_left_menu sticky socket={@socket} />` | DuskmoonLeftMenu, DuskmoonLeftMenuNavigation | Collapse/scroll restoration and active-page synchronization do not run |
 | All `el-dm-*` elements | WebComponentHook | Custom element events not forwarded to LiveView |
 | Form `el-dm-*` elements | FormElementHook | Validation errors don't respect feedback timing |

@@ -366,7 +366,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
 
       <div :if={@show_page_jumper} class="pagination-input">
         <.dm_mdi name="arrow-right-top" class="w-4 h-4" />
-        <form phx-change={!@loading && @update_event}>
+        <form id={@id && "#{@id}-jumper"} phx-change={!@loading && @update_event}>
           <input
             type="number"
             name="current"

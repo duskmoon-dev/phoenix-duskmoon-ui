@@ -28,6 +28,7 @@ defmodule PhoenixDuskmoon.Mixfile do
           "guides/getting-started.md",
           "guides/theming.md",
           "guides/hooks.md",
+          "guides/left-menu.md",
           "guides/react-forms.md",
           "guides/migrating-to-v9.md",
           "guides/upstream-design-alignment.md",

@@ -23,13 +23,17 @@
  * - Spotlight: Keyboard shortcut (Cmd/Ctrl+K) for spotlight search
  * - PageHeader: Intersection observer for scroll-based effects
  * - DuskmoonPopover: Optional server-controlled native popover state
+ * - DuskmoonLeftMenu: Collapsible sidebar with persistent group and scroll state
+ * - DuskmoonLeftMenuNavigation: Active-page synchronization for sticky left menus
  */
 
 // Core hooks for custom element integration
-export { WebComponentHook, FormElementHook } from '../phoenix_duskmoon.js';
+export { WebComponentHook, FormElementHook } from "../phoenix_duskmoon.js";
 
 // Component-specific hooks
-export { ThemeSwitcher } from './theme_switcher.js';
-export { Spotlight } from './spotlight.js';
-export { PageHeader } from './page_header.js';
-export { DuskmoonPopover } from './duskmoon_popover.js';
+export { ThemeSwitcher } from "./theme_switcher.js";
+export { Spotlight } from "./spotlight.js";
+export { PageHeader } from "./page_header.js";
+export { DuskmoonPopover } from "./duskmoon_popover.js";
+export { DuskmoonLeftMenu } from "./left_menu.js";
+export { DuskmoonLeftMenuNavigation } from "./left_menu_navigation.js";

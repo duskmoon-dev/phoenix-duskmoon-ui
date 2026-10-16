@@ -8,6 +8,129 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
   import PhoenixDuskmoon.Component.Navigation.LeftMenu
 
   describe "dm_left_menu/1" do
+    @groups [
+      %{
+        id: "workspace",
+        label: "Workspace",
+        open: false,
+        items: [
+          %{
+            id: "dashboard",
+            label: "Dashboard",
+            to: "/dashboard",
+            icon: "home",
+            rest: %{"data-test" => "dashboard"}
+          }
+        ]
+      }
+    ]
+
+    test "data groups render canonical links, branding and footer without custom slots" do
+      html =
+        render_component(&dm_left_menu/1, %{
+          id: "sidebar",
+          groups: @groups,
+          active: "dashboard",
+          brand: %{label: "My app", to: "/", icon: "home", version: "v1"},
+          footer_text: "Account"
+        })
+        |> LazyHTML.from_fragment()
+
+      assert LazyHTML.text(LazyHTML.query(html, "a[href='/']")) =~ "My app"
+      assert LazyHTML.text(LazyHTML.query(html, "a[href='/']")) =~ "v1"
+      assert LazyHTML.text(html) =~ "Account"
+      assert Enum.count(LazyHTML.query(html, "#sidebar-group-workspace:not([open])")) == 1
+      assert Enum.count(LazyHTML.query(html, "a[data-test=dashboard][aria-current=page]")) == 1
+
+      assert Enum.count(
+               LazyHTML.query(html, "[id=sidebar-group-workspace-dashboard-hint-tooltip]")
+             ) ==
+               1
+    end
+
+    test "data groups require stable unique ids and cannot be mixed with menu slots" do
+      assert_raise ArgumentError, ~r/requires a stable id/, fn ->
+        render_component(&dm_left_menu/1, %{groups: @groups})
+      end
+
+      assert_raise ArgumentError, ~r/either groups or :menu slots/, fn ->
+        render_component(&dm_left_menu/1, %{
+          id: "sidebar",
+          groups: @groups,
+          menu: [%{inner_block: fn _, _ -> "Other menu" end}]
+        })
+      end
+
+      assert_raise ArgumentError, ~r/group ids must be unique/, fn ->
+        render_component(&dm_left_menu/1, %{id: "sidebar", groups: @groups ++ @groups})
+      end
+
+      assert_raise ArgumentError, ~r/item ids must be unique/, fn ->
+        render_component(&dm_left_menu/1, %{
+          id: "sidebar",
+          groups: @groups ++ [%{hd(@groups) | id: "other"}]
+        })
+      end
+    end
+
+    test "sticky mode requires a LiveView socket and rejects captured HEEx slots" do
+      assert_raise ArgumentError, ~r/requires socket/, fn ->
+        render_component(&dm_left_menu/1, %{id: "sidebar", sticky: true, groups: @groups})
+      end
+
+      assert_raise ArgumentError, ~r/instead of slots/, fn ->
+        render_component(&dm_left_menu/1, %{
+          id: "sidebar",
+          sticky: true,
+          socket: %Phoenix.LiveView.Socket{},
+          groups: @groups,
+          header: [%{inner_block: fn _, _ -> "Brand" end}]
+        })
+      end
+    end
+
+    test "collapsible menus require a stable hook id" do
+      assert_raise ArgumentError, ~r/requires a stable id/, fn ->
+        render_component(&dm_left_menu/1, %{collapsible: true})
+      end
+    end
+
+    test "collapse is opt-in and keeps the ordinary menu free of hook controls" do
+      html = render_component(&dm_left_menu/1, %{}) |> LazyHTML.from_fragment()
+      assert Enum.empty?(LazyHTML.query(html, "[phx-hook], [data-left-menu-scroll], button"))
+    end
+
+    test "renders bounded scroll area with header and footer outside it and labelled toggle" do
+      html =
+        render_component(&dm_left_menu/1, %{
+          id: "sidebar",
+          collapsible: true,
+          collapsed: true,
+          storage_key: "app:sidebar",
+          expand_label: "展开菜单",
+          collapse_label: "收起菜单",
+          class: "sticky top-0 h-dvh",
+          header: [%{inner_block: fn _, _ -> "Brand" end}],
+          footer: [%{inner_block: fn _, _ -> "Account" end}],
+          menu: [%{inner_block: fn _, _ -> "Navigation" end}]
+        })
+        |> LazyHTML.from_fragment()
+
+      nav = LazyHTML.query(html, "nav")
+      assert LazyHTML.attribute(nav, "phx-hook") == ["DuskmoonLeftMenu"]
+      assert LazyHTML.attribute(nav, "data-collapsed") == ["true"]
+      assert LazyHTML.attribute(nav, "data-storage-key") == ["app:sidebar"]
+      scroller = LazyHTML.query(html, "#sidebar-scroll[data-left-menu-scroll]")
+      assert LazyHTML.text(scroller) =~ "Navigation"
+      refute LazyHTML.text(scroller) =~ "Brand"
+      refute LazyHTML.text(scroller) =~ "Account"
+      toggle = LazyHTML.query(html, "button[data-left-menu-toggle]")
+      assert LazyHTML.attribute(toggle, "type") == ["button"]
+      assert LazyHTML.attribute(toggle, "aria-expanded") == ["false"]
+      assert LazyHTML.attribute(toggle, "aria-label") == ["展开菜单"]
+      assert LazyHTML.attribute(toggle, "aria-controls") == ["sidebar-scroll"]
+    end
+
     test "renders basic menu with nested-menu class" do
       result =
         render_component(&dm_left_menu/1, %{
@@ -173,6 +296,41 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
   end
 
   describe "dm_left_menu_group/1" do
+    test "icon items keep accessible names and stable tooltips outside navigation links" do
+      assigns = %{}
+
+      html =
+        rendered_to_string(~H"""
+        <.dm_left_menu id="sidebar" collapsible>
+          <:menu>
+            <.dm_left_menu_group id="workspace" active="home">
+              <:title>Workspace</:title>
+              <:menu id="home" to="/home" icon="home" label="Home" rest={%{"aria-describedby" => "help", "style" => "color: red"}}>
+                Home
+              </:menu>
+              <:menu id="settings" to="/settings" icon="cog" label="Settings">Settings</:menu>
+            </.dm_left_menu_group>
+          </:menu>
+        </.dm_left_menu>
+        """)
+        |> LazyHTML.from_fragment()
+
+      link = LazyHTML.query(html, ~s(a[href="/home"]))
+      assert LazyHTML.attribute(link, "aria-label") == ["Home"]
+      assert LazyHTML.attribute(link, "aria-current") == ["page"]
+      assert LazyHTML.attribute(link, "interestfor") == ["workspace-home-hint-tooltip"]
+      assert LazyHTML.attribute(link, "aria-describedby") == ["help workspace-home-hint-tooltip"]
+      assert LazyHTML.attribute(link, "style") |> hd() =~ "color: red"
+      assert LazyHTML.text(LazyHTML.query(link, "[data-left-menu-label]")) =~ "Home"
+      assert LazyHTML.attribute(LazyHTML.query(link, "svg"), "aria-hidden") == ["true"]
+      assert Enum.empty?(LazyHTML.query(html, "a [popover], a[icon], a[label], ul > details"))
+
+      assert LazyHTML.attribute(LazyHTML.query(html, "[role=tooltip]"), "id") == [
+               "workspace-home-hint-tooltip",
+               "workspace-settings-hint-tooltip"
+             ]
+    end
+
     test "forwards public tooltip trigger attributes from a raw menu slot to its native link" do
       assigns = %{}
 

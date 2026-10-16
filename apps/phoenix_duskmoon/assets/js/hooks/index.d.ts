@@ -3,7 +3,9 @@ export type HookEventPayload = unknown;
 export type HookEventCallback = (reply: unknown, ref: number) => void;
 
 /** The LiveView-owned context supplied as `this` to hook callbacks. */
-export interface LiveViewHookContext<ElementType extends HTMLElement = HTMLElement> {
+export interface LiveViewHookContext<
+	ElementType extends HTMLElement = HTMLElement,
+> {
 	readonly el: ElementType;
 	handleEvent(
 		event: string,
@@ -25,7 +27,9 @@ export interface LiveViewHookContext<ElementType extends HTMLElement = HTMLEleme
 /** A Phoenix LiveView hook definition object. */
 export interface LiveViewHook<ElementType extends HTMLElement = HTMLElement> {
 	mounted?(this: LiveViewHookContext<ElementType>): void;
+	beforeUpdate?(this: LiveViewHookContext<ElementType>): void;
 	updated?(this: LiveViewHookContext<ElementType>): void;
+	reconnected?(this: LiveViewHookContext<ElementType>): void;
 	destroyed?(this: LiveViewHookContext<ElementType>): void;
 }
 
@@ -46,3 +50,9 @@ export declare const PageHeader: LiveViewHook;
 
 /** Synchronizes an explicitly controlled native popover with LiveView state. */
 export declare const DuskmoonPopover: LiveViewHook<HTMLElement>;
+
+/** Preserves left-menu collapse, group, and scroll state across LiveView patches. */
+export declare const DuskmoonLeftMenu: LiveViewHook<HTMLElement>;
+
+/** Synchronizes active-page state with the persistent sticky left-menu child. */
+export declare const DuskmoonLeftMenuNavigation: LiveViewHook<HTMLElement>;

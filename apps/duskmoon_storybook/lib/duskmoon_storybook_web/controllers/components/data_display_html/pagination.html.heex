@@ -23,16 +23,37 @@
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Full Pagination</h3>
   <div class="flex flex-col gap-6">
-    <.dm_pagination page_num={3} page_size={10} total={100} show_total={true} />
+    <.dm_pagination
+      id="pagination-full-demo"
+      page_num={@pagination_pages["full"]}
+      page_size={10}
+      total={100}
+      show_total={true}
+      update_event="paginate_full"
+    />
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Thin Pagination</h3>
   <div class="flex flex-col gap-6">
-    <.dm_pagination_thin page_num={2} page_size={10} total={50} show_total={true} />
+    <.dm_pagination_thin
+      id="pagination-thin-demo"
+      page_num={@pagination_pages["thin"]}
+      page_size={10}
+      total={50}
+      show_total={true}
+      update_event="paginate_thin"
+    />
   </div>
 
   <h3 class="text-xl font-semibold mt-8 mb-4">With Page Jumper</h3>
   <div class="flex flex-col gap-6">
-    <.dm_pagination_thin page_num={1} page_size={10} total={100} show_page_jumper={true} />
+    <.dm_pagination_thin
+      id="pagination-jumper-demo"
+      page_num={@pagination_pages["jumper"]}
+      page_size={10}
+      total={100}
+      show_page_jumper={true}
+      update_event="paginate_jumper"
+    />
   </div>
 </.dm_card>

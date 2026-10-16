@@ -63,7 +63,7 @@
     height: fit-content;
   }
 
-  @media (width < 40rem) {
+  @media (width < 64rem) {
     .storybook-appbar .appbar-actions {
       display: none;
     }

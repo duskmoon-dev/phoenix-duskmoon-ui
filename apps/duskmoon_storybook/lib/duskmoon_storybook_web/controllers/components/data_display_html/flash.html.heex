@@ -24,6 +24,7 @@
   <h3 class="text-xl font-semibold mt-8 mb-4">Info Flash</h3>
   <div class="flex flex-col gap-4 mb-4">
     <.dm_flash
+      id="flash-info-demo"
       kind={:info}
       title="Success"
       flash={%{"info" => "Your changes have been saved."}}
@@ -34,6 +35,7 @@
   <h3 class="text-xl font-semibold mt-8 mb-4">Error Flash</h3>
   <div class="flex flex-col gap-4 mb-4">
     <.dm_flash
+      id="flash-error-demo"
       kind={:error}
       title="Error"
       flash={%{"error" => "Could not save your changes. Please try again."}}
@@ -43,7 +45,13 @@
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Flash with Custom Inner Block</h3>
   <div class="flex flex-col gap-4 mb-4">
-    <.dm_flash kind={:info} title="Custom Content" flash={%{"info" => "ignored"}} autoshow={false}>
+    <.dm_flash
+      id="flash-custom-demo"
+      kind={:info}
+      title="Custom Content"
+      flash={%{"info" => "ignored"}}
+      autoshow={false}
+    >
       <p>This flash uses <strong>custom HTML content</strong> via the inner block slot.</p>
     </.dm_flash>
   </div>
@@ -51,6 +59,7 @@
   <h3 class="text-xl font-semibold mt-8 mb-4">Flash without Close Button</h3>
   <div class="flex flex-col gap-4 mb-4">
     <.dm_flash
+      id="flash-persistent-demo"
       kind={:info}
       title="Persistent"
       flash={%{"info" => "This flash cannot be dismissed by the user."}}

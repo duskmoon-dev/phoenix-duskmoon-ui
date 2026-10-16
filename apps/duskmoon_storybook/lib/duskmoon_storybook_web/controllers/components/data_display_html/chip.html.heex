@@ -61,6 +61,8 @@
       Chip documentation
     </.dm_chip>
     <.dm_chip
+      :if={@show_removable_chip}
+      id="removable-chip-demo"
       deletable
       delete_event="remove-chip"
       delete_label="Remove category"

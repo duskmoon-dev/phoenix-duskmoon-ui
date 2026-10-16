@@ -22,10 +22,9 @@ defmodule Storybook.Navigation.LeftMenuGroup do
       },
       %Variation{
         id: :collapsible_group,
-        description: "Collapsible menu group",
+        description: "Native details group; toggle its summary to expand or close",
         attributes: %{
           class: "w-56",
-          collapsible: true,
           open: true
         },
         slots: [
@@ -37,15 +36,15 @@ defmodule Storybook.Navigation.LeftMenuGroup do
       },
       %Variation{
         id: :small_group,
-        description: "Small-sized menu group",
+        description: "Icon links with explicit accessible labels",
         attributes: %{
-          class: "w-56",
-          size: "sm"
+          id: "storybook-icon-menu-group",
+          class: "w-56"
         },
         slots: [
           "<:title>Quick Links</:title>",
-          "<:menu id=\"home\" to=\"#\">Home</:menu>",
-          "<:menu id=\"docs\" to=\"#\">Documentation</:menu>"
+          "<:menu id=\"home\" to=\"#home\" icon=\"home\" label=\"Home\">Home</:menu>",
+          "<:menu id=\"docs\" to=\"#docs\" icon=\"book-open\" label=\"Documentation\">Documentation</:menu>"
         ]
       }
     ]

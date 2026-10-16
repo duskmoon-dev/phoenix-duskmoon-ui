@@ -11,7 +11,7 @@
 
   <.dm_markdown content={"""
   ## Overview
-  Sidebar navigation menu with support for groups and collapsible sections.
+  Sidebar navigation menu with native groups and an optional collapsible icon rail.
 
   ## Usage
   ```elixir
@@ -26,6 +26,65 @@
     </:menu>
   </.dm_left_menu>
   ```
+  """} />
+
+  <h3 class="text-xl font-semibold mt-8 mb-4">Collapsible Sidebar</h3>
+  <p class="mb-4">
+    The live example has 24 pages, a sticky sidebar and a bottom collapse button.
+    Scroll the menu, close a group, then navigate or use Back and Forward to check
+    that its state survives. Hover or focus a collapsed link to see its label.
+  </p>
+  <.link href={~p"/components/navigation/left-menu/live/dashboard"} class="btn btn-primary mb-6">
+    Open persistent sidebar example
+  </.link>
+
+  <.dm_markdown content={"""
+  ## Sticky layout and page navigation
+
+  Register all package hooks using `import * as DuskmoonHooks from "phoenix_duskmoon/hooks"`
+  in your LiveSocket options. The component attaches `DuskmoonLeftMenu` and
+  `DuskmoonLeftMenuNavigation` automatically.
+
+  In the shared **LiveView layout**, pass menu data and the current page directly:
+
+  ```heex
+  <.dm_left_menu
+    id="admin-sidebar"
+    sticky
+    socket={@socket}
+    groups={@menu_groups}
+    active={@active_nav}
+    brand={%{label: "Administration", icon: "view-dashboard"}}
+    footer_text="My application"
+    storage_key="my-app:admin-sidebar-collapsed"
+    class="sticky top-0 h-dvh"
+  />
+  ```
+
+  Each group is a map with string `id`, `label`, optional `open` and `items`.
+  Each item needs string `id`, `label`, `to`, and optionally an MDI `icon`,
+  `disabled`, `class` and `rest`. Use atom keys, unique IDs, and server-filtered
+  menu data. Sticky mode accepts data instead of slots and enables the icon rail.
+  Existing slot-based menus remain available without `sticky`.
+
+  CSS `class="sticky top-0 h-dvh"` positions the menu and bounds its height;
+  `sticky socket={@socket}` keeps its package-owned child alive across LiveView
+  pages. The brand, footer and toggle stay fixed while only the menu body scrolls.
+  CSS sticky remains constrained by its containing block and scrolling ancestors.
+  For a top app bar, adjust both the offset and available height.
+
+  The component owns collapse, group state, navigation scroll restoration and
+  active-item synchronization. Supply the same menu ID and configuration on every
+  destination page; changing only `active` preserves the child. Pass an empty
+  string to clear highlighting. Changing groups, brand or presentation settings
+  changes the configuration hash and remounts the child with current menu data.
+  No application sidebar LiveView, navigation hook or event handler is required.
+
+  Full HTTP navigation or a reload resets in-memory scroll and group state.
+  Optional `storage_key` persists only the collapsed preference. See the
+  [left-menu guide](https://hexdocs.pm/phoenix_duskmoon/left-menu.html)
+  for the data format, shared layout and browser verification steps.
+
   """} />
 
   <h3 class="text-xl font-semibold mt-8 mb-4">Menu with Groups</h3>
