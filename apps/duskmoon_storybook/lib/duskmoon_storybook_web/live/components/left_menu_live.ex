@@ -22,7 +22,9 @@ defmodule DuskmoonStorybookWeb.Components.LeftMenuLive do
   @pages Enum.map(@items, & &1.id)
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
+    controlled = params["controlled"] == "true"
+
     groups =
       @items
       |> Enum.chunk_every(8)
@@ -39,14 +41,22 @@ defmodule DuskmoonStorybookWeb.Components.LeftMenuLive do
           items:
             Enum.map(items, fn item ->
               Map.merge(item, %{
-                to: "/components/navigation/left-menu/live/#{item.id}",
+                to:
+                  "/components/navigation/left-menu/live/#{item.id}" <>
+                    if(controlled, do: "?controlled=true", else: ""),
                 rest: %{"id" => "left-menu-demo-link-#{item.id}"}
               })
             end)
         }
       end)
 
-    {:ok, assign(socket, menu_groups: groups), layout: {__MODULE__, :demo_layout}}
+    {:ok,
+     assign(socket,
+       menu_groups: groups,
+       collapse_controlled: controlled,
+       sidebar_collapsed: false,
+       collapse_notifications: 0
+     ), layout: {__MODULE__, :demo_layout}}
   end
 
   @impl true
@@ -54,6 +64,26 @@ defmodule DuskmoonStorybookWeb.Components.LeftMenuLive do
     page = if page in @pages, do: page, else: "dashboard"
 
     {:noreply, assign(socket, active_nav: page, details: params["tab"] == "details")}
+  end
+
+  @impl true
+  def handle_event(
+        "sidebar_collapse",
+        %{"id" => "left-menu-demo-sidebar", "collapsed" => collapsed},
+        socket
+      )
+      when is_boolean(collapsed) do
+    {:noreply,
+     socket
+     |> assign(:sidebar_collapsed, collapsed)
+     |> update(:collapse_notifications, &(&1 + 1))}
+  end
+
+  def handle_event("sidebar_collapse", _params, socket), do: {:noreply, socket}
+
+  def handle_event("set_sidebar_collapse", %{"collapsed" => value}, socket)
+      when value in ["true", "false"] do
+    {:noreply, assign(socket, :sidebar_collapsed, value == "true")}
   end
 
   @doc "Renders the shared live layout that keeps the sidebar mounted during navigation."
@@ -68,7 +98,10 @@ defmodule DuskmoonStorybookWeb.Components.LeftMenuLive do
         active={@active_nav}
         brand={%{label: "Duskmoon Workspace", icon: "moon-waning-crescent"}}
         footer_text="24 pages · persistent sidebar"
-        storage_key="duskmoon:storybook:left-menu-collapsed"
+        storage_key={if !@collapse_controlled, do: "duskmoon:storybook:left-menu-collapsed"}
+        collapse_controlled={@collapse_controlled}
+        collapsed={@sidebar_collapsed}
+        collapse_event={if @collapse_controlled, do: "storybook:left-menu:collapse"}
         nav_label="Persistent workspace navigation"
         class="sticky top-0 h-dvh bg-base-200 text-base-content"
       />
@@ -83,6 +116,7 @@ defmodule DuskmoonStorybookWeb.Components.LeftMenuLive do
     <section
       id="left-menu-demo-page"
       class="max-w-3xl space-y-6"
+      phx-hook={if @collapse_controlled, do: "DuskmoonLeftMenuHostDemo"}
     >
       <.link navigate={~p"/components/navigation/left-menu"} class="link text-sm">← Left menu documentation</.link>
       <header>
@@ -95,20 +129,57 @@ defmodule DuskmoonStorybookWeb.Components.LeftMenuLive do
           keeps its scroll position and the toggle switches between labels and an icon rail.
         </p>
       </header>
+      <section :if={@collapse_controlled} class="space-y-3 rounded-lg bg-surface-container p-6">
+        <h2 class="text-lg font-semibold">Host-owned collapse state</h2>
+        <p>
+          This page keeps the preference in its LiveView assigns. An application can use its
+          session store in the same event handler. Full page LiveView remounts reset this demo.
+        </p>
+        <p
+          id="left-menu-host-state"
+          data-collapsed={to_string(@sidebar_collapsed)}
+          data-notifications={@collapse_notifications}
+        >
+          Host collapsed: {to_string(@sidebar_collapsed)} · user notifications: {@collapse_notifications}
+        </p>
+        <button
+          id="left-menu-host-collapse"
+          class="btn btn-outline"
+          phx-click="set_sidebar_collapse"
+          phx-value-collapsed="true"
+        >Collapse from host</button>
+        <button
+          id="left-menu-host-expand"
+          class="btn btn-outline"
+          phx-click="set_sidebar_collapse"
+          phx-value-collapsed="false"
+        >Expand from host</button>
+        <.link
+          id="left-menu-host-patch"
+          patch={~p"/components/navigation/left-menu/live/settings?controlled=true"}
+          class="btn btn-ghost"
+        >Change page with patch</.link>
+      </section>
       <div class="flex flex-wrap gap-3">
         <.link
           id="left-menu-demo-dashboard"
-          navigate={~p"/components/navigation/left-menu/live/dashboard"}
+          navigate={
+            ~p"/components/navigation/left-menu/live/dashboard?controlled=#{@collapse_controlled}"
+          }
           class="btn btn-outline"
         >Dashboard</.link>
         <.link
           id="left-menu-demo-settings"
-          navigate={~p"/components/navigation/left-menu/live/settings"}
+          navigate={
+            ~p"/components/navigation/left-menu/live/settings?controlled=#{@collapse_controlled}"
+          }
           class="btn btn-outline"
         >Settings</.link>
         <.link
           id="left-menu-demo-details"
-          patch={~p"/components/navigation/left-menu/live/#{@active_nav}?tab=details"}
+          patch={
+            ~p"/components/navigation/left-menu/live/#{@active_nav}?tab=details&controlled=#{@collapse_controlled}"
+          }
           class="btn btn-ghost"
         >Show details with patch</.link>
       </div>

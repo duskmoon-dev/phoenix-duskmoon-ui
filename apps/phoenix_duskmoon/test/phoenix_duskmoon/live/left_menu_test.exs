@@ -67,38 +67,54 @@ defmodule PhoenixDuskmoon.Live.LeftMenuTest do
     assert Enum.empty?(LazyHTML.query(html, "[data-phx-sticky]"))
   end
 
-  defp mount_menu(active) do
-    config = %{
-      id: "sidebar",
-      class: "sticky top-0 h-dvh",
-      size: "md",
-      groups: [
-        %{
-          id: "workspace",
-          label: "Workspace",
-          open: true,
-          items: [
-            item("dashboard", "Dashboard", "/dashboard"),
-            item("settings", "Settings", "/settings"),
-            %{item("disabled", "Disabled", "/disabled") | disabled: true}
-          ]
-        }
-      ],
-      brand: %{
-        label: "Example application",
-        icon: "moon-waning-crescent",
-        to: "/dashboard",
-        version: "Version 1"
-      },
-      footer_text: "Account information",
-      collapsible: true,
-      collapsed: false,
-      storage_key: nil,
-      nav_label: "Application navigation",
-      expand_label: "Expand navigation",
-      collapse_label: "Collapse navigation",
-      rest: %{}
-    }
+  test "controlled sticky input is consumed by the parent marker, never stale child active patches" do
+    socket = mount_menu("dashboard", %{collapse_controlled: true, storage_key: "ignored"})
+
+    assert {:reply, %{status: "ok"}, socket} =
+             LeftMenu.handle_event("set_active_nav", %{"active_nav" => "settings"}, socket)
+
+    html = render_component(&LeftMenu.render/1, socket.assigns) |> LazyHTML.from_fragment()
+    assert Enum.empty?(LazyHTML.query(html, "[data-server-collapsed], [data-storage-key]"))
+
+    assert LazyHTML.attribute(LazyHTML.query(html, "a[aria-current=page]"), "href") == [
+             "/settings"
+           ]
+  end
+
+  defp mount_menu(active, overrides \\ %{}) do
+    config =
+      %{
+        id: "sidebar",
+        class: "sticky top-0 h-dvh",
+        size: "md",
+        groups: [
+          %{
+            id: "workspace",
+            label: "Workspace",
+            open: true,
+            items: [
+              item("dashboard", "Dashboard", "/dashboard"),
+              item("settings", "Settings", "/settings"),
+              %{item("disabled", "Disabled", "/disabled") | disabled: true}
+            ]
+          }
+        ],
+        brand: %{
+          label: "Example application",
+          icon: "moon-waning-crescent",
+          to: "/dashboard",
+          version: "Version 1"
+        },
+        footer_text: "Account information",
+        collapsible: true,
+        collapsed: false,
+        storage_key: nil,
+        nav_label: "Application navigation",
+        expand_label: "Expand navigation",
+        collapse_label: "Collapse navigation",
+        rest: %{}
+      }
+      |> Map.merge(overrides)
 
     {:ok, socket} =
       LeftMenu.mount(

@@ -23,7 +23,8 @@ defmodule DuskmoonStorybookWeb.LeftMenuLiveTest do
              ]
            }
          ],
-         active: "dashboard"
+         active: "dashboard",
+         collapsed: false
        )}
     end
 
@@ -36,6 +37,8 @@ defmodule DuskmoonStorybookWeb.LeftMenuLiveTest do
         socket={@socket}
         groups={@groups}
         active={@active}
+        collapse_controlled
+        collapsed={@collapsed}
       />
       """
     end
@@ -48,6 +51,10 @@ defmodule DuskmoonStorybookWeb.LeftMenuLiveTest do
     def handle_event("restrict", _params, socket) do
       groups = Enum.map(socket.assigns.groups, &%{&1 | items: Enum.take(&1.items, 1)})
       {:noreply, Phoenix.Component.assign(socket, :groups, groups)}
+    end
+
+    def handle_event("collapse", %{"collapsed" => collapsed}, socket) do
+      {:noreply, Phoenix.Component.assign(socket, :collapsed, collapsed)}
     end
   end
 
@@ -134,6 +141,17 @@ defmodule DuskmoonStorybookWeb.LeftMenuLiveTest do
     assert find_live_child(view, original_id).pid == original.pid
     assert has_element?(view, "#configurable-sidebar-navigation[data-active-nav=settings]")
 
+    for collapsed <- [true, false] do
+      html = render_hook(view, "collapse", %{"collapsed" => collapsed})
+      assert sidebar_id(html) == original_id
+      assert find_live_child(view, original_id).pid == original.pid
+
+      assert has_element?(
+               view,
+               "#configurable-sidebar-navigation[data-collapse-state=#{collapsed}]"
+             )
+    end
+
     html = render_hook(view, "restrict", %{})
     replacement_id = sidebar_id(html)
     refute replacement_id == original_id
@@ -144,6 +162,59 @@ defmodule DuskmoonStorybookWeb.LeftMenuLiveTest do
     refute has_element?(replacement, "[aria-current]")
     render_hook(replacement, "set_active_nav", %{"active_nav" => "settings"})
     refute has_element?(replacement, "[aria-current]")
+  end
+
+  test "host demo observes user changes and renders silent authoritative updates without replacing the sticky child",
+       %{conn: conn} do
+    {:ok, view, html} = live(conn, @demo_path <> "?controlled=true")
+    child_id = sidebar_id(html)
+    child = find_live_child(view, child_id)
+    assert has_element?(view, "#left-menu-demo-page[phx-hook=DuskmoonLeftMenuHostDemo]")
+
+    assert has_element?(
+             child,
+             "#left-menu-demo-sidebar[data-collapse-event='storybook:left-menu:collapse']"
+           )
+
+    refute has_element?(child, "[data-storage-key], [data-server-collapsed]")
+
+    render_hook(view, "sidebar_collapse", %{"id" => "left-menu-demo-sidebar", "collapsed" => true})
+
+    assert has_element?(
+             view,
+             "#left-menu-host-state[data-collapsed=true][data-notifications='1']"
+           )
+
+    assert has_element?(view, "#left-menu-demo-sidebar-navigation[data-collapse-state=true]")
+    assert find_live_child(view, child_id).pid == child.pid
+
+    render_hook(view, "sidebar_collapse", %{"id" => "other", "collapsed" => false})
+
+    render_hook(view, "sidebar_collapse", %{
+      "id" => "left-menu-demo-sidebar",
+      "collapsed" => "false"
+    })
+
+    assert has_element?(
+             view,
+             "#left-menu-host-state[data-collapsed=true][data-notifications='1']"
+           )
+
+    view |> element("#left-menu-host-expand") |> render_click()
+
+    assert has_element?(
+             view,
+             "#left-menu-host-state[data-collapsed=false][data-notifications='1']"
+           )
+
+    render_patch(view, "/components/navigation/left-menu/live/settings?controlled=true")
+
+    assert has_element?(
+             view,
+             "#left-menu-demo-sidebar-navigation[data-collapse-state=false][data-active-nav=settings]"
+           )
+
+    assert find_live_child(view, child_id).pid == child.pid
   end
 
   defp sidebar_id(html) do

@@ -1,19 +1,21 @@
 const navigationKinds = new Set(["redirect", "patch", "initial"]);
 
-/** Client-owned collapse, group, and scroll state for dm_left_menu. */
+/** Collapse integration, group state, and scroll restoration for dm_left_menu. */
 export const DuskmoonLeftMenu = {
 	mounted() {
 		this.menuWindow = this.el.ownerDocument.defaultView;
 		this.collapsed = this.el.dataset.collapsed === "true";
+		this.lastServerCollapsed = this.el.dataset.serverCollapsed;
 		this.groupStates = new Map();
 		this.navigationScrollTop = null;
 		this.scrollTop = this.menuScroller().scrollTop;
 		this.captureGroups();
 
 		try {
-			const stored = this.el.dataset.storageKey
-				? this.menuWindow.localStorage.getItem(this.el.dataset.storageKey)
-				: null;
+			const stored =
+				this.lastServerCollapsed === undefined && this.el.dataset.storageKey
+					? this.menuWindow.localStorage.getItem(this.el.dataset.storageKey)
+					: null;
 			if (stored === "true" || stored === "false") {
 				this.collapsed = stored === "true";
 			}
@@ -24,11 +26,12 @@ export const DuskmoonLeftMenu = {
 		this.handleMenuClick = (event) => {
 			const toggle = event.target.closest?.("[data-left-menu-toggle]");
 			if (!toggle || !this.el.contains(toggle)) return;
-			if (!this.collapsed) this.captureGroups();
-			this.collapsed = !this.collapsed;
-			this.applyMenuState();
+			this.setMenuCollapsed(!this.collapsed);
 			try {
-				if (this.el.dataset.storageKey) {
+				if (
+					this.el.dataset.serverCollapsed === undefined &&
+					this.el.dataset.storageKey
+				) {
 					this.menuWindow.localStorage.setItem(
 						this.el.dataset.storageKey,
 						String(this.collapsed),
@@ -37,6 +40,22 @@ export const DuskmoonLeftMenu = {
 			} catch {
 				// Persistence is optional.
 			}
+			if (this.el.dataset.collapseEvent) {
+				this.el.dispatchEvent(
+					new this.menuWindow.CustomEvent(this.el.dataset.collapseEvent, {
+						bubbles: true,
+						detail: { id: this.el.id, collapsed: this.collapsed },
+					}),
+				);
+			}
+		};
+		this.handleSetCollapsed = (event) => {
+			if (
+				event.target !== this.el ||
+				typeof event.detail?.collapsed !== "boolean"
+			)
+				return;
+			this.setMenuCollapsed(event.detail.collapsed);
 		};
 		this.handleNavigationStart = ({ detail }) => {
 			if (!navigationKinds.has(detail?.kind)) return;
@@ -51,6 +70,10 @@ export const DuskmoonLeftMenu = {
 			if (detail.kind !== "redirect") this.navigationScrollTop = null;
 		};
 		this.el.addEventListener("click", this.handleMenuClick);
+		this.el.addEventListener(
+			"duskmoon:left-menu:set-collapsed",
+			this.handleSetCollapsed,
+		);
 		this.menuWindow.addEventListener(
 			"phx:page-loading-start",
 			this.handleNavigationStart,
@@ -60,6 +83,25 @@ export const DuskmoonLeftMenu = {
 			this.handleNavigationStop,
 		);
 		this.applyMenuState();
+	},
+
+	setMenuCollapsed(collapsed) {
+		const scrollTop = this.navigationScrollTop ?? this.menuScroller().scrollTop;
+		if (!this.collapsed && collapsed) this.captureGroups();
+		this.collapsed = collapsed;
+		this.applyMenuState();
+		this.restoreMenuScroll(scrollTop);
+	},
+
+	syncServerCollapsed(force = false) {
+		const value = this.el.dataset.serverCollapsed;
+		if (
+			(value !== "true" && value !== "false") ||
+			(!force && value === this.lastServerCollapsed)
+		)
+			return;
+		this.lastServerCollapsed = value;
+		this.setMenuCollapsed(value === "true");
 	},
 
 	menuScroller() {
@@ -148,11 +190,13 @@ export const DuskmoonLeftMenu = {
 
 	updated() {
 		this.applyMenuState();
+		this.syncServerCollapsed();
 		this.restoreMenuScroll(this.navigationScrollTop ?? this.scrollTop);
 	},
 
 	reconnected() {
 		this.applyMenuState();
+		this.syncServerCollapsed(true);
 		if (this.navigationScrollTop !== null) {
 			this.restoreMenuScroll(this.navigationScrollTop);
 		}
@@ -160,6 +204,10 @@ export const DuskmoonLeftMenu = {
 
 	destroyed() {
 		this.el.removeEventListener("click", this.handleMenuClick);
+		this.el.removeEventListener(
+			"duskmoon:left-menu:set-collapsed",
+			this.handleSetCollapsed,
+		);
 		this.menuWindow.removeEventListener(
 			"phx:page-loading-start",
 			this.handleNavigationStart,

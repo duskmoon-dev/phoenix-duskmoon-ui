@@ -37,6 +37,12 @@
   <.link href={~p"/components/navigation/left-menu/live/dashboard"} class="btn btn-primary mb-6">
     Open persistent sidebar example
   </.link>
+  <.link
+    href={~p"/components/navigation/left-menu/live/dashboard?controlled=true"}
+    class="btn btn-outline mb-6"
+  >
+    Open host-owned state example
+  </.link>
 
   <.dm_markdown content={"""
   ## Sticky layout and page navigation
@@ -79,6 +85,15 @@
   string to clear highlighting. Changing groups, brand or presentation settings
   changes the configuration hash and remounts the child with current menu data.
   No application sidebar LiveView, navigation hook or event handler is required.
+
+  For host session persistence, opt into `collapse_controlled`, pass authoritative
+  `collapsed`, omit `storage_key`, and set `collapse_event` to a custom event name.
+  User toggles emit a bubbling CustomEvent with `detail: {id, collapsed}`. The host
+  validates and persists that boolean. Changed controlled values preserve the
+  sticky child. A targeted `duskmoon:left-menu:set-collapsed` DOM event applies
+  `detail: {collapsed: true}` silently, without notification or storage writes.
+  The host-owned example uses parent LiveView assigns and server controls; a real
+  session store belongs to the host application.
 
   Full HTTP navigation or a reload resets in-memory scroll and group state.
   Optional `storage_key` persists only the collapsed preference. See the

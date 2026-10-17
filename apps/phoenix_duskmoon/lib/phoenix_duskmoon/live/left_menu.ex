@@ -33,7 +33,14 @@ defmodule PhoenixDuskmoon.Live.LeftMenu do
   @impl true
   def render(assigns) do
     ~H"""
-    <.dm_left_menu {@config} active={@active} />
+    <%!-- The parent marker owns mutable controlled input. Child active patches must
+          never replay the initial collapse value over a newer client toggle. --%>
+    <.dm_left_menu
+      {@config}
+      active={@active}
+      collapse_controlled={false}
+      storage_key={if @config[:collapse_controlled], do: nil, else: @config.storage_key}
+    />
     """
   end
 

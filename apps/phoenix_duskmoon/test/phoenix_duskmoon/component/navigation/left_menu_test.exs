@@ -100,6 +100,27 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       assert Enum.empty?(LazyHTML.query(html, "[phx-hook], [data-left-menu-scroll], button"))
     end
 
+    test "controlled collapse renders distinct server input and an optional user event" do
+      html =
+        render_component(&dm_left_menu/1, %{
+          id: "controlled-sidebar",
+          collapsible: true,
+          collapse_controlled: true,
+          collapsed: false,
+          collapse_event: "app:sidebar-collapse"
+        })
+        |> LazyHTML.from_fragment()
+
+      nav = LazyHTML.query(html, "nav")
+      assert LazyHTML.attribute(nav, "data-server-collapsed") == ["false"]
+      assert LazyHTML.attribute(nav, "data-collapsed") == ["false"]
+      assert LazyHTML.attribute(nav, "data-collapse-event") == ["app:sidebar-collapse"]
+
+      ordinary = render_component(&dm_left_menu/1, %{id: "sidebar", collapsible: true})
+      refute ordinary =~ "data-server-collapsed"
+      refute ordinary =~ "data-collapse-event"
+    end
+
     test "renders bounded scroll area with header and footer outside it and labelled toggle" do
       html =
         render_component(&dm_left_menu/1, %{

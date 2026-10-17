@@ -16,16 +16,25 @@ describe("sticky left-menu active-page synchronization", () => {
 
 	function navigationHook(
 		reply = success,
-		{ available = true, active = "dashboard" } = {},
+		{ available = true, active = "dashboard", collapseState } = {},
 	) {
 		const sent = [];
-		const target = {};
+		const target = new EventTarget();
+		target.ownerDocument = { defaultView: { CustomEvent } };
+		target.collapseStates = [];
+		target.addEventListener("duskmoon:left-menu:set-collapsed", (event) =>
+			target.collapseStates.push(event.detail),
+		);
 		const targets = new Map(
 			available ? [["sidebar:with.special[id]", target]] : [],
 		);
 		const hook = Object.assign(Object.create(DuskmoonLeftMenuNavigation), {
 			el: {
-				dataset: { activeNav: active, sidebarId: "sidebar:with.special[id]" },
+				dataset: {
+					activeNav: active,
+					sidebarId: "sidebar:with.special[id]",
+					collapseState,
+				},
 				ownerDocument: { getElementById: (id) => targets.get(id) },
 			},
 			pushEventTo(target, event, payload) {
@@ -181,6 +190,45 @@ describe("sticky left-menu active-page synchronization", () => {
 		hook.reconnected();
 		expect(sent).toHaveLength(1);
 	});
+
+	test("controlled collapse synchronizes independently of active replies and retries on reconnect or target replacement", async () => {
+		const { hook, sent, target, targets } = navigationHook(success, {
+			collapseState: "false",
+		});
+		const states = [];
+		expect(target.collapseStates).toEqual([{ collapsed: false }]);
+		target.addEventListener("duskmoon:left-menu:set-collapsed", (event) =>
+			states.push(event.detail),
+		);
+		hook.updated();
+		expect(states).toEqual([]);
+		hook.el.dataset.activeNav = "settings";
+		hook.updated();
+		expect(states).toEqual([]); // An active patch must not replay old host state.
+		hook.el.dataset.collapseState = "true";
+		hook.updated();
+		expect(states).toEqual([{ collapsed: true }]);
+		expect(sent).toHaveLength(2);
+		hook.reconnected();
+		expect(states).toEqual([{ collapsed: true }, { collapsed: true }]);
+		const replacement = new EventTarget();
+		replacement.ownerDocument = target.ownerDocument;
+		replacement.addEventListener("duskmoon:left-menu:set-collapsed", (event) =>
+			states.push(event.detail),
+		);
+		targets.set(hook.el.dataset.sidebarId, replacement);
+		hook.updated();
+		expect(states).toHaveLength(3);
+		for (const invalid of [undefined, "", "null", "1"]) {
+			hook.el.dataset.collapseState = invalid;
+			hook.updated();
+		}
+		expect(states).toHaveLength(3);
+		hook.destroyed();
+		hook.el.dataset.collapseState = "false";
+		hook.reconnected();
+		expect(states).toHaveLength(3);
+	});
 });
 
 class Element extends EventTarget {
@@ -211,8 +259,11 @@ function mount({
 	stored = null,
 	storageUnavailable = false,
 	storageKey = "sidebar",
+	collapseEvent,
+	controlled = false,
 } = {}) {
 	const menuWindow = new EventTarget();
+	menuWindow.CustomEvent = CustomEvent;
 	const storage = new Map(stored === null ? [] : [[storageKey, stored]]);
 	Object.defineProperty(menuWindow, "localStorage", {
 		get() {
@@ -224,12 +275,15 @@ function mount({
 		},
 	});
 	const el = new Element();
+	el.id = "sidebar";
 	el.dataset = {
 		collapsed: String(collapsed),
 		storageKey,
 		expandLabel: "Expand menu",
 		collapseLabel: "Collapse menu",
+		collapseEvent,
 	};
+	if (controlled) el.dataset.serverCollapsed = String(collapsed);
 	const toggle = new Element();
 	toggle.closest = () => toggle;
 	const scroller = {
@@ -283,6 +337,91 @@ function mount({
 }
 
 describe("left-menu collapse and LiveView navigation", () => {
+	test("only opted-in user toggles emit the applied state; external setters are strict, targeted, and silent", () => {
+		const { el, hook, click, groups, storage, scroller, toggle } = mount({
+			collapseEvent: "host:collapse",
+		});
+		const changes = [];
+		el.addEventListener("host:collapse", (event) => {
+			expect(event.bubbles).toBe(true);
+			expect(el.dataset.collapsed).toBe(String(event.detail.collapsed));
+			expect(toggle.getAttribute("aria-expanded")).toBe(
+				String(!event.detail.collapsed),
+			);
+			changes.push(event.detail);
+		});
+		scroller.scrollTop = 125;
+		click();
+		expect(changes).toEqual([{ id: "sidebar", collapsed: true }]);
+		const set = (detail) =>
+			el.dispatchEvent(
+				new CustomEvent("duskmoon:left-menu:set-collapsed", { detail }),
+			);
+		set({ collapsed: true });
+		set({ collapsed: false });
+		expect(groups.map((group) => group.open)).toEqual([false, true]);
+		expect(scroller.scrollTop).toBe(125);
+		expect(storage.get("sidebar")).toBe("true"); // External writes do not persist or notify.
+		for (const detail of [{}, null, { collapsed: "true" }, { collapsed: 1 }])
+			set(detail);
+		const nested = new CustomEvent("duskmoon:left-menu:set-collapsed", {
+			detail: { collapsed: true },
+		});
+		Object.defineProperty(nested, "target", { value: toggle });
+		el.dispatchEvent(nested);
+		expect(el.dataset.collapsed).toBe("false");
+		hook.beforeUpdate();
+		hook.updated();
+		hook.reconnected();
+		expect(changes).toHaveLength(1);
+		hook.destroyed();
+		set({ collapsed: true });
+		expect(el.dataset.collapsed).toBe("false");
+	});
+
+	test("inline controlled input wins over storage and applies changed host values without replay on unrelated patches", () => {
+		const { el, hook, click, storage, groups, scroller } = mount({
+			controlled: true,
+			stored: "true",
+		});
+		expect(el.dataset.collapsed).toBe("false");
+		click();
+		expect(storage.get("sidebar")).toBe("true");
+		click();
+		expect(storage.get("sidebar")).toBe("true");
+		click();
+		hook.beforeUpdate();
+		el.dataset.collapsed = "false"; // Stale render, distinct from authoritative input.
+		hook.updated();
+		expect(el.dataset.collapsed).toBe("true");
+		el.dataset.serverCollapsed = "true";
+		hook.updated();
+		el.dataset.serverCollapsed = "false";
+		hook.updated();
+		expect(el.dataset.collapsed).toBe("false");
+		expect(groups.map((group) => group.open)).toEqual([false, true]);
+		click();
+		scroller.scrollTop = 190;
+		hook.reconnected();
+		expect(el.dataset.collapsed).toBe("false");
+		expect(scroller.scrollTop).toBe(190);
+	});
+
+	test("a controlled server patch preserves the group choices captured before its DOM replacement", () => {
+		const { el, hook, groups } = mount({ controlled: true });
+		groups[1].open = false;
+		hook.beforeUpdate();
+		groups[1].open = true; // A server patch renders its original open state.
+		el.dataset.serverCollapsed = "true";
+		hook.updated();
+		el.dispatchEvent(
+			new CustomEvent("duskmoon:left-menu:set-collapsed", {
+				detail: { collapsed: false },
+			}),
+		);
+		expect(groups.map((group) => group.open)).toEqual([false, false]);
+	});
+
 	test("delegates icon clicks, syncs accessible labels, and restores individual group states", () => {
 		const { el, toggle, groups, storage, click } = mount();
 		expect(toggle.getAttribute("aria-expanded")).toBe("true");

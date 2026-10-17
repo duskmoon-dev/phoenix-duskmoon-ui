@@ -109,10 +109,104 @@ and right-side tooltips on hover and keyboard focus. Collapsing temporarily open
 all groups so their icons remain available; expanding restores the user's group
 choices. Stable group IDs also preserve those choices through server patches.
 
+## Host-owned session preferences
+
+The default remains client-owned: `collapsed` initializes the hook and an optional
+`storage_key` takes precedence. To restore authoritative session state, enable
+`collapse_controlled` and pass `collapsed` from the host's assigns. Omit
+`storage_key`; controlled mode ignores localStorage. The host reads/writes its own
+session store, including `phoenix_session_process` if used by the application;
+this package does not depend on or own that store.
+
+```heex
+<.dm_left_menu
+  id="admin-sidebar"
+  sticky
+  socket={@socket}
+  groups={@menu_groups}
+  active={@active_nav}
+  collapse_controlled
+  collapsed={@sidebar_collapsed}
+  collapse_event="my-app:sidebar-collapse"
+  class="sticky top-0 h-dvh"
+/>
+<main id="admin-page" phx-hook="SidebarPreference">{@inner_content}</main>
+```
+
+Register a host hook alongside the package hooks. The optional `collapse_event`
+names a native `CustomEvent` dispatched from the menu's `<nav>` **only after a
+user toggle**, with `bubbles: true` and `detail: {id, collapsed}`. Here `id` is the
+public menu ID and `collapsed` is a boolean. Listen on the window because the
+sticky child and parent page hook are separate DOM branches; filter the ID when
+there are multiple menus. Always remove the listener on destruction:
+
+```javascript
+const SidebarPreference = {
+  mounted() {
+    this.menuWindow = this.el.ownerDocument.defaultView;
+    this.onCollapse = ({ detail }) => {
+      if (detail?.id !== "admin-sidebar" || typeof detail.collapsed !== "boolean") return;
+      this.pushEvent("sidebar_collapse", detail);
+    };
+    this.menuWindow.addEventListener("my-app:sidebar-collapse", this.onCollapse);
+  },
+  destroyed() {
+    this.menuWindow.removeEventListener("my-app:sidebar-collapse", this.onCollapse);
+  },
+};
+```
+
+In the host's LiveView, validate the payload, save the preference with the host's
+session API, and update `:sidebar_collapsed`. Initialize that assign from the
+same store in each destination page's mount. For example, after the application's
+persistence call succeeds:
+
+```elixir
+def handle_event("sidebar_collapse", %{"id" => "admin-sidebar", "collapsed" => collapsed}, socket)
+    when is_boolean(collapsed) do
+  # Persist collapsed with the application's session API here.
+  {:noreply, assign(socket, :sidebar_collapsed, collapsed)}
+end
+
+def handle_event("sidebar_collapse", _payload, socket), do: {:noreply, socket}
+```
+
+Sticky mode synchronizes changed authoritative input from its parent marker;
+inline controlled menus consume a separate server-input attribute. Unrelated
+patches do not replay unchanged input over a newer user toggle. Reconnection
+reapplies the current authoritative host value. Keep the host assign current
+when processing user notifications, and reload it from the host session store
+when that application requires it on reconnect. A collapse-only change preserves
+the sticky child, scroll container and group state. Changes to menu permissions
+still replace the child.
+
+Hosts can also set state directly without accessing private hook methods:
+
+```javascript
+document.getElementById("admin-sidebar").dispatchEvent(
+  new CustomEvent("duskmoon:left-menu:set-collapsed", {
+    detail: { collapsed: true },
+  }),
+);
+```
+
+Dispatch this event **on the native menu element** after it has mounted. It
+accepts only a boolean `detail.collapsed`; missing values and strings are ignored.
+It works in both client-owned and controlled modes. External setters, controlled
+updates, mounting and reconnection never emit `collapse_event` or write
+localStorage. Only user toggles notify and optionally write localStorage, so
+applying the saved state does not echo another persistence request. In controlled
+mode keep the authoritative assign consistent with direct external updates.
+
+The Storybook live example also supports `?controlled=true`. Its host bridge and
+Collapse/Expand controls demonstrate these events and patch navigation using
+LiveView assigns. This demo resets on a full parent LiveView remount; applications
+restore the assign from their session store to persist across those remounts.
+
 ## Active updates and configuration changes
 
-When only `active` changes, the package navigation hook sends the new value to the
-existing child. The menu, scrolling element, collapse preference and group state
+When only `active` changes, the package navigation hook sends the new active ID to
+the existing child. The menu, scrolling element, collapse preference and group state
 remain mounted. An empty string clears the selection. The child accepts only
 known, enabled item IDs or an empty string. Failed synchronization can retry after
 the next update or reconnection.

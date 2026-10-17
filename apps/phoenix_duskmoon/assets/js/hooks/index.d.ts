@@ -54,5 +54,11 @@ export declare const DuskmoonPopover: LiveViewHook<HTMLElement>;
 /** Preserves left-menu collapse, group, and scroll state across LiveView patches. */
 export declare const DuskmoonLeftMenu: LiveViewHook<HTMLElement>;
 
-/** Synchronizes active-page state with the persistent sticky left-menu child. */
+/** User collapse_event detail emitted by dm_left_menu. */
+export interface LeftMenuCollapseDetail {
+	id: string;
+	collapsed: boolean;
+}
+
+/** Synchronizes active-page and controlled collapse state with the sticky left-menu child. */
 export declare const DuskmoonLeftMenuNavigation: LiveViewHook<HTMLElement>;

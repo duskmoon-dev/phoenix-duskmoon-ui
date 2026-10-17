@@ -4,15 +4,45 @@ export const DuskmoonLeftMenuNavigation = {
 		this.navigationDestroyed = false;
 		this.lastNavigation = null;
 		this.navigationRequest = null;
+		this.lastCollapse = null;
 		this.syncActiveNav();
+		this.syncCollapse();
 	},
 	updated() {
 		this.syncActiveNav();
+		this.syncCollapse();
 	},
 	reconnected() {
 		this.lastNavigation = null;
 		this.navigationRequest = null;
+		this.lastCollapse = null;
 		this.syncActiveNav();
+		this.syncCollapse();
+	},
+	syncCollapse() {
+		if (this.navigationDestroyed) return;
+		const { sidebarId, collapseState } = this.el.dataset;
+		const target = sidebarId
+			? this.el.ownerDocument.getElementById(sidebarId)
+			: null;
+		if (!target || (collapseState !== "true" && collapseState !== "false")) {
+			this.lastCollapse = null;
+			return;
+		}
+		if (
+			this.lastCollapse?.target === target &&
+			this.lastCollapse.collapseState === collapseState
+		)
+			return;
+		this.lastCollapse = { target, collapseState };
+		target.dispatchEvent(
+			new target.ownerDocument.defaultView.CustomEvent(
+				"duskmoon:left-menu:set-collapsed",
+				{
+					detail: { collapsed: collapseState === "true" },
+				},
+			),
+		);
 	},
 	syncActiveNav() {
 		if (this.navigationDestroyed) return;
@@ -65,5 +95,6 @@ export const DuskmoonLeftMenuNavigation = {
 		this.navigationDestroyed = true;
 		this.lastNavigation = null;
 		this.navigationRequest = null;
+		this.lastCollapse = null;
 	},
 };

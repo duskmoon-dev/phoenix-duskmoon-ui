@@ -38,8 +38,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
   collapsible group sections.
 
   `collapsible` requires a stable `id` and registration of `DuskmoonLeftMenu`
-  from `phoenix_duskmoon/hooks`. Its client owns collapse and group state after
-  mounting; `collapsed` supplies the initial state. `storage_key` optionally
+  from `phoenix_duskmoon/hooks`. By default its client owns collapse and group
+  state after mounting; `collapsed` supplies the initial state. `storage_key` optionally
   persists collapse across reloads. Use `class="sticky top-0 h-dvh"` for a
   viewport-height sidebar; only the menu body scrolls. Customize widths through
   `--dm-left-menu-width` (18rem) and `--dm-left-menu-collapsed-width` (4.5rem).
@@ -66,8 +66,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
   A stable menu configuration keeps the same child across navigation. Changes
   to the groups, brand or presentation configuration remount it, so stale menu
   permissions are not retained. Changing `active` only updates the highlight.
-  No application-owned sidebar LiveView, event handler or navigation hook is
-  required. See the [complete example](left-menu.html).
+  `collapse_controlled` opts into authoritative host `collapsed` updates without
+  replacing the child. Omit `storage_key` for host-owned session preferences.
+  Optional `collapse_event` emits a bubbling CustomEvent with `detail: {id, collapsed}`
+  after user toggles only. Dispatch `duskmoon:left-menu:set-collapsed` on the nav
+  with a boolean `detail.collapsed` to set it silently, without storage writes.
+  See the guide for a host event bridge and persistence ownership.
+  No application-owned sidebar LiveView or navigation hook is required for the
+  default client-owned behavior. See the [complete example](left-menu.html).
 
   ## Examples
 
@@ -112,7 +118,17 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
 
   attr(:collapsed, :boolean,
     default: false,
-    doc: "Initial collapsed state before the hook mounts"
+    doc: "Initial collapsed state, or authoritative state when collapse_controlled is enabled"
+  )
+
+  attr(:collapse_controlled, :boolean,
+    default: false,
+    doc: "Apply host-owned collapsed updates instead of localStorage preferences"
+  )
+
+  attr(:collapse_event, :string,
+    default: nil,
+    doc: "Optional bubbling CustomEvent name for user toggles; detail contains id and collapsed"
   )
 
   attr(:storage_key, :string, default: nil, doc: "Optional localStorage key for collapse state")
@@ -176,6 +192,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
         :brand,
         :footer_text,
         :collapsed,
+        :collapse_controlled,
+        :collapse_event,
         :storage_key,
         :nav_label,
         :expand_label,
@@ -186,6 +204,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
 
     digest =
       config
+      |> Map.delete(:collapsed)
       |> :erlang.term_to_binary([:deterministic])
       |> then(&:crypto.hash(:sha256, &1))
       |> Base.encode16(case: :lower)
@@ -209,6 +228,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
       phx-hook="DuskmoonLeftMenuNavigation"
       data-sidebar-id={@id}
       data-active-nav={@active}
+      data-collapse-state={if @collapse_controlled, do: to_string(@collapsed)}
     ></span>
     """
   end
@@ -231,6 +251,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
       aria-label={@nav_label}
       phx-hook={@collapsible && "DuskmoonLeftMenu"}
       data-collapsed={@collapsible && to_string(@collapsed)}
+      data-server-collapsed={if @collapsible && @collapse_controlled, do: to_string(@collapsed)}
+      data-collapse-event={if @collapsible, do: @collapse_event}
       data-storage-key={@collapsible && @storage_key}
       data-expand-label={@collapsible && @expand_label}
       data-collapse-label={@collapsible && @collapse_label}

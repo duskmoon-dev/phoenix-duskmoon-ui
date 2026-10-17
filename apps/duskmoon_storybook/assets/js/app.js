@@ -5,16 +5,17 @@ import * as DuskmoonHooks from "phoenix_duskmoon/hooks";
 import { DuskmoonReactForm } from "phoenix_duskmoon/react-form";
 import { DuskmoonReactChat } from "phoenix_duskmoon/react-chat";
 import { DuskmoonComposedChat } from "./react_chat.js";
+import { DuskmoonLeftMenuHostDemo } from "./left_menu.js";
 import { installCodeEngineShadowStyleWorkaround } from "./code_engine.js";
 
 // Make Duskmoon hooks available in PhoenixStorybook LiveView iframes
-window.storybook = { Hooks: { ...DuskmoonHooks, DuskmoonReactForm, DuskmoonReactChat, DuskmoonComposedChat } };
+window.storybook = { Hooks: { ...DuskmoonHooks, DuskmoonReactForm, DuskmoonReactChat, DuskmoonComposedChat, DuskmoonLeftMenuHostDemo } };
 
 // PhoenixStorybook owns its LiveSocket. The regular component demos need one too.
 if (!window.location.pathname.startsWith("/storybook") && !window.liveSocket) {
   const csrfToken = document.querySelector("meta[name='csrf-token']")?.getAttribute("content");
   const liveSocket = new LiveSocket("/live", Socket, {
-    hooks: { ...DuskmoonHooks, DuskmoonReactForm, DuskmoonReactChat, DuskmoonComposedChat },
+    hooks: { ...DuskmoonHooks, DuskmoonReactForm, DuskmoonReactChat, DuskmoonComposedChat, DuskmoonLeftMenuHostDemo },
     params: { _csrf_token: csrfToken },
   });
 
