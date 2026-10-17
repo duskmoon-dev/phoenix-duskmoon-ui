@@ -62,3 +62,6 @@ export interface LeftMenuCollapseDetail {
 
 /** Synchronizes active-page and controlled collapse state with the sticky left-menu child. */
 export declare const DuskmoonLeftMenuNavigation: LiveViewHook<HTMLElement>;
+
+/** Pointer and keyboard pane sizing retained across LiveView patches. */
+export declare const DuskmoonSplitPane: LiveViewHook<HTMLElement>;

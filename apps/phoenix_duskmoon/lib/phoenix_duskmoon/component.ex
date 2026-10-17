@@ -132,6 +132,7 @@ defmodule PhoenixDuskmoon.Component do
 
       # Layout components
       import PhoenixDuskmoon.Component.Layout.SidebarLayout
+      import PhoenixDuskmoon.Component.Layout.SplitPane
       import PhoenixDuskmoon.Component.Layout.BottomSheet
       import PhoenixDuskmoon.Component.Layout.Divider
       import PhoenixDuskmoon.Component.Layout.Drawer

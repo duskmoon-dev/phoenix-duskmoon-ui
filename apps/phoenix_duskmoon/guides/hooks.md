@@ -37,12 +37,22 @@ import {
   PageHeader,
   DuskmoonLeftMenu,
   DuskmoonLeftMenuNavigation,
+  DuskmoonSplitPane,
 } from "phoenix_duskmoon/hooks";
 
-let hooks = { WebComponentHook, FormElementHook, ThemeSwitcher, Spotlight, PageHeader, DuskmoonLeftMenu, DuskmoonLeftMenuNavigation };
+let hooks = { WebComponentHook, FormElementHook, ThemeSwitcher, Spotlight, PageHeader, DuskmoonLeftMenu, DuskmoonLeftMenuNavigation, DuskmoonSplitPane };
 ```
 
 ## Hook Reference
+
+### DuskmoonSplitPane
+
+**Used by**: `<.dm_split_pane />`. Supports pointer capture/cancellation and
+ArrowLeft/ArrowRight/Home/End keyboard resizing with accessible separator range
+attributes. Width survives LiveView patches; a ResizeObserver clamps the available
+range and stacks both panes in narrow containers. No resize events go to the
+server. See [Resizable split panes](split-pane.md) for setup and the lifecycle
+contract.
 
 ### WebComponentHook
 

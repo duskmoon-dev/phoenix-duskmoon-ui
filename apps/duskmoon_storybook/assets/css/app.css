@@ -15,6 +15,7 @@
 @import "@duskmoon-dev/core/themes/moonlight";
 @import "@duskmoon-dev/core/components";
 @import "../../../phoenix_duskmoon/assets/css/element-theme-bridge.css";
+@import "../../../phoenix_duskmoon/assets/css/split-pane.css";
 
 @layer components {
   .rainbow {

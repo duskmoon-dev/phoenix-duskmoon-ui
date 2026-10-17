@@ -25,6 +25,7 @@
  * - DuskmoonPopover: Optional server-controlled native popover state
  * - DuskmoonLeftMenu: Collapsible sidebar with persistent group and scroll state
  * - DuskmoonLeftMenuNavigation: Active-page synchronization for sticky left menus
+ * - DuskmoonSplitPane: Accessible client-owned split-pane resizing
  */
 
 // Core hooks for custom element integration
@@ -37,3 +38,4 @@ export { PageHeader } from "./page_header.js";
 export { DuskmoonPopover } from "./duskmoon_popover.js";
 export { DuskmoonLeftMenu } from "./left_menu.js";
 export { DuskmoonLeftMenuNavigation } from "./left_menu_navigation.js";
+export { DuskmoonSplitPane } from "./split_pane.js";

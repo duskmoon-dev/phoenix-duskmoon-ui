@@ -12,6 +12,7 @@
 @import "@duskmoon-dev/core/themes/moonlight";
 @import "@duskmoon-dev/core/components";
 @import "./element-theme-bridge.css";
+@import "./split-pane.css";
 
 /* CSS Art — decorative/animated visual effects from @duskmoon-dev/css-art */
 @import "@duskmoon-dev/css-art/dist/art/atom.css";

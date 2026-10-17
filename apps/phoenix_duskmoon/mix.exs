@@ -29,6 +29,7 @@ defmodule PhoenixDuskmoon.Mixfile do
           "guides/theming.md",
           "guides/hooks.md",
           "guides/left-menu.md",
+          "guides/split-pane.md",
           "guides/react-forms.md",
           "guides/migrating-to-v9.md",
           "guides/upstream-design-alignment.md",
@@ -118,6 +119,7 @@ defmodule PhoenixDuskmoon.Mixfile do
           ],
           Layout: [
             PhoenixDuskmoon.Component.Layout.SidebarLayout,
+            PhoenixDuskmoon.Component.Layout.SplitPane,
             PhoenixDuskmoon.Component.Layout.BottomSheet,
             PhoenixDuskmoon.Component.Layout.Divider,
             PhoenixDuskmoon.Component.Layout.Drawer,

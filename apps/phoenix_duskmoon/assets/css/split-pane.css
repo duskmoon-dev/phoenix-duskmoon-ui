@@ -1,0 +1,42 @@
+/* Native HEEx layout and interaction states; Core owns the divider appearance. */
+@layer components {
+  .dm-split-pane {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .dm-split-pane[data-split-pane-stacked="false"] {
+    grid-template-columns: var(--dm-split-pane-width) 16px minmax(0, 1fr);
+  }
+
+  .dm-split-pane-primary,
+  .dm-split-pane-secondary {
+    min-width: 0;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  .dm-split-pane > .dm-split-pane-handle {
+    width: 16px;
+    margin: 0;
+    cursor: col-resize;
+    touch-action: none;
+    user-select: none;
+  }
+
+  .dm-split-pane > .dm-split-pane-handle[hidden] {
+    display: none;
+  }
+
+  .dm-split-pane-handle:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+  }
+
+  .dm-split-pane[data-split-pane-dragging] {
+    cursor: col-resize;
+    user-select: none;
+  }
+}
