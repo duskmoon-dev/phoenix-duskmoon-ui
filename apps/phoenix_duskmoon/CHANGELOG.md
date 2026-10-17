@@ -1,3 +1,19 @@
+# [10.0.5](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.4...v10.0.5) (2026-10-18)
+
+### Added
+
+- Add `dm_split_pane` and the public `DuskmoonSplitPane` hook for pointer and
+  keyboard resizing, accessible separator ranges, container-aware bounds and
+  stacked panes on narrow containers, resolving [#203](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/203).
+
+### Fixed
+
+- Expose opt-in left-menu user collapse events and an external state-setting
+  event. Support host-owned collapse state without remounting sticky menus or
+  replaying stale state during active-page updates, resolving [#204](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/204).
+- Keep session storage in the host application and preserve the default
+  client-owned and optional localStorage behavior.
+
 # [10.0.4](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.3...v10.0.4) (2026-10-16)
 
 ### Added
