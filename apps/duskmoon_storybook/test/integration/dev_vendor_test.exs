@@ -41,6 +41,11 @@ defmodule DuskmoonBundler.Integration.DevVendorTest do
 
   setup %{browser: browser} = context do
     on_exit(fn -> File.rm_rf!(@fixture_dir) end)
+    # This fixture has no watcher to invalidate recreated local modules.
+    for filename <- ["app.js", "composer.js"] do
+      DuskmoonBundler.Cache.evict_file(Path.join(@fixture_dir, filename))
+    end
+
     File.rm_rf!(Path.join(Mix.Project.build_path(), "duskmoon_bundler/vendor"))
     File.rm_rf!(@fixture_dir)
     File.mkdir_p!(Path.join(@fixture_dir, "node_modules/cjs-contract"))
