@@ -2,7 +2,10 @@ defmodule Storybook.DataEntry.Checkbox do
   use PhoenixStorybook.Story, :component
 
   def function, do: &PhoenixDuskmoon.Component.DataEntry.Checkbox.dm_checkbox/1
-  def description, do: "Checkbox component for boolean selections."
+
+  def description,
+    do:
+      "Checkbox for boolean fields or record selections with explicit values and optional hidden inputs."
 
   def variations do
     [
@@ -24,6 +27,34 @@ defmodule Storybook.DataEntry.Checkbox do
           label: "Subscribe to newsletter",
           checked: true
         }
+      },
+      %VariationGroup{
+        id: :record_selection,
+        description: "Bulk selection submits checked record IDs without hidden false values",
+        variations: [
+          %Variation{
+            id: :rule_a,
+            attributes: %{
+              id: "checkbox-rule-a",
+              name: "rule_ids[]",
+              value: "rule-a",
+              hidden_input: false,
+              checked: true,
+              label: "Select Rule A"
+            }
+          },
+          %Variation{
+            id: :rule_b,
+            attributes: %{
+              id: "checkbox-rule-b",
+              name: "rule_ids[]",
+              value: "rule-b",
+              hidden_input: false,
+              checked: false,
+              label: "Select Rule B"
+            }
+          }
+        ]
       },
       %VariationGroup{
         id: :sizes,

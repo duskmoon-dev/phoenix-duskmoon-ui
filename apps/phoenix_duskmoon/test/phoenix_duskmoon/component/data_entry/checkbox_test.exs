@@ -107,6 +107,43 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
     assert result =~ ~s[value="true"]
   end
 
+  test "submits an explicit option value and preserves its id and checked state" do
+    document =
+      render_component(&dm_checkbox/1, %{
+        id: "tag-elixir",
+        name: "tags[]",
+        value: "elixir",
+        checked: true
+      })
+      |> LazyHTML.from_fragment()
+
+    checkbox = LazyHTML.query(document, ~s(input[type="checkbox"]))
+    assert ["tag-elixir"] = LazyHTML.attribute(checkbox, "id")
+    assert ["tags[]"] = LazyHTML.attribute(checkbox, "name")
+    assert ["elixir"] = LazyHTML.attribute(checkbox, "value")
+    refute Enum.empty?(LazyHTML.query(checkbox, "[checked]"))
+
+    assert ["false"] =
+             LazyHTML.attribute(LazyHTML.query(document, ~s(input[type="hidden"])), "value")
+  end
+
+  test "array options can omit the hidden false input explicitly" do
+    document =
+      render_component(&dm_checkbox/1, %{
+        id: "tag-phoenix",
+        name: "tags[]",
+        value: "phoenix",
+        hidden_input: false
+      })
+      |> LazyHTML.from_fragment()
+
+    assert Enum.empty?(LazyHTML.query(document, ~s(input[type="hidden"])))
+    checkbox = LazyHTML.query(document, ~s(input[type="checkbox"]))
+    assert ["tags[]"] = LazyHTML.attribute(checkbox, "name")
+    assert ["phoenix"] = LazyHTML.attribute(checkbox, "value")
+    assert Enum.empty?(LazyHTML.query(checkbox, "[checked]"))
+  end
+
   test "renders checkbox with label_class" do
     result =
       render_component(&dm_checkbox/1, %{
@@ -182,6 +219,76 @@ defmodule PhoenixDuskmoon.Component.DataEntry.CheckboxTest do
   end
 
   describe "FormField integration" do
+    test "field values determine checked state without becoming submitted values" do
+      for {value, checked} <- [
+            {true, true},
+            {"true", true},
+            {"1", true},
+            {false, false},
+            {"false", false},
+            {nil, false},
+            {["elixir"], false}
+          ] do
+        field = Phoenix.Component.to_form(%{"agree" => value}, as: "user")[:agree]
+
+        document =
+          render_component(&dm_checkbox/1, %{field: field})
+          |> LazyHTML.from_fragment()
+
+        checkbox = LazyHTML.query(document, ~s(input[type="checkbox"]))
+        assert ["true"] = LazyHTML.attribute(checkbox, "value")
+        assert Enum.empty?(LazyHTML.query(checkbox, "[checked]")) == !checked
+
+        assert ["false"] =
+                 LazyHTML.attribute(LazyHTML.query(document, ~s(input[type="hidden"])), "value")
+      end
+    end
+
+    test "explicit value, checked state, name and id override field defaults" do
+      for {field_value, checked} <- [{true, false}, {false, true}] do
+        field = Phoenix.Component.to_form(%{"agree" => field_value}, as: "user")[:agree]
+
+        document =
+          render_component(&dm_checkbox/1, %{
+            field: field,
+            id: "custom-agree",
+            name: "permissions[]",
+            value: "read",
+            checked: checked,
+            hidden_input: false
+          })
+          |> LazyHTML.from_fragment()
+
+        checkbox = LazyHTML.query(document, ~s(input[type="checkbox"]))
+        assert ["custom-agree"] = LazyHTML.attribute(checkbox, "id")
+        assert ["permissions[]"] = LazyHTML.attribute(checkbox, "name")
+        assert ["read"] = LazyHTML.attribute(checkbox, "value")
+        assert Enum.empty?(LazyHTML.query(checkbox, "[checked]")) == !checked
+        assert Enum.empty?(LazyHTML.query(document, ~s(input[type="hidden"])))
+      end
+    end
+
+    test "multiple keeps the hidden default unless explicitly disabled" do
+      field = Phoenix.Component.to_form(%{"tags" => ["elixir"]}, as: "user")[:tags]
+
+      for hidden_input <- [true, false] do
+        document =
+          render_component(&dm_checkbox/1, %{
+            field: field,
+            multiple: true,
+            value: "elixir",
+            checked: true,
+            hidden_input: hidden_input
+          })
+          |> LazyHTML.from_fragment()
+
+        checkbox = LazyHTML.query(document, ~s(input[type="checkbox"]))
+        assert ["user[tags][]"] = LazyHTML.attribute(checkbox, "name")
+        assert ["elixir"] = LazyHTML.attribute(checkbox, "value")
+        assert Enum.empty?(LazyHTML.query(document, ~s(input[type="hidden"]))) == !hidden_input
+      end
+    end
+
     test "renders checkbox with form field using field id and name" do
       field = Phoenix.Component.to_form(%{"agree" => "true"}, as: "user")[:agree]
 

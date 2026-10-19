@@ -20,18 +20,34 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
   @doc """
   Renders a checkbox input.
 
+  `value` sets the submitted value when checked and defaults to `"true"`.
+  Boolean fields include a hidden `"false"` input by default. Set
+  `hidden_input={false}` for array options to omit that fallback; `multiple`
+  only appends `[]` to a form field's name. A form field's value determines
+  checked state unless `checked` is supplied explicitly.
+
   ## Examples
 
       <.dm_checkbox field={@form[:agree]} label="I agree" />
       <.dm_checkbox name="remember" label="Remember me" checked />
+      <.dm_checkbox name="tags[]" value="elixir" hidden_input={false} label="Elixir" />
 
   """
   @doc type: :component
   attr(:id, :any, default: nil, doc: "HTML id attribute")
   attr(:name, :any, doc: "HTML name attribute for form submission")
-  attr(:value, :any, doc: "the input value")
+  attr(:value, :any, default: "true", doc: "the submitted value when checked")
   attr(:field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form")
-  attr(:checked, :boolean, default: false, doc: "whether the checkbox is checked")
+
+  attr(:checked, :boolean,
+    doc: "whether the checkbox is checked; defaults to the field value or false"
+  )
+
+  attr(:hidden_input, :boolean,
+    default: true,
+    doc: "include a hidden false input for unchecked submission"
+  )
+
   attr(:label, :string, default: nil, doc: "text label displayed next to the checkbox")
 
   attr(:size, :string,
@@ -73,23 +89,25 @@ defmodule PhoenixDuskmoon.Component.DataEntry.Checkbox do
     assigns
     |> assign(field: nil, id: assigns.id || field.id)
     |> assign_new(:name, fn -> if assigns.multiple, do: field.name <> "[]", else: field.name end)
-    |> assign_new(:value, fn -> field.value end)
     |> assign_new(:checked, fn -> Form.normalize_checkbox_value(field.value) end)
     |> dm_checkbox()
   end
 
   def dm_checkbox(assigns) do
-    assigns = assign(assigns, :color, css_color(assigns.color))
+    assigns =
+      assigns
+      |> assign(:color, css_color(assigns.color))
+      |> assign_new(:checked, fn -> false end)
 
     ~H"""
     <div class={["form-group", @horizontal && "form-group-horizontal", @disabled && "form-group-disabled", @errors != [] && "form-group-error", @state && "form-group-#{@state}", @class]} phx-feedback-for={@name}>
       <label class={["flex items-center gap-2", !@disabled && "cursor-pointer"]}>
-        <input type="hidden" name={@name} value="false" disabled={@disabled} />
+        <input :if={@hidden_input} type="hidden" name={@name} value="false" disabled={@disabled} />
         <input
           type="checkbox"
           name={@name}
           id={@id}
-          value="true"
+          value={@value}
           checked={@checked}
           disabled={@disabled}
           aria-disabled={@disabled && "true"}

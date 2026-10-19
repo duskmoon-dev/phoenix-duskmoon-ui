@@ -170,3 +170,16 @@ Data entry components support direct `Phoenix.HTML.FormField` binding via the
 <.dm_checkbox field={@form[:terms]} label="I agree to the terms" />
 <.dm_switch field={@form[:notifications]} label="Enable notifications" />
 ```
+
+For bulk record selection, give each checkbox its record ID as `value`, share an
+array name, and set `hidden_input={false}` so unchecked records contribute no
+`"false"` entries. Set `checked` explicitly for each record:
+
+```heex
+<.dm_checkbox id="rule-a" name="rule_ids[]" value="rule-a" hidden_input={false} checked={true} label="Select Rule A" />
+<.dm_checkbox id="rule-b" name="rule_ids[]" value="rule-b" hidden_input={false} checked={false} label="Select Rule B" />
+```
+
+This selection submits `rule_ids` as `["rule-a"]`. Boolean checkboxes retain the
+default value `"true"` and hidden `"false"` input. With a bound `field`, `multiple`
+appends `[]` to its name; `hidden_input` controls the hidden input separately.
