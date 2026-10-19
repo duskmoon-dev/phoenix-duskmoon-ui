@@ -1,3 +1,26 @@
+# [10.0.6](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.5...v10.0.6) (2026-10-19)
+
+### Changed
+
+- Update Core/CSS Art to 1.20.6, Elements/Art Elements and supporting individual
+  element packages to 1.9.3, and React Components to 0.5.2.
+- Document Markdown Input's lazy renderer, math and Mermaid asset overrides,
+  plus custom-button accessible-name synchronization.
+
+### Fixed
+
+- Apply `form_class` to the actual schema form while preserving upstream default
+  classes, typed values, reset and reconnect behavior.
+- Use published React controls for read-only number stepping and required Select
+  accessibility, removing the obsolete local workarounds.
+- Use Core's secondary pagination selectors for active and hovered pages while
+  retaining the existing neutral-color integration.
+
+### Validation
+
+- Cover button accessible names, secondary pagination in both themes, narrow
+  Megamenu layouts and the updated React Form contracts.
+
 # [10.0.5](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.4...v10.0.5) (2026-10-18)
 
 ### Added
