@@ -5,7 +5,7 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
   use Mix.Project
 
   # Umbrella version tracks phoenix_duskmoon package version
-  @version "10.0.6"
+  @version "10.0.7"
   @bundler_version File.read!(Path.join(__DIR__, "BUNDLER_VERSION")) |> String.trim()
 
   def project do

@@ -1,3 +1,12 @@
+# [10.0.7](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.6...v10.0.7) (2026-10-19)
+
+### Fixed
+
+- Honor explicit `dm_checkbox` values and support `hidden_input={false}` for
+  record-selection arrays, preserving boolean checkbox defaults and resolving
+  [#205](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/205).
+- Document record selection with checked and unchecked examples in Storybook.
+
 # [10.0.6](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.5...v10.0.6) (2026-10-19)
 
 ### Changed
