@@ -105,4 +105,55 @@ defmodule PhoenixDuskmoon.Component.Navigation.MegamenuBrowserTest do
                """)
     end
   end
+
+  test "a tall panel fits a narrow short viewport beside a low trigger", %{
+    browser: browser,
+    css: css
+  } do
+    {:ok, page} = CDPBrowser.new_page(browser)
+    on_exit(fn -> CDPBrowser.close_page(page) end)
+
+    component =
+      render_component(&dm_megamenu/1, %{
+        id: "products",
+        style: "position: absolute; top: 600px; left: 160px;",
+        trigger: [%{inner_block: fn _, _ -> "Products" end}],
+        group: [
+          %{
+            title: "Workspace",
+            inner_block: fn _, _ ->
+              Phoenix.HTML.raw("<div style=\"height: 750px\">Many products</div>")
+            end
+          }
+        ]
+      })
+
+    {:ok, _} =
+      CDPBrowser.command(page, "Emulation.setDeviceMetricsOverride", %{
+        "width" => 375,
+        "height" => 640,
+        "deviceScaleFactor" => 1,
+        "mobile" => false
+      })
+
+    for theme <- ["sunshine", "moonlight"] do
+      html =
+        "<!doctype html><html lang=\"en\" data-theme=\"#{theme}\"><head><style>#{css}</style></head><body>#{component}</body></html>"
+
+      :ok = CDPBrowser.goto(page, "data:text/html;base64," <> Base.encode64(html))
+
+      assert {:ok, %{"open" => true, "fits" => true, "scrolls" => true}} =
+               CDPBrowser.evaluate(page, """
+               (async () => {
+                 document.getElementById('products-trigger').click();
+                 await new Promise(resolve => setTimeout(resolve, 200));
+                 const panel = document.getElementById('products-panel');
+                 const rect = panel.getBoundingClientRect();
+                 return {open: panel.matches(':popover-open'),
+                   fits: rect.left >= 0 && rect.right <= innerWidth && rect.top >= 0 && rect.bottom <= innerHeight,
+                   scrolls: panel.scrollHeight > panel.clientHeight};
+               })()
+               """)
+    end
+  end
 end

@@ -24,9 +24,8 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactForm do
   Classic forms default to `novalidate`. Set `novalidate={false}` to check
   browser constraints before submission. Schema forms retain JSON validation.
 
-  `class` styles the outer hook wrapper. `form_class` styles the actual classic
-  form independently. Schema mode does not apply `form_class`: its upstream
-  React-owned form does not expose a class passthrough.
+  `class` styles the outer hook wrapper. `form_class` styles the actual form
+  independently in both modes. Schema forms retain the upstream default classes.
   """
   @doc type: :component
   attr(:id, :string, required: true)
@@ -41,7 +40,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactForm do
 
   attr(:form_class, :any,
     default: nil,
-    doc: "Classes for the classic native form; not applied in schema mode"
+    doc: "Classes for the native form in classic and schema modes"
   )
 
   attr(:novalidate, :boolean, default: true, doc: "Skip browser validation in classic forms")
@@ -58,15 +57,25 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactForm do
         do: nil,
         else: Jason.encode!(assigns.values || %{})
 
+    schema_form_class =
+      if assigns.schema && assigns.form_class do
+        assigns.form_class
+        |> List.wrap()
+        |> List.flatten()
+        |> Enum.reject(&(&1 in [nil, false]))
+        |> Enum.join(" ")
+      end
+
     assigns =
       assigns
       |> assign(:initial_values, values)
+      |> assign(:schema_form_class, schema_form_class)
       |> assign(:schema_json, assigns.schema && Jason.encode!(assigns.schema))
 
     ~H"""
     <div id={@id} class={@class} phx-hook="DuskmoonReactForm" phx-update="ignore" data-initial-values={@initial_values} data-schema={@schema_json} {@rest}>
       <%= if @schema do %>
-        <div data-dm-react-schema>
+        <div data-dm-react-schema data-form-class={@schema_form_class}>
           <span role="status">Loading…</span>
         </div>
         {render_slot(@inner_block)}

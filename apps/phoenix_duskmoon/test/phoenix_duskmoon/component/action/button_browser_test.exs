@@ -309,6 +309,85 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonBrowserTest do
              """)
   end
 
+  test "registered button keeps its accessible name synchronized with LiveView label updates", %{
+    page: page
+  } do
+    component =
+      render_component(&dm_btn/1, %{
+        id: "remove-item",
+        "aria-label": "Remove item",
+        inner_block: %{inner_block: fn _, _ -> "×" end}
+      })
+
+    package =
+      Path.expand(
+        "../../../../../../node_modules/@duskmoon-dev/el-button/dist/esm/register.js",
+        __DIR__
+      )
+
+    {runtime, 0} = System.cmd("bun", ["build", package, "--target=browser", "--format=iife"])
+
+    html = """
+    <!doctype html><html lang="en"><body>
+    <span id="remove-label">Delete draft</span>
+    #{component}<script>#{runtime}</script></body></html>
+    """
+
+    :ok = CDPBrowser.goto(page, "data:text/html;base64," <> Base.encode64(html))
+
+    assert_button_name(page, "Remove item")
+
+    assert {:ok, _} =
+             CDPBrowser.evaluate(page, """
+             document.getElementById("remove-item").setAttribute("aria-label", "Remove draft")
+             """)
+
+    assert_button_name(page, "Remove draft")
+
+    assert {:ok, _} =
+             CDPBrowser.evaluate(page, """
+             document.getElementById("remove-item").setAttribute("aria-labelledby", "remove-label")
+             """)
+
+    assert_button_name(page, "Delete draft")
+
+    assert {:ok, _} =
+             CDPBrowser.evaluate(page, """
+             document.getElementById("remove-label").textContent = "Delete saved draft"
+             """)
+
+    assert_button_name(page, "Delete saved draft")
+
+    assert {:ok, _} =
+             CDPBrowser.evaluate(page, """
+             const replacement = document.createElement("span")
+             replacement.id = "remove-label"
+             replacement.textContent = "Delete replacement draft"
+             document.getElementById("remove-label").replaceWith(replacement)
+             """)
+
+    assert_button_name(page, "Delete replacement draft")
+
+    assert {:ok, _} =
+             CDPBrowser.evaluate(page, """
+             document.getElementById("remove-item").removeAttribute("aria-labelledby")
+             """)
+
+    assert_button_name(page, "Remove draft")
+  end
+
+  defp assert_button_name(page, expected) do
+    {:ok, %{"nodes" => nodes}} =
+      CDPBrowser.command(page, "Accessibility.getFullAXTree", %{}, timeout: 5_000)
+
+    buttons =
+      Enum.filter(nodes, fn node ->
+        node["ignored"] != true && get_in(node, ["role", "value"]) == "button"
+      end)
+
+    assert [%{"name" => %{"value" => ^expected}}] = buttons
+  end
+
   defp dispatch_key(page, key, code, key_code, modifiers \\ 0) do
     params = %{
       "key" => key,

@@ -8,6 +8,19 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MarkdownInput do
   Provides a split-pane editor with live markdown preview, syntax highlighting,
   and optional Mermaid diagram support.
 
+  Preview math uses KaTeX 0.18.2. The first Mermaid preview loads the upstream
+  package's version-pinned bundle from jsDelivr; the default math stylesheet
+  uses the same CDN. For self-hosting, pass `mermaid-src` and `katex-css-url`
+  through `rest` with HTTPS URLs. Copy `dist/esm/mermaid.js` from the
+  installed `@duskmoon-dev/el-markdown-input` package to your server.
+
+  ```heex
+  <.dm_markdown_input rest={%{
+    "mermaid-src" => "https://assets.example.com/mermaid.js",
+    "katex-css-url" => "https://assets.example.com/katex.min.css"
+  }} />
+  ```
+
   Requires `@duskmoon-dev/el-markdown-input` registered in your project:
 
   ```js

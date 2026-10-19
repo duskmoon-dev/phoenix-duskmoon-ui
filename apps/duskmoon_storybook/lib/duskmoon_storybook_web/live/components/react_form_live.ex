@@ -301,7 +301,7 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
             This form includes a nested object, editable member array, numeric plan enum,
             required fields, and typed defaults. React validates the schema; the server
             checks name availability. Try the workspace name "taken" for a backend error.
-            Schema mode retains the upstream layout; form_class styles classic forms only.
+            Form layout classes apply to the generated form alongside its default styling.
           </p>
           <.dm_react_form
             id="react-schema-profile"
@@ -310,6 +310,7 @@ defmodule DuskmoonStorybookWeb.Components.ReactFormLive do
             phx-submit="save-schema-profile"
             phx-debounce="180"
             class="max-w-4xl"
+            form_class="gap-6"
           />
           <div class="flex flex-wrap items-center gap-4">
             <button

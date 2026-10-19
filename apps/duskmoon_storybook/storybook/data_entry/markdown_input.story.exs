@@ -58,6 +58,16 @@ defmodule Storybook.DataEntry.MarkdownInput do
         }
       },
       %Variation{
+        id: :math_and_mermaid,
+        description: "KaTeX math and lazily loaded Mermaid preview (requires jsDelivr access)",
+        attributes: %{
+          name: "technical_notes",
+          live_preview: true,
+          value:
+            "# Technical notes\n\nInline math: $E = mc^2$.\n\n```mermaid\ngraph LR\n  Write --> Preview\n```"
+        }
+      },
+      %Variation{
         id: :disabled,
         description: "Disabled state",
         attributes: %{

@@ -23,6 +23,16 @@ defmodule Storybook.DataDisplay.Pagination do
         }
       },
       %Variation{
+        id: :secondary,
+        description: "Secondary active-page styling uses the upstream Core color contract",
+        attributes: %{
+          total: 100,
+          page_num: 3,
+          page_size: 10,
+          el_color: "secondary"
+        }
+      },
+      %Variation{
         id: :page_url,
         description: "URL-based navigation mid-range in a large dataset",
         attributes: %{

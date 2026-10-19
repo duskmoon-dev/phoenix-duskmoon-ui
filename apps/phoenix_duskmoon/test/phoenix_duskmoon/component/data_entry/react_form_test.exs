@@ -60,7 +60,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactFormTest do
         id: "schema-profile",
         schema: schema,
         class: "schema-wrapper",
-        form_class: "space-y-4",
+        form_class: ["grid", nil, [false, "gap-6"]],
         novalidate: false,
         "phx-change": "validate",
         "phx-submit": "save",
@@ -83,6 +83,12 @@ defmodule PhoenixDuskmoon.Component.DataEntry.ReactFormTest do
 
     assert [] =
              LazyHTML.attribute(LazyHTML.query(document, "[data-dm-react-schema]"), "class")
+
+    assert ["grid gap-6"] =
+             LazyHTML.attribute(
+               LazyHTML.query(document, "[data-dm-react-schema]"),
+               "data-form-class"
+             )
 
     assert [] = LazyHTML.attribute(root, "novalidate")
     assert Enum.empty?(LazyHTML.query(document, "form"))

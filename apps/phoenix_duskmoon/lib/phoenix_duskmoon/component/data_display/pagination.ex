@@ -102,6 +102,10 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
       |> assign(:max_page, max_page)
       |> assign(:pages, pages)
       |> assign(:pagination_class, pagination_class(assigns.el_size))
+      |> assign(
+        :active_class,
+        assigns.el_color == "secondary" && "pagination-item-active-secondary"
+      )
       |> assign(:control_size_style, pagination_control_size_style(assigns.el_size))
       |> assign(:color_style, pagination_color_style(assigns.el_color))
 
@@ -178,7 +182,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
               aria-label={format_label(@page_button_label, %{"page" => p})}
               aria-current={p == @page_num && "page"}
               data-active={p == @page_num}
-              class="pagination-item"
+              class={["pagination-item", p == @page_num && @active_class]}
               style={@control_size_style}
             >
               {p}
@@ -197,7 +201,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
               aria-label={format_label(@page_button_label, %{"page" => p})}
               aria-current={p == @page_num && "page"}
               data-active={p == @page_num}
-              class="pagination-item"
+              class={["pagination-item", p == @page_num && @active_class]}
               style={@control_size_style}
             >
               {p}
@@ -394,10 +398,6 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
   end
 
   defp pagination_control_size_style(_size), do: false
-
-  defp pagination_color_style("secondary") do
-    "--color-primary: var(--color-secondary); --color-primary-content: var(--color-secondary-content);"
-  end
 
   defp pagination_color_style("neutral") do
     "--color-primary: var(--color-neutral); --color-primary-content: var(--color-neutral-content);"

@@ -13,6 +13,10 @@ defmodule PhoenixDuskmoon.Component.Action.Button do
   Set `native_submit` to render a native `<button type="submit">` without the
   custom element runtime.
 
+  Pass `aria-label` for icon-only buttons or `aria-labelledby` to reference
+  labels in the same document. The custom element synchronizes these attributes
+  and changes to referenced labels with its native shadow button.
+
   With `confirm`, `interestfor`, `title`, and accessible labels/descriptions
   also reach the visible trigger. Caller styles stay on that trigger. LiveView
   events, hooks, and form submission attributes stay on the confirmed action,

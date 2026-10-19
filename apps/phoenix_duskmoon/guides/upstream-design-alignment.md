@@ -1,7 +1,77 @@
 # Upstream design alignment
 
 This audit compares published npm tarballs, public types, runtime code and release
-notes, rather than assuming compatibility from package names. Latest audit: 2026-10-09.
+notes, rather than assuming compatibility from package names. Latest audit: 2026-10-16.
+
+## 2026-10-16 synchronization
+
+All six families were checked against live npm metadata and published tarballs.
+Bun updated exact pins in the root and library manifests and the authoritative
+`bun.lock`. Elements' own Core/CSS Art 1.20.5 dependencies remain independently
+resolved alongside this repository's 1.20.6 pins.
+
+| Package | Before | After / decision |
+| --- | --- | --- |
+| `@duskmoon-dev/core` | 1.20.4 | 1.20.6 |
+| `@duskmoon-dev/css-art` | 1.20.4 | 1.20.6 |
+| `@duskmoon-dev/elements` / `art-elements` | 1.9.1 | 1.9.3 |
+| All 19 declared supporting `el-*` packages | 1.9.1 | 1.9.3 |
+| `@duskmoon-dev/components` | 0.5.0 | 0.5.2 |
+| `@duskmoon-dev/art-components` | Unused | Reviewed 0.5.2; existing CSS Art / art elements meet this library's needs |
+
+### Component decisions
+
+All affected integrations take the **Update** path. No Add or Remove is required:
+existing public components retain their package selection and Phoenix API.
+
+| Integration | Package path | Update and reason |
+| --- | --- | --- |
+| Pagination | Core | Use the shipped secondary active selector on the current native button/link; remove the obsolete secondary primary-token override while retaining LiveView navigation/events |
+| Megamenu | Core | Consume upstream narrow-screen anchor fallback; preserve native popover behavior and verify constrained viewport placement |
+| Screen-reader utilities | Core base CSS | Consume low-specificity, layered `sr-only`/`not-sr-only` rules that allow Tailwind focus variants |
+| Button | Individual `el-button` | Keep the encapsulated native button; upstream now synchronizes host accessible names and referenced label mutations into its shadow button |
+| Markdown Input | Individual `el-markdown-input` | Keep the rich editor; consume lazy preview rendering, bundled math adapters, KaTeX 0.18.2 and version-pinned Mermaid 11.17.0 assets; document existing HTTPS asset overrides through `rest` |
+| React Form number field | Components `input-number` | Delegate read-only input and stepping to the fixed public API; remove the #82 controls/keyboard workaround |
+| React Form selections | Components `select` | Pass `aria-required` through the fixed public API; remove the #83 DOM mutation workaround; consume upstream SVG icons and clear-button spacing |
+| React schema form | Components `json-schema-form` | Forward canonical `form_class` to the new `className` prop, preserving upstream defaults, typed JSON, reset/reconnect and ignored LiveView ownership; remove the resolved #85 TODO |
+| Chat / React Chat | Individual `el-chat` / Components `chat` | Keep each existing integration: shipped element and React chat runtime/type contracts are unchanged; no duplicate Core wrapper is needed for additive upstream CSS |
+| Other element and art wrappers | Individual `el-*`, CSS Art / Art Elements | Update dependency pins; used registrations and public contracts remain compatible; CSS Art implementations are byte-identical |
+
+Core exports, plugin entrypoints, generated themes and token declarations are
+unchanged. All aggregate and individual element export maps remain compatible,
+so lazy registrations and `element-theme-bridge.css` need no changes. Existing
+Code Engine #9/#10 workarounds remain because its published runtime is unchanged.
+React exports, peers, mount/unmount boundaries and props serialization remain
+compatible. React/ReactDOM 19.3.0 satisfy the published peer requirements.
+
+### Validation
+
+- Frozen Bun installation, changed-file formatting, warnings-as-errors compilation
+  and diff checks pass. The full umbrella suite passes 3,134 tests; the JavaScript
+  suite passes 58 tests and 377 assertions.
+- Both configured bundles build in strict precompiled mode with zero native
+  compiler invocations. Storybook emits 70 JavaScript manifest entries, including
+  the editor's lazy `render.js` chunk. Final CSS includes secondary Pagination,
+  the new Megamenu fallback, Chat agent rules and layered screen-reader utilities.
+- Four stale generated app-local dependency directories initially shadowed the
+  updated root packages in the library build. Moving them aside, reinstalling
+  with the frozen lockfile and rebuilding restores the current CSS in both
+  library and Storybook assets.
+- Desktop Chromium checks against the built assets verify both themes for
+  secondary Pagination, native Megamenu opening/Escape, native modal dialogs,
+  button accessible-name updates, React form classes and typed schema submission,
+  required selection ARIA and SVG controls, and Gemini art input events.
+  React Chat mounts its composer and existing messages successfully.
+- Markdown Input renders both KaTeX math and Mermaid SVG in both themes. The
+  actual version-pinned jsDelivr Mermaid module and KaTeX 0.18.2 stylesheet load
+  successfully; its new relative render chunk is served by the built bundle.
+  Checked pages report no console warnings or errors.
+- Focused Chromium regressions also cover Pagination button/link hover colors,
+  constrained Megamenu placement and scrolling, button accessibility-tree names
+  after referenced label changes, and read-only numeric stepping.
+
+No new upstream blockers were found. This synchronization does not commit or
+publish a release.
 
 ## 2026-10-09 synchronization
 

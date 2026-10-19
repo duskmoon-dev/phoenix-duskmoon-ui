@@ -103,6 +103,12 @@ defmodule Storybook.Action.Button do
         },
         slots: ["Save without JavaScript"]
       },
+      %Variation{
+        id: :accessible_icon,
+        description: "Icon-only button names the native shadow button through aria-label",
+        attributes: %{variant: "error", "aria-label": "Remove item"},
+        slots: ["<span aria-hidden=\"true\">×</span>"]
+      },
 
       # ── Slots ─────────────────────────────────────────────────────────
       %VariationGroup{

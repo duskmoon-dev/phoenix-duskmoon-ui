@@ -195,8 +195,8 @@ describe("React form upstream field composition", () => {
 		expect(input).toContain('autoComplete="off"');
 		expect(input).toContain('required=""');
 		expect(input).toContain('readOnly=""');
-		expect(html).not.toContain('aria-label="Increase value"');
-		expect(html).not.toContain('aria-label="Decrease value"');
+		expect(html).toMatch(/<button[^>]*disabled=""[^>]*aria-label="Increase value"/);
+		expect(html).toMatch(/<button[^>]*disabled=""[^>]*aria-label="Decrease value"/);
 		expect(render("number", { value: 4 }, { ...config, readonly: false })).toMatch(/<button[^>]*disabled=""[^>]*aria-label="Increase value"/);
 		expect(render("number", { value: 0 }, { ...config, readonly: false })).toMatch(/<button[^>]*disabled=""[^>]*aria-label="Decrease value"/);
 	});
@@ -204,6 +204,14 @@ describe("React form upstream field composition", () => {
 	test("select placeholders use the upstream selection UI", () => {
 		for (const type of ["select", "multiselect"]) {
 			expect(render(type, {}, { placeholder: "Choose a moon" })).toContain('class="select-placeholder">Choose a moon</span>');
+		}
+	});
+
+	test("required Select ARIA reaches the trigger during static rendering", () => {
+		for (const type of ["select", "multiselect"]) {
+			const trigger = render(type, {}, { required: true }).match(/<button[^>]*aria-haspopup="listbox"[^>]*>/)?.[0];
+			expect(trigger).toContain('aria-required="true"');
+			expect(render(type, {}, { required: false })).not.toContain("aria-required");
 		}
 	});
 
@@ -262,8 +270,10 @@ try {
   mount(numeric, 2);
   let input = host.querySelector('input');
   assert(input.readOnly, 'numeric input not read-only');
-  assert(!host.querySelector('button'), 'read-only numeric step controls present');
+  const stepControls = [...host.querySelectorAll('button')];
+  assert(stepControls.length === 2 && stepControls.every((button) => button.disabled), 'read-only numeric step controls not disabled');
   const previousChanges = changes.length;
+  stepControls.forEach((button) => flushSync(() => button.click()));
   flushSync(() => input.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowUp', bubbles: true})));
   flushSync(() => input.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true})));
   assert(value === 2 && changes.length === previousChanges, 'read-only arrow keys changed numeric value');

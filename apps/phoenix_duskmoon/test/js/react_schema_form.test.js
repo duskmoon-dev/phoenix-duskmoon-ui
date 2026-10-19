@@ -47,7 +47,7 @@ const schema = {
 	},
 };
 
-function hook({ values, target, debounce = "0" } = {}) {
+function hook({ values, target, debounce = "0", formClass } = {}) {
 	const attributes = {
 		"phx-change": "validate",
 		"phx-submit": "save",
@@ -66,7 +66,7 @@ function hook({ values, target, debounce = "0" } = {}) {
 					: { initialValues: JSON.stringify(values) }),
 			},
 			querySelector: (selector) =>
-				selector === "[data-dm-react-schema]" ? {} : null,
+				selector === "[data-dm-react-schema]" ? { dataset: { formClass } } : null,
 			getAttribute: (key) => attributes[key],
 		},
 		handleEvent: (event, handler) => handlers.set(event, handler),
@@ -85,6 +85,23 @@ function hook({ values, target, debounce = "0" } = {}) {
 }
 
 describe("Published schema form integration", () => {
+	test("layout classes reach the upstream form and survive reset and reconnect", () => {
+		const { instance, handlers, props } = hook({ formClass: "grid gap-6" });
+		const assertLayout = () => {
+			const html = renderToStaticMarkup(React.createElement(ReactSchemaForm, props()));
+			expect(html).toContain('class="form form-vertical schema-form grid gap-6"');
+			expect(html.match(/<form\b/g)).toHaveLength(1);
+			expect(html).toStartWith("<fieldset>");
+		};
+		assertLayout();
+		handlers.get("dm:form:reset")({ id: "schema-profile" });
+		assertLayout();
+		instance.disconnected();
+		instance.reconnected();
+		assertLayout();
+		instance.destroyed();
+	});
+
 	test("failed schema initialization preserves its error and allows lifecycle cleanup", () => {
 		const instance = Object.assign(Object.create(DuskmoonReactForm), {
 			el: {

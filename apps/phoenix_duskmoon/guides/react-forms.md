@@ -33,13 +33,12 @@ default. For vertical margin-based layouts such as `form_class="space-y-4"`, use
 `class="block"` on direct `dm_react_field` children: their markers are inline
 spans by default. Flex and grid layouts can use those markers directly as items.
 
-Schema mode does not apply `form_class`. Its React-owned upstream form has no
-class passthrough yet ([upstream #85](https://github.com/duskmoon-dev/duskmoon-react/issues/85)).
-`class` still styles the outer wrapper, and schema mode retains the upstream
-renderer's form layout. These presentation attributes do not change LiveView
-events or ownership.
+In schema mode, `form_class` reaches the React-owned form through the published
+`JsonSchemaForm.className` prop. Its default `form form-vertical schema-form`
+classes are preserved. `class` still styles the outer wrapper. These presentation
+attributes do not change LiveView events or ownership.
 
-Marked fields use the published `@duskmoon-dev/components` 0.5.0 controls and
+Marked fields use the published `@duskmoon-dev/components` 0.5.2 controls and
 `Form.Item` presentation. Text, email, password, textarea, number, and checkbox
 labels are associated with their input IDs. Select and multiselect labels and
 error attributes reach their interactive trigger.
@@ -80,12 +79,10 @@ The form uses JSON submission and defaults to `novalidate`. Set
 `novalidate={false}` for browser constraints before classic form submission, as
 described below. Control attributes do not replace backend validation or authorization.
 
-Components 0.5.0 needs two temporary adapters: numeric `readonly` also disables
-its keyboard and step buttons ([upstream #82](https://github.com/duskmoon-dev/duskmoon-react/issues/82)),
-and required select state is applied to the mounted trigger
-([upstream #83](https://github.com/duskmoon-dev/duskmoon-react/issues/83)).
-Select required-state ARIA is therefore available after React mounts; rendering
-`ReactField` alone to static HTML does not supply that trigger attribute.
+Components 0.5.2 handles numeric `readonly` across typing, keyboard stepping and
+disabled step buttons, and forwards `aria-required` to selection triggers during
+rendering. The earlier adapters for upstream [#82](https://github.com/duskmoon-dev/duskmoon-react/issues/82)
+and [#83](https://github.com/duskmoon-dev/duskmoon-react/issues/83) are removed.
 
 ## LiveView events
 
@@ -209,8 +206,8 @@ The hook mounts the public `JsonSchemaForm` and `compileForm` exports from
 form, controls, Submit button, and Reset button. The Phoenix wrapper provides
 an ignored mount boundary without a parent form. Optional HEEX slot content
 appears beside the schema renderer, outside its form.
-`form_class` applies only to classic HEEX forms; schema forms keep their upstream
-layout until the renderer provides a native-form class API.
+`form_class` adds classes to that generated form while preserving the upstream
+layout classes, resolving [upstream #85](https://github.com/duskmoon-dev/duskmoon-react/issues/85).
 
 Omit `values` to use the compiled schema's initial values and defaults. Pass
 `values={@values}` to start with an explicit typed JSON object; even `%{}` is an

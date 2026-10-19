@@ -19,20 +19,13 @@ export function ReactField({ config, value, errors, disabled, onChange }) {
       control = h(Checkbox, { ...common, required: config.required, checked: Boolean(value), onChange: (event) => onChange(event.target.checked) });
       break;
     case "number":
-      // TODO(upstream): duskmoon-dev/duskmoon-react#82
-      // WORKAROUND(upstream): duskmoon-dev/duskmoon-react#82 — readOnly does not guard upstream stepping.
       control = h(InputNumber, { ...common, ...textAttributes, min: config.min ?? undefined, max: config.max ?? undefined, step: config.step ?? undefined,
-        controls: config.readonly ? false : undefined, keyboard: config.readonly ? false : undefined, value: value ?? null, onChange });
+        value: value ?? null, onChange });
       break;
     case "select":
     case "multiselect":
-      // TODO(upstream): duskmoon-dev/duskmoon-react#83
-      // WORKAROUND(upstream): duskmoon-dev/duskmoon-react#83 — only the mounted trigger can receive required ARIA in 0.5.0.
-      control = h(Select, { ...common, placeholder: config.placeholder ?? undefined, ref: (container) => {
-        const trigger = container?.querySelector('button[aria-haspopup="listbox"]');
-        if (config.required) trigger?.setAttribute("aria-required", "true");
-        else trigger?.removeAttribute("aria-required");
-      }, value: value ?? undefined, mode: config.type === "multiselect" ? "multiple" : undefined,
+      control = h(Select, { ...common, placeholder: config.placeholder ?? undefined, "aria-required": config.required ? "true" : undefined,
+        value: value ?? undefined, mode: config.type === "multiselect" ? "multiple" : undefined,
         options: config.options || [], showSearch: true, allowClear: true, onChange: (next) => onChange(next ?? null) });
       break;
     case "textarea":

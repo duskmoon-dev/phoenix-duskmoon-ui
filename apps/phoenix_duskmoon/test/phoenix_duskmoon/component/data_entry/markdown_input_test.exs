@@ -156,6 +156,24 @@ defmodule PhoenixDuskmoon.Component.DataEntry.MarkdownInputTest do
     assert result =~ "# Hi"
   end
 
+  test "passes self-hosted preview assets through rest without changing form values" do
+    field = Phoenix.Component.to_form(%{"body" => "$E = mc^2$"}, as: "post")[:body]
+
+    result =
+      render_component(&dm_markdown_input/1, %{
+        field: field,
+        rest: %{
+          "mermaid-src" => "https://assets.example.com/mermaid.js",
+          "katex-css-url" => "https://assets.example.com/katex.min.css"
+        }
+      })
+
+    assert result =~ ~s[mermaid-src="https://assets.example.com/mermaid.js"]
+    assert result =~ ~s[katex-css-url="https://assets.example.com/katex.min.css"]
+    assert result =~ ~s(name="post[body]")
+    assert result =~ ~s[value="$E = mc^2$"]
+  end
+
   test "form field id can be overridden" do
     field = Phoenix.Component.to_form(%{"body" => ""}, as: "post")[:body]
     result = render_component(&dm_markdown_input/1, %{field: field, id: "custom-id"})

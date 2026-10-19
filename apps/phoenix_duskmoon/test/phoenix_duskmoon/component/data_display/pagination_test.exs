@@ -1242,7 +1242,26 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.PaginationTest do
       assert result =~ ~s[data-size="lg"]
       assert result =~ ~s[data-color="secondary"]
       assert result =~ ~s[class="pagination pagination-lg"]
-      assert result =~ ~s[--color-primary: var(--color-secondary)]
+      assert result =~ ~s[class="pagination-item pagination-item-active-secondary"]
+      refute result =~ "--color-primary:"
+    end
+
+    test "secondary current URL links use the upstream active color class" do
+      result =
+        render_component(&dm_pagination/1, %{
+          page_num: 2,
+          page_size: 10,
+          total: 30,
+          page_url: "/items?page={page}",
+          page_link_type: "href",
+          el_color: "secondary"
+        })
+
+      [current] = Regex.run(~r/<a[^>]*aria-current="page"[^>]*>/, result)
+      assert current =~ ~s[class="pagination-item pagination-item-active-secondary"]
+      assert current =~ ~s[href="/items?page=2"]
+      assert length(Regex.scan(~r/pagination-item-active-secondary/, result)) == 1
+      refute result =~ "--color-primary:"
     end
   end
 end
