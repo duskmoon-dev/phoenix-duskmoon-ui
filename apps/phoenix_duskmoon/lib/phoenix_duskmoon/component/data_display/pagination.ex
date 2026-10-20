@@ -112,7 +112,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
     ~H"""
     <nav
       id={@id}
-      class={["flex items-center gap-2", @class]}
+      class={["relative flex items-center gap-2", @class]}
       aria-label={@pagination_label}
       {@rest}
     >
@@ -322,7 +322,7 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.Pagination do
     ~H"""
     <nav
       id={@id}
-      class={["pagination", @class]}
+      class={["relative pagination", @class]}
       aria-label={@pagination_label}
       aria-busy={@loading && "true"}
       {@rest}
