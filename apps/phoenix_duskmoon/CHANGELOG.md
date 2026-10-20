@@ -1,3 +1,12 @@
+# [10.0.8](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.7...v10.0.8) (2026-10-20)
+
+### Fixed
+
+- Keep full and compact pagination screen-reader labels inside their navigation
+  container so pagers in scrollable content do not extend the document or scroll
+  the application shell off screen, resolving
+  [#206](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/206).
+
 # [10.0.7](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.6...v10.0.7) (2026-10-19)
 
 ### Fixed
