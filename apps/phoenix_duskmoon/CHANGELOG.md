@@ -1,3 +1,14 @@
+# [10.0.9](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.8...v10.0.9) (2026-10-21)
+
+### Fixed
+
+- Render disabled left-menu entries without destinations, navigation attributes
+  or event handlers, preserving labels, explanations, icons and collapsed hover
+  tooltips. Disabled data entries can omit `to`, resolving
+  [#207](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/207).
+- Allow npm metadata verification to wait for delayed publication processing
+  while preserving immutable package checks and avoiding repeat publication.
+
 # [10.0.8](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.7...v10.0.8) (2026-10-20)
 
 ### Fixed
