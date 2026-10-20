@@ -32,15 +32,35 @@ defmodule Storybook.Navigation.LeftMenu do
           "<:title>Menu with Disabled Items</:title>",
           """
           <:menu>
-            <.dm_left_menu_group>
+            <.dm_left_menu_group id="storybook-unavailable-items">
               <:title>Items</:title>
               <:menu id="enabled" to="#enabled">Enabled Item</:menu>
-              <:menu id="disabled" to="#disabled" disabled>Disabled Item</:menu>
+              <:menu id="services" disabled icon="cog" label="Services">
+                Services <span>Requires scope</span>
+              </:menu>
+              <:menu id="disabled" to="#disabled" disabled>Disabled destination</:menu>
               <:menu id="another" to="#another">Another Enabled Item</:menu>
             </.dm_left_menu_group>
           </:menu>
           """
         ]
+      },
+      %Variation{
+        id: :disabled_data_items,
+        description: "Disabled data entries can omit a destination.",
+        attributes: %{
+          id: "storybook-disabled-data-menu",
+          groups: [
+            %{
+              id: "workers",
+              label: "Workers",
+              items: [
+                %{id: "overview", label: "Overview", to: "#overview", icon: "view-dashboard"},
+                %{id: "services", label: "Services", disabled: true, icon: "cog"}
+              ]
+            }
+          ]
+        }
       },
       %Variation{
         id: :collapsible,
@@ -60,6 +80,7 @@ defmodule Storybook.Navigation.LeftMenu do
               <:menu id="dashboard" to="#dashboard" icon="view-dashboard" label="Dashboard">Dashboard</:menu>
               <:menu id="projects" to="#projects" icon="folder" label="Projects">Projects</:menu>
               <:menu id="team" to="#team" icon="account-group" label="Team">Team</:menu>
+              <:menu id="services" disabled icon="cog" label="Services">Services <span>Requires scope</span></:menu>
             </.dm_left_menu_group>
             <.dm_left_menu_group id="storybook-left-settings" open={false}>
               <:title>Settings</:title>

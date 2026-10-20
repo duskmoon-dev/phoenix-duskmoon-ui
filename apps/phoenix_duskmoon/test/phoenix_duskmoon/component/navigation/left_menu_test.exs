@@ -48,6 +48,37 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
                1
     end
 
+    test "disabled data items accept missing, nil and empty destinations" do
+      for destination <- [%{}, %{to: nil}, %{to: ""}, %{to: "/unavailable"}] do
+        item = Map.merge(%{id: "planned", label: "Planned", disabled: true}, destination)
+
+        html =
+          render_component(&dm_left_menu/1, %{
+            id: "sidebar",
+            groups: [%{id: "workspace", label: "Workspace", items: [item]}]
+          })
+          |> LazyHTML.from_fragment()
+
+        assert Enum.count(LazyHTML.query(html, "li > button[aria-disabled=true]")) == 1
+        assert LazyHTML.text(html) =~ "Planned"
+        assert Enum.empty?(LazyHTML.query(html, "a, [href], [data-phx-link]"))
+      end
+    end
+
+    test "enabled data items still require a nonempty string destination" do
+      for destination <- [%{}, %{to: nil}, %{to: ""}, %{to: false}, %{to: 123}],
+          disabled <- [%{}, %{disabled: false}] do
+        item = Map.merge(%{id: "planned", label: "Planned"}, Map.merge(destination, disabled))
+
+        assert_raise ArgumentError, ~r/requires a non-empty string for to/, fn ->
+          render_component(&dm_left_menu/1, %{
+            id: "sidebar",
+            groups: [%{id: "workspace", label: "Workspace", items: [item]}]
+          })
+        end
+      end
+    end
+
     test "data groups require stable unique ids and cannot be mixed with menu slots" do
       assert_raise ArgumentError, ~r/requires a stable id/, fn ->
         render_component(&dm_left_menu/1, %{groups: @groups})
@@ -352,6 +383,128 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
              ]
     end
 
+    test "disabled slots keep labels, explanations, icons and tooltips without navigation" do
+      for destination <- [%{}, %{to: nil}, %{to: ""}, %{to: "/services"}] do
+        assigns = %{destination: destination}
+
+        html =
+          rendered_to_string(~H"""
+          <.dm_left_menu id="sidebar" collapsible>
+            <:menu>
+              <.dm_left_menu_group id="workers">
+                <:title>Workers</:title>
+                <:menu id="services" disabled icon="cog" label="Services" rest={%{"aria-describedby" => "scope-help"}} {@destination}>
+                  Services <span id="scope-help">Requires scope</span>
+                </:menu>
+              </.dm_left_menu_group>
+            </:menu>
+          </.dm_left_menu>
+          """)
+          |> LazyHTML.from_fragment()
+
+        item = LazyHTML.query(html, "li > button[aria-disabled=true]")
+        assert Enum.count(item) == 1
+        assert LazyHTML.attribute(item, "type") == ["button"]
+        assert LazyHTML.attribute(item, "disabled") == []
+        assert Enum.flat_map(LazyHTML.attribute(item, "class"), &String.split/1) == ["menu-item"]
+        assert LazyHTML.attribute(item, "aria-label") == ["Services"]
+        assert LazyHTML.attribute(item, "tabindex") == ["-1"]
+        assert LazyHTML.attribute(item, "interestfor") == ["workers-services-hint-tooltip"]
+
+        assert LazyHTML.attribute(item, "data-left-menu-tooltip") == [
+                 "workers-services-hint-tooltip"
+               ]
+
+        assert LazyHTML.attribute(item, "aria-describedby") == [
+                 "scope-help workers-services-hint-tooltip"
+               ]
+
+        assert LazyHTML.attribute(LazyHTML.query(item, "svg"), "aria-hidden") == ["true"]
+        assert LazyHTML.text(LazyHTML.query(item, "[data-left-menu-label]")) =~ "Services"
+        assert LazyHTML.text(LazyHTML.query(item, "#scope-help")) == "Requires scope"
+
+        assert Enum.count(
+                 LazyHTML.query(html, "[id=workers-services-hint-tooltip][role=tooltip]")
+               ) == 1
+
+        assert Enum.empty?(LazyHTML.query(item, "[href], [data-phx-link], [data-phx-link-state]"))
+        assert Enum.empty?(LazyHTML.query(html, "a"))
+      end
+    end
+
+    test "disabled slots strip dynamic and explicit event handlers while preserving attributes" do
+      assigns = %{
+        item_attrs: %{
+          "onclick" => "alert('click')",
+          "onmouseover" => "alert('hover')",
+          "phx-click" => "navigate",
+          "phx-keydown" => "navigate",
+          "phx-hook" => "Navigation",
+          "phx-value-id" => "services",
+          "data-phx-link" => "redirect",
+          "data-phx-click" => "navigate",
+          "aria-describedby" => "scope-help",
+          "data-tracking" => "services"
+        }
+      }
+
+      html =
+        rendered_to_string(~H"""
+        <.dm_left_menu_group>
+          <:title>Workers</:title>
+          <:menu id="services" to="/services" disabled rest={%{onfocus: "alert('focus')", "phx-blur": "navigate", "data-note": "planned"}} {@item_attrs}>
+            Services
+          </:menu>
+        </.dm_left_menu_group>
+        """)
+        |> LazyHTML.from_fragment()
+
+      item = LazyHTML.query(html, "li > button[aria-disabled=true]")
+      assert Enum.count(item) == 1
+      assert LazyHTML.attribute(item, "aria-describedby") == ["scope-help"]
+      assert LazyHTML.attribute(item, "data-tracking") == ["services"]
+      assert LazyHTML.attribute(item, "data-note") == ["planned"]
+
+      for attr <-
+            ~w(href data-phx-link data-phx-click onclick onmouseover onfocus phx-click phx-keydown phx-hook phx-blur phx-value-id) do
+        assert LazyHTML.attribute(item, attr) == []
+      end
+    end
+
+    test "disabled items discard reserved navigation and activation attributes regardless of case" do
+      reserved =
+        ~w(class navigate patch href aria-current aria-disabled data-phx-link data-phx-link-state type disabled tabindex popovertarget popovertargetaction command commandfor onclick phx-click data-phx-click)
+
+      for casing <- [&Function.identity/1, &String.upcase/1, &String.capitalize/1] do
+        attrs = Map.new(reserved, &{casing.(&1), "override"})
+
+        html =
+          render_component(&dm_left_menu_group/1, %{
+            title: [%{inner_block: fn _, _ -> "Workers" end}],
+            menu: [
+              %{
+                id: "services",
+                to: "/services",
+                disabled: true,
+                rest: attrs,
+                inner_block: fn _, _ -> "Services" end
+              }
+            ]
+          })
+          |> LazyHTML.from_fragment()
+
+        item = LazyHTML.query(html, "button[aria-disabled=true]")
+        assert Enum.count(item) == 1
+        assert Enum.flat_map(LazyHTML.attribute(item, "class"), &String.split/1) == ["menu-item"]
+        assert LazyHTML.attribute(item, "type") == ["button"]
+        assert LazyHTML.attribute(item, "tabindex") == ["-1"]
+
+        for attr <- reserved -- ~w(class aria-disabled type tabindex) do
+          assert LazyHTML.attribute(item, attr) == []
+        end
+      end
+    end
+
     test "forwards public tooltip trigger attributes from a raw menu slot to its native link" do
       assigns = %{}
 
@@ -390,7 +543,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       assert LazyHTML.text(link) =~ "Dashboard"
     end
 
-    test "forwards explicit rest attributes while retaining disabled and active link behavior" do
+    test "forwards explicit non-event attributes to disabled items and retains active links" do
       assigns = %{}
 
       html =
@@ -420,22 +573,24 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
         """)
         |> LazyHTML.from_fragment()
 
-      disabled = LazyHTML.query(html, ~s(a[href="/settings/private"]))
+      disabled = LazyHTML.query(html, "#private-trigger")
       assert LazyHTML.attribute(disabled, "id") == ["private-trigger"]
       assert LazyHTML.attribute(disabled, "aria-label") == ["Private settings"]
       assert LazyHTML.attribute(disabled, "data-tracking") == ["private-settings"]
-      assert LazyHTML.attribute(disabled, "phx-click") == ["audit-navigation"]
-      assert LazyHTML.attribute(disabled, "phx-value-section") == ["private"]
+      assert LazyHTML.attribute(disabled, "phx-click") == []
+      assert LazyHTML.attribute(disabled, "phx-value-section") == []
       assert LazyHTML.attribute(disabled, "style") == ["color: rebeccapurple"]
       assert LazyHTML.attribute(disabled, "title") == ["Unavailable settings"]
-      assert LazyHTML.attribute(disabled, "data-phx-link") == ["redirect"]
-      assert LazyHTML.attribute(disabled, "class") == ["private-link"]
+      assert LazyHTML.attribute(disabled, "data-phx-link") == []
+      assert LazyHTML.attribute(disabled, "class") == ["menu-item private-link"]
       assert LazyHTML.attribute(disabled, "aria-disabled") == ["true"]
       assert LazyHTML.attribute(disabled, "aria-current") == []
       assert LazyHTML.attribute(disabled, "tabindex") == ["-1"]
 
-      assert LazyHTML.attribute(LazyHTML.query(html, "li.disabled > a"), "href") ==
-               ["/settings/private"]
+      assert Enum.count(LazyHTML.query(html, "li > button[aria-disabled=true]#private-trigger")) ==
+               1
+
+      assert LazyHTML.attribute(disabled, "href") == []
 
       active = LazyHTML.query(html, ~s(a[href="/overview"]))
       assert LazyHTML.attribute(active, "class") == ["overview-link active"]
@@ -544,6 +699,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
               disabled: true,
               rest: %{
                 :class => "override-class",
+                :type => "submit",
+                "disabled" => false,
                 "navigate" => "/override-navigation",
                 :patch => "/override-patch",
                 "href" => "/override-href",
@@ -557,22 +714,14 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
           ]
         })
 
-      [[raw_link]] = Regex.scan(~r/<a\b[^>]*href="\/settings\/private"[^>]*>/, raw_html)
-
-      assert Regex.scan(~r/\sdata-phx-link="[^"]*"/, raw_link) == [
-               [~s( data-phx-link="redirect")]
-             ]
-
-      assert Regex.scan(~r/\sdata-phx-link-state="[^"]*"/, raw_link) == [
-               [~s( data-phx-link-state="push")]
-             ]
-
       html = LazyHTML.from_fragment(raw_html)
-      link = LazyHTML.query(html, "li.disabled > a")
-      assert LazyHTML.attribute(link, "href") == ["/settings/private"]
-      assert LazyHTML.attribute(link, "data-phx-link") == ["redirect"]
-      assert LazyHTML.attribute(link, "data-phx-link-state") == ["push"]
-      assert LazyHTML.attribute(link, "class") == ["private-link active"]
+      link = LazyHTML.query(html, "li > button[aria-disabled=true]")
+      assert Enum.count(link) == 1
+      assert LazyHTML.attribute(link, "href") == []
+      assert LazyHTML.attribute(link, "data-phx-link") == []
+      assert LazyHTML.attribute(link, "data-phx-link-state") == []
+      assert LazyHTML.attribute(link, "type") == ["button"]
+      assert LazyHTML.attribute(link, "class") == ["menu-item private-link active"]
       assert LazyHTML.attribute(link, "aria-current") == ["page"]
       assert LazyHTML.attribute(link, "aria-disabled") == ["true"]
       assert LazyHTML.attribute(link, "tabindex") == ["-1"]
@@ -645,7 +794,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       assert result =~ ~s[aria-current="page"]
     end
 
-    test "renders disabled menu item with disabled class on li" do
+    test "renders disabled menu item as an ARIA-disabled button" do
       result =
         render_component(&dm_left_menu_group/1, %{
           title: [%{inner_block: fn _, _ -> "Settings" end}],
@@ -655,7 +804,9 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
           ]
         })
 
-      assert result =~ ~s(class="disabled")
+      assert result =~ ~s(<button)
+      refute result =~ ~s( disabled)
+      refute result =~ ~s(class="disabled")
       assert result =~ ~s[aria-disabled="true"]
       assert result =~ ~s[tabindex="-1"]
     end
@@ -781,7 +932,9 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
         })
 
       assert result =~ ~s(class="active")
-      assert result =~ ~s(class="disabled")
+      assert result =~ ~s(<button)
+      refute result =~ ~s( disabled)
+      refute result =~ ~s(class="disabled")
       assert result =~ ~s[aria-current="page"]
       assert result =~ ~s[aria-disabled="true"]
     end
@@ -807,7 +960,9 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenuTest do
       assert result =~ "text-lg"
       assert result =~ "Full"
       assert result =~ "custom-cls"
-      assert result =~ ~s(class="disabled")
+      assert result =~ ~s(<button)
+      refute result =~ ~s( disabled)
+      refute result =~ ~s(class="disabled")
     end
 
     test "does not set active class when active is empty" do

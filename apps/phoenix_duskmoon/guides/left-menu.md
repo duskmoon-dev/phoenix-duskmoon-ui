@@ -70,15 +70,40 @@ from the URL.
 | Data | Fields |
 | --- | --- |
 | Group | Required `id`, `label`, `items`; optional `open` (defaults to `true`) |
-| Item | Required `id`, `label`, `to`; optional `icon`, `disabled` (defaults to `false`), `class`, `rest` (defaults to `%{}`) |
+| Item | Required `id`, `label`, and `to` for enabled entries; optional `icon`, `disabled` (defaults to `false`), `class`, `rest` (defaults to `%{}`) |
 | Brand | Required `label`; optional `icon`, `to`, `version` |
 
-Required IDs, labels and item paths must be non-empty strings. Group IDs must be
-unique, and item IDs must be unique across all groups. `icon` is an MDI name.
+Required IDs, labels and enabled item paths must be non-empty strings. Group IDs
+must be unique, and item IDs must be unique across all groups. `icon` is an MDI name.
 `rest` forwards global link attributes, for example `%{"aria-label" => "Settings"}`.
 All data-driven menus require a stable, unique menu `id`.
 `brand` and `footer_text` are optional. These data attributes also work without
 `sticky`; `groups` and `:menu` slots cannot be combined.
+
+## Unavailable entries
+
+Set `disabled: true` for planned features or entries that require a selected
+scope. Disabled entries can omit `to`; any supplied destination is ignored:
+
+```elixir
+%{id: "services", label: "Services", disabled: true, icon: "cog"}
+```
+
+For slotted menus, keep the explanation in the item content:
+
+```heex
+<.dm_left_menu_group id="workers">
+  <:title>Workers</:title>
+  <:menu id="services" disabled icon="cog" label="Services">
+    Services <span>Requires scope</span>
+  </:menu>
+</.dm_left_menu_group>
+```
+
+Disabled entries render buttons with `aria-disabled="true"`, outside the tab order,
+with no URL, LiveView navigation, or event handlers. Their content and accessible
+labels remain available, and their icons retain the collapsed rail layout and
+hover tooltips.
 
 ## Sticky position and scrolling
 

@@ -58,7 +58,8 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
   Data-driven menus require a stable `id`. Groups are maps with string `id`,
   `label`, optional `open`, and `items`.
   Items use string `id`, `label`, `to`, and optional `icon`, `disabled`, `class`
-  and `rest`. Filter this data on the server before passing it to the component.
+  and `rest`. Disabled items may omit `to`; any supplied destination is ignored.
+  Filter this data on the server before passing it to the component.
   `brand` accepts `label`, `icon`, `to` and `version`; `footer_text` supplies a
   fixed footer. These data attributes also work without `sticky`.
 
@@ -244,7 +245,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
           "data-[collapsed=true]:[&_[data-left-menu-label]]:sr-only",
           "data-[collapsed=true]:[&_.nested-menu-title]:hidden data-[collapsed=true]:[&_summary]:hidden",
           "data-[collapsed=true]:[&_.nested-menu_details>ul]:ps-0",
-          "data-[collapsed=true]:[&_.nested-menu_li>a]:justify-center data-[collapsed=true]:[&_.nested-menu_li>a]:px-2"
+          "data-[collapsed=true]:[&_.nested-menu_li>:is(a,button)]:justify-center data-[collapsed=true]:[&_.nested-menu_li>:is(a,button)]:px-2"
         ],
         @class
       ]}
@@ -346,7 +347,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
               %{
                 id: required_text!(item, :id),
                 label: required_text!(item, :label),
-                to: required_text!(item, :to),
+                to: if(item[:disabled], do: nil, else: required_text!(item, :to)),
                 icon: Map.get(item, :icon),
                 disabled: Map.get(item, :disabled, false),
                 class: Map.get(item, :class),
@@ -391,9 +392,13 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
   Generates a collapsible menu group using `<details>`/`<summary>`.
 
   Renders as a `<details>` element with menu items as links inside.
+  Disabled items render non-navigating buttons with `aria-disabled="true"` and
+  `tabindex="-1"`, without destinations, activation attributes or event handlers.
+  They preserve their label, slot content, icon and native collapsed tooltip.
   Designed to be used inside `dm_left_menu/1`.
 
-  Menu slots forward dynamically spread attributes to their navigation anchors,
+  Menu slots forward dynamically spread attributes to their navigation anchors
+  or disabled buttons,
   including the trigger attributes yielded by `dm_tooltip/1`. For explicit global
   attributes, use `rest={%{"aria-label" => "Dashboard"}}` on the menu slot.
   Values in `rest` take precedence over equivalent dynamically spread attributes.
@@ -446,8 +451,11 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
     attr(:to, :string, doc: "navigation path")
     attr(:disabled, :boolean, doc: "disable the menu item")
     attr(:icon, :string, doc: "MDI icon name displayed before the item text")
-    attr(:label, :string, doc: "Accessible link name and collapsed tooltip text")
-    attr(:rest, :map, doc: "Global HTML attributes for the navigation anchor")
+    attr(:label, :string, doc: "Accessible item name and collapsed tooltip text")
+
+    attr(:rest, :map,
+      doc: "Global HTML attributes for the item; disabled items discard event handlers"
+    )
   end
 
   def dm_left_menu_group(assigns) do
@@ -457,10 +465,7 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
         {render_slot(List.first(@title))}
       </summary>
       <ul role="list">
-        <li
-          :for={m <- @menu}
-          class={[m[:disabled] && "disabled"]}
-        >
+        <li :for={m <- @menu}>
           <.dm_tooltip
             :if={menu_tooltip?(@id, m)}
             :let={trigger_attrs}
@@ -483,17 +488,33 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
     assigns = assign(assigns, :attrs, menu_link_attrs(assigns.menu, assigns.tooltip_attrs))
 
     ~H"""
+    <button
+      :if={@menu[:disabled]}
+      {@attrs}
+      type="button"
+      class={["menu-item", @menu[:class], @menu[:id] == @active && @active != "" && "active"]}
+      aria-current={@menu[:id] == @active && @active != "" && "page"}
+      aria-disabled="true"
+    >
+      <.menu_content menu={@menu} />
+    </button>
     <.link
+      :if={!@menu[:disabled]}
       {@attrs}
       navigate={@menu[:to]}
       class={[@menu[:class], @menu[:id] == @active && @active != "" && "active"]}
       aria-current={@menu[:id] == @active && @active != "" && "page"}
-      aria-disabled={@menu[:disabled] && "true"}
     >
-      <.dm_mdi :if={@menu[:icon]} name={@menu[:icon]} class="size-5 shrink-0" aria-hidden="true" />
-      <span :if={@menu[:icon]} data-left-menu-label>{render_slot(@menu)}</span>
-      <%= if !@menu[:icon] do %>{render_slot(@menu)}<% end %>
+      <.menu_content menu={@menu} />
     </.link>
+    """
+  end
+
+  defp menu_content(assigns) do
+    ~H"""
+    <.dm_mdi :if={@menu[:icon]} name={@menu[:icon]} class="size-5 shrink-0" aria-hidden="true" />
+    <span :if={@menu[:icon]} data-left-menu-label>{render_slot(@menu)}</span>
+    <%= if !@menu[:icon] do %>{render_slot(@menu)}<% end %>
     """
   end
 
@@ -545,6 +566,17 @@ defmodule PhoenixDuskmoon.Component.Navigation.LeftMenu do
         attrs
       end
 
-    if menu[:disabled], do: Map.put(attrs, "tabindex", "-1"), else: attrs
+    if menu[:disabled] do
+      attrs
+      |> Map.reject(fn {key, _value} ->
+        key = String.downcase(key)
+
+        key in ~w(class navigate patch href aria-current aria-disabled type disabled tabindex popovertarget popovertargetaction command commandfor) ||
+          String.starts_with?(key, ["on", "phx-", "data-phx-"])
+      end)
+      |> Map.put("tabindex", "-1")
+    else
+      attrs
+    end
   end
 end
