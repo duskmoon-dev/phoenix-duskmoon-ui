@@ -195,19 +195,21 @@ defmodule ReleaseSupport do
   def npm_metadata!(package, version) do
     stable!(version)
 
+    # npm can process a successful publish for more than ten minutes. Retry only
+    # metadata reads so readiness never causes a second publication.
     cmd!(
       "curl",
       [
         "--fail",
         "--retry",
-        "60",
+        "240",
         "--retry-delay",
         "5",
         "--retry-all-errors",
         "--max-time",
         "30",
         "--retry-max-time",
-        "300",
+        "1200",
         "--silent",
         "--show-error",
         "https://registry.npmjs.org/#{package}/#{version}"

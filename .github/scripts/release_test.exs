@@ -170,8 +170,8 @@ defmodule HexDocsPublicationTest do
     assert status == 0, output
     assert output =~ JSON.encode!(metadata)
     assert [request] = String.split(File.read!(ctx.curl_log), "\n", trim: true)
-    assert request =~ "--retry 60 --retry-delay 5 --retry-all-errors"
-    assert request =~ "--max-time 30 --retry-max-time 300"
+    assert request =~ "--retry 240 --retry-delay 5 --retry-all-errors"
+    assert request =~ "--max-time 30 --retry-max-time 1200"
     refute File.exists?(ctx.npm_log)
     refute File.exists?(ctx.mix_log)
     assert File.read!(ctx.tarball) == "verified immutable UI package"
