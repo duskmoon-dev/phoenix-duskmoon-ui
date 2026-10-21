@@ -258,13 +258,18 @@ export const FormElementHook = {
   },
 };
 
-/** Close the current confirm dialog before submit/reset/custom command default actions. */
+/** Close before other actions, leaving native close commands to the browser. */
 export function handleDialogConfirmClick(event) {
   const path = event.composedPath?.() ?? [];
   const action = path.find((node) => node.matches?.(DIALOG_CONFIRM_SELECTOR));
   const dialog = path.find((node) => node.matches?.(DIALOG_SELECTOR));
 
-  if (action && dialog?.open) dialog.close();
+  if (!action || !dialog?.open) return;
+
+  const formAction = action.form && ["submit", "reset"].includes(action.type);
+  const nativeClose = action.command === "close" && action.commandForElement === dialog;
+
+  if (!nativeClose || formAction) dialog.close();
 }
 
 /** Install CSP-safe delegated behavior for LiveView-patched confirm dialogs. */

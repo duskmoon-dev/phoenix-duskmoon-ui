@@ -20,6 +20,146 @@ defmodule PhoenixDuskmoon.Component.Action.ButtonBrowserTest do
     %{page: page}
   end
 
+  test "confirmation closes once through its native command and preserves the action", %{
+    page: page
+  } do
+    component =
+      render_component(&dm_btn/1, %{
+        id: "delete-credential",
+        confirm: "Delete this credential?",
+        "phx-click": "delete_credential",
+        inner_block: %{inner_block: fn _, _ -> "Delete" end}
+      })
+
+    runtime = File.read!(Path.expand("../../../../assets/js/phoenix_duskmoon.js", __DIR__))
+
+    html = """
+    <!doctype html><html lang="en"><body>
+    #{component}<script type="module">#{runtime}</script></body></html>
+    """
+
+    :ok = CDPBrowser.goto(page, "data:text/html;base64," <> Base.encode64(html))
+
+    assert {:ok,
+            %{
+              "actionCount" => 1,
+              "closed" => true,
+              "closeCount" => 1,
+              "commandCount" => 1,
+              "commandSawOpenDialog" => true,
+              "defaultPrevented" => false,
+              "focusReturned" => true
+            }} =
+             CDPBrowser.evaluate(page, """
+             (async () => {
+               const trigger = document.getElementById("delete-credential")
+               const dialog = document.getElementById("confirm-dialog-delete-credential")
+               const action = dialog.querySelector("[data-dm-confirm-action]")
+               const nested = document.createElement("span")
+               nested.textContent = "Confirm deletion"
+               action.append(nested)
+               let actionCount = 0, closeCount = 0, commandCount = 0
+               let commandSawOpenDialog, defaultPrevented
+               document.addEventListener("click", event => {
+                 if (event.composedPath().some(node =>
+                   node.getAttribute?.("phx-click") === "delete_credential"
+                 )) {
+                   actionCount++
+                   defaultPrevented = event.defaultPrevented
+                 }
+               })
+               dialog.addEventListener("command", event => {
+                 if (event.command === "close") {
+                   commandCount++
+                   commandSawOpenDialog = dialog.open
+                 }
+               })
+               dialog.addEventListener("close", () => closeCount++)
+               trigger.focus()
+               trigger.click()
+               const closed = new Promise(resolve => dialog.addEventListener("close", resolve, {once: true}))
+               nested.click()
+               await closed
+               return {
+                 actionCount, closeCount, commandCount, commandSawOpenDialog, defaultPrevented,
+                 closed: !dialog.open,
+                 focusReturned: document.activeElement === trigger
+               }
+             })()
+             """)
+  end
+
+  test "confirmation closes before form reset and custom command defaults", %{page: page} do
+    reset =
+      render_component(&dm_btn/1, %{
+        id: "reset-settings",
+        confirm: "Reset settings?",
+        type: "reset",
+        form: "settings-form",
+        inner_block: %{inner_block: fn _, _ -> "Reset" end}
+      })
+
+    custom =
+      render_component(&dm_btn/1, %{
+        id: "approve-settings",
+        confirm: "Approve settings?",
+        command: "--approve",
+        commandfor: "settings-target",
+        inner_block: %{inner_block: fn _, _ -> "Approve" end}
+      })
+
+    runtime = File.read!(Path.expand("../../../../assets/js/phoenix_duskmoon.js", __DIR__))
+
+    html = """
+    <!doctype html><html lang="en"><body>
+    <form id="settings-form"><input name="title" value="Saved"></form>
+    <div id="settings-target"></div>
+    #{reset}#{custom}<script type="module">#{runtime}</script></body></html>
+    """
+
+    :ok = CDPBrowser.goto(page, "data:text/html;base64," <> Base.encode64(html))
+
+    assert {:ok,
+            %{
+              "customCount" => 1,
+              "customSawClosedDialog" => true,
+              "customSourceMatches" => true,
+              "resetCount" => 1,
+              "resetSawClosedDialog" => true,
+              "value" => "Saved"
+            }} =
+             CDPBrowser.evaluate(page, """
+             (() => {
+               const form = document.getElementById("settings-form")
+               const resetDialog = document.getElementById("confirm-dialog-reset-settings")
+               const customDialog = document.getElementById("confirm-dialog-approve-settings")
+               const customAction = customDialog.querySelector("[data-dm-confirm-action]")
+               let resetCount = 0, customCount = 0
+               let resetSawClosedDialog, customSawClosedDialog, customSourceMatches
+               form.addEventListener("reset", () => {
+                 resetCount++
+                 resetSawClosedDialog = !resetDialog.open
+               })
+               document.getElementById("settings-target").addEventListener("command", event => {
+                 if (event.command === "--approve") {
+                   customCount++
+                   customSawClosedDialog = !customDialog.open
+                   customSourceMatches = event.source === customAction
+                 }
+               })
+               form.elements.title.value = "Edited"
+               document.getElementById("reset-settings").click()
+               resetDialog.querySelector("[data-dm-confirm-action]").click()
+               document.getElementById("approve-settings").click()
+               customAction.click()
+               return {
+                 resetCount, resetSawClosedDialog, value: form.elements.title.value,
+                 customCount, customSawClosedDialog, customSourceMatches
+               }
+             })()
+             """)
+  end
+
   test "confirm modal traps focus and only confirm dispatches the action", %{page: page} do
     component =
       render_component(&dm_btn/1, %{

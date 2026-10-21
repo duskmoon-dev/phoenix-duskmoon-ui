@@ -1,6 +1,9 @@
 import { describe, expect, mock, test } from "bun:test";
 
-import { installDialogBehavior } from "../../assets/js/phoenix_duskmoon.js";
+import {
+	handleDialogConfirmClick,
+	installDialogBehavior,
+} from "../../assets/js/phoenix_duskmoon.js";
 import {
 	DuskmoonPopover,
 	syncPopoverState,
@@ -16,6 +19,71 @@ function delegatedRoot() {
 }
 
 describe("delegated dialog behavior", () => {
+	function confirmClick(overrides = {}) {
+		const dialog = {
+			close: mock(() => undefined),
+			matches: (selector) => selector.startsWith("dialog["),
+			open: true,
+		};
+		const action = {
+			command: "close",
+			commandForElement: dialog,
+			form: null,
+			matches: (selector) => selector.startsWith("[data-dm-confirm-action"),
+			type: "button",
+			...overrides,
+		};
+		const event = {
+			composedPath: () => [{}, action, dialog],
+			preventDefault: mock(() => undefined),
+			stopPropagation: mock(() => undefined),
+			stopImmediatePropagation: mock(() => undefined),
+		};
+
+		return { dialog, event };
+	}
+
+	test("leaves the current dialog's native close command to the browser", () => {
+		const { dialog, event } = confirmClick();
+
+		handleDialogConfirmClick(event);
+
+		expect(dialog.close).not.toHaveBeenCalled();
+		expect(event.preventDefault).not.toHaveBeenCalled();
+		expect(event.stopPropagation).not.toHaveBeenCalled();
+		expect(event.stopImmediatePropagation).not.toHaveBeenCalled();
+	});
+
+	test.each(["submit", "reset"])(
+		"closes before a form-associated %s action without canceling it",
+		(type) => {
+			const { dialog, event } = confirmClick({ type, form: {} });
+
+			handleDialogConfirmClick(event);
+
+			expect(dialog.close).toHaveBeenCalledTimes(1);
+			expect(event.preventDefault).not.toHaveBeenCalled();
+			expect(event.stopPropagation).not.toHaveBeenCalled();
+			expect(event.stopImmediatePropagation).not.toHaveBeenCalled();
+		},
+	);
+
+	test.each([
+		{ command: "show-modal", commandForElement: {} },
+		{ command: "--confirm", commandForElement: {} },
+		{ command: "close", commandForElement: {} },
+		{ command: undefined, commandForElement: undefined },
+	])("closes before another action: %j", (overrides) => {
+		const { dialog, event } = confirmClick(overrides);
+
+		handleDialogConfirmClick(event);
+
+		expect(dialog.close).toHaveBeenCalledTimes(1);
+		expect(event.preventDefault).not.toHaveBeenCalled();
+		expect(event.stopPropagation).not.toHaveBeenCalled();
+		expect(event.stopImmediatePropagation).not.toHaveBeenCalled();
+	});
+
 	test("installs one capturing confirm listener", () => {
 		const root = delegatedRoot();
 

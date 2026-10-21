@@ -145,10 +145,12 @@ defmodule Storybook.Action.Button do
         variations: [
           %Variation{
             id: :remove,
+            description: "Native confirmation closes once and dispatches the LiveView action",
             attributes: %{
               variant: "error",
               confirm_title: "Attention!",
-              confirm: "Do you really want to remove it?"
+              confirm: "Do you really want to remove it?",
+              "phx-click": "remove"
             },
             slots: ["Remove"]
           },
