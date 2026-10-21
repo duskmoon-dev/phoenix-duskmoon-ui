@@ -1,3 +1,12 @@
+# [10.0.10](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.9...v10.0.10) (2026-10-22)
+
+### Fixed
+
+- Let the native confirmation command close its dialog once, avoiding duplicate-close
+  browser warnings while preserving LiveView events, form submit/reset and custom
+  command behavior, resolving
+  [#208](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/208).
+
 # [10.0.9](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.8...v10.0.9) (2026-10-21)
 
 ### Fixed
