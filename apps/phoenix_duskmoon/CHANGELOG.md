@@ -1,3 +1,13 @@
+# [10.0.11](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.10...v10.0.11) (2026-10-22)
+
+### Fixed
+
+- Synchronize native dropdown triggers' explicit `aria-expanded` state on open,
+  Escape, light dismiss and LiveView patches through the existing CSP-safe
+  `DuskmoonPopover` hook. Preserve native-only behavior and accessibility when
+  the hook is absent, resolving
+  [#209](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/209).
+
 # [10.0.10](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.9...v10.0.10) (2026-10-22)
 
 ### Fixed
