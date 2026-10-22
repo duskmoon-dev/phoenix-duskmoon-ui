@@ -14,6 +14,9 @@
   Dropdown menu component using the native HTML Popover API with
   `@duskmoon-dev/core` popover CSS. Click-to-toggle and click-outside-to-dismiss
   behavior is handled by the browser — no JavaScript required.
+  Register `DuskmoonPopover` from `phoenix_duskmoon/hooks` with your LiveSocket to
+  mirror the native state to the trigger's explicit `aria-expanded` attribute.
+  This works with an external bundle under `script-src 'self'`.
 
   ## Usage
   ```elixir

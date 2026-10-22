@@ -35,15 +35,30 @@ import {
   ThemeSwitcher,
   Spotlight,
   PageHeader,
+  DuskmoonPopover,
   DuskmoonLeftMenu,
   DuskmoonLeftMenuNavigation,
   DuskmoonSplitPane,
 } from "phoenix_duskmoon/hooks";
 
-let hooks = { WebComponentHook, FormElementHook, ThemeSwitcher, Spotlight, PageHeader, DuskmoonLeftMenu, DuskmoonLeftMenuNavigation, DuskmoonSplitPane };
+let hooks = { WebComponentHook, FormElementHook, ThemeSwitcher, Spotlight, PageHeader, DuskmoonPopover, DuskmoonLeftMenu, DuskmoonLeftMenuNavigation, DuskmoonSplitPane };
 ```
 
 ## Hook Reference
+
+### DuskmoonPopover
+
+**Used by**: `<.dm_dropdown />` and server-controlled `<.dm_popover />`.
+
+The dropdown hook mirrors native visibility to the trigger's `aria-expanded`
+attribute on mount, native toggle events and LiveView patches. Register the hook
+in your external bundle; it needs no inline script or CSP exception. Use a stable
+dropdown `id` when updating it through LiveView.
+
+Native click toggling, Escape, light dismiss and implicit accessibility state
+continue to work without the hook. An explicit `aria-expanded` attribute is only
+added after mounting, so a static attribute cannot mask the browser's native state.
+Server-controlled popovers keep their existing `data-open` synchronization.
 
 ### DuskmoonSplitPane
 
@@ -167,6 +182,7 @@ persistence behavior.
 
 | Component | Required Hook | What Breaks Without It |
 |-----------|--------------|----------------------|
+| `<.dm_dropdown />` | DuskmoonPopover | Explicit `aria-expanded` is absent; native behavior and implicit accessibility state still work |
 | `<.dm_theme_switcher />` | ThemeSwitcher | Theme choice not persisted across page loads |
 | `<.dmf_spotlight />` | Spotlight | Keyboard shortcut (Cmd/Ctrl+K) doesn't work |
 | `<.dm_page_header />` | PageHeader | Scroll-based nav visibility doesn't trigger |

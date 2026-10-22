@@ -22,7 +22,7 @@
  * - ThemeSwitcher: Theme toggle with localStorage persistence
  * - Spotlight: Keyboard shortcut (Cmd/Ctrl+K) for spotlight search
  * - PageHeader: Intersection observer for scroll-based effects
- * - DuskmoonPopover: Optional server-controlled native popover state
+ * - DuskmoonPopover: Native dropdown expanded state and optional server-controlled popovers
  * - DuskmoonLeftMenu: Collapsible sidebar with persistent group and scroll state
  * - DuskmoonLeftMenuNavigation: Active-page synchronization for sticky left menus
  * - DuskmoonSplitPane: Accessible client-owned split-pane resizing

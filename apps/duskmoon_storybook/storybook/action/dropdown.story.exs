@@ -5,15 +5,18 @@ defmodule Storybook.Action.Dropdown do
   def description, do: "Dropdown menu component for action menus and navigation."
 
   def imports do
-    [{PhoenixDuskmoon.Component.Action.Button, [dm_btn: 1]},
-     {PhoenixDuskmoon.Component.Icon.Icons, [dm_mdi: 1]}]
+    [
+      {PhoenixDuskmoon.Component.Action.Button, [dm_btn: 1]},
+      {PhoenixDuskmoon.Component.Icon.Icons, [dm_mdi: 1]}
+    ]
   end
 
   def variations do
     [
       %Variation{
         id: :default,
-        description: "Basic dropdown with ghost trigger button",
+        description: "Native menu with explicit expanded state synchronized by DuskmoonPopover",
+        attributes: %{id: "dropdown-default"},
         slots: [
           """
           <:trigger>

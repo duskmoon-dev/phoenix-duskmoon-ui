@@ -101,11 +101,27 @@ describe("delegated dialog behavior", () => {
 
 describe("server-controlled native popover state", () => {
 	function popoverElement(controlledOpen, open = false) {
+		const listeners = new Map();
 		return {
+			id: "menu",
 			dataset: { open: controlledOpen },
-			hidePopover: mock(() => undefined),
+			addEventListener: mock((event, listener) =>
+				listeners.set(event, listener),
+			),
+			removeEventListener: mock((event, listener) => {
+				if (listeners.get(event) === listener) listeners.delete(event);
+			}),
+			hidePopover: mock(() => {
+				open = false;
+			}),
 			matches: mock(() => open),
-			showPopover: mock(() => undefined),
+			showPopover: mock(() => {
+				open = true;
+			}),
+			toggle(openState, event = {}) {
+				open = openState;
+				listeners.get("toggle")?.(event);
+			},
 		};
 	}
 
@@ -131,6 +147,156 @@ describe("server-controlled native popover state", () => {
 		DuskmoonPopover.mounted.call(hook);
 		DuskmoonPopover.updated.call(hook);
 
-		expect(element.showPopover).toHaveBeenCalledTimes(2);
+		expect(element.showPopover).toHaveBeenCalledTimes(1);
+	});
+});
+
+// Native visibility belongs to the browser. This harness delivers the same toggle
+// notification for command activation, Escape/light dismiss and show/hidePopover.
+describe("native dropdown expanded state", () => {
+	function dropdown(open = false) {
+		const listeners = new Map();
+		let panel;
+		const trigger = () => ({
+			attributes: { "aria-controls": "menu" },
+			getAttribute(name) {
+				return this.attributes[name] ?? null;
+			},
+			setAttribute(name, value) {
+				this.attributes[name] = value;
+			},
+		});
+		function popover() {
+			let visible = open;
+			return {
+				id: "menu",
+				dataset: {},
+				addEventListener: mock((name, listener) =>
+					listeners.set(name, listener),
+				),
+				removeEventListener: mock((name, listener) => {
+					if (listeners.get(name) === listener) listeners.delete(name);
+				}),
+				matches: (selector) => selector === ":popover-open" && visible,
+				showPopover: mock(() => {
+					visible = true;
+				}),
+				hidePopover: mock(() => {
+					visible = false;
+				}),
+				toggle(value, event = {}) {
+					visible = value;
+					listeners.get("toggle")?.(event);
+				},
+			};
+		}
+		panel = popover();
+		const wrapper = {
+			dataset: { popoverId: "menu" },
+			ownerDocument: { getElementById: (id) => (id === "menu" ? panel : null) },
+			triggers: [trigger()],
+			querySelectorAll: () => wrapper.triggers,
+		};
+		const hook = { el: wrapper };
+		return {
+			hook,
+			panel,
+			wrapper,
+			trigger,
+			replacePanel: () => {
+				panel = popover();
+				return panel;
+			},
+			removePanel: () => {
+				panel = null;
+			},
+		};
+	}
+
+	test.each([false, true])(
+		"initializes explicit state from the mounted native panel: %s",
+		(open) => {
+			const { hook, wrapper } = dropdown(open);
+			expect(wrapper.triggers[0].getAttribute("aria-expanded")).toBeNull();
+
+			DuskmoonPopover.mounted.call(hook);
+
+			expect(wrapper.triggers[0].getAttribute("aria-expanded")).toBe(
+				String(open),
+			);
+		},
+	);
+
+	test("follows native visibility without canceling events or issuing duplicate commands", () => {
+		const { hook, panel, wrapper } = dropdown();
+		DuskmoonPopover.mounted.call(hook);
+		const event = { preventDefault: mock(), stopPropagation: mock() };
+
+		for (const open of [true, false, true, false]) {
+			panel.toggle(open, event);
+			expect(wrapper.triggers[0].getAttribute("aria-expanded")).toBe(
+				String(open),
+			);
+		}
+
+		expect(panel.showPopover).not.toHaveBeenCalled();
+		expect(panel.hidePopover).not.toHaveBeenCalled();
+		expect(event.preventDefault).not.toHaveBeenCalled();
+		expect(event.stopPropagation).not.toHaveBeenCalled();
+	});
+
+	test("reads current native state instead of a stale queued toggle event", () => {
+		const { hook, panel, wrapper } = dropdown();
+		DuskmoonPopover.mounted.call(hook);
+		panel.toggle(false, { newState: "open" });
+		expect(wrapper.triggers[0].getAttribute("aria-expanded")).toBe("false");
+	});
+
+	test("resynchronizes replaced sibling triggers during a LiveView patch", () => {
+		const { hook, panel, wrapper, trigger } = dropdown();
+		DuskmoonPopover.mounted.call(hook);
+		panel.toggle(true);
+		wrapper.triggers = [trigger(), trigger()];
+		const unrelated = trigger();
+		unrelated.attributes["aria-controls"] = "another-menu";
+		wrapper.triggers.push(unrelated);
+
+		DuskmoonPopover.updated.call(hook);
+
+		expect(wrapper.triggers[0].getAttribute("aria-expanded")).toBe("true");
+		expect(wrapper.triggers[1].getAttribute("aria-expanded")).toBe("true");
+		expect(unrelated.getAttribute("aria-expanded")).toBeNull();
+		expect(panel.addEventListener).toHaveBeenCalledTimes(1);
+	});
+
+	test("rebinds to a patched panel and applies server-controlled state before ARIA", () => {
+		const { hook, panel, wrapper, replacePanel } = dropdown();
+		DuskmoonPopover.mounted.call(hook);
+		const replacement = replacePanel();
+		replacement.dataset.open = "true";
+
+		DuskmoonPopover.updated.call(hook);
+
+		expect(panel.removeEventListener).toHaveBeenCalledTimes(1);
+		expect(replacement.addEventListener).toHaveBeenCalledTimes(1);
+		expect(replacement.showPopover).toHaveBeenCalledTimes(1);
+		expect(wrapper.triggers[0].getAttribute("aria-expanded")).toBe("true");
+		replacement.dataset.open = "false";
+		DuskmoonPopover.updated.call(hook);
+		expect(wrapper.triggers[0].getAttribute("aria-expanded")).toBe("false");
+	});
+
+	test("handles a temporarily absent panel and removes listeners on destroy", () => {
+		const { hook, panel, removePanel, replacePanel } = dropdown();
+		DuskmoonPopover.mounted.call(hook);
+		removePanel();
+		DuskmoonPopover.updated.call(hook);
+		expect(panel.removeEventListener).toHaveBeenCalledTimes(1);
+
+		const replacement = replacePanel();
+		DuskmoonPopover.updated.call(hook);
+		DuskmoonPopover.destroyed.call(hook);
+		expect(replacement.removeEventListener).toHaveBeenCalledTimes(1);
+		expect(hook._popover).toBeNull();
 	});
 });

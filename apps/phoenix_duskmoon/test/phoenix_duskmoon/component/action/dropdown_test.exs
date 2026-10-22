@@ -337,7 +337,7 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
     assert result =~ ~s[role="menu"]
   end
 
-  test "does not render stale aria-expanded state" do
+  test "leaves implicit expanded state intact until the hook mounts" do
     result =
       render_component(&dm_dropdown/1, %{
         trigger: trigger(),
@@ -347,7 +347,7 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
     refute result =~ "aria-expanded"
   end
 
-  test "native dropdown requires no inline handlers or client state classes" do
+  test "registers the CSP-safe expanded-state hook without inline handlers or state classes" do
     result =
       render_component(&dm_dropdown/1, %{
         id: "csp-dropdown",
@@ -357,7 +357,9 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownTest do
 
     refute result =~ ~r/\s+on\w+=/i
     refute result =~ "<script"
-    refute result =~ "phx-hook"
+    assert result =~ ~s[phx-hook="DuskmoonPopover"]
+    assert result =~ ~s[id="csp-dropdown-popover-dropdown"]
+    assert result =~ ~s[data-popover-id="csp-dropdown-popover"]
     refute result =~ "popover-show"
     assert result =~ ~s[command="toggle-popover"]
     assert result =~ ~s[commandfor="csp-dropdown-popover"]
