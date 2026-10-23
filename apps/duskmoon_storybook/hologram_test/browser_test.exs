@@ -81,7 +81,10 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
     )
 
     assert {:ok, false} =
-             CDPBrowser.evaluate(page, "document.querySelector('#hologram-notifications').checked")
+             CDPBrowser.evaluate(
+               page,
+               "document.querySelector('#hologram-notifications').checked"
+             )
 
     assert {:ok, light_background} =
              CDPBrowser.evaluate(
@@ -102,7 +105,10 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
     screenshot(page, "moonlight")
 
     assert {:ok, false} =
-             CDPBrowser.evaluate(page, "document.querySelector('#hologram-notifications').checked")
+             CDPBrowser.evaluate(
+               page,
+               "document.querySelector('#hologram-notifications').checked"
+             )
 
     assert {:ok, 0} =
              CDPBrowser.evaluate(page, """
