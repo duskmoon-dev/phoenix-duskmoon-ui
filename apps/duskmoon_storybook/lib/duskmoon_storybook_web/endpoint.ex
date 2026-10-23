@@ -52,6 +52,7 @@ defmodule DuskmoonStorybookWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+
   if Application.compile_env(:duskmoon_storybook, :hologram_examples, false) do
     plug Hologram.Router
   end

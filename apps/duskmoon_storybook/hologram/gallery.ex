@@ -62,17 +62,17 @@ defmodule DuskmoonStorybook.Hologram.Gallery do
             <h1 class="text-3xl font-bold">Hologram + Duskmoon Core</h1>
             <span class="badge badge-secondary">Experimental</span>
             <span id="hologram-runtime" class="badge badge-success" role="status"
-              data-ready={if @ready, do: "true", else: "false"}>
-              {if @ready, do: "Client ready", else: "Server rendered"}
+              data-ready={if(@ready, do: "true", else: "false")}>
+              {if(@ready, do: "Client ready", else: "Server rendered")}
             </span>
           </div>
           <p>One stylesheet. Native HTML. Elixir actions running in your browser.</p>
           <div class="flex flex-wrap gap-2" aria-label="Preview theme">
             <button id="hologram-sunshine" type="button" class="btn btn-primary"
-              aria-pressed={if @theme == "sunshine", do: "true", else: "false"}
+              aria-pressed={if(@theme == "sunshine", do: "true", else: "false")}
               $click={:set_theme, theme: "sunshine"}>Sunshine</button>
             <button id="hologram-moonlight" type="button" class="btn btn-secondary"
-              aria-pressed={if @theme == "moonlight", do: "true", else: "false"}
+              aria-pressed={if(@theme == "moonlight", do: "true", else: "false")}
               $click={:set_theme, theme: "moonlight"}>Moonlight</button>
           </div>
         </header>
@@ -112,7 +112,7 @@ defmodule DuskmoonStorybook.Hologram.Gallery do
                 Enable notifications
               </label>
               <p id="hologram-notifications-preview" role="status">
-                {if @notifications, do: "Notifications enabled", else: "Notifications disabled"}
+                {if(@notifications, do: "Notifications enabled", else: "Notifications disabled")}
               </p>
               <p class="text-sm">Input values have one owner: Hologram state.</p>
             </div>

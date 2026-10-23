@@ -62,6 +62,7 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
 
     wait_for(page, "document.querySelector('#hologram-name-preview').textContent === 'Jonathan'")
     click(page, "#hologram-notifications")
+
     wait_for(
       page,
       "document.querySelector('#hologram-notifications-preview').textContent.includes('disabled')"
@@ -94,15 +95,21 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
   test "native modal survives Hologram rendering and restores focus", %{page: page} do
     assert {:ok, true} =
              CDPBrowser.evaluate(page, "'commandForElement' in HTMLButtonElement.prototype")
+
     assert {:ok, _} =
              CDPBrowser.evaluate(page, "document.querySelector('#hologram-open-dialog').focus()")
+
     click(page, "#hologram-open-dialog")
     wait_for(page, "document.querySelector('#hologram-dialog').matches(':modal')")
 
     click(page, "#hologram-dialog-increment")
     wait_for(page, "document.querySelector('#hologram-dialog-count').textContent.trim() === '1'")
+
     assert {:ok, true} =
-             CDPBrowser.evaluate(page, "document.querySelector('#hologram-dialog').matches(':modal')")
+             CDPBrowser.evaluate(
+               page,
+               "document.querySelector('#hologram-dialog').matches(':modal')"
+             )
 
     assert {:ok, _} =
              CDPBrowser.command(page, "Input.dispatchKeyEvent", %{
@@ -149,7 +156,10 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
 
   defp click(page, selector) do
     assert {:ok, _} =
-             CDPBrowser.evaluate(page, "document.querySelector(#{Jason.encode!(selector)}).click()")
+             CDPBrowser.evaluate(
+               page,
+               "document.querySelector(#{Jason.encode!(selector)}).click()"
+             )
   end
 
   defp wait_for(page, expression) do

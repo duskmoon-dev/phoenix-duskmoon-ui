@@ -5,7 +5,7 @@ root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 cd "$root"
 export DUSKMOON_HOLOGRAM=1
 export HOLOGRAM_START=1
-export MIX_BUILD_PATH="$root/_build/hologram-example"
+export MIX_BUILD_PATH="$root/_build/hologram-example/${MIX_ENV:-dev}"
 mkdir -p "$root/_build"
 lockfile="$root/_build/hologram-example.mix.lock"
 if [ ! -f "$lockfile" ]; then

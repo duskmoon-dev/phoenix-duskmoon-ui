@@ -26,8 +26,7 @@ defmodule Storybook.Integrations.Hologram do
           src="/examples/hologram"
           title="Hologram Duskmoon Core interactive example"
           class="min-h-[960px] w-full rounded-xl border border-outline"
-        >
-        </iframe>
+        ></iframe>
       </div>
       <div :if={!@hologram_enabled} class="space-y-3">
         <p class="alert alert-info" role="status">
