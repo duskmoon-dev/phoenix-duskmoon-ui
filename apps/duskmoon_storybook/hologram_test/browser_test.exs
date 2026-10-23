@@ -61,6 +61,9 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
     click(page, "#hologram-increment")
     wait_for(page, "document.querySelector('#hologram-count').textContent.trim() === '1'")
 
+    assert {:ok, false} =
+             CDPBrowser.evaluate(page, "document.querySelector('#hologram-decrement').disabled")
+
     assert {:ok, _} =
              CDPBrowser.evaluate(page, """
              const input = document.querySelector('#hologram-name');
@@ -76,6 +79,9 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
       page,
       "document.querySelector('#hologram-notifications-preview').textContent.includes('disabled')"
     )
+
+    assert {:ok, false} =
+             CDPBrowser.evaluate(page, "document.querySelector('#hologram-notifications').checked")
 
     assert {:ok, light_background} =
              CDPBrowser.evaluate(
@@ -94,6 +100,9 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
 
     refute light_background == dark_background
     screenshot(page, "moonlight")
+
+    assert {:ok, false} =
+             CDPBrowser.evaluate(page, "document.querySelector('#hologram-notifications').checked")
 
     assert {:ok, 0} =
              CDPBrowser.evaluate(page, """
@@ -191,6 +200,20 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
   end
 
   defp screenshot(page, name) do
+    # Capture settled styles rather than an intermediate checkbox/theme transition.
+    assert {:ok, true} =
+             CDPBrowser.evaluate(page, """
+             (async () => {
+               await document.fonts.ready;
+               await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+               const animations = document.getAnimations().filter(animation =>
+                 animation.playState === 'running' && animation.effect?.getComputedTiming().iterations !== Infinity
+               );
+               await Promise.all(animations.map(animation => animation.finished.catch(() => {})));
+               return true;
+             })()
+             """)
+
     assert {:ok, %{"data" => data}} =
              CDPBrowser.command(page, "Page.captureScreenshot", %{
                format: "png",
