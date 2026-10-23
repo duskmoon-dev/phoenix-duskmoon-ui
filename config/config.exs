@@ -3,6 +3,7 @@ Code.require_file("../scripts/native-policy.exs", __DIR__)
 
 config :duskmoon_storybook,
   namespace: DuskmoonStorybook,
+  hologram_examples: System.get_env("DUSKMOON_HOLOGRAM") == "1",
   generators: [context_app: false]
 
 config :duskmoon_storybook, DuskmoonStorybookWeb.Endpoint,
@@ -69,6 +70,7 @@ config :duskmoon_bundler, :duskmoon_storybook,
       %{base: "apps/duskmoon_storybook/assets", pattern: "**/*.{css,js}"},
       %{base: "apps/duskmoon_storybook/lib", pattern: "**/*.{ex,exs,heex}"},
       %{base: "apps/duskmoon_storybook/storybook", pattern: "**/*.{ex,exs,heex}"},
+      %{base: "apps/duskmoon_storybook/hologram", pattern: "**/*.ex"},
       %{base: "apps/phoenix_duskmoon/assets", pattern: "**/*.{css,js}"},
       %{base: "apps/phoenix_duskmoon/lib", pattern: "**/*.{ex,exs,heex}"}
     ]
@@ -79,6 +81,7 @@ config :duskmoon_bundler, :duskmoon_storybook,
       "apps/duskmoon_storybook/assets",
       "apps/duskmoon_storybook/lib",
       "apps/duskmoon_storybook/storybook",
+      "apps/duskmoon_storybook/hologram",
       "apps/phoenix_duskmoon/assets",
       "apps/phoenix_duskmoon/lib"
     ]

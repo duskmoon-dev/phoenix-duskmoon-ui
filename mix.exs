@@ -13,6 +13,7 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
       apps_path: "apps",
       apps: [:phoenix_duskmoon, :duskmoon_storybook],
       version: @version,
+      lockfile: lockfile(),
       elixir: ">= 1.18.0",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -24,6 +25,14 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
       ],
       aliases: aliases()
     ]
+  end
+
+  defp lockfile do
+    if System.get_env("DUSKMOON_HOLOGRAM") == "1" do
+      "_build/hologram-example.mix.lock"
+    else
+      "mix.lock"
+    end
   end
 
   defp deps do

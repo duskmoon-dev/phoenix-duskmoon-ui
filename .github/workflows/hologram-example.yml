@@ -1,0 +1,75 @@
+name: Hologram Example
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/hologram-example.yml'
+      - 'apps/duskmoon_storybook/**'
+      - 'config/**'
+      - 'mix.exs'
+      - 'mix.lock'
+      - 'BUNDLER_VERSION'
+      - 'scripts/with-hologram-example.sh'
+  pull_request:
+    paths:
+      - '.github/workflows/hologram-example.yml'
+      - 'apps/duskmoon_storybook/**'
+      - 'config/**'
+      - 'mix.exs'
+      - 'mix.lock'
+      - 'BUNDLER_VERSION'
+      - 'scripts/with-hologram-example.sh'
+permissions:
+  contents: read
+concurrency:
+  group: hologram-example-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      MIX_ENV: test
+    steps:
+      - uses: actions/checkout@v7
+      - uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.19'
+          otp-version: '28.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.13
+      - uses: browser-actions/setup-chrome@v2
+        id: chrome
+      - name: Install experimental dependencies
+        run: |
+          mix local.hex --force
+          mix local.rebar --force
+          scripts/with-hologram-example.sh deps.get
+          bun install --frozen-lockfile
+      - name: Build the example and shared styles
+        run: |
+          scripts/with-hologram-example.sh compile --warnings-as-errors
+          scripts/with-hologram-example.sh duskmoon_bundler.build duskmoon_storybook
+      - name: Check formatting
+        run: |
+          if ! scripts/with-hologram-example.sh format --check-formatted; then
+            scripts/with-hologram-example.sh format
+            git diff
+            exit 1
+          fi
+      - name: Run scoped Hologram tests
+        if: success() || failure()
+        env:
+          CHROME_BIN: ${{ steps.chrome.outputs.chrome-path }}
+        run: scripts/with-hologram-example.sh test apps/duskmoon_storybook/hologram_test
+      - name: Upload theme and mobile screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hologram-example-screenshots
+          path: _build/hologram-example/**/hologram-screenshots/*.png
+          if-no-files-found: warn

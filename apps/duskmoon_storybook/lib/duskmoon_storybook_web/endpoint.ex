@@ -27,7 +27,7 @@ defmodule DuskmoonStorybookWeb.Endpoint do
     at: "/",
     from: :duskmoon_storybook,
     gzip: Mix.env() == :prod,
-    only: ~w(assets fonts images favicon.ico robots.txt)
+    only: ~w(assets fonts images favicon.ico robots.txt hologram)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
@@ -52,5 +52,9 @@ defmodule DuskmoonStorybookWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+  if Application.compile_env(:duskmoon_storybook, :hologram_examples, false) do
+    plug Hologram.Router
+  end
+
   plug DuskmoonStorybookWeb.Router
 end

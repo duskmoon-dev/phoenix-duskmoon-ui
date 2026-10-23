@@ -11,8 +11,10 @@ defmodule DuskmoonStorybook.MixProject do
       build_path: "../../_build",
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
-      lockfile: "../../mix.lock",
-      elixir: ">= 1.18.0",
+      lockfile: lockfile(),
+      elixir: if(hologram?(), do: ">= 1.19.0", else: ">= 1.18.0"),
+      compilers: Mix.compilers() ++ hologram_compilers(),
+      test_paths: ["test"] ++ hologram_test_paths(),
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -32,8 +34,18 @@ defmodule DuskmoonStorybook.MixProject do
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "test/support", "storybook"]
-  defp elixirc_paths(_), do: ["lib", "storybook"]
+  defp elixirc_paths(:test), do: ["lib", "test/support", "storybook"] ++ hologram_paths()
+  defp elixirc_paths(_), do: ["lib", "storybook"] ++ hologram_paths()
+
+  defp hologram?, do: System.get_env("DUSKMOON_HOLOGRAM") == "1"
+  defp hologram_paths, do: if(hologram?(), do: ["hologram"], else: [])
+  defp hologram_test_paths, do: if(hologram?(), do: ["hologram_test"], else: [])
+  defp hologram_compilers, do: if(hologram?(), do: [:hologram], else: [])
+  defp hologram_deps, do: if(hologram?(), do: [{:hologram, "== 0.12.2"}], else: [])
+
+  defp lockfile do
+    if hologram?(), do: "../../_build/hologram-example.mix.lock", else: "../../mix.lock"
+  end
 
   # Specifies your project dependencies.
   #
@@ -56,7 +68,7 @@ defmodule DuskmoonStorybook.MixProject do
       {:phoenix_duskmoon, in_umbrella: true},
       {:jason, "~> 1.4"},
       {:bandit, "~> 1.11"}
-    ]
+    ] ++ hologram_deps()
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
