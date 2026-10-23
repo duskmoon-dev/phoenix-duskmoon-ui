@@ -33,7 +33,16 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
     assert conn.resp_body =~ "Server rendered"
     assert conn.resp_body =~ "hologram-count"
     assert conn.resp_body =~ "/assets/css/app"
-    refute conn.resp_body =~ "/assets/js/app.js"
+
+    # The inline asset manifest lists app.js without loading it. Check actual scripts.
+    script_sources =
+      conn.resp_body
+      |> LazyHTML.from_document()
+      |> LazyHTML.query("script[src]")
+      |> LazyHTML.attribute("src")
+
+    assert script_sources != []
+    refute Enum.any?(script_sources, &String.starts_with?(&1, "/assets/js/"))
   end
 
   test "hydration, styles, local actions, inputs and both themes", %{page: page} do
