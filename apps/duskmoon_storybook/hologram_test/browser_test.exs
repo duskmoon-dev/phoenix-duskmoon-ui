@@ -7,7 +7,7 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
   @moduletag timeout: 120_000
 
   setup_all do
-    assert Hologram.enabled?(), "Run this suite through scripts/with-hologram-example.sh"
+    assert Hologram.enabled?(), "Enable the Storybook Hologram runtime with HOLOGRAM_START=1"
 
     css = Application.app_dir(:duskmoon_storybook, "priv/static/assets/css/app.css")
     assert File.exists?(css), "Build Storybook assets before running the Hologram browser tests"
@@ -16,19 +16,26 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
     %{local: {:ok, {_ip, port}}} = Gaoxy.info(server, :http)
     {:ok, browser} = CDPBrowser.start_link()
     on_exit(fn -> CDPBrowser.stop(browser) end)
-    %{browser: browser, base_url: "http://127.0.0.1:#{port}"}
+    %{browser: browser, base_url: "http://localhost:#{port}"}
   end
 
   setup %{browser: browser, base_url: base_url} do
     {:ok, page} = CDPBrowser.new_page(browser)
     on_exit(fn -> CDPBrowser.close_page(page) end)
-    assert :ok = CDPBrowser.goto(page, base_url <> "/examples/hologram", timeout: 30_000)
+
+    assert {:ok, _} =
+             CDPBrowser.command(page, "Storage.clearDataForOrigin", %{
+               origin: base_url,
+               storageTypes: "local_storage"
+             })
+
+    assert :ok = CDPBrowser.goto(page, base_url <> "/hologram/demos/playground", timeout: 30_000)
     wait_for(page, "document.querySelector('#hologram-runtime')?.dataset.ready === 'true'")
     %{page: page}
   end
 
   test "the initial document is server rendered without the LiveView bundle" do
-    conn = Plug.Test.conn(:get, "/examples/hologram") |> Endpoint.call(Endpoint.init([]))
+    conn = Plug.Test.conn(:get, "/hologram/demos/playground") |> Endpoint.call(Endpoint.init([]))
     assert conn.status == 200
     assert conn.resp_body =~ "Server rendered"
     assert conn.resp_body =~ "hologram-count"
@@ -45,7 +52,45 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
     refute Enum.any?(script_sources, &String.starts_with?(&1, "/assets/js/"))
   end
 
+  test "Hologram uses the exact shared appbar and Components menu implementation" do
+    document = fn path ->
+      Plug.Test.conn(:get, path)
+      |> Endpoint.call(Endpoint.init([]))
+      |> Map.fetch!(:resp_body)
+      |> LazyHTML.from_document()
+    end
+
+    hologram = document.("/hologram")
+    components = document.("/components")
+
+    for path <- ["/components", "/art-component"] do
+      assert LazyHTML.query(document.(path), "header.storybook-appbar") |> LazyHTML.to_html() ==
+               LazyHTML.query(hologram, "header.storybook-appbar") |> LazyHTML.to_html()
+    end
+
+    for selector <- ["body", "main.container", "footer"] do
+      assert classes(components, selector) == classes(hologram, selector)
+    end
+
+    assert classes(components, "#components-sidebar") == classes(hologram, "#hologram-sidebar")
+
+    assert LazyHTML.query(hologram, "#hologram-sidebar") |> LazyHTML.attribute("phx-hook") ==
+             ["DuskmoonLeftMenu"]
+
+    assert LazyHTML.query(hologram, "#hologram-sidebar-navigation")
+           |> LazyHTML.attribute("phx-hook") ==
+             ["DuskmoonLeftMenuNavigation"]
+
+    assert LazyHTML.query(hologram, "#hologram-sidebar a") |> LazyHTML.attribute("href") ==
+             ["/hologram", "/hologram/playground", "/hologram/tasks", "/hologram/preferences"]
+
+    assert LazyHTML.query(hologram, "#hologram-demo") |> LazyHTML.attribute("src") ==
+             ["/hologram/demos"]
+  end
+
   test "hydration, styles, local actions, inputs and both themes", %{page: page} do
+    set_document_theme(page, "sunshine")
+
     assert {:ok, true} =
              CDPBrowser.evaluate(page, """
              (() => {
@@ -92,8 +137,8 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
                "getComputedStyle(document.querySelector('#hologram-example')).backgroundColor"
              )
 
-    click(page, "#hologram-moonlight")
-    wait_for(page, "document.querySelector('#hologram-example').dataset.theme === 'moonlight'")
+    set_document_theme(page, "moonlight")
+    wait_for(page, "document.documentElement.dataset.theme === 'moonlight'")
 
     assert {:ok, dark_background} =
              CDPBrowser.evaluate(
@@ -160,7 +205,7 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
     wait_for(page, "!document.querySelector('#hologram-dialog').open")
   end
 
-  test "mobile layout does not overflow", %{page: page} do
+  test "mobile layout does not overflow", %{page: page, base_url: base_url} do
     assert {:ok, _} =
              CDPBrowser.command(page, "Emulation.setDeviceMetricsOverride", %{
                width: 390,
@@ -169,6 +214,9 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
                mobile: true
              })
 
+    assert :ok = CDPBrowser.goto(page, base_url <> "/hologram/demos/playground")
+    wait_for(page, "document.querySelector('#hologram-shell')?.dataset.ready === 'true'")
+
     assert {:ok, true} =
              CDPBrowser.evaluate(
                page,
@@ -176,6 +224,279 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
              )
 
     screenshot(page, "mobile")
+  end
+
+  test "catalog links open the demos in their Phoenix host", %{
+    page: page,
+    base_url: base_url
+  } do
+    assert :ok = CDPBrowser.goto(page, base_url <> "/hologram/demos")
+    wait_for(page, "document.querySelector('#hologram-shell')?.dataset.ready === 'true'")
+
+    for path <- ["/hologram/playground", "/hologram/tasks", "/hologram/preferences"] do
+      assert {:ok, true} =
+               CDPBrowser.evaluate(page, """
+               document.querySelector('#hologram-index a[href="#{path}"]')?.target === '_top'
+               """)
+    end
+
+    assert :ok = CDPBrowser.goto(page, base_url <> "/hologram")
+    wait_for_demo(page, "hologram-index")
+
+    assert {:ok, _} =
+             CDPBrowser.evaluate(page, """
+             document.querySelector('#hologram-demo').contentDocument.querySelector('a[href="/hologram/playground"]').click();
+             """)
+
+    wait_for_demo(page, "hologram-example")
+    assert {:ok, "/hologram/playground"} = CDPBrowser.evaluate(page, "location.pathname")
+
+    assert {:ok, 1} =
+             CDPBrowser.evaluate(page, "document.querySelectorAll('header.appbar').length")
+  end
+
+  test "the shared sidebar stays mounted and the theme updates the live Hologram demo", %{
+    page: page,
+    base_url: base_url
+  } do
+    assert :ok = CDPBrowser.goto(page, base_url <> "/hologram/playground")
+    wait_for_demo(page, "hologram-example")
+
+    assert {:ok, _} =
+             CDPBrowser.evaluate(page, """
+             window.originalHologramSidebar = document.querySelector('#hologram-sidebar');
+             document.querySelector('#hologram-demo').contentDocument.querySelector('#hologram-increment').click();
+             """)
+
+    select_theme(page, "moonlight")
+
+    wait_for(
+      page,
+      "document.querySelector('#hologram-demo').contentDocument.documentElement.dataset.theme === 'moonlight'"
+    )
+
+    assert {:ok, "1"} =
+             CDPBrowser.evaluate(
+               page,
+               "document.querySelector('#hologram-demo').contentDocument.querySelector('#hologram-count').textContent.trim()"
+             )
+
+    assert {:ok, 0} =
+             CDPBrowser.evaluate(
+               page,
+               "document.querySelector('#hologram-demo').contentDocument.querySelectorAll('header.appbar, nav[aria-label], footer').length"
+             )
+
+    click(page, "#hologram-sidebar [data-left-menu-toggle]")
+    click(page, "#hologram-sidebar a[href='/hologram/tasks']")
+    wait_for_demo(page, "hologram-tasks")
+
+    wait_for(
+      page,
+      "document.querySelector('#hologram-sidebar a[href=\"/hologram/tasks\"]').getAttribute('aria-current') === 'page'"
+    )
+
+    assert {:ok, true} =
+             CDPBrowser.evaluate(page, """
+             originalHologramSidebar === document.querySelector('#hologram-sidebar') &&
+               document.querySelector('#hologram-sidebar').dataset.collapsed === 'true'
+             """)
+
+    assert :ok = CDPBrowser.goto(page, base_url <> "/components")
+
+    wait_for(
+      page,
+      "window.liveSocket?.isConnected() && document.documentElement.dataset.theme === 'moonlight'"
+    )
+
+    select_theme(page, "sunshine")
+    assert :ok = CDPBrowser.goto(page, base_url <> "/hologram/preferences")
+    wait_for_demo(page, "hologram-preferences")
+
+    wait_for(
+      page,
+      "document.querySelector('#hologram-demo').contentDocument.documentElement.dataset.theme === 'sunshine'"
+    )
+
+    assert {:ok, "true"} =
+             CDPBrowser.evaluate(
+               page,
+               "document.querySelector('#hologram-sidebar').dataset.collapsed"
+             )
+
+    click(page, "#hologram-sidebar [data-left-menu-toggle]")
+    wait_for(page, "document.querySelector('#hologram-sidebar').dataset.collapsed === 'false'")
+  end
+
+  test "the host fits a narrow viewport and resizes with Hologram content", %{
+    page: page,
+    base_url: base_url
+  } do
+    assert {:ok, _} =
+             CDPBrowser.command(page, "Emulation.setDeviceMetricsOverride", %{
+               width: 390,
+               height: 844,
+               deviceScaleFactor: 1,
+               mobile: true
+             })
+
+    assert :ok = CDPBrowser.goto(page, base_url <> "/hologram/playground")
+    wait_for_demo(page, "hologram-example")
+    click(page, "#hologram-sidebar [data-left-menu-toggle]")
+    wait_for(page, "document.querySelector('#hologram-sidebar').dataset.collapsed === 'true'")
+
+    wait_for(page, """
+    document.documentElement.scrollWidth <= window.innerWidth &&
+      document.querySelector('#hologram-demo').contentDocument.documentElement.scrollWidth <=
+        document.querySelector('#hologram-demo').clientWidth &&
+      Math.abs(document.querySelector('#hologram-demo').clientHeight -
+        document.querySelector('#hologram-demo').contentDocument.body.getBoundingClientRect().height) < 2
+    """)
+
+    assert {:ok, height} =
+             CDPBrowser.evaluate(page, "document.querySelector('#hologram-demo').clientHeight")
+
+    assert {:ok, _} =
+             CDPBrowser.evaluate(page, """
+             document.querySelector('#hologram-demo').contentDocument.querySelector('details.collapse summary').click();
+             """)
+
+    wait_for(page, "document.querySelector('#hologram-demo').clientHeight > #{height}")
+
+    screenshot(page, "shared-shell-mobile")
+  end
+
+  test "task form, completion, filtering and clearing work in the browser", %{
+    page: page,
+    base_url: base_url
+  } do
+    assert :ok = CDPBrowser.goto(page, base_url <> "/hologram/demos/tasks")
+    wait_for(page, "document.querySelector('#hologram-shell')?.dataset.ready === 'true'")
+    set_input(page, "#hologram-task-input", "  Review the Hologram demo  ")
+    click(page, "#hologram-task-add")
+
+    wait_for(
+      page,
+      "document.querySelector('#hologram-task-item-4')?.textContent.includes('Review the Hologram demo')"
+    )
+
+    wait_for(page, "document.querySelector('#hologram-task-input').value === ''")
+    click(page, "#hologram-task-toggle-4")
+
+    wait_for(
+      page,
+      "document.querySelector('#hologram-task-completed-count').textContent.trim() === '2'"
+    )
+
+    click(page, "#hologram-task-filter-completed")
+    wait_for(page, "document.querySelectorAll('#hologram-task-list li').length === 2")
+    click(page, "#hologram-task-clear-completed")
+
+    wait_for(
+      page,
+      "document.querySelector('#hologram-task-empty')?.textContent.includes('No completed tasks')"
+    )
+
+    click(page, "#hologram-task-filter-all")
+    wait_for(page, "document.querySelectorAll('#hologram-task-list li').length === 2")
+  end
+
+  test "profile controls preview, apply and reset values", %{page: page, base_url: base_url} do
+    assert :ok = CDPBrowser.goto(page, base_url <> "/hologram/demos/preferences")
+    wait_for(page, "document.querySelector('#hologram-shell')?.dataset.ready === 'true'")
+    set_input(page, "#hologram-preferences-name", "  Hologram explorer  ")
+
+    wait_for(
+      page,
+      "document.querySelector('#hologram-preferences-preview-name').textContent.includes('Hologram explorer')"
+    )
+
+    assert {:ok, _} =
+             CDPBrowser.evaluate(page, """
+             const select = document.querySelector('#hologram-preferences-mode');
+             select.value = 'compact';
+             select.dispatchEvent(new Event('change', {bubbles: true}));
+             """)
+
+    wait_for(
+      page,
+      "document.querySelector('#hologram-preferences-preview').dataset.density === 'compact'"
+    )
+
+    click(page, "#hologram-preferences-notifications")
+
+    wait_for(
+      page,
+      "document.querySelector('#hologram-preferences-preview-notifications').textContent.includes('hidden')"
+    )
+
+    click(page, "#hologram-preferences-apply")
+
+    wait_for(
+      page,
+      "document.querySelector('#hologram-preferences-applied-name').textContent.trim() === 'Hologram explorer'"
+    )
+
+    click(page, "#hologram-preferences-reset")
+
+    wait_for(
+      page,
+      "document.querySelector('#hologram-preferences-name').value === 'Duskmoon explorer'"
+    )
+
+    wait_for(
+      page,
+      "document.querySelector('#hologram-preferences-preview').dataset.density === 'comfortable'"
+    )
+
+    assert {:ok, true} =
+             CDPBrowser.evaluate(
+               page,
+               "document.querySelector('#hologram-preferences-notifications').checked"
+             )
+  end
+
+  defp set_input(page, selector, value) do
+    assert {:ok, _} =
+             CDPBrowser.evaluate(page, """
+             const input = document.querySelector(#{Jason.encode!(selector)});
+             input.value = #{Jason.encode!(value)};
+             input.dispatchEvent(new Event('input', {bubbles: true}));
+             """)
+  end
+
+  defp classes(document, selector) do
+    document
+    |> LazyHTML.query(selector)
+    |> LazyHTML.attribute("class")
+    |> hd()
+    |> String.split()
+    |> MapSet.new()
+  end
+
+  defp set_document_theme(page, theme) do
+    assert {:ok, _} =
+             CDPBrowser.evaluate(page, "document.documentElement.dataset.theme = '#{theme}'")
+  end
+
+  defp select_theme(page, theme) do
+    click(page, "[phx-hook='ThemeSwitcher'] summary")
+
+    assert {:ok, _} =
+             CDPBrowser.evaluate(page, """
+             const input = document.querySelector('[phx-hook="ThemeSwitcher"] input[value="#{theme}"]');
+             document.querySelector('label[for="' + input.id + '"]').click();
+             """)
+
+    wait_for(page, "document.documentElement.dataset.theme === '#{theme}'")
+  end
+
+  defp wait_for_demo(page, marker) do
+    wait_for(page, """
+    window.liveSocket?.isConnected() &&
+      document.querySelector('#hologram-demo')?.contentDocument?.querySelector('##{marker}') &&
+      document.querySelector('#hologram-demo').contentDocument.querySelector('#hologram-shell')?.dataset.ready === 'true'
+    """)
   end
 
   defp click(page, selector) do
@@ -206,14 +527,15 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
   end
 
   defp screenshot(page, name) do
-    # Capture settled styles rather than an intermediate checkbox/theme transition.
+    # Closed dropdown transitions have no visible effect and may never finish.
     assert {:ok, true} =
              CDPBrowser.evaluate(page, """
              (async () => {
                await document.fonts.ready;
                await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
                const animations = document.getAnimations().filter(animation =>
-                 animation.playState === 'running' && animation.effect?.getComputedTiming().iterations !== Infinity
+                 animation.playState === 'running' && animation.effect?.target?.checkVisibility() &&
+                   animation.effect.getComputedTiming().iterations !== Infinity
                );
                await Promise.all(animations.map(animation => animation.finished.catch(() => {})));
                return true;

@@ -2,7 +2,7 @@
 
 The UI version **U** synchronizes `mix.exs`, `apps/phoenix_duskmoon/mix.exs`,
 `apps/phoenix_duskmoon/package.json` and the Bun workspace lock. Toolchain **B**
-uses `~> 10.0` requirements and is resolved by the complete eight-package Hex
+uses `~> 10.0` requirements and is resolved by the complete nine-package Hex
 lock cohort. The public component package does not require the build toolchain.
 
 Commit a reviewed U version change before running **UI Release** (`release.yml`).

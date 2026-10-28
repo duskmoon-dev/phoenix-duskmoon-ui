@@ -3,7 +3,6 @@ Code.require_file("../scripts/native-policy.exs", __DIR__)
 
 config :duskmoon_storybook,
   namespace: DuskmoonStorybook,
-  hologram_examples: System.get_env("DUSKMOON_HOLOGRAM") == "1",
   generators: [context_app: false]
 
 config :duskmoon_storybook, DuskmoonStorybookWeb.Endpoint,

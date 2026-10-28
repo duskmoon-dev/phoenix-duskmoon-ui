@@ -2,20 +2,19 @@ defmodule DuskmoonStorybook.Hologram.Gallery do
   @moduledoc """
   Direct Core markup with browser-local Hologram state, not Phoenix wrappers.
 
-  The browser owns the dialog and disclosure state. Hologram owns the theme,
-  counter and synchronized inputs. No server commands are used in this demo.
+  The browser owns the dialog and disclosure state. Hologram owns the counter
+  and synchronized inputs. No server commands are used in this demo.
   """
 
   use Hologram.Page
 
-  route "/examples/hologram"
-  layout DuskmoonStorybook.Hologram.Layout
+  route "/hologram/demos/playground"
+  layout DuskmoonStorybook.Hologram.Layout, title: "Component playground"
 
   @impl true
   def init(_params, component, _server) do
     component
     |> put_state(
-      theme: "sunshine",
       count: 0,
       name: "Duskmoon",
       notifications: true,
@@ -37,12 +36,6 @@ defmodule DuskmoonStorybook.Hologram.Gallery do
 
   def action(:reset, _params, component), do: put_state(component, :count, 0)
 
-  def action(:set_theme, %{theme: theme}, component) when theme in ["sunshine", "moonlight"] do
-    put_state(component, :theme, theme)
-  end
-
-  def action(:set_theme, _params, component), do: component
-
   def action(:set_name, %{event: %{value: value}}, component) do
     put_state(component, :name, value)
   end
@@ -54,27 +47,18 @@ defmodule DuskmoonStorybook.Hologram.Gallery do
   @impl true
   def template do
     ~HOLO"""
-    <main id="hologram-example" data-theme={@theme} class="min-h-screen w-full bg-surface text-on-surface">
-      <div class="mx-auto max-w-6xl space-y-8 p-4 md:p-8">
+    <main id="hologram-example" class="w-full bg-surface text-on-surface">
+      <div class="space-y-8">
         <header class="space-y-4">
-          <a href="/storybook/integrations/hologram" class="link">Back to Storybook</a>
+          <a href="/hologram" target="_top" class="link">All Hologram demos</a>
           <div class="flex flex-wrap items-center gap-3">
-            <h1 class="text-3xl font-bold">Hologram + Duskmoon Core</h1>
-            <span class="badge badge-secondary">Experimental</span>
+            <h1 class="text-3xl font-bold">Component playground</h1>
             <span id="hologram-runtime" class="badge badge-success" role="status"
               data-ready={if(@ready, do: "true", else: "false")}>
               {if(@ready, do: "Client ready", else: "Server rendered")}
             </span>
           </div>
           <p>One stylesheet. Native HTML. Elixir actions running in your browser.</p>
-          <div class="flex flex-wrap gap-2" aria-label="Preview theme">
-            <button id="hologram-sunshine" type="button" class="btn btn-primary"
-              aria-pressed={if(@theme == "sunshine", do: "true", else: "false")}
-              $click={:set_theme, theme: "sunshine"}>Sunshine</button>
-            <button id="hologram-moonlight" type="button" class="btn btn-secondary"
-              aria-pressed={if(@theme == "moonlight", do: "true", else: "false")}
-              $click={:set_theme, theme: "moonlight"}>Moonlight</button>
-          </div>
         </header>
 
         <div class="grid gap-6 md:grid-cols-2">
@@ -137,9 +121,6 @@ defmodule DuskmoonStorybook.Hologram.Gallery do
                   <p>The existing Core styles, themes and asset build are shared. The Hologram document does not load Storybook app.js.</p>
                 </div>
               </details>
-              <div class="alert alert-info" role="note">
-                This is an integration example, not a new component library.
-              </div>
             </div>
           </section>
         </div>

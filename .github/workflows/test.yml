@@ -4,6 +4,8 @@ on:
   pull_request:
 permissions:
   contents: read
+env:
+  HOLOGRAM_START: '1'
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -40,6 +42,10 @@ jobs:
           bun install --frozen-lockfile
       - uses: browser-actions/setup-chrome@v2
         id: chrome
+      - name: Build Storybook assets for browser tests
+        env:
+          MIX_ENV: test
+        run: scripts/with-precompiled-toolchain.sh mix duskmoon_bundler.build duskmoon_storybook
       - name: Browser and component regressions
         env:
           MIX_ENV: test

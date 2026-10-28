@@ -3,7 +3,8 @@
 The UI repository owns `phoenix_duskmoon` and `duskmoon_storybook`. The independent
 [duskmoon-bundler](https://github.com/duskmoon-dev/duskmoon-bundler) repository owns
 `duskmoon_bundler`, `duskmoon_bundler_runtime`, `duskmoon_oxc`, `duskmoon_oxide`,
-`duskmoon_vize`, `duskmoon_quickbeam`, `duskmoon_npm`, and `duskmoon_hex_solver`.
+`duskmoon_vize`, `duskmoon_quickbeam`, `duskmoon_npm`, `duskmoon_hex_solver`, and
+`duskmoon_hologram`.
 Application, module, Hex and npm names remain unchanged. The UI root remains a
 small two-application umbrella.
 
@@ -24,8 +25,8 @@ is in `docs/verification/`; executable regression results are recorded in
 still points to the UI repository's `v9.16.16`. Historical tags, releases and assets
 remain untouched.
 
-All eight toolchain dependencies declare `~> 10.0`; the root `mix.lock` resolves
-the cohort to B **10.0.8**. This uses published native
+All nine toolchain dependencies declare `~> 10.0`; adding `duskmoon_hologram`
+resolves the root `mix.lock` cohort to B **10.0.8**. This uses published native
 artifacts in strict precompiled mode. The earlier 10.0.1 artifacts were published by
 `duskmoon-bundler/releases/download/v10.0.1`, from source
 `3bffa78eada45a34c0d20b7207d1db504f6768e7`. The
@@ -35,7 +36,7 @@ its validation revision is separate from the immutable package source. The
 adoption record is `docs/bundler-upgrades/v10.0.1.json`.
 
 U is the synchronized `phoenix_duskmoon` Hex/npm version. B is the synchronized
-eight-package toolchain version. Updating B does not bump U; normal UI release
+nine-package toolchain version. Updating B does not bump U; normal UI release
 automation chooses U after the upgrade PR passes review and regression.
 
 The provenance-preserving import records source SHA
@@ -90,7 +91,7 @@ Zig 0.16.0 through the destination development environment, then run:
 scripts/candidate-integration.sh /absolute/path/to/duskmoon-bundler
 ```
 
-This helper stages all eight candidate packages, snapshots the UI, overrides the
+This helper stages all nine candidate packages, snapshots the UI, overrides the
 complete closure in that disposable snapshot, and uses independent deps/build/
 lock state and explicit source mode. It records UI SHA/patch and staging hashes.
 It cannot enter normal UI CI or public metadata. Candidate source validation is
@@ -106,7 +107,7 @@ prove the released precompiled path.
 3. Review and merge this independently tested UI consumer cutover.
 4. Configure repository environments/credentials from the two release runbooks.
    A formal B1 release builds the full matrix, exposes immutable native assets,
-   publishes and verifies all eight packages, then opens one pinned UI upgrade PR.
+   publishes and verifies all nine packages, then opens one pinned UI upgrade PR.
 5. Review that PR and its full asset/regression checks, then release the next U.
 
 A future UI feature that needs an unpublished toolchain fix must stay gated until

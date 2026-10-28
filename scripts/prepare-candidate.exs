@@ -11,7 +11,7 @@ for relative <- String.split(files, <<0>>, trim: true),
 end
 
 apps =
-  ~w(duskmoon_bundler duskmoon_bundler_runtime duskmoon_oxc duskmoon_oxide duskmoon_vize duskmoon_quickbeam duskmoon_npm duskmoon_hex_solver)a
+  ~w(duskmoon_bundler duskmoon_bundler_runtime duskmoon_oxc duskmoon_oxide duskmoon_vize duskmoon_quickbeam duskmoon_npm duskmoon_hex_solver duskmoon_hologram)a
 
 for app <- apps do
   unless File.regular?(Path.join([stage, Atom.to_string(app), "mix.exs"])),
@@ -31,6 +31,9 @@ path_deps =
 
     {:duskmoon_bundler_runtime, opts} ->
       {:duskmoon_bundler_runtime, Keyword.put(opts, :runtime, true)}
+
+    {:duskmoon_hologram, opts} ->
+      {:duskmoon_hologram, Keyword.put(opts, :runtime, true)}
 
     other ->
       other

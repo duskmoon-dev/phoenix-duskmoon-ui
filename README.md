@@ -195,6 +195,13 @@ and its own releases live in [duskmoon-bundler](https://github.com/duskmoon-dev/
 See the [migration and development guide](docs/bundler-extraction.md) for setup,
 candidate integration and independent release order.
 
+Storybook also consumes `duskmoon_hologram ~> 10.0` and provides a Hologram section
+before Storybook in its top navigation. Run `mix duskmoon.dev` (or `mix holo`) and
+open `/hologram` for the component playground, task list and profile preview.
+The checkout requires OTP 28+; `phoenix_duskmoon` itself keeps its existing Elixir
+and Phoenix compatibility and does not depend on Hologram. See the
+[Hologram guide](docs/hologram-example.md) for runtime boundaries and verification.
+
 ## Live Storybook
 
 [Live Storybook](https://duskmoon-storybook.gsmlg.dev)

@@ -1,94 +1,98 @@
-# Hologram + Duskmoon Core experiment
+# Duskmoon Hologram demos
 
-This is an opt-in example inside `duskmoon_storybook`, not a new UI package.
-It uses the existing pinned Core styles and themes directly in Hologram templates.
-`phoenix_duskmoon` does not acquire a Hologram dependency.
+Storybook consumes the published `duskmoon_hologram ~> 10.0` package from
+[duskmoon-bundler](https://github.com/duskmoon-dev/duskmoon-bundler). Its public
+modules remain `Hologram.*` and its compiler remains `:hologram`. Do not install
+upstream `:hologram` alongside the fork: both define the same modules.
+`phoenix_duskmoon` has no Hologram dependency; the UI umbrella still has two apps.
 
 ## Run
 
-Use **Elixir 1.19+, OTP 28.1+, Node.js 20+ (including npm), Bun**, and the normal
-published/precompiled Duskmoon toolchain. The example pins Hologram **0.12.2**.
-The normal UI test matrix and dependency lock remain unchanged.
-
-From the repository root:
+Use Elixir 1.18+, OTP 28+, Bun and the published precompiled Duskmoon toolchain.
+All nine toolchain requirements use `~> 10.0` and resolve together in `mix.lock`.
+Node.js and the npm CLI are not required for Hologram compilation.
+On Linux GNU, the locked 10.0.8 native artifacts require glibc 2.43 or newer
+(for example, Ubuntu 26.04). The Elixir/OTP process must run with a compatible
+libc. The default glibc 2.42 environment cannot load the published Vize NIF;
+use a compatible runtime environment while retaining strict precompiled mode.
+See the toolchain's [supported build environments](https://github.com/duskmoon-dev/duskmoon-bundler/blob/main/docs/releasing.md).
 
 ```sh
-scripts/with-hologram-example.sh deps.get
+mix deps.get
 bun install --frozen-lockfile
-scripts/with-hologram-example.sh duskmoon_bundler.build duskmoon_storybook
-scripts/with-hologram-example.sh
+scripts/with-precompiled-toolchain.sh mix duskmoon_bundler.build duskmoon_storybook
+mix duskmoon.dev
 ```
 
-Open:
+`mix duskmoon.dev` delegates to `mix holo`, which enables the Hologram runtime and
+compiler in development. The devenv environment also sets `HOLOGRAM_START=1`, so
+`mix phx.server` works there. When running checks outside devenv, explicitly set
+`HOLOGRAM_START=1`. Production builds enable the compiler automatically; releases
+must start with `HOLOGRAM_ENV=prod` (the Docker image sets it).
 
-- `http://localhost:4600/storybook/integrations/hologram`: Storybook page with an isolated iframe.
-- `http://localhost:4600/examples/hologram`: the standalone Hologram document.
+The Hologram top menu appears immediately before Storybook. Open:
 
-The wrapper enables `DUSKMOON_HOLOGRAM=1` and `HOLOGRAM_START=1`, uses an isolated
-`_build/hologram-example` build, and seeds `_build/hologram-example.mix.lock` from
-`mix.lock` on first use. Extra Hologram dependencies resolve into that experimental
-lock, not the default one. Remove only the experimental lock when intentionally
-refreshing its base pins. Dependency sources still use the existing `deps` directory.
-Frontend packages continue to be managed with Bun; Hologram manages its own internal
-compiler dependencies. No new frontend package or custom CSS theme is introduced.
+- `/hologram`: demo catalog.
+- `/hologram/playground`: counter, synchronized inputs, native dialog and disclosure.
+- `/hologram/tasks`: add, complete, filter and clear tasks.
+- `/hologram/preferences`: display-name, density and notification preview with apply/reset.
+- `/storybook/integrations/hologram`: embedded playground and link to the catalog.
 
-Without the opt-in flag, the Hologram dependency, compiler, source directory and test
-suite are excluded. The Storybook integration page then displays setup instructions.
-Do not enable the experiment in normal package or release workflows.
+The original `/examples/hologram` URL redirects to `/hologram/playground`.
+`scripts/with-hologram-example.sh` remains a compatibility launcher using the normal
+build directory and lockfile; there is no experimental dependency lane.
 
-## Ownership boundaries
+## Runtime and styling
 
-`hologram/layout.ex` loads the existing Storybook stylesheet using the bundler's
-server-side asset resolver and includes `Hologram.UI.Runtime`. It does **not** load
-Storybook `app.js`, LiveSocket, React or the custom-element registry. Hologram compiles
-its own client runtime; the existing Duskmoon build remains responsible for CSS.
-The new source directory is registered with both CSS `@source` and the explicit
-bundler sources/watch directories.
+The public `/hologram` routes use `HologramLive` with the same Phoenix root and
+app layouts as Components. The appbar is the exact `dm_appbar` and
+`dm_theme_switcher` used by Components and Art Components. The sidebar is the
+same sticky `dm_left_menu` used by Components, populated with the Hologram demos.
+It retains its DOM, collapse and group state during sidebar navigation. Shell
+classes, navigation data and footer links live in `DuskmoonStorybookWeb.DemoLayout`.
 
-`hologram/gallery.ex` owns theme, counter and synchronized-input state through local
-actions. Its server initializer schedules a client-readiness action so the visible
-badge changes from **Server rendered** to **Client ready** only after client execution.
-There are no server commands, persistence or backend form submission in this example.
+Only demo content runs in a same-origin iframe. Its Hologram documents are served
+at `/hologram/demos`, `/hologram/demos/playground`, `/hologram/demos/tasks` and
+`/hologram/demos/preferences`. `hologram/layout.ex` loads the existing Storybook
+stylesheet through `DuskmoonBundler.static_path/3` and `Hologram.UI.Runtime`.
+These documents have no appbar, sidebar, footer or LiveView app bundle.
+`DuskmoonHologramFrame` keeps their height fitted to the content and synchronizes
+the parent theme without resetting Hologram state. The shared theme dropdown
+provides Auto, Sunshine and Moonlight, using the existing `theme` preference.
+Catalog links target the outer document so navigation cannot nest site shells.
 
-The browser owns `<dialog>` and `<details>` state. The dialog is opened with native
-`command="show-modal"` / `commandfor`, and closed with Escape or `method="dialog"`.
-Use a current browser supporting command invokers. The example deliberately does not
-bind an `open` attribute or maintain a second modal state in Hologram. A counter button
-inside the dialog tests that a Hologram render preserves its native modal state.
-Navigation between Storybook and the example uses normal links, not LiveView navigation.
+Templates use published Core CSS and native HTML controls. Existing Tailwind
+sources/watch directories include `hologram/**/*.ex`; there is no duplicate theme
+or component stylesheet. The layout's `#hologram-shell[data-ready="true"]` marker
+indicates that its initial client action has executed.
 
-## Tests and screenshots
+The demos keep state in the open page, without persistence or server commands.
+Native forms handle task submission, including Enter. The browser owns dialog
+opening, Escape, focus restoration and `method="dialog"` closing. Hologram updates
+inside the dialog must preserve its native modal state. The playground requires a
+current browser supporting `command` / `commandfor`.
 
-With Chrome/Chromium installed (`CHROME_BIN` may select the binary):
+## Verification
+
+With Chrome/Chromium installed (`CHROME_BIN` can select its binary):
 
 ```sh
-MIX_ENV=test scripts/with-hologram-example.sh deps.get
-MIX_ENV=test scripts/with-hologram-example.sh duskmoon_bundler.build duskmoon_storybook
-MIX_ENV=test scripts/with-hologram-example.sh test apps/duskmoon_storybook/hologram_test
+HOLOGRAM_START=1 MIX_ENV=test scripts/with-precompiled-toolchain.sh mix duskmoon_bundler.build duskmoon_storybook
+HOLOGRAM_START=1 MIX_ENV=test scripts/with-precompiled-toolchain.sh mix test apps/duskmoon_storybook/hologram_test
 ```
 
-The scoped suite covers pure action transitions, SSR, client hydration, styled controls,
-input and checkbox updates, theme changes, absence of server commands, dialog state
-through a rerender, Escape/focus restoration, form-based closing and mobile overflow.
-It writes sunshine, moonlight and mobile PNGs beneath the active Mix build directory's
-`hologram-screenshots` directory. Browser tests fail rather than silently skip when the
-runtime, built stylesheet, browser or command-invoker support is missing.
+Normal Storybook tests also include `hologram_test`. Tests cover state transitions,
+SSR, hydration, styles, input/checkbox updates, theme changes, native modal behavior,
+mobile overflow and demo navigation. Screenshots are written beneath the active
+Mix build directory's `hologram-screenshots` directory. The dedicated Hologram
+workflow uses the same locked dependencies and uploads these screenshots.
 
-The dedicated **Hologram Example** workflow runs the opt-in test suite separately from
-the existing Elixir 1.18 / OTP 27–28 matrix and uploads the screenshots. Its dependency
-lock is experimental and generated from the checked-in baseline; this is not yet a
-fully locked production integration.
+Production validation also runs `scripts/check-release-applications.exs` against
+the actual release. It requires the Hologram runtime and retains the exclusion of
+build-tool applications; consuming the framework does not relax that boundary.
 
-For manual review, inspect the iframe and standalone page at desktop and mobile sizes;
-compare Sunshine/Moonlight; type into the name field; toggle the checkbox; open the
-dialog, increment inside it and close with both Escape and the close button. Confirm
-that the normal `/storybook` and `/components` pages still behave as before.
-
-## References
-
-- https://hologram.page/docs/installation
-- https://hologram.page/docs/forms
-- https://github.com/bartblast/hologram/releases/tag/v0.12.2
-
-This experiment must pass the browser checks before treating the integration as
-verified or extracting a reusable Hologram component package.
+The published 10.0.8 framework currently retains npm/Hex solver as runtime
+dependencies. [Upstream issue #14](https://github.com/duskmoon-dev/duskmoon-bundler/issues/14)
+tracks the resulting production release blocker. Do not bypass the exclusion
+check; adopt a corrected published cohort and verify the actual release before
+publishing or deploying this integration.

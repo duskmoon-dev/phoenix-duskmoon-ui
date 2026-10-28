@@ -78,6 +78,9 @@ defmodule DuskmoonStorybookWeb.PageController do
     render(conn, :page, layout: false)
   end
 
+  @doc "Redirects the original Hologram example URL to its dedicated section."
+  def hologram_redirect(conn, _params), do: redirect(conn, to: "/hologram/playground")
+
   def components(conn, _params) do
     render(conn, :components, catalog: catalog(), active_menu: "components-index")
   end

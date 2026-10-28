@@ -19,7 +19,14 @@ defmodule DuskmoonStorybookWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :page
+    get "/examples/hologram", PageController, :hologram_redirect
     live "/components", Components.PageLive
+    live "/hologram", HologramLive, :overview, container: {:div, class: "container"}
+    live "/hologram/playground", HologramLive, :playground, container: {:div, class: "container"}
+    live "/hologram/tasks", HologramLive, :tasks, container: {:div, class: "container"}
+
+    live "/hologram/preferences", HologramLive, :preferences,
+      container: {:div, class: "container"}
 
     live_storybook("/storybook", backend_module: DuskmoonStorybookWeb.Storybook)
   end

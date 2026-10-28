@@ -46,12 +46,14 @@ defmodule AlpineNativeSmoke.MixProject do
   use Mix.Project
   def project do
     [app: :alpine_native_smoke, version: "0.1.0", elixir: ">= 1.18.0",
+     compilers: Mix.compilers() ++ [:hologram],
      deps: [
        {:duskmoon_bundler, "~> 10.0"},
        {:duskmoon_bundler_runtime, "~> 10.0"},
        {:duskmoon_oxc, "~> 10.0"}, {:duskmoon_oxide, "~> 10.0"},
        {:duskmoon_vize, "~> 10.0"}, {:duskmoon_quickbeam, "~> 10.0"},
-       {:duskmoon_npm, "~> 10.0"}, {:duskmoon_hex_solver, "~> 10.0"}$ui_dep]]
+       {:duskmoon_npm, "~> 10.0"}, {:duskmoon_hex_solver, "~> 10.0"},
+       {:duskmoon_hologram, "~> 10.0"}$ui_dep]]
   end
   def application, do: [extra_applications: [:logger]]
 end

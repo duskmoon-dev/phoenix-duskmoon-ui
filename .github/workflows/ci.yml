@@ -6,6 +6,7 @@ permissions:
   contents: read
 env:
   DUSKMOON_NATIVE_INVOCATION_LOG: /tmp/duskmoon-native-invocations.log
+  HOLOGRAM_START: '1'
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

@@ -5,6 +5,8 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+env:
+  HOLOGRAM_START: '1'
 jobs:
   consumer:
     runs-on: ubuntu-26.04

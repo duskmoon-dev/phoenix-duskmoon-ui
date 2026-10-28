@@ -32,5 +32,5 @@ phx_wc_storybook-*.tar
 npm-debug.log
 /assets/node_modules/
 
-# Opt-in Hologram client bundles.
+# Generated Hologram client bundles.
 /priv/static/hologram/

@@ -7,6 +7,7 @@ defmodule DuskmoonBundlerRuntimePackageTest do
 
   test "runtime package resolves manifests without build package modules" do
     refute Code.ensure_loaded?(DuskmoonBundler.Builder)
+    refute Code.ensure_loaded?(Hologram)
     assert Code.ensure_loaded?(DuskmoonBundlerRuntime)
     assert Code.ensure_loaded?(DuskmoonBundler)
 

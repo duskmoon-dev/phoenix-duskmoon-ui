@@ -14,4 +14,19 @@ defmodule DuskmoonStorybookWeb.PageControllerTest do
     refute html =~ "/storybook/data_display/react_chat"
     refute html =~ "/storybook/data_entry/react_form"
   end
+
+  test "the shared menu links to Hologram before Storybook and the old demo redirects", %{
+    conn: conn
+  } do
+    html = conn |> get("/components") |> html_response(200)
+
+    links =
+      html
+      |> LazyHTML.from_document()
+      |> LazyHTML.query("nav[aria-label='Main navigation'] a")
+      |> LazyHTML.attribute("href")
+
+    assert links == ["/components", "/art-component", "/hologram", "/storybook"]
+    assert conn |> get("/examples/hologram") |> redirected_to() == "/hologram/playground"
+  end
 end

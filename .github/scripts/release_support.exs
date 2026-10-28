@@ -1,6 +1,6 @@
 defmodule ReleaseSupport do
   @moduledoc false
-  @cohort ~w(duskmoon_bundler duskmoon_bundler_runtime duskmoon_oxc duskmoon_oxide duskmoon_vize duskmoon_quickbeam duskmoon_npm duskmoon_hex_solver)
+  @cohort ~w(duskmoon_bundler duskmoon_bundler_runtime duskmoon_oxc duskmoon_oxide duskmoon_vize duskmoon_quickbeam duskmoon_npm duskmoon_hex_solver duskmoon_hologram)
   def cohort, do: @cohort
 
   def stable!(value) do

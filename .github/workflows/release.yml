@@ -19,6 +19,8 @@ jobs:
   validate:
     runs-on: ubuntu-26.04
     timeout-minutes: 40
+    env:
+      HOLOGRAM_START: '1'
     steps:
       - uses: actions/checkout@v7
         with:
@@ -52,6 +54,7 @@ jobs:
           elixir scripts/native-policy-test.exs
           elixir scripts/prepare-candidate-test.exs
           scripts/with-precompiled-toolchain.sh mix compile --warnings-as-errors
+          MIX_ENV='test' scripts/with-precompiled-toolchain.sh mix duskmoon_bundler.build duskmoon_storybook
           scripts/with-precompiled-toolchain.sh mix test
           bun test --cwd apps/phoenix_duskmoon
       - name: UI and Storybook production assets

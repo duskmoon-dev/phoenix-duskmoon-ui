@@ -10,7 +10,6 @@ defmodule DuskmoonStorybook.Hologram.GalleryTest do
   end
 
   test "server state schedules a client readiness action", %{component: component} do
-    assert component.state.theme == "sunshine"
     assert component.state.count == 0
     refute component.state.ready
     assert component.next_action.name == :client_ready
@@ -24,11 +23,6 @@ defmodule DuskmoonStorybook.Hologram.GalleryTest do
     assert updated.next_command == nil
     assert Gallery.action(:decrement, %{}, updated).state.count == 0
     assert Gallery.action(:reset, %{}, updated).state.count == 0
-  end
-
-  test "themes are restricted to the two loaded Core themes", %{component: component} do
-    assert Gallery.action(:set_theme, %{theme: "moonlight"}, component).state.theme == "moonlight"
-    assert Gallery.action(:set_theme, %{theme: "unknown"}, component) == component
   end
 
   test "input and checkbox events update one source of state", %{component: component} do

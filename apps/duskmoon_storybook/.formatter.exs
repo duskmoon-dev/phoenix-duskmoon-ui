@@ -1,7 +1,5 @@
-hologram? = System.get_env("DUSKMOON_HOLOGRAM") == "1"
-
 [
-  import_deps: [:phoenix] ++ if(hologram?, do: [:hologram], else: []),
+  import_deps: [:phoenix, :duskmoon_hologram],
   locals_without_parens: [route: 1, layout: 1],
   plugins: [Phoenix.LiveView.HTMLFormatter],
   inputs: [

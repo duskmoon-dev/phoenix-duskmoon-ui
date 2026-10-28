@@ -1,4 +1,4 @@
-# Exercise every native module, then actual production bundling and Tailwind.
+# Exercise the full cohort, then actual production bundling and Tailwind.
 {:unix, :linux} = :os.type()
 system_arch = :erlang.system_info(:system_architecture) |> List.to_string()
 
@@ -13,10 +13,21 @@ for module <- [
       Oxide,
       QuickBEAM,
       DuskmoonBundler,
-      DuskmoonBundlerRuntime
+      DuskmoonBundlerRuntime,
+      Hologram
     ] do
   unless Code.ensure_loaded?(module), do: raise("cohort module missing: #{inspect(module)}")
 end
+
+unless Hologram.enabled?() and is_pid(Process.whereis(Hologram.Supervisor)),
+  do: raise("Hologram production runtime did not start")
+
+runtime_bundles =
+  :alpine_native_smoke
+  |> Application.app_dir("priv/static/hologram/runtime-*.js")
+  |> Path.wildcard()
+
+unless runtime_bundles != [], do: raise("Hologram compiler did not emit its runtime bundle")
 
 {:ok, %{}} = NPM.Resolver.resolve(%{})
 
@@ -62,4 +73,6 @@ unless css =~ ".flex" and css =~ ".items-center" and css =~ ".p-4" and
          css =~ ".text-blue-500",
        do: raise("Tailwind did not generate the scanned utilities")
 
-IO.puts("Alpine precompiled NIFs, production bundling and Tailwind passed on #{system_arch}")
+IO.puts(
+  "Alpine precompiled NIFs, Hologram runtime, production bundling and Tailwind passed on #{system_arch}"
+)

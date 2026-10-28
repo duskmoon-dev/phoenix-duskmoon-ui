@@ -48,6 +48,10 @@ defmodule ReleasePlanningTest do
     assert ReleaseSupport.adoption_ready?(state)
     refute ReleaseSupport.adoption_ready?(Map.put(state, "packages", ["duskmoon_bundler"]))
 
+    refute ReleaseSupport.adoption_ready?(
+             Map.put(state, "packages", List.delete(state["packages"], "duskmoon_hologram"))
+           )
+
     refute ReleaseSupport.adoption_ready?(Map.put(state, "musl_arm64_verified", false))
     refute ReleaseSupport.adoption_ready?(Map.put(state, "public_assets_verified", false))
   end
@@ -84,7 +88,7 @@ defmodule BundlerLockTest do
   test "rejects missing or mixed cohort versions", ctx do
     lock = cohort("10.0.1")
 
-    for package <- [:duskmoon_oxc] do
+    for package <- [:duskmoon_oxc, :duskmoon_hologram] do
       path = write_lock(ctx.tmp_dir, Map.delete(lock, package))
 
       assert_raise RuntimeError, ~r/#{package} requires/, fn ->

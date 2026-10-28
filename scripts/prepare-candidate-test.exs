@@ -10,7 +10,7 @@ defmodule DuskmoonUI.CandidatePrepareTest do
     stage = Path.join(tmp_dir, "stage")
 
     apps =
-      ~w(duskmoon_bundler duskmoon_bundler_runtime duskmoon_oxc duskmoon_oxide duskmoon_vize duskmoon_quickbeam duskmoon_npm duskmoon_hex_solver)
+      ~w(duskmoon_bundler duskmoon_bundler_runtime duskmoon_oxc duskmoon_oxide duskmoon_vize duskmoon_quickbeam duskmoon_npm duskmoon_hex_solver duskmoon_hologram)
 
     for app <- apps do
       File.mkdir_p!(Path.join(stage, app))
