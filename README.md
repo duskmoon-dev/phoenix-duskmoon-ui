@@ -189,9 +189,9 @@ application's upload mechanism; they cannot be sent as LiveView JSON payloads.
 ## Repository development
 
 This checkout contains the UI and Storybook. It consumes the published toolchain
-cohort pinned in `BUNDLER_VERSION` and `mix.lock`; ordinary UI builds use verified
-precompiled Duskmoon native artifacts. The toolchain source and its own releases
-live in [duskmoon-bundler](https://github.com/duskmoon-dev/duskmoon-bundler).
+cohort declared with `~> 10.0` requirements and resolved in `mix.lock`; ordinary UI
+builds use verified precompiled Duskmoon native artifacts. The toolchain source
+and its own releases live in [duskmoon-bundler](https://github.com/duskmoon-dev/duskmoon-bundler).
 See the [migration and development guide](docs/bundler-extraction.md) for setup,
 candidate integration and independent release order.
 

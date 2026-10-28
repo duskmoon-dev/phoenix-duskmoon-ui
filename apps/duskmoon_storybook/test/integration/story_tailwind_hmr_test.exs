@@ -80,18 +80,17 @@ defmodule DuskmoonStorybook.Integration.StoryTailwindHMRTest do
 
     server =
       start_supervised!(
-        {Bandit,
+        {Gaoxy.HTTP,
          plug:
            {DuskmoonStorybook.Integration.StoryTailwindPlug,
             story_file: story_file,
             css_file: css_file,
             dev_server: DuskmoonBundler.DevServer.init(root: assets_dir, vendor_prebundle: false)},
          port: 0,
-         ip: :loopback,
-         startup_log: false}
+         ip: {127, 0, 0, 1}}
       )
 
-    {:ok, {_ip, port}} = ThousandIsland.listener_info(server)
+    %{local: {:ok, {_ip, port}}} = Gaoxy.info(server, :http)
     {:ok, page} = CDPBrowser.new_page(browser)
     on_exit(fn -> CDPBrowser.close_page(page) end)
     :ok = CDPBrowser.goto(page, "http://127.0.0.1:#{port}/")

@@ -12,7 +12,7 @@ concurrency:
 jobs:
   ui:
     name: UI compile, assets, hooks and release contract
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v7
@@ -26,7 +26,7 @@ jobs:
       - uses: actions/cache@v6
         with:
           path: deps
-          key: ${{ github.repository }}-${{ runner.os }}-${{ runner.arch }}-glibc-precompiled-elixir1.18-otp28-${{ hashFiles('mix.lock', 'BUNDLER_VERSION') }}
+          key: ${{ github.repository }}-${{ runner.os }}-${{ runner.arch }}-glibc-precompiled-elixir1.18-otp28-${{ hashFiles('mix.lock', 'mix.exs', 'apps/*/mix.exs') }}
       - uses: actions/cache@v6
         with:
           path: ~/.bun/install/cache

@@ -29,9 +29,23 @@ defmodule DuskmoonUI.CandidatePrepareTest do
       ])
 
     content = File.read!(Path.join(output, "mix.exs"))
-    Code.string_to_quoted!(content)
-    for app <- apps, do: assert(content =~ Path.join(stage, app))
-    refute content =~ "{:duskmoon_oxc, \"=="
+
+    {_, body} =
+      content
+      |> Code.string_to_quoted!()
+      |> Macro.prewalk(nil, fn
+        {:defp, _, [{:deps, _, _}, [do: body]]} = node, _ -> {node, body}
+        node, body -> {node, body}
+      end)
+
+    {dependencies, _} = Code.eval_quoted(body)
+
+    for name <- apps do
+      app = String.to_atom(name)
+      assert [{^app, options}] = Enum.filter(dependencies, &(elem(&1, 0) == app))
+      assert options[:path] == Path.join(stage, name)
+      assert options[:override]
+    end
 
     provenance =
       output |> Path.join("candidate-provenance.json") |> File.read!() |> JSON.decode!()

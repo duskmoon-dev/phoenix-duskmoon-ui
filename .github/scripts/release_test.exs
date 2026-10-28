@@ -47,8 +47,93 @@ defmodule ReleasePlanningTest do
 
     assert ReleaseSupport.adoption_ready?(state)
     refute ReleaseSupport.adoption_ready?(Map.put(state, "packages", ["duskmoon_bundler"]))
+
     refute ReleaseSupport.adoption_ready?(Map.put(state, "musl_arm64_verified", false))
     refute ReleaseSupport.adoption_ready?(Map.put(state, "public_assets_verified", false))
+  end
+end
+
+defmodule BundlerLockTest do
+  use ExUnit.Case, async: true
+  @moduletag :tmp_dir
+
+  test "derives the concrete synchronized version while allowing later 10.x releases", ctx do
+    for version <- ["10.0.1", "10.1.0", "10.42.7"] do
+      lock = cohort(version)
+      path = write_lock(ctx.tmp_dir, lock)
+      assert ReleaseSupport.bundler_version!(path) == version
+      assert ReleaseSupport.bundler_lock!(path) == lock
+    end
+  end
+
+  test "consumer subsets retain the exact registry entries and checksums", ctx do
+    lock = cohort("10.0.1")
+    path = write_lock(ctx.tmp_dir, lock)
+
+    assert ReleaseSupport.bundler_lock!(path, ["duskmoon_bundler_runtime"]) ==
+             Map.take(lock, [:duskmoon_bundler_runtime])
+  end
+
+  test "rejects incompatible major versions and prereleases", ctx do
+    for version <- ["9.16.16", "11.0.0", "10.1.0-rc.1"] do
+      path = write_lock(ctx.tmp_dir, cohort(version))
+      assert_raise RuntimeError, fn -> ReleaseSupport.bundler_version!(path) end
+    end
+  end
+
+  test "rejects missing or mixed cohort versions", ctx do
+    lock = cohort("10.0.1")
+
+    for package <- [:duskmoon_oxc] do
+      path = write_lock(ctx.tmp_dir, Map.delete(lock, package))
+
+      assert_raise RuntimeError, ~r/#{package} requires/, fn ->
+        ReleaseSupport.bundler_version!(path)
+      end
+
+      path = write_lock(ctx.tmp_dir, Map.put(lock, package, entry(package, "10.1.0")))
+
+      assert_raise RuntimeError, ~r/cohort versions differ/, fn ->
+        ReleaseSupport.bundler_version!(path)
+      end
+    end
+  end
+
+  test "rejects non-Hex entries, package aliases, other repositories and missing checksums",
+       ctx do
+    lock = cohort("10.0.1")
+    original = lock.duskmoon_oxc
+
+    invalid = [
+      {:git, "https://example.test/oxc.git", String.duplicate("a", 40), []},
+      put_elem(original, 1, :another_package),
+      put_elem(original, 6, "private"),
+      put_elem(original, 3, nil),
+      put_elem(original, 7, "invalid")
+    ]
+
+    for replacement <- invalid do
+      path = write_lock(ctx.tmp_dir, Map.put(lock, :duskmoon_oxc, replacement))
+      assert_raise RuntimeError, fn -> ReleaseSupport.bundler_version!(path) end
+    end
+  end
+
+  defp cohort(version) do
+    Map.new(ReleaseSupport.cohort(), fn name ->
+      package = String.to_atom(name)
+      {package, entry(package, version)}
+    end)
+  end
+
+  defp entry(package, version) do
+    {:hex, package, version, String.duplicate("a", 64), [:mix], [], "hexpm",
+     String.duplicate("b", 64)}
+  end
+
+  defp write_lock(root, lock) do
+    path = Path.join(root, "mix.lock")
+    File.write!(path, inspect(lock, limit: :infinity))
+    path
   end
 end
 

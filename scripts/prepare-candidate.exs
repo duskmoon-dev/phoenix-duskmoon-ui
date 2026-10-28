@@ -39,7 +39,6 @@ path_deps =
 path_deps = path_deps ++ [{:zigler, "~> 0.16.0", [runtime: false]}]
 root_mix = Path.join(output, "mix.exs")
 content = File.read!(root_mix)
-content = Regex.replace(~r/^  @bundler_version.*\n/m, content, "")
 needle = "  defp deps do\n"
 
 unless String.contains?(content, needle),
@@ -53,21 +52,16 @@ content =
     ""
   )
 
-content =
-  String.replace(
-    content,
-    needle,
-    needle <> "    candidate_deps = #{inspect(path_deps, limit: :infinity)}\n",
-    global: false
-  )
-
-content = String.replace(content, "      {:plug, \"~> 1.19\"},", "      {:plug, \"~> 1.19\"}")
 # Existing ordinary constraints are a separate list; no second copy of a native app can remain.
 content =
-  String.replace(
+  Regex.replace(
+    ~r/(^  defp deps do\n)(.*?)(^  end$)/ms,
     content,
-    "      {:plug, \"~> 1.19\"}\n    ]",
-    "      {:plug, \"~> 1.19\"}\n    ] ++ candidate_deps",
+    fn _, head, body, tail ->
+      head <>
+        "    candidate_deps = #{inspect(path_deps, limit: :infinity)}\n" <>
+        String.trim_trailing(body) <> " ++ candidate_deps\n" <> tail
+    end,
     global: false
   )
 

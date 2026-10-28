@@ -197,15 +197,12 @@ defmodule DuskmoonBundler.Integration.DevVendorTest do
 
     server =
       start_supervised!(
-        {Bandit,
-         plug: {DuskmoonBundler.Integration.VendorPlug, plug_config},
-         port: 0,
-         ip: :loopback,
-         startup_log: false},
+        {Gaoxy.HTTP,
+         plug: {DuskmoonBundler.Integration.VendorPlug, plug_config}, port: 0, ip: {127, 0, 0, 1}},
         id: :dev_vendor_server
       )
 
-    {:ok, {_ip, port}} = ThousandIsland.listener_info(server)
+    %{local: {:ok, {_ip, port}}} = Gaoxy.info(server, :http)
     {:ok, page} = CDPBrowser.new_page(browser)
 
     on_exit(fn -> CDPBrowser.close_page(page) end)
@@ -286,15 +283,12 @@ defmodule DuskmoonBundler.Integration.DevVendorTest do
 
     server =
       start_supervised!(
-        {Bandit,
-         plug: {DuskmoonBundler.Integration.VendorPlug, config},
-         port: 0,
-         ip: :loopback,
-         startup_log: false},
+        {Gaoxy.HTTP,
+         plug: {DuskmoonBundler.Integration.VendorPlug, config}, port: 0, ip: {127, 0, 0, 1}},
         id: :dev_vendor_server
       )
 
-    {:ok, {_ip, port}} = ThousandIsland.listener_info(server)
+    %{local: {:ok, {_ip, port}}} = Gaoxy.info(server, :http)
     {:ok, page} = CDPBrowser.new_page(browser)
     on_exit(fn -> CDPBrowser.close_page(page) end)
     check.(page, port, config)
@@ -503,15 +497,12 @@ defmodule DuskmoonBundler.Integration.DevVendorTest do
 
     restarted_server =
       start_supervised!(
-        {Bandit,
-         plug: {DuskmoonBundler.Integration.VendorPlug, new_config},
-         port: 0,
-         ip: :loopback,
-         startup_log: false},
+        {Gaoxy.HTTP,
+         plug: {DuskmoonBundler.Integration.VendorPlug, new_config}, port: 0, ip: {127, 0, 0, 1}},
         id: :dev_vendor_server
       )
 
-    {:ok, {_ip, restarted_port}} = ThousandIsland.listener_info(restarted_server)
+    %{local: {:ok, {_ip, restarted_port}}} = Gaoxy.info(restarted_server, :http)
     {:ok, restarted_page} = CDPBrowser.new_page(browser)
     on_exit(fn -> CDPBrowser.close_page(restarted_page) end)
 

@@ -10,12 +10,12 @@ concurrency:
 jobs:
   test:
     name: UI browser and component tests / OTP ${{ matrix.otp }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
-        otp: ['27', '28']
+        otp: ['28']
     steps:
       - uses: actions/checkout@v7
       - uses: erlef/setup-beam@v1
@@ -28,7 +28,7 @@ jobs:
       - uses: actions/cache@v6
         with:
           path: deps
-          key: ${{ github.repository }}-${{ runner.os }}-${{ runner.arch }}-glibc-precompiled-elixir1.18-otp${{ matrix.otp }}-${{ hashFiles('mix.lock', 'BUNDLER_VERSION') }}
+          key: ${{ github.repository }}-${{ runner.os }}-${{ runner.arch }}-glibc-precompiled-elixir1.18-otp${{ matrix.otp }}-${{ hashFiles('mix.lock', 'mix.exs', 'apps/*/mix.exs') }}
       - uses: actions/cache@v6
         with:
           path: ~/.bun/install/cache

@@ -26,7 +26,8 @@
 - This umbrella contains only `phoenix_duskmoon` and `duskmoon_storybook`.
 - Toolchain source, native builds, package staging and the bundler skill live in
   `duskmoon-dev/duskmoon-bundler`. Keep ordinary UI work on the published Hex cohort
-  pinned by `BUNDLER_VERSION` and `mix.lock`, using strict precompiled mode.
+  declared with `~> 10.0` requirements and resolved in `mix.lock`, using strict
+  precompiled mode.
 - Use `scripts/with-precompiled-toolchain.sh` for instrumented UI validation and
   `scripts/check-release-applications.exs` to verify the actual Storybook release.
 - Candidate source integration is explicit and isolated through

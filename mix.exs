@@ -6,7 +6,6 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
 
   # Umbrella version tracks phoenix_duskmoon package version
   @version "10.0.11"
-  @bundler_version File.read!(Path.join(__DIR__, "BUNDLER_VERSION")) |> String.trim()
 
   def project do
     [
@@ -36,17 +35,18 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
   end
 
   defp deps do
-    # Pin the entire build-tool cohort without adding it to the public component package.
+    # Keep the build-tool cohort in the 10.x series without adding it to the public package.
     [
       {:ex_doc, "~> 0.40", runtime: false, override: true},
       # Keep Plug available to both test servers and runtime umbrella applications.
       {:plug, "~> 1.19"},
-      {:duskmoon_oxc, "== #{@bundler_version}", runtime: false},
-      {:duskmoon_oxide, "== #{@bundler_version}", runtime: false},
-      {:duskmoon_vize, "== #{@bundler_version}", runtime: false},
-      {:duskmoon_quickbeam, "== #{@bundler_version}", runtime: false},
-      {:duskmoon_npm, "== #{@bundler_version}", runtime: false},
-      {:duskmoon_hex_solver, "== #{@bundler_version}", runtime: false}
+      {:websock_adapter, "~> 0.13.0", hex: :gaoxy_websock_adapter, override: true},
+      {:duskmoon_oxc, "~> 10.0", runtime: false},
+      {:duskmoon_oxide, "~> 10.0", runtime: false},
+      {:duskmoon_vize, "~> 10.0", runtime: false},
+      {:duskmoon_quickbeam, "~> 10.0", runtime: false},
+      {:duskmoon_npm, "~> 10.0", runtime: false},
+      {:duskmoon_hex_solver, "~> 10.0", runtime: false}
     ]
   end
 

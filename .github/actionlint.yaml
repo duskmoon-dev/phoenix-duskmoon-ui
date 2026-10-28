@@ -1,0 +1,5 @@
+# Official hosted label newer than actionlint's bundled runner catalog.
+# https://github.com/actions/runner-images#available-images
+self-hosted-runner:
+  labels:
+    - ubuntu-26.04

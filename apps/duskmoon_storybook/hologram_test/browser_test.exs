@@ -12,8 +12,8 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
     css = Application.app_dir(:duskmoon_storybook, "priv/static/assets/css/app.css")
     assert File.exists?(css), "Build Storybook assets before running the Hologram browser tests"
 
-    server = start_supervised!({Bandit, plug: Endpoint, ip: {127, 0, 0, 1}, port: 0})
-    {:ok, {_ip, port}} = ThousandIsland.listener_info(server)
+    server = start_supervised!({Gaoxy.HTTP, plug: {Endpoint, []}, ip: {127, 0, 0, 1}, port: 0})
+    %{local: {:ok, {_ip, port}}} = Gaoxy.info(server, :http)
     {:ok, browser} = CDPBrowser.start_link()
     on_exit(fn -> CDPBrowser.stop(browser) end)
     %{browser: browser, base_url: "http://127.0.0.1:#{port}"}

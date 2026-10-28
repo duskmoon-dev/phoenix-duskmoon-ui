@@ -2,7 +2,7 @@
 
 The UI version **U** synchronizes `mix.exs`, `apps/phoenix_duskmoon/mix.exs`,
 `apps/phoenix_duskmoon/package.json` and the Bun workspace lock. Toolchain **B**
-is independently pinned by `BUNDLER_VERSION` and the complete eight-package Hex
+uses `~> 10.0` requirements and is resolved by the complete eight-package Hex
 lock cohort. The public component package does not require the build toolchain.
 
 Commit a reviewed U version change before running **UI Release** (`release.yml`).
@@ -67,7 +67,7 @@ reviewed U. Never delete a release or overwrite packages to retry. A Docker or
 UI regression failure does not undo a successful B release.
 
 The destination's `docs/upgrade-ui.md` describes the version-pinned one-way
-upgrade PR/manual command. Review its actual `BUNDLER_VERSION`, `mix.lock` and
+upgrade PR/manual command. Review its dependency requirements, `mix.lock` and
 `docs/bundler-upgrades/vB.json` changes and require the full UI CI/test/E2E checks.
 Merge and the next UI release remain normal reviewed operations. Cross-repository
 credentials are separately configured in the destination; ordinary

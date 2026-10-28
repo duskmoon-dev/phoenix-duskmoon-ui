@@ -14,7 +14,7 @@ defmodule UIRelease do
         do: raise("umbrella U version differs from requested release")
     end)
 
-    bundler = File.read!("BUNDLER_VERSION") |> String.trim() |> ReleaseSupport.stable!()
+    bundler = ReleaseSupport.bundler_version!()
 
     %{
       product: "phoenix_duskmoon",
@@ -122,7 +122,7 @@ defmodule UIRelease do
     ReleaseSupport.hex_docs_publish!("phoenix_duskmoon", version, stage)
 
     IO.puts(
-      "UI Hex/npm/HexDocs release complete; U=#{version}, pinned B=#{provenance.bundler_version}"
+      "UI Hex/npm/HexDocs release complete; U=#{version}, locked B=#{provenance.bundler_version}"
     )
   end
 end

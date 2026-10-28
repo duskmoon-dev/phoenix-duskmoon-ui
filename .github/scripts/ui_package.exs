@@ -1,3 +1,5 @@
+Code.require_file("release_support.exs", __DIR__)
+
 defmodule UIPackage do
   @moduledoc false
   def stage(output) do
@@ -25,7 +27,8 @@ defmodule UIPackage do
     File.mkdir_p!(root)
 
     try do
-      version = File.read!("BUNDLER_VERSION") |> String.trim()
+      locked_runtime =
+        ReleaseSupport.bundler_lock!() |> Map.take([:duskmoon_bundler_runtime])
 
       output = Path.expand(output)
       cmd!("mix", ["hex.build"], output)
@@ -45,12 +48,19 @@ defmodule UIPackage do
         use Mix.Project
         def project, do: [app: :ui_consumer, version: "0.0.0", deps: [
           {:phoenix_duskmoon, path: #{inspect(unpacked)}},
-          {:duskmoon_bundler_runtime, "== #{version}"}
+          {:duskmoon_bundler_runtime, "~> 10.0"}
         ]]
       end
       """)
 
+      File.write!(Path.join(root, "mix.lock"), inspect(locked_runtime, limit: :infinity))
       cmd!("mix", ["deps.get"], root)
+
+      ReleaseSupport.immutable_action(
+        ReleaseSupport.bundler_lock!(Path.join(root, "mix.lock"), ["duskmoon_bundler_runtime"]),
+        locked_runtime
+      )
+
       cmd!("mix", ["compile", "--warnings-as-errors"], root)
 
       cmd!(

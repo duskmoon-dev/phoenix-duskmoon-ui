@@ -7,7 +7,7 @@ The UI repository owns `phoenix_duskmoon` and `duskmoon_storybook`. The independ
 Application, module, Hex and npm names remain unchanged. The UI root remains a
 small two-application umbrella.
 
-The adopted Bundler **10.0.1** fixes
+The earlier Bundler **10.0.1** adoption fixed
 [Bundler internal request #2](https://github.com/duskmoon-dev/duskmoon-bundler/issues/2)
 and [UI internal request #199](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/199):
 editing a Storybook `.story.exs` template now rebuilds Tailwind and applies new
@@ -24,8 +24,9 @@ is in `docs/verification/`; executable regression results are recorded in
 still points to the UI repository's `v9.16.16`. Historical tags, releases and assets
 remain untouched.
 
-`BUNDLER_VERSION` now pins B **10.0.1**, and the root `mix.lock` fixes the actual
-eight-package Hex cohort. Its native artifacts are published by
+All eight toolchain dependencies declare `~> 10.0`; the root `mix.lock` resolves
+the cohort to B **10.0.8**. This uses published native
+artifacts in strict precompiled mode. The earlier 10.0.1 artifacts were published by
 `duskmoon-bundler/releases/download/v10.0.1`, from source
 `3bffa78eada45a34c0d20b7207d1db504f6768e7`. The
 [published-release verification](https://github.com/duskmoon-dev/duskmoon-bundler/actions/runs/38558387833)

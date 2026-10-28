@@ -92,16 +92,15 @@ defmodule DuskmoonStorybook.Integration.ProductionPreloadTest do
 
     server =
       start_supervised!(
-        {Bandit,
+        {Gaoxy.HTTP,
          plug:
            {DuskmoonStorybook.Integration.ProductionPreloadPlug,
             outdir: outdir, entry: Path.basename(result.js.path), test_pid: self()},
          port: 0,
-         ip: :loopback,
-         startup_log: false}
+         ip: {127, 0, 0, 1}}
       )
 
-    {:ok, {_ip, port}} = ThousandIsland.listener_info(server)
+    %{local: {:ok, {_ip, port}}} = Gaoxy.info(server, :http)
 
     for route <- ["/setup", "/account/setup/"] do
       {:ok, page} = CDPBrowser.new_page(browser)

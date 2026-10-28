@@ -26,11 +26,16 @@ jobs:
       - uses: actions/checkout@v7
         with:
           ref: v${{ inputs.version }}
+      - uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.18'
+          otp-version: '28'
       - name: Registry consumer with independent U and B
         env:
           UI_VERSION: ${{ inputs.version }}
         run: |
-          BUNDLER_VERSION=$(cat BUNDLER_VERSION)
+          bundler_version=$(elixir -r .github/scripts/release_support.exs -e 'IO.write(ReleaseSupport.bundler_version!())')
           docker run --rm --volume "$PWD/.github/scripts:/validation:ro" \
+            --volume "$PWD/mix.lock:/validation/mix.lock:ro" \
             --env REQUIRE_MUSL=1 elixir:1.18-otp-28-alpine \
-            sh /validation/alpine_native_smoke.sh "$BUNDLER_VERSION" "$UI_VERSION"
+            sh /validation/alpine_native_smoke.sh "$bundler_version" "$UI_VERSION"

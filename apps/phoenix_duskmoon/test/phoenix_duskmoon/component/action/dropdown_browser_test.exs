@@ -143,8 +143,8 @@ defmodule PhoenixDuskmoon.Component.Action.DropdownBrowserTest do
          File.read!(Path.expand("../../../../assets/js/hooks/duskmoon_popover.js", __DIR__))}
     }
 
-    server = start_supervised!({Bandit, plug: {Assets, assets}, ip: {127, 0, 0, 1}, port: 0})
-    {:ok, {_ip, port}} = ThousandIsland.listener_info(server)
+    server = start_supervised!({Gaoxy.HTTP, plug: {Assets, assets}, ip: {127, 0, 0, 1}, port: 0})
+    %{local: {:ok, {_ip, port}}} = Gaoxy.info(server, :http)
     assert :ok = CDPBrowser.goto(page, "http://localhost:#{port}/")
     assert_dom_expanded(page, false)
 

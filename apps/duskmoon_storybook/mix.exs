@@ -2,7 +2,6 @@ defmodule DuskmoonStorybook.MixProject do
   use Mix.Project
 
   @version "0.0.0"
-  @bundler_version File.read!(Path.expand("../../BUNDLER_VERSION", __DIR__)) |> String.trim()
 
   def project do
     [
@@ -60,14 +59,14 @@ defmodule DuskmoonStorybook.MixProject do
       {:phoenix_live_dashboard, "~> 0.8"},
       {:phoenix_pubsub, "~> 2.2"},
       {:lazy_html, "~> 0.1.0"},
-      {:duskmoon_bundler_runtime, "== #{@bundler_version}"},
-      {:duskmoon_bundler, "== #{@bundler_version}", runtime: Mix.env() in [:dev, :test]},
+      {:duskmoon_bundler_runtime, "~> 10.0"},
+      {:duskmoon_bundler, "~> 10.0", runtime: Mix.env() in [:dev, :test]},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.3"},
       {:gettext, "~> 1.0"},
       {:phoenix_duskmoon, in_umbrella: true},
       {:jason, "~> 1.4"},
-      {:bandit, "~> 1.11"}
+      {:gaoxy_http, "~> 0.13.0"}
     ] ++ hologram_deps()
   end
 

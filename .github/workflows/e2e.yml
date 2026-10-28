@@ -7,7 +7,7 @@ permissions:
   contents: read
 jobs:
   consumer:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v7
@@ -21,7 +21,7 @@ jobs:
       - uses: actions/cache@v6
         with:
           path: deps
-          key: ${{ github.repository }}-${{ runner.os }}-${{ runner.arch }}-glibc-precompiled-elixir1.18-otp28-${{ hashFiles('mix.lock', 'BUNDLER_VERSION') }}
+          key: ${{ github.repository }}-${{ runner.os }}-${{ runner.arch }}-glibc-precompiled-elixir1.18-otp28-${{ hashFiles('mix.lock', 'mix.exs', 'apps/*/mix.exs') }}
       - uses: actions/cache@v6
         with:
           path: ~/.bun/install/cache
@@ -37,4 +37,5 @@ jobs:
           scripts/with-precompiled-toolchain.sh mix prepublish
           elixir .github/scripts/ui_package.exs stage "$RUNNER_TEMP/ui-package"
           elixir .github/scripts/ui_package.exs smoke "$RUNNER_TEMP/ui-package"
-          elixir .github/scripts/runtime_consumer.exs "$(cat BUNDLER_VERSION)"
+          bundler_version=$(elixir -r .github/scripts/release_support.exs -e 'IO.write(ReleaseSupport.bundler_version!())')
+          elixir .github/scripts/runtime_consumer.exs "$bundler_version"
