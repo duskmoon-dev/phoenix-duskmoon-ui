@@ -52,6 +52,7 @@ defmodule DuskmoonStorybookWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
+        container: {:div, class: "container"},
         layout: {DuskmoonStorybookWeb.Layouts, :app}
 
       unquote(html_helpers())
