@@ -1,5 +1,5 @@
 <% sidebar = DemoLayout.sidebar(assigns[:demo_section] || :components) %>
-<main class={DemoLayout.classes().main}>
+<main id="demo-layout" class={DemoLayout.classes().main}>
   <.flash_group flash={@flash} />
   <.dm_left_menu
     id={sidebar.id}
@@ -13,7 +13,7 @@
     class={DemoLayout.classes().sidebar}
   />
 
-  <div class={DemoLayout.classes().content}>
+  <div id="demo-content" class={DemoLayout.classes().content}>
     {@inner_content}
   </div>
 </main>

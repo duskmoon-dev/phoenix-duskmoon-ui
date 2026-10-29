@@ -21,12 +21,10 @@ defmodule DuskmoonStorybookWeb.Router do
     get "/", PageController, :page
     get "/examples/hologram", PageController, :hologram_redirect
     live "/components", Components.PageLive
-    live "/hologram", HologramLive, :overview, container: {:div, class: "container"}
-    live "/hologram/playground", HologramLive, :playground, container: {:div, class: "container"}
-    live "/hologram/tasks", HologramLive, :tasks, container: {:div, class: "container"}
-
-    live "/hologram/preferences", HologramLive, :preferences,
-      container: {:div, class: "container"}
+    live "/hologram", HologramLive, :overview
+    live "/hologram/playground", HologramLive, :playground
+    live "/hologram/tasks", HologramLive, :tasks
+    live "/hologram/preferences", HologramLive, :preferences
 
     live_storybook("/storybook", backend_module: DuskmoonStorybookWeb.Storybook)
   end
@@ -121,22 +119,22 @@ defmodule DuskmoonStorybookWeb.Router do
   scope "/art-component", DuskmoonStorybookWeb do
     pipe_through :browser
 
-    get "/", ArtComponentController, :index
-    get "/atom", ArtComponentController, :atom
-    get "/cat-stargazer", ArtComponentController, :cat_stargazer
-    get "/circular-gallery", ArtComponentController, :circular_gallery
-    get "/color-spin", ArtComponentController, :color_spin
-    get "/eclipse", ArtComponentController, :eclipse
-    get "/flower-animation", ArtComponentController, :flower_animation
-    get "/gemini-input", ArtComponentController, :gemini_input
-    get "/moon", ArtComponentController, :moon
-    get "/mountain", ArtComponentController, :mountain
-    get "/plasma-ball", ArtComponentController, :plasma_ball
-    get "/snow", ArtComponentController, :snow
-    get "/sun", ArtComponentController, :sun
-    get "/synthwave-starfield", ArtComponentController, :synthwave_starfield
-    get "/button-noise", ArtComponentController, :button_noise
-    get "/signature", ArtComponentController, :signature
-    get "/spotlight-search", ArtComponentController, :spotlight_search
+    live "/", ArtComponentLive, :index
+    live "/atom", ArtComponentLive, :atom
+    live "/cat-stargazer", ArtComponentLive, :cat_stargazer
+    live "/circular-gallery", ArtComponentLive, :circular_gallery
+    live "/color-spin", ArtComponentLive, :color_spin
+    live "/eclipse", ArtComponentLive, :eclipse
+    live "/flower-animation", ArtComponentLive, :flower_animation
+    live "/gemini-input", ArtComponentLive, :gemini_input
+    live "/moon", ArtComponentLive, :moon
+    live "/mountain", ArtComponentLive, :mountain
+    live "/plasma-ball", ArtComponentLive, :plasma_ball
+    live "/snow", ArtComponentLive, :snow
+    live "/sun", ArtComponentLive, :sun
+    live "/synthwave-starfield", ArtComponentLive, :synthwave_starfield
+    live "/button-noise", ArtComponentLive, :button_noise
+    live "/signature", ArtComponentLive, :signature
+    live "/spotlight-search", ArtComponentLive, :spotlight_search
   end
 end

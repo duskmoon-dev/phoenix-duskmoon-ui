@@ -45,9 +45,12 @@ build directory and lockfile; there is no experimental dependency lane.
 ## Runtime and styling
 
 The public `/hologram` routes use `HologramLive` with the same Phoenix root and
-app layouts as Components. The appbar is the exact `dm_appbar` and
-`dm_theme_switcher` used by Components and Art Components. The sidebar is the
-same sticky `dm_left_menu` used by Components, populated with the Hologram demos.
+app layouts as Components and Art Components. All three sections inherit the
+same responsive LiveView container and content width. Wide examples scroll within
+the content region when the expanded sidebar leaves little room on a narrow screen.
+The appbar is the exact `dm_appbar` and `dm_theme_switcher` used by Components and
+Art Components. The sidebar is the same sticky `dm_left_menu`, populated with
+each section's own destinations.
 It retains its DOM, collapse and group state during sidebar navigation. Shell
 classes, navigation data and footer links live in `DuskmoonStorybookWeb.DemoLayout`.
 

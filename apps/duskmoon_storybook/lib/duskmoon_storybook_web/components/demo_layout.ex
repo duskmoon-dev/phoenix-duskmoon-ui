@@ -7,7 +7,7 @@ defmodule DuskmoonStorybookWeb.DemoLayout do
       body: "flex flex-col items-center bg-surface text-on-surface",
       appbar: "storybook-appbar appbar-primary appbar-elevated z-50 w-full",
       main: "container flex flex-row justify-start items-start relative",
-      content: "flex flex-col flex-auto min-w-0 w-full",
+      content: "flex flex-col flex-auto min-w-0 w-full overflow-x-auto",
       sidebar: "sticky top-16 h-[calc(100dvh-4rem)] bg-base-300/30",
       footer: "bg-primary text-primary-content"
     }
@@ -42,6 +42,44 @@ defmodule DuskmoonStorybookWeb.DemoLayout do
       label: "Hologram demos",
       storage_key: "duskmoon:storybook:hologram-sidebar-collapsed"
     }
+  end
+
+  def sidebar(:art_components) do
+    %{
+      id: "art-components-sidebar",
+      groups: [%{id: "components", label: "Components", items: art_components()}],
+      brand: %{label: "Art Components", icon: "palette"},
+      label: "Art Components navigation",
+      storage_key: "duskmoon:storybook:art-components-sidebar-collapsed"
+    }
+  end
+
+  @doc "Returns the Art Components destinations used by the shared sidebar."
+  def art_components do
+    for {slug, label, icon} <- [
+          {"index", "Overview", "view-grid"},
+          {"atom", "Atom", "atom"},
+          {"cat-stargazer", "Cat Stargazer", "cat"},
+          {"circular-gallery", "Circular Gallery", "image-multiple"},
+          {"color-spin", "Color Spin", "palette"},
+          {"eclipse", "Eclipse", "moon-waning-crescent"},
+          {"flower-animation", "Flower Animation", "flower"},
+          {"gemini-input", "Gemini Input", "gradient-horizontal"},
+          {"moon", "Moon", "moon-full"},
+          {"mountain", "Mountain", "image-filter-hdr"},
+          {"plasma-ball", "Plasma Ball", "flash"},
+          {"snow", "Snow", "snowflake"},
+          {"sun", "Sun", "white-balance-sunny"},
+          {"synthwave-starfield", "Synthwave Starfield", "star-four-points"}
+        ] do
+      %{
+        id: "art-#{slug}",
+        label: label,
+        to: if(slug == "index", do: "/art-component", else: "/art-component/#{slug}"),
+        icon: icon,
+        rest: %{"id" => "art-components-link-#{slug}"}
+      }
+    end
   end
 
   @doc "Returns the Hologram demos and their isolated runtime documents."

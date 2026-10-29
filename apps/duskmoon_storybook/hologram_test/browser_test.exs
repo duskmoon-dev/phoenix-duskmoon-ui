@@ -88,6 +88,105 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
              ["/hologram/demos"]
   end
 
+  test "all demo sections have equal widths and menu styles at each viewport", %{
+    page: page,
+    base_url: base_url
+  } do
+    for width <- [1440, 768, 390] do
+      assert {:ok, _} =
+               CDPBrowser.command(page, "Emulation.setDeviceMetricsOverride", %{
+                 width: width,
+                 height: 900,
+                 deviceScaleFactor: 1,
+                 mobile: false
+               })
+
+      measurements =
+        for {path, sidebar_id} <- [
+              {"/components/action/button", "components-sidebar"},
+              {"/art-component/atom", "art-components-sidebar"},
+              {"/hologram/playground", "hologram-sidebar"}
+            ] do
+          assert :ok = CDPBrowser.goto(page, base_url <> path)
+
+          wait_for(
+            page,
+            """
+            document.querySelector('[data-phx-main].phx-connected') &&
+              document.getElementById('#{sidebar_id}')?.closest('[data-phx-sticky].phx-connected')
+            """
+          )
+
+          sizes =
+            for collapsed <- [false, true] do
+              assert {:ok, _} =
+                       CDPBrowser.evaluate(page, """
+                       (() => {
+                         const menu = document.getElementById('#{sidebar_id}');
+                         if (menu.dataset.collapsed !== '#{collapsed}') menu.querySelector('[data-left-menu-toggle]').click();
+                       })()
+                       """)
+
+              menu_width = if collapsed, do: 72, else: 288
+
+              wait_for(
+                page,
+                "document.getElementById('#{sidebar_id}').getBoundingClientRect().width === #{menu_width}"
+              )
+
+              assert {:ok, geometry} =
+                       CDPBrowser.evaluate(page, """
+                       (() => {
+                         const menu = document.getElementById('#{sidebar_id}');
+                         const style = getComputedStyle(menu);
+                         return {
+                           shell: document.querySelector('[data-phx-main]').getBoundingClientRect().width,
+                           main: document.querySelector('#demo-layout').getBoundingClientRect().width,
+                           content: document.querySelector('#demo-content').getBoundingClientRect().width,
+                           menu: menu.getBoundingClientRect().width,
+                           position: style.position, top: style.top,
+                           background: style.backgroundColor, radius: style.borderRadius,
+                           overflow: document.documentElement.scrollWidth > innerWidth
+                         };
+                       })()
+                       """)
+
+              assert geometry["position"] == "sticky"
+
+              refute geometry["overflow"],
+                     "#{path} overflows at #{width}px with collapsed=#{collapsed}"
+
+              assert geometry["content"] == geometry["main"] - menu_width
+              geometry
+            end
+
+          if sidebar_id == "art-components-sidebar" do
+            assert {:ok, _} =
+                     CDPBrowser.evaluate(page, """
+                     window.originalArtSidebar = document.getElementById('art-components-sidebar');
+                     document.getElementById('art-components-link-moon').click();
+                     """)
+
+            wait_for(
+              page,
+              "location.pathname === '/art-component/moon' && document.querySelector('#art-components-link-moon[aria-current=page]')"
+            )
+
+            assert {:ok, true} =
+                     CDPBrowser.evaluate(page, """
+                     originalArtSidebar === document.getElementById('art-components-sidebar') &&
+                       originalArtSidebar.dataset.collapsed === 'true'
+                     """)
+          end
+
+          sizes
+        end
+
+      [reference | other_sections] = measurements
+      for section <- other_sections, do: assert(section == reference)
+    end
+  end
+
   test "hydration, styles, local actions, inputs and both themes", %{page: page} do
     set_document_theme(page, "sunshine")
 
@@ -494,6 +593,8 @@ defmodule DuskmoonStorybook.Hologram.BrowserTest do
   defp wait_for_demo(page, marker) do
     wait_for(page, """
     window.liveSocket?.isConnected() &&
+      document.querySelector('[data-phx-main].phx-connected') &&
+      document.querySelector('#hologram-sidebar')?.closest('[data-phx-sticky].phx-connected') &&
       document.querySelector('#hologram-demo')?.contentDocument?.querySelector('##{marker}') &&
       document.querySelector('#hologram-demo').contentDocument.querySelector('#hologram-shell')?.dataset.ready === 'true'
     """)
