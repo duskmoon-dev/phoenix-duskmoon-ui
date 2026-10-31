@@ -45,6 +45,7 @@ jobs:
           elixir .github/scripts/ui_release.exs plan "$RELEASE_VERSION" "$SOURCE_SHA"
       - name: Locked toolchain, UI tests and hooks
         env:
+          MIX_ENV: test
           CHROME_BIN: ${{ steps.chrome.outputs.chrome-path }}
         run: |
           mix deps.get --check-locked
