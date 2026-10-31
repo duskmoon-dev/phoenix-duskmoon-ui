@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@duskmoon-dev/art-elements": "1.10.2",
-    "@duskmoon-dev/components": "0.5.4",
+    "@duskmoon-dev/components": "0.5.5",
     "@duskmoon-dev/core": "1.20.8",
     "@duskmoon-dev/css-art": "1.20.8",
     "@duskmoon-dev/elements": "1.10.2",
