@@ -162,15 +162,15 @@ defmodule PhoenixDuskmoon.Mixfile do
   defp deps do
     [
       {:phoenix, "~> 1.8"},
-      {:phoenix_html, "~> 4.0"},
-      {:phoenix_live_view, "~> 1.1"},
+      {:phoenix_html, "~> 4.4"},
+      {:phoenix_live_view, "~> 1.2"},
       {:mdex, "~> 0.14"},
-      {:mdex_gfm, "~> 0.2.0"},
-      {:mdex_mermaid, "~> 0.4.0"},
-      {:plug, "~> 1.19", optional: true},
+      {:mdex_gfm, "~> 0.2"},
+      {:mdex_mermaid, "~> 0.4"},
+      {:plug, "~> 1.20", optional: true},
       {:jason, "~> 1.4"},
-      {:http_fetch, "~> 0.21.17", only: :test},
-      {:http_web_socket, "~> 0.21.17", only: :test},
+      {:http_fetch, "~> 0.21", only: :test},
+      {:http_web_socket, "~> 0.21", only: :test},
       {:ex_doc, "~> 0.40", runtime: false}
     ]
   end

@@ -31,8 +31,8 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
     [
       {:ex_doc, "~> 0.40", runtime: false, override: true},
       # Keep Plug available to both test servers and runtime umbrella applications.
-      {:plug, "~> 1.19"},
-      {:websock_adapter, "~> 0.13.0", hex: :gaoxy_websock_adapter, override: true},
+      {:plug, "~> 1.20"},
+      {:websock_adapter, "~> 0.14", hex: :gaoxy_websock_adapter, override: true},
       {:duskmoon_oxc, "~> 10.0", runtime: false},
       {:duskmoon_oxide, "~> 10.0", runtime: false},
       {:duskmoon_vize, "~> 10.0", runtime: false},
@@ -44,7 +44,7 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
 
   defp aliases do
     [
-      setup: ["cmd mix setup"],
+      setup: ["deps.get", "npm.install", "cmd mix setup"],
       "duskmoon.dev": "holo",
       prepublish: [
         "do --app phoenix_duskmoon cmd cp #{Path.expand("README.md", __DIR__)} README.md",
