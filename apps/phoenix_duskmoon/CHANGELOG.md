@@ -1,3 +1,13 @@
+# [10.0.12](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.11...v10.0.12) (2026-11-01)
+
+### Fixed
+
+- Exclude build-tool applications (`duskmoon_npm`, `duskmoon_hex_solver`, etc.) from
+  Storybook production release assembly, ensuring a clean runtime-only release.
+- Add Bun setup to test workflow for browser component tests.
+- Bump `@duskmoon-dev/components` to 0.5.5 for Popover API support, dropdown select
+  layout, and timeline marker styling.
+
 # [10.0.11](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.10...v10.0.11) (2026-10-22)
 
 ### Fixed

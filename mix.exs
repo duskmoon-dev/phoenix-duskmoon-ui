@@ -5,7 +5,7 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
   use Mix.Project
 
   # Umbrella version tracks phoenix_duskmoon package version
-  @version "10.0.11"
+  @version "10.0.12"
 
   def project do
     [
@@ -19,11 +19,56 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
       listeners: [Phoenix.CodeReloader],
       releases: [
         storybook: [
-          applications: [duskmoon_storybook: :permanent]
+          applications: [duskmoon_storybook: :permanent],
+          steps: [&strip_build_tools/1, :assemble]
         ]
       ],
       aliases: aliases()
     ]
+  end
+
+  defp strip_build_tools(%Mix.Release{} = release) do
+    excluded =
+      ~w(duskmoon_bundler duskmoon_oxc duskmoon_oxide duskmoon_vize duskmoon_quickbeam duskmoon_npm duskmoon_hex_solver zigler zigler_precompiled)a
+
+    for {app, props} <- release.applications, app not in excluded do
+      path = props[:path] || Application.app_dir(app)
+      app_file = Path.join([path, "ebin", "#{app}.app"])
+
+      if File.exists?(app_file) do
+        case :file.consult(String.to_charlist(app_file)) do
+          {:ok, [{:application, ^app, app_props}]} ->
+            current_apps = Keyword.get(app_props, :applications, [])
+
+            if Enum.any?(excluded, &(&1 in current_apps)) do
+              cleaned_apps = current_apps -- excluded
+              updated_props = Keyword.put(app_props, :applications, cleaned_apps)
+              content = :io_lib.format("~tp.~n", [{:application, app, updated_props}])
+              File.write!(app_file, content)
+            end
+
+          _ ->
+            :ok
+        end
+      end
+    end
+
+    applications =
+      release.applications
+      |> Map.new(fn {app, spec} ->
+        updated_spec =
+          Keyword.update(spec, :applications, [], fn child_apps -> child_apps -- excluded end)
+
+        {app, updated_spec}
+      end)
+      |> Map.drop(excluded)
+
+    boot_scripts =
+      Map.new(release.boot_scripts, fn {boot_name, modes} ->
+        {boot_name, Keyword.drop(modes, excluded)}
+      end)
+
+    %{release | applications: applications, boot_scripts: boot_scripts}
   end
 
   defp deps do

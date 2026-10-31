@@ -1,5 +1,11 @@
 [release_root] = System.argv()
-[release_file] = Path.wildcard(Path.join([release_root, "releases", "*", "storybook.rel"]))
+
+release_file =
+  case Path.wildcard(Path.join([release_root, "releases", "*", "storybook.rel"])) do
+    [] -> raise("No release file found in #{release_root}")
+    files -> Enum.max(files)
+  end
+
 {:ok, [{:release, _, _, apps}]} = :file.consult(String.to_charlist(release_file))
 actual = Enum.map(apps, &elem(&1, 0))
 required = [:phoenix_duskmoon, :duskmoon_storybook, :duskmoon_bundler_runtime, :duskmoon_hologram]
