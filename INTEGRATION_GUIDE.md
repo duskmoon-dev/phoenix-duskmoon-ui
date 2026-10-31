@@ -4,11 +4,10 @@ This guide provides comprehensive instructions for integrating Phoenix Duskmoon 
 
 ## Prerequisites
 
-- **Elixir**: ~> 1.12
+- **Elixir**: ~> 1.18
 - **Phoenix**: ~> 1.8.1
 - **Phoenix LiveView**: ~> 1.1.0
-- **TailwindCSS**: >= 4.0
-- **Bun**: For frontend asset management
+- **DuskmoonBundler**: ~> 10.0 (provides built-in Tailwind v4 and JS bundling)
 
 ## Installation
 
@@ -50,42 +49,41 @@ end
 
 ### 3. Configure CSS/Assets
 
-#### Using bun (Recommended)
+#### Install frontend packages
 
-Install the required frontend packages:
+Install the required frontend packages with `duskmoon_npm`:
 
 ```bash
-bun add tailwindcss @duskmoon-dev/core @duskmoon-dev/elements
+mix npm.install @duskmoon-dev/core @duskmoon-dev/elements
 ```
 
-> **Note (v9)**: Phoenix Duskmoon UI v9 uses `@duskmoon-dev/core` instead of `duskmoonui` (daisyui).
+> **Note**: Phoenix Duskmoon UI uses `@duskmoon-dev/core` for styling.
 
-#### Configure TailwindCSS
+#### Configure CSS
 
 In your `assets/css/app.css`:
 
 ```css
-@source "../js/**/*.js";
-@source '../../lib/**/*.exs';
-@source '../../lib/**/*.ex';
-
 @import "tailwindcss";
 @import "@duskmoon-dev/core";
 @import "phoenix_duskmoon/components";
 ```
 
-#### Using esbuild/tailwind config
+#### Asset Bundling with DuskmoonBundler
 
-Update your `config/config.exs` to include the asset configuration:
+Update your `config/config.exs` to use DuskmoonBundler for JS and Tailwind CSS:
 
 ```elixir
-config :tailwind, :default,
-  args: ~w(
-    --config=tailwind.config.js
-    --input=css/app.css
-    --output=../priv/static/assets/app.css
-  ),
-  cd: Path.expand("../assets", __DIR__)
+config :duskmoon_bundler,
+  entry: "assets/js/app.js",
+  root: "assets",
+  tailwind: [
+    css: "assets/css/app.css",
+    sources: [
+      %{base: "lib", pattern: "**/*.{ex,heex}"},
+      %{base: "assets", pattern: "**/*.{js,ts,css}"}
+    ]
+  ]
 ```
 
 ### 4. Theme Configuration (Optional)

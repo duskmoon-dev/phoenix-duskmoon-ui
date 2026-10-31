@@ -14,7 +14,7 @@ export MIX_BUILD_PATH="$candidate_root/ui/_build/test" MIX_ENV=test
 mix deps.get
 # Provision Rust and Zig 0.16.0 through the destination development environment.
 # Running zig.get here initializes this project before it installs the SDK.
-bun install --frozen-lockfile
+mix npm.ci
 mix compile --warnings-as-errors
 mix test
 mix prepublish

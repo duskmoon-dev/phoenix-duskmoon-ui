@@ -20,7 +20,7 @@ elixir -e '
 '
 
 mix deps.get --check-locked
-bun install --frozen-lockfile
+mix npm.ci
 elixir scripts/check-toolchain.exs
 scripts/with-precompiled-toolchain.sh sh -c 'mix compile --warnings-as-errors && mix test && bun test --cwd apps/phoenix_duskmoon && mix prepublish && mix duskmoon_bundler.build duskmoon_storybook'
 rg -F '.p-\[37px\]' apps/duskmoon_storybook/priv/static/assets/css/app.css >/dev/null

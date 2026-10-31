@@ -1,5 +1,0 @@
-[install]
-registry = "https://npm.gsmlg.dev/"
-
-[workspaces]
-packages = ["apps/duskmoon_storybook", "apps/phoenix_duskmoon"]

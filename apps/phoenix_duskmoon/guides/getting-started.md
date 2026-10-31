@@ -7,8 +7,7 @@ This guide walks through adding Phoenix Duskmoon UI to a Phoenix LiveView projec
 - Elixir >= 1.18
 - Phoenix ~> 1.8.1
 - Phoenix LiveView ~> 1.1.0
-- TailwindCSS >= 4.0
-- [Bun](https://bun.sh) (for frontend package management)
+- DuskmoonBundler ~> 10.0 (includes built-in Tailwind v4 and JS bundler)
 
 ## Installation
 
@@ -30,7 +29,7 @@ mix deps.get
 ### 2. Install frontend packages
 
 ```bash
-bun add @duskmoon-dev/core @duskmoon-dev/elements
+mix npm.install @duskmoon-dev/core @duskmoon-dev/elements
 ```
 
 `@duskmoon-dev/core` provides the CSS design system (theme variables, component

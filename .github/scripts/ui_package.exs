@@ -73,7 +73,7 @@ defmodule UIPackage do
         root
       )
 
-      cmd!("bun", ["pm", "pack", "--quiet", "--destination", output], output)
+      cmd!("npm", ["pack", "--pack-destination", output], output)
       [npm] = Path.wildcard(Path.join(output, "*.tgz"))
       npm_root = Path.join(root, "npm")
       File.mkdir_p!(npm_root)

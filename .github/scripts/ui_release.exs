@@ -23,7 +23,7 @@ defmodule UIRelease do
       source_dirty: ReleaseSupport.source_dirty?(),
       bundler_version: bundler,
       mix_lock_sha256: ReleaseSupport.digest("mix.lock"),
-      bun_lock_sha256: ReleaseSupport.digest("bun.lock"),
+      package_lock_sha256: ReleaseSupport.digest("package-lock.json"),
       packages: ["phoenix_duskmoon"],
       native_builds: [],
       toolchain_publish: [],

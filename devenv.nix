@@ -15,7 +15,6 @@ in
     figlet
     lolcat
     watchman
-    tailwindcss_4
   ] ++ lib.optionals stdenv.isLinux [
     inotify-tools
   ];
@@ -24,8 +23,6 @@ in
   languages.elixir.package = pkgs-stable.beam28Packages.elixir;
 
   languages.javascript.enable = true;
-  languages.javascript.bun.enable = true;
-  languages.javascript.bun.package = pkgs-stable.bun;
 
   scripts.hello.exec = ''
     figlet -w 120 $GREET | lolcat

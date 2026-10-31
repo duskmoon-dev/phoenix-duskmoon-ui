@@ -27,7 +27,7 @@ erl_crash.dump
 
 
 node_modules
-package-lock.json
+bun.lock
 
 /.devenv*
 

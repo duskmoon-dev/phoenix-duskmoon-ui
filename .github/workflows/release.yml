@@ -49,7 +49,7 @@ jobs:
         run: |
           mix deps.get --check-locked
           elixir scripts/check-toolchain.exs
-          bun install --frozen-lockfile
+          mix npm.ci
           elixir .github/scripts/release_test.exs
           elixir scripts/native-policy-test.exs
           elixir scripts/prepare-candidate-test.exs

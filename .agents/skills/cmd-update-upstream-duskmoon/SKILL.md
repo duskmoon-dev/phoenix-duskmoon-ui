@@ -37,9 +37,9 @@ If the user requests a dry run, inspect package metadata and shipped files in a 
 
 ## 1. Discover package changes
 
-1. Record the six required packages above in the root and app manifests, plus `bun.lock` (the Bun lockfile is authoritative for updates). Include any supporting `@duskmoon-dev/el-*` and `@duskmoon-dev/el-art-*` packages used by the integration. Check the registry for current versions and preserve exact-version policy. Treat each package as independently versioned.
+1. Record the six required packages above in the root and app manifests, plus `package-lock.json` (the lockfile is authoritative for updates). Include any supporting `@duskmoon-dev/el-*` and `@duskmoon-dev/el-art-*` packages used by the integration. Check the registry for current versions and preserve exact-version policy. Treat each package as independently versioned.
 2. Compare the old and new shipped contracts. Inspect Core CSS exports, themes, tokens, and plugin entrypoints; CSS Art files and selectors; Elements and Art Elements custom-element exports, attributes, properties, slots, events, parts, and registration entrypoints; and Components and Art Components React exports, peer dependencies, props, events, and mount requirements. Do not infer a component contract from its package name.
-3. Update the six required packages when they are declared or used by this repository. Add a package only when a component or integration in this repository needs it. For one custom element or art element, prefer its `@duskmoon-dev/el-*` or `@duskmoon-dev/el-art-*` package over a complete registry. Outside a dry run, update manifests with Bun and install `bun.lock`; inspect any other lockfile for drift without using it as the update source.
+3. Update the six required packages when they are declared or used by this repository. Add a package only when a component or integration in this repository needs it. For one custom element or art element, prefer its `@duskmoon-dev/el-*` or `@duskmoon-dev/el-art-*` package over a complete registry. Outside a dry run, update manifests and install with `mix npm.install`; inspect any other lockfile for drift without using it as the update source.
 4. If no package version changed, still inspect the requested component contract before reporting a no-op.
 
 ## 2. Choose the component path

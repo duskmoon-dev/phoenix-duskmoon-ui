@@ -43,7 +43,7 @@ spacing, and elevation tokens through CSS custom properties.
 ```
 
 ```bash
-bun add @duskmoon-dev/core @duskmoon-dev/elements
+mix npm.install @duskmoon-dev/core @duskmoon-dev/elements
 ```
 
 See the [Getting Started](getting-started.md) guide for full setup instructions.

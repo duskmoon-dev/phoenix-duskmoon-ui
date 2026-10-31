@@ -1,5 +1,3 @@
-FROM oven/bun:1.3.13 AS bun
-
 FROM elixir:1.19-otp-28 AS builder
 
 ARG MIX_ENV=prod
@@ -7,7 +5,6 @@ ARG RELEASE_VERSION=1.0.0
 
 ENV DUSKMOON_NATIVE_MODE=precompiled
 ENV NPM_EX_ALLOWED_REGISTRIES=https://registry.npmjs.org,https://npm.gsmlg.dev,https://nexus.gsmlg.net
-COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
 COPY . /build
 WORKDIR /build
 
@@ -19,15 +16,7 @@ rm -rf /var/lib/apt/lists/*
 mix local.hex --force
 mix local.rebar --force
 mix deps.get
-bun_install_status=1
-for attempt in 1 2 3 4; do
-  if bun install --frozen-lockfile; then
-    bun_install_status=0
-    break
-  fi
-  sleep $((attempt * 5))
-done
-test "$bun_install_status" -eq 0
+mix npm.ci
 export MATCH_STRING="s%@version \"[^\"]\+\"%@version \"${RELEASE_VERSION}\"%"
 sed -i "$MATCH_STRING" mix.exs;
 sed -i "$MATCH_STRING" apps/duskmoon_storybook/mix.exs;

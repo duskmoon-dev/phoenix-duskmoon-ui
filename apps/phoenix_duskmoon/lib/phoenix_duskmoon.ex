@@ -14,7 +14,7 @@ defmodule PhoenixDuskmoon do
 
   Install frontend packages:
 
-      bun add @duskmoon-dev/core @duskmoon-dev/elements
+      mix npm.install @duskmoon-dev/core @duskmoon-dev/elements
 
   ## Setup in `Phoenix` project
 

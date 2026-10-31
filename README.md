@@ -32,13 +32,13 @@ Add to `mix.exs`:
 Install frontend packages:
 
 ```bash
-bun add @duskmoon-dev/core @duskmoon-dev/elements
+mix npm.install @duskmoon-dev/core @duskmoon-dev/elements
 ```
 
 Optionally, add CSS Art and Art Custom Elements support:
 
 ```bash
-bun add @duskmoon-dev/css-art @duskmoon-dev/art-elements
+mix npm.install @duskmoon-dev/css-art @duskmoon-dev/art-elements
 ```
 
 ### View Helpers

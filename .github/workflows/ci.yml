@@ -28,15 +28,11 @@ jobs:
         with:
           path: deps
           key: ${{ github.repository }}-${{ runner.os }}-${{ runner.arch }}-glibc-precompiled-elixir1.18-otp28-${{ hashFiles('mix.lock', 'mix.exs', 'apps/*/mix.exs') }}
-      - uses: actions/cache@v6
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ github.repository }}-bun1.3.13-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('bun.lock') }}
       - name: Install pinned dependencies
         run: |
           mix deps.get --check-locked
           elixir scripts/check-toolchain.exs
-          bun install --frozen-lockfile
+          mix npm.ci
       - run: elixir .github/scripts/release_test.exs
       - run: elixir scripts/native-policy-test.exs
       - run: elixir scripts/prepare-candidate-test.exs

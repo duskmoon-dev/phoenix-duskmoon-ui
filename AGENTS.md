@@ -34,7 +34,7 @@
   `scripts/candidate-integration.sh`; it must not replace normal registry dependencies.
 
 ## Frontend Dependencies & Styling
-- Use `bun` for all frontend package management (not npm/yarn)
+- Use DuskmoonBundler and `mix npm.*` for frontend package management and asset compilation (no external bun or tailwind CLI required)
 - The theme provides custom component styles and color variants via CSS custom properties
 
 ### Upstream-first component selection

@@ -9,8 +9,8 @@ on:
       - 'config/**'
       - 'mix.exs'
       - 'mix.lock'
-      - 'bun.lock'
       - 'package.json'
+      - 'package-lock.json'
       - '.github/scripts/release_support.exs'
       - 'scripts/with-precompiled-toolchain.sh'
   pull_request:
@@ -21,8 +21,8 @@ on:
       - 'config/**'
       - 'mix.exs'
       - 'mix.lock'
-      - 'bun.lock'
       - 'package.json'
+      - 'package-lock.json'
       - '.github/scripts/release_support.exs'
       - 'scripts/with-precompiled-toolchain.sh'
 permissions:
@@ -43,16 +43,13 @@ jobs:
         with:
           elixir-version: '1.18'
           otp-version: '28'
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: 1.3.13
       - uses: browser-actions/setup-chrome@v2
         id: chrome
       - name: Install locked dependencies
         run: |
           mix deps.get --check-locked
           elixir scripts/check-toolchain.exs
-          bun install --frozen-lockfile
+          mix npm.ci
       - name: Build Hologram and shared styles
         run: |
           scripts/with-precompiled-toolchain.sh mix compile --warnings-as-errors

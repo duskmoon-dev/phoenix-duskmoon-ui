@@ -7,7 +7,7 @@ notes, rather than assuming compatibility from package names. Latest audit: 2026
 
 All six families were checked against live npm metadata and published tarballs.
 Bun updated exact pins in the root and library manifests and the authoritative
-`bun.lock`. Elements' own Core/CSS Art 1.20.5 dependencies remain independently
+`package-lock.json`. Elements' own Core/CSS Art 1.20.5 dependencies remain independently
 resolved alongside this repository's 1.20.6 pins.
 
 | Package | Before | After / decision |
@@ -138,7 +138,7 @@ published editor runtime is unchanged.
 ## 2026-10-08 synchronization
 
 All six package families were checked against live npm metadata and shipped
-artifacts. Exact version pins in both manifests and the authoritative `bun.lock`
+artifacts. Exact version pins in both manifests and the authoritative `package-lock.json`
 are synchronized. Existing lockfile URL edits were preserved; no unrelated
 package versions changed. There is no npm lockfile in this checkout.
 
@@ -369,7 +369,7 @@ excluding generated source-path/debug comments; their dependency versions change
 - **React packages:** both use React/ReactDOM peers. Their exports were inventoried;
   introducing a React island is unnecessary for the changed join/art contracts.
 
-Bun updates the root and Phoenix manifests and `bun.lock`. Storybook uses
+duskmoon_npm updates the root and Phoenix manifests and `package-lock.json`. Storybook uses
 `workspace:*` for the Phoenix package so the lockfile no longer retains an old
 `file:` dependency snapshot with stale nested Duskmoon versions. The existing
 `package-lock.json` is an older npm snapshot and is not the update source.

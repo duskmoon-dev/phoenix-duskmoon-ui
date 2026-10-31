@@ -24,7 +24,7 @@ HTML Custom Elements (`<el-dm-*>`) styled by `@duskmoon-dev/core`.
 ```
 
 ```bash
-bun add @duskmoon-dev/core @duskmoon-dev/css-art @duskmoon-dev/elements @duskmoon-dev/art-elements @duskmoon-dev/components react react-dom
+mix npm.install @duskmoon-dev/core @duskmoon-dev/css-art @duskmoon-dev/elements @duskmoon-dev/art-elements @duskmoon-dev/components react react-dom
 ```
 
 ## Setup
