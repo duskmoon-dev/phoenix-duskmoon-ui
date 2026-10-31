@@ -35,7 +35,8 @@ jobs:
           UI_VERSION: ${{ inputs.version }}
         run: |
           bundler_version=$(elixir -r .github/scripts/release_support.exs -e 'IO.write(ReleaseSupport.bundler_version!())')
+          cp mix.lock .github/scripts/mix.lock
+          trap 'rm -f .github/scripts/mix.lock' EXIT
           docker run --rm --volume "$PWD/.github/scripts:/validation:ro" \
-            --volume "$PWD/mix.lock:/validation/mix.lock:ro" \
             --env REQUIRE_MUSL=1 elixir:1.18-otp-28-alpine \
             sh /validation/alpine_native_smoke.sh "$bundler_version" "$UI_VERSION"
