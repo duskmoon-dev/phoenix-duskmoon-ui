@@ -47,6 +47,13 @@ defmodule DuskmoonUI.CandidatePrepareTest do
       assert options[:override]
     end
 
+    assert [{:zigler, zigler_requirement, [runtime: false]}] =
+             Enum.filter(dependencies, &(elem(&1, 0) == :zigler))
+
+    assert Version.match?("0.16.0", zigler_requirement)
+    assert Version.match?("0.17.0", zigler_requirement)
+    refute Version.match?("0.18.0", zigler_requirement)
+
     provenance =
       output |> Path.join("candidate-provenance.json") |> File.read!() |> JSON.decode!()
 

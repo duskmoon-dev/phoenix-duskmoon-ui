@@ -39,7 +39,7 @@ path_deps =
       other
   end)
 
-path_deps = path_deps ++ [{:zigler, "~> 0.16.0", [runtime: false]}]
+path_deps = path_deps ++ [{:zigler, "~> 0.16.0 or ~> 0.17.0", [runtime: false]}]
 root_mix = Path.join(output, "mix.exs")
 content = File.read!(root_mix)
 needle = "  defp deps do\n"
