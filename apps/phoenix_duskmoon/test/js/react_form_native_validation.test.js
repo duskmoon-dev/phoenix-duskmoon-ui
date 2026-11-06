@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-test("mounted classic forms validate native constraints and snapshot current controls", async () => {
+test("mounted classic forms preserve disabled values, validate constraints and snapshot enabled controls", async () => {
 	const directory = await mkdtemp(join(tmpdir(), "dm-react-form-native-"));
 	let server, browser, timeout;
 	try {
@@ -15,7 +15,8 @@ import {DuskmoonReactForm} from ${JSON.stringify(fileURLToPath(new URL("../../as
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 const tick = () => new Promise(resolve => setTimeout(resolve, 20));
 const el = document.querySelector('#native-form');
-el.dataset.initialValues = JSON.stringify({profile: {title: 'React initial', toolset_ids: ['tools']}, quantity: 0});
+const retained = {padded: '0010', invalid: 'abc', choice: 'saved choice', notes: 'saved notes', checked: true, fieldset: '0020', second_legend: '0030'};
+el.dataset.initialValues = JSON.stringify({profile: {title: 'React initial', toolset_ids: ['tools']}, quantity: 0, retained});
 el.querySelector('[data-dm-react-field]').dataset.dmReactField = JSON.stringify({name: ['profile', 'title'], type: 'text', label: 'React title'});
 const events = [], handlers = new Map();
 const hook = Object.assign(Object.create(DuskmoonReactForm), {el,
@@ -29,6 +30,37 @@ const createInput = (name, value, type = 'hidden') => {
 try {
   flushSync(() => hook.mounted());
   const form = hook.form;
+  const disabled = Object.keys(retained).map(name => input('retained[' + name + ']'));
+  const fieldset = form.querySelector('fieldset');
+  const firstLegend = input('first_legend');
+  assert(!disabled.at(-2).disabled && disabled.at(-2).matches(':disabled'), 'fieldset control must be effectively disabled');
+  assert(!firstLegend.matches(':disabled') && disabled.at(-1).matches(':disabled'), 'only the first legend may escape fieldset disabled state');
+  assert(input('retained[invalid]').value === '', 'browser must sanitize invalid number text');
+  assert(JSON.stringify(hook.values.retained) === JSON.stringify(retained), 'mount changed retained initial values');
+  hook.submit();
+  form.requestSubmit();
+  assert(saves().length === 2 && saves().every(entry => JSON.stringify(entry.payload.values.retained) === JSON.stringify(retained)), 'submit normalized retained disabled values');
+  assert(saves().at(-1).payload.values.first_legend === 10 && !('disabled_without_initial' in saves().at(-1).payload.values), 'submit ignored first legend or collected an uninitialized disabled control');
+  const disabledEvents = events.length;
+  for (const control of disabled) {
+    control.dispatchEvent(new Event('input', {bubbles: true}));
+    control.dispatchEvent(new Event('change', {bubbles: true}));
+  }
+  await tick();
+  assert(events.length === disabledEvents && JSON.stringify(hook.values.retained) === JSON.stringify(retained), 'disabled controls changed retained state');
+  disabled.forEach(control => { control.disabled = false; });
+  fieldset.disabled = false;
+  input('retained[padded]').value = '0012';
+  input('retained[choice]').value = 'latest choice';
+  input('retained[notes]').value = 'latest notes';
+  input('retained[checked]').checked = false;
+  input('retained[fieldset]').value = '0022';
+  input('retained[second_legend]').value = '0032';
+  firstLegend.value = '0011';
+  hook.submit();
+  const enabled = saves().at(-1).payload.values;
+  assert(JSON.stringify(enabled.retained) === JSON.stringify({padded: 12, invalid: null, choice: 'latest choice', notes: 'latest notes', checked: false, fieldset: 22, second_legend: 32}) && enabled.first_legend === 11, 'reenabled controls did not snapshot current DOM values');
+  events.length = 0;
   const title = input('title'), code = input('code'), email = input('email'), importance = input('importance');
   assert(form.noValidate, 'default classic form must retain novalidate');
   title.value = '';
@@ -127,6 +159,12 @@ try {
 <input name="provider" type="hidden" value="old"><input name="enabled" type="checkbox">
 <input name="tool_names[]" type="checkbox" value="file.read" checked><input name="tool_names[]" type="checkbox" value="file.write">
 <input name="profile[toolset_ids][]" type="checkbox" value="tools" checked><span data-dm-react-field></span>
+<input name="retained[padded]" type="number" value="0010" disabled><input name="retained[invalid]" type="number" value="abc" disabled>
+<select name="retained[choice]" disabled><option>DOM choice</option><option>latest choice</option></select>
+<textarea name="retained[notes]" disabled>DOM notes</textarea><input name="retained[checked]" type="checkbox" disabled>
+<input name="disabled_without_initial" value="ignored" disabled>
+<fieldset disabled><legend><input name="first_legend" type="number" value="0010"></legend>
+<input name="retained[fieldset]" type="number" value="0020"><legend><input name="retained[second_legend]" type="number" value="0030"></legend></fieldset>
 </form></div><pre id="result">pending</pre><script type="module" src="/native.js"></script>`, { headers: { "content-type": "text/html" } });
 		} });
 		const executable = process.env.CHROME_BIN || Bun.which("chromium") || Bun.which("google-chrome");

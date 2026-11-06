@@ -6,6 +6,10 @@ afterEach(() => mountedHooks.splice(0).forEach((hook) => hook.destroyed()));
 const tick = () => new Promise((resolve) => setTimeout(resolve, 5));
 
 class NativeControl extends EventTarget {
+	matches(selector) {
+		return selector === ":disabled" && Boolean(this.disabled);
+	}
+
 	dispatchEvent(event) {
 		const result = super.dispatchEvent(event);
 		if (event.bubbles && this.form?.controls.includes(this)) {

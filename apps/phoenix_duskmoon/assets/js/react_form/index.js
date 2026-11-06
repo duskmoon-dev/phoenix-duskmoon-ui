@@ -71,7 +71,7 @@ export const DuskmoonReactForm = {
   nativeControls() {
     const managedPaths = this.fields.map((element) => pathOf(parseJSON(element.dataset.dmReactField).name).map(String));
     return [...this.form.querySelectorAll("input[name], select[name], textarea[name]")].filter((element) => {
-      if (element.closest("[data-dm-react-field]")) return false;
+      if (element.matches(":disabled") || element.closest("[data-dm-react-field]")) return false;
       const path = pathOf(element.name).map(String);
       return !managedPaths.some((managed) => managed.slice(0, Math.min(path.length, managed.length)).every((key, index) => key === path[index]));
     });
