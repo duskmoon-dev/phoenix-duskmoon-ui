@@ -9,15 +9,16 @@ elixir "$toolchain_root/scripts/stage-packages.exs" --output "$candidate_root/to
 elixir "$ui_root/scripts/prepare-candidate.exs" "$ui_root" "$candidate_root/toolchain" "$candidate_root/ui"
 cd "$candidate_root/ui"
 export DUSKMOON_NATIVE_MODE=source DUSKMOON_BUILD_NATIVE_FROM_SOURCE=1 QUICKBEAM_BUILD=1 DUSKMOON_CANDIDATE_INTEGRATION=1
+export HOLOGRAM_START=1
 export MIX_DEPS_PATH="$candidate_root/ui/deps"
 export MIX_BUILD_PATH="$candidate_root/ui/_build/test" MIX_ENV=test
 mix deps.get
-# Provision Rust and Zig 0.16.0 through the destination development environment.
+# Provision Rust and the staged toolchain's Zig SDK through its development environment.
 # Running zig.get here initializes this project before it installs the SDK.
 mix npm.ci
 mix compile --warnings-as-errors
+mix duskmoon_bundler.build duskmoon_storybook
 mix test
 mix prepublish
-mix duskmoon_bundler.build duskmoon_storybook
 bun test --cwd apps/phoenix_duskmoon
 printf 'Candidate integration evidence: %s\n' "$candidate_root/ui/candidate-provenance.json"

@@ -36,6 +36,7 @@ jobs:
       - run: elixir .github/scripts/release_test.exs
       - run: elixir scripts/native-policy-test.exs
       - run: elixir scripts/prepare-candidate-test.exs
+      - run: elixir scripts/candidate-integration-test.exs
       - run: scripts/with-precompiled-toolchain.sh mix format --check-formatted
       - run: scripts/with-precompiled-toolchain.sh mix compile --warnings-as-errors
       - uses: browser-actions/setup-chrome@v2
