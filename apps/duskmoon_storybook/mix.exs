@@ -57,7 +57,7 @@ defmodule DuskmoonStorybook.MixProject do
       {:gettext, "~> 1.0"},
       {:phoenix_duskmoon, in_umbrella: true},
       {:jason, "~> 1.4"},
-      {:gaoxy_http, "~> 0.15"}
+      {:gaoxy_http, "~> 0.15.1"}
     ]
   end
 

@@ -97,7 +97,8 @@ build-tool applications; consuming the framework does not relax that boundary.
 The published 10.1.2 cohort resolves the runtime dependency closure tracked by
 [Bundler #14](https://github.com/duskmoon-dev/duskmoon-bundler/issues/14).
 The fresh 10.1.0 Storybook release passes the 63-application closure check,
-including Hologram runtime and excluding the build toolchain. Production HTTP
-verification is separately blocked by
-[Gaoxy #21](https://github.com/gsmlg-dev/gaoxy/issues/21); see the
-[current release gate](ui-release.md#current-release-gate) before publication.
+including Hologram runtime and excluding the build toolchain. Gaoxy 0.15.1
+resolves the production HTTP blocker in
+[Gaoxy #21](https://github.com/gsmlg-dev/gaoxy/issues/21). The production image
+passes private-cgroup HTTP, LiveView and Hologram interaction checks; see
+[production verification](ui-release.md#production-verification).

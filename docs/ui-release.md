@@ -82,21 +82,19 @@ Merge and the next UI release remain normal reviewed operations. Cross-repositor
 credentials are separately configured in the destination; ordinary
 `GITHUB_TOKEN` does not perform the upgrade.
 
-## Current release gate
+## Production verification
 
-Phoenix 10.1.0 is prepared but unpublished. The published Bundler 10.1.2 cohort
-and HTTP 1.0.0-rc.5 resolve together, and the fresh Storybook release passes its
-runtime application check. The production image boots, but Gaoxy 0.15.0 rejects
-connections in a private cgroup namespace because an overmounted controller
-entry makes its memory safety sample unavailable.
-[Gaoxy #21](https://github.com/gsmlg-dev/gaoxy/issues/21) is a release blocker.
-<!-- TODO(upstream): gsmlg-dev/gaoxy#21 - adopt a corrected published cohort and verify the production image before dispatching UI Release. -->
+Phoenix 10.1.0 locks the published Bundler 10.1.2 cohort, HTTP 1.0.0-rc.5 and
+Gaoxy 0.15.1. Gaoxy 0.15.1 resolves the overmounted cgroup detection defect in
+[Gaoxy #21](https://github.com/gsmlg-dev/gaoxy/issues/21). The rebuilt Storybook
+image passes HTTP, connected LiveView, structured rich composer admission and
+Hologram interaction checks in the private cgroup namespace that reproduced
+the failure. Memory safety sampling and admission remain enabled.
 
-Keep publication on hold until the corrected registry dependency is locked and
-the production image passes HTTP, connected LiveView, structured composer
-admission and Hologram interaction checks in a private cgroup namespace. Do not
-patch dependencies, bypass safety admission or change the deployment namespace
-to avoid this gate.
+The fresh release passes its 63-application runtime check. Local validation also
+passes all 3,233 ExUnit tests, both themes and browser console checks. Publication
+uses the immutable UI Release workflow above; verify the published archives,
+versioned documentation, registry consumers and image after that workflow.
 
 ## Migration verification recorded locally
 
