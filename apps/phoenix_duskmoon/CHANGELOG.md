@@ -1,3 +1,30 @@
+# [10.1.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.12...v10.1.0) (Unreleased)
+
+### Added
+
+- Add opt-in structured composer protocol v1 to React Chat, including semantic
+  documents, context-scoped projections, explicit admission receipts, uncertain
+  submission recovery, and queue removal through LiveView events.
+- Demonstrate composer permissions, commands, steering, queued follow-ups, and
+  reconnect recovery in Storybook while preserving the legacy text submission API.
+- Expose the optional rich editor through lazy imports, with packaged consumer
+  checks that keep Lexical out of ordinary chat and hooks bundles.
+
+### Changed
+
+- Adopt Core/CSS Art 1.21.0, Elements/Art Elements 1.10.2, and React Components
+  0.6.0 with optional Lexical 0.53.0 peers.
+- Update the published Bundler cohort to 10.1.2, the HTTP clients to 1.0.0-rc.5,
+  Gaoxy HTTP and its WebSock adapter to 0.15.0, and Tailwind to 4.3.5.
+- Build Storybook images on Ubuntu 26.04 to meet the published native
+  toolchain's glibc 2.43 requirement.
+
+### Fixed
+
+- Preserve React-owned values for disabled native form controls instead of
+  removing them when the browser omits disabled fields, resolving
+  [#210](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/210).
+
 # [10.0.12](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.11...v10.0.12) (2026-11-01)
 
 ### Fixed
