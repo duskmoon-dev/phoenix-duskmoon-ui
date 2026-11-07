@@ -12,6 +12,7 @@ defmodule DuskmoonStorybook.Application do
       {Phoenix.PubSub, name: DuskmoonStorybook.PubSub},
       # Start the Telemetry supervisor
       DuskmoonStorybookWeb.Telemetry,
+      DuskmoonStorybook.ComposerFixtureStore,
       # Start the Endpoint (http/https)
       DuskmoonStorybookWeb.Endpoint
     ]

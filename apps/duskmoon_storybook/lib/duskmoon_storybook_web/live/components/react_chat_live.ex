@@ -6,11 +6,19 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
   @chat_id "react-chat-demo"
   @conversation_id "react-demo"
   @stream_interval 80
+  @fixture_fields [
+    :fixture_composer,
+    :fixture_runtime,
+    :fixture_messages,
+    :fixture_receipts,
+    :fixture_next_id
+  ]
 
   @impl true
   def mount(_params, _session, socket) do
     {:ok,
-     assign(socket,
+     socket
+     |> assign(
        active_menu: "data-display-react-chat",
        chat_id: @chat_id,
        conversation_id: @conversation_id,
@@ -22,8 +30,14 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
        event_count: 0,
        stream_count: 0,
        status: "Ready for a prompt",
-       last_event: "Initial snapshot"
-     )}
+       last_event: "Initial snapshot",
+       fixture_composer: fixture_composer(),
+       fixture_runtime: %{active: true, phase: "fixture_running", activeTurnId: "fixture-turn"},
+       fixture_messages: [],
+       fixture_receipts: %{},
+       fixture_next_id: 0
+     )
+     |> restore_fixture()}
   end
 
   @impl true
@@ -129,11 +143,156 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
           </section>
         </aside>
       </div>
+
+      <section class="card mt-8 border border-base-300 bg-base-100 shadow-sm">
+        <div class="card-body gap-4 p-4 md:p-6">
+          <h2 class="text-2xl font-semibold">Structured composer and recovery fixtures</h2>
+          <p class="text-sm opacity-70">
+            A second independent mount keeps its single React root and places its composer
+            in the ignored portal below. Load the optional rich editor for atomic references,
+            quotes, and @file or /command suggestions. The fixture turn is simulated; no model
+            is executed. Switch admission scenarios to inspect explicit receipts and edit while pending.
+            Reconnect retains this fixture in server memory for up to 30 idle minutes and
+            128 sessions. Reload, expiry, eviction, or server restart can reset it; the durable
+            receipt scenario is simulated.
+          </p>
+          <.dm_react_chat
+            id="react-structured-chat-demo"
+            conversation_id="react-structured-demo"
+            context_key="storybook:composer:v1"
+            metadata={%{composerPortalId: "react-chat-composer-portal"}}
+            protocol_version={1}
+            composer={@fixture_composer}
+            runtime={@fixture_runtime}
+            admission={%{allowWhileStreaming: true}}
+            actions={
+              %{
+                reconcile: "composer.reconcile",
+                configure: "composer.configure",
+                queue_edit: "composer.queue.edit",
+                queue_remove: "composer.queue.remove",
+                queue_promote: "composer.queue.promote"
+              }
+            }
+            messages={@fixture_messages}
+            hook="DuskmoonComposedChat"
+            label="Structured fixture transcript"
+            class="h-64 min-h-0 overflow-auto rounded-lg bg-base-200/50 p-3"
+          />
+          <div id="react-chat-composer-portal" phx-update="ignore" class="flex flex-col gap-4"></div>
+        </div>
+      </section>
     </div>
     """
   end
 
   @impl true
+  def handle_event("chat.send", %{"id" => "react-structured-chat-demo"} = params, socket) do
+    {receipt, socket} = fixture_submit(socket, params)
+    {:reply, fixture_response(params, receipt), retain_fixture(socket)}
+  end
+
+  def handle_event("composer.reconcile", %{"id" => "react-structured-chat-demo"} = params, socket) do
+    receipt =
+      if fixture_valid_scope?(params) do
+        case socket.assigns.fixture_receipts[params["clientSubmissionId"]] do
+          %{receipt: receipt} ->
+            receipt
+
+          nil ->
+            fixture_receipt(params, "unknown", %{
+              error: %{
+                code: "not_found",
+                message: "No definitive evidence; absence does not authorize replay"
+              }
+            })
+        end
+      else
+        fixture_error(params, "scope_mismatch", "The fixture scope is incompatible")
+      end
+
+    {:reply, fixture_response(params, receipt), socket}
+  end
+
+  def handle_event("chat.sync", %{"id" => "react-structured-chat-demo"} = params, socket) do
+    if fixture_valid_scope?(params) do
+      {:reply, %{status: "ok"}, fixture_snapshot(socket, params)}
+    else
+      {:reply, %{status: "error", message: "The fixture scope is incompatible"}, socket}
+    end
+  end
+
+  def handle_event("chat.stop", %{"id" => "react-structured-chat-demo"} = params, socket) do
+    if fixture_valid_scope?(params) do
+      socket =
+        assign(socket,
+          fixture_runtime: %{
+            socket.assigns.fixture_runtime
+            | active: false,
+              phase: "fixture_cancelled"
+          }
+        )
+
+      {:reply, %{status: "ok"},
+       socket
+       |> fixture_projection(params, socket.assigns.fixture_composer)
+       |> retain_fixture()}
+    else
+      {:reply, %{status: "error", message: "The fixture scope is incompatible"}, socket}
+    end
+  end
+
+  def handle_event("composer.configure", %{"id" => "react-structured-chat-demo"} = params, socket) do
+    composer = socket.assigns.fixture_composer
+
+    valid =
+      fixture_valid_scope?(params) and params["expectedRevision"] == composer.revision and
+        params["settingId"] == "model" and params["value"] in ["fixture-small", "fixture-large"]
+
+    {result, socket} =
+      if valid do
+        socket =
+          fixture_projection(socket, params, %{composer | options: %{model: params["value"]}})
+
+        {%{
+           outcome: "accepted",
+           value: params["value"],
+           revision: socket.assigns.fixture_composer.revision
+         }, socket}
+      else
+        {%{
+           outcome: "rejected",
+           message: "Fixture setting or expected revision is invalid",
+           revision: composer.revision
+         }, socket}
+      end
+
+    result =
+      Map.merge(result, %{
+        requestId: params["requestId"],
+        scopeKey: params["scopeKey"],
+        settingId: params["settingId"]
+      })
+
+    {:reply, %{status: "ok", result: result}, retain_fixture(socket)}
+  end
+
+  def handle_event(
+        "composer.queue." <> operation,
+        %{"id" => "react-structured-chat-demo"} = params,
+        socket
+      )
+      when operation in ["edit", "remove", "promote"] do
+    {result, socket} = fixture_queue(socket, params, operation)
+
+    {:reply,
+     %{
+       request_id: params["request_id"],
+       instanceGeneration: params["instanceGeneration"],
+       result: result
+     }, retain_fixture(socket)}
+  end
+
   def handle_event("chat.send", %{"id" => @chat_id, "text" => text}, socket) do
     text = String.trim(text)
 
@@ -529,4 +688,412 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
       }
     end)
   end
+
+  # This is an in-memory protocol fixture, not a persistence or execution service.
+  defp restore_fixture(socket) do
+    case DuskmoonStorybook.ComposerFixtureStore.get(socket.id) do
+      nil -> socket
+      fixture -> assign(socket, fixture)
+    end
+  end
+
+  defp retain_fixture(socket) do
+    DuskmoonStorybook.ComposerFixtureStore.put(
+      socket.id,
+      Map.take(socket.assigns, @fixture_fields)
+    )
+
+    socket
+  end
+
+  defp fixture_scope do
+    %{contextKey: "storybook:composer:v1", conversationId: "react-structured-demo"}
+  end
+
+  defp fixture_composer do
+    %{
+      revision: 0,
+      capabilities: %{
+        protocolVersion: 1,
+        documentVersions: [1],
+        intents: ["send", "follow_up", "steer"],
+        commands: true,
+        attachments: true,
+        queue: %{edit: "text", remove: true, promote: true},
+        durableRecovery: false
+      },
+      providers: [%{providerId: "files"}, %{providerId: "commands"}],
+      options: %{model: "fixture-small"},
+      queue: %{
+        protocolVersion: 1,
+        scope: fixture_scope(),
+        revision: 0,
+        items: [
+          %{
+            id: "fixture-waiting-1",
+            document: %{
+              schemaVersion: 1,
+              content: [%{type: "text", text: "A confirmed fixture follow-up"}]
+            },
+            attachments: [],
+            capabilities: %{edit: "text", remove: true, promote: true}
+          }
+        ]
+      }
+    }
+  end
+
+  defp fixture_valid_scope?(params) do
+    params["protocolVersion"] == 1 and
+      params["scope"] == %{
+        "contextKey" => "storybook:composer:v1",
+        "conversationId" => "react-structured-demo"
+      } and is_integer(params["instanceGeneration"]) and params["instanceGeneration"] > 0
+  end
+
+  defp fixture_receipt(params, outcome, extra) do
+    Map.merge(
+      %{
+        protocolVersion: 1,
+        clientSubmissionId: params["clientSubmissionId"],
+        scope: fixture_scope(),
+        operation: params["operation"],
+        outcome: outcome
+      },
+      extra
+    )
+  end
+
+  defp fixture_error(params, code, message) do
+    fixture_receipt(params, "rejected", %{error: %{code: code, message: message}})
+  end
+
+  defp fixture_response(params, receipt) do
+    %{
+      request_id: params["request_id"],
+      instanceGeneration: params["instanceGeneration"],
+      receipt: receipt
+    }
+  end
+
+  defp fixture_payload(params) do
+    Map.drop(params, ["request_id", "instanceGeneration", "id", "conversation_id"])
+  end
+
+  defp fixture_submit(socket, params) do
+    id = params["clientSubmissionId"]
+    existing = socket.assigns.fixture_receipts[id]
+
+    {receipt, socket} =
+      cond do
+        not fixture_valid_scope?(params) ->
+          {fixture_error(
+             params,
+             "scope_mismatch",
+             "The fixture scope or protocol is incompatible"
+           ), socket}
+
+        not is_binary(id) or id == "" ->
+          {fixture_error(params, "invalid_identity", "A logical submission identity is required"),
+           socket}
+
+        existing && existing.payload != fixture_payload(params) ->
+          {fixture_error(
+             params,
+             "identity_conflict",
+             "The logical ID already belongs to another snapshot"
+           ), socket}
+
+        existing ->
+          {existing.receipt, socket}
+
+        not fixture_document?(params["document"]) ->
+          {fixture_error(params, "unsupported_document", "Only ComposerDocument v1 is supported"),
+           socket}
+
+        params["attachments"] != [] ->
+          {fixture_error(params, "upload_unavailable", "This fixture has no upload transport"),
+           socket}
+
+        not is_map(params["options"]) ->
+          {fixture_error(params, "invalid_options", "Fixture options must be a JSON object"),
+           socket}
+
+        params["options"]["model"] not in ["fixture-small", "fixture-large"] ->
+          {fixture_error(params, "unsupported_model", "Select a fixture model"), socket}
+
+        params["options"]["scenario"] == "rejected" ->
+          {fixture_error(
+             params,
+             "fixture_rejected",
+             "Explicit fixture rejection; draft is retained"
+           ), socket}
+
+        params["operation"] == "command" ->
+          fixture_command(socket, params)
+
+        params["operation"] == "prompt" ->
+          fixture_prompt(socket, params)
+
+        true ->
+          {fixture_error(params, "unsupported_operation", "Choose prompt or command"), socket}
+      end
+
+    if is_binary(id) and id != "" and fixture_valid_scope?(params) and
+         not Map.has_key?(socket.assigns.fixture_receipts, id) do
+      record = %{payload: fixture_payload(params), receipt: receipt}
+
+      {receipt,
+       assign(socket, fixture_receipts: Map.put(socket.assigns.fixture_receipts, id, record))}
+    else
+      {receipt, socket}
+    end
+  end
+
+  defp fixture_command(socket, params) do
+    if params["document"]["command"] == %{
+         "providerId" => "commands",
+         "commandId" => "reload-tools"
+       } do
+      receipt =
+        fixture_receipt(params, "accepted", %{result: %{action: "reload-tools", reloaded: 2}})
+
+      fixture_retain(socket, params, receipt)
+    else
+      {fixture_error(
+         params,
+         "unknown_command",
+         "The fixture catalog does not contain that command"
+       ), socket}
+    end
+  end
+
+  defp fixture_prompt(socket, params) do
+    intent = params["intent"]
+    runtime = socket.assigns.fixture_runtime
+
+    cond do
+      params["document"]["command"] != nil ->
+        {fixture_error(
+           params,
+           "command_operation",
+           "The fixture catalog requires a command operation"
+         ), socket}
+
+      intent not in ["send", "follow_up", "steer"] ->
+        {fixture_error(params, "unsupported_intent", "The fixture does not support this intent"),
+         socket}
+
+      intent == "steer" and (not runtime.active or params["targetTurnId"] != runtime.activeTurnId) ->
+        {fixture_error(params, "stale_turn", "Steering must target the current fixture turn"),
+         socket}
+
+      true ->
+        next_id = socket.assigns.fixture_next_id + 1
+        message_id = "fixture-message-#{next_id}"
+
+        persistence =
+          if params["options"]["scenario"] == "durable", do: "durable", else: "volatile"
+
+        delivery = if intent == "send", do: "immediate", else: intent
+        fields = %{delivery: delivery, persistence: persistence}
+        socket = assign(socket, fixture_next_id: next_id)
+
+        {fields, socket} =
+          if intent == "follow_up" do
+            item = %{
+              id: "fixture-queue-#{next_id}",
+              document: params["document"],
+              attachments: [],
+              capabilities: %{edit: "text", remove: true, promote: true}
+            }
+
+            queue = socket.assigns.fixture_composer.queue
+            queue = %{queue | revision: queue.revision + 1, items: queue.items ++ [item]}
+
+            {%{fields | delivery: "follow_up"}
+             |> Map.merge(%{queueItemId: item.id, queueRevision: queue.revision}),
+             fixture_projection(socket, params, %{socket.assigns.fixture_composer | queue: queue})}
+          else
+            message = %{
+              id: message_id,
+              role: "user",
+              content: fixture_text(params["document"]),
+              status: "complete"
+            }
+
+            socket =
+              assign(socket, fixture_messages: socket.assigns.fixture_messages ++ [message])
+
+            {%{fields | delivery: delivery} |> Map.put(:messageId, message_id),
+             fixture_snapshot(socket, params)}
+          end
+
+        fixture_retain(socket, params, fixture_receipt(params, "accepted", fields))
+    end
+  end
+
+  defp fixture_retain(socket, params, receipt) do
+    record = %{payload: fixture_payload(params), receipt: receipt}
+
+    socket =
+      assign(socket,
+        fixture_receipts:
+          Map.put(socket.assigns.fixture_receipts, params["clientSubmissionId"], record)
+      )
+
+    if params["options"]["scenario"] == "unknown" do
+      unknown =
+        fixture_receipt(params, "unknown", %{
+          error: %{
+            code: "fixture_reply_lost",
+            message: "Admission evidence was withheld; reconcile before retrying"
+          }
+        })
+
+      {unknown, socket}
+    else
+      {receipt, socket}
+    end
+  end
+
+  defp fixture_text(document) do
+    Enum.map_join(document["content"] || [], fn
+      %{"type" => "text", "text" => text} -> text
+      %{"type" => "reference", "plainText" => text} -> text
+      %{"type" => "quote", "text" => text} -> "\n> " <> text
+    end)
+  end
+
+  defp fixture_envelope(params) do
+    %{
+      id: "react-structured-chat-demo",
+      conversation_id: "react-structured-demo",
+      protocolVersion: 1,
+      scope: fixture_scope(),
+      instanceGeneration: params["instanceGeneration"]
+    }
+  end
+
+  defp fixture_snapshot(socket, params) do
+    receipts =
+      Enum.flat_map(params["unresolvedSubmissionIds"] || [], fn id ->
+        case socket.assigns.fixture_receipts[id] do
+          nil -> []
+          record -> [record.receipt]
+        end
+      end)
+
+    event =
+      Map.merge(fixture_envelope(params), %{
+        type: "chat.snapshot",
+        messages: socket.assigns.fixture_messages,
+        sequences: %{},
+        composer: socket.assigns.fixture_composer,
+        metadata: %{composerPortalId: "react-chat-composer-portal"},
+        runtime: socket.assigns.fixture_runtime,
+        admission: %{allowWhileStreaming: true},
+        receipts: receipts
+      })
+
+    push_event(socket, "chat:event", event)
+  end
+
+  defp fixture_projection(socket, params, composer) do
+    composer = %{composer | revision: socket.assigns.fixture_composer.revision + 1}
+    socket = assign(socket, fixture_composer: composer)
+
+    event =
+      Map.merge(fixture_envelope(params), %{
+        type: "chat.composer-state",
+        composer: composer,
+        runtime: socket.assigns.fixture_runtime,
+        admission: %{allowWhileStreaming: true}
+      })
+
+    push_event(socket, "chat:event", event)
+  end
+
+  defp fixture_queue(socket, params, operation) do
+    composer = socket.assigns.fixture_composer
+    queue = composer.queue
+    item = Enum.find(queue.items, &(&1.id == params["itemId"]))
+
+    error =
+      cond do
+        not fixture_valid_scope?(params) ->
+          %{code: "scope_mismatch", message: "The fixture scope is incompatible"}
+
+        params["operation"] != operation ->
+          %{
+            code: "operation_mismatch",
+            message: "The queue action mapping does not match the requested operation"
+          }
+
+        params["expectedRevision"] != queue.revision ->
+          %{code: "stale_revision", message: "Queue changed; use its authoritative projection"}
+
+        is_nil(item) ->
+          %{
+            code: "missing_item",
+            message: "The fixture queue item was already consumed or removed"
+          }
+
+        operation == "promote" and
+            (not socket.assigns.fixture_runtime.active or
+               params["targetTurnId"] != socket.assigns.fixture_runtime.activeTurnId) ->
+          %{code: "stale_turn", message: "Promotion must target the current fixture turn"}
+
+        operation == "edit" and not fixture_text_document?(params["document"]) ->
+          %{code: "text_only", message: "Fixture queue editing supports text only"}
+
+        true ->
+          nil
+      end
+
+    if error do
+      {%{requestId: params["requestId"], outcome: "rejected", error: error, projection: queue},
+       socket}
+    else
+      items =
+        if operation == "edit" do
+          Enum.map(queue.items, fn candidate ->
+            if candidate.id == item.id,
+              do: %{candidate | document: params["document"]},
+              else: candidate
+          end)
+        else
+          Enum.reject(queue.items, &(&1.id == item.id))
+        end
+
+      queue = %{queue | revision: queue.revision + 1, items: items}
+      socket = fixture_projection(socket, params, %{composer | queue: queue})
+      {%{requestId: params["requestId"], outcome: "accepted", projection: queue}, socket}
+    end
+  end
+
+  defp fixture_document?(%{"schemaVersion" => 1, "content" => content}) when is_list(content) do
+    Enum.all?(content, fn
+      %{"type" => "text", "text" => text} ->
+        is_binary(text)
+
+      %{"type" => "quote", "nodeId" => id, "text" => text} ->
+        is_binary(id) and is_binary(text)
+
+      %{"type" => "reference"} = node ->
+        Enum.all?(["nodeId", "providerId", "refId", "label", "plainText"], &is_binary(node[&1]))
+
+      _node ->
+        false
+    end)
+  end
+
+  defp fixture_document?(_document), do: false
+
+  defp fixture_text_document?(%{"schemaVersion" => 1, "content" => content})
+       when is_list(content),
+       do:
+         Enum.all?(content, &match?(%{"type" => "text", "text" => text} when is_binary(text), &1))
+
+  defp fixture_text_document?(_document), do: false
 end
