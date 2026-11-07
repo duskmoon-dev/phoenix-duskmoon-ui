@@ -38,9 +38,9 @@
   },
   "dependencies": {
     "@duskmoon-dev/art-elements": "1.10.2",
-    "@duskmoon-dev/components": "0.5.5",
-    "@duskmoon-dev/core": "1.20.8",
-    "@duskmoon-dev/css-art": "1.20.8",
+    "@duskmoon-dev/components": "0.6.0",
+    "@duskmoon-dev/core": "1.21.0",
+    "@duskmoon-dev/css-art": "1.21.0",
     "@duskmoon-dev/elements": "1.10.2",
     "react": "19.3.1",
     "react-dom": "19.3.1"
@@ -51,6 +51,20 @@
     "postcss": "8.5.32"
   },
   "peerDependencies": {
-    "tailwindcss": "^4.3.2"
+    "tailwindcss": "^4.3.2",
+    "lexical": "0.53.0",
+    "@lexical/history": "0.53.0",
+    "@lexical/plain-text": "0.53.0"
+  },
+  "peerDependenciesMeta": {
+    "lexical": {
+      "optional": true
+    },
+    "@lexical/history": {
+      "optional": true
+    },
+    "@lexical/plain-text": {
+      "optional": true
+    }
   }
 }
