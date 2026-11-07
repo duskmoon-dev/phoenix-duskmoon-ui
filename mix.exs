@@ -77,7 +77,7 @@ defmodule PhoenixDuskmoon.Umbrella.MixProject do
       {:ex_doc, "~> 0.40", runtime: false, override: true},
       # Keep Plug available to both test servers and runtime umbrella applications.
       {:plug, "~> 1.20"},
-      {:websock_adapter, "~> 0.14", hex: :gaoxy_websock_adapter, override: true},
+      {:websock_adapter, "~> 0.15", hex: :gaoxy_websock_adapter, override: true},
       {:duskmoon_oxc, "~> 10.0", runtime: false},
       {:duskmoon_oxide, "~> 10.0", runtime: false},
       {:duskmoon_vize, "~> 10.0", runtime: false},

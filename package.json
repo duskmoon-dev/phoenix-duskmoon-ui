@@ -44,6 +44,6 @@
         "@duskmoon-dev/el-menu": "1.10.2",
         "@duskmoon-dev/el-tabs": "1.10.2",
         "@duskmoon-dev/elements": "1.10.2",
-        "tailwindcss": "4.3.3"
+        "tailwindcss": "4.3.5"
     }
 }

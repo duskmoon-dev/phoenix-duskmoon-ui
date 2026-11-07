@@ -170,8 +170,8 @@ defmodule PhoenixDuskmoon.Mixfile do
       {:mdex_mermaid, "~> 0.4"},
       {:plug, "~> 1.20", optional: true},
       {:jason, "~> 1.4"},
-      {:http_fetch, "~> 0.21", only: :test},
-      {:http_web_socket, "~> 0.21", only: :test},
+      {:http_fetch, "~> 1.0.0-rc.5", only: :test},
+      {:http_web_socket, "~> 1.0.0-rc.5", only: :test},
       {:ex_doc, "~> 0.40", runtime: false}
     ]
   end
