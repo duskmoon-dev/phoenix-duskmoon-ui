@@ -51,7 +51,6 @@ defmodule DuskmoonStorybook.MixProject do
       {:lazy_html, "~> 0.1"},
       {:duskmoon_bundler_runtime, "~> 10.0"},
       {:duskmoon_bundler, "~> 10.0", runtime: Mix.env() in [:dev, :test]},
-      # TODO(upstream): duskmoon-dev/duskmoon-bundler#14 - adopt a runtime-only dependency closure.
       {:duskmoon_hologram, "~> 10.0"},
       {:telemetry_metrics, "~> 1.2"},
       {:telemetry_poller, "~> 1.3"},

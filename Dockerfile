@@ -1,8 +1,16 @@
-FROM elixir:1.19-otp-28 AS builder
+FROM elixir:1.19-otp-28 AS beam
+
+FROM ubuntu:26.04 AS builder
+
+# Keep the upstream Elixir/OTP distribution with the required glibc 2.43 baseline.
+COPY --from=beam /usr/local /usr/local
+
+RUN apt-get update && apt-get install -y --no-install-recommends bash build-essential ca-certificates curl git libncurses6 libssl3t64 nodejs pkg-config unzip xz-utils && rm -rf /var/lib/apt/lists/*
 
 ARG MIX_ENV=prod
 ARG RELEASE_VERSION=1.0.0
 
+ENV LANG=C.UTF-8
 ENV DUSKMOON_NATIVE_MODE=precompiled
 ENV NPM_EX_ALLOWED_REGISTRIES=https://registry.npmjs.org,https://npm.gsmlg.dev,https://nexus.gsmlg.net
 COPY . /build
@@ -10,12 +18,9 @@ WORKDIR /build
 
 RUN <<EOF
 set -ex
-apt-get update
-apt-get install -y --no-install-recommends bash build-essential curl git nodejs pkg-config unzip xz-utils
-rm -rf /var/lib/apt/lists/*
 mix local.hex --force
 mix local.rebar --force
-mix deps.get
+mix deps.get --check-locked
 mix npm.ci
 export MATCH_STRING="s%@version \"[^\"]\+\"%@version \"${RELEASE_VERSION}\"%"
 sed -i "$MATCH_STRING" mix.exs;
@@ -30,7 +35,7 @@ elixir scripts/check-release-applications.exs _build/prod/rel/storybook
 cp -r _build/prod/rel/storybook /app
 EOF
 
-FROM debian:trixie-slim
+FROM ubuntu:26.04
 
 ARG RELEASE_VERSION=1.0.0
 

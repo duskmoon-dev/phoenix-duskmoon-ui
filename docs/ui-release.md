@@ -1,11 +1,16 @@
 # Independent UI releases
 
 The UI version **U** synchronizes `mix.exs`, `apps/phoenix_duskmoon/mix.exs`,
-`apps/phoenix_duskmoon/package.json` and the Bun workspace lock. Toolchain **B**
+`apps/phoenix_duskmoon/package.json` and the workspace `package-lock.json`. Toolchain **B**
 uses `~> 10.0` requirements and is resolved by the complete nine-package Hex
 lock cohort. The public component package does not require the build toolchain.
 
 Commit a reviewed U version change before running **UI Release** (`release.yml`).
+After `mix version.sync`, use `mix npm.update` to refresh workspace version
+metadata, review the lock diff, and run `mix npm.ci`. Ordinary install currently
+leaves version-only changes stale; [Bundler #18](https://github.com/duskmoon-dev/duskmoon-bundler/issues/18)
+tracks the fix.
+<!-- TODO(upstream): duskmoon-dev/duskmoon-bundler#18. WORKAROUND(upstream): use the full update until a published ordinary-install fix refreshes workspace metadata; then verify it and remove this step. -->
 Select the dispatch ref whose head is that release commit and provide `version=U`
 and the complete immutable `source_sha`. A mismatch between workflow/source SHA
 fails, keeping the workflow definition and build inputs fixed together. The workflow never
@@ -16,6 +21,10 @@ for real component/browser tests, hooks, production JS/CSS/icons and Storybook
 assets. It inspects the actual Storybook `.rel` application list and tests an
 isolated staged UI consumer and npm exports. MDEx remains an independent native
 dependency; the zero-source-build guarantee applies to Duskmoon's toolchain.
+
+The Docker builder and runtime use Ubuntu 26.04 to meet the GNU native
+toolchain's glibc 2.43 baseline. The builder copies the official Elixir/OTP
+distribution into that environment and installs the committed dependency locks.
 
 Dry-run planning records `source_dirty` and has no publication side effects.
 Formal validation/publication requires a clean immutable source checkout:
@@ -72,6 +81,22 @@ upgrade PR/manual command. Review its dependency requirements, `mix.lock` and
 Merge and the next UI release remain normal reviewed operations. Cross-repository
 credentials are separately configured in the destination; ordinary
 `GITHUB_TOKEN` does not perform the upgrade.
+
+## Current release gate
+
+Phoenix 10.1.0 is prepared but unpublished. The published Bundler 10.1.2 cohort
+and HTTP 1.0.0-rc.5 resolve together, and the fresh Storybook release passes its
+runtime application check. The production image boots, but Gaoxy 0.15.0 rejects
+connections in a private cgroup namespace because an overmounted controller
+entry makes its memory safety sample unavailable.
+[Gaoxy #21](https://github.com/gsmlg-dev/gaoxy/issues/21) is a release blocker.
+<!-- TODO(upstream): gsmlg-dev/gaoxy#21 - adopt a corrected published cohort and verify the production image before dispatching UI Release. -->
+
+Keep publication on hold until the corrected registry dependency is locked and
+the production image passes HTTP, connected LiveView, structured composer
+admission and Hologram interaction checks in a private cgroup namespace. Do not
+patch dependencies, bypass safety admission or change the deployment namespace
+to avoid this gate.
 
 ## Migration verification recorded locally
 

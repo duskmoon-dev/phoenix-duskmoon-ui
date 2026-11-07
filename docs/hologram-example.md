@@ -8,18 +8,18 @@ upstream `:hologram` alongside the fork: both define the same modules.
 
 ## Run
 
-Use Elixir 1.18+, OTP 28+, Bun and the published precompiled Duskmoon toolchain.
+Use Elixir 1.18+, OTP 28+ and the published precompiled Duskmoon toolchain.
 All nine toolchain requirements use `~> 10.0` and resolve together in `mix.lock`.
 Node.js and the npm CLI are not required for Hologram compilation.
-On Linux GNU, the locked 10.0.8 native artifacts require glibc 2.43 or newer
+On Linux GNU, the locked 10.1.2 native artifacts require glibc 2.43 or newer
 (for example, Ubuntu 26.04). The Elixir/OTP process must run with a compatible
 libc. The default glibc 2.42 environment cannot load the published Vize NIF;
 use a compatible runtime environment while retaining strict precompiled mode.
 See the toolchain's [supported build environments](https://github.com/duskmoon-dev/duskmoon-bundler/blob/main/docs/releasing.md).
 
 ```sh
-mix deps.get
-bun install --frozen-lockfile
+mix deps.get --check-locked
+mix npm.ci
 scripts/with-precompiled-toolchain.sh mix duskmoon_bundler.build duskmoon_storybook
 mix duskmoon.dev
 ```
@@ -94,8 +94,10 @@ Production validation also runs `scripts/check-release-applications.exs` against
 the actual release. It requires the Hologram runtime and retains the exclusion of
 build-tool applications; consuming the framework does not relax that boundary.
 
-The published 10.0.8 framework currently retains npm/Hex solver as runtime
-dependencies. [Upstream issue #14](https://github.com/duskmoon-dev/duskmoon-bundler/issues/14)
-tracks the resulting production release blocker. Do not bypass the exclusion
-check; adopt a corrected published cohort and verify the actual release before
-publishing or deploying this integration.
+The published 10.1.2 cohort resolves the runtime dependency closure tracked by
+[Bundler #14](https://github.com/duskmoon-dev/duskmoon-bundler/issues/14).
+The fresh 10.1.0 Storybook release passes the 63-application closure check,
+including Hologram runtime and excluding the build toolchain. Production HTTP
+verification is separately blocked by
+[Gaoxy #21](https://github.com/gsmlg-dev/gaoxy/issues/21); see the
+[current release gate](ui-release.md#current-release-gate) before publication.
