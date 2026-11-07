@@ -95,6 +95,19 @@ defmodule UIPackage do
           else: File.regular?(Path.join(npm_package, path)) || raise("missing npm export #{path}")
       end
 
+      cmd!(
+        Path.expand("scripts/with-precompiled-toolchain.sh"),
+        [
+          "mix",
+          "run",
+          "--no-start",
+          "--no-compile",
+          "scripts/check-react-chat-package.exs",
+          tarball
+        ],
+        File.cwd!()
+      )
+
       hashes = %{
         hex_tar_sha256: :crypto.hash(:sha256, File.read!(tarball)) |> Base.encode16(case: :lower),
         npm_tar_sha256: :crypto.hash(:sha256, File.read!(npm)) |> Base.encode16(case: :lower)
