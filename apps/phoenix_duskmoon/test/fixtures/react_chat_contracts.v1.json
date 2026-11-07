@@ -1,0 +1,742 @@
+{
+  "fixtureVersion": 1,
+  "scope": {
+    "contextKey": "repo:示例/alpha",
+    "conversationId": "conversation-中文-1"
+  },
+  "documents": {
+    "mixed": {
+      "schemaVersion": 1,
+      "content": [
+        {
+          "type": "text",
+          "text": "请检查 **这份文件** 🌓 "
+        },
+        {
+          "type": "reference",
+          "nodeId": "ref-occurrence-1",
+          "providerId": "files",
+          "refId": "src/你好.ts",
+          "label": "你好.ts",
+          "plainText": "@src/你好.ts"
+        },
+        {
+          "type": "text",
+          "text": " 和 "
+        },
+        {
+          "type": "reference",
+          "nodeId": "ref-occurrence-2",
+          "providerId": "files",
+          "refId": "src/你好.ts",
+          "label": "再次引用",
+          "plainText": "@src/你好.ts"
+        },
+        {
+          "type": "quote",
+          "nodeId": "quote-occurrence-1",
+          "text": "第一行\n第二行",
+          "source": {
+            "providerId": "messages",
+            "messageId": "message-原文",
+            "conversationId": "conversation-中文-1",
+            "label": "Alice · 原文"
+          }
+        },
+        {
+          "type": "text",
+          "text": "然后查看 "
+        },
+        {
+          "type": "reference",
+          "nodeId": "ref-occurrence-3",
+          "providerId": "missing-provider",
+          "refId": "opaque:失联",
+          "label": "保留的引用",
+          "plainText": "@保留的引用"
+        },
+        {
+          "type": "quote",
+          "nodeId": "quote-occurrence-2",
+          "text": "后续引文",
+          "source": {
+            "label": "Bob"
+          }
+        }
+      ]
+    },
+    "claimedCommand": {
+      "schemaVersion": 1,
+      "content": [
+        {
+          "type": "text",
+          "text": "/reload-tools"
+        }
+      ],
+      "command": {
+        "providerId": "commands",
+        "commandId": "reload-tools"
+      }
+    },
+    "emptyCommandArguments": {
+      "schemaVersion": 1,
+      "content": [
+        {
+          "type": "text",
+          "text": "/reload-tools"
+        }
+      ],
+      "command": {
+        "providerId": "commands",
+        "commandId": "reload-tools"
+      }
+    }
+  },
+  "missingProviderIds": ["missing-provider"],
+  "exports": {
+    "mixed": "请检查 **这份文件** 🌓 @src/你好.ts 和 @src/你好.ts\n> 第一行\n> 第二行\n> — Alice · 原文\n然后查看 @保留的引用\n> 后续引文\n> — Bob",
+    "claimedCommand": "/reload-tools"
+  },
+  "drafts": {
+    "legacy": "旧草稿 👋\n第二行",
+    "semantic": {
+      "draftVersion": 1,
+      "scope": {
+        "contextKey": "repo:示例/alpha",
+        "conversationId": "conversation-中文-1"
+      },
+      "draftKey": "draft-1",
+      "revision": 7,
+      "document": {
+        "schemaVersion": 1,
+        "content": [
+          {
+            "type": "text",
+            "text": "请检查 **这份文件** 🌓 "
+          },
+          {
+            "type": "reference",
+            "nodeId": "ref-occurrence-1",
+            "providerId": "files",
+            "refId": "src/你好.ts",
+            "label": "你好.ts",
+            "plainText": "@src/你好.ts"
+          },
+          {
+            "type": "text",
+            "text": " 和 "
+          },
+          {
+            "type": "reference",
+            "nodeId": "ref-occurrence-2",
+            "providerId": "files",
+            "refId": "src/你好.ts",
+            "label": "再次引用",
+            "plainText": "@src/你好.ts"
+          },
+          {
+            "type": "quote",
+            "nodeId": "quote-occurrence-1",
+            "text": "第一行\n第二行",
+            "source": {
+              "providerId": "messages",
+              "messageId": "message-原文",
+              "conversationId": "conversation-中文-1",
+              "label": "Alice · 原文"
+            }
+          },
+          {
+            "type": "text",
+            "text": "然后查看 "
+          },
+          {
+            "type": "reference",
+            "nodeId": "ref-occurrence-3",
+            "providerId": "missing-provider",
+            "refId": "opaque:失联",
+            "label": "保留的引用",
+            "plainText": "@保留的引用"
+          },
+          {
+            "type": "quote",
+            "nodeId": "quote-occurrence-2",
+            "text": "后续引文",
+            "source": {
+              "label": "Bob"
+            }
+          }
+        ]
+      },
+      "attachments": [
+        {
+          "entryId": "attachment-occurrence-1",
+          "metadata": {
+            "name": "照片🌙.png",
+            "mediaType": "image/png",
+            "size": 1024,
+            "lastModified": 1730000000000
+          },
+          "status": "reattach"
+        },
+        {
+          "entryId": "attachment-occurrence-2",
+          "metadata": {
+            "name": "照片🌙.png",
+            "mediaType": "image/png",
+            "size": 1024,
+            "lastModified": 1730000000000
+          },
+          "status": "ready",
+          "handle": {
+            "providerId": "uploads",
+            "reference": {
+              "uploadId": "upload-中文-1",
+              "receipt": "opaque-approved-reference"
+            }
+          }
+        }
+      ]
+    },
+    "unsupported": {
+      "draftVersion": 2,
+      "payload": {
+        "preserve": "不可丢弃"
+      }
+    }
+  },
+  "submissions": {
+    "send": {
+      "protocolVersion": 1,
+      "clientSubmissionId": "prompt-send",
+      "scope": {
+        "contextKey": "repo:示例/alpha",
+        "conversationId": "conversation-中文-1"
+      },
+      "draftKey": "draft-1",
+      "draftRevision": 7,
+      "operation": "prompt",
+      "document": {
+        "schemaVersion": 1,
+        "content": [
+          {
+            "type": "text",
+            "text": "请检查 **这份文件** 🌓 "
+          },
+          {
+            "type": "reference",
+            "nodeId": "ref-occurrence-1",
+            "providerId": "files",
+            "refId": "src/你好.ts",
+            "label": "你好.ts",
+            "plainText": "@src/你好.ts"
+          },
+          {
+            "type": "text",
+            "text": " 和 "
+          },
+          {
+            "type": "reference",
+            "nodeId": "ref-occurrence-2",
+            "providerId": "files",
+            "refId": "src/你好.ts",
+            "label": "再次引用",
+            "plainText": "@src/你好.ts"
+          },
+          {
+            "type": "quote",
+            "nodeId": "quote-occurrence-1",
+            "text": "第一行\n第二行",
+            "source": {
+              "providerId": "messages",
+              "messageId": "message-原文",
+              "conversationId": "conversation-中文-1",
+              "label": "Alice · 原文"
+            }
+          },
+          {
+            "type": "text",
+            "text": "然后查看 "
+          },
+          {
+            "type": "reference",
+            "nodeId": "ref-occurrence-3",
+            "providerId": "missing-provider",
+            "refId": "opaque:失联",
+            "label": "保留的引用",
+            "plainText": "@保留的引用"
+          },
+          {
+            "type": "quote",
+            "nodeId": "quote-occurrence-2",
+            "text": "后续引文",
+            "source": {
+              "label": "Bob"
+            }
+          }
+        ]
+      },
+      "attachments": [
+        {
+          "entryId": "attachment-occurrence-2",
+          "metadata": {
+            "name": "照片🌙.png",
+            "mediaType": "image/png",
+            "size": 1024,
+            "lastModified": 1730000000000
+          },
+          "handle": {
+            "providerId": "uploads",
+            "reference": {
+              "uploadId": "upload-中文-1",
+              "receipt": "opaque-approved-reference"
+            }
+          }
+        }
+      ],
+      "options": {
+        "model": "host-model"
+      },
+      "intent": "send"
+    },
+    "followUp": {
+      "protocolVersion": 1,
+      "clientSubmissionId": "prompt-follow-up",
+      "scope": {
+        "contextKey": "repo:示例/alpha",
+        "conversationId": "conversation-中文-1"
+      },
+      "draftKey": "draft-1",
+      "draftRevision": 7,
+      "operation": "prompt",
+      "document": {
+        "schemaVersion": 1,
+        "content": [
+          {
+            "type": "text",
+            "text": "请检查 **这份文件** 🌓 "
+          },
+          {
+            "type": "reference",
+            "nodeId": "ref-occurrence-1",
+            "providerId": "files",
+            "refId": "src/你好.ts",
+            "label": "你好.ts",
+            "plainText": "@src/你好.ts"
+          },
+          {
+            "type": "text",
+            "text": " 和 "
+          },
+          {
+            "type": "reference",
+            "nodeId": "ref-occurrence-2",
+            "providerId": "files",
+            "refId": "src/你好.ts",
+            "label": "再次引用",
+            "plainText": "@src/你好.ts"
+          },
+          {
+            "type": "quote",
+            "nodeId": "quote-occurrence-1",
+            "text": "第一行\n第二行",
+            "source": {
+              "providerId": "messages",
+              "messageId": "message-原文",
+              "conversationId": "conversation-中文-1",
+              "label": "Alice · 原文"
+            }
+          },
+          {
+            "type": "text",
+            "text": "然后查看 "
+          },
+          {
+            "type": "reference",
+            "nodeId": "ref-occurrence-3",
+            "providerId": "missing-provider",
+            "refId": "opaque:失联",
+            "label": "保留的引用",
+            "plainText": "@保留的引用"
+          },
+          {
+            "type": "quote",
+            "nodeId": "quote-occurrence-2",
+            "text": "后续引文",
+            "source": {
+              "label": "Bob"
+            }
+          }
+        ]
+      },
+      "attachments": [
+        {
+          "entryId": "attachment-occurrence-2",
+          "metadata": {
+            "name": "照片🌙.png",
+            "mediaType": "image/png",
+            "size": 1024,
+            "lastModified": 1730000000000
+          },
+          "handle": {
+            "providerId": "uploads",
+            "reference": {
+              "uploadId": "upload-中文-1",
+              "receipt": "opaque-approved-reference"
+            }
+          }
+        }
+      ],
+      "options": {
+        "model": "host-model"
+      },
+      "intent": "follow_up"
+    },
+    "steer": {
+      "protocolVersion": 1,
+      "clientSubmissionId": "prompt-steer",
+      "scope": {
+        "contextKey": "repo:示例/alpha",
+        "conversationId": "conversation-中文-1"
+      },
+      "draftKey": "draft-1",
+      "draftRevision": 7,
+      "operation": "prompt",
+      "document": {
+        "schemaVersion": 1,
+        "content": [
+          {
+            "type": "text",
+            "text": "请检查 **这份文件** 🌓 "
+          },
+          {
+            "type": "reference",
+            "nodeId": "ref-occurrence-1",
+            "providerId": "files",
+            "refId": "src/你好.ts",
+            "label": "你好.ts",
+            "plainText": "@src/你好.ts"
+          },
+          {
+            "type": "text",
+            "text": " 和 "
+          },
+          {
+            "type": "reference",
+            "nodeId": "ref-occurrence-2",
+            "providerId": "files",
+            "refId": "src/你好.ts",
+            "label": "再次引用",
+            "plainText": "@src/你好.ts"
+          },
+          {
+            "type": "quote",
+            "nodeId": "quote-occurrence-1",
+            "text": "第一行\n第二行",
+            "source": {
+              "providerId": "messages",
+              "messageId": "message-原文",
+              "conversationId": "conversation-中文-1",
+              "label": "Alice · 原文"
+            }
+          },
+          {
+            "type": "text",
+            "text": "然后查看 "
+          },
+          {
+            "type": "reference",
+            "nodeId": "ref-occurrence-3",
+            "providerId": "missing-provider",
+            "refId": "opaque:失联",
+            "label": "保留的引用",
+            "plainText": "@保留的引用"
+          },
+          {
+            "type": "quote",
+            "nodeId": "quote-occurrence-2",
+            "text": "后续引文",
+            "source": {
+              "label": "Bob"
+            }
+          }
+        ]
+      },
+      "attachments": [
+        {
+          "entryId": "attachment-occurrence-2",
+          "metadata": {
+            "name": "照片🌙.png",
+            "mediaType": "image/png",
+            "size": 1024,
+            "lastModified": 1730000000000
+          },
+          "handle": {
+            "providerId": "uploads",
+            "reference": {
+              "uploadId": "upload-中文-1",
+              "receipt": "opaque-approved-reference"
+            }
+          }
+        }
+      ],
+      "options": {
+        "model": "host-model"
+      },
+      "intent": "steer",
+      "targetTurnId": "turn-active-1"
+    },
+    "command": {
+      "protocolVersion": 1,
+      "clientSubmissionId": "command-accepted",
+      "scope": {
+        "contextKey": "repo:示例/alpha",
+        "conversationId": "conversation-中文-1"
+      },
+      "draftKey": "draft-1",
+      "draftRevision": 7,
+      "operation": "command",
+      "document": {
+        "schemaVersion": 1,
+        "content": [
+          {
+            "type": "text",
+            "text": "/reload-tools"
+          }
+        ],
+        "command": {
+          "providerId": "commands",
+          "commandId": "reload-tools"
+        }
+      },
+      "attachments": [],
+      "options": {
+        "model": "host-model"
+      }
+    }
+  },
+  "receipts": [
+    {
+      "protocolVersion": 1,
+      "clientSubmissionId": "prompt-accepted",
+      "scope": {
+        "contextKey": "repo:示例/alpha",
+        "conversationId": "conversation-中文-1"
+      },
+      "operation": "prompt",
+      "outcome": "accepted",
+      "delivery": "follow_up",
+      "persistence": "volatile",
+      "messageId": "message-1",
+      "queueItemId": "queue-1",
+      "queueRevision": 9
+    },
+    {
+      "protocolVersion": 1,
+      "clientSubmissionId": "prompt-rejected",
+      "scope": {
+        "contextKey": "repo:示例/alpha",
+        "conversationId": "conversation-中文-1"
+      },
+      "operation": "prompt",
+      "outcome": "rejected",
+      "error": {
+        "code": "policy_denied",
+        "message": "请求被拒绝"
+      }
+    },
+    {
+      "protocolVersion": 1,
+      "clientSubmissionId": "prompt-unknown",
+      "scope": {
+        "contextKey": "repo:示例/alpha",
+        "conversationId": "conversation-中文-1"
+      },
+      "operation": "prompt",
+      "outcome": "unknown",
+      "error": {
+        "code": "transport_uncertain",
+        "message": "Reply lost after transmission; do not replay"
+      }
+    },
+    {
+      "protocolVersion": 1,
+      "clientSubmissionId": "command-accepted",
+      "scope": {
+        "contextKey": "repo:示例/alpha",
+        "conversationId": "conversation-中文-1"
+      },
+      "operation": "command",
+      "outcome": "accepted",
+      "result": {
+        "action": "reload-tools",
+        "reloaded": 3
+      }
+    },
+    {
+      "protocolVersion": 1,
+      "clientSubmissionId": "command-rejected",
+      "scope": {
+        "contextKey": "repo:示例/alpha",
+        "conversationId": "conversation-中文-1"
+      },
+      "operation": "command",
+      "outcome": "rejected",
+      "error": {
+        "code": "policy_denied",
+        "message": "请求被拒绝"
+      }
+    },
+    {
+      "protocolVersion": 1,
+      "clientSubmissionId": "command-unknown",
+      "scope": {
+        "contextKey": "repo:示例/alpha",
+        "conversationId": "conversation-中文-1"
+      },
+      "operation": "command",
+      "outcome": "unknown",
+      "error": {
+        "code": "transport_uncertain",
+        "message": "Reply lost after transmission; do not replay"
+      }
+    }
+  ],
+  "capabilities": {
+    "protocolVersion": 1,
+    "documentVersions": [1],
+    "intents": ["send", "follow_up", "steer"],
+    "commands": true,
+    "attachments": true,
+    "queue": {
+      "edit": "text",
+      "remove": true,
+      "promote": true
+    },
+    "durableRecovery": false
+  },
+  "providers": {
+    "request": {
+      "requestId": "query-1",
+      "providerId": "files",
+      "scope": {
+        "contextKey": "repo:示例/alpha",
+        "conversationId": "conversation-中文-1"
+      },
+      "instanceGeneration": 3,
+      "documentRevision": 7,
+      "query": "你好",
+      "trigger": {
+        "text": "@",
+        "nodeIndex": 0,
+        "start": 0,
+        "end": 3,
+        "caret": 3
+      }
+    },
+    "candidates": [
+      {
+        "id": "file:你好.ts",
+        "label": "你好.ts",
+        "action": {
+          "type": "insert",
+          "content": [
+            {
+              "type": "reference",
+              "nodeId": "ref-occurrence-1",
+              "providerId": "files",
+              "refId": "src/你好.ts",
+              "label": "你好.ts",
+              "plainText": "@src/你好.ts"
+            }
+          ]
+        }
+      },
+      {
+        "id": "directory:src",
+        "label": "src/",
+        "action": {
+          "type": "drill",
+          "refId": "src/"
+        }
+      },
+      {
+        "id": "command:reload-tools",
+        "label": "Reload tools",
+        "action": {
+          "type": "invoke",
+          "command": {
+            "providerId": "commands",
+            "commandId": "reload-tools"
+          }
+        }
+      }
+    ]
+  },
+  "queue": {
+    "initial": {
+      "protocolVersion": 1,
+      "scope": {
+        "contextKey": "repo:示例/alpha",
+        "conversationId": "conversation-中文-1"
+      },
+      "revision": 8,
+      "items": [
+        {
+          "id": "queue-1",
+          "document": {
+            "schemaVersion": 1,
+            "content": [
+              {
+                "type": "text",
+                "text": "等待处理"
+              }
+            ]
+          },
+          "attachments": [],
+          "capabilities": {
+            "edit": "text",
+            "remove": true,
+            "promote": true
+          }
+        }
+      ]
+    },
+    "authoritative": {
+      "protocolVersion": 1,
+      "scope": {
+        "contextKey": "repo:示例/alpha",
+        "conversationId": "conversation-中文-1"
+      },
+      "revision": 9,
+      "items": []
+    },
+    "staleMutation": {
+      "requestId": "queue-request-1",
+      "scope": {
+        "contextKey": "repo:示例/alpha",
+        "conversationId": "conversation-中文-1"
+      },
+      "itemId": "queue-1",
+      "expectedRevision": 7,
+      "operation": "promote",
+      "targetTurnId": "turn-active-1"
+    },
+    "staleResult": {
+      "requestId": "queue-request-1",
+      "outcome": "rejected",
+      "error": {
+        "code": "stale_revision",
+        "message": "Queue changed; use the authoritative projection"
+      },
+      "projection": {
+        "protocolVersion": 1,
+        "scope": {
+          "contextKey": "repo:示例/alpha",
+          "conversationId": "conversation-中文-1"
+        },
+        "revision": 9,
+        "items": []
+      }
+    }
+  }
+}

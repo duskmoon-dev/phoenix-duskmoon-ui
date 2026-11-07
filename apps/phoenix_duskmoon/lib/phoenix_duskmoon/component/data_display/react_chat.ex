@@ -19,6 +19,27 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ReactChat do
   attr(:metadata, :map, default: %{})
   attr(:runtime, :map, default: %{})
   attr(:admission, :map, default: %{})
+
+  attr(:protocol_version, :integer,
+    default: nil,
+    doc: "Opt into the structured composer protocol (1)"
+  )
+
+  attr(:context_key, :string,
+    default: nil,
+    doc: "Opaque application scope, including repository context"
+  )
+
+  attr(:composer, :map,
+    default: nil,
+    doc: "Revisioned capabilities, providers, options and queue projection"
+  )
+
+  attr(:actions, :map,
+    default: %{},
+    doc: "Additional or overridden bridge action to LiveView event mappings"
+  )
+
   attr(:class, :any, default: nil)
   attr(:target, :any, default: nil)
   attr(:rest, :global, include: ~w(phx-submit phx-stop phx-target))
@@ -33,13 +54,24 @@ defmodule PhoenixDuskmoon.Component.DataDisplay.ReactChat do
         metadata: assigns.metadata,
         runtime: assigns.runtime,
         admission: assigns.admission,
-        actions: %{
-          send: "chat.send",
-          stop: "chat.stop",
-          retry: "chat.retry",
-          action: "chat.action",
-          sync: "chat.sync"
-        }
+        protocolVersion: assigns.protocol_version,
+        scope:
+          if(assigns.protocol_version == 1,
+            do: %{contextKey: assigns.context_key, conversationId: assigns.conversation_id},
+            else: nil
+          ),
+        composer: assigns.composer,
+        actions:
+          Map.merge(
+            %{
+              send: "chat.send",
+              stop: "chat.stop",
+              retry: "chat.retry",
+              action: "chat.action",
+              sync: "chat.sync"
+            },
+            assigns.actions
+          )
       })
 
     assigns = assign(assigns, :snapshot, snapshot)

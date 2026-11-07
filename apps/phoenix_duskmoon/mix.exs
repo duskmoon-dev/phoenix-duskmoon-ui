@@ -31,6 +31,7 @@ defmodule PhoenixDuskmoon.Mixfile do
           "guides/left-menu.md",
           "guides/split-pane.md",
           "guides/react-forms.md",
+          "guides/react-chat.md",
           "guides/migrating-to-v9.md",
           "guides/upstream-design-alignment.md",
           "guides/migrating-git-components.md",

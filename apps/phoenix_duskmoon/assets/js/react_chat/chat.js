@@ -3,6 +3,7 @@ import { Markdown } from "@duskmoon-dev/components/markdown";
 import { Input } from "@duskmoon-dev/components/input";
 import { Button } from "@duskmoon-dev/components/button";
 import { Chat } from "@duskmoon-dev/components/chat";
+import { requestId } from "./protocol.js";
 const h = React.createElement;
 const defaultOptions = {};
 
@@ -131,21 +132,6 @@ const Message = memo(function Message(props) {
 	);
 });
 
-function requestId() {
-	if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
-	const bytes = crypto.getRandomValues(new Uint8Array(16));
-	bytes[6] = (bytes[6] & 0x0f) | 0x40;
-	bytes[8] = (bytes[8] & 0x3f) | 0x80;
-	const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0"));
-	return [
-		hex.slice(0, 4).join(""),
-		hex.slice(4, 6).join(""),
-		hex.slice(6, 8).join(""),
-		hex.slice(8, 10).join(""),
-		hex.slice(10).join(""),
-	].join("-");
-}
-
 // A composer owns its draft/attachments. This helper only owns admission and UI requests.
 export function useChatSubmission({ bridge, canSubmit }) {
 	const [busy, setBusy] = useState(false);
@@ -165,6 +151,9 @@ export function useChatSubmission({ bridge, canSubmit }) {
 		setBusy(true);
 		setNotice("");
 		try {
+			const structured =
+				payload.protocolVersion !== undefined || payload.document !== undefined;
+			if (structured) return await bridge.submit(payload);
 			return await bridge.send("send", {
 				request_id: requestId(),
 				...payload,
@@ -237,6 +226,7 @@ export function ReactChat({
 	connected,
 	label,
 	options = defaultOptions,
+	adapter,
 }) {
 	const transcriptId = useId();
 	const scroll = useRef(null);
@@ -258,6 +248,11 @@ export function ReactChat({
 		state,
 		bridge,
 		connected,
+		adapter,
+		scope: state.scope,
+		instanceGeneration: state.instanceGeneration,
+		composer: state.composer,
+		providers: adapter?.providers,
 		synchronizing: state.needsSync,
 		metadata: state.metadata,
 		runtime: state.runtime,
@@ -344,9 +339,13 @@ export function ReactChat({
 					: "Disconnected. Draft preserved.",
 			),
 		options.renderStatus && h(options.renderStatus, context),
+		state.error && h("p", { role: "alert" }, state.error),
 		h(options.Composer || DefaultComposer, {
 			...context,
-			key: state.conversationId,
+			key:
+				state.protocolVersion === 1
+					? state.instanceGeneration
+					: state.conversationId,
 		}),
 	);
 }
