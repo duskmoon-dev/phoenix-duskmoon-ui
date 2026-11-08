@@ -6,6 +6,7 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
   @chat_id "react-chat-demo"
   @conversation_id "react-demo"
   @stream_interval 80
+  @generation_interval 1_000
   @fixture_fields [
     :fixture_composer,
     :fixture_runtime,
@@ -24,6 +25,9 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
        conversation_id: @conversation_id,
        messages: initial_messages(),
        active_stream: nil,
+       keep_generating: false,
+       generation_timer: nil,
+       generated_count: 0,
        action_sequences: %{},
        runtime: %{active: false, phase: "idle"},
        admission: %{allowWhileStreaming: true},
@@ -127,6 +131,23 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
               >
                 Seed 12-message transcript
               </button>
+              <button
+                id="chat-keep-generate"
+                type="button"
+                class={[
+                  "btn w-full",
+                  if(@keep_generating, do: "btn-secondary", else: "btn-outline")
+                ]}
+                phx-click="toggle-generation"
+                aria-label="Keep generate"
+                aria-pressed={to_string(@keep_generating)}
+              >
+                {if @keep_generating, do: "Stop generating", else: "Keep generate"}
+              </button>
+              <p class="text-xs opacity-60">
+                Keep generate adds a simulated conversation turn about every two seconds.
+                Stop, Seed, or Reset ends generation.
+              </p>
               <button
                 id="chat-reset"
                 type="button"
@@ -309,7 +330,7 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
   end
 
   def handle_event("chat.stop", %{"id" => @chat_id}, socket),
-    do: {:reply, %{status: "ok"}, stop_stream(socket)}
+    do: {:reply, %{status: "ok"}, socket |> stop_generation() |> stop_stream()}
 
   def handle_event("chat.retry", %{"id" => @chat_id, "message_id" => message_id}, socket),
     do: {:reply, %{status: "ok"}, start_stream(socket, "Retrying #{message_id}")}
@@ -325,6 +346,21 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
   def handle_event("chat.sync", %{"id" => @chat_id}, socket),
     do: {:reply, %{status: "ok"}, push_snapshot(socket)}
 
+  def handle_event("toggle-generation", _params, socket) do
+    if socket.assigns.keep_generating do
+      {:noreply,
+       socket
+       |> stop_generation()
+       |> stop_stream()
+       |> assign(:status, "Continuous generation stopped")}
+    else
+      {:noreply,
+       socket
+       |> assign(:keep_generating, true)
+       |> schedule_generation(0)}
+    end
+  end
+
   def handle_event("seed-long", _params, socket),
     do:
       {:noreply,
@@ -334,6 +370,27 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
     do: {:noreply, reset_conversation(socket, initial_messages(), "Conversation reset")}
 
   @impl true
+  def handle_info({:timeout, timer, :chat_generate}, socket) do
+    if socket.assigns.keep_generating and socket.assigns.generation_timer == timer do
+      socket =
+        if socket.assigns.active_stream do
+          socket
+        else
+          count = socket.assigns.generated_count + 1
+          text = "Generated test prompt #{count}: keep new messages arriving for scroll testing."
+
+          socket
+          |> assign(:generated_count, count)
+          |> append_user(text)
+          |> start_stream(text)
+        end
+
+      {:noreply, schedule_generation(socket)}
+    else
+      {:noreply, socket}
+    end
+  end
+
   def handle_info({:chat_stream_tick, message_id}, socket) do
     case socket.assigns.active_stream do
       %{message_id: ^message_id, events: events, next_index: index} = stream ->
@@ -374,6 +431,15 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
       _ ->
         {:noreply, socket}
     end
+  end
+
+  defp schedule_generation(socket, delay \\ @generation_interval) do
+    assign(socket, :generation_timer, :erlang.start_timer(delay, self(), :chat_generate))
+  end
+
+  defp stop_generation(socket) do
+    if socket.assigns.generation_timer, do: Process.cancel_timer(socket.assigns.generation_timer)
+    assign(socket, keep_generating: false, generation_timer: nil)
   end
 
   defp start_stream(socket, text) do
@@ -473,9 +539,11 @@ defmodule DuskmoonStorybookWeb.Components.ReactChatLive do
 
   defp reset_conversation(socket, messages, status) do
     socket
+    |> stop_generation()
     |> assign(
       messages: messages,
       active_stream: nil,
+      generated_count: 0,
       action_sequences: %{},
       runtime: %{active: false, phase: "idle"},
       status: status,

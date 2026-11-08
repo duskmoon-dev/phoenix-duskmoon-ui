@@ -110,6 +110,10 @@ const ApplicationChat = createDuskmoonReactChat({
 Select it with `hook="ApplicationChat"` on `dm_react_chat`. The interactive
 React Chat demo mounts a consumer composer/message/footer using public exports,
 with attachments, completion, usage, reasoning, summaries, and confirmed actions.
+In its Conversation playground, **Keep generate** (below **Seed 12-message transcript**)
+repeatedly adds a simulated prompt and streamed reply without interrupting an active
+reply. Click it again, use Stop, or seed/reset the conversation to stop generation.
+These are local test messages; no model is invoked.
 `Chat.Composer` is available in upstream Components 0.5.0. Consumers can also supply
 any React composer; there is no required upstream composer dependency in the hook
 contract. The public module also exports `ReactChat`, `initialState`, and

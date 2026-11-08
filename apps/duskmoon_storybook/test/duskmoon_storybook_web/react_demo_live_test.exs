@@ -2,6 +2,7 @@ defmodule DuskmoonStorybookWeb.ReactDemoLiveTest do
   use DuskmoonStorybookWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
+  alias DuskmoonStorybookWeb.Components.ReactChatLive
 
   test "chat demo exposes the high-volume stream controls", %{conn: conn} do
     {:ok, view, html} = live(conn, "/components/data-display/react-chat")
@@ -9,6 +10,7 @@ defmodule DuskmoonStorybookWeb.ReactDemoLiveTest do
     assert html =~ "React-owned streaming chat"
     assert has_element?(view, "#react-chat-demo[phx-hook=DuskmoonComposedChat]")
     assert has_element?(view, "#chat-seed-long")
+    assert has_element?(view, "#chat-seed-long + #chat-keep-generate[aria-pressed=false]")
     assert has_element?(view, "#chat-reset")
 
     html = view |> element("#chat-seed-long") |> render_click()
@@ -16,6 +18,95 @@ defmodule DuskmoonStorybookWeb.ReactDemoLiveTest do
 
     html = view |> element("#chat-reset") |> render_click()
     assert html =~ "Conversation reset"
+  end
+
+  test "keep generate pushes a simulated prompt and streaming reply until stopped", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/components/data-display/react-chat")
+
+    view |> element("#chat-keep-generate") |> render_click()
+    assert has_element?(view, "#chat-keep-generate[aria-pressed=true]", "Stop generating")
+
+    assert_push_event(
+      view,
+      "chat:event",
+      %{id: "react-chat-demo", type: "chat.message", message: %{role: "user", content: prompt}},
+      500
+    )
+
+    assert prompt =~ "Generated test prompt 1"
+
+    assert_push_event(
+      view,
+      "chat:event",
+      %{
+        id: "react-chat-demo",
+        type: "chat.message",
+        message: %{role: "assistant", status: "streaming"}
+      },
+      500
+    )
+
+    view |> element("#chat-keep-generate") |> render_click()
+    assert has_element?(view, "#chat-keep-generate[aria-pressed=false]", "Keep generate")
+    assert has_element?(view, "#chat-status", "Continuous generation stopped")
+  end
+
+  test "keep generate waits for the active reply before starting another turn" do
+    {:noreply, started} = ReactChatLive.handle_event("toggle-generation", %{}, chat_socket())
+    timer = started.assigns.generation_timer
+    {:noreply, first} = ReactChatLive.handle_info({:timeout, timer, :chat_generate}, started)
+
+    assert %{generated_count: 1, active_stream: %{message_id: message_id} = stream} =
+             first.assigns
+
+    timer = first.assigns.generation_timer
+    Process.cancel_timer(timer)
+    {:noreply, waiting} = ReactChatLive.handle_info({:timeout, timer, :chat_generate}, first)
+    assert waiting.assigns.active_stream == stream
+    assert waiting.assigns.generated_count == 1
+
+    complete =
+      Enum.reduce(stream.events, waiting, fn _event, socket ->
+        {:noreply, socket} = ReactChatLive.handle_info({:chat_stream_tick, message_id}, socket)
+        socket
+      end)
+
+    assert complete.assigns.active_stream == nil
+    timer = complete.assigns.generation_timer
+    Process.cancel_timer(timer)
+    {:noreply, second} = ReactChatLive.handle_info({:timeout, timer, :chat_generate}, complete)
+    assert second.assigns.generated_count == 2
+    assert %{role: "user", content: prompt} = List.last(second.assigns.messages)
+    assert prompt =~ "Generated test prompt 2"
+
+    assert {:noreply, stopped} = ReactChatLive.handle_event("toggle-generation", %{}, second)
+    assert stopped.assigns.active_stream == nil
+  end
+
+  test "stop, seed and reset cancel generation and ignore stale ticks after restarting" do
+    for event <- ["toggle-generation", "chat.stop", "seed-long", "reset-chat"] do
+      {:noreply, started} = ReactChatLive.handle_event("toggle-generation", %{}, chat_socket())
+      timer = started.assigns.generation_timer
+
+      stopped =
+        case ReactChatLive.handle_event(event, %{"id" => "react-chat-demo"}, started) do
+          {:noreply, socket} -> socket
+          {:reply, %{status: "ok"}, socket} -> socket
+        end
+
+      assert %{keep_generating: false, generation_timer: nil, active_stream: nil} =
+               stopped.assigns
+
+      assert {:noreply, ^stopped} =
+               ReactChatLive.handle_info({:timeout, timer, :chat_generate}, stopped)
+
+      {:noreply, restarted} = ReactChatLive.handle_event("toggle-generation", %{}, stopped)
+
+      assert {:noreply, ^restarted} =
+               ReactChatLive.handle_info({:timeout, timer, :chat_generate}, restarted)
+
+      ReactChatLive.handle_event("toggle-generation", %{}, restarted)
+    end
   end
 
   test "chat snapshot recovery retains custom rendering and admission state", %{conn: conn} do
@@ -165,6 +256,13 @@ defmodule DuskmoonStorybookWeb.ReactDemoLiveTest do
     assert has_element?(view, "#schema-form-revision", "1")
     assert has_element?(view, "#schema-form-changed", "preset")
     assert has_element?(view, "#form-status", "Waiting for a change")
+  end
+
+  defp chat_socket do
+    {:ok, socket} =
+      ReactChatLive.mount(%{}, %{}, %Phoenix.LiveView.Socket{private: %{live_temp: %{}}})
+
+    socket
   end
 
   defp schema_values do
