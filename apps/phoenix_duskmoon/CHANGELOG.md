@@ -1,3 +1,26 @@
+# [10.1.1](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.1.0...v10.1.1) (2026-11-08)
+
+### Added
+
+- Add floating jump-to-latest and stick-to-bottom chat controls, including
+  continuous following of streamed content, late images and viewport resizing.
+- Add a Keep generate control to the Storybook chat playground for testing
+  continuous conversation updates without an external model.
+
+### Changed
+
+- Update Core/CSS Art to 1.21.2, React Components to 0.6.2 and the HTTP cohort to
+  1.0.0-rc.8, retaining the published Bundler 10.1.2 cohort.
+- Use upstream compact composers and bubble-free assistant content while keeping
+  user message bubbles, Markdown, tools and actions.
+
+### Fixed
+
+- Keep the chat status row mounted so generation does not shift the reply markers.
+- Supply explicit reasoning disclosure markup to restore the upstream padding.
+- Adopt upstream structured submission ID generation that works on LAN HTTP,
+  with browser coverage for plain and rich composers.
+
 # [10.1.0](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.0.12...v10.1.0) (2026-11-07)
 
 ### Added
