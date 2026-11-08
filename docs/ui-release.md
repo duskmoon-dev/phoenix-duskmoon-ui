@@ -6,11 +6,10 @@ uses `~> 10.0` requirements and is resolved by the complete nine-package Hex
 lock cohort. The public component package does not require the build toolchain.
 
 Commit a reviewed U version change before running **UI Release** (`release.yml`).
-After `mix version.sync`, use `mix npm.update` to refresh workspace version
-metadata, review the lock diff, and run `mix npm.ci`. Ordinary install currently
-leaves version-only changes stale; [Bundler #18](https://github.com/duskmoon-dev/duskmoon-bundler/issues/18)
-tracks the fix.
-<!-- TODO(upstream): duskmoon-dev/duskmoon-bundler#18. WORKAROUND(upstream): use the full update until a published ordinary-install fix refreshes workspace metadata; then verify it and remove this step. -->
+After `mix version.sync`, use `mix npm.install` to refresh workspace version
+metadata, review the lock diff, and run `mix npm.ci`. Bundler 10.1.3 synchronizes
+root and workspace descriptors while preserving locked registry packages; frozen
+installs reject stale descriptors before linking.
 Select the dispatch ref whose head is that release commit and provide `version=U`
 and the complete immutable `source_sha`. A mismatch between workflow/source SHA
 fails, keeping the workflow definition and build inputs fixed together. The workflow never

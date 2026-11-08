@@ -238,9 +238,6 @@ thumbnail strip. The Storybook composers enable this upstream presentation mode;
 controlled drafts, upload preparation and admission remain application-owned.
 React Components 0.6.2 requires Core 1.21.1 or newer for these styles.
 
-<!-- TODO(upstream): duskmoon-dev/duskmoon-bundler#19. After adopting the published
-fix, verify normal warm-cache reloads preserve one React runtime, then remove this note. -->
-
 Components 0.6.2 supports default plain and rich structured submissions on LAN HTTP.
 Its submission ID generator uses secure random bytes when `crypto.randomUUID()`
 is unavailable, preserving the same logical identity and admission contract.

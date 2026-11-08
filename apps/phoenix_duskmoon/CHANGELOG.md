@@ -9,13 +9,17 @@
 
 ### Changed
 
-- Update Core/CSS Art to 1.21.2, React Components to 0.6.2 and the HTTP cohort to
-  1.0.0-rc.8, retaining the published Bundler 10.1.2 cohort.
+- Update Core/CSS Art to 1.21.2, React Components to 0.6.2, the HTTP cohort to
+  1.0.0-rc.8 and the published Bundler cohort to 10.1.3.
 - Use upstream compact composers and bubble-free assistant content while keeping
   user message bubbles, Markdown, tools and actions.
 
 ### Fixed
 
+- Refresh workspace version metadata through ordinary npm installs with the
+  published Bundler fix, preserving locked registry packages.
+- Revalidate development vendor entries and keep lazy imports in one React graph
+  when reloading with existing browser caches.
 - Keep the chat status row mounted so generation does not shift the reply markers.
 - Supply explicit reasoning disclosure markup to restore the upstream padding.
 - Adopt upstream structured submission ID generation that works on LAN HTTP,

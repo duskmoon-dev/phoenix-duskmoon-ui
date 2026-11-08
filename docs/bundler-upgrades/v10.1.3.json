@@ -1,0 +1,25 @@
+{
+  "version": "10.1.3",
+  "repository": "duskmoon-dev/duskmoon-bundler",
+  "release": "https://github.com/duskmoon-dev/duskmoon-bundler/releases/tag/v10.1.3",
+  "source_sha": "f60624905b2e4bbd2c5a0963cf138e53674ea59a",
+  "validation_sha": "f60624905b2e4bbd2c5a0963cf138e53674ea59a",
+  "release_run": "https://github.com/duskmoon-dev/duskmoon-bundler/actions/runs/42477662842",
+  "verification_run": "https://github.com/duskmoon-dev/duskmoon-bundler/actions/runs/42482034914",
+  "packages": [
+    "duskmoon_bundler",
+    "duskmoon_bundler_runtime",
+    "duskmoon_oxc",
+    "duskmoon_oxide",
+    "duskmoon_vize",
+    "duskmoon_quickbeam",
+    "duskmoon_npm",
+    "duskmoon_hex_solver",
+    "duskmoon_hologram"
+  ],
+  "public_assets_verified": true,
+  "native_download_consumers_verified": true,
+  "registry_consumer_verified": true,
+  "musl_amd64_verified": true,
+  "musl_arm64_verified": true
+}
