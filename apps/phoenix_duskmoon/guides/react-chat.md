@@ -12,12 +12,19 @@ persistence, admission, and the generation process.
 
 Register `DuskmoonReactChat` from `phoenix_duskmoon/react-chat` in LiveSocket
 hooks. Existing callers need no options. The default transcript uses the published
-`@duskmoon-dev/components/chat` parts for bubbles, tools, statuses, and actions,
-with Markdown inside `.chat-bubble-content`. The default composer preserves its
+`@duskmoon-dev/components/chat` parts for messages, tools, statuses, and actions.
+Assistant replies use `Chat.Agent` and `Chat.Content` without a bubble; user
+messages retain `Chat.Bubble` with Markdown inside `.chat-bubble-content`.
+The default composer preserves its
 text on rejection/disconnect and disallows sending during an active turn unless
-admission explicitly permits it. **Jump to latest** resumes automatic scrolling;
-reply markers cover the latest 24 assistant messages while all messages remain
-visible.
+admission explicitly permits it. Two floating icon buttons stay at the bottom of
+the transcript, above the composer: **Jump to latest** scrolls once without changing
+the follow setting; **Stick to bottom** toggles continuous following of new messages,
+streaming content, and late content or viewport resizing. Sticking starts enabled.
+Scrolling up or choosing a reply marker turns it off so history stays readable;
+reaching the bottom manually does not turn it back on. The toggle exposes its state
+through `aria-pressed`. Reply markers cover the latest 24 assistant messages while
+all messages remain visible. Each conversation starts with its own follow setting.
 
 The mount has `phx-update="ignore"`. Push events rather than updating `@messages`
 per token. HEEX children are not a composition API: `inner_block` is no longer
@@ -72,17 +79,30 @@ function Footer({ message, bridge, connected, synchronizing }) {
 }
 function Message(props) {
   const { message, targetId, timeline } = props;
-  return h(Chat, { id: targetId, timeline, role: "article", placement: message.role === "user" ? "end" : "start" },
+  const assistant = message.role === "assistant";
+  return h(assistant ? Chat.Agent : Chat, {
+    id: targetId, timeline, role: "article",
+    ...(assistant ? {} : { placement: message.role === "user" ? "end" : "start" }),
+  },
     h(Chat.Header, null, message.author || message.role),
-    message.metadata?.reasoning && h(Chat.Reasoning, null, message.metadata.reasoning),
-    h(Chat.Bubble, { streaming: message.status === "streaming" },
-      h(Markdown, { markdown: message.content || "", className: "chat-bubble-content" })),
+    message.metadata?.reasoning && h(
+      Chat.Reasoning, null,
+      h("summary", null, "Reasoning"),
+      h("div", null, message.metadata.reasoning),
+    ),
+    h(assistant ? Chat.Content : Chat.Bubble, { streaming: message.status === "streaming" },
+      h(Markdown, {
+        markdown: message.content || "",
+        className: assistant ? undefined : "chat-bubble-content",
+      })),
     h(Footer, props),
   );
 }
 const ApplicationChat = createDuskmoonReactChat({
   Composer, renderMessage: Message, renderFooter: Footer,
-  renderStatus: ({ runtime }) => runtime.active && h(Chat.Status, null, runtime.phase),
+  renderStatus: ({ runtime }) => h(
+    Chat.Status, null, runtime.active ? runtime.phase || "Generating" : "Ready",
+  ),
 });
 // Add ApplicationChat to your LiveSocket hooks.
 ```
@@ -203,10 +223,23 @@ versioned admission receipt.
 conversation. It is opaque to Phoenix and is not an authorization credential.
 `composer` contains an independent, nonnegative `revision`, v1 `capabilities`,
 serializable provider descriptors, controlled `options`, and optional `queue`.
-Use the types and fixture exported by Components 0.6.0 at
-`@duskmoon-dev/components/chat` and `/chat/contracts.v1.json`. Core/CSS Art 1.21.0
+Use the types and fixture exported by Components 0.6.2 at
+`@duskmoon-dev/components/chat` and `/chat/contracts.v1.json`. Core/CSS Art 1.21.2
 supply the composer classes. Elements/Art Elements remain 1.10.2; Art Components
 is not needed for this integration. React and React DOM remain 19.3.1.
+
+Pass `compact: true` to `Chat.Composer`, `ChatSessionComposer`, or
+`RichChatComposer` to use the compact Add menu, one send/stop action and image
+thumbnail strip. The Storybook composers enable this upstream presentation mode;
+controlled drafts, upload preparation and admission remain application-owned.
+React Components 0.6.2 requires Core 1.21.1 or newer for these styles.
+
+<!-- TODO(upstream): duskmoon-dev/duskmoon-bundler#19. After adopting the published
+fix, verify normal warm-cache reloads preserve one React runtime, then remove this note. -->
+
+Components 0.6.2 supports default plain and rich structured submissions on LAN HTTP.
+Its submission ID generator uses secure random bytes when `crypto.randomUUID()`
+is unavailable, preserving the same logical identity and admission contract.
 
 ```javascript
 import { ChatSessionComposer, createComposerRecoveryOwner } from "@duskmoon-dev/components/chat";

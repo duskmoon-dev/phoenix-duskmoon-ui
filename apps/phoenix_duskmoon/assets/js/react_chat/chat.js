@@ -1,4 +1,11 @@
-import React, { memo, useEffect, useId, useRef, useState } from "react";
+import React, {
+	memo,
+	useEffect,
+	useId,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from "react";
 import { Markdown } from "@duskmoon-dev/components/markdown";
 import { Input } from "@duskmoon-dev/components/input";
 import { Button } from "@duskmoon-dev/components/button";
@@ -18,12 +25,15 @@ const Message = memo(function Message(props) {
 		synchronizing,
 	} = props;
 	const [notice, setNotice] = useState("");
+	const assistant = message.role === "assistant";
 	return h(
-		Chat,
+		assistant ? Chat.Agent : Chat,
 		{
 			id: targetId,
 			role: "article",
-			placement: message.role === "user" ? "end" : "start",
+			...(assistant
+				? {}
+				: { placement: message.role === "user" ? "end" : "start" }),
 			timeline,
 			"data-message-id": message.id,
 		},
@@ -31,7 +41,7 @@ const Message = memo(function Message(props) {
 			? h(options.renderHeader, props)
 			: h(Chat.Header, null, message.author || message.role),
 		h(
-			Chat.Bubble,
+			assistant ? Chat.Content : Chat.Bubble,
 			{ streaming: message.status === "streaming" },
 			...(message.tools || []).map((tool) =>
 				h(
@@ -54,7 +64,7 @@ const Message = memo(function Message(props) {
 				),
 			),
 			h(Markdown, {
-				className: "chat-bubble-content",
+				className: assistant ? undefined : "chat-bubble-content",
 				markdown: message.content || "",
 			}),
 		),
@@ -230,11 +240,44 @@ export function ReactChat({
 }) {
 	const transcriptId = useId();
 	const scroll = useRef(null);
+	const body = useRef(null);
 	const follow = useRef(true);
-	useEffect(() => {
-		if (follow.current && scroll.current)
-			scroll.current.scrollTop = scroll.current.scrollHeight;
+	const previousScrollTop = useRef(0);
+	const [sticking, setSticking] = useState(true);
+	const [atBottom, setAtBottom] = useState(true);
+	function jumpToLatest() {
+		const el = scroll.current;
+		el.scrollTo({ top: el.scrollHeight, behavior: "instant" });
+		previousScrollTop.current = el.scrollTop;
+		setAtBottom(true);
+	}
+	function pauseFollowing() {
+		follow.current = false;
+		setSticking(false);
+	}
+	function updateAtBottom() {
+		const el = scroll.current;
+		setAtBottom(el.scrollHeight - el.scrollTop - el.clientHeight < 2);
+	}
+	useLayoutEffect(() => {
+		follow.current = true;
+		setSticking(true);
+		jumpToLatest();
+	}, [state.conversationId, state.instanceGeneration]);
+	useLayoutEffect(() => {
+		if (follow.current) jumpToLatest();
+		else updateAtBottom();
 	}, [state.messages]);
+	useEffect(() => {
+		// Markdown, images, and the composer can resize without a message event.
+		const observer = new ResizeObserver(() => {
+			if (follow.current) jumpToLatest();
+			else updateAtBottom();
+		});
+		observer.observe(scroll.current);
+		observer.observe(body.current);
+		return () => observer.disconnect();
+	}, []);
 	const streaming = state.messages.some(
 		(message) => message.status === "streaming",
 	);
@@ -271,64 +314,128 @@ export function ReactChat({
 		`${transcriptId}-message-${encodeURIComponent(message.id)}`;
 	return h(
 		"section",
-		{ className: "flex flex-col gap-3 h-full", "aria-label": label },
+		{ className: "flex flex-col gap-3 h-full min-h-0", "aria-label": label },
 		h(
-			Chat.Scroll,
-			{
-				ref: scroll,
-				className: "flex-1 min-h-0",
-				"data-chat-messages": true,
-				onScroll: () => {
-					const el = scroll.current;
-					follow.current =
-						el.scrollHeight - el.scrollTop - el.clientHeight < 48;
-				},
-			},
+			"div",
+			{ className: "relative flex-1 min-h-0" },
 			h(
-				Chat.ScrollTrack,
-				{ role: "navigation", "aria-label": "Assistant replies" },
-				replies.map((message) =>
-					h(Chat.ScrollIndicator, {
-						key: message.id,
-						targetId: targetId(message),
-						timeline: timelines.get(message.id),
-						onClick: () => {
-							follow.current = false;
+				Chat.Scroll,
+				{
+					id: transcriptId,
+					ref: scroll,
+					className: "h-full min-h-0",
+					"data-chat-messages": true,
+					onScroll: () => {
+						const el = scroll.current;
+						const bottom = el.scrollHeight - el.scrollTop - el.clientHeight < 2;
+						setAtBottom(bottom);
+						// Content growth must not be mistaken for scrolling into history.
+						if (!bottom && el.scrollTop < previousScrollTop.current)
+							pauseFollowing();
+						previousScrollTop.current = el.scrollTop;
+					},
+				},
+				h(
+					Chat.ScrollTrack,
+					{ role: "navigation", "aria-label": "Assistant replies" },
+					replies.map((message) =>
+						h(Chat.ScrollIndicator, {
+							key: message.id,
+							targetId: targetId(message),
+							timeline: timelines.get(message.id),
+							onClick: pauseFollowing,
+						}),
+					),
+				),
+				h(
+					Chat.ScrollBody,
+					{ ref: body, className: "gap-3 pb-16" },
+					state.messages.map((message) =>
+						h(options.renderMessage || Message, {
+							...(options.renderMessage ||
+							options.renderHeader ||
+							options.renderFooter
+								? context
+								: { connected, synchronizing: state.needsSync }),
+							options,
+							key: message.id,
+							message,
+							bridge,
+							targetId: targetId(message),
+							timeline: timelines.get(message.id),
+						}),
+					),
+				),
+			),
+			h(
+				"div",
+				{
+					className: "absolute bottom-3 end-3 z-10 flex gap-2",
+					role: "group",
+					"aria-label": "Transcript scrolling",
+				},
+				h(
+					Button,
+					{
+						type: "button",
+						shape: "circle",
+						color: "base",
+						className: "shadow-md",
+						"aria-label": "Jump to latest",
+						"aria-controls": transcriptId,
+						title: "Jump to latest",
+						disabled: atBottom,
+						onClick: jumpToLatest,
+					},
+					h(
+						"svg",
+						{
+							viewBox: "0 0 24 24",
+							className: "size-5",
+							fill: "none",
+							stroke: "currentColor",
+							strokeWidth: 2,
+							"aria-hidden": true,
+							focusable: false,
 						},
-					}),
+						h("path", { d: "M12 5v14m-6-6 6 6 6-6" }),
+					),
+				),
+				h(
+					Button,
+					{
+						type: "button",
+						shape: "circle",
+						color: sticking ? "secondary" : "base",
+						className: "shadow-md",
+						"aria-label": "Stick to bottom",
+						"aria-controls": transcriptId,
+						"aria-pressed": sticking,
+						title: sticking ? "Stop sticking to bottom" : "Stick to bottom",
+						onClick: () => {
+							if (follow.current) pauseFollowing();
+							else {
+								follow.current = true;
+								setSticking(true);
+								jumpToLatest();
+							}
+						},
+					},
+					h(
+						"svg",
+						{
+							viewBox: "0 0 24 24",
+							className: "size-5",
+							fill: "none",
+							stroke: "currentColor",
+							strokeWidth: 2,
+							"aria-hidden": true,
+							focusable: false,
+						},
+						h("path", { d: "M12 17v5M9 3h6M10 3v7l-3 4v3h10v-3l-3-4V3" }),
+					),
 				),
 			),
-			h(
-				Chat.ScrollBody,
-				{ className: "gap-3" },
-				state.messages.map((message) =>
-					h(options.renderMessage || Message, {
-						...(options.renderMessage ||
-						options.renderHeader ||
-						options.renderFooter
-							? context
-							: { connected, synchronizing: state.needsSync }),
-						options,
-						key: message.id,
-						message,
-						bridge,
-						targetId: targetId(message),
-						timeline: timelines.get(message.id),
-					}),
-				),
-			),
-		),
-		h(
-			Button,
-			{
-				type: "button",
-				appearance: "ghost",
-				onClick: () => {
-					follow.current = true;
-					scroll.current.scrollTop = scroll.current.scrollHeight;
-				},
-			},
-			"Jump to latest",
 		),
 		(!connected || state.needsSync) &&
 			h(

@@ -23,19 +23,29 @@ describe("React chat upstream composition", () => {
 				role: "assistant",
 				status: "streaming",
 				content: "**Searching**",
-				tools: [{ id: "search", name: "Search", status: "running", input: { query: "Moon" } }],
+				tools: [
+					{
+						id: "search",
+						name: "Search",
+						status: "running",
+						input: { query: "Moon" },
+					},
+				],
 			},
 		]);
 
 		expect(html).toContain('role="article"');
 		expect(html).toContain('data-message-id="answer"');
-		expect(html).toContain("chat-bubble-streaming");
-		expect(html).toContain('class="chat-bubble-content chat-bubble-streaming" aria-hidden="true"');
+		expect(html).toContain('class="chat chat-start chat-agent"');
+		expect(html).toContain('class="chat-content chat-streaming"');
+		expect(html).not.toContain('class="chat-bubble');
 		expect(html).toContain("<strong>Searching</strong>");
 		expect(html).toContain("chat-tool-running");
 		expect(html).toContain("chat-tool-call");
-		expect(html).toMatch(/class="chat-bubble[^\"]*"><details class="chat-tool chat-tool-running">/);
-		expect(html).toContain('</details><div class="markdown-body chat-bubble-content">');
+		expect(html).toMatch(
+			/class="chat-content chat-streaming"><details class="chat-tool chat-tool-running">/,
+		);
+		expect(html).toContain('</details><div class="markdown-body">');
 		expect(html).toContain("Moon");
 		expect(html).toContain('role="status" class="chat-status"');
 		expect(html).toContain('class="chat-status-item">Generating…');
@@ -52,7 +62,14 @@ describe("React chat upstream composition", () => {
 					status: "error",
 					content: "Partial reply",
 					error: "Generation failed",
-					tools: [{ id: "search", name: "Search", status: "success", result: { count: 3 } }],
+					tools: [
+						{
+							id: "search",
+							name: "Search",
+							status: "success",
+							result: { count: 3 },
+						},
+					],
 					actions: [{ id: "inspect", label: "Inspect" }],
 				},
 			],
@@ -60,18 +77,24 @@ describe("React chat upstream composition", () => {
 		);
 
 		expect(html).toContain("chat-end");
+		expect(html.match(/class="chat-bubble(?:\s|")/g)).toHaveLength(1);
+		expect(html).toContain('class="chat chat-start chat-agent"');
 		expect(html).toContain("chat-tool-success");
 		expect(html).toContain("chat-tool-result");
-		expect(html).toMatch(/class="chat-bubble[^\"]*"><details class="chat-tool chat-tool-success">/);
-		expect(html).toContain('</details><div class="markdown-body chat-bubble-content">');
+		expect(html).toMatch(
+			/class="chat-content"><details class="chat-tool chat-tool-success">/,
+		);
+		expect(html).toContain('</details><div class="markdown-body">');
 		expect(html).toContain("chat-footer");
 		expect(html).toContain("chat-actions");
 		expect(html).toContain('role="alert">Generation failed');
 		expect(html).toMatch(/<button[^>]*><span[^>]*>Retry<\/span><\/button>/);
 		expect(html).toMatch(/<button[^>]*><span[^>]*>Inspect<\/span><\/button>/);
-		expect(html).toMatch(/<button[^>]*disabled=""[^>]*><span[^>]*>Send<\/span><\/button>/);
+		expect(html).toMatch(
+			/<button[^>]*disabled=""[^>]*><span[^>]*>Send<\/span><\/button>/,
+		);
 		expect(html).toContain("Disconnected. Draft preserved.");
-		expect(html).not.toContain('class="chat-bubble-content chat-bubble-streaming"');
+		expect(html).not.toContain('class="chat-content chat-streaming"');
 	});
 
 	test("pairs panel-local reply markers with the latest 24 assistant messages", () => {
@@ -80,7 +103,9 @@ describe("React chat upstream composition", () => {
 			{ id: `assistant-${index}`, role: "assistant", content: "Answer" },
 		]).flat();
 		const html = render(messages);
-		const markers = [...html.matchAll(/data-chat-target="([^"]+)" data-chat-tl="(\d+)"/g)];
+		const markers = [
+			...html.matchAll(/data-chat-target="([^"]+)" data-chat-tl="(\d+)"/g),
+		];
 
 		expect(markers).toHaveLength(24);
 		expect(markers.map(([, , timeline]) => Number(timeline))).toEqual(
@@ -100,7 +125,9 @@ describe("React chat upstream composition", () => {
 
 	test("keeps navigation targets unique when two conversations share message IDs", () => {
 		const props = {
-			state: initialState("conversation", [{ id: "answer", role: "assistant", content: "Hello" }]),
+			state: initialState("conversation", [
+				{ id: "answer", role: "assistant", content: "Hello" },
+			]),
 			bridge: { send: () => Promise.resolve({ status: "ok" }) },
 			connected: true,
 			label: "Conversation",
@@ -113,7 +140,9 @@ describe("React chat upstream composition", () => {
 				React.createElement(ReactChat, props),
 			),
 		);
-		const targets = [...html.matchAll(/data-chat-target="([^"]+)"/g)].map(([, target]) => target);
+		const targets = [...html.matchAll(/data-chat-target="([^"]+)"/g)].map(
+			([, target]) => target,
+		);
 
 		expect(targets).toHaveLength(2);
 		expect(new Set(targets).size).toBe(2);

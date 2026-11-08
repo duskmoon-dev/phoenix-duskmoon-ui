@@ -39,6 +39,7 @@ function LegacyComposer(props) {
 		React.Fragment,
 		null,
 		h(Chat.Composer, {
+			compact: true,
 			value: draft.value,
 			attachments: draft.files,
 			onValueChange: (value) => update({ ...draft, value }),
@@ -127,20 +128,28 @@ function Footer({ message, bridge, connected, synchronizing }) {
 
 function Message(props) {
 	const { message, targetId, timeline } = props;
+	const assistant = message.role === "assistant";
 	return h(
-		Chat,
+		assistant ? Chat.Agent : Chat,
 		{
 			id: targetId,
 			timeline,
 			role: "article",
-			placement: message.role === "user" ? "end" : "start",
+			...(assistant
+				? {}
+				: { placement: message.role === "user" ? "end" : "start" }),
 			"data-message-id": message.id,
 		},
 		h(Chat.Header, null, message.author || message.role),
 		message.metadata?.reasoning &&
-			h(Chat.Reasoning, null, message.metadata.reasoning),
+			h(
+				Chat.Reasoning,
+				null,
+				h("summary", null, "Reasoning"),
+				h("div", null, message.metadata.reasoning),
+			),
 		h(
-			Chat.Bubble,
+			assistant ? Chat.Content : Chat.Bubble,
 			{ streaming: message.status === "streaming" },
 			...(message.attachments || []).map((image) =>
 				h("img", {
@@ -164,7 +173,7 @@ function Message(props) {
 			),
 			h(Markdown, {
 				markdown: message.content || "",
-				className: "chat-bubble-content",
+				className: assistant ? undefined : "chat-bubble-content",
 			}),
 		),
 		h(Footer, props),
@@ -463,6 +472,7 @@ function StructuredComposer(props) {
 		),
 		h(Editor, {
 			ref: editor,
+			compact: true,
 			value,
 			onDocumentChange: update,
 			scope,
@@ -560,10 +570,13 @@ export const DuskmoonComposedChat = createDuskmoonReactChat({
 	renderMessage: Message,
 	renderFooter: Footer,
 	renderStatus: ({ runtime }) =>
-		runtime.active &&
 		h(
 			Chat.Status,
 			{ role: "status" },
-			h(Chat.StatusItem, null, runtime.phase || "Generating"),
+			h(
+				Chat.StatusItem,
+				null,
+				runtime.active ? runtime.phase || "Generating" : "Ready",
+			),
 		),
 });

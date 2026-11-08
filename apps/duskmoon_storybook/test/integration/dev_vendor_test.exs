@@ -325,7 +325,7 @@ defmodule DuskmoonBundler.Integration.DevVendorTest do
     assert {:ok, %{"text" => "custom draft", "event" => "chat.send"}} =
              CDPBrowser.evaluate(page, """
              (async () => {
-               [...document.querySelectorAll('button')].find(button=>button.textContent==='Send').click();
+               document.querySelector('button[aria-label="Send"]').click();
                await new Promise(r=>setTimeout(r,30));
                return {text:window.admission.body.text,event:window.admission.event};
              })()
