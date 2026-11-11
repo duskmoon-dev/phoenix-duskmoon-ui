@@ -1,3 +1,15 @@
+# [10.1.2](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.1.1...v10.1.2) (2026-11-11)
+
+### Fixed
+
+- Document dependency JavaScript and HEEX source scanning for Tailwind and
+  DuskmoonBundler, including umbrella paths and the upstream CSS-source caveat,
+  resolving [#215](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/215).
+- Add a per-item `rest` map to `dm_segment_control` so buttons can carry
+  LiveView events and values, IDs and data attributes, resolving
+  [#214](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/214).
+  Preserve the existing button type, disabled and selection semantics.
+
 # [10.1.1](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.1.0...v10.1.1) (2026-11-08)
 
 ### Added
