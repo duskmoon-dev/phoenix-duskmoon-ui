@@ -166,8 +166,8 @@ request was pending. For conversation-scoped restoration across navigation, own
 the draft store in the application and initialize it with `state.conversationId`.
 Do not persist File bytes as JSON; retain File objects in an application store or
 persist uploaded attachment references. Disconnect/recovery does not remount the
-composer. No request is automatically resent after disconnect or timeout; use
-request IDs and backend idempotency to reconcile uncertain admission.
+composer. Submission requests are never automatically resent after disconnect or
+timeout; use request IDs and backend idempotency to reconcile uncertain admission.
 
 ## Events, application state, and recovery
 
@@ -177,6 +177,15 @@ and `conversation_id`. Ordered message events additionally require `message_id`
 and a per-message positive monotonic `sequence`; duplicates are ignored. A gap
 halts reduction and requests `chat.sync`. Snapshot/reset events replace messages,
 sequences, and application state without message-level sequence requirements.
+
+While connected and still waiting for recovery, sync requests retry after rejection,
+timeout, or an acknowledgment that arrives without a valid snapshot/reset. Retries
+use one in-flight request and exponential delays of 1, 2, 4, 8 and 16 seconds,
+capped at 30 seconds. Each attempt has a fresh request ID. A valid snapshot/reset
+clears the error and cancels the retry timer. Disconnect, context switch and unmount
+also cancel scheduled retries; reconnect requests a fresh sync immediately.
+Only read-only synchronization retries automatically: uncertain submissions remain
+application-owned and are never replayed by this recovery loop.
 
 Pass `metadata`, `runtime`, and `admission` maps as initial HEEX attrs. These fields
 can also accompany any accepted message event, replacing the corresponding map.
@@ -358,7 +367,8 @@ push_event(socket, "chat:event", %{
 
 A full projection can skip revisions; optional `previousRevision` requires ordered
 contiguous application updates. Stale/duplicate revisions are ignored. Gaps or
-invalid queue revisions freeze updates and request one bounded synchronization.
+invalid queue revisions freeze updates and request synchronization with the same
+single-request and capped-retry policy described above.
 In structured mode runtime/admission changes accompany the composer projection
 or snapshot, not message deltas. Stop is always an explicit request; the UI keeps
 the confirmed active/cancelling state until the application's projection changes.

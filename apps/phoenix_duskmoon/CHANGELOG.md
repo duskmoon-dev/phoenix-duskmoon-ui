@@ -1,3 +1,13 @@
+# [10.1.3](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.1.2...v10.1.3) (2026-11-11)
+
+### Fixed
+
+- Retry React Chat transcript synchronization after failed, timed-out or
+  incomplete sync replies with exponential backoff capped at 30 seconds,
+  resolving [#216](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/216).
+  Cancel retries on recovery, disconnect, context changes and unmount. Submission
+  requests are never automatically replayed.
+
 # [10.1.2](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.1.1...v10.1.2) (2026-11-11)
 
 ### Fixed

@@ -49,6 +49,7 @@ export function createDuskmoonReactChat(options = {}) {
 				const previous = this.state;
 				this.state = reduceChat(this.state, event);
 				if (previous === this.state) return;
+				if (!this.state.needsSync) this.resetSyncRetry();
 				if (this.state.needsSync && !previous.needsSync) this.requestSync();
 				this.scheduleRender();
 			});
@@ -66,6 +67,7 @@ export function createDuskmoonReactChat(options = {}) {
 				throw new TypeError(
 					"Structured chat requires an application context key and matching conversation",
 				);
+			this.resetSyncRetry();
 			this.config = config;
 			this.state = initialState(config.conversationId, config.messages, {
 				...config,
@@ -468,8 +470,16 @@ export function createDuskmoonReactChat(options = {}) {
 				});
 			}
 		},
+		resetSyncRetry() {
+			clearTimeout(this.syncRetryTimer);
+			this.syncRetryTimer = null;
+			this.syncRetryDelay = 1000;
+		},
 		requestSync() {
 			if (this.syncPending) return this.syncPending;
+			if (this.dead || !this.connected) return Promise.resolve();
+			clearTimeout(this.syncRetryTimer);
+			this.syncRetryTimer = null;
 			const generation = this.state.instanceGeneration;
 			const payload = { sequences: this.state.sequences };
 			if (this.adapter.reconcileOnSync && this.adapter.recovery)
@@ -485,6 +495,8 @@ export function createDuskmoonReactChat(options = {}) {
 				.catch((error) => {
 					if (
 						!this.dead &&
+						this.connected &&
+						this.state.needsSync &&
 						generation === this.state.instanceGeneration &&
 						this.syncPending === pending
 					) {
@@ -493,7 +505,29 @@ export function createDuskmoonReactChat(options = {}) {
 					}
 				})
 				.finally(() => {
-					if (this.syncPending === pending) this.syncPending = null;
+					if (this.syncPending !== pending) return;
+					this.syncPending = null;
+					if (
+						this.dead ||
+						!this.connected ||
+						!this.state.needsSync ||
+						generation !== this.state.instanceGeneration
+					)
+						return;
+					// Only read-only transcript synchronization is retried. An OK
+					// acknowledgement is not recovery until a snapshot/reset arrives.
+					const delay = this.syncRetryDelay;
+					this.syncRetryDelay = Math.min(delay * 2, 30000);
+					this.syncRetryTimer = setTimeout(() => {
+						this.syncRetryTimer = null;
+						if (
+							!this.dead &&
+							this.connected &&
+							this.state.needsSync &&
+							generation === this.state.instanceGeneration
+						)
+							this.requestSync();
+					}, delay);
 				});
 			this.syncPending = pending;
 			return pending;
@@ -519,6 +553,7 @@ export function createDuskmoonReactChat(options = {}) {
 		},
 		disconnected() {
 			this.connected = false;
+			this.resetSyncRetry();
 			this.requests.forEach((request) => request.cancel());
 			this.syncPending = null;
 			this.renderChat();
@@ -531,6 +566,7 @@ export function createDuskmoonReactChat(options = {}) {
 		},
 		destroyed() {
 			this.dead = true;
+			this.resetSyncRetry();
 			cancelAnimationFrame(this.frame);
 			this.removeHandleEvent(this.eventRef);
 			this.requests.forEach((request) => request.cancel());
