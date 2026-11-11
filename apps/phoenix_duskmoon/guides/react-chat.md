@@ -31,6 +31,21 @@ per token. HEEX children are not a composition API: `inner_block` is no longer
 declared. Put server-rendered controls outside the mount, or use the public React
 composition API below. `target` routes the bridge to a LiveComponent if needed.
 
+## Required Tailwind sources
+
+React Chat uses Tailwind utilities as well as upstream component styles.
+Follow the [Getting Started CSS and Bundler source setup](getting-started.md#4-configure-css),
+including `deps/phoenix_duskmoon/assets/js` and `deps/phoenix_duskmoon/lib`.
+Tailwind v4 skips gitignored dependencies during automatic detection.
+
+With DuskmoonBundler 10.1.3, add the dependency entries to the existing profile's
+`tailwind.sources`; CSS `@source` alone is insufficient
+([upstream issue #23](https://github.com/duskmoon-dev/duskmoon-bundler/issues/23)).
+Keep them until the published upstream fix is adopted and verified. Without the
+JavaScript source, utilities such as `bottom-3`, `end-3` and `pb-16` are missing,
+and the transcript controls can overlap the composer. The getting-started guide
+covers both normal and umbrella path conventions.
+
 ## Public composition
 
 ```javascript

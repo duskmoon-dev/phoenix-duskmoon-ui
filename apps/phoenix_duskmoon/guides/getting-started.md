@@ -62,6 +62,8 @@ In your `assets/css/app.css`:
 @source "../js/**/*.js";
 @source "../../lib/**/*.exs";
 @source "../../lib/**/*.ex";
+@source "../../deps/phoenix_duskmoon/lib";
+@source "../../deps/phoenix_duskmoon/assets/js";
 
 @import "tailwindcss";
 @import "@duskmoon-dev/core/base.css";
@@ -70,6 +72,42 @@ In your `assets/css/app.css`:
 
 The `@plugin` directive registers the Duskmoon design system with Tailwind v4,
 providing all theme variables, component classes, and design tokens.
+
+Tailwind v4 skips gitignored `deps/` during automatic detection. Keep the
+dependency sources so the library's HEEX and JavaScript utilities are generated.
+Paths are relative to this CSS file; for an umbrella app use
+`../../../../deps/phoenix_duskmoon/lib` and
+`../../../../deps/phoenix_duskmoon/assets/js`.
+
+#### DuskmoonBundler source configuration
+
+With DuskmoonBundler 10.1.3, also add these entries to your existing profile's
+`tailwind.sources` in `config/config.exs`; keep your application's sources:
+
+```elixir
+config :duskmoon_bundler, :my_app,
+  # Keep your existing root, entry, outdir and other profile settings.
+  tailwind: [
+    css: "assets/css/app.css",
+    sources: [
+      %{base: "assets", pattern: "**/*.{js,css}"},
+      %{base: "lib", pattern: "**/*.{ex,exs,heex}"},
+      %{base: "deps/phoenix_duskmoon/lib", pattern: "**/*.{ex,exs,heex}"},
+      %{base: "deps/phoenix_duskmoon/assets/js", pattern: "**/*.js"}
+    ]
+  ]
+```
+
+These paths are relative to the project root where the build runs, unlike CSS
+`@source` paths. When running from an umbrella root, use
+`apps/my_app/assets` and `apps/my_app/lib` for your application paths; the
+`deps/phoenix_duskmoon/...` entries remain relative to the umbrella root.
+
+WORKAROUND(upstream): [duskmoon-bundler#23](https://github.com/duskmoon-dev/duskmoon-bundler/issues/23).
+Bundler 10.1.3 scans its configured sources and ignores CSS `@source` declarations.
+TODO(upstream): remove the duplicate dependency entries only after upgrading to a
+published Bundler fix and verifying that CSS-only sources generate the same
+utilities. Until then, keep these entries when upgrading Phoenix Duskmoon UI.
 
 ### 5. Register custom elements
 

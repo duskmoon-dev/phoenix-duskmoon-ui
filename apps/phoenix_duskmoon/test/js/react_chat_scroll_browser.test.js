@@ -1,13 +1,27 @@
 import { expect, test } from "bun:test";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { basename, join } from "node:path";
+import { basename, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 test("chat scrolling separates one-shot jumps from following and cleans up per mount", async () => {
 	const directory = await mkdtemp(join(tmpdir(), "dm-chat-scroll-browser-"));
 	let server, browser, socket, timeout;
 	try {
+		const generatedCss = join(directory, "consumer.css");
+		const repository = fileURLToPath(new URL("../../../../", import.meta.url));
+		const compilation = Bun.spawnSync(
+			[
+				resolve(repository, "scripts/with-precompiled-toolchain.sh"),
+				"mix",
+				"run",
+				"--no-start",
+				"scripts/check-react-chat-css.exs",
+				generatedCss,
+			],
+			{ cwd: repository },
+		);
+		expect(compilation.exitCode, compilation.stderr.toString()).toBe(0);
 		const entry = join(directory, "entry.js");
 		await writeFile(
 			entry,
@@ -62,6 +76,13 @@ function mount(id) {
       assert(!chat.viewport.contains(button), 'floating control scrolls with the transcript');
     }
   }
+  const controls = first.node.querySelector('[aria-label="Transcript scrolling"]');
+  const controlStyle = getComputedStyle(controls);
+  assert(controlStyle.position === 'absolute' && controlStyle.bottom === '12px' && controlStyle.insetInlineEnd === '12px', 'documented consumer CSS did not position transcript controls');
+  assert(getComputedStyle(first.node.querySelector('.chat-scroll-body')).paddingBottom === '64px', 'transcript control clearance is missing');
+  const controlsBox = controls.getBoundingClientRect();
+  const transcriptBox = first.viewport.getBoundingClientRect();
+  assert(controlsBox.bottom <= transcriptBox.bottom && controlsBox.right <= transcriptBox.right, 'scroll controls escaped the transcript');
   assert(first.jump.disabled, 'jump should be disabled at the bottom');
   first.append();
   await waitFor(() => bottom(first.viewport), 'new messages did not follow');
@@ -141,9 +162,6 @@ function mount(id) {
 				artifact,
 			]),
 		);
-		const core = Bun.file(
-			fileURLToPath(import.meta.resolve("@duskmoon-dev/core/standalone.css")),
-		);
 		server = Bun.serve({
 			port: 0,
 			hostname: "127.0.0.1",
@@ -154,7 +172,7 @@ function mount(id) {
 					return new Response(asset, {
 						headers: { "content-type": "text/javascript" },
 					});
-				if (path === "/core.css") return new Response(core);
+				if (path === "/consumer.css") return new Response(Bun.file(generatedCss));
 				if (path === "/preview.svg")
 					return new Response(
 						'<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"/>',
@@ -163,14 +181,12 @@ function mount(id) {
 						},
 					);
 				return new Response(
-					`<!doctype html><html data-theme="sunshine"><head><link rel="stylesheet" href="/core.css"><style>
-/* Constrain the browser fixture without a generated application CSS dependency. */
+					`<!doctype html><html data-theme="sunshine"><head><link rel="stylesheet" href="/consumer.css"><style>
+/* Constrain only fixture dimensions; consumer CSS supplies chat layout. */
 #first, #second { height:360px; width:560px; }
 section { display:flex; flex-direction:column; gap:12px; height:100%; }
 section > div:first-child { position:relative; flex:1; min-height:0; }
 [data-chat-messages] { height:100%; }
-[aria-label="Transcript scrolling"] { position:absolute; bottom:12px; right:12px; display:flex; gap:8px; }
-.chat-scroll-body { padding-bottom:64px; }
 .markdown-body img { height:0; width:100%; }
 </style></head><body><div id="first"></div><div id="second"></div><pre id="result">pending</pre><script type="module" src="/entry.js"></script></body></html>`,
 					{ headers: { "content-type": "text/html" } },
