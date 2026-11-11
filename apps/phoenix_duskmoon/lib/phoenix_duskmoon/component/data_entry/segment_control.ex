@@ -27,6 +27,16 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControl do
   @doc """
   Renders a segmented control group.
 
+  Pass button attributes through each item's `rest` map, including LiveView
+  events, values, IDs and data attributes. Selection remains owned by the caller:
+
+      <.dm_segment_control label="Theme">
+        <:item value="auto" active={@theme == "auto"}
+          rest={%{"phx-click" => "set_theme", "phx-value-theme" => "auto", "id" => "theme-auto"}}>
+          Auto
+        </:item>
+      </.dm_segment_control>
+
   ## Examples
 
       <.dm_segment_control variant="outlined">
@@ -74,6 +84,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControl do
   attr(:rest, :global)
 
   slot :item, required: true, doc: "Segment items" do
+    attr(:rest, :map, doc: "HTML button attributes, including phx-click and phx-value-* bindings")
     attr(:active, :boolean)
     attr(:disabled, :boolean)
     attr(:icon, :string)
@@ -104,6 +115,7 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControl do
     >
       <button
         :for={item <- @item}
+        {item[:rest] || %{}}
         type="button"
         class={[
           "segment-item",

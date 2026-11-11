@@ -1,5 +1,6 @@
 defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControlTest do
   use ExUnit.Case, async: true
+  import Phoenix.Component
   import Phoenix.LiveViewTest
 
   import PhoenixDuskmoon.Component.DataEntry.SegmentControl
@@ -146,6 +147,33 @@ defmodule PhoenixDuskmoon.Component.DataEntry.SegmentControlTest do
       result = render_component(&dm_segment_control/1, %{multi: true, item: items_slot()})
       assert result =~ "segment-control-multi"
     end
+  end
+
+  test "item rest forwards LiveView bindings and HTML attributes in HEEX" do
+    assigns = %{}
+
+    result =
+      rendered_to_string(~H"""
+      <.dm_segment_control label="Theme">
+        <:item value="auto" active
+          rest={%{"phx-click" => "set_theme", "phx-value-theme" => "auto", "id" => "theme-auto", "data-theme" => "auto"}}>
+          Auto
+        </:item>
+        <:item value="dark" disabled
+          rest={%{"phx-click" => "set_theme", "phx-value-theme" => "dark", "id" => "theme-dark"}}>
+          Dark
+        </:item>
+      </.dm_segment_control>
+      """)
+
+    auto = result |> LazyHTML.from_fragment() |> LazyHTML.query("#theme-auto")
+    dark = result |> LazyHTML.from_fragment() |> LazyHTML.query("#theme-dark")
+    assert LazyHTML.attribute(auto, "phx-click") == ["set_theme"]
+    assert LazyHTML.attribute(auto, "phx-value-theme") == ["auto"]
+    assert LazyHTML.attribute(auto, "data-theme") == ["auto"]
+    assert LazyHTML.attribute(auto, "aria-pressed") == ["true"]
+    assert LazyHTML.attribute(dark, "phx-value-theme") == ["dark"]
+    assert LazyHTML.attribute(dark, "disabled") == [""]
   end
 
   describe "dm_segment_control item features" do
