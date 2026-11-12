@@ -1,3 +1,18 @@
+# [10.1.4](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.1.3...v10.1.4) (2026-11-12)
+
+### Changed
+
+- Update Components to 0.6.3 and Core/CSS Art to 1.21.5 so consumers using the
+  new chat context, settings menu and approval request APIs share one Components
+  installation with the Phoenix bridge without overrides, resolving
+  [#217](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/issues/217).
+- Synchronize Elements/Art Elements and the declared supporting elements to
+  1.10.3, preserving the existing wrappers and registration contracts.
+- Document the upstream chat APIs and keep decision authorization and persistence
+  application-owned.
+- Use the runner host network for the Storybook image builder to avoid the
+  additional Docker bridge that encountered repeated Ubuntu package DNS failures.
+
 # [10.1.3](https://github.com/duskmoon-dev/phoenix-duskmoon-ui/compare/v10.1.2...v10.1.3) (2026-11-11)
 
 ### Fixed

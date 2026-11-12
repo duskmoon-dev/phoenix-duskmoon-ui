@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { Chat, ComposerSettings } from "@duskmoon-dev/components/chat";
 import { ReactChat } from "../../assets/js/react_chat/chat.js";
 import { initialState } from "../../assets/js/react_chat/state.js";
 
@@ -16,6 +17,81 @@ function render(messages, connected = true) {
 }
 
 describe("React chat upstream composition", () => {
+	test("custom composers and messages use upstream context, menu settings and requests", () => {
+		const h = React.createElement;
+		function Composer() {
+			return h(
+				Chat.Composer,
+				{
+					value: "",
+					onValueChange: () => {},
+					onSubmit: async () => false,
+					context: h(
+						Chat.ComposerContext,
+						null,
+						h(Chat.ComposerContextItem, null, "Repository: application"),
+						h(
+							Chat.ComposerContextEnd,
+							null,
+							h(Chat.ComposerConnection, { state: "connected" }),
+						),
+					),
+				},
+				h(ComposerSettings, {
+					variant: "menu",
+					scopeKey: "application",
+					revision: 1,
+					settings: [
+						{
+							id: "model",
+							label: "Model",
+							value: "small",
+							choices: [{ value: "small", label: "Small" }],
+						},
+					],
+					onRequest: async () => {
+						throw new Error("No SSR requests");
+					},
+					onAcknowledged: () => {},
+				}),
+			);
+		}
+		function Message({ targetId, timeline }) {
+			return h(
+				Chat.Agent,
+				{ id: targetId, timeline },
+				h(
+					Chat.Request,
+					{
+						title: "Allow file read?",
+						state: "pending",
+						pending: true,
+						actions: [{ id: "approve", label: "Approve", onSelect: () => {} }],
+					},
+					"Application authorization required",
+				),
+			);
+		}
+		const html = renderToStaticMarkup(
+			h(ReactChat, {
+				state: initialState("conversation", [
+					{ id: "request", role: "assistant" },
+				]),
+				bridge: { send: async () => ({ status: "ok" }) },
+				connected: true,
+				options: { Composer, renderMessage: Message },
+			}),
+		);
+		expect(html).toContain("chat-composer-context");
+		expect(html).toContain("Repository: application");
+		expect(html).toContain("Connected");
+		expect(html).toContain('aria-label="Model: Small"');
+		expect(html).toContain('popover="auto" role="group" aria-label="Model"');
+		expect(html).toContain("Allow file read?");
+		expect(html).toContain("Application authorization required");
+		expect(html).toMatch(/<button[^>]*disabled[^>]*>Approve<\/button>/);
+	});
+
 	test("renders streaming Markdown and tool input through the published chat parts", () => {
 		const html = render([
 			{

@@ -140,6 +140,45 @@ of the default message; a full `renderMessage` owns all of its message parts.
 A custom message must apply `targetId` to its root and `timeline` to `Chat` to
 retain reply navigation. React keeps message identity by `message.id`.
 
+### Context, settings menus, and approval requests
+
+The published dependency cohort includes Components 0.6.3 and Core 1.21.5.
+Consumers using these versions can share one Components installation with the
+Phoenix bridge without npm overrides. Keep the application's direct Components
+version aligned with the bridge; verify the installed tree with
+`npm ls @duskmoon-dev/components @duskmoon-dev/core` after `npm ci`.
+
+Inside a custom `Composer`, pass a React node through the `context` prop of
+`Chat.Composer` or `ChatSessionComposer`. The same prop is available on the lazy
+`RichChatComposer`. It renders before the editor:
+
+```javascript
+const context = h(Chat.ComposerContext, null,
+  h(Chat.ComposerContextItem, null, "Repository: application"),
+  h(Chat.ComposerContextEnd, null,
+    h(Chat.ComposerConnection, {
+      state: connected ? "connected" : "disconnected",
+    })),
+);
+// Pass context to the application's existing composer:
+// h(ChatSessionComposer, { ...composerProps, context })
+```
+
+`ComposerSettings` accepts `variant: "menu"` with the same `scopeKey`, `revision`,
+`settings`, `onRequest`, and `onAcknowledged` contract as the default select
+presentation. The application still applies acknowledged values and handles
+rejected or stale requests; selecting a menu item does not authorize a backend
+configuration change by itself.
+
+In a custom `renderMessage`, place `Chat.Request` inside `Chat.Agent` alongside
+tool output. Supply `title`, detail children, and ordered actions with `id`,
+`label`, and `onSelect`. The application owns the request `state`, `pending`
+decision, authorization, persistence, and results. States are `pending`,
+`approved`, `approved-for-session`, `declined`, `expired`, and `answer-elsewhere`.
+Actions appear only in the pending state; `pending: true` disables them while
+the host is deciding. These are upstream presentation APIs; use the existing
+bridge's application-owned action mapping for decisions.
+
 Every component receives `state`, `bridge`, `connected`, `synchronizing`,
 `metadata`, `runtime`, `admission`, `streaming`, `active`, and `canSubmit`.
 Message/header/footer components additionally receive `message`, `targetId`,
